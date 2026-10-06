@@ -1,5 +1,10 @@
 # MeshSat field kit V2: start here
 
+**Current revision: set 30 (6 October 2026), the revision `__INTEGRATED__`. Read section 0 first.** The paragraphs from here to
+section 0 are edition H3's opening and this page's edition history, oldest first (H1 to H3 of 27 September 2026, the supplier packages of 3 and 4 October
+2026, set 30); sections 1 to 9 are edition H3's text of 27 September 2026 with its later edits, kept as history where section 0
+differs.
+
 **Engineering handover, edition H3, partial.** First written 27 September 2026 from the repository at commit
 `e3aedb25` (`e3aedb25c849dbda931888b27093ac6c444621cb`, 27 September 2026 01:17 CEST), under tracker issue
 MESHSAT-1357, brought to H2 the same day and to H3 after it; section 1a is H3's, and section 3 is H2's, whose design
@@ -71,12 +76,100 @@ check, and two outside reviews saved as the owner pasted them, of the 18:00 prog
 (`v2/docs/reviews/2026-09-27-third-checkpoint-review.md`, `2026-09-27-h2-independent-review.md`); and the corrections
 and errata of section 1a. `v2/docs/handover/RELEASE-H3.md` is its release record.
 
+**The supplier packages, 3 and 4 October 2026** (not snapshots of the H series). The owner's instruction of 3 October 2026
+(`v2/docs/handover/OWNER-INSTRUCTION-2026-10-03-SUPPLIER.md`) added an entry page for a supplier's engineers, `v2/docs/handover/supplier/SUPPLIER-HANDOVER.md`,
+with the package cut from it; its section 10 and its dated entries name each package, the current-state addendum to the package
+cut from `d834e6a7` (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md`) and the delta `aa76c894` over `d834e6a7`, each with
+its review as received.
+
+**Set 30** (6 October 2026; the revision `__INTEGRATED__`). The P0 power candidate after the one targeted recheck cx46, which read
+"P0 RECHECK: CORRECTIONS NOT CLOSED." (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10`): the findings it left NOT CLOSED and the cases the
+authors handed over are carried as remaining engineering, with the supplier validation annex, the P0 list, the DESIGN gate's reading
+and the DESK-gate assessment apart from it. Section 0 states what it hands over; no circuit change is applied and nothing in it
+accepts, closes or promotes a design claim.
+
+## 0. Set 30 (6 October 2026): what this revision hands over
+
+Added 6 October 2026 under MESHSAT-1357. A receiving company starts at the supplier entry page, `v2/docs/handover/supplier/SUPPLIER-HANDOVER.md`,
+whose section 0 states this revision in full; this section is the short form for a reader who opens this page first, and where the
+two differ the entry page governs. `path:N` is line N of that file at commit `6fe398e9`
+(`6fe398e9f624160429411e975c26564e553714d3`), the commit this section was written from; `:N` repeats the path cited just before it.
+`__INTEGRATED__` is a placeholder the coordinator fills with the promoted commit at adoption. Prototype framing: nothing in the kit
+has been built, bought, powered or measured.
+
+**The revisions.**
+
+| Revision | Commit | What it is |
+|---|---|---|
+| Tested | `__INTEGRATED__` | the commit the gated release suite ran on (the package's `README.md`, section "What was tested, and how") |
+| Packaged | `__INTEGRATED__` | the commit every file of this revision is taken from |
+| Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate cx46 read (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`) |
+
+The owner's binding rule (part 25, `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:844`): "Use the existing integration gate to
+record the reviewed and integrated revisions and the intervening changes. If changes are only verified bindings or presentation, record
+that equivalence. If they change a circuit, assumption, model, limit or substantive claim, the affected result needs targeted
+verification before being credited. Passing the software suite alone cannot transfer an engineering verdict to altered claims." The
+integration record `v2/docs/records/int30/RESULT.md` (at adoption) binds the two revisions and classifies every commit between them.
+
+**The states, each apart.**
+
+| What | State |
+|---|---|
+| Documents and editable artifacts | on main as a DESK candidate (`__INTEGRATED__`) |
+| Design reviewed and accepted | NO |
+| Implemented | NONE |
+| Physical qualification | NONE |
+| Fabrication release | BLOCKED |
+| Power-design closure | BLOCKED |
+
+In the Layer 4 record's words: "power-design closure BLOCKED, fabrication release BLOCKED, design accepted NO, implemented NONE,
+physical qualification NONE" (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:965`). Layer 4's DESK gate (the owner's part 19) is the
+coordinator's assessment, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` (at adoption); this page states no verdict for it. The
+DESIGN gate of L4-E9's section 8 is a different gate: "**Layer 4's power architecture closes: NO**: on the set 30 candidate **the
+power-design closure gate is BLOCKED**" (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005`).
+
+**What set 30 adds** (one line each; the entry page's section 0c gives them in full).
+
+- `v2/docs/records/l4close/REMAINING-ENGINEERING.md`: the remaining-engineering ledger; each finding cx46 left NOT CLOSED and each case
+  the authors handed over, with the failed cases, the attempted correction, the affected provisional outputs, the receiving company's
+  task and its acceptance.
+- `v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`: the supplier validation annex for U-01, U-02, U-04 and E11-29.
+- `v2/docs/records/l4close/P0-POWER-LIST.md`: the P0 list, revision 3 at adoption.
+- `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md`, section 8: the DESIGN gate's criteria 1 to 5 on the set 30 candidate.
+- `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` (at adoption): the DESK-gate assessment; its contradictions list K-01 to K-28
+  is the register of known differences between records.
+- `v2/docs/handover/LAYER-STATUS.md`, the blocks headed "After set 30" (at adoption): the items set 30's records move, per layer.
+- `v2/docs/records/int30/RESULT.md` (at adoption): the integration record.
+- `v2/docs/records/l4close/`, the four checks of 5 October 2026 (V6, cx44, cx45, cx46), each an AI review filed as received.
+
+**What a receiving company is asked to do, and not** (the entry page's section 0d in full). Asked: to confirm engineering scope,
+responsible personnel, deliverables, exclusions, cost and schedule (the constitution's section 11,
+`v2/docs/EXECUTION-CONSTITUTION.md:94`); to take over the remaining engineering as the ledger scopes it; to validate the annex's four
+items. Nothing is ordered or funded: "We are not undertaking or funding the physical validation now." (the owner's part 19,
+`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:470`). Not asked: to fabricate, assemble or order a board from the package; to read a
+desk check, an AI review or a passing suite as sign-off or qualification; to run a proposed procedure unchanged; to treat remaining
+engineering as qualification-only; to change a requirement or adopt the Saft MP 176065 xtd PROPOSAL without the owner's ruling.
+
+**How to reproduce** (the entry page's section 0e; section 6 below and `v2/docs/handover/REGENERATE.md` for the September formats).
+From a full git checkout at `__INTEGRATED__`: a record's fetch script (`fetch_held_back.py`) fetches and checks the makers' sheets held
+back by their terms; `python3 v2/docs/records/<record>/<script>.py` prints a record's output, compared byte for byte with its committed `.out`, in the
+order of `v2/docs/records/l9t5/stability/regen_cascade.sh` for the P0 cascade; `python3 v2/docs/records/l8p/gen_netlist.py GENERATOR
+OUT.net` writes a generator's netlist without KiCad ("It is not KiCad's netlist", `v2/docs/records/l8p/gen_netlist.py:15`); and
+`python3 v2/ecad/tools/tests/run.py <name substring>` runs the tests.
+
+**What below is history.** The opening paragraphs' "This is handover H3" describes the edition of 27 September 2026; the current
+revision is set 30. Sections 1a and 3 give the states at H3 and H2 (27 September 2026); Layer 3 was accepted again since, last at
+`3b4b92cf` (the entry page's section 2). Section 5's Layer 4 row names `v2/docs/ARCHITECTURE.md` first; for the power architecture the
+current record is `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` (`v2/docs/handover/LAYER-STATUS.md:330`). Section 4's registry counts
+are H3's, as that row says.
+
 ## 1. The handover pages
 
 | Page | Read it for |
 |---|---|
 | `v2/docs/handover/START-HERE.md` (this page) | what is being built, how the repository is organised, the reading order, what you need outside the repository |
-| `v2/docs/handover/LAYER-STATUS.md` | the nine pre-PCB layers (its section "Status at handover H2" first, then each layer's acceptance table at H2, item by item, since after H2); its Appendix A keeps, per layer, the audit at `e3aedb25` (scope, deliverables by revision, every acceptance item met or not with its evidence, unresolved decisions, gate cycles, the next closing actions, per-board lines) and the integrator line |
+| `v2/docs/handover/LAYER-STATUS.md` | the nine pre-PCB layers (its section "Status at handover H2" first, then each layer's acceptance table at H2, item by item, since after H2; **since set 29** the tables headed "After set 29" first, and **since set 30** the blocks headed "After set 30" (at adoption) before them); its Appendix A keeps, per layer, the audit at `e3aedb25` (scope, deliverables by revision, every acceptance item met or not with its evidence, unresolved decisions, gate cycles, the next closing actions, per-board lines) and the integrator line |
+| `v2/docs/handover/supplier/SUPPLIER-HANDOVER.md` | **since 3 October 2026** the supplier package's entry page; **set 30:** its section 0 names the revisions, the states, what set 30 adds, what a receiving company is asked to do and how to reproduce |
 | `v2/docs/handover/CONTINUATION-BRIEF.md` | the decisions an incoming PCB engineer must preserve, the remaining work in dependency order, the constraints known today, the approaches that failed and why, the experiments already specified |
 | `v2/docs/handover/ENGINEERING-QUESTIONS.md` | every blocked question, one compact block each: issue, evidence, attempts, options, recommendation, expertise, cost and lead time |
 | `v2/docs/handover/REGENERATE.md` | how to regenerate the schematics and re-run the checks, and which host each step needs (written separately from these four pages) |

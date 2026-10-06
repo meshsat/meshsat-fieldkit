@@ -5,6 +5,9 @@ Written 3 October 2026 under MESHSAT-1357, on the owner's instruction of the sam
 path below is a path in the public repository `https://github.com/meshsat/meshsat-fieldkit`, from its root; the package's
 `SOURCE.txt` names the commit every file was taken from, and its `MANIFEST.sha256` lists every file with its sha256.
 
+**Brought to set 30 on 6 October 2026: read section 0 first.** It names this revision, its states and what it adds; sections 1
+to 10 are the page of 3 October 2026 with its later corrections, kept where still true and marked as history where set 30 differs.
+
 **What the kit is, and what it is not yet.** The MeshSat field kit V2 is an **unbuilt prototype design**: no V2 board has been
 fabricated, assembled, powered or measured, and no kit has been deployed. Every number here is a design figure, a maker's
 printed figure or a desk calculation, and each record says which. The design and every review of it so far were done by AI
@@ -15,6 +18,122 @@ reviewed it. That is the work this package asks a supplier to quote for.
 **What we ask of you, in three phases** (section 8 and the separate quotation request): (1) review and correct the design;
 (2) build and run the prototype qualification it needs; (3) complete the design and the manufacturing release. Physical
 qualification is part of the work requested; nothing in this package waits for it.
+
+## 0. This revision: set 30 (6 October 2026)
+
+Added 6 October 2026 under MESHSAT-1357. Where this section and a later one disagree, this section is the current statement.
+`path:N` is line N of that file at commit `6fe398e9` (`6fe398e9f624160429411e975c26564e553714d3`), the commit this section was written
+from; `:N` repeats the path cited just before it; a path beginning `records/` is under `v2/docs/records/`. `__INTEGRATED__` is a
+placeholder the coordinator fills with the promoted commit at adoption; until then no revision of this section is promoted. Prototype
+framing: nothing in the kit has been built, bought, powered or measured.
+
+### 0a. The revisions
+
+| Revision | Commit | What it is |
+|---|---|---|
+| Tested | `__INTEGRATED__` | the commit the gated release suite ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
+| Packaged | `__INTEGRATED__` | the commit every file of this revision is taken from |
+| Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate the one targeted recheck cx46 read (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`) |
+| Earlier reviewed | `06077cee` (`06077cee85d0ed44c74c2a06c9fbb2030a0dedbc`) | the candidate the one focused check cx45 read (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:20`); its verdict as given: "P0 CANDIDATE: NOT CONFIRMED." (`:10`) |
+
+**The reviewed revision is not the packaged revision, and no verdict moves between them by itself.** The owner's binding rule (part 25,
+`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:844`): "Use the existing integration gate to record the reviewed and integrated
+revisions and the intervening changes. If changes are only verified bindings or presentation, record that equivalence. If they change a
+circuit, assumption, model, limit or substantive claim, the affected result needs targeted verification before being credited. Passing
+the software suite alone cannot transfer an engineering verdict to altered claims." The integration record `records/int30/RESULT.md`
+(at adoption) binds `4d0ff8a2` and `__INTEGRATED__` and classifies every commit between them. Read each verdict as applying to the
+revision its checker read.
+
+### 0b. The states, each apart
+
+| What | State |
+|---|---|
+| Documents and editable artifacts | on main as a DESK candidate (`__INTEGRATED__`) |
+| Design reviewed and accepted | NO |
+| Implemented | NONE |
+| Physical qualification | NONE |
+| Fabrication release | BLOCKED |
+| Power-design closure | BLOCKED |
+
+The Layer 4 record states five of the six apart: "power-design closure BLOCKED, fabrication release BLOCKED, design accepted NO,
+implemented NONE, physical qualification NONE" (`records/l4e9/L4-POWER-ARCHITECTURE.md:965`); every circuit change is a release-guarded
+draft: "None is APPLIED" (`:401`). The constitution keeps them apart: "A promoted integration set is none of those by itself."
+(`v2/docs/EXECUTION-CONSTITUTION.md:23`). **Two gates, not one.** Layer 4's DESK gate (the owner's part 19: sequential desk acceptance
+per layer) is assessed by the coordinator in `records/l4close/L4-DESK-GATE-ASSESSMENT.md` (at adoption); this page states no verdict for
+it. The DESIGN gate, L4-E9's criteria 1 to 5 (`records/l4e9/L4-POWER-ARCHITECTURE.md`, section 8), is a different gate, and its words on
+the set 30 candidate are "**Layer 4's power architecture closes: NO**: on the set 30 candidate **the power-design closure gate is
+BLOCKED**" (`:1005`), with the coordinator's readings "criterion 1 CONDITIONAL", "criterion 2 FAIL", "criterion 3 PASS", "criterion 4
+PASS" and "criterion 5 CONDITIONAL", and "A PASS here is the DESIGN gate's reading of that criterion on the desk package, never a
+closure, a qualification or a release." (`:1003`).
+
+### 0c. What set 30 adds to the package
+
+| File | What it is |
+|---|---|
+| `v2/docs/records/l4close/REMAINING-ENGINEERING.md` | the remaining-engineering ledger: each finding cx46 left NOT CLOSED (its section 1, the RE- items) and each case the authors handed over (its section 2, the HO- items), with the failed cases, the attempted correction, the affected provisional outputs, the receiving company's task and its acceptance; in its own words it "is not an acceptance, a closure, a verdict, a check, a qualification or a release of anything" (`:11`) |
+| `v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md` | the supplier validation annex: U-02, the sealed case's heat rejection (section 1); U-04, the charger on the battery FET pair (section 2); U-01, the cell (section 3); E11-29, the three paralleled battery FETs, a qualification kept apart (section 4); each with the claim, the specimen, the measured quantity, the pass limit, the capability and the outputs kept PROVISIONAL |
+| `v2/docs/records/l4close/P0-POWER-LIST.md` | the P0 list, the power architecture's current blockers in one table; revision 3 at adoption, which replaces revision 2 of 5 October 2026, 16:50 CEST (`:1`) |
+| `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md`, section 8 | the DESIGN gate's criteria 1 to 5 read on the set 30 candidate, with the gate's words (section 0b) |
+| `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` (at adoption) | the coordinator's assessment of Layer 4's DESK gate; its contradictions list K-01 to K-28 is the register of known differences between records |
+| `v2/docs/handover/LAYER-STATUS.md`, the blocks headed "After set 30" (at adoption) | per layer, the items set 30's records move; a row not listed there keeps its earlier text |
+| `v2/docs/records/int30/RESULT.md` (at adoption) | the integration record: the reviewed and the integrated revisions bound, every intervening commit classified, the gate lines |
+| `v2/docs/records/l4close/CHECK-V6-POWER-DRAFTS-7a82e82a-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX44-F01-SELECTION-8c7c335f-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` | the four independent checks of 5 October 2026, each an AI review filed as received, every negative verdict kept |
+| `v2/docs/records/l9t5/`, `v2/docs/records/l8r2/`, `v2/docs/records/l8p/`, `v2/docs/records/efuse/`, `v2/docs/records/l4e11/`, `v2/docs/records/l4e7/` | the records the P0 round changed (each with its `README.md`), with their scripts, committed outputs and tests; `v2/docs/records/l9t5/stability/` keeps the cascade's two passes and their digests |
+| `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md` | the owner's instructions of 5 October 2026 as received, from part 12 (part 19: the deliverable is the desk package; part 24: an unsupported correction is handed over as remaining engineering; part 25: the binding rule of section 0a) |
+
+The findings ledger of section 3 (`records/l4close/FINDINGS-LEDGER.md`) covers "every rejected collaborator finding of L4-E7 to L4-E13"
+(`:1`); the P0 round's findings and their checks are in the P0 list, in L4-E9's section 8e and in the remaining-engineering ledger.
+
+### 0d. What we ask of you, and what we do not
+
+We ask you, as the constitution's section 11 says ("Ask suppliers to confirm engineering scope, responsible personnel, deliverables,
+exclusions, cost and schedule. Do not assume ordinary fabrication/assembly includes circuit design or qualification.",
+`v2/docs/EXECUTION-CONSTITUTION.md:94`):
+
+1. to confirm the engineering scope, the responsible personnel, the deliverables, the exclusions, the cost and the schedule for the
+   work of section 8;
+2. to take over the remaining engineering as the ledger scopes it: each RE- and HO- item's task and acceptance
+   (`records/l4close/REMAINING-ENGINEERING.md`, sections 1, 2 and 5);
+3. to validate the annex's four items, U-01, U-02, U-04 and E11-29, to the specimens, quantities and pass limits it states
+   (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`, sections 1 to 4).
+
+Nothing is ordered or funded: "We are not undertaking or funding the physical validation now." (the owner's part 19,
+`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:470`); "no supplier is assumed engaged" (`:480`); and the annex says "Nothing here is a
+request for a requirement change, a purchase, an outside contact, fabrication or energisation." (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:10`).
+
+We do NOT ask you:
+
+- to fabricate, assemble or order any board from this package: fabrication release is BLOCKED (section 0b), and the 2026-09 `revA`
+  order set is an obsolete earlier generation (section 4, Layer 11);
+- to read a desk check, an AI review or a passing suite as sign-off or as qualification (the preamble above; section 0a);
+- to run the proposed experiments and procedures unchanged: they are PROPOSED, for you to review and agree before execution (section 8);
+- to treat a remaining-engineering item as a qualification-only task (the owner's part 24: "If a correction remains unsupported, hand it
+  over as **remaining engineering**", `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:786`), or a measured failure of a tested
+  arrangement as a change of the owner's requirements ("A thermal failure of the tested arrangement is a design failure, not
+  automatically a conflict in my requirements.", `:483`);
+- to change a requirement or a fixed constraint of section 2, or to adopt the Saft MP 176065 xtd pack, which is a PROPOSAL under
+  investigation ("Distinguish investigating or testing the Saft option from adopting its 4S1P pack. No pack change has been approved by
+  this clarification.", `:485`), without the owner's ruling.
+
+### 0e. How to reproduce set 30's figures
+
+From a full git checkout at `__INTEGRATED__` (section 7, item 2 says why the ZIP alone does not suffice):
+
+1. **The makers' sheets held back by their terms.** A record that reads one fetches it with its own script (`fetch_held_back.py`, or
+   a `fetch_*.py`, section 7 item 2), run from the repository root, for example `python3 v2/docs/records/l9t5/fetch_held_back.py` ("exit 0: present and checked; 3: a mismatch",
+   `records/l9t5/fetch_held_back.py:11`); the sheets land in gitignored `held/` folders, are checked by sha256 and are never committed.
+2. **A record's figures.** `python3 v2/docs/records/<record>/<script>.py` prints the output; compare it byte for byte with the committed
+   `.out` beside the script. A record's `README.md` states its own commands, and the ledger's section 7, "Reproducing the records",
+   gathers the common ones. The P0 cascade's dependency order is the list in `v2/docs/records/l9t5/stability/regen_cascade.sh`
+   (`records/l9t5/stability/regen_cascade.sh:9-11`); that script drives the coordinator's `regen_out.py`, "outside the tree" (`:7`), so
+   a recipient runs the same scripts in that order directly. The project's two passes and their digests are filed beside it
+   (`records/l9t5/README.md:129-132`).
+3. **Netlists without KiCad.** `python3 v2/docs/records/l8p/gen_netlist.py GENERATOR OUT.net` (`records/l8p/gen_netlist.py:5`) writes a
+   generator's part table as a KiCad-form netlist; "It is not KiCad's netlist" (`:15`), and KiCad's own export is the reading of record
+   (`:17`). A schematic regenerates with KiCad 9.0.9 (`v2/docs/handover/REGENERATE.md`).
+4. **Tests.** `python3 v2/ecad/tools/tests/run.py <name substring>` runs the house fixtures; a test that needs `pcbnew` reports SKIP on a
+   host without KiCad. The gated release suite's line for `__INTEGRATED__` is in the package's `README.md` and in
+   `records/int30/RESULT.md` (at adoption).
 
 ## 1. The product
 
@@ -104,6 +223,9 @@ Rows P3 to P7 are qualification gaps or design choices resting on unprinted or u
 recheck of this candidate read NOT YET (`records/l4close/checks/astra-check-l4close-2.md`); later corrections rest on the
 coordinator's checks, which are labelled as such and are not an independent review. The
 rows below are the ones a reviewer should start with; each names its record.
+**History, 3 October 2026.** This paragraph and the table under it are this page's text of 3 October 2026, kept as written. On set 30
+the table after it, "Set 30: where each row stands", gives each row's state from its record and governs where they differ; the
+collaborator's recheck that read NOT YET is history, and the P0 candidate's own checks are cx45 and cx46 (section 0a).
 
 | # | Circuit or function | Evidence and the failed or uncertain condition | Proposed correction or experiment | Acceptance criterion | Affects |
 |---|---|---|---|---|---|
@@ -117,6 +239,23 @@ rows below are the ones a reviewer should start with; each names its record.
 | P8 | Board B's fans | Board B's fan headers carry 5.1 V; the selected 12 V fans need 10.8 to 13.2 V (E11-40, R-190: a draft is owed) | a 12 V feed on board B: DRAFTED as a per-slot step-up (TPS61089 with a TPS259631 per slot; record l8r2, in the package's `branches/`, integrating in the next set); the supplier reviews the draft | the coolers' window met | board B |
 | P10 | Board A's VBUS20 against the 20 V bus converter's single faults (S-111) | A Q2 short or an FB open puts VIN_RAW on VBUS20, past U3's 32 V, with no clamp and no exemption claimed (register R-48, a KNOWN DEFECT) | DRAFTED: a series cut-off at board A's VIN_RAW entry (CSD19532Q5B under a TPS48110-Q1, its over-voltage window on VBUS20 24.25 to 25.31 V; the SMCJ22A rejected because its breakdown sits inside the 9 to 36 V service range); record l8r2 in the package's `branches/`; the supplier reviews the draft (task P1-3) | U3's input under its absolute maximum through each single fault | board A |
 | P9 | Endurance (an objective, not a defect) | Battery-only 2.52 h on energy alone at 42.8 W (the case sheds the profile at 2.01 to 2.51 h on the thermal bound); solar-assisted, the 48 and 72 h horizons carry 8.0 W steady | none within the fixed constraints today: any change of the profile, the storage or the objective is the owner's decision; a supplier may propose architecture options | the owner's | the claim made for the kit |
+
+**Set 30: where each row stands** (6 October 2026; quoted from the records in section 0's citation form; the P0 round's own rows,
+P0-1 to P0-8 with U-01, U-02, U-04 and E11-29, are the P0 list's, section 0c).
+
+| Row | State on set 30, in its record's words | Where |
+|---|---|---|
+| P1 | "D-10 is OPEN, an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1"; the ledger carries it as HO-F | `records/l4e9/L4-POWER-ARCHITECTURE.md:37`; `records/l4close/REMAINING-ENGINEERING.md`, section 2 |
+| P2 | "D-16 is ADDRESSED IN DRAFTS: corrected in draft by P0-7 (R-240, not applied;" and "PROVISIONAL in A7's zero-differential output (S3) and in the regulation at 25 V (S4)" | `records/l4e9/L4-POWER-ARCHITECTURE.md:37` |
+| P3 | "the battery FETs, R-157 with Q42 since L4-E11's round 9 (R-209)"; "D-14 CONDITIONAL on E11-29, E11-30 and E11-36 with the three's Ciss against TI's 5 nF OPEN, E11-37"; E11-29 is the annex's qualification item | `records/l4e9/L4-POWER-ARCHITECTURE.md:37`; the annex, section 4 |
+| P4 | "the eFuse U42, R-181, 1.4713 to 1.8018 A, sustained-overload remedy drafted; fault qualification open, E11-38" | `records/l4e9/L4-POWER-ARCHITECTURE.md:37` |
+| P5 | U-04, an architecture-level item of the receiving company's validation scope | the annex, section 2 |
+| P6 | U-02, an architecture-level item of the same scope | the annex, section 1 |
+| P7 | U-01, an architecture-level item of the same scope; the Saft MP 176065 xtd stays a PROPOSAL (section 0d) | the annex, section 3 |
+| P8 | superseded on 4 October 2026 by the addendum (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:33`); drafted, not applied: "board B's coolers on a per-slot 12 V step-up with an eFuse (E11-40, R-190)" and "Set 29: board A's slots 1 and 3 on slot 2's LM5176 stage with the coolers at full speed (L9P-F02, `apply_gen_sch_a_slotlm.py`)" | `v2/docs/handover/LAYER-STATUS.md:476` |
+| P9 | "The objective of 48 to 72 h is NOT MET" | `records/l4e9/L4-POWER-ARCHITECTURE.md:38` |
+| P10 | its `branches/` wording superseded on 4 October 2026 (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:34`); drafted, not applied: "VBUS20's over-voltage cut-off in VIN_RAW (S-111, R-48)" | `v2/docs/handover/LAYER-STATUS.md:476` |
+| section 10's L9P-F01, the all-transmit case | "D-17, decision D-11's all-transmit basis on the final drafts (Layer 9's L9P-F01), is OPEN"; "round 7's raised floor is withdrawn as a correction (it narrowed the requirement)"; "round 8's fan design-out (R-210 to R-212) is WITHDRAWN (FAN_OK rejected)"; its correction, the PA drain-current cap, "with cx46 item 2 NOT CLOSED (remaining engineering RE-2)" | `records/l4e9/L4-POWER-ARCHITECTURE.md:37`; the ledger, section 1 |
 
 **Every open item, classified.** `records/l4e9/L4-POWER-ARCHITECTURE.md` section 8f gives each open register item and design
 row exactly one class (KNOWN ENGINEERING DEFECT, PHYSICAL UNCERTAINTY, UNCERTAIN DESIGN CHOICE with its one bounded comparison,
@@ -161,7 +300,8 @@ Three levels, and what each needs:
    `SOURCE.txt` names its commit; from a RELEASE-CANDIDATE package that commit is on the public main branch: `git clone`,
    `git checkout <commit>`, the records' fetch scripts, then the commands above. Work carried in the package's `branches/`
    folders is NOT on that commit (it integrates in the next set): it can be read, is not covered by the release suite's results,
-   and can be re-computed only once it is published.
+   and can be re-computed only once it is published. **History, 3 October 2026:** superseded on 4 October 2026 by the addendum
+   (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:35`): the package carried no `branches/` folder.
 4. **What the project tested, at which commit and how** (corrected after the release-candidate review of 3 October 2026,
    finding L4-RC02). The package's `README.md`, section "What was tested, and how", names the commit the gated release suite
    ran on and the packaged commit. When they are the same commit it says so; when they differ it lists every file changed
@@ -200,7 +340,8 @@ your services, please say so and name a partner if you have one; we will not ass
 - The September battery review packet (`v2/docs/review-packets/battery/`) keeps its own revision and describes the charger and
   pack integration as of 26 September 2026, before the BQ25730 selection; it is not evidence for the current integration.
 - Anything not committed on the named commit, including work running on branches when the package was cut (the package's
-  README names those branches and their tips).
+  README names those branches and their tips). The parenthesis is history of 3 October 2026, superseded on 4 October 2026 by the
+  addendum (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:36`): the README names the later findings, not branches.
 
 ## 10. Changes since the release-candidate package (the delta)
 
@@ -214,8 +355,27 @@ into a measurement gap.
 |---|---|---|---|
 | L4-RC01 | L4-E7's sentence-keyed panel-lead scan let an approved sentence exempt a second, unreviewed statement in the same table cell | The scan is replaced by a numeric guard: every panel-lead length stated in the design documents is compared with the derivation's input (a1solar's 5 m) and a differing one refuses. Preserved review texts are skipped only when named with their sha256 in `v2/docs/records/ARCHIVED-REVIEWS.yaml`; any other file is scanned whatever its name. The reviewer's same-cell counterexample is a regression test. The register row's state is the integration's (R-197) | `v2/docs/records/l4e7/`, `v2/ecad/tools/tests/test_l4e7.py`, register R-197 |
 | L4-RC02 | The replay wording did not identify the tested revision and the execution mode | Section 7 item 4 above and the package's README name the commit the gated release suite ran on and the packaged commit, list any file changed between them, and keep L4-E7's cached render apart from a fresh solver run. CLOSED | register R-198 |
-| L9P-F01 | Layer 9's power budget: D-11's all-transmit basis needs a 15.99 V rest voltage on the drafted design, 0.49 V over its 15.5 V floor (the battery FET pair adds 0.190 V, the fans and their converters at full speed 0.458 V) | A demonstrated analysis defect, OPEN. A correction is drafted on a branch that is not part of this package's commit (L4-E9's round 7): the floor rises to 16.1 V rest from the release that applies those drafts (+0.114 V), the all-transmit window shrinks from 1.384 V to 0.784 V of rest voltage, and the firmware contract owes the matching FW-A05 sentence. Not reviewed, not integrated | the next integration set |
-| L9P-F02 | Layer 9's power budget: the drafted per-slot cooler step-ups take slots 1 and 3's AP64500 to 5.010 A against its 5 A at the highest bound | A defect in a draft, OPEN. A correction is drafted on a branch that is not part of this package's commit (Layer 8's round 3): the per-slot step-up stays with each cooler fan's PWM capped at 70 % by a firmware rule (+0.129 A at the worst state), a 12 V feed per slot as the fallback; the firmware contract owes the cap's row. Not reviewed, not integrated | the next integration set |
+| L9P-F01 | Layer 9's power budget: D-11's all-transmit basis needs a 15.99 V rest voltage on the drafted design, 0.49 V over its 15.5 V floor (the battery FET pair adds 0.190 V, the fans and their converters at full speed 0.458 V) | **History, 3 October 2026; the 16.1 V floor WITHDRAWN on 4 October 2026** (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:38`; set 30: section 5, the last row of "Set 30: where each row stands"). A demonstrated analysis defect, OPEN. A correction is drafted on a branch that is not part of this package's commit (L4-E9's round 7): the floor rises to 16.1 V rest from the release that applies those drafts (+0.114 V), the all-transmit window shrinks from 1.384 V to 0.784 V of rest voltage, and the firmware contract owes the matching FW-A05 sentence. Not reviewed, not integrated | the next integration set |
+| L9P-F02 | Layer 9's power budget: the drafted per-slot cooler step-ups take slots 1 and 3's AP64500 to 5.010 A against its 5 A at the highest bound | **History, 3 October 2026; the 70 % cap WITHDRAWN on 4 October 2026** (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:37`; set 30: section 5, row P8 of "Set 30: where each row stands"). A defect in a draft, OPEN. A correction is drafted on a branch that is not part of this package's commit (Layer 8's round 3): the per-slot step-up stays with each cooler fan's PWM capped at 70 % by a firmware rule (+0.129 A at the worst state), a 12 V feed per slot as the fallback; the firmware contract owes the cap's row. Not reviewed, not integrated | the next integration set |
 
 The two later rounds also expose findings for the next set (the stackup record's copper widths at 1 oz against the 25 A
-coordination, the device rail's 7.181 A against 7.096 A as before); they are carried in those rounds' records and are open.
+coordination, the device rail's 7.181 A against 7.096 A as before); they are carried in those rounds' records and are open. The
+device rail's figure is history of 3 October 2026: the addendum of 4 October 2026 states I-03 at 7.472 A against its 7.0957 A loop
+minimum (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:44`).
+
+**Later entries, dated** (each is history once a later entry stands; the newest is last).
+
+- **4 October 2026: the current-state addendum to the package cut from `d834e6a7`** (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md`, revision 3). It
+  supersedes the rows of this page that its section 2 lists (`:27-38`), among them L9P-F01's 16.1 V
+  floor ("WITHDRAWN", `:38`) and L9P-F02's cap (`:37`). The package's review reads "READY for an initial supplier engineering
+  quotation, accompanied by a short current-state correction sheet. Power-design closure and fabrication release remain BLOCKED."
+  (`v2/docs/records/l4close/REVIEW-SUPPLIER-D834E6A7-AS-RECEIVED.md:11`); the review of the addendum's revision 2 is
+  `v2/docs/records/l4close/REVIEW-SUPPLIER-ADDENDUM-REV2-AS-RECEIVED.md`.
+- **4 October 2026: the delta `aa76c894` over `d834e6a7`** (set 29). Its review reads "READY for supplier engineering review and
+  quotation, with this review attached. Power-design closure and fabrication release remain BLOCKED."
+  (`v2/docs/records/l4close/REVIEW-SUPPLIER-DELTA-AA76C894-AS-RECEIVED.md:5`); its two P1 findings, DELTA-01 and DELTA-02, are mapped in
+  `v2/docs/EXECUTION-PLAN.md`, "Register additions, 4 October 2026 21:05 CEST".
+- **6 October 2026: set 30, the revision `__INTEGRATED__`** (section 0). The P0 power candidate after cx46: the findings cx46 left NOT
+  CLOSED and the cases the authors handed over carried as remaining engineering (`v2/docs/records/l4close/REMAINING-ENGINEERING.md`),
+  U-01, U-02, U-04 and E11-29 in the supplier validation annex, the P0 list, the DESIGN gate's reading ("closes: NO",
+  `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005`) and the DESK-gate assessment kept apart from it. No circuit change is applied, and nothing in it accepts, closes or promotes a design claim.
