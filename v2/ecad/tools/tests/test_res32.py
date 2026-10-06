@@ -4,7 +4,10 @@
 
 What fails here: a commit of set 32's two branch ranges missing, doubled or out of order; a short sha that is not its full sha's prefix; a
 date, subject or file count that is not git's; a class outside W39's fixed set; a row that touches a file cx46 read without the words
-"UNREVIEWED since cx46", or a REVIEWED-INPUT CHANGED row that touches none; summary counts, per-branch counts or the bound statement's
+"UNREVIEWED since cx46"; a REVIEWED-INPUT CHANGED row that touches no file of the reviewed tree (present at 4d0ff8a2), or one that
+touches none of cx46's delta without classing a carried change with its source row and the delta membership; a rule paragraph that is not
+set 30's line 11 verbatim (`eff28be3:v2/docs/records/int30/CLASSIFICATION.md:11`, read as the coordinator ruled on 6 October 2026,
+reading A), or that drops set 30's row 44 as the precedent, the wider reading's answer or the placeholder rows' note; summary counts, per-branch counts or the bound statement's
 numbers that are not the table's; a count typed in the records that is not git's; a commit named that is in no history this record
 reads; a quote that is not on its cited line at its revision; the three claims not quoted verbatim from the assessment; a placeholder
 outside the five tokens the coordinator declared; an em or en dash. Each predicate is also run on a mutant it must refuse.
@@ -38,6 +41,9 @@ DECLARED = ("__S31_PROMOTED__", "__CANDIDATE__", "__REKEY__", "__GATE__", "__PRO
 # set 31's record draft, named by the record, on fnd/res31: in this branch's history only after set 31's adoption
 OUTSIDE = {"4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31's tip, set 31's RESULT and CLASSIFICATION drafts (W39)"}
 ASSESS = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
+S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
+S30C = "v2/docs/records/int30/CLASSIFICATION.md"
+RIC = "REVIEWED-INPUT CHANGED"
 CLAIMS = {492: "### Layer 4's DESK gate: NOT PASSED",
           496: "### Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS",
           500: "### Power-design closure: BLOCKED. Fabrication release: BLOCKED."}
@@ -115,6 +121,13 @@ def _reviewed():
     if "rev" not in _C:
         _C["rev"] = set(_git("diff", "--name-only", CX45, REVIEWED).split()) | set(L4E9_EXTRA)
     return _C["rev"]
+
+
+def _tree():
+    """The files present at cx46's candidate: "a file of the reviewed tree" in set 30's rule."""
+    if "tree" not in _C:
+        _C["tree"] = set(_git("ls-tree", "-r", "--name-only", REVIEWED).split("\n")) - {""}
+    return _C["tree"]
 
 
 def _rows(text):
@@ -216,8 +229,39 @@ def p_columns(text, order):
             bad.append("%s touches %d reviewed file(s) and does not say UNREVIEWED since cx46" % (sha[:8], len(rv)))
         if rv and ("(%d):" % len(rv)) not in c[7]:
             bad.append("%s: its reason does not count its %d reviewed file(s)" % (sha[:8], len(rv)))
-        if cls[0] == "REVIEWED-INPUT CHANGED" and not rv:
-            bad.append("%s is REVIEWED-INPUT CHANGED but touches no file cx46 read" % sha[:8])
+        if cls[0] != RIC:
+            continue
+        if "UNREVIEWED since cx46" not in c[7]:
+            bad.append("%s is %s and does not say UNREVIEWED since cx46" % (sha[:8], RIC))
+        if not [n for n in names if n in _tree()]:
+            bad.append("%s is %s but touches no file of the reviewed tree" % (sha[:8], RIC))
+        carried = "second sentence" in c[7]
+        if not rv and not carried:
+            bad.append("%s is %s, touches none of cx46's delta and does not class a carried change" % (sha[:8], RIC))
+        if carried and (not re.search(r"set 30's rows? \d+|\brows? \d+(?:\.\d+)?\b", c[7]) or "in the delta cx46 read" not in c[7]):
+            bad.append("%s: a carried change without its source row or the delta membership" % sha[:8])
+    return bad
+
+
+def p_rule(text, s30_lines, tree_lines):
+    """The class is set 30's line 11 quoted verbatim (the tree's copy equal to main's), read as ruled, with row 44 the precedent."""
+    bad = []
+    if len(s30_lines) < 68 or not s30_lines[10].startswith("- `REVIEWED-INPUT CHANGED`:"):
+        return ["set 30's record has no REVIEWED-INPUT CHANGED rule at its line 11"]
+    if tree_lines[:len(s30_lines)] != s30_lines:
+        bad.append("the tree's copy of set 30's record is not main's at eff28be3")
+    head = text.split("## 1. ", 1)[0]
+    flat = " ".join(head.split())
+    if "`eff28be3:v2/docs/records/int30/CLASSIFICATION.md:11`):\n\n> " + s30_lines[10] + "\n" not in head:
+        bad.append("the rule paragraph does not quote set 30's line 11 verbatim")
+    for w in ("reading A", "set 30's row 44", "set 30's rows 1, 13 and 44 did not take it",
+              "each placeholder row is classed under the second sentence when filled",
+              "(1) set 30's rule covers a change carried into any file of the reviewed tree",
+              "(2) set 30's rule requires each such reason to name the source row and whether the file was in the delta cx46 read"):
+        if w not in flat:
+            bad.append("the rule paragraph does not read %r" % w)
+    if "no figure or verdict word moved" not in s30_lines[67]:
+        bad.append("set 30's row 44 (line 68) does not read 'no figure or verdict word moved'")
     return bad
 
 
@@ -460,6 +504,19 @@ def t_the_records_carry_no_dash_and_open_with_their_state_lines():
     _mutant_refused(p_hygiene, texts, CLASS, "**NOT DONE:**", "**NOT YET:**")
 
 
+def t_the_rule_is_set_30s_line_11_verbatim_read_as_ruled():
+    _need_git()
+    t = _read(CLASS)
+    s30 = _show(S30, S30C)
+    tree = _read(S30C).split("\n")
+    assert not p_rule(t, s30, tree), p_rule(t, s30, tree)
+    assert p_rule(t.replace("is different now; the reason quotes", "is different now: the reason quotes", 1), s30, tree), \
+        "a changed quote passed"
+    assert p_rule(t.replace("did not take it (each touched", "took it (each touched", 1), s30, tree), \
+        "a wider reading without set 30's answer passed"
+    assert p_rule(t, s30, [l.replace("a verdict word", "a verdict") for l in tree]), "a changed copy of set 30's record passed"
+
+
 def t_every_placeholder_is_a_declared_token():
     texts = _texts()
     assert not p_placeholders(texts), p_placeholders(texts)
@@ -565,6 +622,7 @@ def _pytest(fn):
 
 test_the_records_carry_no_dash_and_open_with_their_state_lines = _pytest(t_the_records_carry_no_dash_and_open_with_their_state_lines)
 test_every_placeholder_is_a_declared_token = _pytest(t_every_placeholder_is_a_declared_token)
+test_the_rule_is_set_30s_line_11_verbatim_read_as_ruled = _pytest(t_the_rule_is_set_30s_line_11_verbatim_read_as_ruled)
 test_the_table_is_the_two_ranges_in_order_with_gits_columns_and_classes = _pytest(
     t_the_table_is_the_two_ranges_in_order_with_gits_columns_and_classes)
 test_the_summary_and_the_bound_statement_are_the_tables = _pytest(t_the_summary_and_the_bound_statement_are_the_tables)

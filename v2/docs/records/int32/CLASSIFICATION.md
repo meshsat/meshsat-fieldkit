@@ -8,6 +8,13 @@ draft (`records/int31/CLASSIFICATION.md` on fnd/res31 `4196e9df`, W39) and set 3
 W26). It designs nothing, runs no generator, suite or box job, accepts nothing, promotes nothing and changes no verdict: it reads git.
 Prototype framing: nothing in the kit is built, bought, powered or measured; the candidate is a desk design.
 
+**The rule restated (6 October 2026, from 17:13 CEST).** Worker W50 applied W49's reconciliation
+(`_runs/claude/w49recon/REPORT-AS-RECEIVED.md`, section 4, the rows for this record) under the coordinator's ruling (reading A, quoted
+below): the class `REVIEWED-INPUT CHANGED` is now set 30's rule quoted verbatim, its two differences from W39's wording are stated, set
+30's row 44 is the precedent for rows 2, 3 and 4, and the placeholder rows are to be classed under the rule's second sentence when
+filled. No row changes class and no count moves; no verdict, figure or claim of any file was changed, and set 30's adopted record was
+not edited.
+
 **The bounds.** Set 32's base is set 31's promoted revision, `__S31_PROMOTED__` (it does not exist when this table is written). Set 32 adopts
 two branches, each read over the commit where it leaves set 31's lineage or main: fnd/w34pdftext, tip
 `5b3153aa4136f08ab186a2b5da53c1c4f0c3ecac`, over `aed4bd234644c80fa494299b21099acf6d2454c1` (set 31's regenerated lineage, row 25 of set
@@ -25,8 +32,8 @@ printed by a script from git, not typed; `test_res32.py` reads them back. Citati
 of that file at that revision. The folders column groups every file under `v2/vendor/` as one entry (all of them, on these branches,
 extracted texts and their sidecars under a `pdftext/` folder).
 
-**What "reviewed" means here (the brief's rule, W39's and W15's, taken as written):** a reviewed input is a file cx46 read. This table
-takes that set as W39 took it: the 60 files of `git diff --name-only 06077cee 4d0ff8a2` (the delta cx46 read; cx46's own base is
+**The delta cx46 read, the set each row's reason states membership in** ("a reviewed file" and "a file cx46 read" below mean a file of
+it; the class itself is set 30's rule, the paragraph after next). This table takes the set as W39 took it: the 60 files of `git diff --name-only 06077cee 4d0ff8a2` (the delta cx46 read; cx46's own base is
 `3057ae43:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8` `"base_commit": "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e",`)
 plus the L4-E9 page `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` and its output `l4e9_power_path.out`. 8 of the two ranges' 382
 changed files are in that set, all on fnd/w34pdftext: `l8r2_gndret.py`, `l8r2_p0.py`, `l4e11_power.py`, `l4e9_power_path.py`,
@@ -36,25 +43,45 @@ reviewed file says so at the end of its reason and says **UNREVIEWED since cx46*
 after cx46 (W36's read of fnd/w34pdftext at `6dc69ad2` is a worker's AI review of the branch, section 2 of RESULT.md, and is not that
 check), and none is credited.
 
-**The REVIEWED-INPUT CHANGED rule, applied (a SESSION decision under the owner's standing rule of 26 September 2026, W44).** The class
-asks that "a figure, a state or verdict word, a composition or release grouping, a case or its placement, an acceptance row, a requirement
-or a limit in a reviewed file reads differently after the commit" (W39's words, which begin
-`4196e9df:v2/docs/records/int31/CLASSIFICATION.md:40` `a figure, a state or verdict word, a composition or release grouping, a case or its placement, an`;
-W15's are the same in substance). The seven reviewed
-generators on fnd/w34pdftext change HOW they obtain a maker's PDF text (the extraction call becomes the helper's call on the same PDF with
-the same options, the input list gains the text), never a figure, state word, composition, case, requirement or limit in their diff, and
-the annex's change is five line numbers in citations whose cited words are unchanged and one sentence inside its citation-form
-paragraph's line; so no row of the two branches is classed
-REVIEWED-INPUT CHANGED, and the four rows that touch a reviewed file carry **UNREVIEWED since cx46** with their other classes. Read with
-the wider rule (a touched reviewed file alone), rows 2, 3, 4 and 9 would be REVIEWED-INPUT CHANGED (4 rows); reversed by re-classing
-those four and recounting section 2. The reviewed OUTPUTS these generators write (for example `l4e11_power.out`, `l4e9_power_path.out`,
-`l9t5_f01.out`, `l8r2_gndret.out`, `efuse_check.out`) move only at the integration, in the rows that are placeholders here.
+**The REVIEWED-INPUT CHANGED rule: set 30's, quoted verbatim.** The class is set 30's, line 11 of
+`v2/docs/records/int30/CLASSIFICATION.md` (in this tree as at main `eff28be3`; `eff28be3:v2/docs/records/int30/CLASSIFICATION.md:11`):
+
+> - `REVIEWED-INPUT CHANGED`: a figure, a verdict word, a circuit draft or a composition of drafts, a case row, a requirement or a limit that cx46 read in `4d0ff8a2` is different now; the reason quotes the old and the new value with file and line, and names the cx46 item that read it, or says that none names it. A quote or restatement that carries another row's change into a file of the reviewed tree is classed so too, its reason naming the source row and whether the file was in the delta cx46 read (`cx46:17`).
+
+**How its second sentence is read: reading A, the coordinator's ruling for set 31 and set 32** (authority SESSION under the owner's
+standing rule of 26 September 2026; `<worktrees>/_runs/int30/QUEUE.md`, entry "17:13 (clock) COORDINATOR'S RULING", `READING A for set 31 and set 32 (the literal second sentence`):
+a quote or restatement that carries another row's change into any file present at `4d0ff8a2` is classed `REVIEWED-INPUT CHANGED`,
+whether or not the file was in the delta cx46 read. This rule replaces the class words this table first took from set 31's draft
+(W39's, which begin `4196e9df:v2/docs/records/int31/CLASSIFICATION.md:40` `a figure, a state or verdict word, a composition or release grouping, a case or its placement, an`,
+and which the first draft of this paragraph called "the same in substance" as W15's). They differ from set 30's in two ways (W49's
+reconciliation, sections 0 and 4): (1) set 30's rule covers a change carried into any file of the reviewed tree, where W39's covers a
+reviewed file only, the 62 files below; (2) set 30's rule requires each such reason to name the source row and whether the file was in
+the delta cx46 read.
+
+**Applied to the two branches.** The seven reviewed generators on fnd/w34pdftext change HOW they obtain a maker's PDF text (the
+extraction call becomes the helper's call on the same PDF with the same options, the input list gains the text), never a figure, state
+word, composition, case, requirement or limit in their diff, and the annex's change is five line numbers in citations whose cited words
+are unchanged and one sentence inside its citation-form paragraph's line; no row carries another row's change into a file of the
+reviewed tree (W49's reconciliation, section 3). So no row of the two branches is classed REVIEWED-INPUT CHANGED, and the four rows that
+touch a reviewed file carry **UNREVIEWED since cx46** with their other classes. The precedent is set 30's row 44, a guard's logic
+corrected in `l4e7_p0sol.py`, a generator of cx46's delta, with its printed figures unchanged and classed DIGEST RE-PIN and GENERATOR
+DATA (text) there, its reason reading `eff28be3:v2/docs/records/int30/CLASSIFICATION.md:68` `no figure or verdict word moved`: rows 2,
+3 and 4 are that case; row 9's moved citation line numbers are also set 30's rows 1 and 13 (one line of a delta file changed, RECORD TEXT). Read with
+the wider rule (a touched reviewed file alone), rows 2, 3, 4 and 9 would be REVIEWED-INPUT CHANGED (4 rows); set 30's rows 1, 13 and 44
+did not take it (each touched a file of cx46's delta and was not classed REVIEWED-INPUT CHANGED). W44's choice of the narrower reading
+(a SESSION decision under the owner's standing rule of 26 September 2026) now rests on those precedents; reversed by re-classing the
+four rows and recounting section 2. The reviewed OUTPUTS these generators write (for example `l4e11_power.out`, `l4e9_power_path.out`,
+`l9t5_f01.out`, `l8r2_gndret.out`, `efuse_check.out`) move only at the integration, in the rows that are placeholders here; each
+placeholder row is classed under the second sentence when filled, against the reviewed tree (the files present at `4d0ff8a2`): an
+output that prints a figure or state different from the reviewed one carries another row's change and is REVIEWED-INPUT CHANGED (set
+30's `RESULT.md` lines 114 to 115 apply the sentence to a regeneration the same way).
 
 **The classes (W39's fixed set; a commit carrying more than one kind of change carries each, the first the most material).**
 
-- `REVIEWED-INPUT CHANGED`: as quoted above; a regenerated output that carries another row's change into a reviewed file is classed so
-  too; a reviewed file whose changed lines are all digests is `DIGEST RE-PIN`.
-- `RECORD TEXT`: prose, citations, quotes, patch rows, notes, an apply script's carried text; no figure, state or limit of a reviewed file.
+- `REVIEWED-INPUT CHANGED`: set 30's rule as quoted above, its second sentence read as ruled (reading A); a file of the delta whose
+  changed lines are all digests is `DIGEST RE-PIN`.
+- `RECORD TEXT`: prose, citations, quotes, patch rows, notes, an apply script's carried text; no figure, state or limit of a reviewed
+  file, and no other row's change carried into a file of the reviewed tree.
 - `GENERATOR DATA (text)`: a generator's printed text or data rows changed without a computed figure changing (here: the input lines the
   converted generators print for their texts).
 - `TEST`: tests and their expectations only.
@@ -82,9 +109,9 @@ those four and recounting section 2. The reviewed OUTPUTS these generators write
 | 12 | `a7a485ab` / `a7a485abf19875055c60f7438e8d3fe24cdeb344` | 2026-10-06 16:15:55 | chore(records): Q-55 for set 32, V-E16's row 3 takes N1a's annotation as the register's R-176 row 3 carries it, delivered as apply_q55_ve16.py for the merged tree (with test_w8l5's tree check and test_l5pwr's L5-F09 d reading), and the record's README with Q-53's reading of the estimator [MESHSAT-1357] | fnd/s32small (W40, Q-59 (Q-55)) | 2: v2/docs/records/s32small/ (2) | RECORD TEXT + TOOLING | `v2/docs/records/s32small/apply_q55_ve16.py` (241 lines) carries N1a's annotation into V-E16 row 3 of `HW-FW-CONTRACT.md` as the register's R-176 row 3 carries it, with `test_w8l5.py`'s tree check and `test_l5pwr.py`'s L5-F09 d reading, for set 32's merged tree (nothing applied on this branch: main lacks the files' set 31 state); the record's README (88 lines) with Q-53's estimator readings; `HW-FW-CONTRACT.md` is not a file cx46 read; once applied it moves `l4e11_power.out` (a file cx46 read) through the `hwfw` pin, which is the integration's row |
 | 13 | `44891f15` / `44891f15efd0181ecae64d10a6230c7959b0b23c` | 2026-10-06 16:51:53 | chore(records): checkpoint, Q-65 for set 32, Q-55's change record row in HW-FW-CONTRACT.md and the register's annotated U5 line as TP-SOLAR.md's own quote, as edits 5 and 6 of apply_q55_ve16.py with test_w8l5's check of both [MESHSAT-1357] | fnd/s32small (W47, Q-65) | 2: v2/docs/records/s32small/ (2) | RECORD TEXT + TOOLING | `v2/docs/records/s32small/apply_q55_ve16.py` gains edits 5 and 6 (+130 -12): one change-record row for Q-55 appended in W8's form to `HW-FW-CONTRACT.md` after the V-E16 edit, and the register's annotated U5 line entering `TP-SOLAR.md` beside line 297 as its own text quote with a dated lead-in (the quote of record l4e7's page already there stays verbatim), with `test_w8l5.py`'s check of both; the README (+49 -3); nothing applied on this branch; neither page is a file cx46 read; `TP-SOLAR.md` is pinned by `tp_check.out`, which the chain regenerates |
 | 14 | `7b7219a7` / `7b7219a7d0a695b6b866435116905964a68f5578` | 2026-10-06 16:55:09 | chore(records): Q-65 checked on a scratch clone of 3057ae43 with fnd/s32small merged, the results and set 32's added step (regenerate tp_check.out) in record s32small's README [MESHSAT-1357] | fnd/s32small (W47) | 1: v2/docs/records/s32small/ (1) | RECORD TEXT | the README (+32 -1): the script checked on a scratch clone of `3057ae43` with the branch merged (it applies once, to four files; a second run exits 3; a half-applied tree and the branch's own tree are refused), the test counts before and after the apply as the commit message gives them, and set 32's added step (regenerate `tp_check.out`); not a file cx46 read |
-| 15 | `__GATE__` | not determined | the integration's commits on set 32's lineage: the merges of fnd/w34pdftext (one conflict predicted, the annex's line 136) and fnd/s32small onto `__S31_PROMOTED__`, the commit of the converged outputs and of the inputs the chain changes (Q-55's three files, the supplier page's 0e sentence, TP-E11-29's two re-cites, the four typed pins, `L4E8_OUT`), the re-take of the citations into outputs, the merge of this record's branch | set 32's integration branch (the coordinator) | not determined | not determined | filled from git and the chain's log at the adoption; one row per commit (a regenerated output carrying a row's change into a reviewed file is classed by the rule above) |
-| 16 | `__REKEY__` | not determined | the re-key's commit of record l4e7's results cache, after the converged commit and its independent read | set 32's integration branch (the coordinator) | not determined | not determined | filled from git at the adoption |
-| 17 | `__CANDIDATE__` | not determined | set 32's candidate commit (the re-key's dependents, the evidence install, `candidate_guard record`) | set 32's integration branch (the coordinator) | not determined | not determined | filled from git at the adoption |
+| 15 | `__GATE__` | not determined | the integration's commits on set 32's lineage: the merges of fnd/w34pdftext (one conflict predicted, the annex's line 136) and fnd/s32small onto `__S31_PROMOTED__`, the commit of the converged outputs and of the inputs the chain changes (Q-55's three files, the supplier page's 0e sentence, TP-E11-29's two re-cites, the four typed pins, `L4E8_OUT`), the re-take of the citations into outputs, the merge of this record's branch | set 32's integration branch (the coordinator) | not determined | not determined | filled from git and the chain's log at the adoption; one row per commit, classed under the second sentence when filled (a regenerated output carrying a row's change into a file of the reviewed tree is REVIEWED-INPUT CHANGED, reading A) |
+| 16 | `__REKEY__` | not determined | the re-key's commit of record l4e7's results cache, after the converged commit and its independent read | set 32's integration branch (the coordinator) | not determined | not determined | filled from git at the adoption; classed under the second sentence when filled |
+| 17 | `__CANDIDATE__` | not determined | set 32's candidate commit (the re-key's dependents, the evidence install, `candidate_guard record`) | set 32's integration branch (the coordinator) | not determined | not determined | filled from git at the adoption; classed under the second sentence when filled |
 
 ## 2. Summary
 

@@ -53,8 +53,9 @@ every commit named, every count and every placeholder.
 class per row: REVIEWED-INPUT CHANGED 0; RECORD TEXT 7; GENERATOR DATA (text) 0; TEST 0; DIGEST RE-PIN 0; MERGE 0; TOOLING 7; total 14.
 4 of the 14 touch a file cx46 read (8 files: seven generators' input route and the annex's citation line numbers); each is **UNREVIEWED
 since cx46**, never credited. None is classed REVIEWED-INPUT CHANGED, because none changes a figure, state word, composition, case,
-requirement or limit in a reviewed file (a SESSION decision under the owner's standing rule of 26 September 2026, stated with its wider
-alternative, four rows, in that file). The integration's own commits (the merges, the converged outputs, the re-key, the candidate) are
+requirement or limit in a reviewed file and none carries another row's change into a file of the reviewed tree (set 30's rule, line 11
+of `records/int30/CLASSIFICATION.md`, read as the coordinator ruled on 6 October 2026, reading A; set 30's row 44 the precedent; W44's
+SESSION decision under the owner's standing rule of 26 September 2026, stated with its wider alternative, four rows, in that file). The integration's own commits (the merges, the converged outputs, the re-key, the candidate) are
 placeholder rows there; the outputs they regenerate include files cx46 read.
 
 ### 2a. The branches, in the chain's merge order
