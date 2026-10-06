@@ -1,0 +1,203 @@
+Technical Data ELX1135                      Effective December 2021
+
+
+
+
+SCF9550
+9.5 mm x 5.0 mm Surface mount self-control fuse
+
+                                                                  Applications
+                                                                  •   Notebook and laptop computing
+                                                                  •   Handheld electric power tools
+                                                                  •   Battery powered household appliances
+
+
+                                                                  Agency information
+                                                                  cURus recognition file number:
+                                                                  E19180, Guide JDYX2 and JDYX8
+
+            Product features
+            •   Surface mount, 3 terminal fuse
+            •   Provides overcurrent and
+                overcharging protection
+                                                                  Environmental compliance
+            •   Integrated thermal element provides
+                triggerable operation                                               HALOGEN
+
+
+            •   Ideal for battery powered electronics                               HF
+                                                                                    FREE
+            •   A unique fusible device provides fast
+                acting performance
+            •   Moisture sensitivity level (MSL): 1
+
+                                                                  Ordering part number
+                                                                                              SCF9550- 30 -01
+
+                                                                  Family code
+
+                                                                  Ampere rating
+            Equivalent circuit diagram
+                                                                  Number of cells
+Technical Data ELX1135                                                                                                                             SCF9550﻿
+Effective January 2022                                                                                       9.5 mm x 5.0 mm Surface mount self-control fuse﻿
+                                                                                                                                                           ﻿﻿
+Electrical characteristics
+
+
+    Condition of test                 Opening time
+
+    100% of current rating            1 hour minimum
+    200% of current rating            60 seconds maximum
+    Operating voltage                 60 seconds maximum
+
+
+
+Product specifications
+
+                         Current         Voltage                               Operating             Breaking
+                         rating          rating1       Heater DCR              voltage               capacity    Fuse DCR    Applicable                       Agency approval
+Part number              (A)             (Vdc)         (Ω)                     (V)                   (A)         (mΩ)        cells in series   Part Marking   cURus
+
+SCF9550-30-01            30              62            0.8 - 1.2               4.0 - 6.6             80          1.0 - 2.5   1                 30A1K          √
+SCF9550-30-02            30              62            1.1 - 2.3               5.6 - 9.0             80          1.0 - 2.5   2                 30A2K          √
+SCF9550-30-03            30              62            3.2 - 5.2               8.4 - 13.2            80          1.0 - 2.5   3                 30A3K          √
+SCF9550-30-05            30              62            4.8 - 8.0               10.5 - 23.5           80          1.0 - 2.5   4-5               30A4K          √
+SCF9550-30-07            30              62            18.8 - 31.2             20.2 - 31.5           80          1.0 - 2.5   6-7               30A7K          √
+SCF9550-30-08            30              80            24.0 - 52.0             26.4 - 36.0           80          1.0 - 2.5   8                 30A9K2
+SCF9550-30-10            30              80            40.0 - 60.0             28.0 - 47.0           80          1.0 - 2.5   10                30A10K         √
+SCF9550-30-12            30              80            35.0 - 70.0             33.6 - 54.0           80          1.0 - 2.5   12                30A10K2
+SCF9550-30-13            30              80            65.0 - 100.0            36.2 - 58.5           80          1.0 - 2.5   13                30A10K4
+SCF9550-30-14            30              80            40.0 - 60.0             28.0 - 62.0           80          1.0 - 2.5   10-14             30A14K         √
+SCF9550-30-17            30              80            59.0 - 120.0            42.0 - 74.8           80          1.0 - 2.5   15-17             30A14K3
+SCF9550-30-08L           30              80            10.0 - 20.0             20.0 - 30.0           80          1.0 - 2.5   8 LFP             30A9K2P
+SCF9550-30-14L           30              80            36.0 - 60.0             35.0 - 51.8           80          1.0 - 2.5   14 LFP            30A14KP
+SCF9550-30-16L           30              80            42.0 - 70.0             36.0 - 62.0           80          1.0 - 2.5   16 LFP            30A14K3P
+SCF9550-30-17L           30              80            54.0 - 90.0             42.5 - 62.9           80          1.0 - 2.5   17 LFP            30A14K4P
+SCF9550-30-20L           30              80            60.0 - 100.0            50.0 - 74.0           80          1.0 - 2.5   20 LFP            30A14K7P
+SCF9550-45-03            45              80            1.9 - 2.9               9.8 - 13.5            120         0.5 - 1.5   3                 45A3K          √
+SCF9550-45-04            45              80            3.4 - 5.1               13.0 - 18.4           120         0.5 - 1.5   4                 45A4K          √
+SCF9550-45-05            45              80            5.6 - 8.4               16.7 - 23.5           120         0.5 - 1.5   5                 45A5K          √
+SCF9550-45-06            45              80            7.4 - 11.8              19.8 - 27.0           120         0.5 - 1.5   6                 45A5K2
+SCF9550-45-07            45              80            10.0 - 15.0             22.3 - 31.5           120         0.5 - 1.5   6-7               45A7K          √
+SCF9550-45-08            45              80            14.4 - 21.5             26.7 - 37.6           120         0.5 - 1.5   8                 45A8K          √
+SCF9550-45-10            45              80            22.0 - 33.0             33.0 - 47.0           120         0.5 - 1.5   9-10              45A10K         √
+SCF9550-45-14            45              80            38.5 - 75.0             47.2 - 62.0           120         0.7 - 1.4   13-14             45A14K         √
+SCF9550-45-16            45              80            55.0 - 95.0             56.0 - 70.4           120         0.7 - 1.4   16                45A14K6
+SCF9550-45-17            45              80            64.0 - 104.0            59.5 - 76.0           120         0.5 - 1.5   17                45A14K4
+SCF9550-45-20            45              80            72.0 - 145.0            70.0 - 90.0           120         0.5 - 1.5   20                45A14K7
+SCF9550-45-14L           45              80            27.0 - 41.0             36.4 - 51.8           120         0.5 - 1.5   14 LFP            45A14KP
+SCF9550-45-15L           45              80            29.2 - 48.4             40.0 - 54.0           120         0.5 - 1.5   15 LFP            45A14K2P
+SCF9550-45-16L           45              80            35.6 - 52.4             41.6 - 59.2           120         0.5 - 1.5   16 LFP            45A14K3P
+SCF9550-45-17L           45              80            39.6 - 59.2             44.2 - 62.9           120         0.5 - 1.5   17 LFP            45A14K4P
+SCF9550-45-20L           45              80            55.0 - 75.5             50.0 - 74.0           120         0.5 - 1.5   20 LFP            45A14K7P
+SCF9550-45-24L           45              80            85.0 - 156.5            72.0 - 92.0           120         0.5 - 1.5   24 LFP            45A14K11P
+
+1. Rated voltage is the maximum voltage that the fuse can block, not the action voltage of the heater assembly
+
+
+
+
+2             www.eaton.com/electronics
+SCF9550 ﻿                                                                               Technical Data ELX1135
+9.5 mm x 5.0 mm Surface mount self-control fuse﻿                                                 Effective January 2022
+﻿﻿
+     Dimensions- mm
+     Drawing not to scale
+
+
+
+
+     Recommended pad layout
+
+
+
+
+     Part marking
+
+
+                                         1. Rated current: 30A, 45A
+                                         2. Number related to series number
+                                         3. Length width size code: K: 9.5 × 5.0 mm
+                                         4. Extension for (2)
+                                         5. Year: D: 2018; E: 2019……
+                                         6. Week of year: 01, 02……52
+                                         7. Running number: 01, 02……
+
+
+
+
+                                                                                      www.eaton.com/electronics      3
+Technical Data ELX1135                                                                                         SCF9550﻿
+Effective January 2022                                                   9.5 mm x 5.0 mm Surface mount self-control fuse﻿
+                                                                                                                       ﻿﻿
+General specifications
+
+
+Operating temperature: -20 °C to +60 °C
+Storage temperature: -10 °C to +40 °C < 90% RH
+Storage duration: 1 year
+High temperature: +105 °C @ 1000 hours
+Humidity: +85 °C @ 85% RH @ 500 hours
+Low temperature: -40 °C @ 500 hours
+
+
+
+
+Packaging information- mm
+                                                                                             Code        (mm)
+Supplied in tape and reel packaging, 3000 parts per 13” diameter reel. (EIA-481 compliant)
+                                                                                             E1          1.75 ± 0.10
+                                                                                             F           7.50 ± 0.10
+                                                                                             P2          2.00 ± 0.10
+                                                                                             D0          1.50 + 0.1/-0
+                                                                                             D1          1.50 + 0.1/-0
+                                                                                             P0          4.00 ± 0.10
+                                                                                             10P0        40.0 ± 0.20
+                                                                                             W           16.00 ± 0.30
+                                                                                             P           8.00 ± 0.10
+                                                                                             A0          5.3 ± 0.10
+                                                                                             B0          9.8 ± 0.10
+                                                                                             K0          2.3 ± 0.10
+                                                                                             T           0.30 ± 0.05
+
+
+
+
+Direction of taping
+The direction shall be seen from the top cover tape side
+
+
+
+
+4           www.eaton.com/electronics
+SCF9550 ﻿                                                                                                                              Technical Data ELX1135
+9.5 mm x 5.0 mm Surface mount self-control fuse﻿                                                                                                    Effective January 2022
+﻿﻿
+Solder reflow profile
+
+
+
+
+                         Life Support Policy: Eaton does not authorize the use of any of its products for use in life support devices or systems without the express written
+                         approval of an officer of the Company. Life support systems are devices which support or sustain life, and whose failure to perform, when properly used
+                         in accordance with instructions for use provided in the labeling, can be reasonably expected to result in significant injury to the user.
+
+                         Eaton reserves the right, without notice, to change design or construction of any products and to discontinue or limit distribution of any products. Eaton also
+                         reserves the right to change or update, without notice, any technical information contained in this bulletin.
+
+
+
+                         Eaton
+                         Electronics Division
+                         1000 Eaton Boulevard
+                         Cleveland, OH 44122
+                         United States
+                         Eaton.com/electronics
+
+                         © 2022 Eaton                                                                                               Follow us on social media to get the
+                         All Rights Reserved                                  Eaton is a registered trademark.                      latest product and support information.
+                         Printed in USA
+                         Publication No. ELX1135 BU-ELX21143                  All other trademarks are property
+                         January 2022                                         of their respective owners.
+

@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/pdi/pdi-e2370ks0c1-flyer.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/pdi/pdi-e2370ks0c1-flyer.pdf",
+ "pdf_sha256": "266e2b62a3c88a08038e27c151982657a8395ef447e15549b5aebcaa2368333d",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/pdi/pdftext/pdi-e2370ks0c1-flyer.layout.txt",
+ "text_bytes": 638,
+ "text_sha256": "d54838d4e14170b565fa836b61b7ecdc5827bbc9682a3caf69fb75c0e2e0bdd0"
+}

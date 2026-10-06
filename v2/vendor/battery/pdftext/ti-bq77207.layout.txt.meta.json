@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/battery/ti-bq77207.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/battery/ti-bq77207.pdf",
+ "pdf_sha256": "45c1c99e2d303be8bcf1a2b1eea8275f657c7c80170bda7c2778042a688295cb",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/ti-bq77207.layout.txt",
+ "text_bytes": 104415,
+ "text_sha256": "c265abfba80feb1698c97546119b923e0b0bd88a28fe04fc352a3a1ba823f9bf"
+}

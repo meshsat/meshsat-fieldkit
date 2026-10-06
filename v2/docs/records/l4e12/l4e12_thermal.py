@@ -121,6 +121,50 @@ M507 = "v2/vendor/standards/mil-std-810h-method-507-6.md"
 TRACE = "v2/docs/records/l3batt/load_trace.out"
 REPLAY = "v2/docs/records/l4e/l4e_replay.out"
 RTA = "v2/docs/reviews/READY-TO-ACT.md"
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; the closing list prints each text's sha256 among the pins.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4e12
+PDFTEXT = {
+    "v2/vendor/bosch/bosch-bme688.pdf": [["-layout"]],
+    "v2/vendor/bulgin/bulgin-4000-series-sealed-usb-c.pdf": [["-layout"]],
+    "v2/vendor/bulgin/bulgin-pxp4043c-usb-c-rear-panel.pdf": [["-layout"]],
+    "v2/vendor/cm5/cm5-datasheet.pdf": [["-layout"]],
+    "v2/vendor/diodes/diodes-ap2112-ldo.pdf": [["-layout"]],
+    "v2/vendor/diodes/diodes-ap63200-series-buck.pdf": [["-layout"]],
+    "v2/vendor/diodes/diodes-ap64500.pdf": [["-layout"]],
+    "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf": [["-layout"]],
+    "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf": [["-layout"]],
+    "v2/vendor/omron/omron-g6k-signal-relay.pdf": [["-layout"]],
+    "v2/vendor/pdi/pdi-e2370ks0c1-flyer.pdf": [["-layout"]],
+    "v2/vendor/pulse/pulse-h5007nl.pdf": [["-layout"]],
+    "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf": [["-layout"]],
+    "v2/vendor/seals/floydbell-mc-09-530-q-spec.pdf": [["-layout"]],
+    "v2/vendor/seals/nkk-ip-rated-switches-accessories.pdf": [["-layout"]],
+    "v2/vendor/sensirion/sgp41-datasheet.pdf": [["-layout"]],
+    "v2/vendor/storage/cervoz-m2-2242-nvme-titan.pdf": [["-layout"]],
+    "v2/vendor/switches/ck-atp16-series-datasheet.pdf": [["-layout"]],
+    "v2/vendor/switches/ck-atp19-series-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/bq25731-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-csd17577q5a-slps516.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-csd17578q5a-slps526.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tlv755p-c404027.pdf": [["-layout"]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-pcm2912a.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-sn74lv1t08.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-sn74lvc2g07.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tlv758p.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tmp117-temperature.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tps62933.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tusb2046b.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tusb8041.pdf": [["-layout"]],
+    "v2/vendor/wifi/asiarf-AW7915-AED_V1.pdf": [["-layout"]],
+    "v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TOP, "v2", "docs", "records", "_lib", "pdftext.py"))
+PDFT = importlib.util.module_from_spec(_PTS)   # PT names a page here
+_PTS.loader.exec_module(PDFT)
 PINS = {
     L4E8_OUT: "c6181037bede1fec6b183bcb1d8eab66e0023bc23ae5e5374be4d22eedaf4333",
     L4E10_OUT: "2dffb64efb295450d50fe0a963d384105aa3a558ca0389c585d692c0b482fc41",
@@ -256,10 +300,7 @@ _PDF = {}
 
 def pdf(rel):
     if rel not in _PDF:
-        r = subprocess.run(["pdftotext", "-layout", path(rel), "-"], capture_output=True)
-        if r.returncode != 0:
-            refuse(3, "pdftotext failed on %s" % rel)
-        _PDF[rel] = r.stdout.decode("utf-8", "replace")
+        _PDF[rel] = PDFT.pdf_text(TOP, rel, ["-layout"], PDFTEXT, "v2/docs/records/l4e12")
     return _PDF[rel]
 
 
@@ -593,7 +634,7 @@ def base():
         got = sha(rel)
         if got != PINS[rel]:
             refuse(2, "%s is not the pinned file (%s)" % (rel, got[:16]))
-    R = {"pins": dict(PINS)}
+    R = {"pins": dict(PINS, **{t: h for t, h, _held in PDFT.inputs(TOP, PDFTEXT)})}
     # ======================================================== 0: the reproductions
     outs = {rel: open(path(rel), "rb").read() for rel in (PB_OUT, PB_JSON, RED2_OUT)}
     with tempfile.TemporaryDirectory() as td:

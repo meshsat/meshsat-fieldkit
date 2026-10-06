@@ -51,6 +51,19 @@ import track_current as tc  # noqa: E402
 import via_current as vc    # noqa: E402
 import stackup_write as sw  # noqa: E402
 
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 among the pins (keys pdftext NN).
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9stk
+PDFTEXT = {
+    "v2/vendor/battery/amass-xt60-spec-tme.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout"]],
+    "v2/vendor/keystone/littelfuse-297-ficcorp.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {
     "track_current": "v2/ecad/tools/track_current.py",
     "via_current": "v2/ecad/tools/via_current.py",
@@ -108,11 +121,7 @@ def need(t, pat, what, flags=re.M | re.S):
 
 
 def pdf(key):
-    try:
-        r = subprocess.run(["pdftotext", "-layout", rel(PINS[key]), "-"], capture_output=True, check=True)
-    except (OSError, subprocess.CalledProcessError) as e:
-        refuse("pdftotext could not read %s (%s)" % (PINS[key], e))
-    return r.stdout.decode("utf-8", "replace")
+    return PT.pdf_text(ROOT, PINS[key], ["-layout"], PDFTEXT, "v2/docs/records/l9stk")
 
 
 BAT_NETS = ("CH_BATDRV", "CH_BATQ", "VBAT")     # nfet's gate, drain and source for a battery FET (TI's Figure 9-1: BATDRV, toward RSR, VSYS)
@@ -615,7 +624,8 @@ def compute():
     for k, p in PINS.items():
         if not os.path.isfile(rel(p)):
             refuse("pinned input %s (%s) is missing" % (k, p))
-    R = {"pins": {k: (p, sha(p)) for k, p in PINS.items()}}
+    R = {"pins": dict({k: (p, sha(p)) for k, p in PINS.items()},
+                      **{"pdftext %02d" % i: (t, (h or "ABSENT")[:16]) for i, (t, h, _held) in enumerate(PT.inputs(ROOT, PDFTEXT), 1)})}
     I = read_inputs()
     read_more(I)
     R["in"] = I

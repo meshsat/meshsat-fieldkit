@@ -178,6 +178,26 @@ def inputs(top, declared):
     return sorted(set(rows))
 
 
+def merge(*tables):
+    """One PDFTEXT table from several (a script that reads through a module it imports prints that module's texts with its own)."""
+    out = {}
+    for t in tables:
+        for pdf, opts in (t or {}).items():
+            for o in opts:
+                if tag(o) not in {tag(x) for x in out.get(pdf, [])}:
+                    out.setdefault(pdf, []).append(list(o))
+    return out
+
+
+def declared_in(path):
+    """The module-level PDFTEXT literal of the script at path, read with ast (the script is not imported); {} when it has none."""
+    import ast
+    for node in ast.parse(open(path, encoding="utf-8").read(), path).body:
+        if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "PDFTEXT" for t in node.targets):
+            return ast.literal_eval(node.value)
+    return {}
+
+
 def _rel(p):
     """A path as the messages print it: repository-relative where it can be (no host path reaches an output)."""
     p = os.path.abspath(p)

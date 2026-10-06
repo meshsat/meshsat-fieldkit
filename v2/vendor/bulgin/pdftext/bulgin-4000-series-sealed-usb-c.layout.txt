@@ -1,0 +1,268 @@
+BUCCANEER FOR DATA
+4000 Series - C-Type USB Buccaneer
+Sealed C-Type USB Cables
+
+
+
+
+    IP66, IP68 and IP69K rated      EN60068-2-52 Test Kb Salt Mist (Cyclic) Marine Severity Level 1
+
+    USB3.2 supported                Data rates up to 20 Gbps
+
+    Plug and play capability        Tamperproof Construction
+
+    Shielded system                 Colour coded O-rings & washers for easy
+                                    identificaiton purposes
+    Secure, proven locking system
+
+
+
+
+                                                                                  Circular Data Connectors 73
+BUCCANEER FOR DATA
+4000 Series - C-Type USB Buccaneer
+Sealed C-Type USB Cables
+
+
+
+               Sealed ‘C‘ type to Standard ‘C’
+                                                    •    Sealed Plug USB ‘C’ to Standard Plug
+                                                         USB ‘C’
+                                                    •    Available in 1, 2, 3 & 5m lengths
+                                                    •    Plug variant mates with PXP4043/C
+                                                    •    USB 3.2 Gen 2x2 Supported
+
+
+
+                                 PXP4041/C/C
+
+Part No.                      Length                Description
+
+PXP4041/C/C/1M00              1.0m                  IP-sealed ‘C’ type to Standard ‘C’ type USB
+PXP4041/C/C/2M00              2.0m                  IP-sealed ‘C’ type to Standard ‘C’ type USB
+PXP4041/C/C/3M00              3.0m                  IP-sealed ‘C’ type to Standard ‘C’ type USB
+PXP4041/C/C/5M00              5.0m                  IP-sealed ‘C’ type to Standard ‘C’ type USB
+
+
+               Sealed ‘C‘ type to Standard ‘A’
+                                                    •    Sealed Plug USB ‘C’ to Standard
+                                                         Plug USB ‘A’
+                                                    •    Available in 1, 2, 3 & 5m lengths
+                                                    •    Plug variant mates with PXP4043/C
+                                                    •    USB 3.2 Gen 1 Supported
+
+
+
+                                 PXP4040/C/A
+
+Part No.                   Length                   Description
+
+PXP4040/C/A/1M00           1.0m                     IP-sealed ‘C’ type to Standard ‘A’ type USB
+PXP4040/C/A/2M00           2.0m                     IP-sealed ‘C’ type to Standard ‘A’ type USB
+PXP4040/C/A/3M00           3.0m                     IP-sealed ‘C’ type to Standard ‘A’ type USB
+PXP4040/C/A/5M00           5.0m                     IP-sealed ‘C’ type to Standard ‘A’ type USB
+
+
+                              Rear Panel Mount
+                                                    •    Sealed Socket USB ‘C’ Connector
+                                                    •    Leaded with 2x 12 way header
+                                                    •    Socket variant mates with
+                                                    •    PXP4040/C/A and PXP4041/C/C
+                                                         type cables
+                                                    •    USB 3.2 Gen 2 Supported
+                                   PXP4043/C
+
+Part no.               Description
+
+PXP4043/C               IP-sealed ‘C’ type USB, rear panel mounted. 2x 12 way header connector at rear
+
+
+Sealing Caps                                                                                         Part no.   Description
+                                                                                                     PXP4081    Sealing cap for use with
+                                                    •    Sealing caps to maintain IP rating                     PXP4040/C/A and PXP4041/C/C
+                                                         when connectors are not in use
+                                                                                                     PXP4083    Sealing cap for use with
+                                                                                                                PXP4043/C
+
+
+
+
+O-ring & washer pack
+
+                                                 Part no.         Description
+                                                 PXP4089/YL       Yellow coloured O-ring and washer pack
+                                                 PXP4089/BL       Blue coloured O-ring and washer pack
+                                                 PXP4089/RD       Red coloured O-ring and washer pack
+                                                 PXP4089/WH       White coloured O-ring and washer pack
+                                                 PXP4089/GN       Green coloured O-ring and washer pack
+
+
+
+74 Circular Data Connectors
+BUCCANEER FOR DATA
+4000 Series - C-Type USB Buccaneer
+Sealed C-Type USB Cables
+
+Cables & connectors
+
+Mechanical
+Sealing                         IP69K, DIN40050-9
+                                IP68, EN60529:1992+A2:2013
+                                (10m depth for 2 weeks)
+                                IP66, EN60529:1992+A2:2013
+Panel Mount Nut                 1.0 - 1.1Nm (91lb.in)
+Operating temperature           -40°C to +80°C
+Salt Mist                       EN60068-2-52 Test Kb Salt Mist
+                                (Cyclic) Marine Severity Level 1
+Electrical
+No. of Contacts                 2x 12 way
+Current rating                  5A
+Voltage rating                  ≤ 30V AC
+Contact resistance              40m Ω max.
+USB3.2 Gen 1:                   5Gbps (2m maximum length)
+USB3.2 Gen 2:                   10Gbps (1m maximum length)
+USB3.2 Gen 1x2:                 10Gbps (2m maximum length)
+USB3.2 Gen 2x2:                 20Gbps (1m maximum length)
+
+
+
+
+Materials - Re-wireable and Panel Connectors
+Shell material                  Stainless Steel
+Shell plating                   Nickel
+Contact material                Copper Alloy
+Contact plating                 30 micro inch Gold
+Connector body & locking ring   PC/PBT
+Panel connector                 PC/PBT
+Flammability rating             UL94V-0
+‘O’ rings                       Silicone
+Mating cycles                   1,000
+RoHS                            Compliant
+
+Materials - cable
+Cable Jacket                    PVC (black)
+Screen                          Tinned copper braid
+Flammability                    UL94V-0
+RoHS                            Compliant
+
+
+
+
+Cable construction - PXP4040/C/A, PXP4041/C/C & PXP4043/C
+
+Jacket
+
+Braid
+
+
+AL / MYLAR
+
+
+
+                                                     Conductor
+MYLAR
+                                                     Insulation
+
+
+                                               Drain
+
+
+
+
+                                                                   Circular Data Connectors 75
+BUCCANEER FOR DATA
+4000 Series - C-Type USB Buccaneer
+
+PXP4043/C
+
+                     Wire             Label                  Type                 Cable Number             PCB Header             PCB Header
+                    Colour                                                                                  Plugs P2               Plugs P3
+
+     A1               -               Gnd                   Braid                         -                       1                      -
+     A2            Orange             TxI+            Shielded Twisted                    3                       2                      -
+                                                    (                   )                 3
+     A3            Brown              TxI-            Shielded Twisted                                            3                      -
+     A4              Red              Vbus                 Power                         11                       4                      -
+     A5             Blue              CC1                  Single                        10                       5                      -
+     A6             White              D+             Shielded Twisted                    5                       6                      -
+                                                    (                   )                 5
+     A7            Green               D-             Shielded Twisted                                            7                      -
+     A8            Orange             Sbu1                 Single                         8                       8                      -
+     A9              Red              Vbus                 Power                         11                       9                      -
+     A10            Blue              RX2-            Shielded Twisted                    2                      10                      -
+                                                    (                   )
+     A11            Black             RX2+            Shielded Twisted                    2                      11                      -
+     A12              -               Gnd                   Braid                         -                      12                      -
+     B1               -               Gnd                   Braid                         -                       -                     12
+     B2             White             Tx2+            Shielded Twisted                    1                       -                     11
+                                                    (                   )                 1
+     B3              Red              Tx2-            Shielded Twisted                                            -                     10
+     B4              Red              Vbus                 Power                         11                       -                     9
+     B5            Yellow             CC2                  Single                         9                       -                     8
+     B6            Purple              D+                Twisted Pair                     6                       -                     7
+                                                       (              )
+     B7             Grey               D-                Twisted Pair                     6                       -                     6
+     B8            Brown              Sbu2                 Single                         7                       -                     5
+     B9              Red              Vbus                 Power                         11                       -                     4
+     B10           Yellow             RXI-            Shielded Twisted                    4                       -                     3
+                                                    (                   )                 4
+     B11           Green              RXI+            Shielded Twisted                                            -                     2
+     B12              -               Gnd                   Braid                         -                       -                     1
+
+
+
+   Receptacle Plug Colour Key:
+
+   A1, A12, B12, B1:     Cable Ground
+   A2, A3, B3, B2:       High Speed Path (TX for USB or for DP Alt mode)
+   A4, A9, B9, B4:       Cable Bus Power
+   A6, A7, B7, B6:       USB 2.0 Interface
+   A8, B8:		             For Sideband Use (not used for USB)
+   A5, B5:		             Plug Configuration Detection (- One becomes Vconn, for cable or adaptor power.  - CC is used for USB-PD communication)
+   A10, A11, B11, B10:   High Speed Data Path (RX for USB, or TX for DP Alt Mode)
+
+
+
+
+76 Circular Data Connectors
+BUCCANEER FOR DATA
+4000 Series - C-Type USB Buccaneer
+
+PXP4040/C/A
+
+                                     Wire Colour                     Label                  Type               Cable Number               USB-3 Plug P2
+
+   A1, B1, A12, B12                      -                           Gnd                   Braid                       -                        4, 7
+    A4, B4, A9, B9                      Red                         Vbus                     -                      10, 11                       1
+          A5                             -                           CC                      -                         -                         -
+          B5                             -                          Vconn                    -                         -                         -
+          A6                           Green                         Dp 1               Twisted Pair                  5                          3
+                                                                                      (              )
+          A7                           White                          D-                Twisted Pair                  5                          2
+          A2                   Blue (Brown Jacket)                 SSTXp 1              Twisted Pair                  1                          6
+                                                                                      (              )
+          A3                   White (Brown Jacket)                SSTXn 1              Twisted Pair                  1                          5
+         B11                    Blue (Red Jacket)                  SSRXp 1              Twisted Pair                  2                          9
+                                                                                      (              )
+         B10                    White (Red Jacket)                 SSRXn 1              Twisted Pair                  2                          8
+         Shell                           -                             -                   Braid                    Screen                     Shield
+
+
+
+
+    Wiring Notes:
+
+    1. Cable used has shielded twisted pairs with drain wires used for all SDP’s.
+    2. Pin A5 (CC) of the USB Type-C Plug shall be connected to Vbus through a 56 K Ω ±5% resistor.
+    3. Contaacts B6 and B7 are not connected in the USB Type-C Plug.
+    4. All Vbus pins are connected together within the USB Type-C Plug. A Bypass Capacitor is required between the ground pins in the USB Type-C Plug side
+        of the cable. The Bypass Capacitor is 10nF ± 20%. The bypass capacitor shall is as close as possible to the power supply pad.
+    5. All ground return pins are connected together within the USB Type-C Plug.
+    6. Shield and Gnd grounds are connected within the USB Type-C and USB 3.1 standard-A plugs on both ends of the cable assembly.
+    7. All USB Type-C plug pins that are not listed in this table shall be open (not connected).
+
+
+
+
+                                                                                                                               Circular Data Connectors 77
+

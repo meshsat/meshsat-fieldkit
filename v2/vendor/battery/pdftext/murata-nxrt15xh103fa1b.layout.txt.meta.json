@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/battery/murata-nxrt15xh103fa1b.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/battery/murata-nxrt15xh103fa1b.pdf",
+ "pdf_sha256": "81a99339fb677f38c90fcd3778cebf701c8bbead6a941d36694cc10849f78f57",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/murata-nxrt15xh103fa1b.layout.txt",
+ "text_bytes": 9255,
+ "text_sha256": "b32d1ad9c1100d1259846fa02c68d66c9ec10d68833f340c404330c1aac110cf"
+}

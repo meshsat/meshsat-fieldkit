@@ -1,0 +1,693 @@
+swiss world connects
+SPRING - LOADED
+CONNECTORS
+SPRING–LOADED CONNECTORS
+                                                                                                         QUICK SELECTOR CHART
+                                                                                                         SPRING-LOADED CONNECTORS AND PAD CONNECTORS
+
+WWW.PRECIDIP.COM   TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+
+GRID                                                1.25 mm                          2 mm                                2.54 mm
+
+
+
+
+                                                                                            DOUBLE ROW
+
+
+
+
+                                                                                                                                   DOUBLE ROW
+                                                                        SINGLE ROW
+
+
+
+
+                                                                                                            SINGLE ROW
+                                                       SINGLE ROW
+SLC CONNECTORS                                                                        SEE PAGE
+Straight                                              32                                                   34                      34
+solder tail
+
+
+
+Right angle                                           32
+solder tail
+
+
+Surface mount                                                          33                   33            35, 36              35, 36
+perpendicular
+
+
+Surface mount                                                                                              37                      37
+perpendicular
+with positioning pins
+
+Surface mount                                                                                              38
+parallel
+
+
+SIM card socket                                                                                                                    38
+
+
+
+
+PAD CONNECTORS
+Surface mount                                                                                              39                      39
+perpendicular
+
+
+Surface mount                                                                                              39
+parallel
+
+
+
+
+30                                                                  Due to technical progress, all information provided is subject to change without prior notice.
+                                                                                     SPRING-LOADED CONNECTORS
+                                                                                     PAD CONNECTORS
+                                                                                     GENERAL SPECIFICATIONS
+WWW.PRECIDIP.COM      TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+
+
+                                                                                                                                                               SPRING–LOADED CONNECTORS
+The values listed below are general specs applying for PRECI-DIP spring-loaded connectors. Please see individual catalog page for additional and
+product specific technical data.
+
+OPERATING TEMPERATURE RANGE                  -55 ... +125 °C (-55 °… +85 °C with music wire spring)
+CLIMATIC CATEGORY (IEC)                      55/85/21
+OPERATING HUMIDIT Y RANGE                    Annual mean 75%
+MA X. WORKING VOLTAGE                        100 VRMS /150 VDC (2.54 mm grid)
+
+              PRECI-DIP connectors designated « Series Preci-Dip Connector » are recognized by UL LLC and listed under « Connectors for Use
+              in Data, Signal, Control and Power Applications », File Nr. E174442.
+
+
+
+MECHANICAL CHARACTERISTICS                                                                            PACKAGING
+                            BASIC                  LOW RESISTANCE        LOW RESISTANCE
+                                                                                                      • Standard connector packaging is card box.
+                            HOLLOW PISTON T YPE    SHAPED PISTON T YPE   CLIP IN-LINE DESIGN T YPE
+                                                                                                      • SMD mount connectors available on request
+MIN. INITIAL HEIGHT         3 mm                   6 mm                  10 mm                          with Tape & Reel packaging acc. to EIA Standard 481.
+STROKE/HEIGHT RATIO         Max. 0.3               Max. 0.2              Max. 0.15                      These products are marked with the symbol:
+MA X STROKE                 2 mm                   2 mm                  1.5 mm
+MIN. INITIAL SPRING FORCE   0.2 N                  0.2 N                 0.2 N
+
+
+                                                                                                      T & R Packaging
+ELECTRICAL CHARACTERISTICS
+INSUL ATION RESISTANCE BETWEEN ANY TWO ADJACENT CONTACTS          Min. 10’000 M: at 500 VAC           Please consult www.precidip.com for availability,
+CAPACITANCE BETWEEN ANY TWO ADJACENT CONTACTS                     Max. 1 pF                           size of tape, size of reel, number of components
+                                                                                                      per reel, packing units and part numbers.
+ENVIRONMENTAL CHARACTERISTICS
+The sockets withstand the following environmental tests without mechanical
+and electrical defects:
+• Dry heat steady state IEC 60512-11-9.11i / 60068-2-2.Bb: 125 °C, 16 h
+• Damp heat cyclic IEC 60512-11-12.11m / 60068-2-30.Db: 25/55 °C, 90 – 100 %rH,
+  1 cycle of 24 h
+• Cold steady state IEC 60512-11-10.11j / 60068-2-1.A: -55 °C, 2 h
+• Thermal shock IEC 60512-11-4.11d / 60068-2-14.Na: -55/125 °C, 5 cycles 30 min
+• Sinusoidal vibrations IEC 60512-6-4.6d / 60068-2-6.Fc: 10 to 500 Hz, 10 g,
+  1 octave/min, 10 cycles for each axis
+• Shock IEC 60512-6-3.6c / 60068-2-27.Ea: 50 g, 11 ms, 3 shocks in three axis
+During the above two tests, no contact interruption >50 ns does appear.
+
+• Solderability J-STD-002A, Test A, 245 °C, 5 s, solder alloy SnAg3.8Cu0.7
+• Resistance to soldering heat J-STD-020C, 260 °C, 20 s
+• Moisture sensitivity J-STD-020C level 1
+
+
+
+
+Due to technical progress, all information provided is subject to change without prior notice.                                                         31
+                                                                                   SPRING-LOADED CONNECTORS
+                                                                                   1.25 mm GRID / SINGLE ROW / SOLDER TAIL
+
+WWW.PRECIDIP.COM     TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+Fine pitch connectors with spring-loaded contacts (SLC), solder tail. High-rel contacts with clip, patented in-line design.
+
+TECHNICAL SPECIFICATIONS (FOR GENERAL SPECS, SEE PAGE 31)
+INSUL ATOR               Black glass filled polyester PCT-GF30-FR
+FL AMMABILIT Y           UL 94V-O
+PISTON AND BARREL        Brass CuZn36Pb3 (C36000)
+CONTACT CLIP             Beryllium copper (C17200)
+SPRING                   Stainless steel X12 CrNi177, DIN 17224
+MA X. STROKE             1.4 mm
+FORCES                   0.2 N initial             0.36 N at 1/2 stroke
+MECHANICAL LIFE          40'000 cycles
+OPERATING CURRENT        Max. 2 A
+CONTACT RESISTANCE       20 m: (static measurement, halfway position)
+
+ORDERING INFORMATION ROHS COMPLIANT PARTS
+PL ATING CODE            PIN                          PISTON
+
+28                       Tin                          0.3 μm min. gold             See page 178 for plating specs.
+                                                                                   Surface mount miniature SLC connectors available on request.
+                                                                                   Please consult.
+
+
+
+
+8PD-28-0014-01-812
+Straight SLC connector, solder tail, single row
+Standard number of contacts: 14
+Please consult for other pin number or partially equipped connectors
+
+
+
+
+8PC-28-0014-01-828
+Right angle SLC connector, solder tail, single row
+Standard number of contacts: 14
+Please consult for other pin number or partially equipped connectors
+
+
+
+
+32                                                               Due to technical progress, all information provided is subject to change without prior notice.
+                                                                                 SPRING-LOADED CONNECTORS
+                                                                                 2 mm GRID / SINGLE ROW / DOUBLE ROW /SURFACE MOUNT
+
+WWW.PRECIDIP.COM     TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+
+
+                                                                                                                                                        SPRING–LOADED CONNECTORS
+Basic modular connectors with spring-loaded contacts (SLC), surface mount. Contacts with shaped piston design for low profile.
+
+TECHNICAL SPECIFICATIONS (FOR GENERAL SPECS, SEE PAGE 31)
+INSUL ATOR               Black glass filled polyester LCP-GF30-FR
+FL AMMABILIT Y           UL 94V-O
+PISTON AND BARREL        Brass CuZn36Pb3 (C36000)
+SPRING                   Stainless steel X12 CrNi177, DIN 17224
+MA X. STROKE             1.1 / 1.4 mm according to total height
+FORCES                   0.25 N initial            0.7 N at 0.7 mm stroke
+MECHANICAL LIFE          50'000 cycles
+OPERATING CURRENT        Max. 3.5 A / 7A peak
+CONTACT RESISTANCE       10 m: (static measurement, halfway position)
+COPL ANARIT Y
+SMD TERMINATIONS         Max. 0.1 mm (measured on 25 mm long connectors)
+
+
+ORDERING INFORMATION ROHS COMPLIANT PARTS
+PL ATING CODE            BARREL                       PISTON                     See page 178 for plating specs.
+S1                       0.25 μm gold                 0.5 μm gold                NNN number of poles. Replace NNN with the requested number of poles,
+                                                                                 e.g. 821-SS-NNN-30-012101 for a single row version with 16 pins
+                                                                                 becomes 821-SS-016-30-012101.
+
+
+
+
+Bulk :                                T & R Packaging with pick & place cap* :
+821-S1-NNN-30-XXX101                  821-S1-NNN-30-XXX191
+Surface mount SLC connector, low profile, single row
+AVAIL ABILIT Y FROM 2 to 10 contacts
+                    (standard number of contacts: 10)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+Bulk :                                T & R Packaging with pick & place cap* :
+823-S1-NNN-30-XXX101                  823-S1-NNN-30-XXX191
+Surface mount SLC connector, low profile, double row
+AVAIL ABILIT Y FROM 4 to 20 contacts
+                    (standard number of contacts: 20)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+                                                                                      AVAILABLE CONNECTOR HEIGHTS
+                                                                                      INITIAL HEIGHT A (mm)   STROKE S (mm)   X X X CODE
+
+                                                                                      5                       1.1             012
+                                                                                      5.5                     1.1             013
+                                                                                      6                       1.4             014
+                                                                                      6.5                     1.4             015
+
+
+
+
+Due to technical progress, all information provided is subject to change without prior notice.                                                  33
+                                                                                    SPRING-LOADED CONNECTORS
+                                                                                    2.54 mm GRID / SINGLE ROW / DOUBLE ROW / SOLDER TAIL
+
+WWW.PRECIDIP.COM     TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+Low resistance modular connectors with spring-loaded contacts (SLC), solder tail. Contacts with improved, shaped piston design.
+
+TECHNICAL SPECIFICATIONS (FOR GENERAL SPECS, SEE PAGE 31)
+INSUL ATOR                Black glass filled polyester PCT-GF30-FR
+FL AMMABILIT Y            UL 94V-O
+PISTON AND BARREL         Brass CuZn36Pb3 (C36000)
+SPRING                    Music wire DIN 17223, gold plated
+MA X. STROKE              1.4 mm
+FORCES                    0.25 N initial            0.85 N at 1/2 stroke
+MECHANICAL LIFE           50'000 cycles
+OPERATING CURRENT         Max. 3.5 A
+CONTACT RESISTANCE        10 m: (static measurement, halfway position)
+
+ORDERING INFORMATION ROHS COMPLIANT PARTS
+PL ATING CODE             BARREL                       PISTON
+
+S1                        0.25 μm gold                 0.5 μm gold
+SS                        0.5 μm gold                  0.5 μm gold                 See page 178 for plating specs.
+                                                                                   NNN number of poles: Replace NNN with the requested number of poles,
+                                                                                   e.g. 813-S1-NNN-10-014101 for a double row version with 16 pins
+                                                                                   becomes 813-S1-016-10-014101.
+
+
+
+
+811-S1-NNN-10-XXX101
+Straight SLC connector, low profile, solder tail, single row
+AVAIL ABILIT Y FROM  2 to 64 contacts
+                     (standard number of contacts: 64)
+
+
+
+
+813-S1-NNN-10-XXX101
+Straight SLC connector, low profile, solder tail, double row
+AVAIL ABILIT Y FROM  4 to 72 contacts
+                     (standard number of contacts: 72)
+
+
+
+
+813-SS-NNN-10-474101
+Straight SLC connector, solder tail, double row
+AVAIL ABILIT Y FROM  4 to 64 contacts
+                     (standard number of contacts: 64)
+
+
+
+
+                                                                                   AVAILABLE CONNECTOR HEIGHTS
+                                                                                   INITIAL HEIGHT A (mm)   PL ASTIC BODY HEIGHT B (mm)   X X X CODE
+
+                                                                                   6                       4                             014
+                                                                                   6.5                     4                             015
+                                                                                   7                       4                             016
+                                                                                   7.5                     4                             017
+
+
+
+
+34                                                               Due to technical progress, all information provided is subject to change without prior notice.
+                                                                                 SPRING-LOADED CONNECTORS
+                                                                                 2.54 mm GRID / SINGLE ROW / DOUBLE ROW /SURFACE MOUNT
+
+WWW.PRECIDIP.COM     TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+
+
+                                                                                                                                                                    SPRING–LOADED CONNECTORS
+Basic modular connectors with spring-loaded contacts (SLC), surface mount. Contacts with hollow piston design for low profile.
+
+TECHNICAL SPECIFICATIONS (FOR GENERAL SPECS, SEE PAGE 31)
+INSUL ATOR               Black glass filled polyester PCT-GF30-FR
+FL AMMABILIT Y           UL 94V-O
+PISTON AND BARREL        Brass CuZn36Pb3 (C36000)
+SPRING                   Stainless steel X12 CrNi177, DIN 17224
+                         (Music wire DIN 17223, gold plated for 811...008101)
+MA X. STROKE             1.4 mm (1 mm for 811-...-008101
+                         and 1.15 mm for 811/813-...-001101)
+FORCES                   0.25 N initial            0.6 N at 1/2 stroke
+MECHANICAL LIFE          100'000 cycles
+OPERATING CURRENT        Max. 3.5 A
+CONTACT RESISTANCE       15 m: (static measurement, halfway position)
+COPL ANARIT Y
+SMD TERMINATIONS         Max. 0.1 mm (measured on 25 mm long connectors)
+
+ORDERING INFORMATION ROHS COMPLIANT PARTS                                        See page 178 for plating specs.
+PL ATING CODE            BARREL                       PISTON                     NNN number of poles. Replace NNN with the requested number of poles,
+SS                       0.5 μm gold                  0.5 μm gold                e.g. 811-SS-NNN-30-002101 for a single row version with 16 pins
+                                                                                 becomes 811-SS-016-30-002101.
+
+
+
+
+Bulk :                                T & R Packaging with pick & place cap* :
+811-SS-NNN-30-008101                  811-SS-NNN-30-008191
+Surface mount SLC connector, very low profile, single row
+AVAIL ABILIT Y FROM 2 to 10 contacts
+                    (standard number of contacts: 10)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+Bulk :                                T & R Packaging with pick & place cap* :
+811-SS-NNN-30-XXX101                  811-SS-NNN-30-XXX191
+Surface mount SLC connector, low profile, single row
+AVAIL ABILIT Y FROM 2 to 10 contacts
+                    (standard number of contacts: 10)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+Bulk :                                T & R Packaging with pick & place cap* :
+813-SS-NNN-30-XXX101                  813-SS-NNN-30-XXX191
+Surface mount SLC connector, low profile, double row
+AVAIL ABILIT Y FROM 4 to 20 contacts
+                    (standard number of contacts: 20)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+                                                                                 AVAILABLE CONNECTOR HEIGHTS
+                                                                                 INITIAL HEIGHT A (mm)   STROKE S (mm)   PL ASTIC BODY HEIGHT B (mm)   X X X CODE
+
+                                                                                 4.5                     1.15            2.95                          001
+                                                                                 5                       1.4             2.95                          002
+                                                                                 5.5                     1.4             2.95                          003
+                                                                                 6                       1.4             4                             004
+                                                                                 6.5                     1.4             4                             005
+                                                                                 7                       1.4             4                             006
+                                                                                 7.5                     1.4             4                             007
+
+Due to technical progress, all information provided is subject to change without prior notice.                                                                 35
+                                                                                   SPRING-LOADED CONNECTORS
+                                                                                   2.54 mm GRID / SINGLE ROW / DOUBLE ROW / SURFACE MOUNT
+
+WWW.PRECIDIP.COM     TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+Low resistance modular connectors with spring-loaded contacts (SLC), surface mount. Contacts with improved shaped piston design.
+
+TECHNICAL SPECIFICATIONS (FOR GENERAL SPECS, SEE PAGE 31)
+INSUL ATOR               Black glass filled polyester PCT-GF30-FR
+FL AMMABILIT Y           UL 94V-O
+PISTON AND BARREL        Brass CuZn36Pb3 (C36000)
+SPRING                   Music wire DIN 17223, gold plated
+MA X. STROKE             1.4 mm
+FORCES                   0.25 N initial            0.85 N at 1/2 stroke
+MECHANICAL LIFE          50'000 cycles
+OPERATING CURRENT        Max. 3.5 A
+CONTACT RESISTANCE       10 m: (static measurement, halfway position)
+COPL ANARIT Y
+SMD TERMINATIONS         Max. 0.1 mm (measured on 25 mm long connectors)
+
+ORDERING INFORMATION ROHS COMPLIANT PARTS
+PL ATING CODE            BARREL                       PISTON
+                                                                                   See page 178 for plating specs.
+S1                       0.25 μm gold                 0.5 μm gold
+                                                                                   NNN number of poles. Replace NNN with the requested number of poles,
+                                                                                   e.g. 813-S1-NNN-30-014101 for a double row version with 16 pins
+                                                                                   becomes 813-S1-016-30-014101.
+
+
+
+
+Bulk :                                T & R Packaging with pick & place cap* :
+811-S1-NNN-30-XXX101                  811-S1-NNN-30-XXX191
+Surface mount SLC connector, low profile, single row
+AVAIL ABILIT Y FROM 2 to 10 contacts
+                    (standard number of contacts: 10)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+Bulk :                                T & R Packaging with pick & place cap* :
+813-S1-NNN-30-XXX101                  813-S1-NNN-30-XXX191
+Surface mount SLC connector, low profile, double row
+AVAIL ABILIT Y FROM 4 to 20 contacts
+                    (standard number of contacts: 20)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+                                                                                   AVAILABLE CONNECTOR HEIGHTS
+                                                                                   INITIAL HEIGHT A (mm)   PL ASTIC BODY HEIGHT B (mm)   X X X CODE
+
+                                                                                   6                       4                             014
+                                                                                   6.5                     4                             015
+                                                                                   7                       4                             016
+                                                                                   7.5                     4                             017
+
+
+
+
+36                                                               Due to technical progress, all information provided is subject to change without prior notice.
+                                                                           SPRING-LOADED CONNECTORS
+                                                                           2.54 mm GRID / SINGLE ROW / DOUBLE ROW / SURFACE MOUNT
+
+WWW.PRECIDIP.COM     TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+
+
+                                                                                                                                                               SPRING–LOADED CONNECTORS
+Basic modular connectors with spring-loaded contacts (SLC), surface mount with positioning pins. Contacts with hollow piston design for low profile.
+
+TECHNICAL SPECIFICATIONS (FOR GENERAL SPECS, SEE PAGE 31)
+INSUL ATOR               Black glass filled polyester PCT-GF30-FR
+FL AMMABILIT Y           UL 94V-O
+PISTON AND BARREL        Brass CuZn36Pb3 (C36000)
+SPRING                   Stainless steel X12 CrNi177, DIN 17224
+MA X. STROKE             1.4 mm (1.15 mm for 811/813-...-021101)
+FORCES                   0.25 N initial            0.6 N at 1/2 stroke
+MECHANICAL LIFE          100'000 cycles
+OPERATING CURRENT        Max. 3.5 A
+CONTACT RESISTANCE       15 m: (static measurement, halfway position)
+COPL ANARIT Y
+SMD TERMINATIONS         Max. 0.1 mm (measured on 25 mm long connectors)
+
+
+ORDERING INFORMATION ROHS COMPLIANT PARTS
+PL ATING CODE            BARREL                       PISTON               See page 178 for plating specs.
+SS                       0.5 μm gold                  0.5 μm gold          NNN number of poles. Replace NNN with the requested number of poles,
+                                                                           e.g. 813-SS-NNN-30-021101 for a double row version with 16 pins
+                                                                           becomes 813-SS-016-30-021101.
+
+
+
+
+811-SS-NNN-30-XXX101
+Surface mount SLC connector, low profile, single row, with 2 positioning pins
+AVAIL ABILIT Y FROM 2 to 10 contacts
+                    (standard number of contacts: 10)
+
+
+
+
+813-SS-NNN-30-XXX101
+Surface mount SLC connector, double row, with 4 positioning pins
+AVAIL ABILIT Y FROM 4 to 20 contacts
+                    (standard number of contacts: 20)
+
+
+
+
+                                                                           AVAILABLE CONNECTOR HEIGHTS
+                                                                           INITIAL HEIGHT A (mm)   STROKE S (mm)   PL ASTIC BODY HEIGHT B (mm)   X X X CODE
+
+                                                                           4.5                     1.15            2.95                          021
+                                                                           5                       1.4             2.95                          022
+                                                                           5.5                     1.4             2.95                          023
+                                                                           6                       1.4             4                             024
+                                                                           6.5                     1.4             4                             025
+                                                                           7                       1.4             4                             026
+                                                                           7.5                     1.4             4                             027
+
+
+
+
+Due to technical progress, all information provided is subject to change without prior notice.                                                            37
+                                                                                       SPRING-LOADED CONNECTORS
+                                                                                       2.54 mm GRID / SINGLE ROW / DOUBLE ROW / SURFACE MOUNT
+
+WWW.PRECIDIP.COM     TEL +41 32 421 04 00     SALES@PRECIDIP.COM
+
+
+Connectors with spring-loaded contacts (SLC), surface mount.
+
+TECHNICAL SPECIFICATIONS (FOR GENERAL SPECS, SEE PAGE 31)
+INSULATOR          Black glass filled polyester PCT-GF30-FR
+FLAMMABILITY       UL 94V-O
+PISTON
+AND BARREL         Brass CuZn36Pb3 (C36000)
+                   8PM...131           8PM...260                 8PM...219
+SPRING             Music wire          Stainless steel X12       Stainless steel X12
+                   DIN 17723,          CrNi177,                  CrNi177,
+                   gold plated         DIN 17224                 DIN 17224
+MAX. STROKE        1.5 mm              1.5 mm                    1 mm
+FORCES             0.2 N initial       0.25 N initial            0.25 N initial
+                   0.9 N at 1/2 stroke 0.95 N at 1/2 stroke      0.6 N at 1/2 stroke
+MECHANICAL
+LIFE               50'000 cycles            50'000 cycles        100‘000 cycles
+OPERATING
+CURRENT            Max. 3 A          Max. 3 A             Max. 3 A
+CONTACT            10 m:            10 m:               15 m:                        Other plating on request (see page 178 for plating specs).
+RESISTANCE         (static measurement, halfway position)                              NN number of poles. Replace NN with the requested number of poles,
+COPLANARITY                                                                            e.g. 8PM-11-00NN-02-131 with 5 pins becomes 8PM-11-0005-02-131.
+SMD TERMINATIONS   Max 0.1 mm (measured on 25 mm long connectors)
+
+
+ORDERING INFORMATION ROHS COMPLIANT PARTS
+PL ATING CODE            BARREL                         PISTON
+
+11                       0.25 μm gold                   0.25 μm gold
+SS                       0.5 μm gold                    0.5 μm gold
+
+
+Bulk :                                T & R Packaging* :
+8PM-11-00NN-02-260                    8PM-11-00NN-02-260191
+Parallel surface mount SLC connector for pick & place
+automatic assembly
+AVAIL ABILIT Y FROM  2 to 10 contacts
+                     (standard number of contacts: 10)
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+Bulk :                                T & R Packaging* :
+8PM-11-00NN-02-131                    8PM-11-00NN-02-131191
+Parallel surface mount SLC connector for pick & place
+automatic assembly
+AVAIL ABILIT Y FROM  2 to 10 contacts
+                     (standard number of contacts: 10)
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+Bulk :                                T & R Packaging* :
+8PM-SS-0006-02-219                    8PM-SS-0006-02-219191
+SLC connector for chipcards with contacting pads
+acc. to ISO 7816
+Standard number of contacts: 6
+
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+
+38                                                                 Due to technical progress, all information provided is subject to change without prior notice.
+                                                                            PAD CONNECTORS
+                                                                            SINGLE ROW / DOUBLE ROW / SURFACE MOUNT
+
+WWW.PRECIDIP.COM      TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+
+
+                                                                                                                                                  SPRING–LOADED CONNECTORS
+Pad connectors with fixed contacts, counterparts for spring- loaded connectors.
+
+TECHNICAL SPECIFICATIONS (FOR GENERAL SPECS, SEE PAGE 31)
+INSUL ATOR                Black glass filled polyester PCT-GF30-FR
+FL AMMABILIT Y            UL 94V-O
+CONTACT                   Brass CuZn36Pb3 (C36000)
+CONTACTING AREA Ø         1.5 mm
+OPERATING CURRENT         Max. 3.5 A
+DIELECTRIC STRENGTH       Min. 1'000 VRMS
+COPL ANARIT Y
+SMD TERMINATIONS          Max. 0.1 mm (measured on 25 mm long connectors)
+
+
+ORDERING INFORMATION ROHS COMPLIANT PARTS
+PL ATING CODE             TERMINATION                  CONTACTING AREA
+
+10, 11                    0.25 μm gold                 0.25 μm gold
+
+
+                                                                            See page 178 for plating specs.
+                                                                            NNN / NN number of poles. Replace NNN or NN with the requested
+                                                                            number of poles, e.g. 802-10-NNN-30-507101 for a double row version
+                                                                            with 20 pins becomes 802-10-020-30-507101.
+
+
+
+
+Bulk :                                 T & R Packaging* :
+800-10-NNN-30-507101                   800-10-NNN-30-507191
+SMD pad connector, single row, perpendicular mount
+AVAIL ABILIT Y FROM  2 to 10 contacts
+                     (standard number of contacts: 10)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+Bulk :                                 T & R Packaging* :
+802-10-NNN-30-507101                   802-10-NNN-30-507191
+SMD pad connector, double row, perpendicular mount
+AVAIL ABILIT Y FROM 4 to 20 contacts
+                    (standard number of contacts: 20)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+Bulk :                                 T & R Packaging* :
+8MM-11-00NN-02-131                     8MM-11-00NN-02-131191
+SMD pad connector, single row, parallel mount
+AVAIL ABILIT Y FROM  2 to 10 contacts
+                     (standard number of contacts: 10)
+
+
+
+*Please consult www.precidip.com for availability size of tape, size of
+reel, number of components per reel and packing units.
+
+
+
+
+Due to technical progress, all information provided is subject to change without prior notice.                                              39
+                    www.precidip.com
+           PRECI-DIP SA   Rue Saint-Henri 11 P.O.Box 834 CH-2800 Delémont / Switzerland
+PHONE   +41 (0)32 421 04 00   FA X   +41 (0)32 421 04 01   E-MAIL   sales@precidip.com www.precidip.com
+

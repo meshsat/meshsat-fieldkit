@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/battery/heater/rs-pro-245-556-heater-mat-sheet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/battery/heater/rs-pro-245-556-heater-mat-sheet.pdf",
+ "pdf_sha256": "5c0e331bc0051078cc373f87ed904a2fffaeb26dc1bffd0d79e54c524667fe7f",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/heater/pdftext/rs-pro-245-556-heater-mat-sheet.layout.txt",
+ "text_bytes": 2787,
+ "text_sha256": "36a63e8fe3c5d7b2c17d58e2ab9e188df7d82a7cb29885d737bae44ce47850e6"
+}

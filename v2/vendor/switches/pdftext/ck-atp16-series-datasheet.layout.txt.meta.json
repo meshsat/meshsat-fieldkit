@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/switches/ck-atp16-series-datasheet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/switches/ck-atp16-series-datasheet.pdf",
+ "pdf_sha256": "fce6061e05364e614da1d199b61cdfdc0a5ba50facb215690154710b824bdf11",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/switches/pdftext/ck-atp16-series-datasheet.layout.txt",
+ "text_bytes": 25373,
+ "text_sha256": "6e5be4a701e257c177aabea6aac3667e0e1edb2c064baf8b5895f7651b04a7c2"
+}

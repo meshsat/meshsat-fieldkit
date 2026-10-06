@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf",
+ "pdf_sha256": "2bae882148b45172e009f88cbea08878f80e284dc6d44e93af5d67f6b9ed030a",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/quectel/pdftext/quectel-rm520n-series-hardware-design-v1.1.layout.txt",
+ "text_bytes": 222182,
+ "text_sha256": "eb10ff9c371ef15ec745b249b908435c56549fe2aff823ec05a90eb6406f2517"
+}

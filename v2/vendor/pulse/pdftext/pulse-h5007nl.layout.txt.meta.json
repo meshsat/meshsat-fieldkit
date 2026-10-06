@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/pulse/pulse-h5007nl.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/pulse/pulse-h5007nl.pdf",
+ "pdf_sha256": "76b85b47d0bd9f46cfca2281b5e5e31eba1e82f148ffda680472e5a1995c8d65",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/pulse/pdftext/pulse-h5007nl.layout.txt",
+ "text_bytes": 36646,
+ "text_sha256": "4d24d898d6c038ede400ec8b2688bde2930e4261c2321447846c557991ed25d2"
+}

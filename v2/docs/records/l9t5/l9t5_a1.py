@@ -25,6 +25,22 @@ N = "\u2013"     # the en dash TI and LTC print
 
 SHEETS = {"adl5902": "v2/vendor/adi/held/adi-adl5902-revb.pdf", "adl5513": "v2/vendor/adi/held/adi-adl5513-revb.pdf",
           "ltc5582": "v2/vendor/adi/held/adi-ltc5582-revd.pdf", "lmh2110": "v2/vendor/ti/held/ti-lmh2110-snws022d.pdf"}
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 1 prints each text's sha256 after the pins.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9t5
+PDFTEXT = {
+    "v2/vendor/adi/held/adi-adl5513-revb.pdf": [["-layout"]],
+    "v2/vendor/adi/held/adi-adl5902-revb.pdf": [["-layout"]],
+    "v2/vendor/adi/held/adi-ltc5582-revd.pdf": [["-layout"]],
+    "v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-lmh2110-snws022d.pdf": [["-layout"]],
+}
+import importlib.util  # noqa: E402  (the helper's loader; W34)
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {"fetch": "v2/docs/records/l9t5/fetch_held_back.py", "codec_floor": "v2/docs/records/s99a/codec_floor.out",
         "gen_d": "v2/ecad/tools/gen_sch_d.py", "case_out": "v2/docs/records/l9t5/l9t5_case.out", "ra30": "v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf"}
 BAND = (144.0, 146.0)          # MHz: the EU amateur 2 m band the SA868 and the PA serve (CHO-001, the device set)
@@ -53,10 +69,7 @@ def pdf(rel):
     p = os.path.join(ROOT, rel)
     if not os.path.isfile(p):
         refuse("%s is not held here: python3 v2/docs/records/l9t5/fetch_held_back.py" % rel)
-    try:
-        return subprocess.run(["pdftotext", "-layout", p, "-"], capture_output=True, check=True).stdout.decode("utf-8", "replace")
-    except (OSError, subprocess.CalledProcessError) as e:
-        refuse("pdftotext could not read %s (%s)" % (rel, e))
+    return PT.pdf_text(ROOT, rel, ["-layout"], PDFTEXT, "v2/docs/records/l9t5")
 
 
 def need(t, pat, what, flags=re.M):
@@ -155,7 +168,7 @@ def main():
     w("prototype design; nothing built, bought, powered or measured; the sheets are held back (fetch_held_back.py), read here, never committed")
     w("")
     w("1. INPUTS, pinned by sha256")
-    for rel in list(SHEETS.values()) + list(PINS.values()):
+    for rel in list(SHEETS.values()) + list(PINS.values()) + [t for t, _h, _held in PT.inputs(ROOT, PDFTEXT)]:
         w("   %s %s" % (sha(rel), rel))
     w("")
     w("2. THE PRINTED TEMPERATURE ROW NEAREST THE KIT'S %.0f TO %.0f MHz, PER DETECTOR (deviation from the 25 C output; the column it is printed in)" % BAND)

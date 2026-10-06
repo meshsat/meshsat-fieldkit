@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/bulgin/bulgin-px0833-sealed-rj45-coupler.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/bulgin/bulgin-px0833-sealed-rj45-coupler.pdf",
+ "pdf_sha256": "b0fb46464e073ab9d145d805346ae3bc5227237f303d70d3799be4d68d6874a8",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/bulgin/pdftext/bulgin-px0833-sealed-rj45-coupler.layout.txt",
+ "text_bytes": 3389,
+ "text_sha256": "2764d670dcd3e7c2024ee3d386e143ebb19e78673fea3c01cf59548eba964127"
+}
