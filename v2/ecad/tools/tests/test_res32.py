@@ -48,6 +48,11 @@ W95's restatement (6 October 2026, from 23:35 CEST): the record names its patch 
 adoption pages, held by test_patch32), so the fill tool's template covers it; section 8's template statement counts it as a third
 file (p_placeholders, and _template_texts reads it at the template's commit). Nothing else here changes.
 
+W113's restatement (7 October 2026, from 01:43 CEST, on W109's F2 to F4 and W110's C1): the record names the chain's base, main's tip
+at the run's start (CHAIN_BASE, be07863b, the chain's log's first line), apart from its BASE row (set 31's promoted revision); the
+chain's base is declared in OUTSIDE (it is in no history this record's branch reads until main is merged), and a mutant naming a
+commit that is neither is refused.
+
 What fails here: a commit of set 32's five branch ranges missing, doubled or out of order; a short sha that is not its full sha's prefix; a
 date, subject or file count that is not git's; a class outside W39's fixed set; a row that touches a file cx46 read without the words
 "UNREVIEWED since cx46"; a REVIEWED-INPUT CHANGED row that touches no file of the reviewed tree (present at 4d0ff8a2), or one that
@@ -101,13 +106,20 @@ CX45 = "06077cee"                                           # the delta cx46 rea
 L4E9_EXTRA = ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "v2/docs/records/l4e9/l4e9_power_path.out")
 FIXED = ("REVIEWED-INPUT CHANGED", "RECORD TEXT", "GENERATOR DATA (text)", "TEST", "DIGEST RE-PIN", "MERGE", "TOOLING")
 DECLARED = ("__REKEY__", "__CANDIDATE__", "__GATE__", "__PROMOTED__", "__ADOPTION__")   # fill_res.py's TOK (W76), INTEGRATED apart
+# W113 (W109's F4, W110's B2): the chain's base, main's tip at the chain's start, as its log's first line prints it
+# (`<worktrees>/_runs/int32/real-0115.log:1`, `base be07863bbca206a81ab42b9f96a7684c5c10a746`); set 31's promoted revision is the
+# record's BASE row (RESULT section 1), an ancestor of this commit but never on main's first-parent line (it is a second parent)
+CHAIN_BASE = "be07863bbca206a81ab42b9f96a7684c5c10a746"
 # set 31's record draft, named by the record, on fnd/res31: in this branch's history only after set 31's adoption
 OUTSIDE = {"4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31's tip, set 31's RESULT and CLASSIFICATION drafts (W39)",
            # W78 (W75's F2 and F4): set 31's classification at W75's read and set 31's candidate, after this record's lineage tip
            "f535bbcabab190f2489e168c09caa45fcc6e6d31": "fnd/res31 at W75's read, set 31's CLASSIFICATION with its caveat on row 44",
            "d0e283aa52ceb7f303358862b539161b721475e5": "set 31's candidate, l4e7_p0sol.out's paragraph 0a and its KNOWN ITEM",
            # W102 (W99's B1 and C4): main after set 31's adoption, the pages the patch file's rows are read against with the pins
-           "ad757edb1be7e0fe3b586f986d2d704c9836fdcf": "main after set 31's adoption (the fill's second run), set 32's integration base"}
+           "ad757edb1be7e0fe3b586f986d2d704c9836fdcf": "main after set 31's adoption (the fill's second run), set 32's integration base",
+           # W113 (W109's F4, W110's C1 and B2): the chain's base, main's tip at the run's start (_runs/int32/real-0115.log:1), a
+           # descendant of set 31's promoted revision (the record's BASE row): named in RESULT's section 3b and the classification's bounds
+           CHAIN_BASE: "main's tip at set 32's chain's start, the chain's base (W100's S1, W104)"}
 ASSESS = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
 S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
 S30C = "v2/docs/records/int30/CLASSIFICATION.md"
@@ -1221,6 +1233,8 @@ def t_every_commit_named_is_in_the_histories_read_or_declared_outside_them():
     texts = _texts()
     assert not p_commits_named(texts), p_commits_named(texts)
     _mutant_refused(p_commits_named, texts, RESULT, "`6dc69ad2`", "`6dc69ad3`")
+    # W113 (W109's F4): the chain's base is named as itself; a near miss of it is no commit this record may name
+    _mutant_refused(p_commits_named, texts, RESULT, "start (`be07863b`, a descendant", "start (`be07863c`, a descendant")
     if _stage(texts[RESULT]):                  # W80: the commits the fill wrote are accepted only while p_filled accepts them
         base = _line(texts[RESULT], "| BASE ")
         _mutant_refused(p_commits_named, texts, RESULT, base, base.replace("| %s |" % _cell(base), "| `%s` |" % LINEAGE[:8], 1))
