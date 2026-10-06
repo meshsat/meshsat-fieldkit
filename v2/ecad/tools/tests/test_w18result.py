@@ -43,6 +43,11 @@ Q05_REL = "int30/Q05-verdict.final.md"
 CLASS_FILE = "v2/docs/records/int30/CLASSIFICATION.md"
 ASSESSMENT = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
 INTEG = "dd1aed00d0a0a521063b5792550bc510c4707c59"        # the promoted revision (INTEGRATED = CANDIDATE = PROMOTED)
+# Restated by W33 (6 October 2026; basis: W32's read of the adoption, REPORT-AS-RECEIVED.md, class 1, the insertion times, and the
+# coordinator's ruling 1 in W33's brief): the record now names the adoption commit, where the coordinator inserted the Q-05 judgement
+# whole (main fast-forwarded to it after the promotion), so p_shas accepts exactly this one commit when it is in this tree's history;
+# every other sha keeps the rule (the integration's history at INTEG, or the fnd/ branch named before it).
+ADOPTION = "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec"
 B2 = "d83d9f2d720878ca5267dbf59bdc571c6890fd92"           # commit 2b, the integration's committed tip when draft 3 was written
 W15 = "57bcdbfce095c461b4c3b6804ea8cc3508762577"          # W15's classification
 W15_FILE = "v2/docs/records/int30/CLASSIFICATION.draft.md"
@@ -199,6 +204,8 @@ def p_shas(text):
             continue
         if _ancestor(sha, INTEG):
             continue
+        if ADOPTION.startswith(sha) and _ancestor(sha, "HEAD"):   # W33: the adoption commit, by its full sha's prefix only
+            continue
         before = text[max(0, m.start() - 60):m.start()]
         b = re.search(r"(fnd/[\w-]+)[ |]*$", before)
         if b and _git("rev-parse", "--verify", "-q", b.group(1)).returncode == 0 and _ancestor(sha, b.group(1)):
@@ -339,7 +346,10 @@ def p_unreviewed(text):
     bad = []
     rows, six = _w15_rows()
     try:
-        sec = _section(text, "**The 13 REVIEWED-INPUT CHANGED commits", "Three merges bring them")
+        # restated by W33 (6 October 2026): the table now closes at "Four merges bring them" (basis: W32's count finding,
+        # `git log 2ccf0f20^1..2ccf0f20^2` prints 9802dfde, 2f74beb5 and 3088ee79, and CLASSIFICATION.md's rows 30 and 31 are
+        # REVIEWED-INPUT CHANGED, so merge 2ccf0f20 is a fourth that brings them); the table and its rows are unchanged
+        sec = _section(text, "**The 13 REVIEWED-INPUT CHANGED commits", "Four merges bring them")
     except ValueError:
         return ["the unreviewed-change table is missing"]
     mine, marked = {}, set()

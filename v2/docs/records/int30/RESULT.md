@@ -66,7 +66,7 @@ Its summary counts, first class per row (its lines 74 to 81): REVIEWED-INPUT CHA
 `git rev-list 4d0ff8a2..dd1aed00` the adopted record counts REVIEWED-INPUT CHANGED 14; RECORD TEXT (restatement) 8; GENERATOR DATA (text) 1;
 TEST / FIXTURE 2; DIGEST RE-PIN / REGENERATED OUTPUT 5; MERGE 11; OUTSIDE P0 4; total 45 (`CLASSIFICATION.md`, section 2).
 
-**The 13 REVIEWED-INPUT CHANGED commits, as UNREVIEWED CHANGES after cx46** (W15's reasons, shortened to one line each; the six
+**The 13 REVIEWED-INPUT CHANGED commits of W15's range (`4d0ff8a2..6bc4424e`, 38 commits), as UNREVIEWED CHANGES after cx46** (W15's reasons, shortened to one line each; the six
 marked NOT ONLY NARROWING are W15's "They do not only narrow (6)" list, `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:88` `They do not only narrow (6):`;
 the other seven are its line 87, `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:87` `They narrow, withdraw, tighten or restate an OPEN state (7):`):
 
@@ -86,8 +86,9 @@ the other seven are its line 87, `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.
 | 30 | `3088ee79` | NOT ONLY NARROWING | TP-SOLAR's acceptance quotes carry P1-1's narrowing to E-1 and R-189's replacement by S3 and S4 |
 | 31 | `2f74beb5` | narrows | R-159's 40.78 K/W carried into TP-E11-29's quote (stricter) |
 
-Three merges bring them (`f973b646`, `9cf3982a`, `6fe398e9`). W15 found no baseline circuit draft, no board generator and no netlist
-changed in the range (its summary, line 90).
+Four merges bring them (`f973b646`, `9cf3982a`, `6fe398e9`, `2ccf0f20`; the fourth brings rows 30 and 31, `git log 2ccf0f20^1..2ccf0f20^2`
+prints `9802dfde`, `2f74beb5` and `3088ee79`; "three" until W32's read of the adoption, corrected by W33 on 6 October 2026). W15 found
+no baseline circuit draft, no board generator and no netlist changed in the range (its summary, line 90).
 
 **None of these 13 was checked by an independent checker after cx46.** The method ended with cx46's second negative
 (`d83d9f2d:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.`), and no
@@ -109,7 +110,8 @@ from `git show --stat` and its diff, the full reasons and quotes there):
 | 44 | `c4438d6a` | DIGEST RE-PIN / REGENERATED OUTPUT + GENERATOR DATA (text) | the re-key's dependents: the P0 output's guard, a rule about history, corrected and its paragraph reprinted with the figures unchanged; the rest digest re-pins |
 | 45 | `dd1aed00` | RECORD TEXT (restatement) | the pack rule: OUTSIDE P0 made classifiable (`compact/**` excluded by kind in the handover pack specification); no record, figure, verdict, script, output or test |
 
-**So the promoted revision carries 14 UNREVIEWED CHANGES, not 13:** W15's 13 above and commit 2b (row 39), classed under W15's own
+**So the promoted revision carries 14 UNREVIEWED CHANGES, not 13:** 14 over the 45 commits of `4d0ff8a2..dd1aed00`: W15's 13 above
+(its range `4d0ff8a2..6bc4424e`) and commit 2b (row 39), classed under W15's own
 rule for a change carried into a file of the reviewed tree, as W15 classed row 18. Seven do not only narrow (W15's six and 2b). Commit
 2b was not checked by an independent checker either: W16's review of 2b (section 3f) is an AI review of its diff, and the two of its
 findings answered before the freeze (rows 40 to 42) correct a generator and add a test, they credit nothing. Rows 40 to 45 change no
@@ -230,7 +232,8 @@ rekey6 (`<worktrees>/_runs/int30/ADOPTION-VALUES.md:5` `the re-keyed l4e7 cache 
 
 Filed: `<worktrees>/_runs/int30/REVIEW-2B.md` (W16, an AI review, read from 04:43 to 05:00 CEST by its own heading; file sha256 prefix
 50e8f0fda536b9e0 as read here at 04:58). It is a reviewer's reading of commit 2b, not a verdict on the power design and not a check
-of the 13 unreviewed changes of section 2. Its FINDINGS list, verbatim (its lines 190 to 213):
+of the 13 unreviewed changes of W15's range `4d0ff8a2..6bc4424e` (section 2); the fourteenth of `4d0ff8a2..dd1aed00`, commit 2b itself,
+is what it reads, as an AI review of its diff, not an independent check (section 2). Its FINDINGS list, verbatim (its lines 190 to 213):
 
 > 1. `v2/docs/records/l6r2/l6r2_passives.out` line 2537 (old 2532), cause `v2/docs/records/l6r2/l6r2_passives.py` lines 97 and 742: board D's
 >    declaration-draft commutation with all pending drafts lost; "commutes" became "refused" because ptt is in both STANDALONE and R-239's
@@ -286,11 +289,12 @@ below is quoted from that file or from the log it names, never typed.
 | Runner pass (Debian 12, Python 3.11.2, `test_l4e7`) | `<worktrees>/_runs/int30s1/runner/suite-runner.log` | `<worktrees>/_runs/int30s1/runner/suite-runner.log:66` `tests: 64 passed, 0 failed, 1 skipped`, `<worktrees>/_runs/int30s1/runner/suite-runner.log:67` `EXIT 0` |
 | suite_gate with G7 (identity, module coverage, 0 failed, 0 load errors, every skip explained, totals consistent) over the four logs | `<worktrees>/_bin/suite_gate.py`; `<worktrees>/_runs/int30s1/suite_gate.txt` | `<worktrees>/_runs/int30s1/suite_gate.txt:2` `suite_gate: PASS`, after `<worktrees>/_runs/int30s1/suite_gate.txt:1` `suite_gate: candidate dd1aed00d0a0; totals tests: 2770 passed, 0 failed, 2 skipped + tests: 48 passed, 0 failed, 0 skipped + tests: 64 passed, 0 failed, 1 skipped + tests: 234 passed, 0 failed, 0 skipped; result lines 3119 (3116 PASS, 3 SKIP, 0 FAIL); modules 236 of 236 ran` |
 | Promotion: fast-forward of main, push, the mirror, candidate_guard check on main | `<worktrees>/_runs/int30/promote-1036.log` | `dd1aed00d0a0a521063b5792550bc510c4707c59` (`<worktrees>/_runs/int30/promote-1036.log:2` `main fast-forwarded to dd1aed00d0a0a521063b5792550bc510c4707c59`, `<worktrees>/_runs/int30/promote-1036.log:5` `pushed origin main at 10:36:57`); mirror `dd1aed00d0a0a521063b5792550bc510c4707c59` (`<worktrees>/_runs/int30/promote-1036.log:7` `mirror: 2026-10-06T08:37:03.137Z finished`, `<worktrees>/_runs/int30/promote-1036.log:8` `GitHub main at dd1aed00d0a0a521063b5792550bc510c4707c59`); the evidence on main `<worktrees>/_runs/int30/promote-1036.log:10` `evidence tar extracted: 997 files`; the guard on main `<worktrees>/_runs/int30/promote-1036.log:11` `-- candidate_guard check on main`, line 12 as quoted in the guard's row |
-| Targeted verification of the 14 unreviewed changes of section 2 | the coordinator's choice of verifier; not the ended review method | owed; none performed |
+| Targeted verification of the 14 unreviewed changes of section 2 (over `4d0ff8a2..dd1aed00`) | the coordinator's choice of verifier; not the ended review method | owed; none performed |
 
 **Why a fourth log, the records box.** `<worktrees>/_runs/int30/ADOPTION-VALUES.md:13` `the records' environment: the records' generators extract makers' PDFs at run time; a box needs poppler-data (now in every onstart); set 31 pins the extracted text (Q-41)`; that box is `<worktrees>/_runs/int30/ADOPTION-VALUES.md:9` `the records box (54444804, debian:12, Python 3.11.2, pdftotext 22.12.0, poppler-data; test_l4e9 test_l4e11 test_l4e13 test_l5r2 test_l8r2 test_efuse)`. It exists because of the first box pass's failure below: `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `149 failures were the boxes' missing poppler-data (the JST VH catalogue's CID Type 0C fonts, Identity-H: 184 bytes extracted against the runner's 39318)`.
 
-**The three explained skips** (suite_gate's G7 accepts a skip only with its reason): `<worktrees>/_runs/int30/ADOPTION-VALUES.md:11` `test_l4e7 t_recompute_reproduces_the_committed_output (the gated recompute, L4E7_RECOMPUTE=1)`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:11` `the two on the Ubuntu box: test_pairsearch.t_the_three_implementations_agree: no numba on this host`.
+**The three explained skips** (suite_gate's G7 accepts a skip only with its reason): the runner's one, `<worktrees>/_runs/int30/ADOPTION-VALUES.md:11` `test_l4e7 t_recompute_reproduces_the_committed_output (the gated recompute, L4E7_RECOMPUTE=1)`; the two on the Ubuntu box, `<worktrees>/_runs/int30/ADOPTION-VALUES.md:11` `the two on the Ubuntu box: test_pairsearch.t_the_three_implementations_agree: no numba on this host` and `<worktrees>/_runs/int30/ADOPTION-VALUES.md:11` `test_per_board_contract_verdict.t_without_pcbnew_the_tool_writes_its_own_verdict_declaring_the_absence: pcbnew is importable here`.
+Each is a row of G7's accepted skips, `<worktrees>/_bin/suite_gate_skips.tsv` lines 5 to 7, whose reasons read `the gated recompute, by design: the committed results cache is checked by the guard` (test_l4e7), `the compiled kernel is optional; the two other kernels are compared` (test_pairsearch) and `the test of the host without pcbnew cannot run where pcbnew exists` (test_per_board_contract_verdict). Dated note (W33, 6 October 2026): the third skip stood here by its count only until W32's read of the adoption; quoted from the same line of the values file.
 
 **Measured history of the freeze, not a reflection on the candidate's figures.** `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `the first box pass on c4438d6a (superseded; _runs/int30s1/superseded-984/ holds the 984-manifest passes' logs`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `1363 passed, 151 failed, 3 skipped, aborted after 110 of 236 modules`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `149 failures were the boxes' missing poppler-data`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `one was the pack specification's unclassified compact/ files (the candidate's defect, fixed in dd1aed00d0a0a521063b5792550bc510c4707c59)`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `three skips were the board gates' outputs absent from the worktree's evidence (set 29's archived evidence restored under v2/ecad/)`. The one candidate defect that pass
 found is corrected by the pack rule of I16; the 149 environment failures and the three skips were fixed on the boxes and in the evidence, not in
@@ -348,8 +352,10 @@ candidate's records state it:
 
 **Layer 4's DESK gate, on the promoted revision: NOT PASSED.** The coordinator's judgement (queue item Q-05; the gate, not one of the
 three claims): `<worktrees>/_runs/int30/Q05-verdict.final.md:5` `## Layer 4's DESK gate: NOT PASSED`, because `<worktrees>/_runs/int30/Q05-verdict.final.md:7` `The gate's own premise is not met.` (its section on the gate, `<worktrees>/_runs/int30/Q05-verdict.final.md:7` `the desk-fixable defects are not closed and checked`). Recorded in Layer 4's DESK-gate assessment,
-`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, which the other adoption author (W27, fnd/adopt30b) writes from W12's draft 2
-(fnd/dgate2 `150e908b`) with the coordinator's text inserted verbatim. This record quotes the words; it adds no reading of its own.
+`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, which the other adoption author (W27, fnd/adopt30b) wrote from W12's draft 2
+(fnd/dgate2 `150e908b`), holding the coordinator's text on two sentences while drafting; the coordinator inserted the text whole and
+verbatim in the adoption commit `836f711b` at 11:25 CEST (dated note, W33, 6 October 2026: this sentence read "writes" and "inserted
+verbatim" as the draft's words until that adoption). This record quotes the words; it adds no reading of its own.
 
 **The three completion claims, each with its own state** (the constitution's section 2, cited above; never blended; each state the
 coordinator's word in the Q-05 file and in the assessment):
@@ -361,7 +367,7 @@ coordinator's word in the Q-05 file and in the assessment):
 | Fabrication release | BLOCKED | the coordinator's judgement, the same line of the Q-05 file, recorded in `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`; `d83d9f2d:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:885` `**Fabrication release: BLOCKED.**` (no circuit change applied, no board laid out); the connected output's line 4 above |
 
 Kept apart from all three: documents and editable artifacts (on main as a DESK candidate after the promotion, `dd1aed00d0a0a521063b5792550bc510c4707c59`); design
-reviewed and accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, and the 14 unreviewed changes of section 2); circuit
+reviewed and accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, and the 14 unreviewed changes of section 2, over `4d0ff8a2..dd1aed00`); circuit
 changes implemented (NONE); physical qualification (NONE). A promoted integration set is none of the three claims by itself, and the
 readiness word above is the coordinator's judgement of a package of open items, not a closure.
 
@@ -390,20 +396,20 @@ and the coordinator items the queue lists as Q-27.
 | The P0 power list, revision 3 | `v2/docs/records/l4close/P0-POWER-LIST.md` (the adoption checklist's path), adopted by the other adoption author (W27, fnd/adopt30b) from W17's draft 3, `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft3.md` at fnd/w17p0list `c0f2183b` (merged into this branch's base; draft 3 read earlier at its checkpoint fnd/w17p0list `ec5d818d`), revision 2 kept dated. Its inputs: Slot K's draft 2, `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md`, with W7's nine patch rows R-01 to R-09 in `v2/docs/records/l4close/P0-POWER-LIST.rev3.patch.md` on fnd/w7rem `3e566c55` | revision 3, adopted at Q-04a beside this record |
 | LAYER-STATUS, the set 30 fold | `v2/docs/handover/LAYER-STATUS.md`: Slot I's fold fnd/lstat31 `87c5fb08` and its After set 30 blocks fnd/lstat32 `ea795ebb` (both in this branch's base), the verdict cell the other adoption author's | adopted at Q-04a and Q-04b beside this record |
 | Layer 4's DESK-gate assessment | `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, from W12's draft 2 fnd/dgate2 `150e908b` (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft2.md`) with the coordinator's Q-05 text | the gate NOT PASSED; the three claims as section 6 gives them |
-| The part 25 classification | `v2/docs/records/int30/CLASSIFICATION.md`, adopted with this file: W15's draft at fnd/w15class `57bcdbfc` renamed, rows 39 to 45 added | 45 commits classified; 14 REVIEWED-INPUT CHANGED (section 2) |
+| The part 25 classification | `v2/docs/records/int30/CLASSIFICATION.md`, adopted with this file: W15's draft at fnd/w15class `57bcdbfc` renamed, rows 39 to 45 added | 45 commits classified (`4d0ff8a2..dd1aed00`); 14 REVIEWED-INPUT CHANGED (section 2) |
 
 ## 8. Left out, and why
 
 - W16's findings 2 and 4 to 7 are carried as notes for the next set, not resolved here; the two corrections it asked before the
   candidate commit are committed (`33efca07`; `2d4f6df5` merged at `c4492dd3`).
 - The count of unreviewed changes: W15's range to `6bc4424e` holds 13; on the promoted revision the record counts 14 (commit 2b,
-  section 2). The coordinator's Q-05 text counted thirteen on W15's classification when first written and was corrected to fourteen (this classification's rows 39 to 45) before its insertion into the assessment at 11:15 CEST; both counts stand in this record.
+  section 2). The coordinator's Q-05 text counted thirteen on W15's classification when first written (10:45 CEST) and was corrected to fourteen (this classification's rows 39 to 45) at about 10:59 by the clock; W27 held it on two sentences while drafting, and the coordinator inserted it whole into the assessment in the adoption commit `836f711b` at 11:25 CEST. Both counts stand in this record, each with its range: 13 over `4d0ff8a2..6bc4424e`, 14 over `4d0ff8a2..dd1aed00`.
 - `v2/docs/records/int30/RESULT.draft2.md` stays in the tree, unchanged: `test_recpack.py` reads it there and the P0 list's drafts
   cite it by path (draft 3 was renamed to this file; W15's draft to `CLASSIFICATION.md`). A SESSION choice of the adoption's author,
   reversed by removing the file once those readers are restated.
 - Draft 2's per-commit equivalence at `bbba3e53`, its pin read and its nine contradictions: cited by path, not re-read on 2b, except
   where section 2 reads 2b's own diff.
-- The figure-by-figure comparison of the 14 unreviewed changes: W15's reasons are copied, not re-derived; row 39's are read from 2b's
+- The figure-by-figure comparison of the 14 unreviewed changes (over `4d0ff8a2..dd1aed00`): W15's reasons are copied, not re-derived; row 39's are read from 2b's
   diff (section 2 and `CLASSIFICATION.md`).
 - The suite5 hourly figure's two values (0.1223 against 0.1663 USD/h): both copied; the values file gives 0.1663 as the total with the
   disk (section 5).

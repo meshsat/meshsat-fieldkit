@@ -23,7 +23,9 @@ qualification is part of the work requested; nothing in this package waits for i
 
 Added 6 October 2026 under MESHSAT-1357. Where this section and a later one disagree, this section is the current statement.
 `path:N` is line N of that file at commit `6fe398e9` (`6fe398e9f624160429411e975c26564e553714d3`), the commit this section was written
-from; `:N` repeats the path cited just before it; a path beginning `records/` is under `v2/docs/records/`. `dd1aed00d0a0a521063b5792550bc510c4707c59` is the
+from; `:N` repeats the path cited just before it; a path beginning `records/` is under `v2/docs/records/`. The owner-instruction file
+is cited as `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:N`, line N at the tested revision `dd1aed00`: part 26's row, filed after
+`6fe398e9`, moved every later line of that file by one (dated note, W33, 6 October 2026). `dd1aed00d0a0a521063b5792550bc510c4707c59` is the
 promoted commit (main was fast-forwarded to it on 6 October 2026), filled in at the adoption. Prototype
 framing: nothing in the kit has been built, bought, powered or measured.
 
@@ -31,13 +33,14 @@ framing: nothing in the kit has been built, bought, powered or measured.
 
 | Revision | Commit | What it is |
 |---|---|---|
-| Tested | `dd1aed00d0a0a521063b5792550bc510c4707c59` | the commit the gated release suite ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
-| Packaged | `dd1aed00d0a0a521063b5792550bc510c4707c59` | the commit every file of this revision is taken from |
+| Tested | `dd1aed00d0a0a521063b5792550bc510c4707c59` | the promoted revision: the commit the gated release suite and the promotion gate ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
+| Adopted | `836f711b` (`836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`) | the adoption commit (6 October 2026, 11:25 CEST), to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 30 records as adopted |
+| Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its difference from the tested revision and which checks cover it |
 | Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate the one targeted recheck cx46 read (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`) |
 | Earlier reviewed | `06077cee` (`06077cee85d0ed44c74c2a06c9fbb2030a0dedbc`) | the candidate the one focused check cx45 read (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:20`); its verdict as given: "P0 CANDIDATE: NOT CONFIRMED." (`:10`) |
 
-**The reviewed revision is not the packaged revision, and no verdict moves between them by itself.** The records adopted after the promotion (RESULT.md, CLASSIFICATION.md, the P0 list revision 3, the assessment, LAYER-STATUS and these pages) are committed on main after the tested commit; a page cannot carry its own commit's sha, so the supplier delta's README.md names that adoption commit (6 October 2026). The owner's binding rule (part 25,
-`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:844`): "Use the existing integration gate to record the reviewed and integrated
+**The reviewed revision is not the packaged revision, and no verdict moves between them by itself.** The records adopted after the promotion (RESULT.md, CLASSIFICATION.md, the P0 list revision 3, the assessment, LAYER-STATUS and these pages) are committed on main after the tested commit, first as adopted in the adoption commit `836f711b` (the Adopted row); a page cannot carry the sha of the commit that packages it, so the supplier delta's README.md names the packaged commit (the Packaged row) and states its difference from the tested revision (6 October 2026). Dated note (W33, 6 October 2026): the Packaged row named `dd1aed00` until W32's read of the adoption, which found RESULT.md and these pages' section 0 first in the adoption's commits, not at `dd1aed00`. The owner's binding rule (part 25,
+`dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:845`): "Use the existing integration gate to record the reviewed and integrated
 revisions and the intervening changes. If changes are only verified bindings or presentation, record that equivalence. If they change a
 circuit, assumption, model, limit or substantive claim, the affected result needs targeted verification before being credited. Passing
 the software suite alone cannot transfer an engineering verdict to altered claims." The integration record `records/int30/RESULT.md`
@@ -45,7 +48,7 @@ binds `4d0ff8a2` and `dd1aed00d0a0a521063b5792550bc510c4707c59`, and `records/in
 as applying to the revision its checker read.
 
 **What the promoted revision is, and is not**, in the integration record's words (`records/int30/RESULT.md`, sections 1, 2 and 6):
-"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit".
+"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`).
 
 ### 0b. The states, each apart
 
@@ -110,7 +113,7 @@ exclusions, cost and schedule. Do not assume ordinary fabrication/assembly inclu
    (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`, sections 1 to 4).
 
 Nothing is ordered or funded: "We are not undertaking or funding the physical validation now." (the owner's part 19,
-`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:470`); "no supplier is assumed engaged" (`:480`); and the annex says "Nothing here is a
+`dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:471`); "no supplier is assumed engaged" (`dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:481`); and the annex says "Nothing here is a
 request for a requirement change, a purchase, an outside contact, fabrication or energisation." (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:10`).
 
 We do NOT ask you:
@@ -120,12 +123,12 @@ We do NOT ask you:
 - to read a desk check, an AI review or a passing suite as sign-off or as qualification (the preamble above; section 0a);
 - to run the proposed experiments and procedures unchanged: they are PROPOSED, for you to review and agree before execution (section 8);
 - to treat a remaining-engineering item as a qualification-only task (the owner's part 24: "If a correction remains unsupported, hand it
-  over as **remaining engineering**", `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:786`), or a measured failure of a tested
+  over as **remaining engineering**", `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:787`), or a measured failure of a tested
   arrangement as a change of the owner's requirements ("A thermal failure of the tested arrangement is a design failure, not
-  automatically a conflict in my requirements.", `:483`);
+  automatically a conflict in my requirements.", `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:484`);
 - to change a requirement or a fixed constraint of section 2, or to adopt the Saft MP 176065 xtd pack, which is a PROPOSAL under
   investigation ("Distinguish investigating or testing the Saft option from adopting its 4S1P pack. No pack change has been approved by
-  this clarification.", `:485`), without the owner's ruling.
+  this clarification.", `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:486`), without the owner's ruling.
 
 ### 0e. How to reproduce set 30's figures
 
