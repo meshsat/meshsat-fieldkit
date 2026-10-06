@@ -1,0 +1,18 @@
+{
+  "board_clashes": [],
+  "part_pairs": [
+    {
+      "a": "a_membrane",
+      "b": "a_plungers",
+      "mm3": 17.599,
+      "note": "membrane drawn uncompressed: 0.3 mm onto plunger heads (intended)"
+    },
+    {
+      "a": "a_membrane",
+      "b": "a_retainer",
+      "mm3": 116.91,
+      "note": "flange compression 0.3 mm (intended)"
+    }
+  ],
+  "status": "PASS"
+}
