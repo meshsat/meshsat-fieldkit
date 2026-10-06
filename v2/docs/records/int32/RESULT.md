@@ -445,7 +445,10 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   On this revision, by `test_res32`'s count and by W78's run of the template on its corrected tree before its commit: before the fill, the tool's
   template rows are 72 (RESULT.md 70, CLASSIFICATION.md 2; GATE 58, REKEY 6, PROMOTED 4, CANDIDATE 3, ADOPTION 1; no KEEP row). The
   fill's first run leaves ADOPTION's one token and its second run none; after the fill `test_res32` compares this count with the newest
-  committed revision of this file that still holds the tokens (W80, on W79's N4).
+  committed revision of this file that still holds the tokens (W80, on W79's N4). W85 repeated W80's three stages on its revision of
+  the three files in a scratch clone, with stand-in commits on set 31's lineage tip that hold the five pinned tips (`62300318` among
+  them): `test_res32` printed 15 passed, 0 failed before the fill, after the first run (57 lines applied, ADOPTION deferred) and after
+  the second (1 line applied; a third run refused, exit 2), the template reading 72 rows as above.
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.
