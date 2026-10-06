@@ -4,9 +4,10 @@ pins): `v2/docs/records/int32/RESULT.md` and its classification `CLASSIFICATION.
 
 The basis of each predicate (W73's restatement): every row's sha, date, subject and file count is compared with git over the five
 ranges in the chain's merge order (each range's base is its merge base with set 31's lineage tip aa332280, or for fnd/s32attr with
-fnd/w34pdftext's tip, which the chain merges first); the declared tokens are fill_res31.py's (`_runs/int31/freeze/fill_res31.py`, its
-TOK pattern without the name INTEGRATED, which it fills only inside quoted subjects), so the same fill tool can be pointed at set 32 (the
-runner pass reads the tool and compares), and set 31's promoted revision is the PROMOTED token in section 1's BASE row alone; the class counts are recomputed from the table; row 14's carried change names a source row
+fnd/w34pdftext's tip, which the chain merges first); the declared tokens are the fill tool's, `_bin/fill_res.py` (W76's generalisation
+of set 31's `_runs/int31/freeze/fill_res31.py`, the same TOK pattern; W79's N3), without the name INTEGRATED, which it fills only inside
+quoted subjects, so the tool fills set 32 (the runner pass reads the tool and compares), and set 31's promoted revision is the PROMOTED
+token in section 1's BASE row alone; the class counts are recomputed from the table; row 14's carried change names a source row
 that set 30's adopted record classes REVIEWED-INPUT CHANGED; the chain's pinned merges are the five ranges' branches, each pin inside
 its range (fnd/res32's own later commits are placeholder row 31's).
 
@@ -17,6 +18,22 @@ change may name this table's own REVIEWED-INPUT CHANGED row as its source (row 1
 totals are recomputed from the table and the rows they name (W75's F3); every PROMOTED line but the BASE row names set 32 (F9); row 31
 carries no token (F11); the record's statement of the fill tool's template counts equals the tokens in the two files; the 21 are file
 touches and the 16 distinct files (F8); the fill tool read is `_bin/fill_res.py` (W76), its TOK and its set 32 file list read with ast.
+
+W80's restatement (6 October 2026, from 21:30 CEST, on W79's N4 and condition C3, as W69 did for set 31 from W68's F1): the test holds
+at three stages, which it reads from RESULT's section 1 (the five role rows: BASE, the re-key's cache commit, the candidate, set 32's
+promotion, the adoption): stage 0, every role row its token; stage 1, after the fill tool's first run (`fill_res.py --set 32 ... --apply`),
+the four commits named and ADOPTION its token (DEFER); stage 2, after its second run, all five named; any other mix is a partial fill and
+refused. The unclassified rows are 31 (text, no token), 32 and 33: a sha cell of ONE code span holding the token or the commit the fill
+wrote (a classified row's is `short` / `full`), date and class "not determined", never counted. A filled commit must stand where its role
+puts it (p_filled): set 31's promoted revision follows set 31's lineage tip LINEAGE on the first-parent line; the re-key's cache commit
+follows it there and holds the five branch tips; the candidate follows the re-key there; set 32's promotion is the candidate (main
+fast-forwarded to it); the adoption descends from the candidate; rows 32 and 33 name the same values as RESULT's re-key and candidate
+rows. Only commits that pass are accepted as named commits. The PROMOTED rule of W75's F9 holds on the filled commits too (set 32's
+promotion only on lines naming set 32, set 31's only on lines naming set 31), and section 8's template statement is compared with the
+files before the fill and, after it, with the newest committed revision of RESULT.md that still holds the tokens (git). The mutations
+whose anchor was a token the fill removes use anchors that stay, or the cell the stage holds; each refuses at every stage. W79's N1
+(p_alternatives reads which rows carry which row's change) and N2 (p_carried: a REVIEWED-INPUT CHANGED row without the second sentence's
+source must carry the first sentence's old and new value and its cx46 item) are added, each with the mutant W79 found passing.
 
 What fails here: a commit of set 32's five branch ranges missing, doubled or out of order; a short sha that is not its full sha's prefix; a
 date, subject or file count that is not git's; a class outside W39's fixed set; a row that touches a file cx46 read without the words
@@ -180,14 +197,133 @@ def _classes(cells):
     return [c.strip() for c in cells[6].split(" + ")]
 
 
+PH_CELL = re.compile(r"`(__[A-Z0-9]+(?:_[A-Z0-9]+)*__|[0-9a-f]{8,40})`$")
+
+
 def _placeholder_row(cells):
-    """A row of the integration's commits: its sha cell a token the fill fills, or (row 31, several commits; W75's F11) the words
-    'not determined'."""
-    return bool(re.match(r"`__[A-Z0-9_]+__`$", cells[1])) or cells[1] == "not determined"
+    """A row of the integration's commits that the table does not classify (W80, on W79's N4): its sha cell ONE code span holding a
+    token the fill fills or the commit it wrote there (a classified row's sha cell is `short` / `full`), or (row 31, several commits;
+    W75's F11) the words 'not determined'. Its date and class read "not determined" (p_placeholders); p_integration_rows says which."""
+    return bool(PH_CELL.match(cells[1])) or cells[1] == "not determined"
 
 
 def _real(text):
     return [c for c in _rows(text) if not _placeholder_row(c)]
+
+
+# the integration's unclassified rows: (row, the token its sha cell holds before the fill, the RESULT role that names the same value)
+INTEG = (("31", None, None), ("32", "__REKEY__", "REKEY"), ("33", "__CANDIDATE__", "CANDIDATE"))
+# RESULT's section 1 role rows, by the words before the revision cell (they stay through the fill), and each one's token
+ROLES = (("BASE", "| BASE (the REVIEWED role of the brief's form): set 31's promoted revision |", "__PROMOTED__"),
+         ("REKEY", "| The re-key's cache commit |", "__REKEY__"),
+         ("CANDIDATE", "| INTEGRATED = CANDIDATE: the candidate commit |", "__CANDIDATE__"),
+         ("PROMOTED", "| PROMOTED: main after the fast-forward, set 32's promotion |", "__PROMOTED__"),
+         ("ADOPTION", "| ADOPTED: the commit that adopts this record |", "__ADOPTION__"))
+
+
+def _roles(result):
+    """{role: the code span's content in its revision cell (the token or a commit)}, or a list of problems."""
+    sec = result.split("\n## 1. ", 1)[1].split("\n## 2. ", 1)[0] if "\n## 1. " in result else ""
+    out, bad = {}, []
+    for role, words, tok in ROLES:
+        ls = [l for l in sec.split("\n") if l.startswith(words)]
+        if len(ls) != 1:
+            bad.append("section 1 has %d rows %r, not one" % (len(ls), words[:50]))
+            continue
+        cell = CELL_SPLIT.split(ls[0].strip())[2].strip()
+        m = PH_CELL.match(cell)
+        if not m or (m.group(1).startswith("__") and m.group(1) != tok):
+            bad.append("the %s row's revision cell %r is neither %s nor one commit" % (role, cell[:40], tok))
+            continue
+        out[role] = m.group(1)
+    return bad or out
+
+
+def _stage(result):
+    """0 before the fill (every role its token), 1 after its first run (ADOPTION deferred), 2 after its second; None otherwise."""
+    r = _roles(result)
+    if isinstance(r, list):
+        return None
+    filled = tuple(not r[k].startswith("__") for k in ("BASE", "REKEY", "CANDIDATE", "PROMOTED", "ADOPTION"))
+    return {(False,) * 5: 0, (True,) * 4 + (False,): 1, (True,) * 5: 2}.get(filled)
+
+
+def _full(sha):
+    return _git("rev-parse", "--verify", sha + "^{commit}").strip() if _has(sha) else None
+
+
+def _fp(sha):
+    return _git("rev-list", "--first-parent", sha).split()
+
+
+def p_filled(texts):
+    """W80: each commit the fill wrote stands where its role puts it (stage 1 and 2); before the fill (stage 0) every role is its token."""
+    r = _roles(texts[RESULT])
+    if isinstance(r, list):
+        return r
+    st = _stage(texts[RESULT])
+    if st is None:
+        return ["a partial fill: the role rows %s" % ", ".join("%s %s" % (k, v[:12]) for k, v in r.items())]
+    if st == 0:
+        return []
+    bad = []
+    f = {k: _full(v) for k, v in r.items() if not v.startswith("__")}
+    for k, v in f.items():
+        if not v:
+            bad.append("the %s row names %s, not a commit of this repository" % (k, r[k]))
+    if bad:
+        return bad
+    if f["BASE"] == LINEAGE or LINEAGE not in _fp(f["BASE"]):
+        bad.append("BASE %s does not follow set 31's lineage tip %s on the first-parent line" % (r["BASE"], LINEAGE[:8]))
+    if f["REKEY"] == f["BASE"] or f["BASE"] not in _fp(f["REKEY"]):
+        bad.append("the re-key's cache commit %s does not follow BASE on the first-parent line" % r["REKEY"])
+    for b in BRANCHES:
+        if subprocess.run(["git", "-C", REPO, "merge-base", "--is-ancestor", b[2], f["REKEY"]], capture_output=True).returncode:
+            bad.append("the re-key's cache commit %s does not hold %s's tip %s" % (r["REKEY"], b[0], b[2][:8]))
+    if f["CANDIDATE"] == f["REKEY"] or f["REKEY"] not in _fp(f["CANDIDATE"]):
+        bad.append("the candidate %s does not follow the re-key's cache commit on the first-parent line" % r["CANDIDATE"])
+    if f["PROMOTED"] != f["CANDIDATE"]:
+        bad.append("set 32's promotion %s is not the candidate (main fast-forwarded to it)" % r["PROMOTED"])
+    if st == 2 and (f["ADOPTION"] == f["CANDIDATE"] or subprocess.run(
+            ["git", "-C", REPO, "merge-base", "--is-ancestor", f["CANDIDATE"], f["ADOPTION"]], capture_output=True).returncode):
+        bad.append("the adoption commit %s does not descend from the candidate" % r["ADOPTION"])
+    return bad
+
+
+def _accepted(texts):
+    """The full shas of the role commits p_filled accepts (none before the fill or when it refuses)."""
+    r = _roles(texts[RESULT])
+    if isinstance(r, list) or not _stage(texts[RESULT]) or p_filled(texts):
+        return set()
+    return {_full(v) for v in r.values() if not v.startswith("__")}
+
+
+def p_integration_rows(texts):
+    """W80 (W69's p_candidate_row for set 31): the unclassified rows are 31, 32 and 33 alone, numbered one past the last classified
+    row; row 31's sha cell 'not determined'; rows 32 and 33 their token before the fill and the commit RESULT's re-key and candidate
+    rows name after it (p_filled places those commits on the lineage)."""
+    bad = []
+    rows = _rows(texts[CLASS])
+    ph = [c for c in rows if _placeholder_row(c)]
+    if [c[0] for c in ph] != [i[0] for i in INTEG]:
+        return ["the unclassified rows are %s, not rows 31, 32 and 33" % [c[0] for c in ph]]
+    last = max(int(c[0]) for c in rows if not _placeholder_row(c) and "." not in c[0])
+    if int(ph[0][0]) != last + 1:
+        bad.append("the integration's rows start at %s, not %d (after the last classified row)" % (ph[0][0], last + 1))
+    if ph[0][1] != "not determined":
+        bad.append("row 31's sha cell is %r, not 'not determined'" % ph[0][1])
+    r = _roles(texts[RESULT])
+    for c, (n, tok, role) in zip(ph[1:], INTEG[1:]):
+        v = PH_CELL.match(c[1])
+        v = v.group(1) if v else c[1]
+        if v.startswith("__"):
+            if v != tok:
+                bad.append("row %s's token is %s, not %s" % (n, v, tok))
+            if isinstance(r, dict) and r.get(role) != tok:
+                bad.append("row %s holds %s while RESULT's %s row names %s" % (n, v, role, r.get(role)))
+        elif not isinstance(r, dict) or r.get(role, "").startswith("__") or _full(v) is None or _full(v) != _full(r[role]):
+            bad.append("row %s names %s, not the commit RESULT's %s row names" % (n, v, role))
+    return bad
 
 
 # ---- predicates: each returns a list of problems (empty when the record holds) ----
@@ -213,29 +349,66 @@ def p_placeholders(texts):
     for c in _rows(texts[CLASS]):
         if _placeholder_row(c) and (c[6] != "not determined" or c[2] != "not determined"):
             bad.append("the placeholder row %s carries a class or a date" % c[1])
+    st = _stage(texts[RESULT])
+    if st is None:
+        bad.append("the role rows of RESULT's section 1 are neither all tokens, nor all but ADOPTION filled, nor all filled (a partial fill)")
     # PROMOTED stands for set 31's promoted revision only in section 1's BASE row (the fill tool fills it there by its line)
     base = [l for l in texts[RESULT].split("\n") if l.startswith("| BASE ")]
     s31 = [l for l in texts[RESULT].split("\n") if "__PROMOTED__" in l and "set 31's promoted revision" in l]
-    if len(base) != 1 or "`__PROMOTED__`" not in base[0] or s31 != base:
+    if st == 0 and (len(base) != 1 or "`__PROMOTED__`" not in base[0] or s31 != base):
         bad.append("set 31's promoted revision is not section 1's BASE row alone as the PROMOTED token")
+    # W80: after the fill no token is left but ADOPTION's (stage 1, in RESULT) or none (stage 2)
+    left = {1: Counter({"__ADOPTION__": len(PH.findall(texts[RESULT]))}), 2: Counter()}
+    if st in left and (Counter(PH.findall(texts[RESULT]) + PH.findall(texts[CLASS])) != left[st] or (st == 1 and not left[1]["__ADOPTION__"])):
+        bad.append("stage %d of the fill leaves %s, not %s" % (st, dict(Counter(PH.findall(texts[RESULT]) + PH.findall(texts[CLASS]))),
+                                                            "the ADOPTION token alone in RESULT.md" if st == 1 else "none"))
+    if st and len(base) != 1:
+        bad.append("RESULT.md has %d BASE rows, not one" % len(base))
     # W78 (W75's F9): every other PROMOTED line names set 32, the rule RESULT's paragraph "Placeholders" states for the fill by its line
     for l in texts[RESULT].split("\n"):
         if "__PROMOTED__" in l and not l.startswith("| BASE ") and "set 32" not in l:
             bad.append("a PROMOTED line other than the BASE row does not name set 32: %r" % l[:80])
+    # W80: the same rule on the commits the fill wrote: set 32's promotion only on lines naming set 32, set 31's only on lines naming set 31
+    r = _roles(texts[RESULT])
+    if st and isinstance(r, dict):
+        for role, words in (("PROMOTED", "set 32"), ("BASE", "set 31")):
+            full = _full(r[role])
+            for l in texts[RESULT].split("\n"):
+                named = [t for t in HEXTOK.findall(l) if len(t) in (8, 40) and full and full.startswith(t)]
+                if named and words not in l:
+                    bad.append("a line naming the %s commit %s does not name %s: %r" % (role, r[role], words, l[:80]))
     # W78 (W75's F11): row 31 stands for several commits that do not exist yet, so no single value a fill could type: no token in it
     for c in _rows(texts[CLASS]):
         if c[0] == "31" and any(PH.search(x) for x in c):
             bad.append("row 31 carries a token")
-    # W78: section 8's statement of the fill tool's template rows equals the tokens in the two files (one row per occurrence, no KEEP)
+    # W78: section 8's statement of the fill tool's template rows equals the tokens in the two files (one row per occurrence, no KEEP);
+    # W80: it states the template BEFORE the fill, so after the fill it is compared with the newest committed revision of RESULT.md that
+    # still holds the re-key's token (git), its two files read at that commit
     flat = " ".join(texts[RESULT].split())
-    m = re.search(r"template rows are (\d+) \(RESULT\.md (\d+), CLASSIFICATION\.md (\d+); GATE (\d+), REKEY (\d+), PROMOTED (\d+), "
-                  r"CANDIDATE (\d+), ADOPTION (\d+); no KEEP row\)", flat)
-    cr, cc = Counter(PH.findall(texts[RESULT])), Counter(PH.findall(texts[CLASS]))
+    m = re.search(r"before the fill, the tool's template rows are (\d+) \(RESULT\.md (\d+), CLASSIFICATION\.md (\d+); GATE (\d+), REKEY (\d+), "
+                  r"PROMOTED (\d+), CANDIDATE (\d+), ADOPTION (\d+); no KEEP row\)", flat)
+    src = texts if st == 0 else _template_texts()
+    if src is None:
+        bad.append("after the fill, no committed revision of RESULT.md holds the template (the re-key's token)")
+        return bad
+    cr, cc = Counter(PH.findall(src[RESULT])), Counter(PH.findall(src[CLASS]))
     al = cr + cc
     want = (sum(al.values()), sum(cr.values()), sum(cc.values())) + tuple(al["__%s__" % k] for k in ("GATE", "REKEY", "PROMOTED", "CANDIDATE", "ADOPTION"))
     if not m or tuple(int(x) for x in m.groups()) != want:
-        bad.append("section 8's template rows are not the files' tokens %s" % (want,))
+        bad.append("section 8's template rows are not the %s tokens %s" % ("files'" if st == 0 else "template revision's", want))
     return bad
+
+
+def _template_texts():
+    """The two files at the newest commit touching RESULT.md whose RESULT.md still holds `__REKEY__` (the template the fill filled)."""
+    if "tmpl" not in _C:
+        _C["tmpl"] = None
+        for c in _git("log", "--format=%H", "--", RESULT).split():
+            t = "\n".join(_show(c, RESULT))
+            if "`__REKEY__`" in t:
+                _C["tmpl"] = {RESULT: t, CLASS: "\n".join(_show(c, CLASS))}
+                break
+    return _C["tmpl"]
 
 
 def p_coverage(text, order):
@@ -486,6 +659,7 @@ def p_row_numbers(text):
 def p_commits_named(texts):
     bad = []
     hist = set(_git("rev-list", LINEAGE, *[b[2] for b in BRANCHES]).split())
+    hist |= _accepted(texts)               # W80: the commits the fill wrote, each where its role puts it (p_filled), and only then
     for name, t in texts.items():
         for tok in set(HEXTOK.findall(t)):
             if len(tok) not in (8, 40):
@@ -574,7 +748,16 @@ def p_carried(text, s30_lines):
             s30[m.group(1)] = (m.group(2), [c.strip() for c in CELL_SPLIT.split(l.strip())[1:-1]][6])
     own = {c[0]: c for c in _real(text)}
     for c in _real(text):
-        if _classes(c)[0] != RIC or "second sentence" not in c[7]:
+        if _classes(c)[0] != RIC:
+            continue
+        if "second sentence" not in c[7]:
+            # W80 (W79's N2): a row classed by the first sentence quotes the old and the new value with file and line ("`a:f:N` `old`
+            # now `b:f:N` `new`") and names the cx46 item that read it or says none names it, both outside the quotes
+            bare = GIT_ANCHOR.sub("", c[7])
+            pair = re.search(r"`[0-9a-f]{8,40}:[^`:\s]+:\d+` `(?:[^`\\]|\\.)+` now `[0-9a-f]{8,40}:[^`:\s]+:\d+` `", c[7])
+            if not pair or not re.search(r"cx46's items? \d+|none names it", bare):
+                bad.append("row %s is %s with neither the second sentence's source row nor the first sentence's old and new value and "
+                           "cx46 item" % (c[0], RIC))
             continue
         m = re.search(r"this table's row (\d+)'s change \(`([0-9a-f]{8})`", c[7])
         if m:
@@ -648,6 +831,28 @@ def p_alternatives(text, order):
         bad.append("the second wider reading's rows %s are not a set of rows touching the reviewed tree holding the table's %s" % (sorted(named), sorted(ric)))
     if _totals(m2.group(1)) != moved(named):
         bad.append("the second wider reading's totals are not the table's %s" % moved(named))
+    # W80 (W79's N1): the clauses after the list say which row carries which row's change; the rows they name as carriers (and "as
+    # above", the REVIEWED-INPUT CHANGED rows) are the listed rows, each carrying an EARLIER row of the table
+    seg = flat[m.end():].split(" By first class under that reading", 1)[0].split(" Rows 2 to 5 and 11 ", 1)[0]
+    carriers = set()
+    for clause in seg.split("; "):
+        a = re.match(r"\s*rows? ([\d]+(?:(?:, | and )\d+)*) as above\b", clause)
+        if a:
+            if set(_nums(a.group(1))) != ric:
+                bad.append("the rows 'as above' %s are not the table's REVIEWED-INPUT CHANGED rows %s" % (a.group(1), sorted(ric)))
+            carriers |= set(_nums(a.group(1)))
+            continue
+        k = re.match(r"\s*rows? ([\d]+(?:(?:, | and )\d+)*)(?:'s [a-z ]+?)? (?:carry|carries|restate|restates) rows? "
+                     r"([\d]+(?:(?:, | and )\d+)*)'s ", clause)
+        if not k:
+            bad.append("a clause of the second wider reading names no carrier and source: %r" % clause[:60])
+            continue
+        who, src = _nums(k.group(1)), _nums(k.group(2))
+        if any(s >= w or s not in first for w in who for s in src):
+            bad.append("rows %s do not carry earlier rows of the table (%s)" % (who, src))
+        carriers |= set(who)
+    if carriers != named:
+        bad.append("the second wider reading lists rows %s but its clauses carry rows %s" % (sorted(named), sorted(carriers)))
     return bad
 
 
@@ -774,17 +979,75 @@ def t_the_rule_is_set_30s_line_11_verbatim_read_as_ruled():
     assert p_rule(t, s30, [l.replace("a verdict word", "a verdict") for l in tree]), "a changed copy of set 30's record passed"
 
 
+def _line(text, start):
+    ls = [l for l in text.split("\n") if l.startswith(start)]
+    assert len(ls) == 1, "%d lines start with %r" % (len(ls), start[:40])
+    return ls[0]
+
+
+def _cell(line):
+    """The second cell of a table row (a role row's revision, a table row's sha cell), as written."""
+    return CELL_SPLIT.split(line.strip())[2].strip()
+
+
 def t_every_placeholder_is_a_declared_token():
     texts = _texts()
+    st = _stage(texts[RESULT])
+    assert st is not None, p_filled(texts)
     assert not p_placeholders(texts), p_placeholders(texts)
-    _mutant_refused(p_placeholders, texts, RESULT, "`__GATE__`", "`__GATE_LINE__`")
-    _mutant_refused(p_placeholders, texts, CLASS, "`__REKEY__` | not determined", "`__REKEY__` | 2026-10-06 18:00:00")
-    _mutant_refused(p_placeholders, texts, RESULT, "set 31's promoted revision | `__PROMOTED__`", "set 31's promoted revision | `__GATE__`")
+    # W80: anchors that stay through the fill (W69's method for set 31); the refused defect is unchanged at every stage
+    _mutant_refused(p_placeholders, texts, RESULT, "**Set 32 closes NO power item.**", "**Set 32 closes NO power item.** `__GATE_LINE__`")
+    r32 = _line(texts[CLASS], "| 32 |")
+    _mutant_refused(p_placeholders, texts, CLASS, r32, r32.replace("| %s | not determined |" % _cell(r32), "| %s | 2026-10-06 18:00:00 |" % _cell(r32), 1))
+    base = _line(texts[RESULT], "| BASE ")      # the BASE row's cell another token: the wrong token before the fill, a partial fill after
+    _mutant_refused(p_placeholders, texts, RESULT, base, base.replace("| %s |" % _cell(base), "| `__GATE__` |", 1))
     # W78: a PROMOTED line that does not name set 32 (W75's F9), a token back in row 31 (F11), a template count not the files' (section 8)
-    _mutant_refused(p_placeholders, texts, RESULT, "(a DESK candidate once set 32 is promoted, `__PROMOTED__`)",
-                    "(a DESK candidate once promoted, `__PROMOTED__`)")
+    _mutant_refused(p_placeholders, texts, RESULT, "(a DESK candidate once set 32 is promoted, ", "(a DESK candidate once promoted, ")
+    _mutant_refused(p_placeholders, texts, RESULT, "(set 32's promotion) |", "(the promotion) |")
     _mutant_refused(p_placeholders, texts, CLASS, "| 31 | not determined |", "| 31 | `__GATE__` |")
     _mutant_refused(p_placeholders, texts, RESULT, "CLASSIFICATION.md 2; GATE 58,", "CLASSIFICATION.md 2; GATE 57,")
+    if st == 0:
+        _mutant_refused(p_placeholders, texts, RESULT, "`__GATE__`", "`__GATE_LINE__`")
+    else:
+        # after the fill: a token left that the stage does not leave, and set 31's promoted revision on a line naming set 32
+        _mutant_refused(p_placeholders, texts, RESULT, "**Set 32 closes NO power item.**", "**Set 32 closes NO power item.** `__REKEY__`")
+        _mutant_refused(p_placeholders, texts, RESULT, "(a DESK candidate once set 32 is promoted, `%s`)" % _roles(texts[RESULT])["PROMOTED"],
+                        "(a DESK candidate once set 32 is promoted, `%s`)" % _roles(texts[RESULT])["BASE"])
+
+
+def t_the_integration_rows_and_the_filled_commits():
+    """W80: rows 31 to 33 are the integration's unclassified rows; the commits the fill writes stand where their roles put them."""
+    _need_git()
+    texts = _texts()
+    st = _stage(texts[RESULT])
+    bad = p_integration_rows(texts) + p_filled(texts)
+    assert not bad, bad
+    r32, r33 = _line(texts[CLASS], "| 32 |"), _line(texts[CLASS], "| 33 |")
+    _mutant_refused(p_integration_rows, texts, CLASS, r33, r33 + "\n" + r33.replace("| 33 |", "| 34 |", 1))
+    _mutant_refused(p_integration_rows, texts, CLASS, r32, r32.replace("| %s |" % _cell(r32), "| %s |" % _cell(r33), 1))
+    _mutant_refused(p_integration_rows, texts, CLASS, r32, r32.replace("| %s |" % _cell(r32), "| `%s` |" % LINEAGE[:8], 1))
+    _mutant_refused(p_integration_rows, texts, CLASS, "| 31 | not determined |", "| 31 | `%s` |" % LINEAGE[:8])
+    _mutant_refused(p_integration_rows, texts, CLASS, r32, r32.replace("| 32 |", "| 32.1 |", 1))
+    if st == 0:     # a fill of rows 32 and 33 without RESULT's rows, and RESULT's rows without the others: a partial fill
+        _mutant_refused(p_integration_rows, texts, CLASS, r33, r33.replace("| `__CANDIDATE__` |", "| `%s` |" % LINEAGE[:8], 1))
+        rk = _line(texts[RESULT], ROLES[1][1])
+        _mutant_refused(p_filled, texts, RESULT, rk, rk.replace("`__REKEY__`", "`%s`" % LINEAGE[:8], 1))
+        return
+    r = _roles(texts[RESULT])
+    rows = {x[0]: _line(texts[RESULT], x[1]) for x in ROLES}
+
+    def moved(role, value):
+        _mutant_refused(p_filled, texts, RESULT, rows[role], rows[role].replace("`%s`" % r[role], "`%s`" % value, 1))
+    moved("BASE", LINEAGE[:8])                 # set 31's lineage tip itself, not its promoted revision
+    moved("BASE", r["REKEY"])                  # a later commit as the base
+    moved("REKEY", r["BASE"])                  # the re-key at the base itself
+    moved("REKEY", BRANCHES[4][2][:8])         # a commit that is not on the lineage after the base
+    moved("CANDIDATE", r["REKEY"])             # the candidate equal to the re-key
+    moved("PROMOTED", r["BASE"])               # set 32's promotion naming set 31's
+    moved("PROMOTED", r["REKEY"])              # not the candidate main is fast-forwarded to
+    moved("ADOPTION", r["CANDIDATE"])          # the adoption commit is not the candidate (at stage 1 the mutant makes stage 2)
+    if st == 2:
+        moved("ADOPTION", r["BASE"])           # nor an earlier commit
 
 
 def t_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes():
@@ -845,6 +1108,9 @@ def t_every_commit_named_is_in_the_histories_read_or_declared_outside_them():
     texts = _texts()
     assert not p_commits_named(texts), p_commits_named(texts)
     _mutant_refused(p_commits_named, texts, RESULT, "`6dc69ad2`", "`6dc69ad3`")
+    if _stage(texts[RESULT]):                  # W80: the commits the fill wrote are accepted only while p_filled accepts them
+        base = _line(texts[RESULT], "| BASE ")
+        _mutant_refused(p_commits_named, texts, RESULT, base, base.replace("| %s |" % _cell(base), "| `%s` |" % LINEAGE[:8], 1))
 
 
 def t_every_quote_is_on_its_cited_line():
@@ -890,6 +1156,11 @@ def t_a_carried_change_names_a_reviewed_input_row_of_set_30():
         "a source row that is a merge passed"
     assert p_carried(t.replace("this table's row 14's change (`4d07a401`", "this table's row 13's change (`b397aada`", 1), s30), \
         "a source row of this table that is not REVIEWED-INPUT CHANGED passed"
+    # W80 (W79's N2, its mutant passed at b279819e): row 15 without the second sentence and its source, and without the first sentence's
+    # old and new value and cx46 item, still REVIEWED-INPUT CHANGED
+    assert p_carried(t.replace("classed REVIEWED-INPUT CHANGED under set 30's rule's second sentence as ruled (reading A; the coordinator's "
+                               "ruling on W75's F2): it quotes this table's row 14's change (`4d07a401`, which carries set 30's row 8's)",
+                               "classed REVIEWED-INPUT CHANGED: it quotes words", 1), s30), "a REVIEWED-INPUT CHANGED row with no basis passed"
 
 
 def t_the_wider_readings_are_the_tables():
@@ -902,6 +1173,11 @@ def t_the_wider_readings_are_the_tables():
         "a wrong second reading's total passed"
     assert p_alternatives(t.replace("(rows 2 to 5, 7, 9, 11, 14", "(rows 2 to 5, 9, 11, 14", 1), order), \
         "a wrong list of rows touching the reviewed tree passed"
+    # W80 (W79's N1, its probe passed at b279819e): row 26 listed for row 27, the same first class, so the totals do not move
+    assert p_alternatives(t.replace("finds the same 6 rows, 7, 9, 14, 15, 27 and 29", "finds the same 6 rows, 7, 9, 14, 15, 26 and 29", 1), order), \
+        "a listed row that no clause says carries a change passed"
+    assert p_alternatives(t.replace("rows 27 and 29 carry row 25's new KEY", "rows 27 and 29 carry row 28's new KEY", 1), order), \
+        "a carried change from a later row passed"
 
 
 def t_the_declared_tokens_are_the_fill_tools():
@@ -942,6 +1218,7 @@ def _pytest(fn):
 
 test_the_records_carry_no_dash_and_open_with_their_state_lines = _pytest(t_the_records_carry_no_dash_and_open_with_their_state_lines)
 test_every_placeholder_is_a_declared_token = _pytest(t_every_placeholder_is_a_declared_token)
+test_the_integration_rows_and_the_filled_commits = _pytest(t_the_integration_rows_and_the_filled_commits)
 test_the_rule_is_set_30s_line_11_verbatim_read_as_ruled = _pytest(t_the_rule_is_set_30s_line_11_verbatim_read_as_ruled)
 test_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes = _pytest(
     t_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes)

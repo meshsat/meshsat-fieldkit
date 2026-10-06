@@ -436,8 +436,10 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 - **The fill tool for set 32** (W73's third finding, W75's F11) exists since 20:59 CEST: `<worktrees>/_bin/fill_res.py --set 32`
   (W76) lists `v2/docs/records/int32/RESULT.md` and `CLASSIFICATION.md` and fills the same five tokens; `test_res32` reads its pattern
   and its set 32 file list in the runner pass. Its template on W73's revision, as W76 read it: `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W76 at about 20:59 CEST", `Set 32's template at ab0cdd9e: 72 rows (RESULT 69, CLASSIFICATION 3; GATE 58, REKEY 6, PROMOTED 4, CANDIDATE 3, ADOPTION 1)`.
-  On this revision, by `test_res32`'s count and by W78's run of the template on its corrected tree before its commit, the tool's
-  template rows are 72 (RESULT.md 70, CLASSIFICATION.md 2; GATE 58, REKEY 6, PROMOTED 4, CANDIDATE 3, ADOPTION 1; no KEEP row).
+  On this revision, by `test_res32`'s count and by W78's run of the template on its corrected tree before its commit: before the fill, the tool's
+  template rows are 72 (RESULT.md 70, CLASSIFICATION.md 2; GATE 58, REKEY 6, PROMOTED 4, CANDIDATE 3, ADOPTION 1; no KEEP row). The
+  fill's first run leaves ADOPTION's one token and its second run none; after the fill `test_res32` compares this count with the newest
+  committed revision of this file that still holds the tokens (W80, on W79's N4).
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.
