@@ -2419,6 +2419,16 @@ def surge_inputs(F, T):
     b6["r176"] = [r[1].rstrip(";").strip() for r in rows]
     if "no loop is claimed to pass (round 5)" not in b6["r176"][2] or "their 10 % margin lines are not held at a connector fault" not in b6["r176"][1]:
         refuse(3, "R-176's rows 2 and 3 after round 5")
+    # set 31 (6 October 2026), the coordinator's N1a (b2564b59, QUEUE 05:28, W20-N1a's candidate A): the register annotates row 3's
+    # U5 line with R-240 while R-240 is drafted, not applied (a drafted correction annotates, an applied one replaces). This record
+    # renders the register's row, so L4-E7's printed row 3 carries the same words here; refused once R-240 is no longer DRAFTED
+    # (its correction then replaces the line, record l4e7's to restate: L4E7-P0SOL.md section 5)
+    u5l = "U5's CSPIN to CSNIN within +-0.240 V"
+    r240 = [r_ for r_ in md_table(open(os.path.join(HERE, "DOWNSTREAM-REGISTER.md"), encoding="utf-8").read(), "| ID | Kind |") if r_[0] == "R-240"]
+    if len(r240) != 1 or r240[0][6] != "DRAFTED" or b6["r176"][2].count(u5l) != 1:
+        refuse(3, "R-176 row 3's U5 line and R-240 DRAFTED (N1a)")
+    b6["r176"][2] = b6["r176"][2].replace(u5l, u5l + " (under R-240, drafted, not applied: under 10 mV in magnitude, a layout check, "
+                                          "L4E7-P0SOL.md section 5)")
     rm["b6"] = b6
     src7 = one(T["l4e7r"]) + " " + one(T["l4e7md"]) + " " + one(T["l4e7p0"])   # set 30: L4-E7's P0 output too (D-10's applied text cites its cases)
     for d in DEFECTS + [{"id": "RESERVE_NOTE", "options": RESERVE_NOTE, "state": "", "resolution": ""}]:
