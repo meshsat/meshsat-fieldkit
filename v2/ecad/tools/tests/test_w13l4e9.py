@@ -1,11 +1,16 @@
 """W13 (MESHSAT-1357, 6 October 2026): W5's findings on L4-E9's side, held as predicates on one patch file.
 
 The file: v2/docs/records/l4e9/L4E9-W5-PATCH.md (rows WP-01 to WP-27 for the coordinator). Nothing in it is applied by this branch:
-L4-E9's page, register, generator, output and inputs are the integration's files, the drafts are records l8p's and l4e11's. The
-predicates, each run on the tree and on the texts the rows replace:
+L4-E9's page, register, generator, output and inputs are the integration's files, the drafts are records l8p's and l4e11's. Set 31
+applied WP-01 to WP-22 with the re-take of section 2 (W24, bad162ad on fnd/int31l4e9 from a6e3a066); WP-23 to WP-27 wait (the
+coordinator's decision: only with the next circuit change to those drafts). Since W25 (6 October 2026) the first predicate reads the
+applied state at this tree and the pending state at a6e3a066 through git (the history: the rows were once true). The predicates,
+each run on the tree and on the texts the rows replace:
 
 - every row's Old text is where the row says (a whole line, consecutive lines or a fragment once in the file), or its New text is;
-  the re-take rows (WP-01 to WP-06) and the list rows (WP-07 to WP-22) each stand all pending or all applied, never half;
+  the re-take rows (WP-01 to WP-06) and the list rows (WP-07 to WP-22) each stand all pending or all applied, never half: APPLIED at
+  this tree with every Old text gone, the copies the new pins name standing with their digests and round 1's copies removed, and
+  all pending at a6e3a066; the docstring rows WP-23 to WP-27 stand pending at both;
 - the three copies: their sha256, round 1's bytes at 515f6cf2, W5's files and their sha256, the LM5069 lines and the quoted unified
   diffs recomputed; the re-taken bytes still meet the generator's two checks on a copy (read from its syntax tree), which a copy
   without its draft marker fails; the new pins name the drafts' current bytes and the commit that last changed them;
@@ -43,6 +48,8 @@ L8P_DRAFTS = {"apply_gen_sch_p_breaker.py", "apply_gen_sch_p_idealdiode.py", "ap
               "apply_gen_sch_a_thguard.py", "apply_gen_sch_a_thgfs.py"}
 GROUPS = {"re-take": ["WP-%02d" % i for i in range(1, 7)], "list": ["WP-%02d" % i for i in range(7, 23)]}
 DOCS = ["WP-%02d" % i for i in range(23, 28)]
+SET31_BASE = "a6e3a066a827b8504e8ce804f82c77dac6955c93"   # fnd/int31's tip: every row pending (the history side)
+APPLIED_AT = "bad162ad"   # fnd/int31l4e9: W24 applied WP-01 to WP-22 and the re-take (set 31); WP-23 to WP-27 not applied
 DASHES = (chr(0x2013), chr(0x2014))
 _C = {}
 
@@ -102,6 +109,16 @@ def _where(r, text):
         new_here = text.count(r["new"]) == 1
     assert old_here != new_here, "%s: neither its Old nor its New text stands alone where the row says" % r["title"]
     return "old" if old_here else "new"
+
+
+def _old_left(r, text):
+    """Whether row r's Old text still stands in `text` outside its New text (a line row by its whole lines; W25)."""
+    if r["Kind"] in ("line", "lines"):
+        lines, nb = text.split("\n"), r["new"].split("\n")
+        at = _find(lines, nb)
+        rest = lines[:at[0]] + ["\0"] + lines[at[0] + len(nb):] if len(at) == 1 else lines
+        return bool(_find(rest, r["old"].split("\n")))
+    return r["old"] in text.replace(r["new"], "\0")
 
 
 def _turn(r, text, to):
@@ -208,8 +225,40 @@ def t_every_row_stands_where_it_says_and_no_group_is_half_applied():
     for name, ids in GROUPS.items():
         sides = {_where(rows[i], _read(rows[i]["File"])) for i in ids}
         assert len(sides) == 1, "the %s rows are half applied: %s" % (name, sorted(sides))
+        # W25: applied at this tree (W24, bad162ad), every Old text gone
+        assert sides == {"new"}, "the %s rows are not applied at this tree (W24, %s)" % (name, APPLIED_AT)
+        assert not [i for i in ids if _old_left(rows[i], _read(rows[i]["File"]))], "an applied %s row's Old text still stands" % name
     for rid in DOCS:
-        _where(rows[rid], _read(rows[rid]["File"]))
+        # not applied (the coordinator's decision: only with the next circuit change to those drafts): the Old text once, as before
+        assert _where(rows[rid], _read(rows[rid]["File"])) == "old", "%s was applied" % rid
+    # the re-take (section 2) applied: each new pin's copy stands with its digest, round 1's copy is gone
+    for rid in ("WP-01", "WP-02", "WP-03"):
+        _k, (p_old, s_old) = list(ast.literal_eval("{" + rows[rid]["old"].strip().rstrip(",") + "}").items())[0]
+        _k, (p_new, s_new) = list(ast.literal_eval("{" + rows[rid]["new"].strip().rstrip(",") + "}").items())[0]
+        assert _sha(open(os.path.join(ROOT, p_new), "rb").read()) == s_new, "%s: the copy %s is not the pinned bytes" % (rid, p_new)
+        assert not os.path.exists(os.path.join(ROOT, p_old)), "%s: round 1's copy %s still stands" % (rid, p_old)
+    # history: at fnd/int31's a6e3a066 every row stood pending, its Old text where it says and round 1's copies in place
+    base = {}
+    for rid, r in rows.items():
+        b = _git_show(SET31_BASE, r["File"])
+        if b is None:
+            raise Skip("fnd/int31's %s is not in this object store (the history side)" % SET31_BASE[:8])
+        base[r["File"]] = b.decode("utf-8")
+    for rid, r in rows.items():
+        assert _where(r, base[r["File"]]) == "old", "%s did not stand pending at %s" % (rid, SET31_BASE[:8])
+    for rid in ("WP-01", "WP-02", "WP-03"):
+        _k, (p_old, s_old) = list(ast.literal_eval("{" + rows[rid]["old"].strip().rstrip(",") + "}").items())[0]
+        assert _sha(_git_show(SET31_BASE, p_old)) == s_old, "%s: round 1's copy at %s" % (rid, SET31_BASE[:8])
+    # a mutation: a fragment row and a re-take row reverted in memory at this tree are refused (the row numbers are the base's, so a
+    # reverted Old text off its base line reads "neither"; either way the applied predicate above fails on it)
+    for rid in ("WP-07", "WP-01"):
+        r = rows[rid]
+        reverted = _turn(r, _read(r["File"]), "old")
+        try:
+            side = _where(r, reverted)
+        except AssertionError:
+            side = None
+        assert side != "new" and _old_left(r, reverted), "%s reverted is not refused" % rid
     text = _read(PATCH)
     assert not any(d in text for d in DASHES), "a dash in the patch file"
     assert "## 6. ONLY WITH THE NEXT CIRCUIT CHANGE TO THESE DRAFTS" in text

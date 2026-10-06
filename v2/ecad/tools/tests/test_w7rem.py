@@ -3,10 +3,14 @@
 The files: v2/docs/records/l4e9/L4E9-4588-PATCH.md (rows P-01 to P-12 for L4-E9's page and the generator data that renders or checks
 the same texts; records l4e11 and l4e10 classified) and v2/docs/records/l4close/P0-POWER-LIST.rev3.patch.md (rows R-01 to R-09 for
 Slot K's draft 2 of the P0 list's revision 3). Neither patch is applied by this branch: the page, the generator and the P0 list are
-the coordinator's files. The predicates, each run on the tree and on the texts the rows replace:
+the coordinator's files. Set 31 applied the L4-E9 rows P-01 to P-12 verbatim (W24, 467c2aaa on fnd/int31l4e9 from a6e3a066); since
+W25 (6 October 2026) the first predicate reads them APPLIED at this tree and PENDING at a6e3a066 through git (the history: the rows
+were once true); the P0 rows R-01 to R-09 are read on Slot K's draft 2 at its commit, as before. The predicates, each run on the tree
+and on the texts the rows replace:
 
-- every L4-E9 row's Old text is where the row says (a whole line, consecutive lines or a fragment of the named line, once in the
-  file), or every row's New text is, so a half-applied patch is refused;
+- every L4-E9 row's New text stands once where the row says and its Old text is gone (a line row by its whole lines, a fragment
+  outside the New text), so a half-applied or reverted patch is refused; at a6e3a066 every row's Old text is where the row says (a
+  whole line, consecutive lines or a fragment of the named line, once in the file) and its New text is not;
 - once every row is applied, each page cell equals the generator data that renders or checks it: 8a's D-14 options and 8b's U-04
   constraint read from the patched generator's syntax tree, the exit table's D-14 state and 8f's UDC-1 current rendered from their
   format strings with the figures L4-E11 prints (the same pairing checked on the old texts, which fixes those figures);
@@ -42,6 +46,8 @@ L4O = "v2/docs/records/l4e9/l4e9_power_path.out"
 E11O = "v2/docs/records/l4e11/l4e11_power.out"
 E11P = "v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md"
 D2 = ("35dca639d1f7cbc72e9649b8bb327f65caa686c9", "v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md")
+SET31_BASE = "a6e3a066a827b8504e8ce804f82c77dac6955c93"   # fnd/int31's tip: P-01 to P-12 pending (the history side)
+APPLIED_AT = "467c2aaa"   # fnd/int31l4e9: W24 applied P-01 to P-12 verbatim (set 31)
 DASHES = (chr(0x2013), chr(0x2014))
 NEW_EXPECT = "(Zself + 2 Zmut) at most 40.78 K/W without m"
 OLD_EXPECT = ("(Zself + 2 Zmut) at most 45.88 K/W steady with R17 placed apart", "(Zself + Zmut) at most 20.39 K/W the fallback")
@@ -96,11 +102,12 @@ def _find(lines, block):
     return [i for i in range(len(lines) - k + 1) if lines[i:i + k] == block]
 
 
-def _state(rows):
-    """'pending' when every L4-E9 row's Old text is where it says, 'applied' when every New text stands once; else refused."""
+def _state(rows, reader=None):
+    """'pending' when every L4-E9 row's Old text is where it says, 'applied' when every New text stands once; else refused. `reader`
+    gives a file's text (the tree's by default; a commit's for the history side)."""
     seen = set()
     for rid, r in rows.items():
-        text = _read(r["File"])
+        text = (reader or _read)(r["File"])
         lines = text.split("\n")
         n = int(r["Line"])
         if r["Kind"] in ("line", "lines"):
@@ -113,6 +120,23 @@ def _state(rows):
         seen.add("pending" if old_here else "applied")
     assert len(seen) == 1, "half applied: %s" % sorted(seen)
     return seen.pop()
+
+
+def _old_left(rows, reader=None):
+    """The rows whose Old text still stands in their file outside their New text: a line row by its whole lines, a fragment by its text
+    (W25: the applied side of the first predicate; a New text that contains its Old is read with the New text taken out)."""
+    left = []
+    for rid, r in sorted(rows.items()):
+        text = (reader or _read)(r["File"])
+        if r["Kind"] in ("line", "lines"):
+            lines, nb = text.split("\n"), r["new"].split("\n")
+            at = _find(lines, nb)
+            rest = lines[:at[0]] + ["\0"] + lines[at[0] + len(nb):] if len(at) == 1 else lines
+            if _find(rest, r["old"].split("\n")):
+                left.append(rid)
+        elif text.replace(r["new"], "\0").count(r["old"]):
+            left.append(rid)
+    return left
 
 
 def _apply(rows, rel, text, which_from, which_to):
@@ -239,10 +263,28 @@ def _labelled(text):
 
 
 def t_the_l4e9_rows_stand_where_they_say():
+    """W25's restatement (6 October 2026) of "pending or applied, never half": APPLIED at this tree (W24, 467c2aaa) with every Old text
+    gone, PENDING at fnd/int31's a6e3a066 (read through git), and a row reverted at this tree is refused as half applied."""
     rows = _rows(L4E9P)
     assert sorted(rows) == ["P-%02d" % i for i in range(1, 13)], sorted(rows)
     assert {r["File"] for r in rows.values()} == {PAGE, GEN}
-    assert _state(rows) in ("pending", "applied")
+    assert _state(rows) == "applied", "P-01 to P-12 are not applied at this tree (W24, %s)" % APPLIED_AT
+    assert not _old_left(rows), "an applied row's Old text still stands: %s" % _old_left(rows)
+    base = {rel: _git_show(SET31_BASE, rel) for rel in (PAGE, GEN)}
+    if None in base.values():
+        raise Skip("fnd/int31's %s is not in this object store (the history side)" % SET31_BASE[:8])
+    assert _state(rows, base.get) == "pending", "the rows did not stand pending at %s" % SET31_BASE[:8]
+    assert _old_left(rows, base.get) == sorted(rows), "an Old text was missing at %s" % SET31_BASE[:8]
+    for rid in ("P-01", "P-12"):   # a fragment row and a line row reverted in memory: half applied, refused
+        rel = rows[rid]["File"]
+        texts = {PAGE: _read(PAGE), GEN: _read(GEN)}
+        texts[rel] = _apply({rid: rows[rid]}, rel, texts[rel], "new", "old")
+        try:
+            _state(rows, texts.get)
+            refused = False
+        except AssertionError:
+            refused = True
+        assert refused and _old_left(rows, texts.get) == [rid], "%s reverted is not refused" % rid
 
 
 def t_each_page_cell_equals_its_generator_data_on_both_sides():
