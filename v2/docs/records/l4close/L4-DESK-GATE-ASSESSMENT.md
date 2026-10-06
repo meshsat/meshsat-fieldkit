@@ -1,19 +1,21 @@
 # Layer 4's DESK gate (the owner's part 19): the assessment on the promoted revision `dd1aed00` (MESHSAT-1357, 6 October 2026)
 
-**Status: ADOPTED on the promoted revision `dd1aed00d0a0a521063b5792550bc510c4707c59`.** The coordinator's judgement is inserted in section 6 (11:19 CEST). Prototype framing:
+**Status: ADOPTED on the promoted revision `dd1aed00d0a0a521063b5792550bc510c4707c59`.** The coordinator's judgement is inserted whole in section 6, by the coordinator in the adoption commit `836f711b` (11:25 CEST). Prototype framing:
 nothing in the kit has been built, bought, powered or measured. W12's draft 2 adopted by worker W27 on branch `fnd/adopt30b`
 (6 October 2026, from 10:43 CEST): the integrated and the promoted sha bound from the coordinator's values of 10:40:38 CEST
 (INTEGRATED = CANDIDATE = PROMOTED = `dd1aed00d0a0a521063b5792550bc510c4707c59`, main fast-forwarded at 10:36:57 CEST), each mark *basis moved* resolved and the
-lines marked *re-read on 2b* re-read on `dd1aed00` (sections 6 and 9), the Y6 table added (section 6a). W27 stopped on two
-sentences of the coordinator's judgement of 10:45 CEST that read differently from the ledger at `dd1aed00` and did not insert it
+lines marked *re-read on 2b* re-read on `dd1aed00` (sections 6 and 9), the Y6 table added (section 6a). W27 held the coordinator's
+judgement of 10:45 CEST (one count corrected at about 10:59 by the clock) on two sentences that read differently from the ledger at
+`dd1aed00` while W27 drafted, and did not insert it; the coordinator inserted it whole in the adoption commit `836f711b` at 11:25 CEST
 (section 6). The text from here to section 5 and in sections 7, 8 and 10 is draft 2's as W12 wrote it, read at `6bc4424e`.
 
 **Draft 2 as filed.** It is Slot L's draft (`L4-DESK-GATE-ASSESSMENT.draft.md`, branch `fnd/dgate`
 at `249e9e4785a170238c69316742a422250908cd1f`, kept unchanged beside it as filed) re-read on the current committed integration,
 `fnd/p0pwr` at `6bc4424ec64592e1a501af5db2246f3391c525a0` (the candidate below), with sections 0 and 5 brought to the present and every
 citation checked. The coordinator adopts, edits or rejects it at promotion, binding the final integrated sha and the promoted sha
-where draft 2 read their placeholders (both bound at the adoption: `dd1aed00`). The verdict word is the coordinator's and stands in section 6
-(inserted at the adoption, 11:15 CEST: NOT PASSED, with the three completion claims apart). Nothing here accepts, closes, verifies or promotes anything; it designs nothing,
+where draft 2 read their placeholders (draft 2's words, a draft until the adoption at `836f711b`, 11:25 CEST, where the coordinator
+adopted it; both shas bound at the adoption: `dd1aed00`). The verdict word is the coordinator's and stands in section 6
+(inserted whole by the coordinator in the adoption commit `836f711b`, 11:25 CEST: NOT PASSED, with the three completion claims apart). Nothing here accepts, closes, verifies or promotes anything; it designs nothing,
 runs no generator, suite or box job and consumes no review. Written by worker W12 on branch `fnd/dgate2`, read from 04:05 CEST on
 6 October 2026. The coordinator's commit 2b (the regenerated outputs) is not committed when this is written: every line that a
 regenerated output may move is marked *re-read on 2b*. Prototype framing: nothing in the kit has been built, bought, powered or
@@ -148,8 +150,9 @@ every sha and branch named here.
      communications bootstrap) filed in the owner-instruction file, whose new table row moves every later line of that file by one
      (every OWN citation here is at the candidate), and the compact kit's folder and the root README, outside Layer 4. None of the
      four parts. IN the tree; its classification as an unrelated intervening commit is the coordinator's (part 25 [OWN:845]).
-  8. Commit 2b, the regenerated outputs: sha pending (the coordinator's); NOT read here. Calculations; every `.out` citation and every
-     pin comparison below is re-read on 2b.
+  8. Commit 2b, the regenerated outputs: sha pending (the coordinator's) when draft 2 was written; NOT read here. Calculations; every
+     `.out` citation and every pin comparison below is re-read on 2b. Dated note (the adoption at `836f711b`, 11:25 CEST): 2b is
+     `d83d9f2d`, bound and re-read at the adoption (section 9).
 - **The pre-freeze branches named in the coordinator's note** (`<worktrees>/_runs/claude/w12dgate/INBOX.md`): `fnd/w1l5pwr`
   `6ab17e21`, `fnd/w2applier` `2080a0ff`, `fnd/w6tp` `9802dfde`, `fnd/ledgerfix` `99bbc0c6` and `fnd/l4e9s31` `17ce29d5`, each an
   ancestor of the candidate (held by the test).
@@ -249,7 +252,7 @@ every sha and branch named here.
   connected output still prints "L4-E9's own output refuses on this tree at its L4-E11 pin" [CONP:362], a generator sentence the
   promoted revision's bytes no longer bear out (K-28, restated in its row).
 - A2.4 KiCad is needed for the reading of record and for everything after the schematic: "the KiCad export on the box (kicad-cli sch
-  export netlist) is the reading of record" [GNL:14-15]; no ERC is run by the netlist tool [GNL:13]; no board has a layout
+  export netlist) is the reading of record" [GNL:16-17]; no ERC is run by the netlist tool [GNL:15]; no board has a layout
   [PAGE:885]; tests that need pcbnew or kicad-cli skip on a host without them [HAR:7].
 - A2.5 Several calculations are withdrawn as bounds and owed as engineering: "the universal sustained bound and its positive margin
   are WITHDRAWN" [T10:620]; the connected verdict is "REMAINING ENGINEERING. No row of sections 5 to 10 is a positive electrical
@@ -409,7 +412,7 @@ L's reading (SESSION, for the coordinator to keep or change); 17 read YES on the
 | K-01 | S8 C1; I30 4; LS30 2 | criterion 2: "three material defects are open" [PAGE0:967] against "criterion 2 has no open defect" [PAGE0:979] (set 29's text) | no | in the candidate: corrected in the text [PAGE:1007], set 31 row 1 [H31:32] | CLAIM CHANGE [H31:32] | NO |
 | K-02 | S8 C2 | the register's count, 209 items [REG0:59] and 186 [PAGE0:969], against its rows | no | in the candidate: 235 items [PAGE:1612], set 31 row 15 [H31:46] | PRESENTATION OR BINDING [H31:46] | NO |
 | K-03 | S8 C3; PC-01; PC-08; LS30 1 | FAN_OK: R-210 to R-213 WITHDRAWN [REG:306-309] and R-28 without FAN_OK [REG:134] against LH-12's "the fans' supplies through FAN_OK, R-210 to R-212" [LH:28] | yes (LH-12) | none: set 31 left it [H31:117]; W7 and W3 leave it to its file [W7PAT:359], [W3ANX:290-291] | none stated | YES (LH-12, Layer 5's row) |
-| K-04 | S8 C4; H31 C | the P0 list's band 6.3522 to 6.9257 A and case at 15.1307 V [P0L:18] against the record's 6.3518 to 6.9259 A [F01:132] and 15.1308 V [F01:145] (the register's R-227 restated in the candidate [H31:56]) | yes (the P0 list's row) | next set: `fnd/w7rem` R-01 and R-02 [W7P0L:31], [W7P0L:56]; `fnd/w9l9t5` W9-07 [W9T5R:397] | PRESENTATION OR BINDING [W7P0L:43], [W7P0L:65], [W9T5R:397] | YES (the P0 list's row) |
+| K-04 | S8 C4; H31 C | the P0 list's band 6.3522 to 6.9257 A and case at 15.1307 V [P0L:18] against the record's 6.3518 to 6.9259 A [F01:132] and 15.1308 V [F01:145] (the register's R-227 restated in the candidate [H31:56]) | yes (the P0 list's row; dated note: resolved at the adoption (`836f711b`), where revision 3 of the P0 list carries the record's band and case, its row note P0-1) | next set: `fnd/w7rem` R-01 and R-02 [W7P0L:31], [W7P0L:56]; `fnd/w9l9t5` W9-07 [W9T5R:397] | PRESENTATION OR BINDING [W7P0L:43], [W7P0L:65], [W9T5R:397] | YES (the P0 list's row) |
 | K-05 | S8 C5; PC-09 | R-242, R-244, R-245 class SETTLED WORK [REG0:335] against their acceptance REMAINING ENGINEERING | no | in the candidate: KNOWN ENGINEERING DEFECT, ASSIGN [REG:337], [REG:339], [REG:340]; set 31 row 17 classes seven P0 rows so, R-225, R-227, R-232, R-238, R-242, R-244 and R-245 [H31:48] | CLAIM CHANGE [H31:48] | NO |
 | K-06 | S8 C6; PC-05; LS30 9 | set 29's 45.88 K/W per FET in D-14's rows, U-04's row and UDC-1's comparison [H31:120-122], [PAGE:1401] against R-159 restated from E11-29's row [REG:255] and TP-E11-29 NOT EXECUTABLE on the earlier cell [TP29:19], [TP29:712-715] | yes (the per-FET bar on L4-E9's page) | next set: `fnd/w7rem` P-01 to P-12 [W7PAT:1]; `fnd/w3annex` annex 6.3 [W3ANX:197-210] | CLAIM CHANGE [W7PAT:63] (W3: none stated, "The narrower statement" [W3ANX:206]) | YES (the per-FET bar) |
 | K-07 | S8 C7; PC-16 | set 29's P1-2 and P1-3 corrected at the desk [L8R2:10-12] against R-48 and R-190 assigned to the supplier [REG0:152], [REG0:284] | no | in the candidate: R-48 and R-190 restated to the check of record l8r2's drafts [REG:154], [REG:286], set 31 row 24 [H31:55]; next set adds the draft state on record l8r2's side, `fnd/w9l9t5` W9-12 [W9T5R:402] | CLAIM CHANGE [H31:55] | NO |
@@ -420,7 +423,7 @@ L's reading (SESSION, for the coordinator to keep or change); 17 read YES on the
 | K-12 | PC C-3; H31 C | R17's design target "R17's coupling at most 0.29 K/W" [E11:500] against "R17 at most 0.294 K/W" [ANX:105] and [TP29:781] | yes (not reconciled [H31:105-106]) | next set: `fnd/w3annex` annex 6.2 [W3ANX:180-195] and TP-E11-29 [W3TP:789]; `fnd/w7rem` R-08 [W7P0L:178] | PRESENTATION OR BINDING [W7P0L:187] (W3: none stated, a SESSION reading [W3ANX:193]) | YES (a pass limit) |
 | K-13 | PC C-4; H31 C | "Completed independently of E-1" for D-16's correction [P11:89] (and the ledger's "completed independently" [REM:517]) against the crediting rule | yes (record l4e7's request) | next set: `fnd/w4l4e7` [W4P11:120], [W4SOL:166-167] | none stated | YES (the supplier-facing request) |
 | K-14 | PC C-5; H31 C | record l8p's one release of "five drafts" [BRK:265] against the register's R-206 to R-208 and R-222, R-244, R-246 | yes (membership record l8p's [H31:107-108]) | next set: `fnd/w5l8p` "One release for the six drafts" [W5BRK:266], [W5BRK:1662-1663] | none stated | YES (a release instruction) |
-| K-15 | LS30 3; REM F; RE-1 | the P0 list is revision 2 of 16:50 [P0L:1] against the records' states after cx46 [REM:113-123] | yes | none: the adoption of revision 3 is the coordinator's ("nothing to apply here" [W7P0L:26]); revision 3 drafted [P0L3:1-12] | none stated | YES (until revision 3 is adopted) |
+| K-15 | LS30 3; REM F; RE-1 | the P0 list is revision 2 of 16:50 [P0L:1] against the records' states after cx46 [REM:113-123] | yes (dated note: resolved at the adoption (`836f711b`), where revision 3 is adopted as `v2/docs/records/l4close/P0-POWER-LIST.md` and revision 2 kept as `v2/docs/records/l4close/P0-POWER-LIST.rev2-2026-10-05.md`) | none: the adoption of revision 3 is the coordinator's ("nothing to apply here" [W7P0L:26]); revision 3 drafted [P0L3:1-12] | none stated | YES (until revision 3 is adopted) |
 | K-16 | LS30 4 | eFuse round 2 "has none" [EFS:213] against P0-4 "CONFIRMED AS CONDITIONAL" [CX46:10] | yes | none: no next-set branch edits record efuse; left to its file [W3ANX:292] | none stated | YES (which drafts were checked) |
 | K-17 | LS30 5; REM C | the ledger reads a stale stability digest [REM:711-715]; at the candidate every DIGESTS-cr3 digest equals its file [STAB:15] | yes (the amendment restated items E and G only [REM:20-23]) | none: left to its file [W3ANX:292] | none stated | YES (the ledger reports a gap that is closed) |
 | K-18 | LS30 6 | cx45's `base_commit` names `e132db0e` [CX45:8] against the HEAD it read, `06077cee` [CX45:20] | yes (filed as received; the file states both) | none: a filed check is not edited | none stated | NO (the file states both) |
@@ -429,7 +432,7 @@ L's reading (SESSION, for the coordinator to keep or change); 17 read YES on the
 | K-21 | REM B | the declared upper bound of the return: 27.8159 A [DIST:86] against 27.9108 A [P0R:21], [T5R:59] | yes | next set: `fnd/w9l9t5` W9-03 to W9-06 [W9T5R:393-396], [W9L8R2:1265] | PRESENTATION OR BINDING (W9-03, W9-05) and CLAIM CHANGE (W9-04, W9-06) [W9T5R:393-396] | YES (a bound value) |
 | K-22 | REM D | V-B23's response 0.9259 s [CX46:89] against about 0.98 s [T10:584-586]; the countermodel's peak 127.55 C [CX46:91] against 127.54 C [T10:620] | yes | none (no state changes: both over 125 C and over 0.2 s [REM:718-719]) | none stated | NO |
 | K-23 | REM E | the lower-source back-feed among E-1's retained cases [CX46:95], and the ledger's narrower reading in the candidate [REM:722-725], against record l4e7's S1 added row (b) [P11:120-123] | yes (the ledger and record l4e7 differ, the ledger says so [REM:725-727]) | next set: `fnd/w4l4e7` [W4P11:57-63]; `fnd/w3annex` annex 6.4 [W3ANX:212-228] | none stated | YES (engineering or validation) |
-| K-24 | I30 1; PC-15 | route B2 "an unapproved PARTIAL proposal" in the change-list draft's docstring [CLP:23] and the heading "(a partial proposal)" [P0SOL:99] against "UNSELECTED and WITHDRAWN AS DRAFTED" [B2:4] (L4-E9's generator data restated in the candidate [L4PY:4244], set 31 row 23 [H31:54]) | yes ([CLP:23], [P0SOL:99]) | next set: `fnd/w4l4e7` the heading [W4SOL:121-126]; `fnd/w9l9t5` W9-11 [W9T5R:401]; [CLP:23] restated nowhere | CLAIM CHANGE [W9T5R:401] (W4: none stated) | YES (cx46 asked "throughout" [CX46:203]) |
+| K-24 | I30 1; PC-15 | route B2 "an unapproved PARTIAL proposal" in the change-list draft's docstring [CLP:23] and the heading "(a partial proposal)" [P0SOL:99] against "UNSELECTED and WITHDRAWN AS DRAFTED" [B2:4] (L4-E9's generator data restated in the candidate [L4PY:4244], set 31 row 23 [H31:54]) | yes ([CLP:23], [P0SOL:99]) | next set: `fnd/w4l4e7` the heading [W4SOL:121-126]; `fnd/w9l9t5` W9-11 [W9T5R:401]; [CLP:23] restated nowhere | CLAIM CHANGE [W9T5R:401] (W4: none stated) | YES (cx46 asked "throughout" [CX46:111]) |
 | K-25 | I30 2 | R-240 named D-10's item S1 against E-1 [P11:19] | no | in the candidate: R-240 names E-1 and S1 as its later validation step [REG:336] | none stated (resolved before set 31) | NO |
 | K-26 | I30 3 | the connected output's T10 row, "rev X on V-B20" and "CORRECTED IN DRAFT, UNCHECKED" [CON:350-351], against revision X HELD with no admission route [T10:645-647] and "cx45's Q3 NOT CLOSED" [T10:662]; on `dd1aed00` the two connected lines read as here [CONP:350-351] | yes (re-read on `dd1aed00`: unchanged) | next set: `fnd/w11l9t5` W11-04, the generator's lines [W11CON:1002-1004], [W11T5R:451]; the output left as committed [W11T5R:454-459] | CLAIM CHANGE [W11T5R:451] | YES (a part admission) |
 | K-27 | S8 head | Slot F frames criteria 1 to 5 as "the Layer 4 DESK gate assessed in record l4e9" [S8:12-14] against "The DESIGN gate (criteria 1 to 5 below) is not the DESK handover gate" [PAGE:965] | no | in the candidate: set 31's text governs [PAGE:965]; S8 is not merged | CLAIM CHANGE [H31:32] | NO |
@@ -459,8 +462,8 @@ candidate since the merge `6fe398e9`; the column Next set names where a left ite
 
 ## 6. The coordinator's judgement on the promoted revision
 
-**The adoption's history (W27, 6 October 2026: the judgement held on two sentences, then inserted whole by the coordinator at 11:19 CEST)** after restating the two sentences W27 named and three more it noted (the guard's own words, every output binds but the four declared, in place of the earlier every pin binds; part 19's header quoted as the file reads it; the owner's parts 23 and 24 quoted in the consequence section; the next set's branches named as such); the HELD paragraph stays as the adoption's history. The coordinator's judgement on Layer 4's DESK gate, dated 6 October 2026, 10:45
-CEST, one count corrected at 11:15 by its own label (thirteen to fourteen unreviewed changes; `<worktrees>/_runs/int30/Q05-verdict.final.md`, outside the repository), belongs under this heading verbatim, its introduction
+**The adoption's history (W27, 6 October 2026: the judgement held on two sentences while W27 drafted, then inserted whole by the coordinator in the adoption commit `836f711b` at 11:25 CEST)** after restating the two sentences W27 named and three more it noted (the guard's own words, every output binds but the four declared, in place of the earlier every pin binds; part 19's header quoted as the file reads it; the owner's parts 23 and 24 quoted in the consequence section; the next set's branches named as such); the HELD paragraph stays as the adoption's history. The coordinator's judgement on Layer 4's DESK gate, dated 6 October 2026, 10:45
+CEST, one count corrected at about 10:59 by the clock (thirteen, W15's count over `4d0ff8a2..6bc4424e`, to fourteen unreviewed changes, the count over `4d0ff8a2..dd1aed00`; `<worktrees>/_runs/int30/Q05-verdict.final.md`, outside the repository), belongs under this heading verbatim, its introduction
 and its five sections. W27 did not insert it: two of its sentences read differently from the ledger at `dd1aed00`, and the adoption's
 rule is to stop on such a sentence and report it, never to edit it. The coordinator restates them and replaces the verdict line below
 with the judgement whole. The two sentences, each with the record it reads against:
@@ -482,7 +485,7 @@ file and the queue's entry of 10:50 CEST give them): Layer 4's DESK gate NOT PAS
 PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED. They are the coordinator's, recorded here for the
 page that cites this file; they replace none of the judgement's text.
 
-**Layer 4's DESK gate (the owner's part 19 [OWN:477]), assessed on `dd1aed00`: NOT PASSED; engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED (the coordinator's judgement, inserted whole below at 11:15 CEST).**
+**Layer 4's DESK gate (the owner's part 19 [OWN:477]), assessed on `dd1aed00`: NOT PASSED; engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED (the coordinator's judgement, inserted whole below by the coordinator in the adoption commit `836f711b` at 11:25 CEST).**
 
 This is the coordinator's own judgement (authority: the plan of 5 October, section 5, and the owner's part 19, whose header line reads "each layer accepted at its DESK gate in order" [OWN:7]); it is not a review of the design and credits no engineering result. It is read against W12's draft 2 (sections 5 and 6: Y1 to Y7, N1 to N5) and the records at `dd1aed00`. The three completion claims the constitution's section 2 names are reported apart; no blended word.
 
@@ -598,7 +601,7 @@ every item carries an attempted-correction field. The cx46 words are each item's
 | RE-17 | [REMP:409] | Failed cases: "The handed-over cases HO-A to HO-E" [REMP:416] | Attempted correction and the disposition: "The effects written at each claim" [REMP:417-418] | "17. Handed-over cases propagated to every affected claim: NOT CLOSED" [REMP:411] | Affected provisional outputs [REMP:420] | remaining engineering [REMP:683] |
 | RE-18 | [REMP:425] | Failed case: "A wording defect" [REMP:434] | Attempted correction and the disposition: "The solar author's 4d1d02de" [REMP:435-437] | "18. B2 uniformly unselected and withdrawn outside baseline: NOT CLOSED" [REMP:427] | Affected provisional outputs: "None in the baseline" [REMP:440] | remaining engineering [REMP:684] |
 
-The coordinator's reading, as its judgement of 10:45 CEST words it in the section on Y6 (held with the judgement, section 6):
+The coordinator's reading, as its judgement of 10:45 CEST words it in the section on Y6 (held with the judgement while W27 drafted; inserted whole in section 6 in the adoption commit `836f711b`, 11:25 CEST):
 
 > The coordinator's reading: carried under an ended method, not parked.
 
@@ -626,8 +629,8 @@ inherit, PROVISIONAL or OPEN:
 
 - the PA interface texts IF-A-PA and IF-AD-HARNESS and the firmware row of the cap [T5R:51-56], on F01 / D-17, PROVISIONAL
   [F01:212-214];
-- the contract rows FW-B20 to FW-B22 and V-B20 to V-B23, a draft "UNAPPLIED: the integrator runs it" [HWFW:2], with "FW-B22
-  PROVISIONAL" and "V-B23's 0.2 s withdrawn" [HWFW:10];
+- the contract rows FW-B20 to FW-B22 and V-B20 to V-B23, a draft "UNAPPLIED: the integrator runs it" [HWFW:3], with "FW-B22
+  PROVISIONAL" and "V-B23's 0.2 s withdrawn" [HWFW:11];
 - CON-004's quorum service OPEN and L9T5-F21 in IOHA section 12 [T10R:201-202], [T10:662-667];
 - the DOCK_EN_OUT allowance still 30 uA in Layer 5's row, "their restatement is the owners'" [E11:2044];
 - LH-12 with the withdrawn FAN_OK (K-03) [LH:28];
@@ -673,7 +676,7 @@ coordinator's values file of 10:40:38 CEST.
   the base the same rows were [PAGE0:966-970] and on the candidate they are [PAGE:997-1001].
 - **The K table.** (Ticked: K-26 and K-28 re-read on `dd1aed00` in their rows; K-17 in the 2b tick.) The column Standing reads "no" only where the candidate carries the correction (held by the test); a next-set
   restatement adopted in the next set changes the next set's reading, not this one.
-- **The verdict placeholder** (HELD: section 6; the coordinator's judgement replaces the verdict line once its two sentences are restated) appears once as the verdict (and once, as code, in the header); the completion claims (the brief's five
+- **The verdict placeholder** (HELD: section 6; the coordinator's judgement replaces the verdict line once its two sentences are restated; dated note: a placeholder until the adoption at `836f711b`, 11:25 CEST, where the coordinator inserted the judgement whole and no placeholder remains) appears once as the verdict (and once, as code, in the header); the completion claims (the brief's five
   and power-design closure) are written as briefed; the design-gate words appear in section 7 only.
 - **W11** (`fnd/w11l9t5`, K-26 and K-28; ticked: `85b6f258` is not in `dd1aed00`, held by the test): read at its tip `85b6f258`; a later tip is the coordinator's to read. Its generator lines
   reach the connected output only when the coordinator's cascade regenerates it in the next set [W11T5R:458-459].
