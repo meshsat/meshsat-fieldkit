@@ -1,0 +1,177 @@
+                                                                                                                                                                                                                                    Hybrid
+
+Conductive Polymer Hybrid Aluminum
+Electrolytic Capacitors
+ Surface Mount Type
+ ZK series     High temperature lead-free reflow
+
+  Features
+● High capacitance and High ripple current compared with ZC series
+● Endurance : 4000 h at 125 ℃ (High temperature / Long life)
+● Low ESR
+● Characteristics dependencies in frequency and low temperature are as small as polymer type
+● Vibration-proof product is available upon request (ø6.3, ø8, ø10)
+● AEC-Q200 compliant
+● RoHS compliant
+  Specifications
+         Size code                                    C                                                          D                                  D8                                                          F                                              G
+   Category temp. range                                                                                                                       –55 ℃ to +125 ℃
+    Rated voltage range                                                                                                                         25 V to 35 V
+     Nominal cap.range                          33 μF to 47 μF                               56 μF to 82 μF                                   100 μF to 150 μF                                 180 μF to 270 μF                               330 μF to 470 μF
+   Capacitance tolerance                                                                                                                   ±20 % (120 Hz / +20 ℃)
+      Leakage current                            I ≦ 0.01 CV (μA), 2 minutes after reaching rated voltage, 20 ℃ *CV = (Capacitance in μF) x (Rated voltage in V)
+  Dissipation factor (tan δ)                                                   Please see the attached characteristics list
+     Surge voltage (V)                                                            Rated voltage × 1.25 (15 ℃ to 35 ℃)
+                                          +125 ℃ ± 2 ℃, 4000 h, apply the rated ripple current without exceeding the rated voltage.
+                                                Capacitance change         Within ±30% of the initial value
+                                              Dissipation factor (tan δ)   ≦ 200 % of the initial limit
+                                                        ESR                ≦ 200 % of the initial limit
+            Endurance
+                                                  Leakage current          Within the initial limit
+                                                ESR after endurance                                         Size code
+                                                                                 C                D            D8             F                                                                                                                G
+                                               (Ω / 100 kHz)(-40 ℃）
+                                                                                2.0              1.4           0.8           0.4                                                                                                              0.3
+                                          After storage for 1000 hours at +125 ℃ ± 2 ℃ with no voltage applied and then being
+             Shelf life                   stabilized at +20 ℃, capacitors shall meet the limits specified in endurance.
+                                          (With voltage treatment)
+                                          +85 ℃ ± 2 ℃, 85 % to 90 %RH, 2000 h, rated voltage applied
+                                                Capacitance change         Within ±30% of the initial value
+       Damp heat (Load)                       Dissipation factor (tan δ)   ≦ 200 % of the initial limit
+                                                        ESR                ≦ 200 % of the initial limit
+                                                  Leakage current          Within the initial limit
+                                          After reflow soldering and then being stabilized at +20 °C, capacitors shall meet the
+                                          following limits.
+         Resistance to
+                                                Capacitance change         Within ±10% of the initial value
+         soldering heat
+                                              Dissipation factor (tan δ)   Within the initial limit
+                                                  Leakage current          Within the initial limit
+
+ Marking                                              Dimensions (not to scale)
+    Example : 25 V 47 μF                                  [Standard]
+    Marking color : BLACK                                                  0.3 max.                          A±0.2                                                                                                                                                 Unit：ｍｍ
+                                                                                                                               (I)
+                                                                                                                               K
+
+
+
+
+                                                                                                                                                    Size
+                                                                                                                                                    code      øD            L               A, B       H max.        I              W             P                 K
+                                                                                                                                                                                                                                                                     +0.15
+                                                                                                                                                        C     5.0         5.8±0.3           5.3         6.5         2.2       0.65±0.1            1.5         0.35
+                                                      øD±0.5
+
+
+
+
+                                                                                                 B±0.2
+
+
+
+
+ Negative polarity marking (–)                                                                                                                                                                                                                                        -0.20
+                                                                                                                                   (P)
+                                                                                       H
+
+
+
+
+                                                                                                                                                                                                                                                                     +0.15
+                                                                                                                                                        D     6.3         5.8±0.3           6.6         7.8         2.6       0.65±0.1            1.8         0.35    -0.20
+        Capacitance (μF)                                                                                                                                                                                                                                             +0.15
+                                                                                                                                                        D8    6.3         7.7±0.3           6.6         7.8         2.6       0.65±0.1            1.8         0.35    -0.20
+                        Series identification                               L                                            W
+                                                                                                                                                        F
+                                                                                                                                   (I)
+
+
+
+
+                                                                                                                                                              8.0        10.2±0.3           8.3         10          3.4       0.90±0.2            3.1           0.70±0.2
+                                                               Pressure relief (ø10 ≦)                       ( ) Reference size                         G     10.0       10.2±0.3           10.3       12.0         3.5       0.90±0.2            4.6           0.70±0.2
+                                                          [Vibration-proof product]
+               47                                                       < Size code：D, D8 >                                                                                < Size code：F, G >
+
+               E ZK
+                                                                                             F                                 A±0.2                                                                            F                         A±0.2
+                                                                                                                                                                                                                                                       (I)
+                                                                                                                                                  (I)
+
+
+
+
+                                                                                                                                                                                                                                                       K
+                                                                                                                                            K
+
+
+
+
+                                                                                                                                                                                øD±0.5
+
+
+
+
+                                                                                                                                                                                                                            B±0.2
+                                                               øD±0.5
+
+
+
+
+                                                                                                                 B±0.2
+
+
+
+
+                                                                                                                                                                                                                                                           (P)
+                                                                                                                                                                                                                                    (S)
+                                                                                                                                                                                                                     H
+                                                                                                                         (S)
+                                                                                                         H
+
+
+
+
+                                                                                                                                                  (P)
+                                                                                                                                            R
+
+
+
+
+                                                                                                                                                                                                                                                       R
+
+
+
+
+                                                                                                                                           T                                                                                                       T
+                                                                                                                                                                                                       L
+                                                                                                                                                                                                                                                           (I)
+
+
+
+
+                                                                                                                               W                                                                                                          W
+                                                                                 L
+                                                                                                                                                  (I)
+
+
+
+
+                      Rated voltage code
+                                                                                                 Supportive terminals                                                                    Pressure relief (ø10 ≦)         Supportive terminals           ( ) Reference size
+                                                                                                                                         ( ) Reference size
+           Lot number                                                                                                                                                                                                                                             Unit：ｍｍ
+                                                                Size code             øD                     L               A, B        H max.          F           I            W                P                K                     R              S              T
+                                                                                                                                                                                                                  +0.15
+                                                                    D                  6.3          6.1±0.3                   6.6         7.8      0 to +0.15      2.4      0.65±0.1             2.2       0.35    -0.20              1.1±0.2           3.3        1.05±0.2
+                                                                                                                                                                                                                  +0.15
+   R. voltage code                    Unit：V                       D8                  6.3          8.0±0.3                   6.6         7.8      0 to +0.15      2.4      0.65±0.1             2.2       0.35    -0.20              1.1±0.2           3.3        1.05±0.2
+           E                     25                                 F                  8.0          10.5±0.3                  8.3        10.0      0 to +0.15      3.4       1.2±0.2             3.1         0.70±0.2                0.70±0.2           5.3         1.3±0.2
+           V                     35                                 G                 10.0          10.5±0.3                 10.3        12.0      0 to +0.15      3.5       1.2±0.2             4.6         0.70±0.2                0.70±0.2           6.9         1.3±0.2
+
+
+
+Design and specifications are each subject to change without notice. Ask factory for the current technical specifications before purchase and/or use.
+Should a safety concern arise regarding this product, please be sure to contact us immediately.                                                                                                                                                                  01-Apr-22
+

@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 1 -l 1 v2/vendor/infineon/infineon-bsc039n06ns-rev2.4-c534330.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "1",
+  "-l",
+  "1"
+ ],
+ "pdf": "v2/vendor/infineon/infineon-bsc039n06ns-rev2.4-c534330.pdf",
+ "pdf_sha256": "8d95c1da9c78b3afb037e1f80c3bea1ed0f874f689e3a0c96d926dafe6a437b9",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/infineon/pdftext/infineon-bsc039n06ns-rev2.4-c534330.layout.p1.txt",
+ "text_bytes": 2865,
+ "text_sha256": "8d805950a64b21110970066c517be8bd9cafcbeaffaea5f386c695212f8c5d76"
+}

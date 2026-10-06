@@ -1,0 +1,2163 @@
+                                                                                                                                 TLV758P
+                                                                                            SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+        TLV758P 500-mA, High-Accuracy, Adjustable LDO in a Small Size Package
+
+1 Features                                                              3 Description
+•   Input voltage range: 1.5 V to 6.0 V                                 The TLV758P is an adjustable 500-mA low-dropout
+•   Adjustable output voltage:                                          (LDO) regulator . This device is available in a small,
+    – 0.55 V to 5.5 V                                                   6-pin, 2-mm × 2-mm WSON package and a 5-pin
+•   Low dropout:                                                        SOT23 package and consumes very low quiescent
+    – 130 mV (max) at 500 mA (3.3 VOUT)                                 current and provides fast line and load transient
+•   High output accuracy: 0.7% (typical) and 1%                         performance. The TLV758P features an ultra-low
+    (maximum over temperature)                                          dropout of 130 mV at 500 mA that can help improve
+•   IQ: 25 μA (typical)                                                 the power efficiency of the system.
+•   Built-in soft-start with monotonic VOUT rise                        The TLV758P is optimized for a wide variety of
+•   Packages:                                                           applications by supporting an input voltage range
+    – 2-mm × 2-mm WSON-6 (DRV)                                          from 1.5 V to 6.0 V and an externally adjustable
+    – SOT23-5 (DBV)                                                     output range of 0.55 V to 5.5 V. The low output
+•   Active output discharge                                             voltage enables this LDO to power the modern
+                                                                        microcontrollers with lower core voltages.
+2 Applications
+•   Gaming consoles                                                     The TLV758P is stable with small ceramic output
+•   Home theaters and entertainment                                     capacitors, allowing for a small overall solution size. A
+•   PC and notebooks                                                    precision band-gap and error amplifier provides high
+•   Connected peripherals and printers                                  accuracy of 0.7% (max) at 25°C and 1% (max) over
+•   Rack and server power                                               temperature (85°C). This device includes integrated
+•   Thermostats                                                         thermal shutdown, current limit, and undervoltage
+•   Retail automation and payment                                       lockout (UVLO) features. The TLV758P has an
+                                                                        internal foldback current limit that helps reduce the
+                                                                        thermal dissipation during short-circuit events.
+                                                                                            Package Information
+                                                                              PART NUMBER          PACKAGE(1)         PACKAGE SIZE(2)
+                                                                                               DRV (WSON, 6)         2 mm × 2 mm
+                                                                        TLV758P
+                                                                                               DBV (SOT-23, 5)       2.9 mm × 2.8 mm
+
+                                                                        (1)    For all available packages, see the orderable addendum at
+                                                                               the end of the data sheet.
+                                                                        (2)    The package size (length × width) is a nominal value and
+                                                                               includes pins, where applicable.
+
+
+
+
+                                   VIN                                                            VOUT
+                                                    IN           OUT
+
+                                    CIN                  TLV758P                 R1               COUT
+                                                    GND            FB
+                                                                                 R2
+                                          VEN
+                                                    EN           DNC
+
+
+                                                         Typical Application
+
+
+
+
+     An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+     intellectual property matters and other important disclaimers. PRODUCTION DATA.
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                                                                     www.ti.com
+
+
+                                                                        Table of Contents
+1 Features............................................................................1   7 Application and Implementation.................................. 16
+2 Applications..................................................................... 1       7.1 Application Information............................................. 16
+3 Description.......................................................................1       7.2 Typical Application.................................................... 21
+4 Pin Configuration and Functions...................................3                       7.3 Power Supply Recommendations.............................22
+5 Specifications.................................................................. 4        7.4 Layout....................................................................... 22
+  5.1 Absolute Maximum Ratings........................................ 4                  8 Device and Documentation Support............................24
+  5.2 ESD Ratings............................................................... 4          8.1 Documentation Support............................................ 24
+  5.3 Recommended Operating Conditions.........................5                            8.2 Receiving Notification of Documentation Updates....24
+  5.4 Thermal Information....................................................5              8.3 Support Resources................................................... 24
+  5.5 Electrical Characteristics.............................................6              8.4 Trademarks............................................................... 24
+  5.6 Typical Characteristics................................................ 7             8.5 Electrostatic Discharge Caution................................24
+6 Detailed Description......................................................13              8.6 Glossary....................................................................24
+  6.1 Overview................................................................... 13      9 Revision History............................................................ 25
+  6.2 Functional Block Diagram......................................... 13                10 Mechanical, Packaging, and Orderable
+  6.3 Feature Description...................................................13              Information.................................................................... 25
+  6.4 Device Functional Modes..........................................15
+
+
+
+
+2       Submit Document Feedback                                                                                         Copyright © 2023 Texas Instruments Incorporated
+
+                                                                      Product Folder Links: TLV758P
+                                                                                                                                               TLV758P
+www.ti.com                                                                                             SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+4 Pin Configuration and Functions
+
+
+
+                      OUT         1          6      IN                                            IN        1                5      OUT
+
+                                      Thermal
+                       FB         2     pad
+                                              5     DNC                                         GND         2
+
+                      GND         3          4      EN
+                                                                                                 EN         3                4      FB
+
+
+
+                            Not to scale                                                                             Not to scale
+
+  Figure 4-1. DRV Package, 6-Pin Adjustable WSON                                Figure 4-2. DBV Package, 5-Pin Adjustable SOT-23
+                     (Top View)                                                                    (Top View)
+
+                                                              Table 4-1. Pin Functions
+                PIN
+                                             I/O                                                DESCRIPTION
+ NAME                       NO.
+ DNC                         5                —          Do not connect
+                                                         Enable pin. Drive EN greater than VEN(HI) to turn on the regulator.
+ EN                          4              Input
+                                                         Drive EN less than VEN(LO) to put the LDO into shutdown mode.
+                                                         This pin is used as an input to the control loop error amplifier and is used to set the output
+ FB                          2                —
+                                                         voltage of the LDO.
+ GND                         3                —          Ground pin
+                                                         Input pin. For best transient response and to minimize input impedance, use the
+                                                         recommended value or larger ceramic capacitor from IN to ground as listed in the
+ IN                          6              Input
+                                                         Recommended Operating Conditions table and the Input and Output Capacitor Selection
+                                                         section. Place the input capacitor as close to the output of the device as possible.
+                                                         Regulated output voltage pin. A capacitor is required from OUT to ground for stability. For
+                                                         best transient response, use the nominal recommended value or larger ceramic capacitor
+ OUT                         1             Output        from OUT to ground; see the Recommended Operating Conditions table and the Input and
+                                                         Output Capacitor Selection section. Place the output capacitor as close to output of the
+                                                         device as possible.
+ Thermal pad                Pad               —          Connect the thermal pad to a large area GND plane for improved thermal performance.
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                                     Submit Document Feedback              3
+                                                              Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                                                    www.ti.com
+
+
+5 Specifications
+5.1 Absolute Maximum Ratings
+over operating free-air temperature range (unless otherwise noted)(1)
+                                                                                                          MIN                      MAX          UNIT
+                                            Supply, VIN                                                   –0.3                       6.5
+                                            Enable, VEN                                                   –0.3                       6.5
+    Voltage                                                                                                                                      V
+                                            Feedback, VFB                                                 –0.3                         2
+                                            Output, VOUT                                                  –0.3               VIN + 0.3(2)
+                                            Operating junction, TJ                                        –40                       150
+    Temperature                                                                                                                                  °C
+                                            Storage, Tstg                                                 –65                       150
+
+(1)          Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress
+             ratings only, which do not imply functional operation of the device at these or any other conditions beyond those indicated under
+             Recommended Operating Conditions. Exposure to absolute-maximum-rated conditions for extended periods may affect device
+             reliability.
+(2)          The absolute maximum rating is VIN + 0.3V or 6.5 V, whichever is smaller.
+
+5.2 ESD Ratings
+                                                                                                                                       VALUE          UNIT
+                                                      Human-body model (HBM), per ANSI/ESDA/JEDEC JS-001(1)                             ±2000
+    V(ESD)        Electrostatic discharge                                                                                                              V
+                                                      Charged-device model (CDM), per JEDEC specification JESD22-C101(2)                ±500
+
+(1)          JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process. Manufacturing with
+             less than 500-V HBM is possible with the necessary precautions.
+(2)          JEDEC document JEP157 states that 250-V CDM allows safe manufacturing with a standard ESD control process. Manufacturing with
+             less than 250-V CDM is possible with the necessary precautions.
+
+
+
+
+4            Submit Document Feedback                                                                        Copyright © 2023 Texas Instruments Incorporated
+
+                                                                     Product Folder Links: TLV758P
+                                                                                                                                        TLV758P
+www.ti.com                                                                                         SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+5.3 Recommended Operating Conditions
+over operating free-air temperature range (unless otherwise noted)
+                                                                                         MIN                 NOM             MAX       UNIT
+ VIN                Input voltage                                                         1.5                                    6.0    V
+ VOUT               Output voltage                                                       0.55                                    5.5    V
+ IOUT               Output current                                                             0                                 500   mA
+ CIN                Input capacitor                                                            1                                       µF
+ COUT               Output capacitor(1)                                                        1                                 220   µF
+ VEN                Enable voltage(2)                                                          0                                 6.0    V
+ fEN                Enable toggle frequency                                                                                       10   kHz
+ TJ                 Junction temperature                                                  –40                                    125    °C
+
+(1)     Minimum derated capacitance of 0.47 µF is required for stability.
+(2)     If VEN > VIN, when VEN > VUVLO rising (min), the input pin (IN) must sink 1 mA of current to avoid the device being turn on with floating
+        input pin.
+
+
+5.4 Thermal Information
+                                                                                                               TLV758P
+                                          THERMAL METRIC(1)                                        DBV (SOT-23)        DRV (WSON)       UNIT
+                                                                                                      5 PINS             6 PINS
+ RθJA           Junction-to-ambient thermal resistance                                                176.9               80.3          °C/W
+ RθJC(top)      Junction-to-case (top) thermal resistance                                              95.3               98.7          °C/W
+ RθJB           Junction-to-board thermal resistance                                                   45.0               44.8          °C/W
+ ψJT            Junction-to-top characterization parameter                                             21.0                6.1          °C/W
+ ψJB            Junction-to-board characterization parameter                                           44.8               45.0          °C/W
+ RθJC(bot)      Junction-to-case (bottom) thermal resistance                                           N/A                20.8          °C/W
+
+(1)     For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+        note.
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                                    Submit Document Feedback         5
+                                                               Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                                                         www.ti.com
+
+
+5.5 Electrical Characteristics
+at operating temperature range (TJ = –40°C to +125°C),VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever is greater), IOUT = 1 mA,
+VEN = VIN, and CIN = COUT = 1 μF (unless otherwise noted); all typical values are at TJ = 25°C
+                    PARAMETER                                            TEST CONDITIONS                                    MIN        TYP       MAX      UNIT
+    VFB         Feedback voltage                  TJ = 25°C                                                                            0.55                V
+                                                  TJ = 25°C                                                               –0.7%                  0.7%
+                Output accuracy(1)                –40°C ≤ TJ ≤ +85°C                                                        –1%                    1%
+                                                  –40°C ≤ TJ ≤ +125°C                                                     –1.5%                  1.5%
+                Line regulation                   VOUT(NOM) + 0.5 V(2) ≤ VI N ≤ 6.0 V                                                     2        7.5     mV
+                Load regulation                   0.1 mA ≤ IOUT ≤ 500 mA, VIN ≥ 2.0 V                                                 0.030               V/A
+    IGND        Ground current                                                          TJ = 25°C                             10         25         31     µA
+                                                  IOUT = 0 mA
+    IGND        Ground current                                                          –40°C ≤ TJ ≤ +125°C                                         35     µA
+    ISHDN       Shutdown current                  VEN ≤ 0.3 V, 1.5 V ≤ VIN ≤ 6.0 V                                                      0.1          1     µA
+    IFB         Feedback pin current                                                                                                   0.01        0.1     µA
+                                                                                        VOUT = VOUT(NOM) – 0.2 V,
+                                                                                                                             530        720       865
+                                                                                        VOUT < 1.5 V
+    ICL         Output current limit              VIN = VOUT(NOM) + 1.0 V                                                                                  mA
+                                                                                        VOUT = 0.9 V × VOUT(NOM),
+                                                                                                                             530        720       865
+                                                                                        VOUT ≥ 1.5 V
+    ISC         Short-circuit current limit       VIN = VOUT(NOM) + 1.0 V               VOUT = 0 V                                      350                mA
+                                                                                        0.65 V ≤ VOUT < 0.8 V                           720       880
+                                                                                        0.8 V ≤ VOUT < 1.0 V                            585       750
+                                                                                        1.0 V ≤ VOUT < 1.2 V                            420       570
+                                                  IOUT = 500 mA,                        1.2 V ≤ VOUT < 1.5 V                            285       400
+    VDO         Dropout voltage                   –40°C ≤ TJ ≤ +125°C,                                                                                     mV
+                                                  VOUT = 0.95 × VOUT(NOM)               1.5 V ≤ VOUT < 1.8 V                            180       235
+                                                                                        1.8 V ≤ VOUT < 2.5 V                            140       185
+                                                                                        2.5 V ≤ VOUT < 3.3 V                            102       140
+                                                                                        3.3 V ≤ VOUT ≤ 5.5 V                             95       130
+                                                                                        f = 1 kHz                                        50
+                                                  VIN = VOUT(NOM) + 1.0 V,
+    PSRR        Power-supply rejection ratio                                            f = 100 kHz                                      45                dB
+                                                  IOUT = 50 mA
+                                                                                        f = 1 MHz                                        30
+    Vn          Output noise voltage              BW = 10 Hz to 100 kHz, VOUT = 0.9 V                                                    53              µVRMS
+                                                  VIN rising                                                                1.21       1.33       1.47     V
+    VUVLO       Undervoltage lockout
+                                                  VIN falling                                                               1.17       1.29       1.42     V
+    VUVLO,
+                Undervoltage lockout hysteresis   VIN Hysteresis                                                                         40                mV
+    HYST
+
+    tSTR        Start-up time                     From EN low-to-high transition to VOUT = VOUT(NOM) × 95%                              500                µs
+    VEN(HI)     EN pin high voltage                                                                                          1.0                           V
+    VEN(LO)     EN pin low voltage                                                                                                                 0.3     V
+    IEN         Enable pin current                VIN = EN = 6.0 V                                                                       10                nA
+    RPULL
+                Pulldown resistance               VIN = 6.0 V                                                                            95                Ω
+    DOWN
+
+                                                  Shutdown, temperature increasing                                                      170
+    TSD         Thermal shutdown                                                                                                                           °C
+                                                  Reset, temperature decreasing                                                         155
+
+(1)         When the device is connected to external feedback resistors at the FB pin, external resistor tolerances are not included
+(2)         VIN = 1.5 V for VOUT < 1.0 V.
+
+
+
+
+6           Submit Document Feedback                                                                                Copyright © 2023 Texas Instruments Incorporated
+
+                                                                   Product Folder Links: TLV758P
+                                                                                                                                                                                                                                                      TLV758P
+www.ti.com                                                                                                                                                                                SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+5.6 Typical Characteristics
+at operating temperature range TJ = 25°C, VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever is greater), IOUT = 1 mA, VEN = VIN,
+and CIN = COUT = 1 µF (unless otherwise noted)
+
+                                              0.6                                                                                                                        0.6
+
+                                             0.45                                                                                                                       0.45
+       Output Voltage Accuracy (%)
+
+
+
+
+                                                                                                                                          Output Voltage Accuracy (%)
+                                              0.3                                                                                                                        0.3
+
+                                             0.15                                                                                                                       0.15
+
+                                                0                                                                                                                          0
+
+                                             -0.15                                                                                                                      -0.15
+
+                                              -0.3                                                                                                                       -0.3
+                                                                                            TJ                                                                                                                             TJ
+                                             -0.45                   ±      qC          ± qC             25qC            125qC                                          -0.45                     ±    qC              ± qC        25qC         125qC
+                                                                     ±      qC          0qC              85qC            150qC                                                                    ±    qC              0qC         85qC         150qC
+                                              -0.6                                                                                                                       -0.6
+                                                  3.8    4     4.2   4.4    4.6       4.8    5     5.2    5.4     5.6     5.8     6                                          1.5      2     2.5        3         3.5      4      4.5      5     5.5     6
+                                                                            Input Voltage (V)                                                                                                          Input Voltage (V)
+                                                                 VOUT = 3.3 V, IOUT = 1 mA                                                                                                 VOUT = 0.55 V, IOUT = 1 mA
+                                                     Figure 5-1. 3.3-V Line Regulation vs VIN                                                                                 Figure 5-2. 0.55-V Line Regulation vs VIN
+                                              0.3                                                                                                                       160
+                                                                                                                                                                                                          TJ
+                                                                                                                                                                        140          ±    qC          ± qC               25qC          125qC
+               Output Voltage Accuracy (%)
+
+
+
+
+                                              0.2                                                                                            Dropout Voltage (mV)                    ±    qC          0qC                85qC          150qC
+                                                                                                                                                                        120
+                                              0.1
+                                                                                                                                                                        100
+
+                                                0                                                                                                                        80
+
+                                                                                                                                                                         60
+                                             -0.1
+                                                                                                                                                                         40
+                                             -0.2                                           TJ
+                                                                     ±     qC           ± qC             25qC           125qC                                            20
+                                                                     ±     qC           0qC              85qC           150qC
+                                             -0.3                                                                                                                         0
+                                                 5.5           5.6              5.7              5.8            5.9              6                                            0    0.05   0.1   0.15       0.2    0.25     0.3   0.35    0.4   0.45   0.5
+                                                                            Input Voltage (V)                                                                                                         Output Current (A)
+                                                                 VOUT = 5.5 V, IOUT = 1 mA
+                                                     Figure 5-3. 5.5-V Line Regulation vs VIN                                                                                 Figure 5-4. 3.3-V Dropout Voltage vs IOUT
+                                             900                                                                                                                        160
+                                                                                                                                                                                                          TJ
+                                             870                                                                                                                        140          ±    qC          ± qC               25qC          125qC
+                                                                                                                                                                                     ±    qC          0qC                85qC          150qC
+          Dropout Voltage (mV)
+
+
+
+
+                                                                                                                                             Dropout Voltage (mV)
+
+
+
+
+                                             840                                                                                                                        120
+
+                                             810                                                                                                                        100
+
+                                             780                                                                                                                         80
+
+                                             750                                                                                                                         60
+
+                                             720                                                                                                                         40
+                                                                                           TJ
+                                             690                     ±     qC          ± qC              25qC           125qC                                            20
+                                                                     ±     qC          0qC               85qC           150qC
+                                             660                                                                                                                          0
+                                                   0    0.05   0.1   0.15       0.2   0.25   0.3       0.35     0.4     0.45    0.5                                           0    0.05   0.1   0.15       0.2    0.25     0.3   0.35    0.4   0.45   0.5
+                                                                           Output Current (A)                                                                                                         Output Current (A)
+
+
+                                                Figure 5-5. 0.55-V Dropout Voltage vs IOUT                                                                                    Figure 5-6. 5.5-V Dropout Voltage vs IOUT
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                                                                                                                                  Submit Document Feedback                   7
+                                                                                                                      Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                                                                                                                                                 www.ti.com
+
+5.6 Typical Characteristics (continued)
+at operating temperature range TJ = 25°C, VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever is greater), IOUT = 1 mA, VEN = VIN,
+and CIN = COUT = 1 µF (unless otherwise noted)
+
+                                1,000                                                                                                                               800
+                                                                                      TJ
+                                  900                      ±      qC              ± qC            25qC          125qC                                               700
+                                  800                      ±      qC              0qC             85qC          150qC
+
+
+
+
+                                                                                                                                      Ground Pin Current (PA)
+        Dropout Voltage (mV)
+
+
+
+
+                                                                                                                                                                    600
+                                  700
+                                  600                                                                                                                               500
+
+                                  500                                                                                                                               400
+                                  400                                                                                                                               300
+                                  300
+                                                                                                                                                                    200
+                                  200                                                                                                                                                                               TJ
+                                  100                                                                                                                               100                       ±   qC            ± qC          25qC         125qC
+                                                                                                                                                                                              ±   qC            0qC           85qC         150qC
+                                    0                                                                                                                                  0
+                                     0.5      1      1.5         2          2.5       3         3.5      4     4.5      5                                                  0    0.05   0.1    0.15     0.2      0.25   0.3   0.35    0.4   0.45   0.5
+                                                                     Output Voltage (V)                                                                                                           Output Current (A)
+                                                                 IOUT = 500 mA
+                                                   Figure 5-7. VDO vs VOUT                                                                                                             Figure 5-8. IGND vs IOUT
+                                2,100                                                                                                                                560
+                                                                         TJ                                                                                                                                         TJ
+                                1,800          ±   qC                ± qC             25qC             125qC                                                         480                      ±   qC            ± qC          25qC         125qC
+                                               ±   qC                0qC              85qC             150qC                              Ground Pin Current (PA)                             ±   qC            0qC           85qC         150qC
+        Shutdown Current (nA)
+
+
+
+
+                                1,500                                                                                                                                400
+
+                                1,200                                                                                                                                320
+
+                                  900                                                                                                                                240
+
+                                  600                                                                                                                                160
+
+                                  300                                                                                                                                 80
+
+                                    0                                                                                                                                  0
+
+                                 -300                                                                                                                                -80
+                                        0    0.6   1.2         1.8     2.4        3       3.6    4.2     4.8    5.4     6                                                   0    0.6   1.2     1.8        2.4    3     3.6   4.2     4.8   5.4      6
+                                                                     Input Voltage (V)                                                                                                               Input Voltage (V)
+                                                                      VEN = 0 V                                                                                                          VOUT = 3.3 V, IOUT = 0 mA
+                                                   Figure 5-9. ISHDN vs VIN                                                                                                             Figure 5-10. IQ vs VIN
+                                   1                                                                                                                                 0.6
+                                                                                  TJ                                                                                                                                 TJ
+                                0.75                       ±     qC           ± qC               25qC          125qC                                                0.45                      ±      qC          ± qC         25qC          125qC
+                                                           ±     qC           0qC                85qC          150qC                                                                          ±      qC          0qC          85qC          150qC
+                                 0.5                                                                                                                                 0.3
+      Change in VOUT (%)
+
+
+
+
+                                                                                                                                 Change in VOUT (%)
+
+
+
+
+                                0.25                                                                                                                                0.15
+
+                                   0                                                                                                                                   0
+
+                                -0.25                                                                                                                               -0.15
+
+                                 -0.5                                                                                                                                -0.3
+
+                                -0.75                                                                                                                               -0.45
+
+                                   -1                                                                                                                                -0.6
+                                        0   0.05   0.1     0.15       0.2     0.25     0.3      0.35    0.4    0.45   0.5                                                   0   0.05   0.1    0.15        0.2   0.25   0.3   0.35    0.4   0.45    0.5
+                                                                 Output Current (A)                                                                                                                  Output Current (A)
+                                                     VIN = 3.8 V, VOUT = 3.3 V                                                                                                               VIN = 2 V, VOUT = 0.55 V
+                                    Figure 5-11. 3.3-V Load Regulation vs IOUT                                                                                         Figure 5-12. 0.55-V Load Regulation vs IOUT
+
+
+
+
+8       Submit Document Feedback                                                                                                                                                              Copyright © 2023 Texas Instruments Incorporated
+
+                                                                                                             Product Folder Links: TLV758P
+                                                                                                                                                                                                                                                                            TLV758P
+www.ti.com                                                                                                                                                                                           SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+5.6 Typical Characteristics (continued)
+at operating temperature range TJ = 25°C, VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever is greater), IOUT = 1 mA, VEN = VIN,
+and CIN = COUT = 1 µF (unless otherwise noted)
+
+                                      1                                                                                                                                      640
+                                                                                    TJ                                                                                                                                     TJ
+                                   0.75                         ±    qC         ± qC             25qC           125qC                                                        560                ±    qC                ± qC                 25qC            125qC
+                                                                ±    qC         0qC              85qC           150qC                                                                           ±    qC                0qC                  85qC            150qC
+                                    0.5                                                                                                                                      480
+
+
+
+
+                                                                                                                                                       Output Voltage (mV)
+       Change in VOUT (%)
+
+
+
+
+                                   0.25                                                                                                                                      400
+
+                                      0                                                                                                                                      320
+
+                                   -0.25                                                                                                                                     240
+
+                                    -0.5                                                                                                                                     160
+
+                                   -0.75                                                                                                                                         80
+
+                                      -1                                                                                                                                          0
+                                           0   0.05   0.1       0.15      0.2   0.25   0.3      0.35    0.4    0.45      0.5                                                          0    0.5           1       1.5        2         2.5       3     3.5      4      4.5    5
+                                                                     Output Current (A)                                                                                                                          Pulldown Current (mA)
+                                                            VIN = 6 V, VOUT = 5.5 V
+                                         Figure 5-13. 5.5-V Load Regulation vs IOUT                                                                                              Figure 5-14. VOUT vs IOUT Pulldown Resistor
+                                   840                                                                                                                                       300
+                                                                                             VEN(LO)           VEN(HI)                                                                                                               TJ
+                                   800                                                                                                                                                                       ±     qC            ± qC                 125qC          125qC
+                                                                                                                                                                             250
+                                   760
+                                                                                                                                                   Enable Pin Current (PA)                                   ±     qC            0qC                  85qC           150qC
+           Enable Threshold (mV)
+
+
+
+
+                                   720                                                                                                                                       200
+
+                                   680
+                                                                                                                                                                             150
+                                   640
+                                                                                                                                                                             100
+                                   600
+                                   560                                                                                                                                           50
+                                   520
+                                                                                                                                                                                  0
+                                   480
+                                   440                                                                                                                                       -50
+                                     -50        -25         0          25       50         75     100         125     150                                                             0   0.5        1       1.5        2       2.5         3   3.5       4   4.5      5    5.5
+                                                                     Temperature (qC)                                                                                                                                  Input Voltage (V)
+                                                                                                                                                                                                                         VEN = 5.5 V
+                                    Figure 5-15. VEN(HI) and VEN(LO) vs Temperature                                                                                                                      Figure 5-16. IEN vs VIN
+                                     5                                                                                                                   14                                                                                                               25
+                                                                                     TJ                                                                  13                                                                                                         Vin   20
+                                   4.5                          -50qC           -20qC           25qC           125qC                                                                                                                                                Vout 15
+
+
+
+
+                                                                                                                                                                                                                                                                                  AC-coupled Output Voltage (mV)
+                                                                                                                                                         12
+                                     4                          -40qC           0qC             85qC
+                                                                                                                                                         11                                                                                                               10
+             Output Voltage (V)
+
+
+
+
+                                   3.5                                                                                                                   10                                                                                                               5
+                                                                                                                               Input Voltage (V)
+
+
+
+
+                                                                                                                                                          9                                                                                                               0
+                                     3
+                                                                                                                                                          8                                                                                                               -5
+                                   2.5                                                                                                                    7                                                                                                               -10
+                                     2                                                                                                                    6                                                                                                               -15
+                                                                                                                                                          5                                                                                                               -20
+                                   1.5                                                                                                                    4                                                                                                               -25
+                                     1                                                                                                                    3                                                                                                               -30
+                                                                                                                                                          2                                                                                                               -35
+                                   0.5
+                                                                                                                                                          1                                                                                                               -40
+                                     0                                                                                                                    0                                                                                                               -45
+                                         0      100         200           300        400        500      600          700                                                    0                      0.5                     1                       1.5                 2
+                                                                    Output Current (mA)                                                                                                                                 Time (ms)
+
+                                                                                                                                                                                  VOUT = 0.55 V, IOUT = 1 mA, VIN slew rate = 1 V/µs
+                                   Figure 5-17. 3.3-V Foldback Current Limit vs IOUT                                                                                                      Figure 5-18. 0.55-V Line Transient
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                                                                                                                                                 Submit Document Feedback                                                           9
+                                                                                                          Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                                                                                                                                                                       www.ti.com
+
+5.6 Typical Characteristics (continued)
+at operating temperature range TJ = 25°C, VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever is greater), IOUT = 1 mA, VEN = VIN,
+and CIN = COUT = 1 µF (unless otherwise noted)
+
+                               10                                                                                    120                                                                         4                                                                  200
+                              9.5                                                                              Vin   100                                                                                                                                       Iout
+                                                                                                                                                                                        3.5                                                                    Vout 150
+                                                                                                               Vout 80
+
+
+
+
+                                                                                                                              AC-coupled Output Voltage (mV)
+
+
+
+
+                                                                                                                                                                                                                                                                            AC-coupled Output Voltage (mV)
+                                9
+                              8.5                                                                                    60                                                                          3                                                                  100
+                                8                                                                                    40                                                                 2.5                                                                          50
+
+
+
+
+                                                                                                                                                                   Output Current (A)
+       Input Voltage (V)
+
+
+
+
+                              7.5                                                                                    20
+                                                                                                                                                                                                 2                                                                   0
+                                7                                                                                    0
+                              6.5                                                                                    -20                                                                1.5                                                                          -50
+                                6                                                                                    -40
+                                                                                                                                                                                                 1                                                                   -100
+                              5.5                                                                                    -60
+                                5                                                                                    -80                                                                0.5                                                                          -150
+                              4.5                                                                                    -100                                                                        0                                                                   -200
+                                4                                                                                    -120
+                                                                                                                                                                                        -0.5                                                                         -250
+                              3.5                                                                                    -140
+                                3                                                                                    -160                                                                    -1                                                                      -300
+                                          0               0.2   0.4     0.6   0.8    1   1.2   1.4   1.6     1.8   2                                                                                  0        50   100   150    200 250 300     350   400   450   500
+                                                                                 Time (ms)                                                                                                                                          Time (us)
+
+                                                      VOUT = 3.3 V, IOUT = 1 mA, VIN slew rate = 1 V/µs                                                                                                        VIN = 3.8 V, VOUT = 3.3 V, IOUT slew rate = 1 A/µs
+                                                                Figure 5-19. 3.3-V Line Transient                                                                                                 Figure 5-20. 3.3-V, 1-mA to 500-mA Load Transient
+                                         4                                                                            200                                                                        4                                                                  200
+                                                                                                                 Iout                                                                                                                                          Iout
+                                3.5                                                                              Vout 150                                                               3.5                                                                    Vout 150
+                                                                                                                                  AC-coupled Output Voltage (mV)
+
+
+
+
+                                                                                                                                                                                                                                                                            AC-coupled Output Voltage (mV)
+                                         3                                                                            100                                                                        3                                                                  100
+                                2.5                                                                                   50                                                                2.5                                                                          50
+     Output Current (A)
+
+
+
+
+                                                                                                                                                                   Output Current (A)
+
+
+
+
+                                         2                                                                            0                                                                          2                                                                   0
+                                1.5                                                                                   -50                                                               1.5                                                                          -50
+                                         1                                                                            -100                                                                       1                                                                   -100
+                                0.5                                                                                   -150                                                              0.5                                                                          -150
+                                         0                                                                            -200                                                                       0                                                                   -200
+                            -0.5                                                                                      -250                                                              -0.5                                                                         -250
+                                         -1                                                                           -300                                                                   -1                                                                      -300
+                                              0           50    100     150   200 250 300      350   400     450    500                                                                               0        50   100   150    200 250 300     350   400   450   500
+                                                                                 Time (us)                                                                                                                                          Time (us)
+
+                                                          VIN = 2 V, VOUT = 0.55 V, IOUT slew rate = 1 A/µs                                                                                                    VIN = 5.5 V, VOUT = 5 V, IOUT slew rate = 1 A/µs
+                                         Figure 5-21. 0.55-V, 1-mA to 500-mA Load Transient                                                                                                           Figure 5-22. 5-V, 1-mA to 500-mA Load Transient
+                                                  5                                                                                                                                                   5
+                                              4.5
+                                                  4                                                                                                                                                   4
+                                              3.5
+                                                  3                                                                                                                                                   3
+                           Voltage (V)
+
+
+
+
+                                                                                                                                                                                        Voltage (V)
+
+
+
+
+                                              2.5
+                                                  2                                                                                                                                                   2
+                                              1.5
+                                                  1                                                                                                                                                   1
+                                              0.5
+                                                                                                                                                                                                                                                              Vout
+                                                  0                                                                                                                                                   0                                                       Venable
+                                                                                                                    Vout
+                                          -0.5                                                                      Vin                                                                                                                                       Vin
+                                               -1                                                                                                                                                     -1
+                                                      0               200        400        600            800        1,000                                                                                0          200          400        600       800         1,000
+                                                                                    Time (us)                                                                                                                                         Time (us)
+
+                                                                VIN = 3.8 V, VOUT = 3.3 V, IOUT = 1 mA                                                                                                              VIN = 3.8 V, VOUT = 3.3 V, IOUT = 1 mA
+                                                                      Figure 5-23. VIN Power-Up                                                                                                                      Figure 5-24. Start-Up With EN
+
+
+
+
+10                           Submit Document Feedback                                                                                                                                                                           Copyright © 2023 Texas Instruments Incorporated
+
+                                                                                                                 Product Folder Links: TLV758P
+                                                                                                                                                                                                                           TLV758P
+www.ti.com                                                                                                                                                                   SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+5.6 Typical Characteristics (continued)
+at operating temperature range TJ = 25°C, VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever is greater), IOUT = 1 mA, VEN = VIN,
+and CIN = COUT = 1 µF (unless otherwise noted)
+
+                                             90                                                                                                                90
+                                                                                                 VIN = 3.5 V
+                                             80                                                  VIN = 3.6 V                                                   80
+        Power-Supply Rejection Ratio (dB)
+
+
+
+
+                                                                                                                           Power-Supply Rejection Ratio (dB)
+                                                                                                 VIN = 3.7 V
+                                             70                                                  VIN = 3.8 V                                                   70
+
+                                             60                                                                                                                60
+
+                                             50                                                                                                                50
+
+                                             40                                                                                                                40
+
+                                             30                                                                                                                30       VIN = 3.9 V
+                                                                                                                                                                        VIN = 4.0 V
+                                             20                                                                                                                20
+                                                                                                                                                                        VIN = 4.1 V
+                                             10                                                                                                                10       VIN = 4.2 V
+                                                                                                                                                                        VIN = 4.3 V
+                                              0                                                                                                                0
+                                               10       100        1k         10k       100k      1M       10M                                                  10        100         1k        10k      100k      1M      10M
+                                                                         Frequency (Hz)                        D001                                                                        Frequency (Hz)
+
+                                                     VOUT = 3.3 V, IOUT = 500 mA, COUT = 2.2 µF                                                                       VOUT = 3.3 V, IOUT = 500 mA, COUT = 2.2 µF
+                                                    Figure 5-25. PSRR vs Frequency and VIN                                                                          Figure 5-26. PSRR vs Frequency and VIN
+                                             90                                                                                                                90
+                                                                                                  VIN = 3.5 V
+                                             80                                                                                                                80
+         Power-Supply Rejection Ratio (dB)
+
+
+
+
+                                                                                                  VIN = 3.6 V              Power-Supply Rejection Ratio (dB)
+                                                                                                  VIN = 3.7 V
+                                             70                                                                                                                70
+                                                                                                  VIN = 3.8 V
+                                             60                                                                                                                60
+
+                                             50                                                                                                                50
+
+                                             40                                                                                                                40
+
+                                             30                                                                                                                30       VIN = 3.9 V
+                                                                                                                                                                        VIN = 4.0 V
+                                             20                                                                                                                20
+                                                                                                                                                                        VIN = 4.1 V
+                                             10                                                                                                                10       VIN = 4.2 V
+                                                                                                                                                                        VIN = 4.3 V
+                                              0                                                                                                                0
+                                               10        100        1k        10k      100k        1M          10M                                              10        100         1k        10k      100k      1M      10M
+                                                                         Frequency (Hz)                                                                                                    Frequency (Hz)
+
+                                                     VOUT = 3.3 V, IOUT = 250 mA, COUT = 2.2 µF                                                                       VOUT = 3.3 V, IOUT = 250 mA, COUT = 2.2 µF
+                                                    Figure 5-27. PSRR vs Frequency and VIN                                                                          Figure 5-28. PSRR vs Frequency and VIN
+                                             90                                                                                                                90
+                                                                                     VIN = 1.9 V, VOUT = 0.9 V                                                                                                  COUT = 1 PF
+                                             80                                                                                                                80
+         Power-Supply Rejection Ratio (dB)
+
+
+
+
+                                                                                                                           Power-Supply Rejection Ratio (dB)
+
+
+
+
+                                                                                     VIN = 2.8 V, VOUT = 1.8 V                                                                                                  COUT = 2.2 PF
+                                                                                     VIN = 4.3 V, VOUT = 3.3 V                                                                                                  COUT = 4.7 PF
+                                             70                                                                                                                70
+                                                                                                                                                                                                                COUT = 47 PF
+                                             60                                                                                                                60
+
+                                             50                                                                                                                50
+
+                                             40                                                                                                                40
+
+                                             30                                                                                                                30
+
+                                             20                                                                                                                20
+
+                                             10                                                                                                                10
+
+                                              0                                                                                                                0
+                                               10        100        1k        10k      100k        1M          10M                                              10        100         1k        10k      100k      1M      10M
+                                                                         Frequency (Hz)                                                                                                    Frequency (Hz)
+
+                                                               IOUT = 500 mA, COUT = 2.2 µF                                                                             VIN = 3.8 V, VOUT = 3.3 V, IOUT = 500 mA
+                                                       Figure 5-29. PSRR vs Frequency                                                                               Figure 5-30. PSRR vs Frequency and COUT
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                                                                                                                Submit Document Feedback          11
+                                                                                                       Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                                                                                                                                         www.ti.com
+
+5.6 Typical Characteristics (continued)
+at operating temperature range TJ = 25°C, VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever is greater), IOUT = 1 mA, VEN = VIN,
+and CIN = COUT = 1 µF (unless otherwise noted)
+
+                                                     90                                                                                                                     90
+                                                                                                       CFF = 0 nF
+                                                     80                                                                                                                     80
+                 Power-Supply Rejection Ratio (dB)
+
+
+
+
+                                                                                                                                        Power-Supply Rejection Ratio (dB)
+                                                                                                       CFF = 1 nF
+                                                                                                       CFF = 10 nF
+                                                     70                                                                                                                     70
+                                                                                                       CFF = 100 nF
+                                                     60                                                                                                                     60
+
+                                                     50                                                                                                                     50
+
+                                                     40                                                                                                                     40
+
+                                                     30                                                                                                                     30
+                                                                                                                                                                                      ILOAD = 10 mA
+                                                     20                                                                                                                     20
+                                                                                                                                                                                      ILOAD = 100 mA
+                                                     10                                                                                                                     10        ILOAD = 250 mA
+                                                                                                                                                                                      ILOAD = 500 mA
+                                                      0                                                                                                                      0
+                                                       10          100     1k        10k      100k       1M       10M                                                         10       100       1k         10k      100k     1M       10M
+                                                                                Frequency (Hz)                                                                                                         Frequency (Hz)
+
+                                                                 VIN = 3.8 V, VOUT = 3.3 V, IOUT = 500 mA                                                                            VIN = 3.8 V, VOUT = 3.3 V, COUT = 2.2 µF
+                                                              Figure 5-31. PSRR vs Frequency and CFF                                                                             Figure 5-32. PSRR vs Frequency and ILOAD
+                                                      20                                                                                                                     20
+                                                      10                                     IOUT= 10mA, 159PVRMS                                                            10                                     CFF = 0 nF, 160 PVRMS
+                                                                                             IOUT= 100mA, 160PVRMS                                                                                                  CFF = 1 nF, 108 PVRMS
+                                                          5                                  IOUT= 500mA, 160PVRMS                                                               5                                  CFF = 10 nF, 74 PVRMS
+                                                                                                                                                                                                                    CFF = 100 nF, 44 PVRMS
+                                                          2                                                                                                                      2
+       Noise (PV/—Hz)
+
+
+
+
+                                                                                                                              Noise (PV/—Hz)
+
+
+
+                                                          1                                                                                                                      1
+                                                      0.5                                                                                                                    0.5
+
+                                                      0.2                                                                                                                    0.2
+                                                      0.1                                                                                                                    0.1
+                                                     0.05                                                                                                                   0.05
+
+                                                     0.02                                                                                                                   0.02
+                                                     0.01                                                                                                                   0.01
+                                                0.005                                                                                                                  0.005
+                                                     10             100      1k        10k      100k       1M         10M                                                   10          100       1k         10k      100k      1M      10M
+                                                                                  Frequency (Hz)                                                                                                        Frequency (Hz)
+
+                 VIN = 3.8 V, VOUT = 3.3 V, COUT = 2.2 µF, VRMS BW = 10 Hz to                                                        VIN = 3.8 V, VOUT = 3.3 V, IOUT = 500 mA, COUT = 2.2 µF, VRMS
+                                            100 kHz                                                                                                     BW = 10 Hz to 100 kHz
+                                                          Figure 5-33. Output Spectral Noise Density                        Figure 5-34. Output Spectral Noise Density vs Frequency and
+                                                                                                                                                         CFF
+                                                      20                                                                                                                     20
+                                                      10                                    COUT = 2.2PF, 160 PVRMS                                                          10                             VIN=1.9V, VOUT=0.9V, 53PVRMS
+                                                                                            COUT = 4.7PF, 170 PVRMS                                                                                         VIN=2.8V, VOUT=1.8V, 96PVRMS
+                                                          5                                 COUT = 47PF, 138 PVRMS                                                               5                          VIN=3.8V, VOUT=3.3V, 160PVRMS
+                                                          2                                                                                                                      2
+       Noise (PV/—Hz)
+
+
+
+
+                                                                                                                              Noise (PV/—Hz)
+
+
+
+
+                                                          1                                                                                                                      1
+                                                      0.5                                                                                                                    0.5
+
+                                                      0.2                                                                                                                    0.2
+                                                      0.1                                                                                                                    0.1
+                                                     0.05                                                                                                                   0.05
+
+                                                     0.02                                                                                                                   0.02
+                                                     0.01                                                                                                                   0.01
+                                                0.005                                                                                                                  0.005
+                                                     10             100      1k        10k      100k       1M         10M                                                   10          100       1k         10k      100k      1M      10M
+                                                                                  Frequency (Hz)                                                                                                        Frequency (Hz)
+
+                                          VIN = 3.8 V, VOUT = 3.3 V, IOUT = 100 mA, CFF = 0 µF, VRMS                                               IOUT = 500 mA, COUT = 2.2 µF, VRMS BW = 10 Hz to 100 kHz
+                                                            BW = 10 Hz to 100 kHz
+     Figure 5-35. Output Spectral Noise Density vs Frequency and                                                              Figure 5-36. Output Spectral Noise Density vs Frequency
+                                 COUT
+
+
+
+
+12           Submit Document Feedback                                                                                                                                                           Copyright © 2023 Texas Instruments Incorporated
+
+                                                                                                           Product Folder Links: TLV758P
+                                                                                                                              TLV758P
+www.ti.com                                                                                  SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+6 Detailed Description
+6.1 Overview
+The TLV758P low-dropout regulators (LDO) consumes low quiescent current and delivers excellent line and
+load transient performance. These characteristics, combined with low noise and good PSRR with low dropout
+voltage, make this device designed for portable consumer applications.
+This regulator offers foldback current limit, shutdown, and thermal protection. The operating junction temperature
+for this device is –40°C to +125°C.
+6.2 Functional Block Diagram
+
+
+               IN                                                                                                      OUT
+                                                  Current
+                                                   Limit
+
+
+                                                                                                               95 
+                                                                                Thermal
+                                                                    –   +      Shutdown
+
+                                                                                                                       FB
+                                                  UVLO
+
+
+
+
+              EN                      Band Gap                                                                         GND
+
+                                                                            Logic
+
+
+
+
+6.3 Feature Description
+6.3.1 Undervoltage Lockout (UVLO)
+The TLV758P uses an undervoltage lockout (UVLO) circuit that disables the output until the input voltage
+is greater than the rising UVLO voltage (VUVLO). This circuit ensures that the device does not exhibit any
+unpredictable behavior when the supply voltage is lower than the operational range of the internal circuitry.
+When VIN is less than VUVLO, the output is connected to ground with a pulldown resistor (RPULLDOWN).
+6.3.2 Shutdown
+The enable pin (EN) is active high. Enable the device by forcing the EN pin to exceed VEN(HI). Turn off the device
+by forcing the EN pin to drop below VEN(LO). If shutdown capability is not required, connect EN to IN.
+The TLV758P has an internal pulldown MOSFET that connects an RPULLDOWN resistor to ground when the
+device is disabled. The discharge time after disabling depends on the output capacitance (COUT) and the load
+resistance (RL) in parallel with the pulldown resistor (RPULLDOWN). Equation 1 calculates the time constant:
+
+      τ = ( RPULLDOWN × RL) / (RPULLDOWN + RL)                                                                                 (1)
+
+6.3.3 Foldback Current Limit
+The device has an internal current limit circuit that protects the regulator during transient high-load current faults
+or shorting events. The current limit is a hybrid brick-wall-foldback scheme. The current limit transitions from a
+brick-wall scheme to a foldback scheme at the foldback voltage (VFOLDBACK). In a high-load current fault with
+the output voltage above VFOLDBACK, the brick-wall scheme limits the output current to the current limit (ICL).
+When the voltage drops below VFOLDBACK, a foldback current limit activates that scales back the current as the
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                        Submit Document Feedback      13
+                                                            Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                                     www.ti.com
+
+
+output voltage approaches GND. When the output is shorted, the device supplies a typical current called the
+short-circuit current limit (ISC). ICL and ISC are listed in the Electrical Characteristics table.
+For this device, VFOLDBACK = 0.4 V × VOUT(NOM).
+The output voltage is not regulated when the device is in current limit. When a current limit event occurs, the
+device begins to heat up because of the increase in power dissipation. When the device is in brick-wall current
+limit, the pass transistor dissipates power [(VIN – V OUT) × ICL]. When the device output is shorted and the output
+is below VFOLDBACK, the pass transistor dissipates power [(VIN – VOUT) × ISC]. If thermal shutdown is triggered,
+the device turns off. After the device cools down, the internal thermal shutdown circuit turns the device back on.
+If the output current fault condition continues, the device cycles between current limit and thermal shutdown. For
+more information on current limits, see the Know Your Limits application note.
+Figure 6-1 shows a diagram of the foldback current limit.
+
+
+                                   VOUT
+
+                                                                                                     Brickwall
+                  VOUT(NOM)
+
+
+
+
+                                                                                                         VFOLDBACK
+
+
+
+
+                                                                                     Foldback
+
+
+
+                              0V                                                                                     IOUT
+
+                                   0 mA   ISC                            IRATED           ICL
+
+
+
+
+                                                Figure 6-1. Foldback Current Limit
+
+6.3.4 Thermal Shutdown
+Thermal shutdown protection disables the output when the junction temperature rises to approximately 170°C.
+Disabling the device eliminates the power dissipated by the device, allowing the device to cool. When the
+junction temperature cools to approximately 155°C, the output circuitry is again enabled. Depending on power
+dissipation, thermal resistance, and ambient temperature, the thermal protection circuit can cycle on and off.
+This cycling limits regulator dissipation, protecting the LDO from damage as a result of overheating.
+Activating the thermal shutdown feature usually indicates excessive power dissipation as a result of the product
+of the (VIN – VOUT) voltage and the load current. For reliable operation, limit junction temperature to 125°C
+maximum. To estimate the margin of safety in a complete design, increase the ambient temperature until the
+thermal protection is triggered; use worst-case loads and signal conditions.
+The TLV758P internal protection circuitry protects against overload conditions but is not intended to be activated
+in normal operation. Continuously running the TLV758P into thermal shutdown degrades device reliability.
+
+
+
+
+14    Submit Document Feedback                                                                  Copyright © 2023 Texas Instruments Incorporated
+
+                                                     Product Folder Links: TLV758P
+                                                                                                                                  TLV758P
+www.ti.com                                                                                   SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+6.4 Device Functional Modes
+6.4.1 Device Functional Mode Comparison
+Table 6-1 shows the conditions that lead to the different modes of operation. See the Electrical Characteristics
+table for parameter values.
+                                          Table 6-1. Device Functional Mode Comparison
+                                                                            PARAMETER
+    OPERATING MODE
+                                                  VIN                            VEN                  IOUT                   TJ
+ Normal operation            VIN > VOUT(nom) + VDO and VIN > VIN(min)        VEN > VEN(HI)       IOUT < IOUT(max)     TJ < TSD(shutdown)
+ Dropout operation                VIN(min) < VIN < VOUT(nom) + VDO           VEN > VEN(HI)       IOUT < IOUT(max)     TJ < TSD(shutdown)
+ Disabled
+ (any true condition                        VIN < VUVLO                     VEN < VEN(LOW)        Not applicable      TJ > TSD(shutdown)
+ disables the device)
+
+
+6.4.2 Normal Operation
+The device regulates to the nominal output voltage when the following conditions are met:
+•    The input voltage is greater than the nominal output voltage plus the dropout voltage (VOUT(nom) + VDO)
+•    The output current is less than the current limit (IOUT < ICL)
+•    The device junction temperature is less than the thermal shutdown temperature (TJ < TSD)
+•    The enable voltage has previously exceeded the enable rising threshold voltage and has not yet decreased
+     to less than the enable falling threshold
+6.4.3 Dropout Operation
+If the input voltage is lower than the nominal output voltage plus the specified dropout voltage, but all other
+conditions are met for normal operation, the device operates in dropout mode. In this mode, the output voltage
+tracks the input voltage. During this mode, the transient performance of the device becomes significantly
+degraded because the pass transistor is in the ohmic or triode region, and acts as a switch. Line or load
+transients in dropout can result in large output-voltage deviations.
+When the device is in a steady dropout state (defined as when the device is in dropout, VIN < VOUT(NOM) + VDO,
+directly after being in a normal regulation state, but not during start-up), the pass transistor is driven into the
+ohmic or triode region. When the input voltage returns to a value greater than or equal to the nominal output
+voltage plus the dropout voltage (VOUT(NOM) + VDO), the output voltage can overshoot for a short period of time
+while the device pulls the pass transistor back into the linear region.
+6.4.4 Disabled
+The output of the device can be shutdown by forcing the voltage of the enable pin to less than the maximum
+EN pin low-level input voltage (see the Electrical Characteristics table). When disabled, the pass transistor is
+turned off, internal circuits are shutdown, and the output voltage is actively discharged to ground by an internal
+discharge circuit from the output to ground.
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                          Submit Document Feedback          15
+                                                          Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                         www.ti.com
+
+
+7 Application and Implementation
+                                                               Note
+      Information in the following applications sections is not part of the TI component specification,
+      and TI does not warrant its accuracy or completeness. TI’s customers are responsible for
+      determining suitability of components for their purposes, as well as validating and testing their design
+      implementation to confirm system functionality.
+
+7.1 Application Information
+7.1.1 Adjustable Device Feedback Resistors
+Figure 7-1 shows that the output voltage of the TLV758P can be adjusted from 0.55 V to 5.5 V by using a
+resistor divider network.
+                                    VIN                                             VOUT
+                                                    IN          OUT
+
+                                    CIN                  TLV758P            R1       COUT
+                                                    GND            FB
+                                                                            R2
+                                          VEN
+                                                    EN         DNC
+
+
+                                                Figure 7-1. Adjustable Operation
+
+The adjustable-version device requires external feedback divider resistors to set the output voltage. VOUT is set
+using the feedback divider resistors, R1 and R2, according to the following equation:
+
+     VOUT = VFB × (1 + R1 / R2)                                                                                          (2)
+
+For this device, VFB = 0.55 V.
+To ignore the FB pin current error term in the VOUT equation, set the feedback divider current to 100 times the
+FB pin current listed in the Electrical Characteristics table. This setting provides the maximum feedback divider
+series resistance, as shown in the following equation:
+
+     R1 + R2 ≤ VOUT / (IFB × 100)                                                                                        (3)
+
+For this device, IFB = 10 nA.
+7.1.2 Input and Output Capacitor Selection
+The TLV758P requires an output capacitance of 0.47 µF or larger for stability. Use X5R- and X7R-type
+ceramic capacitors because these capacitors have minimal variation in value and equivalent series resistance
+(ESR) over temperature. When choosing a capacitor for a specific application, pay attention to the dc bias
+characteristics for the capacitor. Higher output voltages cause a significant derating of the capacitor. For best
+performance, the maximum recommended output capacitance is 220 µF.
+Although an input capacitor is not required for stability, good analog design practice is to connect a capacitor
+from IN to GND. Some input supplies have a high impedance, thus placing the input capacitor on the input
+supply helps reduce the input impedance. This capacitor counteracts reactive input sources and improves
+transient response, input ripple, and PSRR. If the input supply has a high impedance over a large range of
+frequencies, several input capacitors can be used in parallel to lower the impedance over frequency. Use a
+higher-value capacitor if large, fast, rise-time load transients are anticipated, or if the device is located several
+inches from the input power source.
+
+
+
+
+16    Submit Document Feedback                                                      Copyright © 2023 Texas Instruments Incorporated
+
+                                                    Product Folder Links: TLV758P
+                                                                                                                                      TLV758P
+www.ti.com                                                                                        SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+7.1.3 Dropout Voltage
+The TLV758P uses a PMOS pass transistor to achieve low dropout. When (VIN – VOUT) is less than the dropout
+voltage (VDO), the PMOS pass transistor is in the linear region of operation and the input-to-output resistance is
+the RDS(ON) of the PMOS pass transistor. VDO scales approximately with output current because the PMOS pass
+transistor behaves like a resistor in dropout mode. As with any linear regulator, PSRR and transient response
+degrade as (VIN – VOUT) approaches dropout operation.
+7.1.4 Exiting Dropout
+Some applications have transients that place the LDO into dropout, such as slower ramps on VIN during start-up.
+As with other LDOs, the output may overshoot on recovery from these conditions. A ramping input supply
+causes an LDO to overshoot on start-up, as shown in Figure 7-2, when the slew rate and voltage levels are in
+the correct range. Use an enable signal to avoid this condition.
+
+                                                                                                 Input Voltage
+
+                                             Response time for
+                                            LDO to get back into
+                                                regulation.                                Load current discharges
+                                                                                               output voltage.
+             VIN = VOUT(nom) + VDO
+
+
+
+                                                                                                      Output Voltage
+
+                                             Dropout
+                                Voltage
+
+
+
+
+                                          VOUT = VIN - VDO
+
+
+                                                                                                 Output Voltage in
+                                                                                                 normal regulation.
+
+
+
+
+                                                                                    Time
+
+                                                        Figure 7-2. Start-Up Into Dropout
+
+Line transients out of dropout can also cause overshoot on the output of the regulator. These overshoots are
+caused by the error amplifier having to drive the gate capacitance of the pass transistor and bring the gate
+back to the correct voltage for proper regulation. Figure 7-3 illustrates what is happening internally with the
+gate voltage and how overshoot can be caused during operation. When the LDO is placed in dropout, the gate
+voltage (VGS) is pulled all the way down to ground to give the pass transistor the lowest on-resistance as
+possible. However, if a line transient occurs when the device is in dropout, the loop is not in regulation and can
+cause the output to overshoot until the loop responds and the output current pulls the output voltage back down
+into regulation. If these transients are not acceptable, then continue to add input capacitance in the system until
+the transient is slow enough to reduce the overshoot.
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                                  Submit Document Feedback   17
+                                                              Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                    www.ti.com
+
+
+
+
+                                       Figure 7-3. Line Transients From Dropout
+
+
+
+
+18    Submit Document Feedback                                                 Copyright © 2023 Texas Instruments Incorporated
+
+                                               Product Folder Links: TLV758P
+                                                                                                                          TLV758P
+www.ti.com                                                                              SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+7.1.5 Reverse Current
+As with most LDOs, excessive reverse current can damage this device.
+Reverse current flows through the body diode on the pass transistor instead of the normal conducting channel.
+At high magnitudes, this current flow degrades the long-term reliability of the device, as a result of one of the
+following conditions:
+• Degradation caused by electromigration
+• Excessive heat dissipation
+• Potential for a latch-up condition
+Conditions where reverse current can occur are outlined in this section, all of which can exceed the absolute
+maximum rating of VOUT > VIN + 0.3 V:
+• If the device has a large COUT and the input supply collapses with little or no load current
+• The output is biased when the input supply is not established
+• The output is biased above the input supply
+If reverse current flow is expected in the application, external protection must be used to protect the device.
+Figure 7-4 shows one approach of protecting the device.
+                                                            Schottky Diode
+
+
+
+
+                                                          Internal Body Diode
+                                                   IN                           OUT
+
+
+                                                    CIN         Device                COUT
+
+
+                                                                 GND
+
+
+
+
+                Figure 7-4. Example Circuit for Reverse Current Protection Using a Schottky Diode
+
+7.1.6 Power Dissipation (PD)
+Circuit reliability requires consideration of the device power dissipation, location of the circuit on the printed
+circuit board (PCB), and correct sizing of the thermal plane. The PCB area around the regulator must have few
+or no other heat-generating devices that cause added thermal stress.
+To first-order approximation, power dissipation in the regulator depends on the input-to-output voltage difference
+and load conditions. Equation 4 calculates power dissipation (PD).
+
+      PD = (VIN – VOUT) × IOUT                                                                                             (4)
+
+                                                               Note
+       Power dissipation can be minimized, and therefore greater efficiency can be achieved, by correct
+       selection of the system voltage rails. For the lowest power dissipation use the minimum input voltage
+       required for correct output regulation.
+
+For devices with a thermal pad, the primary heat conduction path for the device package is through the thermal
+pad to the PCB. Solder the thermal pad to a copper pad area under the device. This pad area must contain an
+array of plated vias that conduct heat to additional copper planes for increased heat dissipation.
+The maximum power dissipation determines the maximum allowable ambient temperature (TA) for the device.
+According to Equation 5, power dissipation and junction temperature are most often related by the junction-to-
+ambient thermal resistance (RθJA) of the combined PCB and device package and the temperature of the ambient
+air (TA).
+
+Copyright © 2023 Texas Instruments Incorporated                                                    Submit Document Feedback      19
+                                                  Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                    www.ti.com
+
+     TJ = TA + (RθJA × PD)                                                                                          (5)
+
+Thermal resistance (RθJA) is highly dependent on the heat-spreading capability built into the particular PCB
+design, and therefore varies according to the total copper area, copper weight, and location of the planes.
+The junction-to-ambient thermal resistance listed in the Thermal Information table is determined by the JEDEC
+standard PCB and copper-spreading area, and is used as a relative measure of package thermal performance.
+7.1.7 Feed-Forward Capacitor (CFF)
+For the adjustable-voltage version device, a feed-forward capacitor (CFF) can be connected from the OUT pin
+to the FB pin. CFF improves transient, noise, and PSRR performance, but is not required for regulator stability.
+Recommended CFF values are listed in the Recommended Operating Conditions table. A higher capacitance
+CFF can be used; however, the start-up time increases. For a detailed description of CFF tradeoffs, see the Pros
+and Cons of Using a Feedforward Capacitor with a Low-Dropout Regulator application note.
+7.1.8 Start-Up Sequencing
+If VEN is greater than VUVLO rising (min), then the input pin (IN) must sink 1 mA of current to avoid the device
+being turn on with a floating input pin.
+
+
+
+
+20    Submit Document Feedback                                                 Copyright © 2023 Texas Instruments Incorporated
+
+                                               Product Folder Links: TLV758P
+                                                                                                                            TLV758P
+www.ti.com                                                                                SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+7.2 Typical Application
+Figure 7-5 shows the typical application circuit for the TLV758P. Input and output capacitances must be at least
+1 µF.
+                                        VIN                                                    VOUT
+                                                          IN          OUT
+
+                                         CIN                   TLV758P            R1           COUT
+                                                          GND            FB
+                                                                                  R2
+                                               VEN
+                                                          EN         DNC
+
+
+                                                  Figure 7-5. TLV758P Typical Application
+
+7.2.1 Design Requirements
+Use the parameters listed in Table 7-1 for typical linear regulator applications.
+                                                        Table 7-1. Design Parameters
+                               PARAMETER                                                  DESIGN REQUIREMENT
+                               Input voltage                                                       3.8 V
+                               Output voltage                                                   3.3 V, ±1%
+                               Input current                                                500 mA (maximum)
+                                Output load                                                     500-mA DC
+                     Maximum ambient temperature                                                   70°C
+
+
+7.2.2 Detailed Design Procedure
+Input and output capacitors are required to achieve the output voltage transient requirements. Capacitance
+values of 2.2 µF are selected to give the maximum output capacitance in a small, low-cost package; see the
+Input and Output Capacitor Selection section for details.
+Figure 7-1 illustrates the output voltage of the TLV758P; set the output voltage using the resistor divider.
+7.2.2.1 Input Current
+During normal operation, the input current to the LDO is approximately equal to the output current of the LDO.
+During start-up, the input current is higher as a result of the inrush current charging the output capacitor. Use
+Equation 6 to calculate the current through the input.
+
+                  COUT ´ dVOUT(t)             VOUT(t)
+      IOUT(t) =                         +
+                          dt                  RLOAD                                                                          (6)
+
+where:
+•    VOUT(t) is the instantaneous output voltage of the turn-on ramp
+•    dVOUT(t) / dt is the slope of the VOUT ramp
+•    RLOAD is the resistive load impedance
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                       Submit Document Feedback     21
+                                                          Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                                                                www.ti.com
+
+7.2.2.2 Thermal Dissipation
+The junction temperature can be determined using the junction-to-ambient thermal resistance (RθJA) and the
+total power dissipation (PD). Use Equation 7 to calculate the power dissipation. Multiply PD by RθJA as Equation
+8 shows and add the ambient temperature (TA) to calculate the junction temperature (TJ).
+
+     PD = (IGND+ IOUT) × (VIN – VOUT)                                                                                                                           (7)
+
+     TJ = RθJA × PD + TA                                                                                                                                        (8)
+
+Calculate the maximum ambient temperature as Equation 9 shows if the (TJ(MAX)) value does not exceed 125°C.
+Equation 10 calculates the maximum ambient temperature with a value of 104.93°C.
+
+     TA(MAX) = TJ(MAX) – RθJA × PD                                                                                                                              (9)
+
+     TA(MAX) = 125°C – 80.3°C/W × (3.8 V – 3.3 V) × (0.5 A) = 104.93°C                                                                                        (10)
+
+7.2.3 Application Curve
+
+                                                                         90
+
+                                                                         80
+                                     Power-Supply Rejection Ratio (dB)
+
+
+
+
+                                                                         70
+
+                                                                         60
+
+                                                                         50
+
+                                                                         40
+
+                                                                         30
+                                                                               ILOAD = 10 mA
+                                                                         20
+                                                                               ILOAD = 100 mA
+                                                                         10    ILOAD = 250 mA
+                                                                               ILOAD = 500 mA
+                                                                         0
+                                                                          10    100       1k         10k      100k   1M    10M
+                                                                                                Frequency (Hz)
+                                                                                VIN = 3.8 V, VOUT = 3.3 V, COUT = 2.2 µF
+
+                                                                         Figure 7-6. PSRR vs Frequency and ILOAD
+
+7.3 Power Supply Recommendations
+Connect a low output impedance power supply directly to the IN pin of the TLV758P.
+7.4 Layout
+7.4.1 Layout Guidelines
+•    Place input and output capacitors as close to the device as possible.
+•    Use copper planes for device connections, in order to optimize thermal performance.
+•    Place thermal vias around the device to distribute the heat.
+•    Do not place a thermal via directly beneath the thermal pad of the DRV package. A via can wick solder or
+     solder paste away from the thermal pad joint during the soldering process, leading to a compromised solder
+     joint on the thermal pad.
+
+
+
+
+22    Submit Document Feedback                                                                                             Copyright © 2023 Texas Instruments Incorporated
+
+                                                                                  Product Folder Links: TLV758P
+                                                                                                                                          TLV758P
+www.ti.com                                                                                              SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+7.4.2 Layout Examples
+
+                                               VIN                              VOUT                      GND
+                                                                                                         PLANE
+                                                                                            COUT
+
+
+
+
+                                                      CIN
+
+
+                                                                                                   R1         R2
+                                                 GND
+                                                PLANE
+
+
+
+                                                     EN
+
+
+                                               Figure 7-7. DBV Package Layout Example
+
+
+                                                                 COUT                                   CIN
+
+
+                                                                  1                    6
+
+                                         CFF         R1
+                                                                  2                    5
+
+
+                                                            R2    3                    4
+
+
+
+
+                                   GND PLANE
+
+
+                                               Figure 7-8. DRV Package Layout Example
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                                    Submit Document Feedback      23
+                                                            Product Folder Links: TLV758P
+TLV758P
+SBVS351D – APRIL 2018 – REVISED OCTOBER 2023                                                                                       www.ti.com
+
+
+8 Device and Documentation Support
+8.1 Documentation Support
+8.1.1 Device Nomenclature
+                                               Table 8-1. Device Nomenclature(1)
+           PRODUCT                                                                   VOUT
+                                   xx(x) is the nominal output voltage. For output voltages with a resolution of 100 mV, two digits are used
+                                   in the ordering number; otherwise, three digits are used (for example, 28 = 2.8 V; 125 = 1.25 V). 01 is for
+                                   adjustable version.
+       TLV758 xx(x)Pyyyz           P indicates an active output discharge feature. All members of the TLV758P family actively discharge
+                                   the output when the device is disabled.
+                                   yyy is the package designator.
+                                   z is the package quantity. R is for reel (3000 pieces), T is for tape (250 pieces).
+
+(1)   For the most current package and ordering information see the Package Option Addendum at the end of this document, or visit the
+      device product folder on www.ti.com.
+
+8.1.2 Related Documentation
+For related documentation see the following:
+Texas Instruments, Pros and cons of using a feedforward capacitor with a low-dropout regulator application note
+8.2 Receiving Notification of Documentation Updates
+To receive notification of documentation updates, navigate to the device product folder on ti.com. Click on
+Subscribe to updates to register and receive a weekly digest of any product information that has changed. For
+change details, review the revision history included in any revised document.
+8.3 Support Resources
+TI E2E™ support forums are an engineer's go-to source for fast, verified answers and design help — straight
+from the experts. Search existing answers or ask your own question to get the quick design help you need.
+Linked content is provided "AS IS" by the respective contributors. They do not constitute TI specifications and do
+not necessarily reflect TI's views; see TI's Terms of Use.
+8.4 Trademarks
+TI E2E™ is a trademark of Texas Instruments.
+All trademarks are the property of their respective owners.
+8.5 Electrostatic Discharge Caution
+                 This integrated circuit can be damaged by ESD. Texas Instruments recommends that all integrated circuits be handled
+                 with appropriate precautions. Failure to observe proper handling and installation procedures can cause damage.
+                 ESD damage can range from subtle performance degradation to complete device failure. Precision integrated circuits may
+                 be more susceptible to damage because very small parametric changes could cause the device not to meet its published
+                 specifications.
+
+
+8.6 Glossary
+ TI Glossary          This glossary lists and explains terms, acronyms, and definitions.
+
+
+
+
+24    Submit Document Feedback                                                                    Copyright © 2023 Texas Instruments Incorporated
+
+                                                      Product Folder Links: TLV758P
+                                                                                                                                                TLV758P
+www.ti.com                                                                                           SBVS351D – APRIL 2018 – REVISED OCTOBER 2023
+
+
+
+
+9 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+Changes from Revision C (March 2019) to Revision D (October 2023)                                                                                  Page
+• Changed DBV package from Advance Information to Production Data ............................................................ 1
+• Added links to Applications section.................................................................................................................... 1
+• Changed 5-V to 5.5-V in title of 5.5-V Load Regulation vs IOUT figure............................................................... 7
+• Added Startup Sequencing section.................................................................................................................. 20
+• Added Device Nomenclature section .............................................................................................................. 24
+
+Changes from Revision B (March 2019) to Revision C (March 2019)                                                                          Page
+• Deleted thermal pad from DBV pin out drawing ................................................................................................ 3
+
+10 Mechanical, Packaging, and Orderable Information
+The following pages include mechanical, packaging, and orderable information. This information is the most
+current data available for the designated devices. This data is subject to change without notice and revision of
+this document. For browser-based versions of this data sheet, refer to the left-hand navigation.
+
+
+
+
+Copyright © 2023 Texas Instruments Incorporated                                                                     Submit Document Feedback             25
+                                                            Product Folder Links: TLV758P
+                                                                                                                                                                     PACKAGE OPTION ADDENDUM
+
+       www.ti.com                                                                                                                                                                                                    15-Jul-2026
+
+
+
+
+PACKAGING INFORMATION
+
+       Orderable part number          Status     Material type      Package | Pins      Package qty | Carrier       RoHS             Lead finish/               MSL rating/          Op temp (°C)               Part marking
+                                        (1)            (2)                                                            (3)            Ball material              Peak reflow                                           (6)
+                                                                                                                                          (4)                       (5)
+
+          TLV75801PDBVJ               Active      Production       SOT-23 (DBV) | 5      8000 | JUMBO T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   1UDF
+         TLV75801PDBVJ.A              Active      Production       SOT-23 (DBV) | 5      8000 | JUMBO T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   1UDF
+          TLV75801PDBVR               Active      Production       SOT-23 (DBV) | 5      3000 | LARGE T&R            Yes             NIPDAU | SN         Level-1-260C-UNLIM            -40 to 125                   1UDF
+         TLV75801PDBVR.A              Active      Production       SOT-23 (DBV) | 5      3000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                   1UDF
+          TLV75801PDBVT               Active      Production       SOT-23 (DBV) | 5       250 | SMALL T&R            Yes             NIPDAU | SN         Level-1-260C-UNLIM            -40 to 125                   1UDF
+         TLV75801PDBVT.A              Active      Production       SOT-23 (DBV) | 5       250 | SMALL T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                   1UDF
+          TLV75801PDRVR               Active      Production       WSON (DRV) | 6        3000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                   1MHH
+         TLV75801PDRVR.A              Active      Production       WSON (DRV) | 6        3000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                   1MHH
+        TLV75801PDRVRG4               Active      Production       WSON (DRV) | 6        3000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                   1MHH
+       TLV75801PDRVRG4.A              Active      Production       WSON (DRV) | 6        3000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                   1MHH
+          TLV75801PDRVT               Active      Production       WSON (DRV) | 6         250 | SMALL T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                   1MHH
+         TLV75801PDRVT.A              Active      Production       WSON (DRV) | 6         250 | SMALL T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                   1MHH
+
+(1)
+      Status: For more details on status, see our product life cycle.
+
+(2)
+   Material type: When designated, preproduction parts are prototypes/experimental devices, and are not yet approved or released for full production. Testing and final process, including without limitation quality assurance,
+reliability performance testing, and/or process qualification, may not yet be complete, and this item is subject to further changes or possible discontinuation. If available for ordering, purchases will be subject to an additional
+waiver at checkout, and are intended for early internal evaluation purposes only. These items are sold without warranties of any kind.
+
+(3)
+      RoHS values: Yes, No, RoHS Exempt. See the TI RoHS Statement for additional information and value definition.
+
+(4)
+   Lead finish/Ball material: Parts may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead finish/Ball material values may wrap to two lines if the finish value exceeds the maximum
+column width.
+
+(5)
+  MSL rating/Peak reflow: The moisture sensitivity level ratings and peak solder (reflow) temperatures. In the event that a part has multiple moisture sensitivity ratings, only the lowest level per JEDEC standards is shown.
+Refer to the shipping label for the actual reflow temperature that will be used to mount the part to the printed circuit board.
+
+(6)
+      Part marking: There may be an additional marking, which relates to the logo, the lot trace code information, or the environmental category of the part.
+
+Multiple part markings will be inside parentheses. Only one part marking contained in parentheses and separated by a "~" will appear on a part. If a line is indented then it is a continuation of the previous line and the two
+combined represent the entire part marking for that device.
+
+
+
+                                                                                                          Addendum-Page 1
+                                                                                                                                                                      PACKAGE OPTION ADDENDUM
+
+    www.ti.com                                                                                                                                                                                                    15-Jul-2026
+
+
+
+
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information provided by third parties, and
+makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and continues to take reasonable steps to provide representative
+and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals. TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers
+and other limited information may not be available for release.
+
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+
+
+
+
+                                                                                                          Addendum-Page 2
+                                                                               PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                                                          3-Sep-2026
+
+
+
+TAPE AND REEL INFORMATION
+
+       REEL DIMENSIONS                                                                      TAPE DIMENSIONS
+                                                                                       K0         P1
+
+
+
+                                                                                                                         B0 W
+                                         Reel
+                                       Diameter
+                                                                                    Cavity             A0
+                                                                A0   Dimension designed to accommodate the component width
+                                                                B0   Dimension designed to accommodate the component length
+                                                                K0   Dimension designed to accommodate the component thickness
+                                                                W    Overall width of the carrier tape
+                                                                P1   Pitch between successive cavity centers
+
+
+                                        Reel Width (W1)
+                              QUADRANT ASSIGNMENTS FOR PIN 1 ORIENTATION IN TAPE
+
+                                                                                                        Sprocket Holes
+
+
+                                                  Q1       Q2          Q1    Q2
+
+                                                  Q3       Q4          Q3    Q4                    User Direction of Feed
+
+
+
+                                                            Pocket Quadrants
+
+
+*All dimensions are nominal
+             Device           Package Package Pins              SPQ        Reel   Reel   A0                    B0         K0     P1     W     Pin1
+                               Type Drawing                              Diameter Width (mm)                  (mm)       (mm)   (mm)   (mm) Quadrant
+                                                                           (mm) W1 (mm)
+     TLV75801PDBVJ            SOT-23     DBV           5        8000        330.0           8.4        3.2     3.2       1.4    4.0    8.0     Q3
+    TLV75801PDBVR             SOT-23     DBV           5        3000        178.0           8.4        3.2     3.2       1.4    4.0    8.0     Q3
+    TLV75801PDBVT             SOT-23     DBV           5         250        180.0           8.4        3.2     3.2       1.4    4.0    8.0     Q3
+    TLV75801PDRVR             WSON       DRV           6        3000        178.0           8.4        2.25   2.25       1.0    4.0    8.0     Q2
+    TLV75801PDRVR             WSON       DRV           6        3000        180.0           8.4        2.3     2.3       1.15   4.0    8.0     Q2
+   TLV75801PDRVRG4            WSON       DRV           6        3000        180.0           8.4        2.3     2.3       1.15   4.0    8.0     Q2
+    TLV75801PDRVT             WSON       DRV           6         250        180.0           8.4        2.3     2.3       1.15   4.0    8.0     Q2
+
+
+
+
+                                                                       Pack Materials-Page 1
+                                                                PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                              3-Sep-2026
+
+
+
+ TAPE AND REEL BOX DIMENSIONS
+
+
+
+
+                                                               Width (mm)
+                                                                              H
+                      W
+
+
+
+
+                                                          L
+
+
+
+
+*All dimensions are nominal
+             Device           Package Type   Package Drawing   Pins         SPQ    Length (mm)   Width (mm)   Height (mm)
+     TLV75801PDBVJ              SOT-23            DBV           5           8000      360.0        360.0         36.0
+     TLV75801PDBVR              SOT-23            DBV           5           3000      208.0        191.0         35.0
+     TLV75801PDBVT              SOT-23            DBV           5           250       210.0        185.0         35.0
+     TLV75801PDRVR               WSON             DRV           6           3000      205.0        200.0         33.0
+     TLV75801PDRVR               WSON             DRV           6           3000      210.0        185.0         35.0
+   TLV75801PDRVRG4               WSON             DRV           6           3000      210.0        185.0         35.0
+     TLV75801PDRVT               WSON             DRV           6           250       210.0        185.0         35.0
+
+
+
+
+                                                        Pack Materials-Page 2
+                                                                                                            PACKAGE OUTLINE
+DBV0005A                                                          SCALE 4.000
+                                                                                                     SOT-23 - 1.45 mm max height
+                                                                                                              SMALL OUTLINE TRANSISTOR
+
+
+
+
+                                            3.0                                                                       C
+                                            2.6
+                                          1.75                                                                0.1 C
+                                                           B                               A
+                                          1.45
+            PIN 1
+      INDEX AREA
+
+                        1                                        5
+
+
+              2X 0.95                                            (0.1)
+                                                                                          3.05
+                                                                                          2.75
+        1.9                                                                         1.9
+                        2
+                                                                 (0.15)
+
+
+
+                                                                 4
+                            3
+              0.5
+           5X
+              0.3
+                                                                                                                             0.15
+               0.2      C A B                                                   NOTE 5           4X 0 -15      (1.1)              TYP
+                                                                                                                             0.00
+                                                                                                                1.45
+                                                                                                                0.90
+                                                               4X 4 -15
+
+
+
+          0.25
+ GAGE PLANE                                                                          0.22
+                                                                                          TYP
+                                                                                     0.08
+
+
+
+   8
+     TYP                          0.6
+   0                                  TYP            SEATING PLANE
+                                  0.3
+
+
+
+
+                                                                                                                          4214839/K 08/2024
+
+NOTES:
+
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+   per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. Refernce JEDEC MO-178.
+4. Body dimensions do not include mold flash, protrusions, or gate burrs. Mold flash, protrusions, or gate burrs shall not
+   exceed 0.25 mm per side.
+5. Support pin may differ or may not be present.
+
+
+
+
+                                                                                www.ti.com
+                                                                               EXAMPLE BOARD LAYOUT
+DBV0005A                                                                             SOT-23 - 1.45 mm max height
+                                                                                                     SMALL OUTLINE TRANSISTOR
+
+
+
+
+                                                                 PKG
+                                                 5X (1.1)
+                                             1
+                                                                                         5
+                                  5X (0.6)
+
+
+                                                                                             SYMM
+                                                                                                     (1.9)
+                                             2
+                              2X (0.95)
+
+
+                                             3                                           4
+
+                             (R0.05) TYP                         (2.6)
+
+
+                                                     LAND PATTERN EXAMPLE
+                                                       EXPOSED METAL SHOWN
+                                                            SCALE:15X
+
+
+
+
+                                                                                                         SOLDER MASK
+                 SOLDER MASK                     METAL                   METAL UNDER                     OPENING
+                 OPENING                                                 SOLDER MASK
+
+
+
+
+         EXPOSED METAL                                        EXPOSED METAL
+
+                                          0.07 MAX                                           0.07 MIN
+                                          ARROUND                                            ARROUND
+
+                                NON SOLDER MASK                                        SOLDER MASK
+                                    DEFINED                                              DEFINED
+                                  (PREFERRED)
+
+                                                      SOLDER MASK DETAILS
+
+
+
+
+                                                                                                               4214839/K 08/2024
+
+NOTES: (continued)
+
+6. Publication IPC-7351 may have alternate designs.
+7. Solder mask tolerances between and around signal pads can vary based on board fabrication site.
+
+
+
+
+                                                                www.ti.com
+                                                                               EXAMPLE STENCIL DESIGN
+ DBV0005A                                                                              SOT-23 - 1.45 mm max height
+                                                                                                       SMALL OUTLINE TRANSISTOR
+
+
+
+
+                                                                 PKG
+                                                 5X (1.1)
+                                             1
+                                                                                         5
+                                  5X (0.6)
+
+
+
+                                                                                             SYMM
+                                             2                                                      (1.9)
+                             2X(0.95)
+
+
+                                             3                                           4
+
+                            (R0.05) TYP
+                                                                (2.6)
+
+
+                                                   SOLDER PASTE EXAMPLE
+                                                 BASED ON 0.125 mm THICK STENCIL
+                                                            SCALE:15X
+
+
+
+
+                                                                                                                   4214839/K 08/2024
+
+NOTES: (continued)
+
+8. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+    design recommendations.
+9. Board assembly site may have different recommendations for stencil design.
+
+
+
+
+                                                                  www.ti.com
+                                                                    GENERIC PACKAGE VIEW
+DRV 6                                                          WSON - 0.8 mm max height
+                                                                            PLASTIC SMALL OUTLINE - NO LEAD
+
+
+
+
+  Images above are just a representation of the package family, actual package may vary.
+  Refer to the product data sheet for package details.
+
+                                                                                                  4206925/F
+                                                                                                               PACKAGE OUTLINE
+DRV0006A                                                             SCALE 5.500
+                                                                                                           WSON - 0.8 mm max height
+                                                                                                               PLASTIC SMALL OUTLINE - NO LEAD
+
+
+
+
+                                                        2.1                            A
+                                        B
+                                                        1.9
+
+
+
+
+                 PIN 1 INDEX AREA
+                                                                                       2.1
+                                                                                       1.9
+                                                                                                                                    0.1 MIN
+
+
+
+
+                                                                                                                0.08 MAX
+
+                                                                                                           OPTIONAL: SIDE WALL PIN DETAIL
+                                                                                                                       NOTE 4
+
+
+
+
+                                  0.8
+                                  0.7                                                             C
+
+                                                                                                      SEATING PLANE
+
+                                                                                                      0.08 C
+
+                                                                                                                                 (0.2) TYP
+                                                      1 0.1                                                        0.05
+                           EXPOSED                                                                                 0.00
+                        THERMAL PAD
+
+                                            3
+                                                                                   4
+
+
+                            2X
+                                                          7
+                            1.3                                                         1.6 0.1
+
+
+
+                                                                                   6
+                                            1
+                        4X 0.65
+                                                                                                  0.35
+                                                                                             6X
+                                PIN 1 ID                       0.3                                0.25
+                                                          6X
+                             (OPTIONAL)                        0.2                                  0.1    C A B
+                                                                                                    0.05    C
+
+
+                                                                                                                               4222173/C 11/2025
+
+NOTES:
+
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+   per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. The package thermal pad must be soldered to the printed circuit board for thermal and mechanical performance.
+4. Minimum 0.1 mm solder wetting on pin side wall. Available for wettable flank version only.
+
+
+
+
+                                                                     www.ti.com
+                                                                                 EXAMPLE BOARD LAYOUT
+DRV0006A                                                                                  WSON - 0.8 mm max height
+                                                                                                PLASTIC SMALL OUTLINE - NO LEAD
+
+
+
+
+                               6X (0.45)
+                                                                  (1)
+                                            1                       7
+
+                                 6X (0.3)                                                 6
+
+
+
+                                                                                              SYMM           (1.6)
+                                                                                                     (1.1)
+
+                               4X (0.65)
+
+                                                                                          4
+                                            3
+
+                        (R0.05) TYP                             SYMM
+
+                                ( 0.2) VIA
+                                      TYP                       (1.95)
+
+
+                                                    LAND PATTERN EXAMPLE
+                                                               SCALE:25X
+
+
+
+
+                                                0.07 MAX                                         0.07 MIN
+                                                ALL AROUND                                       ALL AROUND
+
+
+
+
+                     SOLDER MASK                       METAL               METAL UNDER                        SOLDER MASK
+                     OPENING                                               SOLDER MASK                        OPENING
+                                 NON SOLDER MASK
+                                     DEFINED                                                  SOLDER MASK
+                                   (PREFERRED)                                                  DEFINED
+
+
+                                                        SOLDER MASK DETAILS
+
+
+                                                                                                                     4222173/C 11/2025
+
+NOTES: (continued)
+
+5. This package is designed to be soldered to a thermal pad on the board. For more information, see Texas Instruments literature
+   number SLUA271 (www.ti.com/lit/slua271).
+6. Vias are optional depending on application, refer to device data sheet. If some or all are implemented, recommended via locations
+   are shown.
+
+
+
+
+                                                                  www.ti.com
+                                                                               EXAMPLE STENCIL DESIGN
+DRV0006A                                                                                  WSON - 0.8 mm max height
+                                                                                               PLASTIC SMALL OUTLINE - NO LEAD
+
+
+
+
+                                                                 SYMM
+                                             6X (0.45)
+                                                                                  METAL
+                                         1                       7
+
+                              6X (0.3)                                                          6
+
+
+
+                                                                                                    (0.45)
+                                                                                                                SYMM
+
+
+
+                            4X (0.65)
+                                                                                                        (0.7)
+                                                                                                4
+                                         3
+
+                       (R0.05) TYP
+                                                                     (1)
+
+                                                                 (1.95)
+
+
+
+                                                         SOLDER PASTE EXAMPLE
+                                                     BASED ON 0.125 mm THICK STENCIL
+
+                                                       EXPOSED PAD #7
+                                     88% PRINTED SOLDER COVERAGE BY AREA UNDER PACKAGE
+                                                          SCALE:30X
+
+
+
+
+                                                                                                                       4222173/C 11/2025
+NOTES: (continued)
+
+7. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+   design recommendations.
+
+
+
+
+                                                                 www.ti.com
+                                         IMPORTANT NOTICE AND DISCLAIMER
+TI PROVIDES TECHNICAL AND RELIABILITY DATA (INCLUDING DATASHEETS), DESIGN RESOURCES (INCLUDING REFERENCE
+DESIGNS), APPLICATION OR OTHER DESIGN ADVICE, WEB TOOLS, SAFETY INFORMATION, AND OTHER RESOURCES “AS IS”
+AND WITH ALL FAULTS, AND DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION ANY
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD
+PARTY INTELLECTUAL PROPERTY RIGHTS.
+These resources are intended for skilled developers designing with TI products. You are solely responsible for (1) selecting the appropriate
+TI products for your application, (2) designing, validating and testing your application, and (3) ensuring your application meets applicable
+standards, and any other safety, security, regulatory or other requirements.
+These resources are subject to change without notice. TI grants you permission to use these resources only for development of an
+application that uses the TI products described in the resource. Other reproduction and display of these resources is prohibited. No license
+is granted to any other TI intellectual property right or to any third party intellectual property right. TI disclaims responsibility for, and you fully
+indemnify TI and its representatives against any claims, damages, costs, losses, and liabilities arising out of your use of these resources.
+TI’s products are provided subject to TI’s Terms of Sale, TI’s General Quality Guidelines, or other applicable terms available either on
+ti.com or provided in conjunction with such TI products. TI’s provision of these resources does not expand or otherwise alter TI’s applicable
+warranties or warranty disclaimers for TI products. Unless TI explicitly designates a product as custom or customer-specified, TI products
+are standard, catalog, general purpose devices.
+TI objects to and rejects any additional or different terms you may propose.
+IMPORTANT NOTICE
+
+                                                Copyright © 2026, Texas Instruments Incorporated
+                                                                Last updated 10/2025
+

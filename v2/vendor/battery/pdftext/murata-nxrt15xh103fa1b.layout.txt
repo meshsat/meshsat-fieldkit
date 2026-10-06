@@ -1,0 +1,162 @@
+                                                                                                          Note: This datasheet may be out of date.
+                                        Product Search Data Sheet                                         Please download the latest datasheet of NXRT15XH103FA1B010 from the official website of Murata
+                                                                                                          Manufacturing Co., Ltd.
+
+                                                                                                          http://www.murata.com/en-us/products/productdetail?partno=NXRT15XH103FA1B010
+
+
+
+NXRT15XH103FA1B010
+
+
+
+
+            Appearance & Shape                                                                                                     Features
+
+                                                                                                                     1. High accuracy and high sensibility temperature sensing is
+                                                                                                                     available by the high accuracy NTC Thermistor.
+                                                                                                                     2. This product is compatible with 1005 (1.0mm * 0.5mm) size
+                                                                                                                     NTC Thermistor.
+                                                                                                                     3. The variation per hour of this product is stable few.
+                                                                                                                     4. This product is produced with the automation line which was
+                                                                                                                     consistent from a lead to packing so that the product of uniform
+                                                                                                                     quality may be obtained at low cost in large quantities.
+                                                                                                                     5. Since this product has strong lead intensity with original lead
+                                                                                                                     mounting technique, it is bent at the time of use and can perform
+                                                                                                                     processing etc. freely. Moreover, taping supply can also respond.
+                                                                                                                     6. UL/cULcertified product.(UL1434, File No. E137188)
+
+
+
+
+            Applications
+
+Limited Usage                   Consumer Grade
+
+
+
+
+            Packaging Information
+
+                                                                             Standard
+Packaging              Specifications                                        Packing
+                                                                             Quantity
+
+B                      Bulk(Bag)                                             500
+
+
+
+
+                                                                                                                                                                                           1 of 3
+Attention
+1.This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd. Therefore, it’s specifications are subject to change or our products in it may be discontinued
+without advance notice. Please check with our sales representatives or product engineers before ordering.
+2.This datasheet has only typical specifications because there is no space for detailed specifications.
+Therefore, please review our product specifications or consult the approval sheet for product specifications before ordering.
+
+
+                         URL : https://www.murata.com/
+                                                                                                                                                                                         Last updated06/14/2022
+                                                                                                          Note: This datasheet may be out of date.
+                                        Product Search Data Sheet                                         Please download the latest datasheet of NXRT15XH103FA1B010 from the official website of Murata
+                                                                                                          Manufacturing Co., Ltd.
+
+                                                                                                          http://www.murata.com/en-us/products/productdetail?partno=NXRT15XH103FA1B010
+
+
+
+NXRT15XH103FA1B010
+
+            Specifications
+
+Resistance (25℃)                                  10kΩ
+
+Resistance Value Tolerance
+                                                  ±1%
+(at 25℃)
+
+B-Constant (25/50℃)                               3380K
+
+B-Constant (25/50℃)
+                                                  ±1%
+Tolerance
+B-Constant(25/80℃)
+                                                  3428K
+(Reference Value)
+B-Constant(25/85℃)
+                                                  3434K
+(Reference Value)
+B-Constant(25/100℃)
+                                                  3455K
+(Reference Value)
+Maximum Operating Current
+                                                  0.12mA
+(25℃)
+
+Rated Electric Power (25℃)                        7.5mW
+
+Typical Dissipation Constant
+                                                  1.5mW/℃
+(25℃)
+Operating Temperature
+                                                  -40℃ to 125℃
+Range
+
+Thermal Time Constant                             4s
+
+Lead Shape                                        Lead Wire type
+
+Size Code (in mm)                                 010＝10㎜
+
+Size Code (in inch)                               010＝10㎜
+
+Shape                                             Lead
+
+Mass                                              0.042g
+
+MSL                                               N
+
+
+
+
+                                                                                                                                                                                           2 of 3
+Attention
+1.This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd. Therefore, it’s specifications are subject to change or our products in it may be discontinued
+without advance notice. Please check with our sales representatives or product engineers before ordering.
+2.This datasheet has only typical specifications because there is no space for detailed specifications.
+Therefore, please review our product specifications or consult the approval sheet for product specifications before ordering.
+
+
+                         URL : https://www.murata.com/
+                                                                                                                                                                                         Last updated06/14/2022
+                                                                                                          Note: This datasheet may be out of date.
+                                        Product Search Data Sheet                                         Please download the latest datasheet of NXRT15XH103FA1B010 from the official website of Murata
+                                                                                                          Manufacturing Co., Ltd.
+
+                                                                                                          http://www.murata.com/en-us/products/productdetail?partno=NXRT15XH103FA1B010
+
+
+
+NXRT15XH103FA1B010
+
+            Product Data
+
+
+
+
+    Resistance-Temperature Characteristics                                                                             Temperature Tolenrance VS. Temp.
+
+
+
+
+                                                                                                                                                                                           3 of 3
+Attention
+1.This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd. Therefore, it’s specifications are subject to change or our products in it may be discontinued
+without advance notice. Please check with our sales representatives or product engineers before ordering.
+2.This datasheet has only typical specifications because there is no space for detailed specifications.
+Therefore, please review our product specifications or consult the approval sheet for product specifications before ordering.
+
+
+                         URL : https://www.murata.com/
+                                                                                                                                                                                         Last updated06/14/2022
+

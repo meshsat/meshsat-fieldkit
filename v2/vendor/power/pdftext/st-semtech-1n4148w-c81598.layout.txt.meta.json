@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/power/st-semtech-1n4148w-c81598.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/power/st-semtech-1n4148w-c81598.pdf",
+ "pdf_sha256": "54de8e4089bb8221cf6cf191ee3acc2bdb20c9933cf59e7b5de3ef4ee291ce3f",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/st-semtech-1n4148w-c81598.layout.txt",
+ "text_bytes": 12511,
+ "text_sha256": "1b0093a4cb0764e4c0bcaf893557e10f2ed625cd0e5c3ddd7c5acf6f00e1b5e2"
+}

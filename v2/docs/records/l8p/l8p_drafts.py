@@ -281,13 +281,31 @@ SESSION = [
 # L4-E11's drafts (REPLACED; the round L4E11_ROUND names), which the compositions use.
 STANDINS = {}
 
-
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 1 prints each text's sha256 among the inputs.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8p
+PDFTEXT = {
+    "v2/vendor/battery/murata-nxrt15xh103fa1b.pdf": [["-layout"]],
+    "v2/vendor/battery/murata-prf-series.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-bq4050.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-csd17570q5b.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-csd18510q5b.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf": [["-layout"]],
+    "v2/vendor/diodes/diodes-bzt52c-ds18004.pdf": [["-layout"]],
+    "v2/vendor/power/jscj-2n7002-c8545.pdf": [["-layout"]],
+    "v2/vendor/power/st-semtech-1n4148w-c81598.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-opa187-sbos807e.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-lm5069.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-lm74700-q1.pdf": [["-layout"]],
+}
+import importlib.util  # noqa: E402  (the helper's loader; W34)
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 def pdftext(path):
-    try:
-        r = subprocess.run(["pdftotext", "-layout", path, "-"], capture_output=True, check=True)
-    except (OSError, subprocess.CalledProcessError) as e:
-        refuse("pdftotext could not read %s (%s)" % (rel(path), e))
-    return r.stdout.decode("utf-8", "replace")
+    return PT.pdf_text(ROOT, rel(path), ["-layout"], PDFTEXT, "v2/docs/records/l8p")
 
 
 def need(text, pat, what, flags=re.M):
@@ -1185,6 +1203,7 @@ def main():
     inputs += [LM5069_SHEET, NTC_SHEET, D4148_SHEET, OPA187, CSD_SHEET, N7002_SHEET, BZT_SHEET, TRM_SHEET, BQ4050_SHEET, CSD17570_SHEET, LM74700_SHEET,
                PRF_SHEET, os.path.join(HERE, "fetch_held_back.py"), os.path.join(HERE, "read_prf_typical.py")]
     inputs += [MINE["p"]] + MINE2["p"] + [MINE["e"], MINE["a"]] + MINE_AFTER["a"] + [os.path.join(HERE, "check_l8p_netlist.py"), os.path.join(HERE, "gen_netlist.py")]
+    inputs += [os.path.join(ROOT, t) for t, _h, _held in PT.inputs(ROOT, PDFTEXT)]
     w("1. INPUTS, pinned by sha256\n")
     for p in inputs:
         if not os.path.isfile(p):

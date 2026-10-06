@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-ina226.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-ina226.pdf",
+ "pdf_sha256": "c9b67f886d4a5241a5e070723f7b61867409eeb27eed768b9cdd9cb17e03ca2d",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-ina226.layout.txt",
+ "text_bytes": 168224,
+ "text_sha256": "234fbb73ef374502f2cfa0eacb1dc06103031e375413f0ba2367d1837824a5cf"
+}

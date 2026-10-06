@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/seals/floydbell-mc-09-530-q-spec.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/seals/floydbell-mc-09-530-q-spec.pdf",
+ "pdf_sha256": "d2dc7cd7959cdd076ef6941510c204058235744b2a87402f9746fe94daa8afc2",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/seals/pdftext/floydbell-mc-09-530-q-spec.layout.txt",
+ "text_bytes": 2776,
+ "text_sha256": "64a23dd3eee88dd7020f4be633d43a41c2211ae25c35a2a69d8b51a1dcffe174"
+}

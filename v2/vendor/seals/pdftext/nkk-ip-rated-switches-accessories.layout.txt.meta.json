@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/seals/nkk-ip-rated-switches-accessories.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/seals/nkk-ip-rated-switches-accessories.pdf",
+ "pdf_sha256": "1b5b8003ea7657807cac3880873f364fc09cea2c4d8bea4c60d47954b52ed60d",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/seals/pdftext/nkk-ip-rated-switches-accessories.layout.txt",
+ "text_bytes": 38032,
+ "text_sha256": "d57cba8bb49d793c27b9faecedecbf7219b1cb09a34875abcb6061733989618d"
+}

@@ -1,0 +1,51 @@
+BSC039N06NS
+
+
+    MOSFET
+    OptiMOSTMPower-Transistor,60V                                                                   SuperSO8
+
+                                                                                           8                            5
+                                                                                                                            6
+    Features                                                                                       7
+                                                                                                       6                        7
+                                                                                                                                    8
+                                                                                                           5
+    •OptimizedforhighperformanceSMPS,e.g.sync.rec.
+    •100%avalanchetested
+    •Superiorthermalresistance
+    •N-channel
+    •QualifiedaccordingtoJEDEC1)fortargetapplications                  1                           4
+                                                                                                                3
+    •Pb-freeleadplating;RoHScompliant                                        2
+                                                                                       3
+                                                                                                                    2
+                                                                                                                            1
+    •Halogen-freeaccordingtoIEC61249-2-21                                                  4
+
+
+
+
+    Table1KeyPerformanceParameters
+    Parameter                 Value                Unit                                            S1                                   8D
+
+    VDS                       60                   V                                               S2                                   7D
+
+    RDS(on),max               3.9                  mΩ                                              S3                                   6D
+
+    ID                        100                  A                                               G4                                   5D
+    QOSS                      32                   nC
+    QG(0V..10V)               27                   nC
+
+
+
+
+    Type/OrderingCode            Package                         Marking                RelatedLinks
+    BSC039N06NS                     PG-TDSON-8                      039N06NS                                        -
+
+
+
+
+    1)
+         J-STD20 and JESD22
+ Final Data Sheet                                               1                                              Rev.2.4,2020-02-03
+

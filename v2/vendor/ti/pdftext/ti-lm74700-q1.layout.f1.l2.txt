@@ -1,0 +1,141 @@
+                                                                                                                                    LM74700-Q1
+www.ti.com                                                                                                                   LM74700-Q1
+                                                                                          SNOSD17G – OCTOBER 2017 – REVISED DECEMBER 2020
+                                                                                          SNOSD17G – OCTOBER 2017 – REVISED DECEMBER 2020
+
+              LM74700-Q1 Low IQ Reverse Battery Protection Ideal Diode Controller
+
+1 Features                                                                  3 Description
+•   AEC-Q100 qualified with the following results                           The LM74700-Q1 is an automotive AEC Q100
+    – Device temperature grade 1:                                           qualified ideal diode controller which operates in
+       –40°C to +125°C ambient operating                                    conjunction with an external N-channel MOSFET as
+       temperature range                                                    an ideal diode rectifier for low loss reverse polarity
+    – Device HBM ESD classification level 2                                 protection with a 20-mV forward voltage drop. The
+    – Device CDM ESD classification level C4B                               wide supply input range of 3.2 V to 65 V allows control
+                                                                            of many popular DC bus voltages such as 12-V, 24-V
+•   Functional Safety-Capable
+                                                                            and 48-V automotive battery systems. The 3.2-V input
+    – Documentation available to aid functional safety                      voltage support is particularly well suited for severe
+       system design                                                        cold crank requirements in automotive systems. The
+•   3.2-V to 65-V input range (3.9-V start up)                              device can withstand and protect the loads from
+•   –65-V reverse voltage rating                                            negative supply voltages down to –65 V.
+•   Charge pump for external N-Channel MOSFET
+                                                                            The device controls the GATE of the MOSFET to
+•   20-mV ANODE to CATHODE forward voltage drop                             regulate the forward voltage drop at 20 mV. The
+    regulation                                                              regulation scheme enables graceful turn off of the
+•   Enable pin feature                                                      MOSFET during a reverse current event and ensures
+•   1-µA shutdown current (EN=Low)                                          zero DC reverse current flow. Fast response (< 0.75
+•   80-µA operating quiescent current (EN=High)                             µs) to Reverse Current Blocking makes the device
+•   2.3-A peak gate turnoff current                                         suitable for systems with output voltage holdup
+•   Fast response to reverse current blocking:                              requirements during ISO7637 pulse testing as well as
+    < 0.75 µs                                                               power fail and input micro-short conditions.
+•   Meets automotive ISO7637 transient requirements                         The LM74700-Q1 controller provides a charge pump
+    with a suitable TVS Diode                                               gate drive for an external N-channel MOSFET. The
+•   Available in 6-pin and 8-pin SOT-23 Package 2.90                        high voltage rating of LM74700-Q1 helps to simplify
+    mm × 1.60 mm                                                            the system designs for automotive ISO7637
+                                                                            protection. With the enable pin low, the controller is off
+2 Applications                                                              and draws approximately 1 µA of current.
+•   Automotive ADAS systems - camera
+                                                                                                     Device Information (1)
+•   Automotive infotainment systems - digital cluster,
+                                                                                  PART NUMBER              PACKAGE           BODY SIZE (NOM)
+    head unit
+                                                                             LM74700-Q1                SOT-23 (6)           2.90 mm × 1.60 mm
+•   Industrial factory automation - PLC
+                                                                             LM74700-Q1                SOT-23 (8)           2.90 mm × 1.60 mm
+•   Enterprise power supplies
+•   Active ORing for redundant power                                        (1)    For all available packages, see the orderable addendum at
+                                                                                   the end of the data sheet.
+                                                                                              VOUT
+      VBATT                                         VOUT
+                                                                                               VGATE
+                                                            Voltage                            VBATT
+       TVS                                                 Regulator
+                                   GATE   CATHODE
+                           ANODE
+
+
+                            VCAP   LM74700
+
+                                                                                               IBATT
+                            EN      GND
+                  ON OFF
+
+
+
+
+                Typical Application Schematic
+                                                                               Reverse Current Blocking During Input Short
+
+
+
+
+       An©IMPORTANT
+Copyright                NOTICEIncorporated
+           2020 Texas Instruments at the end of this data sheet addresses availability, warranty, changes, use in safety-critical
+                                                                                                               Submit  Document   applications,
+                                                                                                                                    Feedback      1
+       intellectual property matters and other important disclaimers. UNLESS OTHERWISE NOTED, this document contains PRODUCTION
+       DATA.                                          Product Folder Links: LM74700-Q1
+LM74700-Q1
+SNOSD17G – OCTOBER 2017 – REVISED DECEMBER 2020                                                                                                                  www.ti.com
+
+
+                                                                        Table of Contents
+1 Features............................................................................1     9.3 Feature Description...................................................13
+2 Applications..................................................................... 1       9.4 Device Functional Modes..........................................15
+3 Description.......................................................................1     10 Application and Implementation................................ 16
+4 Revision History.............................................................. 2          10.1 Application Information........................................... 16
+5 Pin Configuration and Functions...................................3                       10.2 OR-ing Application Configuration............................22
+6 Specifications.................................................................. 5      11 Power Supply Recommendations..............................22
+  6.1 Absolute Maximum Ratings........................................ 5                  12 Layout...........................................................................23
+  6.2 ESD Ratings............................................................... 5          12.1 Layout Guidelines................................................... 23
+  6.3 Recommended Operating Conditions.........................5                            12.2 Layout Example...................................................... 24
+  6.4 Thermal Information....................................................6            13 Device and Documentation Support..........................25
+  6.5 Electrical Characteristics.............................................6              13.1 Receiving Notification of Documentation Updates..25
+  6.6 Switching Characteristics............................................7                13.2 Support Resources................................................. 25
+7 Typical Characteristics................................................... 8              13.3 Trademarks............................................................. 25
+8 Parameter Measurement Information.......................... 11                            13.4 Electrostatic Discharge Caution..............................25
+9 Detailed Description......................................................12              13.5 Glossary..................................................................25
+  9.1 Overview................................................................... 12      14 Mechanical, Packaging, and Orderable
+  9.2 Functional Block Diagram......................................... 12                  Information.................................................................... 25
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+
+Changes from Revision F (December 2019) to Revision G (December 2020)                                                                 Page
+• Updated the numbering format for tables, figures and cross-references throughout the document...................1
+• Added DDF (SOT-23) package option to data sheet.......................................................................................... 1
+• Relaxed VCAP specs in Electrical Characteristics table.................................................................................... 5
+
+Changes from Revision E (February 2019) to Revision F (December 2019)                                                            Page
+• Added the Functional safety capable link to the Features section......................................................................1
+
+Changes from Revision D (January 2019) to Revision E (February 2019)                                                               Page
+• Changed from Advance Information to Production Data ................................................................................... 1
+
+Changes from Revision C (November 2018) to Revision D (January 2019)                                                                             Page
+• Added Typical Characteristics section ............................................................................................................... 8
+• Added Parameter Measurement Information section .......................................................................................11
+• Deleted Application Limitations section ........................................................................................................... 22
+• Added Or-ing Application Configuration section .............................................................................................. 22
+
+Changes from Revision B (October 2018) to Revision C (November 2018)                                                                                       Page
+• Added footnotes to the Absolute Maximum Ratings and Recommended Operating Conditions tables in the
+  Specifications section......................................................................................................................................... 5
+
+Changes from Revision A (March 2018) to Revision B (October 2018)                                                          Page
+• Changes made in the Specifications and Application Limitations sections........................................................ 1
+
+Changes from Revision * (October 2017) to Revision A (March 2018)                                                                       Page
+• Multiple changes made throughout Data Sheet..................................................................................................1
+
+
+
+
+2       Submit Document Feedback                                                                                           Copyright © 2020 Texas Instruments Incorporated
+
+                                                                   Product Folder Links: LM74700-Q1
+

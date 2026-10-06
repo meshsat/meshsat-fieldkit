@@ -1,0 +1,122 @@
+RP2040 Datasheet
+
+175
+176
+
+// Go to sleep
+
+177
+
+__wfi();
+
+178 }
+
+2.11.5.2. Dormant
+The
+
+hello_dormant
+
+example,
+
+https://github.com/raspberrypi/pico-playground/blob/master/sleep/hello_dormant/
+
+hello_dormant_gpio.c, demonstrates dormant mode. The example takes the following steps:
+
+• Run all clocks in the system from XOSC
+• Configure a GPIO interrupt for the "dormant_wake" hardware which can wake both the ROSC and XOSC from
+dormant mode
+
+• Put the XOSC into dormant mode which stops all processor execution (and all other clocked logic on the chip)
+immediately
+
+• When GPIO 10 goes high, the XOSC is started again and execution of the program continues
+hello_dormant uses sleep_goto_dormant_until_pin under the hood:
+Pico Extras: https://github.com/raspberrypi/pico-extras/blob/master/src/rp2_common/pico_sleep/sleep.c Lines 258 - 282
+
+258 void sleep_goto_dormant_until_pin(uint gpio_pin, bool edge, bool high) {
+259
+
+bool low = !high;
+
+260
+
+bool level = !edge;
+
+261
+262
+
+// Configure the appropriate IRQ at IO bank 0
+
+263
+
+assert(gpio_pin < NUM_BANK0_GPIOS);
+
+264
+265
+
+uint32_t event = 0;
+
+266
+267
+
+if (level && low) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_LEVEL_LOW_BITS;
+
+268
+
+if (level && high) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_LEVEL_HIGH_BITS;
+
+269
+
+if (edge && high) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_EDGE_HIGH_BITS;
+
+270
+
+if (edge && low) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_EDGE_LOW_BITS;
+
+271
+272
+
+gpio_init(gpio_pin);
+
+273
+
+gpio_set_input_enabled(gpio_pin, true);
+
+274
+
+gpio_set_dormant_irq_enabled(gpio_pin, event, true);
+
+275
+276
+
+_go_dormant();
+
+277
+
+// Execution stops here until woken up
+
+278
+279
+
+// Clear the irq so we can go back to dormant mode again if we want
+
+280
+
+gpio_acknowledge_irq(gpio_pin, event);
+
+281
+
+gpio_set_input_enabled(gpio_pin, false);
+
+282 }
+
+2.12. Chip-Level Reset
+2.12.1. Overview
+The chip-level reset subsystem resets the whole chip, placing it in a default state. This happens at initial power-on,
+during a power supply brown-out event or when the chip’s RUN pin is taken low. The chip can also be reset via the
+
+2.12. Chip-Level Reset
+
+163
+
+

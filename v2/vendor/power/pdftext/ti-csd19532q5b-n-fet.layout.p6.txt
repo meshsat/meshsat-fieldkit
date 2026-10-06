@@ -1,0 +1,102 @@
+CSD19532Q5B
+SLPS414B – DECEMBER 2013 – REVISED MAY 2017                                                                                                                                                                                                                                www.ti.com
+
+
+Typical MOSFET Characteristics (continued)
+(TA = 25°C unless otherwise stated)
+                                                2.2                                                                                                                                                               100
+                                                              VGS = 6V                                                                                                                                                          TC = 25°C
+                                                 2
+
+
+
+
+                                                                                                                                                            ISD − Source-to-Drain Current (A)
+     Normalized On-State Resistance
+
+
+
+
+                                                              VGS = 10V                                                                                                                                                         TC = 125°C
+                                                                                                                                                                                                                   10
+                                                1.8
+                                                1.6                                                                                                                                                                 1
+                                                1.4
+                                                                                                                                                                                                                   0.1
+                                                1.2
+                                                 1                                                                                                                                                                0.01
+                                                0.8
+                                                                                                                                                                                                          0.001
+                                                0.6
+                                                                                                                                          ID =17A
+                                                0.4                                                                                                                                      0.0001
+                                                   −75          −25         25        75         125                                            175                                                                      0        0.2        0.4         0.6         0.8            1
+                                                                      TC - Case Temperature (ºC)                                                    G001                                                                             VSD − Source-to-Drain Voltage (V)              G001
+
+
+
+
+                           Figure 8. Normalized On-State Resistance vs Temperature                                                                                                                                           Figure 9. Typical Diode Forward Voltage
+                               10000                                                                                                                                                                              100
+                                                              10us          1ms                                            DC                                                                                                                                          TC = 25ºC
+
+
+                                                                                                                                                                               IAV - Peak Avalanche Current (A)
+           IDS - Drain-to-Source Current (A)
+
+
+
+
+                                                              100us         10ms                                                                                                                                                                                       TC = 125ºC
+                                               1000
+
+
+                                                100
+
+
+                                                10
+
+
+                                                 1
+                                                         Single Pulse Width
+                                                         Max RthetaJC = 0.8ºC/W
+                                                0.1                                                                                                                                                                10
+                                                   0.1              1              10           100                                             1000                                                                0.01                             0.1                            1
+                                                                   VDS - Drain-to-Source Voltage (V)                                                G001                                                                                TAV - Time in Avalanche (mS)                G001
+
+
+
+
+                                                         Figure 10. Maximum Safe Operating Area                                                                                                                   Figure 11. Single Pulse Unclamped Inductive Switching
+                                                                                                                           120
+                                                                                     IDS - Drain- to- Source Current (A)
+
+
+
+
+                                                                                                                           100
+
+                                                                                                                           80
+
+                                                                                                                           60
+
+                                                                                                                           40
+
+                                                                                                                           20
+
+                                                                                                                            0
+                                                                                                                             −50    −25     0     25    50    75    100 125                                                       150    175
+                                                                                                                                                TC - Case Temperature (ºC)                                                                G001
+
+
+
+
+                                                                                                                            Figure 12. Maximum Drain Current vs Temperature
+
+
+
+
+6                                              Submit Documentation Feedback                                                                                                                                                    Copyright © 2013–2017, Texas Instruments Incorporated
+
+                                                                                                                                   Product Folder Links: CSD19532Q5B
+

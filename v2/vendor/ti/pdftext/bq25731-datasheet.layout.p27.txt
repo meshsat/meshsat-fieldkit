@@ -1,0 +1,58 @@
+                                                                                                                                          BQ25731
+www.ti.com                                                                                         SLUSE66A – JUNE 2020 – REVISED JANUARY 2021
+
+enabled, ADC circuits are disactivated to reduce quiescent current. In order to exit HIZ mode, ILIM_HIZ pin
+voltage has to be higher than 0.8 V and EN_HIZ bit has to be set to 0b.
+9.3.9 USB On-The-Go (OTG)
+The device supports USB OTG operation to deliver power from the battery to other portable devices through
+USB port. The OTG mode output voltage is set in OTGVoltage register REG0x07/06() with 8-mV LSB range
+from 3.0 V to 24 V. The OTG mode output current is set in OTGCurrent register REG0x09() with 100-mA LSB
+range from 0 A to 12.7 A under 5-mΩ input current sensing. Both OTG voltage and OTG current are qualified for
+USB-C™ programed power supply (PPS) specification in terms of resolution and accuracy. The OTG mode can
+be enabled following below steps:
+•    Set target OTG current limit in OTGCurrent register, VBUS is below VVBUS_CONVENZ.
+•    Set OTG_VAP_MODE = 1b and EN_OTG = 1b.
+•    OTG/VAP/FRS pin is pulled high.
+•    15 ms after the above conditions are valid, converter starts and VBUS ramps up to target voltage. CHRG_OK
+     pin goes HIGH if OTG_ON_CHRGOK= 1b.
+OTG/VAP/FRS pin is used as multi-function to enable OTG and FRS mode.
+9.3.10 Converter Operation
+The charger operates in buck, buck-boost and boost mode under different VBUS and VBAT combination. The
+buck-boost can operate seamlessly across the three operation modes. The 4 main switches operating status
+under continuous conduction mode (CCM) are listed below for reference.
+                                                       Table 9-3. MOSFET Operation
+                MODE                                  BUCK                         BUCK-BOOST                                BOOST
+                  Q1                                 Switching                         Switching                               ON
+                  Q2                                 Switching                         Switching                               OFF
+                  Q3                                   OFF                             Switching                             Switching
+                  Q4                                   ON                              Switching                             Switching
+
+
+9.3.11 Inductance Detection Through IADPT Pin
+The charger reads both converter operation frequency and the inductance value through the resistance tied to
+IADPT pin before the converter starts up. The resistances recommended for 2.2-μH (800 kHz), 3.3-μH (800 kHz)
+and 4.7-μH (400 kHz) inductance refers to Table 9-4. A surface mount chip resistor with ±3% or better tolerance
+must to be used for an accurate inductance detection.
+                                    Table 9-4. Inductor Detection through IADPT Resistance
+                           INDUCTOR IN USE                                                     RESISTOR ON IADPT PIN
+                   2.2 µH (recommended for 800 kHz)                                                  137 kΩ or 140 kΩ
+                   3.3 µH (recommended for 800 kHz)                                                        169 kΩ
+                   4.7 µH (recommended for 400 kHz)                                                  191 kΩ or 187 kΩ
+
+
+9.3.12 Converter Compensation
+The charger employs two compensation pins COMP1 and COMP2 for converter compensation purpose,
+appropriate RC network is needed to guarantee converter steady state and transient operation. Under different
+operation frequency corresponding RC network value needs to be configured respectively as shown in below
+table. The definition of these RC components can be referred to Figure 9-2. It is not recommended to change the
+compensation network value due to the complexity of various operation modes.
+                                                  Table 9-5. Compensation Configuration
+    COMPONENT
+                       INDUCTOR          COMP1 R1            COMP1 C11      COMP1 C12         COMP2 R2         COMP2 C21             COMP2 C22
+      VALUE
+     400 kHz             4.7 μH            40.2 kΩ               4.7 nF        33 pF               15 kΩ            680 pF               15 pF
+
+
+Copyright © 2022 Texas Instruments Incorporated                                                                Submit Document Feedback          27
+                                                            Product Folder Links: BQ25731
+

@@ -1,0 +1,149 @@
+                                                                                                                                                               VH CONNECTOR
+
+  Header (Shrouded Header)
+
+                                                                                                               No. of                                                             Dimensions (mm)
+                                                                                                                                             Model No.                                                              Q'ty/box
+  <2 , 3 circuits>                                                                                             circuits                                                            A               B
+                           B                                            9.7                                             2                 B2P-VH-FB-BNote2                         3.96           9.8                 250
+                                                                                                                        3                 B3P-VH-FB-B                              7.92          13.76                200
+                                                                                                                        4                 B4P-VH-FB-B                             11.88          17.72                150
+
+
+
+
+                                                                                     11
+                                                                                                                        5                 B5P-VH-FB-B                             15.84          21.68                200
+                                                                                                                        6                 B6P-VH-FB-B                             19.80          25.64                200
+                                                                                                                        7                 B7P-VH-FB-B                             23.76          29.60                100
+                                                                                                                        8                 B8P-VH-FB-B                             27.72          33.56                100
+                                                                                     (3.7)
+                3.96                    No. 1 circuit
+                                                                                                                        9                 B9P-VH-FB-B                             31.68          37.52                100
+                           A
+                                                                                                                   10                     B10P-VH-FB-B                            35.64          41.48                125
+
+  <4 to 10 circuits>                                                                                                                                 Material and Surface ﬁnish, etc.
+
+                            B                                                  9.7                                                            Post: Copper alloy, tin-plated
+                                                                                                                                              Base housing: PBT (GF), natural (white)
+
+                                                                                                               Note: 1. This product displays (LF)(SN) on a label.
+                                                                                                                     2. The housings that mate with the two position are the N-type and
+                                                                                                  11
+
+
+
+
+                                                                                                                        M-type.
+                                                                                                                        Please note that retainer mountable type cannot be used.
+                                                                                                                     3. For flame retardant grade of resin material used, please refer to
+                                                                                                                        the "List of Registered Overseas Standards" on our website
+                                                                                                  (3.7)
+
+
+
+
+                                3.96                   No. 1 circuit
+                                                                                                                        (listed in the "Technical Documents" column on the Product
+                            A                                                                                           Information page).
+
+
+
+
+  PC board layout and Assembly layout
+
+          Top entry type                                                                                       Side entry type
+
+                                                                              10.5                                     No. 1                                                                             (20.5)
+                                                                                                                                         3.96±0.05                         +0.1
+               3.96±0.05                                                                                               circuit                                φ1.65 0
+                                       Connector outline
+                                                                                                                                                               Connector
+                                                                                                                                                                                          10.5
+
+
+
+
+                                                +0.1
+                                                                                                                   7.2min.＊
+
+
+
+
+                                       φ1.65 0
+                                                                                                                                 (4)
+
+
+
+
+                                                                                                                                                                                                                            8
+                                                                                                                                                               outline
+No. 1
+                                                               （16.5）
+                                       (4.8)
+
+
+
+
+circuit
+                                                                                                                                                                          PC board edge
+                                                                                                                                                                                                               7.2 min.
+
+
+
+
+                                                                                                                                       ＊11.0 max when used with the VR connector socket
+
+
+
+          Side entry type with stopper                                                                         Shrouded Header
+                                                                                                                                                                                                 10.5
+                                                                                                                                         3.96±0.05 1.5±0.05      Connector
+              3.96±0.05                          +0.1
+                                        φ1.65 0                                              (21)                                                                outline
+                No. 1 circuit                                                                                                                                    No. 1
+                                        Connector
+                                                                                                                         (5.3)
+
+
+
+
+                                        outline                                                                                                                  circuit
+                                                             10.5
+5.7min.
+
+
+
+
+                                                                                                                                                                                                           （16.5）
+
+
+
+
+                                                                                                                              +0.1
+                                               PC board edge                                                   φ1.65 0
+                                                                                                                                                               3.4±0.05
+
+
+
+
+                                                                                                                                                     +0.1
+                                                                                                   5.7min.                                     φ1.4 0
+                                                                                             19
+
+
+
+
+Note: 1. The PC board layout figure shown is viewed from the connector mounting surface.
+      2. Tolerance for the PCB hole pitch shall be ± 0.05 and shall not accumulate.
+      3. Hole dimensions differ depending on the type of PCB and PCB drilling method.
+         The above dimensions are for reference only. Please contact JST for further details.
+      4. The assembly layout is for N-type housings.
+         For housings other than N-type, please contact JST.
+
+
+
+
+                                                                                                             ‑4‑
+

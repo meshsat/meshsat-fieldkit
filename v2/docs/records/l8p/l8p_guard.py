@@ -78,15 +78,28 @@ def rel(p):
 def sha(p, n=64):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()[:n]
 
-
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 after the pins.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8p
+PDFTEXT = {
+    "v2/vendor/battery/ti-csd17570q5b.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-csd18510q5b.pdf": [["-layout"]],
+    "v2/vendor/power/aos-ao3400a-n-mosfet.pdf": [["-layout"]],
+    "v2/vendor/power/jscj-2n7002-c8545.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-lm26lv-snis144g.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps709-sbvs186h.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-lm5069.pdf": [["-layout"]],
+}
+import importlib.util  # noqa: E402  (the helper's loader; W34)
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 def pdftext(path):
     if not os.path.isfile(path):
         refuse("%s is absent (held back: run v2/docs/records/l8p/fetch_held_back.py)" % rel(path))
-    try:
-        r = subprocess.run(["pdftotext", "-layout", path, "-"], capture_output=True, check=True)
-    except (OSError, subprocess.CalledProcessError) as e:
-        refuse("pdftotext could not read %s (%s)" % (rel(path), e))
-    return r.stdout.decode("utf-8", "replace")
+    return PT.pdf_text(ROOT, rel(path), ["-layout"], PDFTEXT, "v2/docs/records/l8p")
 
 
 def need(text, pat, what, flags=re.M):
@@ -284,7 +297,8 @@ def main():
     w("LABELS: PRINTED a maker's printed limit; TYPICAL a maker's typical figure or curve; ASSUMED; DERIVED this script's arithmetic; RECORD\n")
     w("another record's figure, read from its copy.\n\n")
     w("0. PINS (sha256/16)\n")
-    for p in (L9_OUT, L9_PAGE, L4_20C, L9_P15, L4_B, DRAFTS_OUT, LM26LV, TPS709, AO3400A, N7002, LM5069, CSD18510, CSD17570, os.path.abspath(__file__)):
+    for p in (L9_OUT, L9_PAGE, L4_20C, L9_P15, L4_B, DRAFTS_OUT, LM26LV, TPS709, AO3400A, N7002, LM5069, CSD18510, CSD17570, os.path.abspath(__file__)) \
+            + tuple(os.path.join(ROOT, t) for t, _h, _held in PT.inputs(ROOT, PDFTEXT)):
         w("   %s  %s%s\n" % (sha(p, 16), rel(p), "  (held back, fetch_held_back.py)" if "/held/" in p else ""))
     w("\n1. WHAT RECORD l9stk STATES OF G2 (RECORD: its l9stk_guard.out and page 15.9 at 43da41ca, copied)\n")
     w("   the 130 C preset: no trip under %.1f C, surely tripped from %.1f C, resets between %.1f and %.1f C\n" % (L["no_trip"], L["trip"], L["reset_lo"], L["reset_hi"]))

@@ -1,0 +1,74 @@
+BQ25731
+SLUSE66A – JUNE 2020 – REVISED JANUARY 2021                                                                                        www.ti.com
+
+
+8 Specifications
+8.1 Absolute Maximum Ratings
+over operating free-air temperature range (unless otherwise noted)(1)
+                                                                                                  MIN               MAX            UNIT
+                       SRN, SRP, ACN, ACP, VBUS, VSYS                                             –0.3                32
+                       SW1, SW2                                                                        –2             32
+                       BTST1, BTST2, HIDRV1, HIDRV2,                                              –0.3                38
+                       LODRV1, LODRV2 (25nS)                                                           –4               7
+                       HIDRV1, HIDRV2 (25nS)                                                           –4             38
+    Voltage                                                                                                                         V
+                       SW1, SW2 (25nS)                                                                 –4             32
+                       SDA, SCL, REGN, PSYS, CHRG_OK, CELL_BATPRESZ, ILIM_HIZ,
+                       LODRV1, LODRV2, VDDA, COMP2, CMPIN, CMPOUT,OTG/VAP/                        –0.3                  7
+                       FRS,
+                       PROCHOT                                                                    –0.3                5.5
+                       IADPT, IBAT, COMP1                                                         –0.3                3.6
+
+    Differential       BTST1-SW1, BTST2-SW2, HIDRV1-SW1, HIDRV2-SW2                               –0.3                  7
+                                                                                                                                    V
+    Voltage            SRP-SRN, ACP-ACN                                                           –0.5                0.5
+    Temperature        Junction temperature range, TJ                                              –40               150
+                                                                                                                                    °C
+    Temperature        Storage temperature, Tstg                                                   –55               150
+
+(1)       Stresses beyond those listed under Absolute Maximum Rating may cause permanent damage to the device. These are stress
+          ratings only, which do not imply functional operation of the device at these or any other conditions beyond those indicated
+          under Recommended Operating Condition. Exposure to absolute-maximum-rated conditions for extended periods may affect device
+          reliability.
+
+
+8.2 ESD Ratings
+                                                                                                                    VALUE            UNIT
+                                                                Human body model (HBM), per ANSI/ESDA/
+                                                                                                                    ±2000
+                                                                JEDEC JS-001, all pins(1)
+    V(ESD)         Electrostatic discharge                                                                                               V
+                                                                Charged device model (CDM), per JEDEC
+                                                                                                                     ±500
+                                                                specification JESD22-C101, all pins(2)
+
+(1)       JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process.
+(2)       JEDEC document JEP157 states that 250-V CDM allows safe manufacturing with a standard ESD control process.
+
+
+8.3 Recommended Operating Conditions
+over operating free-air temperature range (unless otherwise noted)
+                                                                                                MIN         NOM             MAX      UNIT
+                     ACN, ACP, VBUS                                                                0                         26
+                     SRN, SRP, VSYS                                                                0                     23.15
+                     SW1, SW2                                                                    –2                          26
+                     BTST1, BTST2, HIDRV1, HIDRV2,                                                 0                         32
+    Voltage                                                                                                                              V
+                     SDA, SCL, REGN, PSYS, CHRG_OK, CELL_BATPRESZ, ILIM_HIZ,
+                                                                                                   0                         6.5
+                     LODRV1, LODRV2, VDDA, COMP2, CMPIN, CMPOUT,OTG/VAP/FRS
+                     PROCHOT                                                                       0                         5.3
+                     IADPT, IBAT, COMP1                                                            0                         3.3
+                     BTST1-SW1, BTST2-SW2, HIDRV1-SW1, HIDRV2-SW2                                  0                         6.5
+    Differential
+                     SRP-SRN, ACP-ACN                                                           –0.5                         0.5         V
+    Voltage
+                     BATDRV-VSYS                                                                   0                        10.8
+
+
+
+
+8         Submit Document Feedback                                                               Copyright © 2022 Texas Instruments Incorporated
+
+                                                        Product Folder Links: BQ25731
+

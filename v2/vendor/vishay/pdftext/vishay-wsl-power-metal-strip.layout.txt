@@ -1,0 +1,336 @@
+               Upgrade for Higher Current to WSLP and for Zero Ohm Jumper to WSL-9
+                                                                                                                                                  WSL
+                      www.vishay.com
+                                                                                                                                       Vishay Dale
+                                  Power Metal Strip® Resistors, Low Value
+                                    (Down to 0.0005 Ω), Surface-Mount
+                                                                                         FEATURES
+                                                                                         • All welded construction of the Power Metal
+                                                                                           Strip® resistors are ideal for all types of current
+                                                                                           sensing, voltage division and pulse
+                                                                                           applications
+                                                                                                                                                 Available
+                                                                                         • Proprietary processing technique produces
+                                                                                           extremely low resistance values (down to
+                                                                                           0.0005 Ω)
+                                                                                         • Sulfur resistance by construction that is
+                                                                                           unaffected by high sulfur environments              Available
+
+                                                                                         • Very low inductance 0.5 nH to 5 nH
+LINKS TO ADDITIONAL RESOURCES                                                            • Low thermal EMF (< 3 μV/°C)                           Available
+
+
+                                                                                         • AEC-Q200 qualified     (1)
+   3D 3D                                                                                                                                        Available
+ 3D Models       Design Tools          Videos       Infographics   Calculators           • Material categorization: for definitions of
+                                                                                           compliance please see www.vishay.com/doc?99912
+Notes
+* This datasheet provides information about parts that are RoHS-compliant and / or parts that are non-RoHS-compliant. For example, parts
+    with lead (Pb) terminations are not RoHS-compliant. Please see the information / tables in this datasheet for details
+(1) Flame retardance test may not be applicable to some resistor technologies
+
+
+
+  STANDARD ELECTRICAL SPECIFICATIONS
+  GLOBAL                                        POWER RATING P70 °C                   RESISTANCE VALUE RANGE Ω (2)                    WEIGHT (typical)
+                                SIZE
+  MODEL                                                 W                           TOL. ± 0.5 %        TOL. ± 1.0 %                   g/1000 pieces
+  WSL0603                       0603                    0.1                          0.01 to 0.1          0.01 to 0.1                       1.9
+  WSL0805                       0805                  0.125                          0.005 to 0.2        0.005 to 0.2                       4.8
+  WSL1206                       1206                   0.25                          0.005 to 0.2       0.0005 to 0.2                      16.2
+  WSL2010                       2010                    0.5                          0.004 to 0.5        0.001 to 0.5                      38.9
+  WSL2512                       2512                  1.0 (1)                        0.003 to 0.5       0.0005 to 0.5                      63.6
+  WSL2816                       2816                   2.0                           0.003 to 0.1        0.002 to 0.1                       118
+Notes
+• Part marking: value; tolerance: due to resistor size limitations some resistors will be marked with only the resistance value
+• Qualified to AEC-Q200 rev. D
+(1) For values above 0.1 Ω derate linearly to 80 % rated power at 0.5 Ω
+(2) WSL1206 0.0005 Ω to 0.00099 Ω is only available with 2 % tolerance (G tolerance code)
+
+
+
+  GLOBAL PART NUMBER INFORMATION
+  Global Part Numbering Example: WSL25124L000FEA (visit www.vishay.net Vishay Dale parts numbering manual for all options)
+             W        S          L         2       5         1     2         4      L      0       0      0      F      E         A
+
+  GLOBAL               RESISTANCE                      TOLERANCE
+   MODEL                VALUE (1)                         CODE                                 PACKAGING CODE (2)                            SPECIAL (3)
+                                                                                                    (2 digits)                             (up to 2 digits)
+  (7 digits)             (5 digits)                      (1 digit)
+ WSL0603                L = mΩ*                        D = ± 0.5 %                        EA = lead (Pb)-free, tape / reel                  (dash number)
+ WSL0805               R = decimal                     F = ± 1.0 %                   EH = lead (Pb)-free, tape / reel (WSL2816)            from 1 to 99 as
+ WSL1206             5L000 = 0.005 Ω                   J = ± 5.0 %                                                                            applicable
+ WSL2010             R0100 = 0.01 Ω                                                         TA = tin / lead, tape / reel (R86)
+ WSL2512                                                                     TG = tin / lead, tape / reel (RT1, for WSL0603 and WSL0805)
+ WSL2816         * Use “L” for resistance                                             TH = tin / lead, tape / reel (RJ9, WSL2816)
+                     values < 0.01 Ω                                                 SB = tin / lead, tape / reel for DLA drawings
+
+
+Notes
+• Per PCN-DR-00009-2022-REV-0, WSL marking will be removed effective March 1st, 2023
+(1) WSL marking (www.vishay.com/doc?30327); WSL decade values (www.vishay.com/doc?30117)
+(2) Packaging code: EB (lead (Pb)-free) and TB (tin / lead) are non-standard packaging codes designating 1000 piece reels. These non-standard
+    packaging codes are identical to our standard EA (lead (Pb)-free) and TA (tin / lead), except that they have a package quantity of 1000 pieces
+(3) Follow link for customization capabilities: www.vishay.com/doc?48163
+
+
+
+
+Revision: 23-Nov-2023                                         1                               Document Number: 30100
+                                For technical questions, contact: ww2bresistors@vishay.com
+      THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                     ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+            Upgrade for Higher Current to WSLP and for Zero Ohm Jumper to WSL-9
+                                                                                                                                       WSL
+                  www.vishay.com
+                                                                                                                              Vishay Dale
+
+  TECHNICAL SPECIFICATIONS
+                                                                                WSL RESISTOR CHARACTERISTICS
+  PARAMETER                                   UNIT
+                                                                 WSL0603 (1)        WSL0805 WSL1206 WSL2010 WSL2512 WSL2816
+                                                          ± 75 for 50 mΩ to 100 mΩ                ± 75 for 7 mΩ to 500 mΩ
+  Component temperature coefficient                       ± 110 for 10 mΩ to 49 mΩ                ± 110 for 5 mΩ to 6.9 mΩ
+  (including terminal) (2)
+                                             ppm/°C                    -                          ± 150 for 3 mΩ to 4.9 mΩ
+  TCR measured from
+  -55 °C to +155 °C                                                    -                          ± 275 for 1 mΩ to 2.9 mΩ
+                                                                       -                        ± 400 for 0.5 mΩ to 0.99 mΩ
+  Element TCR (3)                            ppm/°C                                          < 20
+  Operating temperature range                  °C                                         -65 to +170
+  Maximum working voltage (4)                   V                                          (P x R)1/2
+Notes
+(1) Consult factory for detailed TCR performance across temperature range associated with PCN-DR-00003-2020 for WSL0603. TCR
+    performance is improved for +25 °C to +155 °C
+(2) Component TCR - total TCR that includes the TCR effects of the resistor element and the copper terminal
+(3) Element TCR - only applies to the alloy used for the resistor element; refer to item 1 in the construction illustration on the following page
+(4) Maximum working voltage - the WSL is not voltage sensitive, but is limited by power / energy dissipation and is also not ESD sensitive
+
+
+DIMENSIONS in inches (millimeters)
+                                                                      H
+                                                                                                  l                       b
+                                                                  W
+
+                                                      T                                                a
+                                    L                                                          Typical sensing traces
+Notes
+• 3D models available: www.vishay.com/doc?30306
+• Surface mount solder profile recommendations: www.vishay.com/doc?31052
+                  RESISTANCE                                        DIMENSIONS                                  SOLDER PAD DIMENSIONS
+  MODEL
+                   RANGE (Ω)                  L                 W               H                   T             a       b         l
+  WSL0603 (1)       0.01 to 0.1         0.060 ± 0.010     0.030 ± 0.010   0.016 ± 0.005       0.015 ± 0.010     0.040   0.040   0.020
+                                        (1.52 ± 0.254)    (0.76 ± 0.254) (0.406 ± 0.127)     (0.381 ± 0.254)    (1.01)  (1.01)   (0.50)
+                                        0.080 ± 0.010     0.050 ± 0.010   0.016 ± 0.005       0.015 ± 0.010     0.040   0.050   0.020
+  WSL0805 (2)      0.005 to 0.2
+                                        (2.03 ± 0.254)    (1.27 ± 0.254) (0.406 ± 0.127)     (0.381 ± 0.254)    (1.02)  (1.27)   (0.50)
+                                                                                                                0.089   0.076   0.023
+                0.0005 to 0.00099                                                                               (2.26)  (1.93)   (0.58)
+                                                                                             0.041 ± 0.010
+                                                                                             (1.04 ± 0.254)     0.086   0.076   0.029
+                 0.001 to 0.0019
+                                        0.126 ± 0.010     0.063 ± 0.010     0.025 ± 0.010                       (2.18)  (1.93)   (0.74)
+  WSL1206
+                                        (3.20 ± 0.254)    (1.60 ± 0.254)   (0.635 ± 0.254)    0.025 ± 0.010     0.070   0.076   0.061
+                 0.002 to 0.0059
+                                                                                             (0.635 ± 0.254)    (1.78)  (1.93)   (1.55)
+                                                                                              0.020 ± 0.010     0.065   0.076   0.071
+                   0.006 to 0.20                                                             (0.508 ± 0.254)    (1.65)  (1.93)   (1.80)
+                                                                                              0.058 ± 0.010     0.093   0.120   0.055
+                 0.001 to 0.0069
+                                        0.200 ± 0.010     0.100 ± 0.010     0.025 ± 0.010     (1.47 ± 0.254)    (2.36)  (3.05)   (1.40)
+  WSL2010
+                                        (5.08 ± 0.254)    (2.54 ± 0.254)   (0.635 ± 0.254)    0.020 ± 0.010     0.055   0.120   0.130
+                   0.007 to 0.5                                                              (0.508 ± 0.254)    (1.40)  (3.05)   (3.30)
+                                                                                              0.107 ± 0.010
+                0.0005 to 0.00099
+                                                                                              (2.72 ± 0.254)     0.120                  0.050
+                                                                                              0.087 ± 0.010      (3.05)                 (1.27)
+                 0.001 to 0.0049
+                                        0.250 ± 0.010     0.125 ± 0.010     0.025 ± 0.010     (2.21 ± 0.254)                  0.145
+  WSL2512
+                                        (6.35 ± 0.254)    (3.18 ± 0.254)   (0.635 ± 0.254)    0.047 ± 0.010      0.083        (3.68)    0.125
+                 0.005 to 0.0069                                                              (1.19 ± 0.254)     (2.11)                 (3.18)
+                                                                                              0.030 ± 0.010      0.065                  0.160
+                   0.007 to 0.5
+                                                                                             (0.762 ± 0.254)     (1.65)                 (4.06)
+                 0.002 to 0.00399                                                             0.098 ± 0.010      0.135                  0.060
+                                        0.280 ± 0.010     0.165 ± 0.010     0.025 ± 0.010     (2.49 ± 0.254)     (3.43)       0.185     (1.52)
+  WSL2816
+                                         (7.1 ± 0.254)     (4.2 ± 0.254)   (0.635 ± 0.254)    0.062 ± 0.010      0.096         (4.7)    0.125
+                   0.004 to 0.1                                                               (1.57 ± 0.254)     (2.45)                 (3.20)
+Notes
+(1) PCN-DR-00003-2020 changed terminal height for WSL0603 from 0.013" ± 0.005" for clad construction to 0.016" ± 0.005" for welded
+    construction
+(2) PCN-DR-00021-2021-REV-1 changed terminal height for WSL0805 from 0.013" ± 0.005" for clad construction to 0.016" ± 0.005" for welded
+    construction
+
+Revision: 23-Nov-2023                                         2                               Document Number: 30100
+                                For technical questions, contact: ww2bresistors@vishay.com
+      THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                     ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                         Upgrade for Higher Current to WSLP and for Zero Ohm Jumper to WSL-9
+                                                                                                                                                                     WSL
+                             www.vishay.com
+                                                                                                                                                        Vishay Dale
+DERATING                                                                                             PULSE CAPABILITY
+                                             Axis Title
+                   120                                                      10000
+
+                                                                                                             get started
+                   100
+Rated Power (%)
+
+
+
+
+                    80                                                      1000
+
+
+
+
+                                                                                    2nd line
+    2nd line
+
+
+
+
+                                                                                    1st line
+                    60
+
+
+                    40                                                      100
+
+
+                    20
+                                                                                                                                                  (ILLUSTRATIVE PURPOSES ONLY)
+                     0                                                      10
+                      -65-50 -25    0   25     50 70      100 125 150 170
+                                   Ambient Temperature (°C)                                                       www.vishay.com/en/resistors/joulewizard/
+
+
+WELDED CONSTRUCTION
+                                                                                        1 Resistive element: solid metal nickel-chrome
+                                                                                          or manganese-copper alloy resistive element
+                                                                                          with low TCR (< 20 ppm/°C)
+                                                                                        2 Plated terminal: solid copper, 100 % Sn (100 μ" min.)
+                                                                                          with 100 % Ni (20 μ" min.) under layer finish
+                                                                             4          3 Terminal / element weld
+                                                                  1
+                                                          3                             4 Silicone coating with ink print
+                                                 2
+
+
+
+     PERFORMANCE
+     TEST                                                                      CONDITIONS OF TEST                                                 TEST LIMITS
+     Thermal shock                                   -55 °C to +150 °C, 1000 cycles, 15 min at each extreme                                   ± (0.5 % + 0.0005 Ω)
+                                                     Refer to link for short time overload performance and pulse capability;
+     Short time overload                                                                                                                      ± (0.5 % + 0.0005 Ω)
+                                                     www.vishay.com/en/resistors/power-metal-strip-calculator/
+     Low temperature operation                       -65 °C for 24 h                                                                          ± (0.5 % + 0.0005 Ω)
+     High temperature exposure                       1000 h at + 170 °C                                                                       ± (1.0 % + 0.0005 Ω)
+     Bias humidity                                   +85 °C, 85 % RH, 10 % bias, 1000 h                                                       ± (0.5 % + 0.0005 Ω)
+     Mechanical shock                                100 g’s for 6 ms, 5 pulses                                                               ± (0.5 % + 0.0005 Ω)
+     Vibration                                       Frequency varied 10 Hz to 2000 Hz in 1 min, 3 directions, 12 h                           ± (0.5 % + 0.0005 Ω)
+     Load life                                       1000 h at rated power, + 70 °C, 1.5 h “ON”, 0.5 h “OFF”                                  ± (1.0 % + 0.0005 Ω)
+     Resistance to solder heat                       +260 °C solder, 10 s to 12 s dwell, 25 mm/s emergence                                    ± (0.5 % + 0.0005 Ω)
+     Moisture resistance                             MIL-STD-202, method 106, 0 % power, 7a and 7b not required                               ± (0.5 % + 0.0005 Ω)
+Note
+• Contact ww2bresistors@vishay.com for application specific performance requirements or qualification data. Typical performance is better
+  than stated test limits
+
+
+     PACKAGING (1)
+                                                                                                              REEL
+     MODEL
+                                                      TAPE WIDTH                               DIAMETER                    PIECES/REEL                      CODE
+     WSL0603                                       8 mm / punched paper                        178 mm / 7"                     5000                          EA
+     WSL0805                                       8 mm / punched paper                        178 mm / 7"                     5000                          EA
+     WSL1206                                      8 mm / embossed plastic                      178 mm / 7"                     4000                          EA
+     WSL2010                                     12 mm / embossed plastic                      178 mm / 7"                     4000                          EA
+     WSL2512                                     12 mm / embossed plastic                      178 mm / 7"                     2000                          EA
+     WSL2816                                     12 mm / embossed plastic                      178 mm / 7"                     2000                          EH
+Notes
+• Embossed carrier tape per EIA-481
+(1) Additional packaging details at www.vishay.com/doc?20051
+
+
+Revision: 23-Nov-2023                                                     3                               Document Number: 30100
+                                            For technical questions, contact: ww2bresistors@vishay.com
+                  THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                                 ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+          Upgrade for Higher Current to WSLP and for Zero Ohm Jumper to WSL-9
+                                                                                                           WSL
+                 www.vishay.com
+                                                                                                     Vishay Dale
+
+ LINKS TO RELATED DOCUMENTS
+ SELECTOR GUIDE
+   Overview of Automotive Grade Products                                  www.vishay.com/doc?49924
+ TECHNICAL NOTES
+   SMD Current Sense: AEC-Q200 vs. Vishay Qualification                   www.vishay.com/doc?30416
+   MIL-PRF vs. AEC-Q200: Do You Know What You Are Getting?                www.vishay.com/doc?11000
+ WHITE PAPER
+   Thermal Management for Surface-Mount Devices                           www.vishay.com/doc?30380
+   Temperature Coefficient of Resistance for Current Sensing              www.vishay.com/doc?30405
+
+
+
+
+Revision: 23-Nov-2023                                        4                               Document Number: 30100
+                               For technical questions, contact: ww2bresistors@vishay.com
+     THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                    ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+                                                                                       Legal Disclaimer Notice
+                 www.vishay.com
+                                                                                                                             Vishay
+                                                         Disclaimer
+
+ALL PRODUCT, PRODUCT SPECIFICATIONS AND DATA ARE SUBJECT TO CHANGE WITHOUT NOTICE TO IMPROVE
+RELIABILITY, FUNCTION OR DESIGN OR OTHERWISE.
+
+Vishay Intertechnology, Inc., its affiliates, agents, and employees, and all persons acting on its or their behalf (collectively,
+“Vishay”), disclaim any and all liability for any errors, inaccuracies or incompleteness contained in any datasheet or in any other
+disclosure relating to any product.
+
+Vishay makes no warranty, representation or guarantee regarding the suitability of the products for any particular purpose or
+the continuing production of any product. To the maximum extent permitted by applicable law, Vishay disclaims (i) any and all
+liability arising out of the application or use of any product, (ii) any and all liability, including without limitation special,
+consequential or incidental damages, and (iii) any and all implied warranties, including warranties of fitness for particular
+purpose, non-infringement and merchantability.
+
+Statements regarding the suitability of products for certain types of applications are based on Vishay's knowledge of typical
+requirements that are often placed on Vishay products in generic applications. Such statements are not binding statements
+about the suitability of products for a particular application. It is the customer's responsibility to validate that a particular product
+with the properties described in the product specification is suitable for use in a particular application. Parameters provided in
+datasheets and / or specifications may vary in different applications and performance may vary over time. All operating
+parameters, including typical parameters, must be validated for each customer application by the customer's technical experts.
+Product specifications do not expand or otherwise modify Vishay's terms and conditions of purchase, including but not limited
+to the warranty expressed therein.
+
+Hyperlinks included in this datasheet may direct users to third-party websites. These links are provided as a convenience and
+for informational purposes only. Inclusion of these hyperlinks does not constitute an endorsement or an approval by Vishay of
+any of the products, services or opinions of the corporation, organization or individual associated with the third-party website.
+Vishay disclaims any and all liability and bears no responsibility for the accuracy, legality or content of the third-party website
+or for that of subsequent links.
+
+Vishay products are not designed for use in life-saving or life-sustaining applications or any application in which the failure of
+the Vishay product could result in personal injury or death unless specifically qualified in writing by Vishay. Customers using or
+selling Vishay products not expressly indicated for use in such applications do so at their own risk. Please contact authorized
+Vishay personnel to obtain written terms and conditions regarding products designed for such applications.
+
+No license, express or implied, by estoppel or otherwise, to any intellectual property rights is granted by this document or by
+any conduct of Vishay. Product names and markings noted herein may be trademarks of their respective owners.
+
+
+
+
+© 2026 VISHAY INTERTECHNOLOGY, INC. ALL RIGHTS RESERVED
+
+Revision: 01-Jan-2026                                              1                                           Document Number: 91000
+
+     THIS DOCUMENT IS SUBJECT TO CHANGE WITHOUT NOTICE. THE PRODUCTS DESCRIBED HEREIN AND THIS DOCUMENT
+                    ARE SUBJECT TO SPECIFIC DISCLAIMERS, SET FORTH AT www.vishay.com/doc?91000
+

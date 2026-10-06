@@ -1,0 +1,81 @@
+                                            Blade Fuses
+
+
+MINI ® BLADE FUSE RATED 32V
+
+
+                                                                     Specifications
+                                                                     Interrupting Rating:				       1000A @ 32 VDC
+                                                                     Voltage Rating:					            32 VDC
+                                                                     Operating Temperature Range:   -40˚C to +125˚C (Sn=-40˚C to +105˚C)
+                                                                     Terminals:			                   Ag plated zinc alloy
+                                                                     Housing Material:			            PA66
+                                                                     Complies with:                  Meets SAE J2077
+                                                                     		                              ISO 8820-3
+                                                                     		                              UL 248 Special Purpose Fuses
+                                                                     					                            (Sn Fuse not UL recognized)
+                                                                     Ordering Information
+                                                                         Part Number                  Package Size
+
+                                                                         0297xxx.WXNV                      3000
+                                                                            0297xxx.U                       500
+                                                                            0297xxx.H                       100
+                                                                            0297xxx.L                        50
+                                                                     MINI® Sn Fuse
+                                                                          0297xxx.WXT                        3000
+            Also available:
+            MINI® Sn Fuse
+            (tin plated)
+                                                                           Dimensions
+                                                                           Dimensions in mm
+Description
+The MINI® Fuse is the standard for vehicle circuit protection. Its
+miniature design meets the need for more circuits to be protected
+while utilizing less space, and its ability to cope with high
+temperatures in adverse environments makes the MINI® Fuse of
+recommended choice for protection.
+
+
+
+
+Time-Current Characteristics
+      % of Rating              Opening Time Min / Max (s)
+
+           110                        360,000 s / –
+           135                        0.75 s / 600 s
+           200                         0.15 s / 5 s
+           350                      0.080 s / 0.500 s
+           600                      0.030 s / 0.100 s
+
+
+
+
+www.littelfuse.com
+                                                           Blade Fuses
+
+
+MINI ® BLADE FUSE RATED 32V
+
+
+Time-Current Characteristic Curves                         Temperature Rerating Curve
+
+
+
+
+Ratings
+   Part Number   Current Rating   Housing Material Color   Typ. Voltage Drop   Cold Resistance         I2t
+
+    0297002._         2A                                       171 mV            55.60 mΩ           2.8 A²s
+    0297003._         3A                                       153 mV            33.75 mΩ           9.4 A²s
+    0297004._         4A                                       121 mV            23.48 mΩ           17 A²s
+    0297005._         5A                                       129 mV            17.75 mΩ           25 A²s
+    029707.5_        7.5 A                                     135 mV            10.85 mΩ           68 A²s
+    0297010._        10 A                                      108 mV             7.42 mΩ           93 A²s
+    0297015._        15 A                                       98 mV             4.58 mΩ          270 A²s
+    0297020._        20 A                                       96 mV             3.21 mΩ          380 A²s
+    0297025._        25 A                                       86 mV             2.36 mΩ          625 A²s
+    0297030._        30 A                                       87 mV             1.85 mΩ          1130 A²s
+
+
+                                                                                                 www.littelfuse.com
+

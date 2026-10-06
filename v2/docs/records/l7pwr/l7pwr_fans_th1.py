@@ -29,6 +29,22 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 after the pins.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l7pwr
+PDFTEXT = {
+    "v2/vendor/cm5/rpi-cm5-cooler-product-brief-2024-12.pdf": [["-layout"]],
+    "v2/vendor/fans/samesky-cfm-60bg68-dc-axial-fan-2024-09-12.pdf": [["-layout"]],
+    "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf": [["-layout"]],
+    "v2/vendor/fans/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.pdf": [["-layout"]],
+    "v2/vendor/precidip/precidip-catalog-slc-2018-03-20.pdf": [["-layout"]],
+}
+import importlib.util  # noqa: E402  (the helper's loader; W34)
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TOP, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {
     "sunon_ip": "v2/vendor/fans/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.pdf",
     "sunon_cat": "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf",
@@ -104,13 +120,10 @@ def text_of(rel):
 
 
 def pdf_text(rel, first=None, last=None):
-    cmd = ["pdftotext", "-layout"]
+    cmd = ["-layout"]
     if first:
         cmd += ["-f", str(first), "-l", str(last or first)]
-    r = subprocess.run(cmd + [os.path.join(TOP, rel), "-"], capture_output=True, text=True)
-    if r.returncode != 0:
-        refuse("pdftotext could not read %s" % rel)
-    return r.stdout
+    return PT.pdf_text(TOP, rel, cmd, PDFTEXT, "v2/docs/records/l7pwr", universal_newlines=True)
 
 
 def need(text, pat, what, flags=re.M | re.S):
@@ -566,6 +579,8 @@ def render(R):
     P("0. INPUTS (sha256/16)")
     for k, v in PINS.items():
         P("   %-11s %s  sha256 %s" % (k, v, R["pins"][k][:16]))
+    for t, h, _held in PT.inputs(TOP, PDFTEXT):
+        P("   %-11s %s  sha256 %s" % ("pdftext", t, (h or "ABSENT")[:16]))
     P("")
     P("1. THE SITES AND THEIR SUPPLIES (read from the generators and L4-E11)")
     P("   mixers:  " + R["sites"]["mixers"])

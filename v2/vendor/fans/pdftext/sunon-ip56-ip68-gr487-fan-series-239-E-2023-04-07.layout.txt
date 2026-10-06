@@ -1,0 +1,184 @@
+                                                                                                 Application : IT/Telecom、Refrigeration、Outdoor LED Lighting、Solar Inverter
+
+
+
+
+                              Dustproof                                                                                             Waterproof
+
+
+
+
+     IP56/68 Rating                                                                             IP- 68                           8：Protection against permanent immersion
+     Dustproof & Waterproof Fan Series                                                                                           6：Complete protection against dust
+
+
+            Size                  Model                            Model           Voltage      Bearing      Speed       Air Flow         Static         Noise          Weight
+                                                                                                                                         Pressure
+           (mm)                   (IP56)                           (IP68)           (VDC)        2 BALL      (RPM)        (CFM)        (Inch-H2O)       (db(A))           (g)
+
+                                                      GF40282BX-1000U-SEP            24                      17600        24.6            2.07           58.1            46.0
+                                                      GF40282B1-1000U-SEP            24                      14600        20.4            1.41           54.0            46.0
+                                                      GF40282B2-1000U-SEP            24                      13100        18.3            1.13           51.7            46.0
+                                                      GF40282B3-1000U-SEP            24                      10500        14.7            0.73           46.8            46.0
+        40x40x28
+                                                      GF40282BX-1000U-QEP            24                      17600        24.6            2.07           58.1            46.0
+                                                      GF40282B1-1000U-QEP            24                      14600        20.4            1.41           54.0            46.0
+                                                      GF40282B2-1000U-QEP            24                      13100        18.3            1.13           51.7            46.0
+                                                      GF40282B3-1000U-QEP            24                      10500        14.7            0.73           46.8            46.0
+                        GF60151B6-1E00U-AC9           GF60151B6-1E00U-AE9            12                      4500         21.3            0.18           34.5            47.0
+                        GF60151B7-1E00U-AC9           GF60151B7-1E00U-AE9            12                      3900         18.2            0.13           29.8            47.0
+        60x60x15
+                        GF60151B8-1E00U-AC9           GF60151B8-1E00U-AE9            12                      3200         14.5            0.09           24.9            47.0
+                        GF60151B9-1E00U-AC9           GF60151B9-1E00U-AE9            12                      2300         10.6            0.05           17.1            47.0
+       Ø84.9X15.4       GF60151B9-1E01U-AC9           GF60151B9-1E01U-AE9            12                      2200          9.8            0.05           17.1            45.0
+                                                      GF60252BX-1000U-SEP            24                      12900        54.8            1.44           55.4            84.0
+                                                      GF60252B1-1000U-SEP            24                      11500        48.8            1.23           52.7            84.0
+                                                      GF60252B2-1000U-SEP            24                      9000         38.3            0.75           48.9            84.0
+                                                      GF60252B3-1000U-SEP            24                      6450         27.4            0.38           41.7            84.0
+        60x60x25
+                                                      GF60252BX-1000U-QEP            24                      12900        54.8            1.44           55.4            84.0
+                                                      GF60252B1-1000U-QEP            24                      11500        48.8            1.23           52.7            84.0
+                                                      GF60252B2-1000U-QEP            24                      9000         38.3            0.75           48.9            84.0
+                                                      GF60252B3-1000U-QEP            24                      6450         27.4            0.38           41.7            84.0
+                        GF80251B1-000U-AC9            GF80251B1-000U-AE9             12                      4800         60.0            0.41           47.5           105.0
+                        GF80251B2-000U-AC9            GF80251B2-000U-AE9             12                      4500         57.0            0.35           46.0           105.0
+                        GF80251B3-000U-AC9            GF80251B3-000U-AE9             12                      4200         53.0            0.30           44.5           105.0
+                        GF80251B5-000U-AC9            GF80251B5-000U-AE9             12                      3200         41.0            0.18           33.0            87.0
+                        GF80251B6-000U-AC9            GF80251B6-000U-AE9             12                      2900         37.0            0.15           30.0            87.0
+                        GF80251B7-000U-AC9            GF80251B7-000U-AE9             12                      2600         33.0            0.11           28.0            87.0
+        80x80x25
+                        GE80252B1-000U-AC9            GE80252B1-000U-AE9             24                      4800         60.0            0.41           47.5           105.0
+                        GE80252B2-000U-AC9            GE80252B2-000U-AE9             24                      4500         57.0            0.35           46.0           105.0
+                        GE80252B3-000U-AC9            GE80252B3-000U-AE9             24                      4200         53.0            0.30           44.5           105.0
+                        GF80252B5-000U-AC9            GF80252B5-000U-AE9             24                      3200         41.0            0.18           33.0            87.0
+                        GF80252B6-000U-AC9            GF80252B6-000U-AE9             24                      2900         37.0            0.15           30.0            87.0
+                        GF80252B7-000U-AC9            GF80252B7-000U-AE9             24                      2600         33.0            0.11           28.0            87.0
+
+
+
+                                                              URL : www.sunon.com
+Sunonwealth Electric Machine Industry Co., Ltd.                                                                                                                   2023/04/07 (239-E)
+                                                              email：sunon@email.sunon.com.tw
+* If you need special specification. Please contact Sunon sales.
+* Specifications are subject to change without notice. Specifications in this catalog are for reference. More Sunon products information please visit SUNON website at www.sunon.com
+ Copyright @ 2023 Sunonwealth Electric Machine Industry Co., Ltd
+                                                                                                 Application : IT/Telecom、Refrigeration、Outdoor LED Lighting、Solar Inverter
+
+
+
+
+                              Dustproof                                                                                             Waterproof
+
+
+
+
+     IP56/68 Rating                                                                             IP- 68                           8：Protection against permanent immersion
+     Dustproof & Waterproof Fan Series                                                                                           6：Complete protection against dust
+
+
+           Size                  Model                             Model           Voltage      Bearing      Speed       Air Flow         Static         Noise         Weight
+                                                                                                                                         Pressure
+          (mm)                   (IP56)                            (IP68)           (VDC)        2 BALL      (RPM)        (CFM)        (Inch-H2O)       (db(A))          (g)
+
+                       GF80321B1-000U-AC9             GF80321B1-000U-AE9             12                      4800         59.4            0.36           45.2           109.0
+       80x80x32        GF80321B2-000U-AC9             GF80321B2-000U-AE9             12                      4500         55.9            0.32           43.1           109.0
+                       GF80321B3-000U-AC9             GF80321B3-000U-AE9             12                      4100         50.3            0.27           41.1           109.0
+                                                      GF80382BX-1000U-SEP            24                      10000        133.0           1.76           64.3           235.0
+                                                      GF80382B1-1000U-SEP            24                      8000         107.3           1.14           59.6           235.0
+       80x80x38
+                                                      GF80382BX-1000U-QEP            24                      10000        133.0           1.76           64.3           235.0
+                                                      GF80382B1-1000U-QEP            24                      8000         107.3           1.14           59.6           235.0
+                       GF92251B1-000U-AC9             GF92251B1-000U-AE9             12                      4500         75.0            0.35           47.0           113.0
+                       GF92251B2-000U-AC9             GF92251B2-000U-AE9             12                      4200         70.0            0.30           45.0           113.0
+                       GF92251B3-000U-AC9             GF92251B3-000U-AE9             12                      3900         65.0            0.25           43.0           113.0
+                       GF92251B5-000U-AC9             GF92251B5-000U-AE9             12                      3000         51.5            0.15           34.0            99.0
+                       GF92251B6-000U-AC9             GF92251B6-000U-AE9             12                      2700         45.0            0.13           32.0            99.0
+                       GF92251B7-000U-AC9             GF92251B7-000U-AE9             12                      2400         39.5            0.10           28.0            99.0
+       92x92x25
+                       GE92252B1-000U-AC9             GE92252B1-000U-AE9             24                      4500         75.0            0.35           47.0           113.0
+                       GE92252B2-000U-AC9             GE92252B2-000U-AE9             24                      4200         70.0            0.30           45.0           113.0
+                       GE92252B3-000U-AC9             GE92252B3-000U-AE9             24                      3900         65.0            0.25           43.0           113.0
+                       GF92252B5-000U-AC9             GF92252B5-000U-AE9             24                      3000         51.5            0.15           34.0            99.0
+                       GF92252B6-000U-AC9             GF92252B6-000U-AE9             24                      2700         45.0            0.13           32.0            99.0
+                       GF92252B7-000U-AC9             GF92252B7-000U-AE9             24                      2400         39.5            0.10           28.0            99.0
+                                                      GF92382BX-1000U-SEP            24                      9000         172.9           1.73           66.8            260
+                                                      GF92382B1-1000U-SEP            24                      7200         145.3           1.20           60.6            260
+       92x92x38
+                                                      GF92382BX-1000U-QEP            24                      9000         172.9           1.73           66.8            260
+                                                      GF92382B1-1000U-QEP            24                      7200         145.3           1.20           60.6            260
+
+
+
+
+                                                              URL : www.sunon.com
+Sunonwealth Electric Machine Industry Co., Ltd.                                                                                                                   2023/04/07 (239-E)
+                                                              email：sunon@email.sunon.com.tw
+* If you need special specification. Please contact Sunon sales.
+* Specifications are subject to change without notice. Specifications in this catalog are for reference. More Sunon products information please visit SUNON website at www.sunon.com
+ Copyright @ 2023 Sunonwealth Electric Machine Industry Co., Ltd
+                                                                                                               Application : Telecom / Inverter / Outdoor LED Lighting
+
+
+
+
+    Meets GR487
+    For salt spray environment
+    Environmental Test : Meets GR-487-CORE(2000), Section3.34.1 Salt Fog Test Procedure.
+                                                                                   dure.
+
+           Size                                               Voltage         Bearing         Speed          Air Flow            Static            Noise           Weight
+                                    Model                                                                                       Pressure
+          (mm)                                                 (VDC)           2 BALL         (RPM)           (CFM)           (Inch-H2O)          (db(A))            (g)
+
+                          GF40282BX-1000U-SDP                      24                         17600           24.6               2.07              58.1             46.0
+                          GF40282B1-1000U-SDP                      24                         14600           20.4               1.41              54.0             46.0
+                          GF40282B2-1000U-SDP                      24                         13100           18.3               1.13              51.7             46.0
+                          GF40282B3-1000U-SDP                      24                         10500           14.7               0.73              46.8             46.0
+        40x40x28
+                          GF40282BX-1000U-QDP                      24                         17600           24.6               2.07              58.1             46.0
+                          GF40282B1-1000U-QDP                      24                         14600           20.4               1.41              54.0             46.0
+                          GF40282B2-1000U-QDP                      24                         13100           18.3               1.13              51.7             46.0
+                          GF40282B3-1000U-QDP                      24                         10500           14.7               0.73              46.8             46.0
+                          GF60252BX-1000U-SDP                      24                         12900           54.8               1.44              55.4             84.0
+                          GF60252B1-1000U-SDP                      24                         11500           48.8               1.23              52.7             84.0
+                          GF60252B2-1000U-SDP                      24                         9000            38.3               0.75              48.9             84.0
+                          GF60252B3-1000U-SDP                      24                         6450            27.4               0.38              41.7             84.0
+        60x60x25
+                          GF60252BX-1000U-QDP                      24                         12900           54.8               1.44              55.4             84.0
+                          GF60252B1-1000U-QDP                      24                         11500           48.8               1.23              52.7             84.0
+                          GF60252B2-1000U-QDP                      24                         9000            38.3               0.75              48.9             84.0
+                          GF60252B3-1000U-QDP                      24                         6450            27.4               0.38              41.7             84.0
+                          GF80251B5-000U-AD9                       12                         3200            41.0              0.18               33.0             87.0
+                          GF80251B6-000U-AD9                       12                         2900            37.0              0.15               30.0             87.0
+                          GF80251B7-000U-AD9                       12                         2600            33.0              0.11               28.0             87.0
+        80x80x25
+                          GF80252B5-000U-AD9                       24                         3200            41.0              0.18               33.0             87.0
+                          GF80252B6-000U-AD9                       24                         2900            37.0              0.15               30.0             87.0
+                          GF80252B7-000U-AD9                       24                         2600            33.0              0.11               28.0             87.0
+                          GF80382BX-1000U-SDP                      24                         10000            133               1.76              64.3            235.0
+                          GF80382B1-1000U-SDP                      24                         8000            107.3              1.14              59.6            235.0
+        80x80x38
+                          GF80382BX-1000U-QDP                      24                         10000            133               1.76              64.3            235.0
+                          GF80382B1-1000U-QDP                      24                         8000            107.3              1.14              59.6            235.0
+                          GF92251B5-000U-AD9                       12                         3000            51.5              0.15               34.0             99.0
+                          GF92251B6-000U-AD9                       12                         2700            45.0              0.13               32.0             99.0
+                          GF92251B7-000U-AD9                       12                         2400            39.5              0.10               28.0             99.0
+        92x92x25
+                          GF92252B5-000U-AD9                       24                         3000            51.5              0.15               34.0             99.0
+                          GF92252B6-000U-AD9                       24                         2700            45.0              0.13               32.0             99.0
+                          GF92252B7-000U-AD9                       24                         2400            39.5               0.10              28.0             99.0
+                          GF92382BX-1000U-SDP                      24                         9000            172.9              1.73              66.8            260.0
+                          GF92382B1-1000U-SDP                      24                         7200            145.3              1.2               60.6            260.0
+        92x92x38
+                          GF92382BX-1000U-QDP                      24                         9000            172.9              1.73              66.8            260.0
+                          GF92382B1-1000U-SDP                      24                         7200            145.3              1.2               60.6            260.0
+
+
+                                                                   URL : www.sunon.com
+Sunonwealth Electric Machine Industry Co., Ltd.
+                                                                   email：sunon@email.sunon.com.tw                                                              2023/04/07 (239-E)
+
+* If you need special specification. Please contact Sunon sales.
+* Specifications are subject to change without notice. Specifications in this catalog are for reference. More Sunon products information please visit SUNON website at www.sunon.com
+ Copyright @ 2023 Sunonwealth Electric Machine Industry Co., Ltd
+

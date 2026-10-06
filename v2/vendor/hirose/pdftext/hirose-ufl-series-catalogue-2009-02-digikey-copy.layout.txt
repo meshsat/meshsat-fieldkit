@@ -1,0 +1,668 @@
+The product information in this catalog is for reference only. Please request the Engineering Drawing for the most current and accurate design information.
+All non-RoHS products have been discontinued, or will be discontinued soon. Please check the products status on the Hirose website RoHS search at www.hirose-connectors.com, or contact your Hirose sales representative.
+
+
+                           Ultra Small Surface Mount Coaxial Connectors - 1.9mm or 2.4mm Mated Height
+                           U.FL Series                                                                                            Up to 6GHz Transmission Speed
+                                                                                                                               Mated height comparison (with E.FL series)
+
+
+
+                                                                                                                                                                                                     E.FL-LP-040
+                                                                                                                                                                                    U.FL-LP-040      E.FL-LP-066
+                                                                                                                                                                                    U.FL-LP-066
+                                                                                                                                                     U.FL-LP(V)-040
+
+
+
+
+                                                                                                                                                                                                                     3(3.2Max)
+                                                                                                                                                                      2.4(2.5Max)
+                                                                                                                                    1.9(2.0Max)
+                                                                                                                                                                      U.FL                               E.FL
+
+
+
+
+           ■Features                                                                                                        ●Space Factor of Mated Connector
+           1. Nominal mated height of 1.9 or 2.4mm (Max. 2.0 or 2.5mm)
+           2. Small mounting area
+                The receptacle occupies an area of 7.7mm2.                                                                                                     Plug                    U.FL-LP-040
+                                                                                                                                                                                                        Cable
+
+           3. Light weight
+                                                                                                                                                                                                                Dia.0.81
+                                                                                                                                                  2.5Max
+                Receptacle: 15.7mg
+           4. Accepts high frequency transmission.
+                                                                                                                                                                                      U.FL-R-SMT-1
+                To meet the frequency requirements of a wide variety of                                                                                                               Receptacle
+                miniature devices, the connectors offer high frequency
+                performance from DC to 6GHz, with a V.S.W.R. of 1.3 to 1.5                                                                                                                              Cable
+                max.                                                                                                                                           Plug                    U.FL-LP-066
+
+           5. Automatic board placement                                                                                                                                                                           Dia.1.32
+                                                                                                                                                  2.5Max
+
+
+
+
+                Packaged on tape-and-reel the receptacles can be placed with                                                                                                                                      Dia.1.13
+                vacuum nozzles of the automatic placement equipment.
+                                                                                                                                                                                      U.FL-R-SMT-1
+           6. Plugs are terminated with ultra-fine coaxial                                                                                                                            Receptacle
+              (fluorinated resin insulated) cable
+                Standard ultra-fine coaxial cable of 0.81mm diameter (single                                                                                                           U.FL-LP(V)-040
+                                                                                                                                                                                                          Cable
+                                                                                                                                                               Plug
+                braid shielding) is used for the plug termination, assuring secure
+                and stable connections.
+                                                                                                                                                  2.0Max
+
+
+
+
+                                                                                                                                                                                                                Dia.0.81
+
+           7. Simple connector mating / unmating
+                                                                                                                                                                                      U.FL-R-SMT-1
+                Use of available extraction tool assures correct disconnection                                                                                                        Receptacle
+                of the plug and receptacle.
+           8. Verification of the fully mated condition                                                                                                                                U.FL-LP-062
+                                                                                                                                                                                                          Cable
+                                                                                                                                                               Plug
+                Tactile click sensation confirms fully mated condition, assuring
+                complete electrical and mechanical connection.                                                                                                                                                  Dia.1.00
+                                                                                                                                                  2.4Max
+
+
+
+
+           ■Applications                                                                                                                                                              U.FL-R-SMT-1
+                                                                                                                                                                                      Receptacle
+               Cellular phones, PHS, mobile phones, wireless communication
+               devices, electronic measuring instruments, GPS, wireless LAN,
+               Bluetooth and any application requiring high frequency                                                                                          Plug                    U.FL-LP-088         Cable
+               transmission using small coaxial connectors.
+                                                                                                                                                  2.4Max
+
+
+
+
+                                                                                                                                                                                                                Dia.1.37
+
+
+                                                                                                                                                                                      U.FL-R-SMT-1
+                                                                                                                                                                                      Receptacle
+
+
+
+
+                                                                                                                                                                                                  2009.2w                        1
+The product information in this catalog is for reference only. Please request the Engineering Drawing for the most current and accurate design information.
+All non-RoHS products
+           U.FL       have been discontinued,
+                  Series●Ultra         Small or     will be discontinued
+                                                  Surface      Mount soon.    Please Connectors
+                                                                         Coaxial     check the products status on the
+                                                                                                     - 1.9mm       or Hirose
+                                                                                                                       2.4mm website
+                                                                                                                                MatedRoHS search
+                                                                                                                                          Height at www.hirose-connectors.com, or contact your Hirose sales representative.
+
+
+
+          ■Product Specifications
+                                 Nominal characteristic impedance 50 ohms                     Operating temperature range           -40˚C to +90˚C        Storage temperature range -30˚C to +70˚C
+                Ratings
+                                 Frequency range                        DC to 6GHz            Operating humidity                    90%RH max.            Storage humidity                      90%RH max.
+
+
+
+                             Item                                                  Specification                                                                    Conditions
+            1. Contact resistance                      Center : 20 m ohms max.
+                                                                                                                                   10 mA max.
+                                                       Outer : 10 m ohms max.
+            2. Insulation resistance                   500 M ohms min.                                                             100 V DC
+            3. Withstanding voltage                    No flashover or insulation breakdown.                                       200 V AC / 1 minute
+            4. V.S.W.R.*                                                              Part No.                                                 Up to 3GHz                                3 to 6GHz
+                                                       U.FL-LP-040 dia.0.81mm Coaxial Cable Assembly                                             1.3 Max                                  1.35 Max
+                                                       U.FL-LP(V)-040 dia.0.81mm Coaxial Cable Assembly                                          1.3 Max                                  1.3 Max
+                                                       U.FL-LP-066 dia.1.13mm Coaxial Cable Assembly                                             1.3 Max                                  1.4 Max
+                                                       U.FL-LP-066 dia.1.32mm Coaxial Cable Assembly                                             1.3 Max                                  1.5 Max
+                                                       U.FL-LP-062 dia.1mm Coaxial Cable Assembly                                                1.3 Max                                  1.3 Max
+                                                       U.FL-LP-088 dia.1.37mm Coaxial Cable Assembly                                             1.3 Max                                  1.4 Max
+            5. Durability                              Contact resistance
+               (mating / un-mating,                    Center : 25 m ohms max.                                                     30 cycles
+               with corresponding plug)                Outer : 15 m ohms max.
+            6. Vibration                                                                                                           Frequency: 10 to 100 Hz, single amplitude of 1.5mm, acceleration
+                                                       No electrical discontinuity of 1µs min.                                     of 59m/s2, for 5 cycles in the direction of each of the 3 axis.
+            7. Shock                                   No damage, cracks or parts dislocation.                                     Acceleration of 735 m/s2, 11ms duration, sine half-wave
+                                                                                                                                   waveform, 3 cycles in each of 3 axes.
+            8. Humidity                                No damage, cracks or parts dislocation.
+               (Steady state)                          Insulation resistance 10 M ohms min.(humidity high)                         96 hours at temperature of 40ç and humidity of 95%.
+                                                       Insulation resistance 500 M ohms min.(dry)
+            9. Temperature cycle                       No damage, cracks or parts dislocation.                                     Temperature: -40˚C/+5 to +35˚C/+90˚C/+5 to +35˚C
+                                                       Contact resistance: 25 m ohms max. (Center)                                 Time:             30min. /          3min.       /30min./            3min.
+                                                                                  15 m ohms max. (Outer)                           5 cycles
+            10. Salt spray                             No excessive corrosion                                                      5% salt water solution, 48 hours
+          *V.S.W.R. Measurement System
+          The above V.S.W.R. standard values were measured using the measurement connection shown below.
+
+
+
+
+                                                                                                    Note 1: Cable type connectors were measured with SMA conversion adapters
+                                                                                                            attached to both ends of the harness product of a suitable 100cm cable.
+                                                                                                    Note 2: Board type connectors were mounted to a 50Ω glass epoxy board and
+                                                                                                            measurements were conducted with SMA conversion adapters attached.
+
+
+
+          ■Material / Finishes
+                               Part                                                   Material                                                Finish                                   Remarks
+                              Shell                                             Phosphor bronze                                           Silver plated                               —————
+                    Male center contact                                                 Brass                                             Gold plated                                 —————
+                  Female center contact                                         Phosphor bronze                                           Gold plated                                 —————
+                                                                       Plug                               PBT                             Color: Black                                 UL94V-0
+                            Insulator
+                                                                  Receptacle                              LCP                             Color: Beige                                 UL94V-0
+
+
+
+
+      2
+The product information in this catalog is for reference only. Please request the Engineering Drawing for the most current and accurate design information.
+All non-RoHS products have been discontinued, or will be discontinued soon. Please  checkSeries●Ultra
+                                                                                 U.FL     the products status  on the Surface
+                                                                                                            Small     Hirose website RoHS search
+                                                                                                                                 Mount           at www.hirose-connectors.com,
+                                                                                                                                           Coaxial    Connectors - 1.9mm       or contact your Hirose
+                                                                                                                                                                                    or 2.4mm          sales Height
+                                                                                                                                                                                                  Mated     representative.
+
+
+
+           ■Receptacles
+                                                                                                                       Note 1: Receptacles of (01) specification are sold by the
+                                                                                                                               bag with 100 pieces per bag.
+                                                                                                                               Please order in pack units.
+                                                                                                                       Note 2: Receptacles of (10) specification are sold by the
+                                                                                                                               reel (which contains 2,500 pieces).
+                                                                                                                               Please order in reel units.
+                                                                                                                       Note 3: Receptacles of (40) specification are sold by the
+                                                                                                                               reel (Which contains 4,000 pieces)
+                                                                                                                       Note 4: This area may be covered by insulating material.
+
+
+
+
+                                                                                                       BRecommended PCB
+                                                   GND                           GND                    Mounting Pattern
+                                                                           SIG                                 No conductive traces in this area
+                                                                     Ø2
+                                                                                                                                 4±0.05
+                                                  1.25
+
+
+
+
+                                                                                                                                1.9±0.05
+                                                                                 1.2Max(Note 4)
+
+
+
+
+                                                                                                           GND
+                                                         0.35
+
+
+
+
+                                                                                                                                                  2.2±0.05
+                                                                      3
+                                                                     2.6
+                                                                                                           1±0.05
+
+
+
+
+                                                                     0.6
+
+                                                                                                                                            GND
+                                                                                                                                       SIG
+                                                (3.1)
+                                                 2.6
+                                                 1.8
+
+
+
+
+                                                                                                           1.05±0.05
+
+
+
+
+                                                                                                                                      1±0.05
+
+
+
+                                                                U.FL-R-SMT-1
+
+
+                        Part No.                                CL No.                                Packaging                            Weight / EA         RoHS
+            U.FL-R-SMT-1(01)                        331-0472-2-01                Bag packaging (100 pieces/bag)
+            U.FL-R-SMT-1(10)                        331-0472-2-10                Reel packaging (2,500 pieces/reel)                         15.7/mg                YES
+            U.FL-R-SMT-1(40)                        331-0472-2-40                Reel packaging (4,000 pieces/reel)
+
+
+
+
+           ●Packaging Specifications
+
+           Embossed Carrier Tape Dimensions                                                                                            Reel Dimensions
+                                                                                                                                                             1.8                                            14
+                       1.75±0.1
+
+                                  Ø1
+
+
+
+
+                                               2±0.1        4±0.1                         Center contact                  0.3
+                                   .5
+                                       + 0
+                                        0.
+                                           1
+
+
+
+
+                                                                                                                                                                              Ø13
+                      5.5±0.1
+
+
+
+
+                                                                                                                                                                                   Ø21
+             12±0.3
+
+
+
+
+                                                                                                                                                                                                  Ø330±2
+
+
+
+
+                                                           8±0.1                 Unreeling direction                       1.6
+
+
+
+
+                                                                                                                                                                                                                       3
+The product information in this catalog is for reference only. Please request the Engineering Drawing for the most current and accurate design information.
+All non-RoHS products
+           U.FL       have been discontinued,
+                  Series●Ultra         Small or     will be discontinued
+                                                  Surface      Mount soon.    Please Connectors
+                                                                         Coaxial     check the products status on the
+                                                                                                     - 1.9mm       or Hirose
+                                                                                                                       2.4mm website
+                                                                                                                                MatedRoHS search
+                                                                                                                                          Height at www.hirose-connectors.com, or contact your Hirose sales representative.
+
+
+
+          ■Cable Assembly (Plug)
+
+
+
+
+                                          U.FL-LP-040                           U.FL-LP-066                    U.FL-LP(V)-040                         U.FL-LP-062                         U.FL-LP-088
+
+
+
+
+                                                                                                                                                2.8
+                                                                                                              2.8
+
+
+
+
+                                                                                                                                                                                   3
+                                   3
+
+
+
+
+                                                                        3
+
+
+
+
+               Part No.
+                                                    4                                    4                                  3.4                                  4                                   5
+
+
+
+
+                                                                                                                                                                                   1.85
+                                                                                                              1.5
+                                   1.93
+
+
+
+
+                                                                        1.93
+
+
+
+
+                                                                                                                                                1.8
+                                          2.5mm Max.                             2.5mm Max.                         2.0mm Max.                        2.4mm Max.                           2.4mm Max.
+            Mated Height
+                                          (2.4mm Nom.)                          (2.4mm Nom.)                        (1.9mm Nom.)                      (2.3mm Nom.)                        (2.3mm Nom.)
+
+                                                                               Dia. 1.13mm and
+              Applicable                  Dia. 0.81mm                                                               Dia. 0.81mm                         Dia. 1mm                          Dia. 1.37mm
+                                                                                Dia. 1.32mm
+                 cable                    Coaxial cable                                                             Coaxial cable                     Coaxial cable                       Coaxial cable
+                                                                                Coaxial cable
+
+            Weight (mg)                        53.7                                  59.1                               34.8                                45.5                                71.7
+                 RoHS                                                                                                   YES
+
+
+
+          ●Cable Guide
+                                                                                                                    Cable Specification
+                                  Cable
+             Description                            Inner                Dielectric                Outer                   Jacket                 Nominal                     Nominal attenuation
+                                  Type
+                                                              *                                               *
+                                               Conductor                 Diameter              Conductor                 Diameter              Impedance                  At 3GHz                 At 6GHz
+            Dia.0.81mm                           7/0.05 SA                Dia.0.40                 Single                 Dia.0.81                                        6.52dB/m                9.52dB/m
+                                    04                                                                                                            50 ohms
+            Coaxial Cable                        (AWG36)                       PFA            Shield TA[SA]                  PFA                                         [6.45dB/m]              [9.42dB/m]
+            Dia.1.13mm                           7/0.08 SA                Dia.0.68                 Single                 Dia.1.13                                        3.73dB/m                5.44dB/m
+                                   068                                                                                                            50 ohms
+            Coaxial Cable                        (AWG32)                       FEP            Shield TA[SA]                  FEP                                         [3.43dB/m]              [5.13dB/m]
+            Dia.1.32mm                           7/0.08 SA                Dia.0.66                 Double                 Dia.1.32
+                                   066                                                                                                            50 ohms                 3.8dB/m                  5.6dB/m
+            Coaxial Cable                        (AWG32)                       FEP               Shield TA                   FEP
+            Dia.1mm                             7/0.071 SA                Dia.0.62             Tape, single                 Dia.1
+                                   062                                                                                                            50 ohms                 3.1dB/m                  4.4dB/m
+            Coaxial Cable                        (AWG33)                       FEP              Shield TAT                   FEP
+            Dia.1.37mm                          7/0.102 SA                Dia.0.88                 Single                 Dia.1.37
+                                   088                                                                                                            50 ohms                 2.8dB/m                  4.3dB/m
+            Coaxial Cable                        (AWG30)                       FEP               Shield TA                   FEP
+            (data as provided by cable suppliers, for reference only)
+            * SA : Silver plated annealed copper wire, TA : Tin plated annealed copper wire, TAT : Tin plated copper wire alloyed with tin
+
+
+
+
+      4
+The product information in this catalog is for reference only. Please request the Engineering Drawing for the most current and accurate design information.
+All non-RoHS products have been discontinued, or will be discontinued soon. Please  checkSeries●Ultra
+                                                                                 U.FL     the products status  on the Surface
+                                                                                                            Small     Hirose website RoHS search
+                                                                                                                                 Mount           at www.hirose-connectors.com,
+                                                                                                                                           Coaxial    Connectors - 1.9mm       or contact your Hirose
+                                                                                                                                                                                    or 2.4mm          sales Height
+                                                                                                                                                                                                  Mated     representative.
+
+
+
+           ■How to Specify Plug Cable Assembly
+            Double-Ended Cable Assembly                                                                            Single-Ended Cable Assembly
+                                                             L                                                                                                    L
+
+
+
+
+           ●Ordering Information                                                                                ●Standard Tolerances for (L)
+                U.FL - [] LP - [] - A - (L)                                                                                              L
+                                                                                                                               L=35 to 200mm
+                                                                                                                                                                               Standard Tolerance
+                                                                                                                                                                                       ±04mm
+                      1                       2                  3                            4
+                                                                                                                              L=200 to 500mm                                           ±08mm
+            1 Series name                         U.FL                                                                       L=500 to 1000mm                                           ±12mm
+            2 Assembly type                       LP: Single ended                                                        L=Longer than 1000mm                                     ±1.5% of (L)
+                                                  2LP: Double ended                                             Note1: Minimum available length (L) is 35mm
+                                                  04 : Dia.0.81mm Coaxial Cable                                 Note2: Contact nearest HRS representative if different tolerances are
+            3 Cable type                                                                                               required.
+                                                  068 : Dia.1.13mm Coaxial Cable
+                                                  066 : Dia.1.32mm Coaxial Cable                                Note3: Contact Nearest HRS representative if one end requires
+                                                  062 : Dia.1 mm Coaxial Cable                                         preparation.
+                                                  088 : Dia.1.37mm Coaxial Cable
+            4 Total length(mm)                    Length(L)
+
+
+              Part No. of Plug               Part No. of Cable Assembly                                              Description                                       RoHS
+                                              U.FL-2LP-04N1T-A-(L)                       Dia. 0.81mm double ended coaxial cable, color: white
+                                              U.FL-2LP-04N2T-A-(L)                       Dia. 0.81mm double ended coaxial cable, color: black
+                   U.FL-LP-040
+                                              U.FL-LP-04N1T-A-(L)                        Dia. 0.81mm single ended coaxial cable, color: white
+                                              U.FL-LP-04N2T-A-(L)                        Dia. 0.81mm single ended coaxial cable, color: black
+                                              U.FL-2LP-068N1T-A-(L)                      Dia. 1.13mm double ended coaxial cable, color: gray
+                                              U.FL-2LP-068N2T-A-(L)                      Dia. 1.13mm double ended coaxial cable, color: black
+                   U.FL-LP-066
+                                              U.FL-LP-068N1T-A-(L)                       Dia. 1.13mm single ended coaxial cable, color: gray
+                                              U.FL-LP-068N2T-A-(L)                       Dia. 1.13mm single ended coaxial cable, color: black
+                                              U.FL-2LP-066N1-A-(L)                       Dia. 1.32mm double ended coaxial cable, color: gray
+                                              U.FL-2LP-066N2-A-(L)                       Dia. 1.32mm double ended coaxial cable, color: black
+                  U.FL-LP-066
+                                              U.FL-LP-066N1-A-(L)                        Dia. 1.32mm single ended coaxial cable, color: gray
+                                              U.FL-LP-066N2-A-(L)                        Dia. 1.32mm single ended coaxial cable, color: black
+                                                                                                                                                                         YES
+                                              U.FL-2LP(V)-04N1T-A-(L)                    Dia. 0.81mm double ended coaxial cable, color: white
+                                              U.FL-2LP(V)-04N2T-A-(L)                    Dia. 0.81mm double ended coaxial cable, color: black
+                 U.FL-LP(V)-040
+                                              U.FL-LP(V)-04N1T-A-(L)                     Dia. 0.81mm single ended coaxial cable, color: white
+                                              U.FL-LP(V)-04N2T-A-(L)                     Dia. 0.81mm single ended coaxial cable, color: black
+                                              U.FL-2LP-062N1D-A-(L)                      Dia. 1mm double ended coaxial cable, color: gray
+                                              U.FL-2LP-062N2D-A-(L)                      Dia. 1mm double ended coaxial cable, color: black
+                   U.FL-LP-062
+                                              U.FL-LP-062N1D-A-(L)                       Dia. 1mm single ended coaxial cable, color: gray
+                                              U.FL-LP-062N2D-A-(L)                       Dia. 1mm single ended coaxial cable, color: black
+                                              U.FL-2LP-088N1T-A-(L)                      Dia. 1.37mm double ended coaxial cable, color: gray
+                                              U.FL-2LP-088N2T-A-(L)                      Dia. 1.37mm double ended coaxial cable, color: black
+                  U.FL-LP-088
+                                              U.FL-LP-088N1T-A-(L)                       Dia. 1.37mm single ended coaxial cable, color: gray
+                                              U.FL-LP-088N2T-A-(L)                       Dia. 1.37mm single ended coaxial cable, color: black
+
+           Please contact Hirose Sales Representative for cable length and cable end treatment.
+
+
+
+
+                                                                                                                                                                                                                       5
+The product information in this catalog is for reference only. Please request the Engineering Drawing for the most current and accurate design information.
+All non-RoHS products
+           U.FL       have been discontinued,
+                  Series●Ultra         Small or     will be discontinued
+                                                  Surface      Mount soon.    Please Connectors
+                                                                         Coaxial     check the products status on the
+                                                                                                     - 1.9mm       or Hirose
+                                                                                                                       2.4mm website
+                                                                                                                                MatedRoHS search
+                                                                                                                                          Height at www.hirose-connectors.com, or contact your Hirose sales representative.
+
+
+
+          ■Conversion Adapters
+          ●SMA Conversion Adapter
+           (Mating portion: U.FL side jack - SMA side plug)                                                                            (10.7)                                        8HEX
+
+
+
+
+          Note: The U.FL side mating portions has a lower lock retention                                                        Part No.                      CL No.                RoHS
+                force than the regular product, therefore, cannot be used
+                                                                                                                            HRMP-U.FLJ(40)                 311-0300-2-40             YES
+                for purposes other than performance measurements.
+
+          ●SMA Conversion Adapter                                                                                                       14.05
+           (Mating portion: U.FL side plug - SMA side jack)                                                                      6        (4.05)                                     5.6
+
+
+
+
+                                                                                                                                                                    Ø6.35
+                                                                                                                                       1/4-36UNS-2A
+
+                                                                                                                                Part No.                      CL No.                RoHS
+          Note: The U.FL side mating portions has a lower lock retention
+                force than the regular product, therefore, cannot be used                                                   HRMJ-U.FLP(40)                 311-0301-5-40             YES
+                for purposes other than performance measurements.
+                                                                                                                                              (18.6)
+          ●SMA Conversion Adapter
+                                                                                                                                  6          (4)                                     5.5
+           (Mating portion: U.FL side plug - SMA side jack)
+
+
+
+
+                                                                                                                                        1/4-36UNS-2A
+
+                                                                                                                                Part No.                      CL No.                RoHS
+          Note: This connector is used by compressing the mated                                                            HRMJ-U.FLP-ST1(40)              311-0385-5-40             YES
+                portion of U.FL side onto the U.FL-R-SMT-1 portion.
+
+          ■Receptacle to Inspection                                                                                                   (7.9)
+                                                                                                                                            12.9
+                                                                                                                                                                                   7HEX
+                                                                                                                                                       5
+                                                                                                                                          (4.4)    1
+
+
+
+
+                                                                                                                              M5∞0.5
+          This receptacle is used for inspecting the continuity, withstand
+          voltage, and other aspects of the harness product.                                                                    Part No.                      CL No.                RoHS
+                                                                                                                               U.FL-R-1                     331-0466-0               YES
+
+          ■Plug Extraction Tool                                                                                                                              (90)
+          This jig is used for extraction from a mating condition.
+                                                                                                                                                  50
+                                                                                                                                                                                           Ø15
+                                                                                                                     5
+
+
+
+
+                                                                                                                                U.FL
+                                                                                                                     2.1
+
+
+
+
+          Note: Part No. U.FL-LP-N-2 for U.FL-LP-040/066/088.                                                                   Part No.                      CL No.                RoHS
+                Part No. U.FL-LP(V)-N-2 for U.FL-LP(V)-040/U.FL-LP-062.
+                                                                                                                              U.FL-LP-N-2                   331-0494-5
+                                                                                                                                                                                     YES
+                                                                                                                            U.FL-LP(V)-N-2                  331-0493-2
+
+
+      6
+The product information in this catalog is for reference only. Please request the Engineering Drawing for the most current and accurate design information.
+All non-RoHS products have been discontinued, or will be discontinued soon. Please  checkSeries●Ultra
+                                                                                 U.FL     the products status  on the Surface
+                                                                                                            Small     Hirose website RoHS search
+                                                                                                                                 Mount           at www.hirose-connectors.com,
+                                                                                                                                           Coaxial    Connectors - 1.9mm       or contact your Hirose
+                                                                                                                                                                                    or 2.4mm          sales Height
+                                                                                                                                                                                                  Mated     representative.
+
+
+
+           ■Usage Precautions
+           1. Plugs
+
+                                                  1) To disconnect connectors, insert the end portion of U.FL-LP-N-2 and U.FL-LP(V)-N-2 under the connector flanges
+                                                     and pull off vertically, in the direction of the connector mating axis.
+                                                  2) To mate the connectors, the mating axes of both connectors must be              Extraction Jig
+                                                     aligned and the connectors can be mated. The "click" will confirm fully
+            (1) Mating / unmating                    mated connection.Do not attempt to insert on an extreme angle.                           U.FL Cable
+                                                                                                                                                                                    Assembly
+
+
+
+                                                                                                                                                                            U.FL-R-SMT-1
+
+                                                  After the connectors are mating, do not apply a load to the cable in excess of the values indicated in the diagram
+                                                  below.
+
+                                                                      U.FL-LP                                        1N max (U.FL-LP(V)-040, U.FL-LP-062)
+                                                                      Cable Assembly
+                                                                                                                     2N max (U.FL-LP-040, U.FL-LP-066, U.FL-LP-088)
+            (2) Pull forces on the
+                cable after connectors                            U.FL-R-SMT-1
+                are mated.                                                                                                           3N max (U.FL-LP(V)-040, U.FL-LP-062)
+                                                                                                                                     4N max (U.FL-LP-040, U.FL-LP-066, U.FL-LP-088)
+
+
+
+                                                                                                                     1N max (U.FL-LP(V)-040, U.FL-LP-062)
+                                                                                                                     2N max (U.FL-LP-040, U.FL-LP-066, U.FL-LP-088)
+
+
+            (3) Precautions                       Do NOT forcefully twist or deform wires.
+
+
+           2. Receptacles
+
+                                                                                              250 ç max. for
+                                                        [ç]                                    10 seconds                                 q The temperature of the printed circuit board
+                                                        260                                                                                 surface temperature at the points of contact with
+                                                        240                                                   230ç
+                                                        220                                                                                 the terminals.
+                                                                           Preheat                             220ç
+                                                        200                                                                               w Reflow soldering should be performed at a
+                                                        180             (130 to 180ç)
+            (1) Recommended reflow                                                                                                          printed circuit surface temperature of 250°C max.
+                                                        160
+                temperature profile                     140                                                                               e In individual applications the actual temperature
+                                                        120                                                                                 may vary, depending on the solder paste type,
+                                                        100              120 seconds max.                      50 seconds max.
+                                                         80
+                                                                                                                                            volume / thickness and board size / thickness.
+                                                                                                               60 seconds max.
+                                                                                                                                            Consuly your solder paste and equipment
+                                                                                                                                            manufacturer for specific recommendations.
+                                                                                       Time
+
+
+
+            (2) Recommended
+                                                  Manual soldering: 350˚C for 5 seconds
+                manual soldering
+
+
+            (3) Recommended metal
+                                                  0.1 to 0.12 mm
+                mask thickness
+
+            (4) Reflow cycles                     2 times
+
+
+           3. Operating environment and storage conditions
+                                                  The connectors are not designed to operate in the following environments:
+                                                  • Exposed to a excessive amounts of fine particles and dust
+            (1) Operating environment
+                                                  • Regions and places having a high density of sulfur dioxide, hydrogen sulfide, nitrogen dioxide or other corrosive gasses.
+                                                  • Environments having large rapid variations in temperature.
+                                                  Store in the Hirose Electric packaging.
+            (2) Storage conditions -              Temperature: -10 to +40ç, Humidity: 85% max.
+                Receptacle                        Use within 6 months of delivery.
+                                                  Receptacles for which the storage period has elapsed must be tested for solderability to the PC board mounting surface.
+
+
+
+
+                                                                                                                                                                                                                       7
+

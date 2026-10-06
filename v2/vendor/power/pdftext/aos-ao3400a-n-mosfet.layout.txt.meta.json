@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/power/aos-ao3400a-n-mosfet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/power/aos-ao3400a-n-mosfet.pdf",
+ "pdf_sha256": "9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/aos-ao3400a-n-mosfet.layout.txt",
+ "text_bytes": 28336,
+ "text_sha256": "39f205116896b7e2c2a6eb092f80fd848b2e93c0e64a3eea659df3803d5f7aa8"
+}

@@ -1,0 +1,54 @@
+Controller area network with flexible data rate (FDCAN)                                          RM0433
+
+
+                                Figure 735. Pin control in bus monitoring mode
+
+                                           FDCAN_TX            FDCAN_RX
+
+
+
+                                               =1
+
+
+
+
+                                               Tx                   Rx
+
+                                         FDCAN
+                                                                                                 MS41462V1
+
+
+            Disabled automatic retransmission (DAR) mode
+            According to the CAN Specification (see ISO11898-1, 6.3.3 recovery management), the
+            FDCAN provides means for automatic retransmission of frames that have lost arbitration or
+            that have been disturbed by errors during transmission. By default automatic retransmission
+            is enabled.
+            To support time-triggered communication as described in ISO 11898-1: 2015, chapter 9.2,
+            the automatic retransmission may be disabled via FDCAN_CCCR.DAR.
+
+            Frame transmission in disabled automatic retransmission (DAR) mode
+            In DAR mode all transmissions are automatically canceled after they started on the CAN
+            bus. A Tx buffer Tx request pending bit FDCAN_TXBRP.TRPx is reset after successful
+            transmission, when a transmission has not yet been started at the point of cancellation, has
+            been aborted due to lost arbitration, or when an error occurred during frame transmission.
+            •   Successful transmission:
+                –    Corresponding Tx buffer transmission occurred bit FDCAN_TXBTO.TOx set
+                –    Corresponding Tx buffer cancellation finished bit FDCAN_TXBCF.CFx not set
+            •   Successful transmission in spite of cancellation:
+                –    Corresponding Tx buffer transmission occurred bit FDCAN_TXBTO.TOx set
+                –    Corresponding Tx buffer cancellation finished bit FDCAN_TXBCF.CFx set
+            •   Arbitration loss or frame transmission disturbed:
+                –    Corresponding Tx buffer transmission occurred bit FDCAN_TXBTO.TOx not set
+                –    Corresponding Tx buffer cancellation finished bit FDCAN_TXBCF.CFx set
+            In case of a successful frame transmission, and if storage of Tx events is enabled, a Tx
+            event FIFO element is written with event type ET = 10 (transmission in spite of cancellation).
+
+            Power down (Sleep mode)
+            The FDCAN can be set into power down mode controlled by clock stop request input via
+            register FDCAN_CCCR.CSR. As long as the clock stop request is active, bit
+            FDCAN_CCCR.CSR is read as 1.
+
+
+
+2470/3353                                    RM0433 Rev 8
+

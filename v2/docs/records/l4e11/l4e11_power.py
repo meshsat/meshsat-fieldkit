@@ -131,6 +131,70 @@ PINS = {
     "ao3401": ("v2/vendor/power/aos-ao3401a-p-mosfet.pdf", "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c"),
     "n4148w": ("v2/vendor/power/st-semtech-1n4148w-c81598.pdf", "54de8e4089bb8221cf6cf191ee3acc2bdb20c9933cf59e7b5de3ef4ee291ce3f"),
 }
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 after the PDFs' own pins, which stay.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4e11
+PDFTEXT = {
+    "v2/vendor/battery/amass-xt60-spec-tme.pdf": [["-layout"]],
+    "v2/vendor/battery/samsung-35e-orbtronic.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-bq4050.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-csd17570q5b.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-csd18510q5b.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf": [[]],
+    "v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout"]],
+    "v2/vendor/d38999/amphenol-d38999-iii-federal.pdf": [[], ["-layout"]],
+    "v2/vendor/d38999/cables/alpha-25064-spec.pdf": [["-layout"]],
+    "v2/vendor/d38999/cables/lapp-olflex-robust-210-product-information.pdf": [["-layout"]],
+    "v2/vendor/diodes/diodes-ap63200-series-buck.pdf": [[]],
+    "v2/vendor/diodes/diodes-ap64500.pdf": [["-layout"]],
+    "v2/vendor/diodes/diodes-bzt52c-ds18004.pdf": [["-layout"]],
+    "v2/vendor/keystone/M65p42.pdf": [[]],
+    "v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf": [["-layout"]],
+    "v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf": [[], ["-layout"]],
+    "v2/vendor/nexperia/held/nexperia-pxp9r1-30ql.pdf": [[], ["-layout"]],
+    "v2/vendor/passives/held/moolee-hollr2512-ho-a0-2022-01-06.pdf": [[]],
+    "v2/vendor/passives/held/murata-grm3195c1h104ga05-01a-2026-06-11.pdf": [["-layout"]],
+    "v2/vendor/passives/held/murata-grm3195c1h683ja05-01a-2026-06-11.pdf": [["-layout"]],
+    "v2/vendor/passives/yageo-cc-series.pdf": [["-layout"]],
+    "v2/vendor/passives/yageo-rc-l-series-v12.pdf": [["-layout"]],
+    "v2/vendor/power/aos-ao3401a-p-mosfet.pdf": [["-layout"]],
+    "v2/vendor/power/bourns-mf-msmf-pptc.pdf": [["-layout"]],
+    "v2/vendor/power/bourns-srf1260-common-mode-choke.pdf": [[], ["-layout"]],
+    "v2/vendor/power/bq25792.pdf": [["-layout"]],
+    "v2/vendor/power/bq25798.pdf": [[], ["-layout"]],
+    "v2/vendor/power/held/adi-ltc3115-1-rev-e.pdf": [["-layout"]],
+    "v2/vendor/power/held/aos-aons21357-rev2.1-2023-11.pdf": [[], ["-layout"]],
+    "v2/vendor/power/held/diodes-b520c-b560c-ds13012-rev18-2.pdf": [["-layout"]],
+    "v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf": [["-layout"]],
+    "v2/vendor/power/held/vishay-sqj403ep-67109-reva.pdf": [["-layout"]],
+    "v2/vendor/power/held/vishay-sqj407ep-62806-revb.pdf": [["-layout"]],
+    "v2/vendor/power/jscj-2n7002-c8545.pdf": [[], ["-layout"]],
+    "v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf": [["-layout"]],
+    "v2/vendor/power/littelfuse-smcj-series-tvs.pdf": [["-layout"]],
+    "v2/vendor/power/ltc2954.pdf": [[], ["-layout"]],
+    "v2/vendor/power/st-semtech-1n4148w-c81598.pdf": [["-layout"]],
+    "v2/vendor/power/ti-csd19532q5b-n-fet.pdf": [["-layout"]],
+    "v2/vendor/power/tps2596.pdf": [["-layout"]],
+    "v2/vendor/ti/bq25731-datasheet.pdf": [[], ["-layout"]],
+    "v2/vendor/ti/held/ti-bq25730-sluse65a.pdf": [[], ["-layout"]],
+    "v2/vendor/ti/held/ti-csd19536ktt-slps540c.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf": [[], ["-layout"]],
+    "v2/vendor/ti/held/ti-tps1663-slvset9g.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps55340-slvsbd4e.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf": [["-layout"]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-lm5069.pdf": [[], ["-layout"]],
+    "v2/vendor/ti/ti-lm74700-q1.pdf": [[], ["-layout"]],
+    "v2/vendor/ti/ti-tps37-snvsbj1e.pdf": [[], ["-layout"]],
+    "v2/vendor/ti/ti-tps62933.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TOP, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
           "lcsc-C3873338-2026-10-02.json", "jlc-search-c0g-150nf-2026-10-02.json", "murata-reference-sheets-2026-10-02.json",
           "ia-littelfuse-997-mini58v-20251210045250.json",
@@ -229,11 +293,8 @@ _PDF = {}
 def pdf_pages(key, layout=False):
     k = (key, layout)
     if k not in _PDF:
-        a = ["pdftotext"] + (["-layout"] if layout else []) + [read(key), "-"]
-        r = subprocess.run(a, capture_output=True)
-        if r.returncode != 0:
-            refuse(3, "pdftotext could not read %s" % PINS[key][0])
-        _PDF[k] = r.stdout.decode("utf-8", "replace").split("\f")
+        read(key)
+        _PDF[k] = PT.pdf_text(TOP, PINS[key][0], ["-layout"] if layout else [], PDFTEXT, "v2/docs/records/l4e11").split("\f")
     return _PDF[k]
 
 
@@ -647,7 +708,8 @@ def compute():
     xt = flat(pdf_pages("xt60", True)[0])
     D["xt60"], D["xt60_inst"] = f(need(xt, r"额定电流 (\d+)A", "XT60 rated")), f(need(xt, r"瞬时电流 (\d+)A", "XT60 instantaneous"))
     D["xt60_awg"] = int(need(xt, r"推荐线规 (\d+)AWG", "XT60 wire").group(1))
-    ks = flat(subprocess.run(["pdftotext", read("keystone"), "-"], capture_output=True).stdout.decode("utf-8", "replace"))
+    read("keystone")
+    ks = flat(PT.pdf_text(TOP, PINS["keystone"][0], [], PDFTEXT, "v2/docs/records/l4e11"))
     m = need(ks, r"CAT\. NO\. 3568 HORIZONTAL FUSE ENTRY ® For Littelfuse Mini 297 or 997 series/Bussmann ATM series or equivalent SPECIFICATIONS Contacts: \.012 \(\.30\) Brass Insulator: Nylon 6/6, UL Rated 94V-0 UL Temperature Rating: (.*?)\(-50°C to\+145°C\)", "the 3568 entry")
     D["holder_rating_printed"] = bool(re.search(r"Current Rating", m.group(0)))
     D["keystone_ratings"] = sorted(set(int(x) for x in re.findall(r"UL Current Rating: (\d+) Amps", ks)))
@@ -6592,6 +6654,8 @@ def render(R):
         p("   %-9s %s  %s:%s (record %s's commit, read with git show; round 9)" % (k, s[:16], R9_COMMITS[who][:8], rel, who))
     for name, s in R["filed"]:
         p("   filed     %s  %s/inputs/%s" % (s[:16], REC, name))
+    for t, h, _held in PT.inputs(TOP, PDFTEXT):
+        p("   %-9s %s  %s" % ("pdftext", (h or "ABSENT")[:16], t))
     p("   this record's own figures: copper %s ohm mm2/m at 20 C and %s /K, %s J/cm3K (ASSUMPTION, constants); AWG 14 %s mm2, AWG 12 %s mm2,"
       % (CU_RHO_20, CU_ALPHA, CU_CV, AWG14_MM2, AWG12_MM2))
     p("     AWG 18 %s mm2 (ASSUMPTION, constants); the cold end %s C (REQ-024); the SESSION choices are named where they are used" % (AWG18_MM2, fmt(T_COLD)))

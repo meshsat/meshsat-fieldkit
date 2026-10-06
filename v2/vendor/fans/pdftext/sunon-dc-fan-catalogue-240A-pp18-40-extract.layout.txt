@@ -1,0 +1,150 @@
+ 30x30x6 mm
+
+
+   3.7~4.9 CFM
+
+
+Specifications
+
+                             Bearing     Rating          Power       Power       Speed              Air                       Static       Noise     Weight   Curve
+                                         Voltage         Current   Consumption                     Flow                      Pressure
+                               VAPO          (VDC)        (mA)      (WATTS)      (RPM)             (CFM)                     (inch-H 2O)   (dB(A))    (g)
+MF30060V1-10000-A99                           5            112        0.56        9100              4.9                         0.17        23.6      6.0      1
+MF30060V2-10000-A99                           5            72         0.36        7100              3.7                         0.11        15.7      6.0      2
+
+
+
+
+Air Flow-Static Pressure Characteristics                                External dimensions(mm)
+
+
+   0.18
+
+                                                                                                                       3                                             9.5
+   0.15          1                                                               ROATION                          0.       AIR FLOW                             ø2
+                                                                                                         .   2±
+                                                                                                      ø3
+                                                                                                    3-
+
+   0.12
+                                                                                                       24±0.3
+                                                                                                                  30±0.5
+
+
+
+
+   0.09       2
+
+
+
+   0.06
+
+
+   0.03                                                                                    5±0.3                            6.5±0.3
+
+                                                                     #28AWG
+                                                                                  145±10
+                                                                                                                                                                   8.3
+                                                                                                                                                                ø2
+     0            1     2       3        4           5
+
+
+
+
+   *All model could be customized. Please contact with Sunon Sales.
+   *Specifications are subject to change without notice. Please Visit SUNON website at www.sunon.com for update information.
+
+
+
+                                                                      17
+                             60x60x15 mm (IP68)
+
+
+                                10.6~21.3 CFM
+
+
+                       Specifications
+
+                                                           Bearing      Rating          Power       Power           Speed         Air         Static      Noise     Weight   Curve
+                                     Model                              Voltage         Current   Consumption                    Flow        Pressure
+                                                            2BALL          (VDC)         (mA)      (WATTS)          (RPM)        (CFM)      (inch-H 2O)   (dB(A))    (g)
+                                                            Sleeve
+                             GF60151B6-1E000-AE9                            12           125         1.50            4500        21.3           0.18       34.5      47.0     1
+                             GF60151B7-1E000-AE9                            12            80         0.96            3900        18.2           0.13       29.8      47.0     2
+                             GF60151B8-1E000-AE9                            12            70         0.84            3200        14.5           0.09       24.9      47.0     3
+                             GF60151B9-1E000-AE9                            12            32         0.39            2300        10.6           0.05       17.1      47.0     4
+
+
+
+
+                             Air Flow-Static Pressure Characteristics                                 External dimensions(mm)
+
+
+                              0.20
+Static Pressure (Inch-H2O)
+
+
+
+
+                                                                                                                                                                                       3.1
+                                                                                                                                                                                  ø6
+                                                                                                          8-
+
+
+
+
+                                                                                                                                           AIR FLOW
+                                                                                                          ø4
+
+
+
+
+                                      1                                                                                ATI
+                                                                                                                    ROT ON
+                                                                                                             .3
+
+
+
+
+                              0.16
+                                                                                                                ±
+                                                                                                               0.
+                                                                                                                3
+
+
+
+
+                              0.12
+                                                                                                                                  50±0.3
+                                                                                                                                  60±0.5
+
+
+
+
+                                          2
+
+
+                              0.08
+                                              3
+
+                              0.04
+                                                                                                     #26AWG              5±0.3              15± 0.5
+                                                                                                                                                0
+                                                  4                                                                  290±10
+
+                                                                                                                                                                                       0.3
+                                                                                                                                                                                  ø6
+                                 0            5       10     15       20           25
+
+                                                                  Airflow (CFM)
+
+
+
+
+                               *All model could be customized. Please contact with Sunon Sales.
+                               *Specifications are subject to change without notice. Please Visit SUNON website at www.sunon.com for update information.
+
+
+
+                                                                                                     39
+

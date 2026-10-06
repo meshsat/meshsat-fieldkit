@@ -1,0 +1,343 @@
+Order
+Now
+
+Product
+Folder
+
+Support &
+Community
+
+Tools &
+Software
+
+Technical
+Documents
+
+CSD19532Q5B
+SLPS414B – DECEMBER 2013 – REVISED MAY 2017
+
+CSD19532Q5B 100 V N-Channel NexFET™ Power MOSFET
+1 Features
+•
+•
+•
+•
+•
+•
+•
+1
+
+Product Summary
+
+Low Qg and Qgd
+Low Thermal Resistance
+Avalanche Rated
+Pb-Free Terminal Plating
+RoHS Compliant
+Halogen Free
+SON 5-mm × 6-mm Plastic Package
+
+TA = 25°C
+
+TYPICAL VALUE
+
+Drain-to-Source Voltage
+
+100
+
+V
+
+Qg
+
+Gate Charge Total (10 V)
+
+48
+
+nC
+
+Qgd
+
+Gate Charge Gate to Drain
+
+•
+
+8.7
+
+RDS(on)
+
+Drain-to-Source On Resistance
+
+VGS(th)
+
+Threshold Voltage
+
+nC
+
+VGS = 6 V
+
+4.6
+
+mΩ
+
+VGS = 10 V
+
+4
+
+mΩ
+
+2.6
+
+V
+
+.
+Ordering Information(1)
+
+2 Applications
+•
+
+UNIT
+
+VDS
+
+Synchronous Rectifier for Offline and Isolated DCDC Converters
+Motor Control
+
+Device
+
+Media
+
+Qty
+
+Package
+
+Ship
+
+CSD19532Q5B
+
+13-Inch Reel
+
+2500
+
+CSD19532Q5BT
+
+13-Inch Reel
+
+250
+
+SON 5 x 6 mm
+Plastic Package
+
+Tape and
+Reel
+
+3 Description
+
+(1) For all available packages, see the orderable addendum at
+the end of the data sheet.
+
+This 100 V, 4 mΩ, SON 5-mm × 6-mm NexFET™
+power MOSFET is designed to minimize losses in
+power conversion applications.
+
+TA = 25°C
+
+Top View
+S
+
+8
+
+1
+
+D
+
+Absolute Maximum Ratings
+VALUE
+
+UNIT
+
+VDS
+
+Drain-to-Source Voltage
+
+100
+
+V
+
+VGS
+
+Gate-to-Source Voltage
+
+±20
+
+V
+
+Continuous Drain Current (Package limited)
+
+100
+
+Continuous Drain Current (Silicon limited),
+TC = 25°C
+
+140
+
+ID
+
+(1)
+
+S
+
+7
+
+2
+
+D
+
+Continuous Drain Current
+
+17
+
+Pulsed Drain Current(2)
+
+400
+
+Power Dissipation(1)
+
+3.1
+
+Power Dissipation, TC = 25°C
+
+195
+
+TJ,
+Tstg
+
+Operating Junction and
+Storage Temperature Range
+
+–55 to 150
+
+°C
+
+EAS
+
+Avalanche Energy, single pulse
+ID = 74 A, L = 0.1 mH, RG = 25 Ω
+
+274
+
+mJ
+
+IDM
+PD
+
+S
+
+6
+
+3
+
+D
+
+D
+G
+
+5
+
+4
+
+D
+P0093-01
+
+RDS(on) vs VGS
+
+W
+
+Gate Charge
+10
+TC = 25°C, I D = 17A
+TC = 125°C, I D = 17A
+
+18
+
+VGS - Gate-to-Source Voltage (V)
+
+RDS(on) - On-State Resistance (mΩ)
+
+A
+
+(1) Typical RθJA = 40°C/W on a 1-inch2, 2-oz. Cu pad on a 0.06inch thick FR4 PCB.
+(2) Max RθJC = 0.8°C/W, Pulse duration ≤100 µs, duty cycle ≤1%
+
+20
+
+16
+14
+12
+10
+8
+6
+4
+2
+0
+
+A
+
+0
+
+2
+
+4
+
+6
+8
+10
+12
+14
+16
+VGS - Gate-to- Source Voltage (V)
+
+18
+
+20
+G001
+
+ID = 17A
+VDS = 50V
+
+9
+8
+7
+6
+5
+4
+3
+2
+1
+0
+
+0
+
+5
+
+10
+
+15
+20
+25
+30
+35
+Qg - Gate Charge (nC)
+
+40
+
+45
+
+50
+G001
+
+1
+
+An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+intellectual property matters and other important disclaimers. PRODUCTION DATA.
+
+

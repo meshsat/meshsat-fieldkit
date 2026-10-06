@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/battery/samsung-35e-akkuzentrum.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/battery/samsung-35e-akkuzentrum.pdf",
+ "pdf_sha256": "d2a7c686941c1f4237240ee140127e6828f6d590170cf5a7f30d945d1aab50a1",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/samsung-35e-akkuzentrum.layout.txt",
+ "text_bytes": 36063,
+ "text_sha256": "d11f16e414503af8e6ebd8c416640d34c22bebc5467da0ef56dc405f7e6aa119"
+}

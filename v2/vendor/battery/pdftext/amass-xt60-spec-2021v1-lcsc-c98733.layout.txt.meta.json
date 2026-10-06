@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf",
+ "pdf_sha256": "94e4568e3abe8ab516137588aea475872c0714cc2cc357be52e3a80e842c1780",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/amass-xt60-spec-2021v1-lcsc-c98733.layout.txt",
+ "text_bytes": 3443,
+ "text_sha256": "1ec5ff7ded53acbd4c0bc9e508b7ce9e820d1232d591e165727165968fbf749e"
+}

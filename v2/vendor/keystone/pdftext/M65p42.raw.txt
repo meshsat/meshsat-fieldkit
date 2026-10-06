@@ -1,0 +1,179 @@
+“AUTO”
+FUSE
+CLIPS
+&
+HOLDERS
+42
+.280 [7.1] .156 [4.0]
+.070 [1.80]
+.040
+[1.00] .400 [10.2]
+.075 [1.90]
+.100 [2.6]
+.062
+[1.55]
+.212
+[5.4]
+.091 [2.30]
+.244 [6.2]
+.236 [6.0]
+.079 [2.00]
+.197 [5.0]
+.320 [8.2]
+.270
+[6.9]
+.120 [3.1] DIA.
+(2) PLS
+.094 [2.4] DIA.
+(4) PLS
+MATERIAL:
+.016 (.41) Brass, Matte Tin Plate
+UL Current Rating: 15 Amps @ 500V AC
+Mounting Detail
+For Two Clips
+.075 [1.90]
+.086 [2.20]
+.062 [1.55]
+.440 [11.2]
+.144 [3.7]
+.125 [3.2]
+.156 [4.0]
+.196
+[5.0]
+Mounting Detail For Two Clips
+.100 [2.6]
+.578 [14.7]
+.125 [3.2]
+.138
+[3.5]
+.340 [8.7]
+.187 [4.8]
+.176 [4.5]
+.144
+[3.7]
+.065 [1.65] DIA. (4) PLS
+.144
+[3.7]
+Mounting Detail For Two Clips
+VERTICAL FUSE ENTRY
+MINI FUSE HOLDER
+LOW PROFILE MINI FUSE HOLDER
+Surface Mount
+Thru Hole Mount
+.400 [10.2]
+.250 [6.4]
+.125 [3.2]
+.091 [2.30]
+.125 [3.2]
+.236 [6.0]
+.079 [2.00]
+(2) PLS
+.120 [3.1] DIA.
+.320 [8.2]
+.091 [2.30]
+MIN. TYP.
+.400 [10.2]
+MIN.
+.125 [3.2]
+• Low Profile
+• Low Profile
+AVAILABLE ON TAPE AND REEL
+.406 [10.3]
+.700 [17.8]
+.394
+[10.0]
+.070 [1.8]
+(2) PLS
+.295 [7.5]
+.040 [1.0]
+(2) PLS
+.145 [3.7]
+.228 [5.8]
+.400
+[10.2]
+.295 [7.5]
+.076 [1.93]
+DIA. (2) PLS
+.046 [1.17]
+DIA. (2) PLS
+Mounting Detail
+.134
+[3.40]
+.390
+[9.9]
+.063 [1.60]
+DIA. (4) PLS
+Mounting Detail
+.134 [3.4]
+.063 [1.60] DIA. (4) PLS
+.530 [13.5]
+Pad Layout
+For Two Clips
+HORIZONTAL FUSE ENTRY
+CAT. NO. 3549 Nickel Plate
+CAT. NO. 3564
+CAT. NO. 3563 (Bulk)
+CAT. NO. 3549-2 Tin Plate
+SPECIFICATIONS
+Material: .012 (.30) Brass
+Insulator: Nylon, UL Rated 94V-0
+UL Temperature Rating: -58°F to+292°F (-50°C to+145°C)
+CAT. NO. 3563TR (Tape & Reel)
+For .110 (2.8) × .032 (.80) MINI BLADE FUSES
+For Littelfuse Mini 297 or 997 series/Bussmann ATM series or equivalent
+For Littelfuse Low Profile
+Mini 897 series or equivalent
+For Littelfuse Mini 297 or
+997 series/Bussmann ATM
+or equivalents
+Tape & Reel Spec’s: 24mm wide; 12mm pitch;
+13 inch reel (1500 pieces per reel)
+“MINI” AUTOMOTIVE FUSE CLIPS & HOLDERS
+SPECIFICATIONS
+Contacts: .012 (.30) Brass
+Insulator: Nylon 6/6, UL Rated 94V-0
+UL Temperature Rating: -58°F to+292°F (-50°C to+145°C)
+Tel (718) 956-8900 • Fax (718) 956-9040
+(800) 221-5510 • kec@keyelco.com
+www.keyelco.com
+31-07 20th Road – Astoria,NY 11105-2017
+RoHS COMPLIANT ~ ISO 9001 CERTIFIED
+®
+• Low insertion force
+•Thru hole PC mountable, maintains position during wave soldering
+• Fuse holder fully insulates clips to protect fuse from shorting
+• Holder assures proper spacing and reduces assembly time
+CAT. NO. 3557-2 CAT. NO. 3568
+Refer to page 41
+for Cat. No. 3557
+Clip details
+.062 [1.57] (2) PLS
+.134
+[3.4]
+.530 [13.5]
+.110 [2.8]
+.780 [19.8]
+.290 [7.4]
+.265 [6.8] .265 [6.73]
+.630 [16.00]
+.110 [2.79]
+.390 [9.9]
+.062 [1.57] TYP
+.290 [7.37]
+.134
+[3.41]
+SPECIFICATIONS
+Contacts: .016 (.41) Brass,
+Tin-Nickel Plate
+Insulator: Nylon 4/6, UL Rated 94V-0
+UL Current Rating: 30 Amps @ 500V AC
+UL Temperature Rating: -58°F to+292°F
+(-50°C to+145°C)
+For Littelfuse Mini 297 or 997 series/Bussmann ATM series or equivalent
+CAT. NO. 3544 Tin-Nickel Plate CAT. NO. 3544-2 Tin Plate
+®
+®
+®
+UL Current Rating: 30 Amps @ 500V AC UL Current Rating: 20 Amps @ 500V AC
+UL Current Rating: 30 Amps @ 500V AC UL Current Rating: 20 Amps @ 500V AC
+

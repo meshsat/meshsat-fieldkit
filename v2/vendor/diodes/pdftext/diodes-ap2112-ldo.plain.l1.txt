@@ -1,0 +1,245 @@
+AP2112
+600mA CMOS LDO REGULATOR WITH ENABLE
+
+Description
+
+Pin Assignments
+
+The AP2112 is CMOS process low dropout linear regulator with
+enable function, the regulator delivers a guaranteed 600mA (min.)
+continuous load current.
+The AP2112 is available with a fixed output voltage of 1.2V, 1.8V,
+2.5V, 2.6V, or 3.3V. The LDO has an output accuracy of ±1.5% and a
+very fast loop response providing excellent performance for dealing
+with line and load transients. The AP2112 includes an auto discharge
+function which connects the output to ground via 60 of resistance
+when the device is disabled.
+
+(Top View)
+
+VIN
+GND
+EN
+
+The regulator features low power consumption, and provides SOT25,
+SOT89-5, and SO-8 packages. Previously SOT-23-5, SOT-89-5 and
+SOIC-8 packages were respectively identified as SOT23-5, SOT89-5
+and SO-8 but have been renamed to match the latest Diodes
+Incorporated‘s nomenclature.
+
+(Top View)
+
+1
+
+5
+
+VOUT
+
+2
+3
+
+4
+
+NC
+
+VOUT
+
+1
+
+8
+
+VIN
+
+NC
+
+2
+
+7
+
+GND
+
+NC
+
+3
+
+6
+
+GND
+
+NC
+
+4
+
+5
+
+EN
+
+SOT25
+
+SO-8
+
+(Top View)
+
+(Top View)
+
+VOUT
+
+VIN
+
+VOUT
+
+VIN
+
+5
+
+4
+
+5
+
+4
+
+2
+
+3
+
+1
+
+2
+
+3
+
+GND
+
+EN
+
+EN
+
+GND
+
+NC
+
+Features
+
+
+
+
+
+
+Output Voltage Accuracy: ±1.5%
+Output Current: 600mA (Min.)
+Foldback Short Current Protection: 50mA
+Enable Function to Turn ON/OFF VOUT
+Low Dropout Voltage (3.3V): 250mV (Typ.) @IOUT = 600mA
+
+
+
+
+
+
+
+Excellent Load Regulation: 0.2%/A (Typ.)
+Excellent Line Regulation: 0.02%/V (Typ.)
+Low Quiescent Current: 55µA (Typ.)
+Low Standby Current: 0.01µA (Typ.)
+Low Output Noise: 50µVRMS
+
+
+
+
+
+
+
+
+
+1
+NC
+
+(R5 Package)
+
+(R5A Package)
+SOT89-5 (Option 1)
+
+(Top View)
+
+(Top View)
+
+VOUT
+
+VIN
+
+VOUT
+
+VIN
+
+5
+
+4
+
+5
+
+4
+
+2
+
+3
+
+1
+
+2
+
+3
+
+GND
+
+EN
+
+EN
+
+GND
+
+NC
+
+PSRR: 100Hz -65dB, 1kHz -65dB
+OTSD Protection
+Stable with 1.0µF Flexible Cap: Ceramic, Tantalum and
+Aluminum Electrolytic
+Operation Temperature Range: -40°C to +85°C
+ESD: MM 400V, HBM 4000V
+Totally Lead-Free & Fully RoHS Compliant (Notes 1 & 2)
+Halogen and Antimony Free. “Green” Device (Note 3)
+
+1
+NC
+
+(R5 Package)
+
+(R5A Package)
+SOT89-5 (Option 2)
+
+Applications
+
+
+
+
+Laptop Computer
+LCD Monitor
+Portable DVD
+
+Notes:
+
+1. No purposely added lead. Fully EU Directive 2002/95/EC (RoHS) & 2011/65/EU (RoHS 2) compliant.
+2. See http://www.diodes.com/quality/lead_free.html for more information about Diodes Incorporated‘s definitions of Halogen- and Antimony-free, "Green"
+and Lead-free.
+3. Halogen- and Antimony-free "Green‖ products are defined as those which contain <900ppm bromine, <900ppm chlorine (<1500ppm total Br + Cl) and
+<1000ppm antimony compounds.
+
+AP2112
+Document number: DS39724 Rev. 2 - 2
+
+1 of 18
+www.diodes.com
+
+June 2017
+© Diodes Incorporated
+
+

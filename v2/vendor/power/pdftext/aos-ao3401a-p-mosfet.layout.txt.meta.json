@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/power/aos-ao3401a-p-mosfet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+ "pdf_sha256": "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/aos-ao3401a-p-mosfet.layout.txt",
+ "text_bytes": 30126,
+ "text_sha256": "fb56f2c99ddbf1642fbd88b348822cb9e6f1f24542ec551561896f1fed9a52e7"
+}

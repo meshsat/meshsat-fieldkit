@@ -456,7 +456,8 @@ def t_l3r5_an_objective_is_validated():
 
 def t_l3r5_cfl017_by_mode_and_the_cells_provenance():
     """Each quote of the cell's provenance is in its source; each mode's gap is the arithmetic of the figures beside it;
-    the maker sheets as filed carry the limits the modes use (read with pdftotext), and OPERATING-ENVELOPE.md the rises."""
+    the maker sheets as filed carry the limits the modes use (read from their committed pdftotext extraction, W81), and
+    OPERATING-ENVELOPE.md the rises."""
     RL = _rl()
     data = RL.load_data()
     for q in data["cell_provenance"]["quotes"]:
@@ -470,11 +471,16 @@ def t_l3r5_cfl017_by_mode_and_the_cells_provenance():
     env = " ".join(open(os.path.join(ROOT, "v2/docs/OPERATING-ENVELOPE.md"), encoding="utf-8").read().split())
     for f in ("+62.1 C lid closed", "+61.6 to +74.2 C", "6.63 to 7.30", "13.16 to 14.47"):
         assert f in env, "OPERATING-ENVELOPE.md does not read %r" % f
-    if shutil.which("pdftotext") is None: raise Skip("pdftotext is not installed")
-    def sheet(name):
-        out = subprocess.run(["pdftotext", "-layout", os.path.join(ROOT, "v2/vendor/battery", name), "-"], capture_output=True)
-        return " ".join(out.stdout.decode("utf-8", "replace").split())
-    v11, v10 = sheet("samsung-35e-orbtronic.pdf"), sheet("samsung-35e-akkuzentrum.pdf")
+    # W81: the committed extractions record l4e10 declares for both sheets (its PDFTEXT, re-taken by retake_pdf_text.py beside each
+    # sheet), read through the records' helper; never this host's pdftotext
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("l3r5_records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+    PT = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(PT)
+    t10 = PT.declared_in(os.path.join(ROOT, "v2", "docs", "records", "l4e10", "l4e10_cell_thermal.py"))
+    txt = {n: " ".join(PT.pdf_text(ROOT, "v2/vendor/battery/" + n, ["-layout"], t10, "v2/docs/records/l4e10").split())
+           for n in ("samsung-35e-orbtronic.pdf", "samsung-35e-akkuzentrum.pdf")}
+    v11, v10 = txt["samsung-35e-orbtronic.pdf"], txt["samsung-35e-akkuzentrum.pdf"]
     for w in ("Ver. 1.1", "Charge : 0 to 45°C", "Discharge : -10 to 60°C", "1 year : -20~25°C", "3 months : -20~45°C",
               "1 month : -20~60°C", "(Cell Surface Temperature)"):
         assert w in v11, "the Ver. 1.1 sheet does not read %r" % w

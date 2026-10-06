@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -raw v2/vendor/keystone/M65p42.pdf -",
+ "held_back": false,
+ "options": [
+  "-raw"
+ ],
+ "pdf": "v2/vendor/keystone/M65p42.pdf",
+ "pdf_sha256": "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/keystone/pdftext/M65p42.raw.txt",
+ "text_bytes": 3212,
+ "text_sha256": "fb6f0c38dad4483d4ef80a8dedca1127d6eeb95d5a6b6583979dc2ddf7b0307b"
+}

@@ -1,0 +1,357 @@
+                              JIANGSU CHANGJIANG ELECTRONICS TECHNOLOGY CO., LTD
+
+
+                              SOT-23 Plastic-Encapsulate MOSFETS
+
+  2N7002               MOSFET (N-Channel)
+
+      V(BR)DSS                  RDS(on)MAX                    ID
+                                                                               SOT-23
+                                    5Ω@10V                                                          3
+        60 V                                              115mA
+                                    7Ω@5V
+                                                                               1. GATE
+                                                                               2. SOURCE
+                                                                                                1
+                                                                               3. DRAIN             2
+
+
+
+
+   FEATURE                                                           APPLICATION
+     z  High density cell design for low RDS(ON)                     z Load Switch for Portable Devices
+                                                                     z DC/DC Converter
+     z  Voltage controlled small signal switch
+     z  Rugged and reliable
+     z  High saturation current capability
+
+   MARKING                                                           Equivalent Circuit
+
+
+
+
+   MAXIMUM RATINGS (Ta=25℃ unless otherwise noted)
+                        Parameter                Symbol             Value                  Unit
+
+   Drain-Source Voltage                            VDS                60                    V
+   Gate-Source Voltage                             VGS               ±20                    V
+   Continuous Drain Current                         ID               0.115                  A
+   Power Dissipation                               PD                0.225                 W
+   Thermal Resistance from Junction to Ambient     RθJA              556                   ℃/W
+   Junction Temperature                            TJ                150
+                                                                                           ℃
+   Storage Temperature                             Tstg            -50 ~+150
+
+
+
+www.cj-elec.com                                           1                                             J,Sep,2016
+MOSFET ELECTRICAL CHARACTERISTICS
+   Ta =25 ℃ unless otherwise specified
+
+               Parameter                    Symbol          Test   conditions    Min    Typ    Max            Unit
+
+  Drain-Source Breakdown Voltage            V(BR)DSS   VGS=0 V, ID=250 µA         60
+                                                                                                              V
+  Gate-Threshold Voltage                    Vth(GS)    VDS=VGS, ID=250 µA         1     1.6        2.5
+  Gate-body Leakage                           lGSS     VDS=0 V, VGS=±20 V                          ±80       nA
+  Zero Gate Voltage Drain Current             IDSS     VDS=60 V, VGS=0 V                           80        nA
+  On-state Drain Current                     ID(ON)    VGS=10 V, VDS=7 V         500                         mA
+                                                       VGS=10 V, ID=500mA               0.9        5
+  Drain-Source On-Resistance                 RDS(on)                                                          Ω
+                                                       VGS=5 V, ID=50mA                 1.1         7
+  Forward Trans conductance                    gfs     VDS=10 V, ID=200mA         80                          ms
+                                                       VGS=10V, ID=500mA          0.5              3.75          V
+  Drain-source on-voltage                   VDS(on)
+                                                       VGS=5V, ID=50mA           0.05          0.375             V
+  Diode Forward Voltage                       VSD      IS=115mA, VGS=0 V         0.55          1.2               V
+  Input Capacitance *                         Ciss                                                 50
+  Output Capacitance *                        Coss     VDS=25V, VGS=0V, f=1MHz                     25        pF
+  Reverse Transfer Capacitance *              Crss                                                 5
+ SWITCHING TIME
+  Turn-on Time *                             td(on)     VDD=25 V, RL=50Ω,                     20
+                                                        ID=500mA,VGEN=10 V                                  ns
+  Turn-off Time *                            td(off)                                          40
+                                                        RG=25Ω
+
+ *These parameters have no way to verify.
+
+
+
+
+www.cj-elec.com                                               2                                           J,Sep,2016
+ Typical Characteristics
+
+
+
+
+                                                     Output Characteristics                                                                                     Transfer Characteristics
+                        1.4                                                                                                                         1.0
+                                  Ta=25℃ VGS=10V,9V,8V,7V,6V                                                                                                                                             Ta=25℃
+                                  Pulsed                                                                       VGS=5V                                                                                    Pulsed
+                        1.2
+                                                                                                                                                    0.8
+
+                        1.0
+
+
+
+
+                                                                                                                                    (A)
+      (A)
+
+
+
+
+                                                                                                                                    ID
+      ID
+
+
+
+
+                                                                                                                                                    0.6
+                        0.8
+
+
+
+
+                                                                                                                                    DRAIN CURRENT
+      DRAIN CURRENT
+
+
+
+
+                                                                                                               VGS=4V
+                        0.6
+                                                                                                                                                    0.4
+
+
+                        0.4
+
+                                                                                                                                                    0.2
+                        0.2                                                                                    VGS=3V
+
+
+
+                        0.0                                                                                                                         0.0
+                              0                  1            2               3                     4                   5                                 0         2                  4                          6
+
+                                                 DRAIN TO SOURCE VOLTAGE                     VDS   (V)                                                        GATE TO SOURCE VOLTAGE        VGS    (V)
+
+
+
+
+                                                             RDS(ON) —— ID                                                                                          RDS(ON) ——    VGS
+                          3                                                                                                                          6
+                                                                                                               Ta=25℃                                                                                    Ta=25℃
+                                                                                                               Pulsed                                                                                    Pulsed
+                                                                                                                                  ( Ω)
+       ( Ω)
+
+
+
+
+                          2                                                                                                                          4
+                                                                                                                                  RDS(ON)
+       RDS(ON)
+
+
+
+
+                                                                                                                                  ON-RESISTANCE
+       ON-RESISTANCE
+
+
+
+
+                                                                    VGS=5V
+                                                                                                                                                                  ID=500mA
+                          1                                                                                                                          2
+                                                                                                                                                                 ID=50mA
+                                                                    VGS=10V
+
+
+
+
+                          0                                                                                                                          0
+                           0.0               0.2              0.4             0.6                  0.8                  1.0                               0        6                   12                         18
+
+                                                       DRAIN CURRENT              ID    (A)                                                                   GATE TO SOURCE VOLTAGE       VGS    (V)
+
+
+
+
+                                                                  IS —— VSD
+                          2
+                                                                                                               Ta=25℃
+                          1
+                                                                                                               Pulsed
+
+
+
+                        0.3
+      IS (A)
+
+
+
+
+                        0.1
+      SOURCE CURRENT
+
+
+
+
+                       0.03
+
+
+
+                       0.01
+
+
+
+
+                       3E-3
+
+
+
+                       1E-3
+                           0.2             0.4         0.6            0.8              1.0               1.2            1.4
+
+                                                 SOURCE TO DRAIN VOLTAGE                 VSD (V)
+
+
+
+
+                                                                                                                 3                                                                          J,Sep,2016
+ SOT-23 Package Outline Dimensions
+
+
+
+
+                                               Dimensions In Millimeters    Dimensions In Inches
+                                     Symbol
+                                                 Min               Max      Min              Max
+                                      A         0.900             1.150    0.035            0.045
+                                      A1        0.000             0.100    0.000            0.004
+                                      A2        0.900             1.050    0.035            0.041
+                                       b        0.300             0.500    0.012            0.020
+                                       c        0.080             0.150    0.003            0.006
+                                      D         2.800             3.000    0.110            0.118
+                                      E         1.200             1.400    0.047            0.055
+                                      E1        2.250             2.550    0.089            0.100
+                                       e              0.950 TYP                  0.037 TYP
+                                      e1        1.800             2.000    0.071            0.079
+                                       L              0.550 REF                  0.022 REF
+                                      L1        0.300             0.500    0.012            0.020
+                                       θ          0°                8°       0°                8°
+
+
+
+
+ SOT-23 Suggested Pad Layout
+
+
+
+
+www.cj-elec.com                            4                                                    J,Sep,2016
+SOT-23 Tape and Reel
+
+
+      SOT-23 Tape and reel
+      SOT-23 Embossed Carrier Tape                                                                                             Packaging Description:
+                                                                                                                                     SOT-23 parts are shipped in tape. The carrier
+                                                                                                                               tape is made from a dissipative (carbon filled)
+                                P0                      P1                                                                     polycarbonate resin. The cover tape is a multilayer
+
+
+
+
+                                                                           d
+                                                                                                        C                      film (Heat Activated Adhesive in nature) primarily
+                                                                                                                               composed of polyester film, adhesive layer, sealant,
+
+
+
+
+                                                                                 E
+                                                                                                                               and anti-static sprayed agent. These reeled parts in
+                                                                           A                                                   standard option are shipped with 3,000 units per 7"
+
+
+
+
+                                                                                 F
+                                                                                       W
+                                                                                                                               or 17.8cm diameter reel. The reels are clear in color
+
+
+
+
+                                                                                                              B
+                                                                                                                               and is made of polystyrene plastic (anti-static
+                                                                                                                               coated).
+                                                                           A
+                P                                   A                                                   A-A
+
+
+
+                                                                          Dimensions are in millimeter
+        Pkg type            A                   B                  C             d             E               F              P0               P       P1         W
+         SOT-23            3.15                2.77               1.22         Ø1.50          1.75            3.50            4.00           4.00     2.00       8.00
+
+
+
+
+      SOT-23 Tape Leader and Trailer
+                    Trailer Tape                                                                                                         Leader Tape
+                                                                           Components                                                100±2 Empty Pockets
+                 50±2 Empty Pockets
+
+
+
+
+      SOT-23 Reel
+                                                                                                                                               D
+                                                                                                   W2
+            G
+
+
+
+
+                                                        I
+
+
+
+
+                                  3000
+        H                         2500
+                                  2000
+
+                                  1500
+
+                                  1000
+
+                                  500
+                                                                          D1
+
+                                                                                 D2
+
+
+
+
+                                                                                                       W1
+
+
+                                                                                Dimensions are in millimeter
+            Reel Option                  D                   D1                 D2                 G                   H                 I            W1            W2
+                7''Dia          Ø178.00                  54.40                 13.00           R78.00                R25.60            R6.50         9.50         12.30
+
+
+
+
+                 REEL                    Reel Size                       Box               Box Size(mm)                 Carton          Carton Size(mm)       G.W.(kg)
+                3000 pcs                     7 inch                 30,000 pcs             203×203×195               120,000 pcs             438×438×220
+
+
+
+www.cj-elec.com                                                                                         5                                                                       J,Sep,2016
+

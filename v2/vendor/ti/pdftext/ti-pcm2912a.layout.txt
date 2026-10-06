@@ -1,0 +1,2433 @@
+                              Product         Sample &         Technical           Tools &            Support &
+                              Folder          Buy              Documents           Software           Community
+
+
+
+                                                                                                                          PCM2912A
+                                                                                     SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+       PCM2912A Audio Codec With USB Interface, Mono Microphone Input and Stereo
+                                 Headphone Output
+1 Features                                                             •   Multifunctions:
+1•   On-Chip USB Interface:                                                – Suspend, Playback, and Record Status Flag
+     – With Full-Speed Transceivers                                        – Microphone Amplifier, Mute, and Gain Control
+     – Fully Compliant With USB 2.0 Specification                      •   Pop/Click Noise-Free
+     – Certified By USB-IF                                             •   Single Power-Supply: 5 V Typical (VBUS)
+     – Partially Programmable Descriptors                              •   Package: 32-Pin TQFP
+     – Adaptive Isochronous Transfer for Playback
+                                                                       2 Applications
+     – Asynchronous-Isochronous Transfer for
+        Record                                                         •   USB Headset
+     – Bus Powered                                                     •   USB Headphone
+•    16-Bit Delta-Sigma ADC and DAC                                    •   USB Speaker
+•    Sampling Rate:                                                    •   USB Featured Consumer Audio Product
+     – 8, 11.025, 16, 22.05, 32, 44.1, or 48 kHz                       •   USB Audio Interface Box
+•    On-Chip Clock Generator:                                          •   USB Monitor
+     – With Single 6-MHz Clock Source                                  •   Video Conference System
+•    Mono ADC with Microphone Input
+                                                                       3 Description
+     – Analog Performance at VBUS = 5 V:                               The PCM2912A is the Texas Instruments single-chip,
+        – THD+N: 0.01%                                                 USB stereo audio codec with a USB, 2.0-compliant,
+        – SNR: 92 dB                                                   full-speed protocol controller and an analog front-end
+                                                                       (AFE) function for headset applications.
+        – Dynamic Range: 90 dB
+     – Decimation Digital Filter                                       The USB protocol controller works with no software
+                                                                       code, but USB descriptors can be modified on
+        – Passband Ripple: ±0.05 dB                                    request.    The    PCM2912A       employs     SpAct™
+        – Stop-Band Attenuation: –65 dB                                architecture, TI’s unique system that recovers the
+     – Single-Ended Voltage Input                                      audio clock from USB packet data. On-chip analog
+                                                                       PLLs with SpAct enables independent playback and
+     – Antialiasing Filter Included
+                                                                       record sampling rates with low clock jitters.
+     – Digital HPF Included
+     – Microphone Bias, Microphone Amplifier, and                                             Device Information(1)
+        Input PGA                                                          PART NUMBER               PACKAGE       BODY SIZE (NOM)
+•    Stereo DAC With Headphone Output                                   PCM2912A               TQFP (32)           7.00 mm × 7.00 mm
+     – Analog Performance at VBUS = 5.0 V:                              (1) For all available packages, see the orderable addendum at
+                                                                            the end of the data sheet.
+        – THD+N: 0.01% (RL > 10 kΩ)
+        – THD+N: 0.02% (RL = 32 Ω)                                                              Block Diagram
+        – SNR: 92 dB
+        – Dynamic Range: 90 dB                                                   USB
+                                                                            Mic Input                                Headphone
+        – PO: 13 mW (RL = 32 Ω)                                                                                      Play indicator
+        – PO: 25 mW (RL = 16 Ω)                                                                  PCM2912A            Record indicator
+     – Oversampling Digital Filter                                                                                   Suspend flag
+
+        – Passband Ripple: ±0.1 dB
+                                                                                              VDD        PGND
+        – Stop-Band Attenuation: –43 dB                                                       VCCA       HGND
+        – Single-Ended Voltage Output                                                         VCCR       BGND
+                                                                                              VCCL       AGND
+                                                                                              VCCP       DGND
+        – Analog LPF Included
+        – Sidetone PGA, Output PGA, and HP
+1
+            Amplifier
+
+
+       An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+       intellectual property matters and other important disclaimers. PRODUCTION DATA.
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                                                               www.ti.com
+
+
+                                                                           Table of Contents
+    1   Features .................................................................. 1                      9.3 Feature Description................................................. 16
+    2   Applications ........................................................... 1                         9.4 Device Functional Modes........................................ 19
+    3   Description ............................................................. 1                        9.5 Programming........................................................... 20
+    4   Revision History..................................................... 2                     10 Application and Implementation........................ 24
+                                                                                                           10.1 Application Information.......................................... 24
+    5   Device Comparison Table..................................... 3
+                                                                                                           10.2 Typical Application ............................................... 24
+    6   Pin Configuration and Functions ......................... 3
+                                                                                                    11 Power Supply Recommendations ..................... 27
+    7   Specifications......................................................... 5
+         7.1    Absolute Maximum Ratings ..................................... 5                    12 Layout................................................................... 27
+                                                                                                           12.1 Layout Guidelines ................................................. 27
+         7.2    ESD Ratings.............................................................. 5
+                                                                                                           12.2 Layout Example .................................................... 27
+         7.3    Recommended Operating Conditions....................... 5
+         7.4    Thermal Information .................................................. 5            13 Device and Documentation Support ................. 28
+         7.5    Electrical Characteristics........................................... 6                    13.1     Documentation Support ........................................ 28
+         7.6    Typical Characteristics .............................................. 9                   13.2     Community Resources.......................................... 28
+                                                                                                           13.3     Trademarks ........................................................... 28
+    8   Parameter Measurement Information ................ 14
+                                                                                                           13.4     Electrostatic Discharge Caution ............................ 28
+    9   Detailed Description ............................................ 15
+                                                                                                           13.5     Glossary ................................................................ 28
+         9.1 Overview ................................................................. 15
+         9.2 Functional Block Diagram ....................................... 15                    14 Mechanical, Packaging, and Orderable
+                                                                                                       Information ........................................................... 28
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+
+Changes from Original (September 2008) to Revision A                                                                                                                                   Page
+
+•   Added Pin Configuration and Functions section, ESD Ratings table, Feature Description section, Device Functional
+    Modes, Application and Implementation section, Power Supply Recommendations section, Layout section, Device
+    and Documentation Support section, Device Comparison table, and Mechanical, Packaging, and Orderable
+    Information section ................................................................................................................................................................ 1
+
+
+
+
+2        Submit Documentation Feedback                                                                                 Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                                        Product Folder Links: PCM2912A
+                                                                                                                                                            PCM2912A
+www.ti.com                                                                                                              SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+5 Device Comparison Table
+
+           FEATURE                      PCM2900C                  PCM2902C                             PCM2903C                        PCM2906C           PCM2912A
+        Supply voltage           5 V (Bus-Powered)        5 V (Bus-Powered) 3.3 V (Bus-Powered)                                  5 V (Bus-Powered)     5 V (Bus-Powered)
+                                                                                                                                     S/PDIF I/O            Mic Bias
+       Additional features                 —                      S/PDIF I/O                           S/PDIF I/O                 500-mA Maximum            PGAs
+                                                                                                                                 Power Configuration       Sidetone
+
+
+
+6 Pin Configuration and Functions
+
+                                                                          PJT Package
+                                                                          32-Pin TQFP
+                                                                           Top View
+
+
+                                                          POWER
+
+
+
+
+                                                                                                                MBIAS
+                                                                          VOUTR
+                                                                  MAMP
+
+
+
+
+                                                                                         HGND
+
+
+                                                                                                        VOUTL
+                                                                                  VCCR
+
+
+                                                                                                VCCL
+                                                          24      23      22      21     20     19      18      17
+
+
+                                         PGND      25                                                                       16   VIN
+                                          VCCP     26                                                                       15   VCCA
+
+                                         TEST1     27                                                                       14   NC
+
+                                         TEST0     28                                                                       13   AGND
+                                                                            PCM2912A
+                                         SSPND     29                                                                       12   VCOM2
+
+                                        MMUTE      30                                                                       11   VCOM1
+
+                                           REC     31                                                                       10   FR
+                                          PLAY     32                                                                        9   FL
+
+                                                           1       2       3      4      5       6       7       8
+                                                         BGND
+                                                                  VBUS
+
+                                                                          D-
+                                                                                  D+
+                                                                                         VDD
+                                                                                                DGND
+                                                                                                        XTO
+                                                                                                                XTI
+
+
+
+
+                                                                         Pin Functions
+              PIN
+                                   I/O                                                                     DESCRIPTION
+      NAME          NO.
+AGND                 13            —        Analog ground
+BGND                  1            —        Reference for internal regulator
+D–                    3            I/O      USB differential input/output minus (1)
+D+                    4            I/O      USB differential input/output plus (1)
+DGND                  6                     Digital ground
+FL                    9            —        External filter pin of L-channel (optional)
+FR                   10            —        External filter pin of R-channel (optional)
+HGND                 20            —        Analog ground for headphone amplifier
+MAMP                 23             I       Microphone preamplifier gain control (LOW: Preamplifier off, HIGH: Preamplifier on = +20 dB) (2)
+MBIAS                17             O       Microphone bias output (0.75 VCCA)
+MMUTE                30             I       Microphone mute control, active HIGH (LOW: Mute off, HIGH: Mute on) (3)
+NC                   14            —        Not connected
+
+(1)    LV-TTL level
+(2)    3.3-V CMOS level input.
+(3)    3.3-V CMOS level input with internal pulldown resistor.
+Copyright © 2008–2015, Texas Instruments Incorporated                                                                             Submit Documentation Feedback        3
+                                                         Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                    www.ti.com
+
+
+                                                       Pin Functions (continued)
+             PIN
+                                 I/O                                               DESCRIPTION
+      NAME         NO.
+PGND                25            —       Analog ground for microphone bias, microphone amplifier, and PGA
+PLAY                32            O       Status output for playback (LOW: Playback, FLASH: Mute on playback, HIGH: Stop) (4)
+POWER               24             I      Power consumption declaration select pin (LOW: 100 mA, HIGH: 500 mA) (2)
+REC                 31            O       Status output for record (LOW: Record, FLASH: Mute on recode, HIGH: Stop) (4)
+SSPND               29            O       Suspend flag (LOW: Suspend, HIGH: Operational state)
+TEST0               28             I      Test pin. Must be set to LOW (2)
+TEST1               27             I      Test pin. Must be set to HIGH (2)
+VBUS                 2            —       Connect to USB power (VBUS)
+VCCA                15            —       Analog power supply
+VCCL                19            —       Analog power supply for headphone amplifier of L-channel (5)
+VCCP                26            —       Analog power supply for PLL (5)
+VCCR                21            —       Analog power supply for headphone amplifier of R-channel (5)
+                                          Common voltage for ADC, DAC, and analog front-end (VCCA/2). Decoupling capacitor must be
+VCOM1               11            —
+                                          connected to AGND.
+VCOM2               12            —       Common voltage for headphone (VCCA/2). Decoupling capacitor must be connected to AGND.
+VDD                  5            —       Digital power supply (5)
+VIN                 16             I      ADC microphone input
+VOUTL               18            O       Headphone output for L-channel
+VOUTR               22            O       Headphone output for R-channel
+XTI                  8             I      Crystal oscillator input (2)
+XTO                  7            O       Crystal oscillator output
+
+(4)    5-V tolerant, open-drain.
+(5)    Connect decoupling capacitor to corresponding ground.
+
+
+
+
+4         Submit Documentation Feedback                                                    Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                       Product Folder Links: PCM2912A
+                                                                                                                                        PCM2912A
+www.ti.com                                                                                SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+7 Specifications
+7.1 Absolute Maximum Ratings
+Over operating free-air temperature range (unless otherwise noted). (1) (2)
+                                                                                                              MIN               MAX          UNIT
+Supply voltage               VBUS                                                                             –0.3              6.5           V
+Ground voltage
+                             BGND, PGND, AGND, HGND, DGND                                                     –0.1              0.1           V
+differences
+Input voltage                VCCP, VCCA, VCCL, VCCR, VDD                                                      –0.3               4            V
+                             PLAY, REC                                                                        –0.3              6.5           V
+Digital input voltage
+                             D+, D–, XTI, XTO, MMUTE, TEST0, TEST1, POWER, MAMP, SSPND                        –0.3               4            V
+Analog input voltage         MBIAS, VIN, VCOM1, VCOM2, VOUTL, VOUTR, FR, FL                                   –0.3               4            V
+Input current (any pins except supplies)                                                                      –10               10            mA
+Ambient temperature under bias                                                                                –40               125
+Junction temperature                                                                                                            150           °C
+Storage temperature, Tstg                                                                                     –55               150
+
+(1)   Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress ratings
+      only, and functional operation of the device at these or any other conditions beyond those indicated under Recommended Operating
+      Conditions is not implied. Exposure to absolute-maximum-rated conditions for extended periods may affect device reliability.
+(2)   All voltage values are with respect to network ground terminal.
+
+7.2 ESD Ratings
+                                                                                                                            VALUE            UNIT
+                                                                                                (1)
+                Electrostatic            Human body model (HBM), per ANSI/ESDA/JEDEC JS-001                                 ±3000
+V(ESD)                                                                                                                                        V
+                discharge                Charged device model (CDM), per JEDEC specification JESD22-C101 (2)                ±1000
+
+(1)   JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process.
+(2)   JEDEC document JEP157 states that 250-V CDM allows safe manufacturing with a standard ESD control process.
+
+7.3 Recommended Operating Conditions
+Over operating free-air temperature range (unless otherwise noted).
+                                                                                                       MIN           NOM          MAX        UNIT
+VBUS        Supply voltage                                                                             4.35                 5        5.25     V
+            Analog input voltage, full scale (–0 dB)                                                          0.43 VCCA                       VPP
+            Digital input logic family                                                                                TTL
+            Digital input clock frequency                                                             5.997                 6    6.003       MHz
+            Analog output load resistance                                                               32                                    Ω
+            Analog output load capacitance                                                                                            100     pF
+            Digital output load capacitance                                                                                           10      pF
+TA          Operating free-air temperature                                                             –25                            70      °C
+
+
+7.4 Thermal Information
+                                                                                                              PCM2912A
+                                                                (1)
+                                             THERMAL METRIC                                                   PJT (TQFP)                    UNIT
+                                                                                                                32 PINS
+RθJA               Junction-to-ambient thermal resistance                                                            69.6                   °C/W
+RθJC(top)          Junction-to-case (top) thermal resistance                                                         10.6                   °C/W
+RθJB               Junction-to-board thermal resistance                                                              34.6                   °C/W
+ψJT                Junction-to-top characterization parameter                                                        0.3                    °C/W
+ψJB                Junction-to-board characterization parameter                                                      33.9                   °C/W
+
+(1)   For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+      report, SPRA953.
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                 Submit Documentation Feedback                 5
+                                                         Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                   www.ti.com
+
+
+7.5 Electrical Characteristics
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted. for Host
+interface, apply USB revision 2.0, full-speed. For audio data format, use UsB isochronous data format.
+                   PARAMETER                                   TEST CONDITIONS                MIN             TYP         MAX       UNIT
+INPUT LOGIC
+VIH           Input logic high level                                                             2                          3.3
+                                                                                                                                    VDC
+VIL           Input logic low level                                                                                         0.8
+              Input logic high current (1) (2)         VIN = 3.3 V                            –10                           10
+IIH                                                                                                                                  μA
+              Input logic high current (3)             VIN = 3.3 V                                               65        100
+              Input logic low current (1) (2)          VIN = 0 V                              –10                           10
+IIL                                                                                                                                  μA
+              Input logic low current (3)              VIN = 0 V                              –10                           10
+OUTPUT LOGIC
+              Output logic high level (1)              IOH = –10 mA                            2.9
+VOH                                                                                                                                 VDC
+              Output logic high level (4)              IOH = –2 mA                             2.8
+              Output logic low level (1)               IOL = 10 mA                                                          0.3
+                                        (4)
+VOL           Output logic low level                   IOL = 2 mA                                                           0.5     VDC
+              Output logic low level (5)               IOL = 8 mA                                                           0.5
+IOH           Output leak current (5)                  VIN = 5 V                                                           ±10       μA
+CLOCK FREQUENCY
+              Input clock frequency, XTI                                                    5.997            6.000       6.003      MHz
+MICROPHONE BIAS
+              Output voltage                                                                            0.75 VCCA                   VDC
+              Output current                                                                                      2                  mA
+              Output noise                             RL = 1 kΩ                                                  5                μVRMS
+ANALOG-TO-DIGITAL CONVERTER (ADC) CHARACTERISTICS
+              Resolution                                                                                         16                  Bits
+              Audio data channel                                                                                  1                Channel
+                                                                                                          8
+                                                                                                        11.025
+                                                                                                          16
+              Sampling frequency                                                                        22.05                        kHz
+                                                                                                          32
+                                                                                                         44.1
+                                                                                                          48
+ADC DYNAMIC PERFORMANCE (6)
+THD+N         Total harmonic distortion plus noise     VIN = –1 dB of 0.43 VCCA                             0.01%       0.02%
+              Dynamic range                            A-weighted                              82                90                  dB
+SNR           Signal-to-noise ratio                    A-weighted                              84                92                  dB
+ADC DC ACCURACY
+              Gain error                                                                                         ±2        ±10    % of FSR
+              Bipolar zero error                                                                                 ±0               % of FSR
+ANALOG INPUT
+              Input voltage                                                                             0.43 VCCA                    VPP
+              Center voltage                                                                             0.5 VCCA                     V
+                                                       –3 dB                                                   150                   kHz
+              Antialiasing filter frequency response
+                                                       fIN = 20 kHz                                          –0.08                   dB
+
+
+(1)   Pins 3, 4: D–, D+.
+(2)   Pins 8, 23, 24, 27, 28: XTI, MAMP, POWER, TEST1, TEST0
+(3)   Pin 30: MMUTE
+(4)   Pins 7, 29: XTO, SSPND
+(5)   Pins 31, 32: REC, PLAY.
+(6)   fIN = 1 kHz, using Audio Precision™ System Two™, RMS mode with 20-kHz LPF, 400-Hz HPF in calculation. Microphone amplifier = 0
+      dB, PGA = 0 dB.
+6        Submit Documentation Feedback                                                   Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                        Product Folder Links: PCM2912A
+                                                                                                                                 PCM2912A
+www.ti.com                                                                                SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+Electrical Characteristics (continued)
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted. for Host
+interface, apply USB revision 2.0, full-speed. For audio data format, use UsB isochronous data format.
+                     PARAMETER                                  TEST CONDITIONS                  MIN             TYP         MAX      UNIT
+MICROPHONE AMPLIFIER
+              Gain                                                                                  0                          20      dB
+              Input impedance                                                                                        20                kΩ
+INPUT PGA
+              Gain range                                                                          –12                          30      dB
+              Gain step size                                                                                          1                dB
+ADC DIGITAL FILTER PERFORMANCE
+              Passband                                                                                                    0.454 fS     Hz
+              Stop band                                                                       0.583 fS                                 Hz
+              Passband ripple                                                                   –0.02                        0.02      dB
+              Stop-band attenuation                                                               –65                                  dB
+              Delay time                                                                                       17.4/fS                  s
+              HPF frequency response                    –3 dB                                            0.078 fS/1000                 Hz
+DIGITAL-TO-ANALOG CONVERTER (DAC) CHARACTERISTICS
+              Resolution                                                                                             16                Bits
+              Audio data channel                                                                                  1, 2               Channel
+                                                                                                              8
+                                                                                                            11.025
+                                                                                                              16
+              Sampling frequency                                                                            22.05                      kHz
+                                                                                                              32
+                                                                                                             44.1
+                                                                                                              48
+DAC DYNAMIC PERFORMANCE (7)
+                                                        RL > 10 kΩ, VOUT = 0 dB of 0.6 VCCA                    0.01%       0.02%
+THD+N         Total harmonic distortion plus noise
+                                                        RL = 32 Ω, VOUT = 0 dB of 0.55 VCCA                    0.02%       0.05%
+              Dynamic range                             EIAJ, A-weighted                           82                90                dB
+SNR           Signal-to-noise ratio                     EIAJ, A-weighted                           84                92                dB
+              Channel separation                        RL > 10 kΩ                                 80                88                dB
+DAC DC ACCURACY
+              Gain mismatch channel-to-channel                                                    –10                ±2        10    % of FSR
+              Gain error                                                                          –10                ±2        10    % of FSR
+              Bipolar zero error                                                                                     ±3              % of FSR
+ANALOG OUTPUT
+                                                        RL > 10 kΩ                                           0.6 VCCA
+              Output voltage                                                                                                           VPP
+                                                        RL = 32 Ω                                           0.55 VCCA
+              Center voltage                                                                                 0.5 VCCA                   V
+                                                        RL = 32 Ω                                                    13
+              Output power                                                                                                             mW
+                                                        RL = 16 Ω                                                    25
+                                                        Line                                       10                                  kΩ
+              Load impedance (AC coupling)
+                                                        Headphone                                  16                32                 Ω
+                                                        –3 dB                                                     140                  kHz
+              LPF frequency response
+                                                        f = 20 kHz                                               –0.1                  dB
+
+(7)   fOUT = 1 kHz, using Audio Precision System Two, RMS mode with 20-kHz LPF, 400-Hz HPF. Output attenuator = 0 dB,
+      Sidetone = Mute.
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                Submit Documentation Feedback              7
+                                                         Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                    www.ti.com
+
+
+Electrical Characteristics (continued)
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted. for Host
+interface, apply USB revision 2.0, full-speed. For audio data format, use UsB isochronous data format.
+                  PARAMETER                                 TEST CONDITIONS                    MIN             TYP         MAX       UNIT
+SIDETONE PROGRAMMABLE ATTENUATOR
+             Gain range                                                                        –76                             0      dB
+             Gain step size                                                                                       1                   dB
+OUTPUT PROGRAMMABLE ATTENUATOR
+             Gain range                                                                        –76                             0      dB
+             Gain step size                                                                                       1                   dB
+ANALOG LOOPBACK PERFORMANCE (8)
+                                                    RL > 10 kΩ, VIN = 0 dB of 0.43 VCCA                      0.01%       0.02%
+THD+N        Total harmonic distortion plus noise
+                                                    RL = 32 Ω, VIN = 0 dB of 0.43 VCCA                       0.02%       0.05%
+             Dynamic range                          EIAJ, A-weighted                            82               90                   dB
+SNR          Signal-to-noise ratio                  EIAJ, A-weighted                            84               92                   dB
+DAC DIGITAL FILTER PERFORMANCE
+             Passband                                                                                                  0.445 fS       Hz
+             Stop band                                                                    0.555 fS                                    Hz
+             Passband ripple                                                                                               ±0.1       dB
+             Stop-band attenuation                                                             –43                                    dB
+             Delay time                                                                                      14.3/fS                   s
+POWER-SUPPLY REQUIREMENTS
+VBUS         Voltage range                          Bus-powered                               4.35                5        5.25      VDC
+                                                    ADC, DAC operation (RL = 32 Ω)                               85         100       mA
+             Supply current
+                                                    Suspend mode (9)                                            220         300       μA
+                                                    ADC, DAC Operation                                          425         500       mW
+             Power dissipation
+                                                    Suspend mode (9)                                            0.8            1      mW
+VCCP,VCCL
+          Internally-generated power supply
+VCCR,VCCA                                                                                         3             3.3          3.6     VDC
+          voltage (10)
+VDD
+TEMPERATURE RANGE
+             Operation temperature                                                             –25                           85       °C
+
+(8) MIC Amp = 0 dB, Sidetone attenuator = 0 dB, Output attenuator = 0 dB.
+(9) Under USB suspend state
+(10) Pins 5, 15, 19, 21, 26: VDD, VCCA, VCCL, VCCR, VCCP.
+
+
+
+
+8       Submit Documentation Feedback                                                     Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                     Product Folder Links: PCM2912A
+                                                                                                                                                                                                       PCM2912A
+www.ti.com                                                                                                                                        SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+7.6 Typical Characteristics
+
+7.6.1 ADC Digital Decimation Filter Frequency Response
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+
+                                          0                                                                                                       0
+
+
+
+                                                                                                                                               -20
+                                        -40
+
+
+
+
+                                                                                                                              Amplitude - dB
+                      Amplitude - dB
+
+
+
+
+                                                                                                                                               -40
+
+                                        -80
+
+                                                                                                                                               -60
+
+
+                                       -120
+                                                                                                                                               -80
+
+
+
+                                       -160                                                                                                    -100
+                                              0              8           16          24         32                                                    0        0.2       0.4          0.6      0.8   1.0
+                                                             Normalized Frequency - x fS                                                                         Normalized Frequency - x fS
+
+                                                   Figure 1. Overall Characteristic                                                                       Figure 2. Stop Band Attenuation
+                                        0.2                                                                                                      0
+
+
+
+                                         0                                                                                                      -4
+              Amplitude - dB
+
+
+
+
+                                                                                                                              Amplitude - dB
+
+                                       -0.2                                                                                                     -8
+
+
+
+                                       -0.4                                                                                                    -12
+
+
+
+                                       -0.6                                                                                                    -16
+
+
+
+                                       -0.8                                                                                                    -20
+                                              0        0.1         0.2        0.3         0.4    0.5                                             0.46           0.48           0.50         0.52     0.54
+                                                             Normalized Frequency - x fS                                                                         Normalized Frequency - x fS
+
+                                                      Figure 3. Passband Ripple                                                                       Figure 4. Transient Band Response
+
+
+
+7.6.2 ADC Digital High-Pass Filter Frequency Response
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+
+                                          0                                                                                                       0
+
+
+
+                                        -20                                                                                                    -0.2
+                                                                                                                           Amplitude - dB
+                     Amplitude - dB
+
+
+
+
+                                        -40                                                                                                    -0.4
+
+
+
+                                        -60                                                                                                    -0.6
+
+
+
+                                        -80                                                                                                    -0.8
+
+
+
+                                       -100                                                                                                    -1.0
+                                              0          0.1         0.2          0.3           0.4                                                   0              1           2            3         4
+                                                        Normalized Frequency - x fS/1000                                                                        Normalized Frequency - x fS/1000
+
+                                                  Figure 5. Stop Band Characteristic                                                                      Figure 6. Passband Characteristic
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                                                                                Submit Documentation Feedback            9
+                                                                                                Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                                                                                                                  www.ti.com
+
+
+7.6.3 ADC Analog Antialiasing Filter Frequency Response
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+
+                                 0                                                                                                                               0
+
+
+
+                               -10                                                                                                                             -0.2
+
+
+
+
+                                                                                                                                          Amplitude - dB
+           Amplitude - dB
+
+
+
+
+                               -20                                                                                                                             -0.4
+
+
+
+                               -30                                                                                                                             -0.6
+
+
+
+                               -40                                                                                                                             -0.8
+
+
+
+                               -50                                                                                                                             -1.0
+                                      1          10          100            1000                     10000                                                       0.01               0.1           1             10         100
+                                                      f - Frequency - kHz                                                                                                                 f - Frequency - kHz
+
+                                          Figure 7. Stop Band Characteristic                                                                                              Figure 8. Passband Characteristic
+
+
+
+7.6.4 DAC Digital Interpolation Filter Frequency Response
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+
+                                 0                                                                                                                              0.2
+
+
+
+                                -20                                                                                                                              0
+              Amplitude - dB
+
+
+
+
+                                                                                                                                              Amplitude - dB
+
+
+
+
+                                -40                                                                                                                            -0.2
+
+
+
+                                -60                                                                                                                            -0.4
+
+
+
+                                -80                                                                                                                            -0.6
+
+
+
+                               -100                                                                                                                            -0.8
+                                      0          1            2              3                             4                                                          0           0.1       0.2       0.3            0.4   0.5
+                                                 Normalized Frequency - x fS                                                                                                        Normalized Frequency - x fS
+
+                                           Figure 9. Stop Band Attenuation                                                                                                       Figure 10. Passband Ripple
+
+                                                                                                    0
+
+
+
+                                                                                                   -4
+                                                                                 Amplitude - dB
+
+
+
+
+                                                                                                   -8
+
+
+
+                                                                                                  -12
+
+
+
+                                                                                                  -16
+
+
+
+                                                                                                  -20
+                                                                                                    0.46       0.48        0.50        0.52                               0.54
+                                                                                                                Normalized Frequency - x fS
+
+                                                                                                        Figure 11. Transient Band Response
+
+
+
+
+10     Submit Documentation Feedback                                                                                                                                       Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                                                                        Product Folder Links: PCM2912A
+                                                                                                                                                                                                                                                     PCM2912A
+www.ti.com                                                                                                                                                                                SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+7.6.5 DAC Analog FIR Filter Frequency Response
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+
+                                                                   0                                                                                                                       0.2
+
+
+
+                                                                 -10                                                                                                                         0
+
+
+
+
+                                                                                                                                                         Amplitude - dB
+                           Amplitude - dB
+
+
+
+
+                                                                 -20                                                                                                                      -0.2
+
+
+
+                                                                 -30                                                                                                                      -0.4
+
+
+
+                                                                 -40                                                                                                                      -0.6
+
+
+
+                                                                 -50                                                                                                                      -0.8
+                                                                       0          8           16             24           32                                                                     0     0.1          0.2         0.3      0.4   0.5
+                                                                                 Normalized Frequency - x fS                                                                                                Normalized Frequency - x fS
+
+                                                                 Figure 12. Stop Band Characteristic                                                                                       Figure 13. Passband Characteristic
+
+
+
+7.6.6 DAC Analog Low-Pass Filter Frequency Response
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+
+                                                                   0                                                                                                                        0
+
+
+
+                                                                -10                                                                                                                       -0.2
+                                                                                                                                                         Amplitude - dB
+                         Amplitude - dB
+
+
+
+
+                                                                -20                                                                                                                       -0.4
+
+
+
+                                                                -30                                                                                                                       -0.6
+
+
+
+                                                                -40                                                                                                                       -0.8
+
+
+
+                                                                -50                                                                                                                       -1.0
+                                                                       1         10          100            1000        10000                                                               0.01            0.1            1            10     100
+                                                                                      f - Frequency - kHz                                                                                                         f - Frequency - kHz
+
+                                                                 Figure 14. Stop Band Characteristic                                                                                       Figure 15. Passband Characteristic
+
+
+
+7.6.7 ADC
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+
+                                                                0.010                                                                                                                     96
+                THD+N - Total Harmonic Distortion + Noise - %
+
+
+
+
+                                                                0.009
+                                                                                                                                                                                          94
+                                                                                                                                                             Dynamic Range and SNR - dB
+
+
+
+
+                                                                0.008                                                                                                                                                     SNR
+
+                                                                                                                                                                                          92
+                                                                0.007
+                                                                                                                                                                                                                      Dynamic Range
+
+                                                                0.006
+                                                                                                                                                                                          90
+
+                                                                0.005
+                                                                                                                                                                                          88
+                                                                0.004
+
+
+                                                                0.003                                                                                                                     86
+                                                                    -50    -25        0       25       50          75     100                                                               -50      -25         0       25     50        75   100
+                                                                                 TA - Free-Air Temperature - °C                                                                                            TA - Free-Air Temperature - °C
+
+                Figure 16. THD+N at –1 dB vs Temperature                                                                                          Figure 17. Dynamic Range and Signal-to-Noise Ratio vs
+                                                                                                                                                                      Temperature
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                                                                                                                       Submit Documentation Feedback                  11
+                                                                                                                            Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                                                                                                                                                                             www.ti.com
+
+
+ADC (continued)
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+                                                                                         0.010                                                                                                                                98
+                                         THD+N - Total Harmonic Distortion + Noise - %
+
+
+
+                                                                                         0.009
+                                                                                                                                                                                                                              96
+
+
+
+
+                                                                                                                                                                                                 Dynamic Range and SNR - dB
+                                                                                         0.008
+                                                                                                                                                                                                                              94
+                                                                                                                                                                                                                                                           SNR
+                                                                                         0.007
+
+                                                                                                                                                                                                                              92
+                                                                                         0.006                                                                                                                                                        Dynamic Range
+
+                                                                                                                                                                                                                              90
+                                                                                         0.005
+
+
+                                                                                         0.004                                                                                                                                88
+
+
+                                                                                         0.003                                                                                                                                86
+                                                                                                 4.2   4.4         4.6    4.8     5.0        5.2   5.4                                                                         4.2       4.4         4.6     4.8    5.0         5.2   5.4
+                                                                                                               VBUS - Supply Voltage - V                                                                                                         VBUS - Supply Voltage - V
+
+                                      Figure 18. THD+N at –1 dB vs Supply Voltage                                                                                        Figure 19. Dynamic Range and Signal-to-Noise Ratio vs
+                                                                                                                                                                                            Supply Voltage
+
+                                                                                          0.010                                                                                                                               98
+                                       THD+N - Total Harmonic Distortion + Noise - %
+
+
+
+
+                                                                                         0.009                                                                                                                                96
+
+
+
+
+                                                                                                                                                                                              Dynamic Range and SNR - dB
+                                                                                         0.008
+                                                                                                                                                                                                                              94                                   SNR
+
+                                                                                         0.007
+                                                                                                                                                                                                                              92
+
+                                                                                         0.006
+                                                                                                                                                                                                                              90
+                                                                                         0.005
+                                                                                                                                                                                                                                                             Dynamic Range
+                                                                                                                                                                                                                              88
+                                                                                         0.004
+
+
+                                                                                         0.003                                                                                                                                86
+                                                                                              30              35          40            45         50                                                                           30              35           40            45          50
+                                                                                                             fS - Sampling Frequency - kHz                                                                                                      fS - Sampling Frequency - kHz
+
+          Figure 20. THD+N at –1 dB vs Sampling Frequency                                                                                                                Figure 21. Dynamic Range and Signal-to-Noise Ratio vs
+                                                                                                                                                                                         Sampling Frequency
+
+
+
+7.6.8 DAC
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+
+                                                                                         0.010                                                                                                                                96
+            THD+N - Total Harmonic Distortion + Noise - %
+
+
+
+
+                                                                                         0.009
+                                                                                                                                                                                                                              94
+                                                                                                                                                                              Dynamic Range and SNR - dB
+
+
+
+
+                                                                                         0.008
+                                                                                                                                                                                                                                                           SNR
+
+                                                                                                                                                                                                                              92
+                                                                                         0.007
+
+                                                                                                                                                                                                                                                           Dynamic Range
+                                                                                         0.006                                                                                                                                90
+
+
+                                                                                         0.005
+                                                                                                                                                                                                                              88
+                                                                                         0.004
+
+
+                                                                                         0.003                                                                                                                                86
+                                                                                                                                                                                                                                -50      -25         0       25      50          75   100
+                                                                                             -50       -25         0      25      50          75   100
+                                                                                                             TA - Free-Air Temperature - °C                                                                                                    TA - Free-Air Temperature - °C
+
+                                                                                         Figure 22. THD+N at 0 dB vs Temperature                                         Figure 23. Dynamic Range and Signal-to-Noise Ratio vs
+                                                                                                                                                                                             Temperature
+
+
+
+
+12     Submit Documentation Feedback                                                                                                                                                                                                  Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                                                                                                                   Product Folder Links: PCM2912A
+                                                                                                                                                                                                                                                                                                                    PCM2912A
+www.ti.com                                                                                                                                                                                                                                                 SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+DAC (continued)
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+                                                                                        0.010                                                                                                                                                              98
+                                        THD+N - Total Harmonic Distortion + Noise - %
+
+
+
+                                                                                        0.009                                                                                                                                                              96
+
+
+
+
+                                                                                                                                                                                                                       Dynamic Range and SNR - dB
+                                                                                        0.008
+                                                                                                                                                                                                                                                           94
+                                                                                                                                                                                                                                                                                   SNR
+                                                                                        0.007
+                                                                                                                                                                                                                                                           92
+                                                                                        0.006
+                                                                                                                                                                                                                                                                               Dynamic Range
+                                                                                                                                                                                                                                                           90
+                                                                                        0.005
+
+                                                                                                                                                                                                                                                           88
+                                                                                        0.004
+
+
+                                                                                        0.003                                                                                                                                                              86
+                                                                                            4.2        4.4         4.6         4.8         5.0         5.2      5.4                                                                                         4.2   4.4        4.6    4.8     5.0         5.2   5.4
+
+                                                                                                               VBUS - Supply Voltage - V                                                                                                                                 VBUS - Supply Voltage - V
+
+                                                     Figure 24. THD+N at 0 dB vs Supply Voltage                                                                                              Figure 25. Dynamic Range and Signal-to-Noise Ratio vs
+                                                                                                                                                                                                                Supply Voltage
+                                                                                        0.010                                                                                                                                                              98
+                                        THD+N - Total Harmonic Distortion + Noise - %
+
+
+
+
+                                                                                        0.009                                                                                                                                                              96
+
+
+
+
+                                                                                                                                                                                                                              Dynamic Range and SNR - dB
+                                                                                        0.008
+                                                                                                                                                                                                                                                           94
+                                                                                                                                                                                                                                                                                                  SNR
+                                                                                        0.007
+                                                                                                                                                                                                                                                           92
+                                                                                        0.006
+                                                                                                                                                                                                                                                                                    Dynamic Range
+                                                                                                                                                                                                                                                           90
+                                                                                        0.005
+
+
+                                                                                        0.004                                                                                                                                                              88
+
+
+                                                                                        0.003                                                                                                                                                              86
+                                                                                                30            35                40               45             50                                                                                          30          35          40            45          50
+                                                                                                             fS - Sampling Frequency - kHz                                                                                                                              fS - Sampling Frequency - kHz
+
+                  Figure 26. THD+N at 0 dB vs Sampling Frequency                                                                                                                             Figure 27. Dynamic Range and Signal-to-Noise Ratio vs
+                                                                                                                                                                                                             Sampling Frequency
+
+
+
+7.6.9 Supply Current
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+
+                                       100                                                                                                                     0.5                                                                100
+
+
+
+                                       90                                                                                                                      0.4                                                                                  90
+                                                                                                        Operational Current
+                                                                                                                                                                                                 Operational Current - mA
+            Operational Current - mA
+
+
+
+
+                                                                                                                                                                      Suspend Current - mA
+
+
+
+
+                                       80                                                                                                                      0.3                                                                                  80
+
+                                                                                                       Suspend Current
+
+                                       70                                                                                                                      0.2                                                                                  70
+
+
+
+                                       60                                                                                                                      0.1                                                                                  60
+
+
+
+                                       50                                                                                                                       0                                                                                   50
+                                        4.2                                                      4.4     4.6             4.8         5.0         5.2         5.4                                                                                           30           35          40             45           50
+                                                                                                       VBUS - Supply Voltage - V                                                                                                                                    fS - Sampling Frequency - kHz
+
+                                              Figure 28. Supply Current vs Supply Voltage                                                                                                      Figure 29. Supply Current vs Sampling Frequency
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                                                                                                                                                                                    Submit Documentation Feedback                    13
+                                                                                                                                                               Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                                                    www.ti.com
+
+
+Supply Current (continued)
+All specifications at TA = 25°C, VBUS = 5 V, fS = 44.1 kHz, fIN = 1 kHz, and 16-bit data, unless otherwise noted.
+                                                                   0.40
+
+
+                                                                   0.35
+
+                                                                                    USB spec limit for device = 0.3 mA
+
+
+
+
+                                            Suspend Current - mA
+                                                                   0.30
+
+
+                                                                   0.25
+
+
+
+                                                                   0.20
+
+
+
+                                                                   0.15
+
+
+                                                                   0.10
+                                                                      -40     -20       0     20     40      60       80   100
+                                                                                     TA - Free-Air Temperature - °C
+
+                                      Figure 30. Supply Current vs Temperature at Suspend Mode
+
+
+
+8 Parameter Measurement Information
+All parameters are measured according to the conditions described in Specifications.
+
+
+
+
+14     Submit Documentation Feedback                                                                                       Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                                          Product Folder Links: PCM2912A
+                                                                                                                                      PCM2912A
+www.ti.com                                                                                       SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+9 Detailed Description
+
+9.1 Overview
+The PCM2912A is an audio codec with USB connection capability and an analog front-end for headset
+applications.
+The PCM2912A is a bus-powered device that uses the USB voltage source. The PCM2912A meets the
+requirements of USB2.0 standard connection. This device has analog and digital inputs and outputs; it has a
+digital USB interface for input and output data; the analog input is directly routed to the A/D converter and to the
+analog output. The microphone input has an optional mic amp with fixed +20 dB. The PCM2912A has 2 digital
+output flags that can be used as LED indicators for Playback and Record. The PCM2912A requires a 12-MHz
+clock; it can be provided by an external clock or generated by a built-in crystal resonator.
+
+9.2 Functional Block Diagram
+
+                                                                         VCCA/VCCP/VCCL/VCCR/VDD
+                                                           BGND                                        AGND/ HGND/ PGND/DGND
+
+
+
+
+                                                                                                        Power
+                                                                                 5 V to 3.3 V          Manager                        SSPND
+                                                            VREF                   Voltage
+                                                                                  Regulator
+                                                                                                                                      VBUS
+
+                          MIC
+       MBIAS              BIAS         PGA + 30 dB ~ –12 dB
+                                         in 1 dB steps                                                                                D+
+                    MIC                                                                                 ISO-In           XCVR
+                                                                                          FIFO
+                    AMP                                                                                Endpoint                       D–
+          VIN                                                ADC
+                  +20/0 dB                                                   Selector
+                                                                                                                        USB SIE
+
+                                                                                                        Control
+       VCOM2                                                                            Analog         Endpoint                       POWER
+                                                                                         PLL                                          MAMP
+       VCOM1
+                                                                                        Analog                                        MMUTE
+                                              ATT 0 dB ~ –76 dB                          PLL
+                                           in 1 dB steps with Mute
+
+
+       VOUTL                           S                                                                                              PLAY
+                                                                            Selector
+                                                              DAC
+                                                                                                       ISO-Out                        REC
+       VOUTR                                   S                                          FIFO
+                                                                                                       Endpoint
+                     HP AMP 15 mW (at 32 W)
+                       ATT 0 dB ~ –76 dB
+                     in 1 dB steps with Mute                                                                                          TEST0
+           FL                                                                                       USB Protocol
+                                                                                                      Controller                      TEST1
+           FR
+
+
+
+                                                                                   96 MHz           Tracker
+                                                                     PLL (x16)
+                                                                                                   (SpAct® )
+
+
+                                   6.000 MHz
+                             XTI                   XTO
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                          Submit Documentation Feedback   15
+                                                            Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                            www.ti.com
+
+
+9.3 Feature Description
+9.3.1 Clock and Reset
+The PCM2912A requires a 6-MHz (±500 ppm) clock for USB function and audio function, which can be
+generated from a built-in crystal oscillator with a 6-MHz crystal resonator. The 6-MHz crystal resonator must be
+connected to XTI (pin 8) and XTO (pin 7) with one high (1-MΩ) resistor and two small capacitors, whose
+capacitance depends on the load capacitance of the crystal resonator. An external clock can be supplied through
+XTI; if an external clock is supplied, XTO must be left open. Because there is no clock disabling signal, using the
+external clock supply is not recommended. SSPND (pin 29) is unable to use clock disabling.
+The PCM2912A has an internal power-on-reset circuit, which works automatically when VBUS (pin 2) exceeds
+2.5 V, typical (2.2 V to 2.7 V), and approximately 700 μs is required until the internal reset is released.
+
+9.3.2 DAC
+The PCM2912A has a stereo delta-sigma DAC that uses a 64-fS oversampling technique with an 8-fS
+oversampling digital filter. DAC outputs are provided through the headphone amplifier; VOUTL (pin 18) and VOUTR
+(pin 22) provide 13 mW at 32 Ω and 0.6 VCCL/VCCR VPP at a 10-kΩ load.
+
+9.3.3 ADC
+The PCM2912A has a mono delta-sigma ADC that uses a 64-fS oversampling technique with a 1/64-fS
+decimation digital filter. The microphone input, VIN (pin 16), is fed to the ADC through a +20-dB microphone
+amplifier and the PGA, which has +30 dB to –12 dB in 1-dB steps.
+
+9.3.4 Microphone Bias
+The PCM2912A has a microphone bias generator, which provides a low-noise, 0.75-VCCA, 2-mA source current
+output with appropriate output impedance for electret-microphone driving. This output, MBIAS (pin 17), should be
+bypassed to AGND (pin 13) through an appropriate capacitor to reduce the output noise level.
+
+9.3.5 Microphone Amplifier
+The PCM2912A has a low-noise, single-ended, mono microphone amplifier with a mute function that is controlled
+by MUTE (pin 30). The signal gain is selectable by MAMP (pin 23). The noise level at the input node is 5 μVRMS,
+and the input impedance is 20 kΩ.
+
+9.3.6 Input PGA
+The PCM2912A also has a low-noise input, programmable gain amplifier (PGA) for the microphone amplifier
+output/ADC input, with a gain range of +30 dB to –12 dB in 1dB/step.
+
+9.3.7 Sidetone Programmable Attenuator
+The PCM2912A has a low-noise, sidetone programmable attenuator with a mute function for the sidetone signal
+path (microphone amplifier output to output PGA input), and a gain range of 0 dB to –76 dB in 1 dB/step.
+
+9.3.8 Output Programmable Attenuator
+The PCM2912A has a low-noise output programmable attenuator with a mute function for mixed signal, which
+affects DAC output signal and sidetone signal. The output PGA gain range is 0 dB to –76 dB in 1 dB/step.
+
+9.3.9 VCOM1 and VCCM2
+VCOM2 (pin 12) is provided for the center voltage of the headphone amplifier. VCOM1 (pin 11) is provided for the
+center voltage of all other analog circuits. Each VCOM pin must be decoupled with an appropriate capacitor.
+Because the headphone output is disconnected when entering the suspend state, determining the capacitance is
+important to prevent pop noise, especially for VCOM2 (pin 12). The equivalent resistance of VCOM2 is 500 kΩ, and
+VCOM1 is 15 kΩ.
+
+
+
+
+16     Submit Documentation Feedback                                               Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                  Product Folder Links: PCM2912A
+                                                                                                                             PCM2912A
+www.ti.com                                                                                 SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+Feature Description (continued)
+9.3.10 Filter Pins
+FL (pin 9) and FR (pin 10) are provided to make a low-pass filter (LPF) to decrease the DAC outband noise, as
+shown in Figure 31. This filter is optional.
+                                                                              Side Tone
+
+
+
+
+                                                                                       20 kW
+
+                                                                                         20 kW
+
+                                                            10 kW       10 kW
+                                                DAC                                    –
+                                                                                       +
+
+
+                                                                                VCOM
+
+                                                                      FR/FL
+                                                                       CF
+
+
+
+                                                        Figure 31. Filter Circuit
+
+9.3.11 Interface Sequence
+
+9.3.11.1 Power-On, Attach, and Play Back Sequence
+The PCM2912A is ready for setup when the reset sequence has finished and the USB bus is attached. After a
+connection has been established, the PCM2912A is ready to accept USB audio data. While waiting for the audio
+data (that is, in an idle state), the analog output is set to bipolar zero (BPZ).
+When receiving the audio data, the PCM2912A stores the first audio packet, which contains 1-ms audio data,
+into the internal storage buffer. The PCM2912A starts playing the audio data when the subsequent Start of
+Frame (SOF) packet is detected, as shown in Figure 32.
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                               Submit Documentation Feedback      17
+                                                        Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                                       www.ti.com
+
+
+Feature Description (continued)
+
+
+                                                                                                                                                       5.0 V (typ)
+     VBUS (pin 2)                          2.5 V (typ)
+
+          0V
+
+
+
+                                                     Bus Reset              Set Configuration          1st Audio Data         2nd Audio Data
+
+ D+ (pin 4),        Bus Idle
+ D- (pin 3)
+                                                                                                SOF                     SOF                    SOF
+
+
+
+
+ SSPND (pin 29)
+
+
+
+
+ VOUTL (pin 18),
+ VOUTR (pin 22)
+
+
+
+
+                               700 ms                              Device Setup                             1 ms
+
+                          Internal Reset
+                                                               Ready for Setup                  Ready for Playback
+
+
+
+                                                                    Figure 32. Initial Sequence
+
+9.3.11.2 Play, Stop, and Detach Sequence
+When the host finishes or aborts the play back process, the PCM2912A stops playing after last audio data has
+played, as shown in Figure 33.
+        VBUS (pin 2)
+
+
+                                        Audio Data             Audio Data          Last Audio Data
+
+          D+ (pin 4),
+          D- (pin 3)
+                                SOF                      SOF                 SOF                 SOF           SOF
+
+
+
+
+      VOUTL (pin 18),
+      VOUTR (pin 22)
+
+                                              1 ms
+                                                                                                                                                      Detach
+
+
+                                                               Figure 33. Play, Stop, and Detach
+
+
+
+18         Submit Documentation Feedback                                                                      Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                                     Product Folder Links: PCM2912A
+                                                                                                                                    PCM2912A
+www.ti.com                                                                                     SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+Feature Description (continued)
+9.3.11.3 Record Sequence
+Figure 34 illustrates how the PCM2912A records the audio into the internal memory after receiving the
+SET_INTERFACE command.
+                                    SET_INTERFACE         IN token   Audio data     IN token   Audio data   IN token   Audio data
+
+
+
+      D+ (pin 4),
+      D– (pin 3)
+                     SOF                       SOF                   SOF                       SOF
+                                                                                                                       SOF
+
+
+
+
+      VIN (pin 16)
+
+                                     1ms
+
+
+                                                        Figure 34. Record Sequence
+
+9.3.11.4 Suspend and Resume Sequence
+The PCM2912A enters a suspend state when it sees a constant idle state on the USB bus after approximately
+5 ms. When the PCM2912A enters the suspend state, the SSPND flag (pin 29) is asserted. The PCM2912A
+wakes up immediately after detecting the non-idle state on the USB bus. Figure 35 illustrates these actions.
+
+           D+ (pin 4),                                                              Idle
+           D- (pin 3)
+
+
+
+
+      SSPND (pin 29)
+                                               5 ms                               Suspend
+
+       VOUTL (pin 18),
+       VOUTR (pin 22)
+
+                           Active     2.5 ms                                                                  Active
+
+
+                                                      Figure 35. Suspend and Resume
+
+
+9.4 Device Functional Modes
+The PCM2912A is a USB-controlled device. The PCM2912A is a codec, with an analog input (that goes to an
+A/D converter) and analog output (that comes from a D/A converter), alongside the analog path that goes from
+the microphone input to the headphone output. A wider explanation of these operational modes is shown in
+Feature Description.
+The PCM2912A has hardware controls to turn on and off the integrated microphone preamplifier and the
+microphone input itself (MAMP and MMUTE, respectively); the microphone preamplifier has +20-dB fixed gain.
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                   Submit Documentation Feedback      19
+                                                         Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                       www.ti.com
+
+
+9.5 Programming
+9.5.1 USB Interface
+Control data and audio data are transferred to the PCM2912A via D+ (pin 4) and D– (pin 3). All data transferred
+to/from the PCM2912A are performed at full speed. Table 1 summarizes the device descriptor. The device
+descriptor can be modified on request.
+
+                                                  Table 1. Device Descriptor
+               DEVICE DESCRIPTOR                                       DESCRIPTION
+               USB revision                                            2.0 compliant
+               Device class                                            0x00 (device defined in interface level)
+               Device sub class                                        0x00 (not specified)
+               Device protocol                                         0x00 (not specified)
+               Maximum packet size for endpoint 0                      8-byte
+               Vendor ID                                               0x08BB
+               Product ID                                              0x2912
+               Device release number                                   0x0100 (1.00)
+               Number of configurations                                1
+               Vendor string                                           String #1 (refer to Table 3)
+               Product string                                          String #2 (refer to Table 3)
+               Serial number                                           Not supported
+
+Table 2 lists the configuration descriptor. The configuration descriptor can be modified on request.
+
+                                           Table 2. Configuration Descriptor
+               CONFIGURATION DESCRIPTOR             DESCRIPTION
+               Interface                            Three interfaces
+               Power attribute                      0x80 (Bus powered, no remote wakeup)
+               Max power                            0x32 (100 mA at POWER = Low) / 0xFA (500mA at POWER = High)
+
+Table 3 summarizes the string descriptor. The string descriptor can be modified on request.
+
+                                                  Table 3. String Descriptor
+               STRING DESCRIPTOR                    DESCRIPTION
+               #0                                   0x0409
+               #1                                   Burr-Brown from TI
+               #2                                   USB audio CODEC
+
+
+
+
+20     Submit Documentation Feedback                                                          Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                    Product Folder Links: PCM2912A
+                                                                                                                                PCM2912A
+www.ti.com                                                                                    SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+9.5.1.1 Device Configuration
+Figure 36 illustrates the USB audio function topology. The PCM2912A has three interfaces. Each interface is
+constructed with some alternative settings.
+
+
+                Endpoint #0
+
+
+
+              Default Endpoint
+
+
+                                                                         FU
+
+                Endpoint #1
+                  (IF #1)                        IT          S                                              OT
+                                                                                                                               Analog Out
+                                               TID3         UID4                                           TID6
+
+         Audio Streaming Interface
+                                                                                               UID5
+
+
+                                                                         FU
+
+
+                                                                                                            IT
+                                                                                                           TID1
+
+                                                                                               UID2
+                                                                                                                                 Analog In
+                                                                         FU
+
+                 Endpoint #1                    OT           S                                              IT
+                   (IF #1)                     TIDB         UIDA                                           TID7
+
+         Audio Streaming Interface                                                             UID8
+
+
+
+                                                            Standard Audio Control Interface (IF #0)
+
+
+
+
+                                             Figure 36. USB Audio Function Topology
+
+9.5.1.2 Interface #0
+Interface #0 is the control interface. Alternative setting #0 is the only possible setting for interface #0. Alternative
+setting #0 describes the standard audio control interface. The audio control interface is constructed with a series
+of terminal connections. The PCM2912A has the following 10 terminals:
+• Input terminal (Terminal ID#1) for audio analog input for sidetone
+• Feature unit (Unit ID#2) for sidetone PGA
+• Input terminal (Terminal ID#3) for isochronous out stream
+• Mixer unit (Unit ID#4) for sidetone mixing
+• Feature unit (Unit ID#5) for analog output PGA
+• Output terminal (Terminal ID#6) for audio analog output
+• Input terminal (Terminal ID#7) for audio analog input
+• Feature unit (Unit ID#8) for analog input PGA
+• Mixer unit (Unit ID#A) for analog input
+• Output terminal (Terminal ID#B) for isochronous in stream
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                  Submit Documentation Feedback         21
+                                                        Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                               www.ti.com
+
+
+Input terminal #3 is defined as USB stream (terminal type 0x0101). Input terminal #3 can accept two-channel
+audio streams constructed by the left and right channels. Output terminal #6 is defined as a speaker (terminal
+type 0x0301). Input terminals #1 and #7 are defined as Microphone (terminal type 0x0201). Physically, these two
+input terminals are the same input, but logically duplicated. Output terminal B is defined as a USB stream
+(terminal type 0x0101). Output terminal B is a single-channel audio stream. Mixer unit #4 multiplexes the analog
+input (sidetone) and the audio data of the digital-to-analog converter (DAC). Mixer unit A is placed in front of
+output terminal B. Mixer unit A has no impact on recording data. Mixer units #4 and A do not have programming
+capability.
+Feature unit #5 supports the following sound control features for analog outputs:
+• Volume control
+• Mute control
+The built-in volume controller can be manipulated by an audio-class-specific request from 0 dB to –76 dB in
+steps of 1 dB. An individual (L and R) channel can be set for different values. The built-in mute controller can be
+manipulated by an audio-class-specific request. Only the master mute control request is acceptable.
+Feature unit #2 supports the following sound control features for analog input (sidetone):
+• Volume control
+• Mute control
+The built-in volume controller can be manipulated by an audio-class-specific request from 0 dB to –76 dB in 1-dB
+steps. Only the master volume control is acceptable. The built-in mute controller can be manipulated by audio-
+class-specific request. Only the master mute control request is acceptable.
+Feature unit #8 supports the following sound control features for analog input (microphone record input):
+• Volume control
+• Mute control
+The built-in analog volume controller can be manipulated by an audio-class-specific request from +30 dB to –12
+dB in 1-dB steps. The built-in mute controller can be manipulated by an audio-class-specific request. Only the
+master mute control request is acceptable.
+
+9.5.1.3 Interface #1
+Interface #1 is the audio streaming interface for data output. Table 4 lists the three alternative settings for
+Interface #1. Alternative setting #0 is the zero bandwidth setting. All other alternative settings are operational
+settings.
+
+                                        Table 4. Interface #1 Alternative Settings
+     ALTERNATIVE
+                                           DATA FORMAT                             TRANSFER MODE            SAMPLING RATE (kHz)
+       SETTING
+          00                                                         Zero Bandwidth
+                                                                                                         8, 11.025, 16, 22.05, 32, 44.1,
+          01                16 bit       Stereo         2s complement (PCM)             Adaptive
+                                                                                                                       48
+                                                                                                         8, 11.025, 16, 22.05, 32, 44.1,
+          02                16 bit        Mono          2s complement (PCM)             Adaptive
+                                                                                                                       48
+
+
+9.5.1.4 Interface #2
+Interface #2 is the audio streaming interface for data output. Table 5 shows the two alternative settings for
+Interface #2. Alternative setting #0 is the Zero Band Width setting. Alternative setting #1 is an operational setting.
+
+                                        Table 5. Interface #2 Alternative Settings
+     ALTERNATIVE
+                                           DATA FORMAT                               TRANSFER MODE             SAMPLING RATE (kHz)
+       SETTING
+          00                                                         Zero Bandwidth
+                                                                                                               8, 11.025, 16, 22.05, 32,
+          01               16 bit        Mono           2s complement (PCM)             Asynchronous
+                                                                                                                       44.1, 48
+
+
+
+
+22     Submit Documentation Feedback                                                  Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                  Product Folder Links: PCM2912A
+                                                                                                                           PCM2912A
+www.ti.com                                                                               SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+9.5.1.5 Endpoints
+The PCM2912A has the following three endpoints:
+• Control endpoint (EP #0)
+• Isochronous out audio data stream endpoint (EP #1)
+• Isochronous in audio data stream endpoint (EP #2)
+The control endpoint is the default endpoint. The control endpoint controls all functions of the PCM2912A by the
+standard USB request and USB audio class-specific request from the host. The isochronous out audio data
+stream endpoint is an audio sink endpoint, which receives the PCM audio data. The isochronous out audio data
+stream endpoint accepts the asynchronous transfer mode. The isochronous in audio data stream endpoint is an
+audio source endpoint, which transmits the PCM audio data. The isochronous in audio data stream endpoint
+uses synchronous transfer mode.
+
+9.5.1.6 Internal Regulator
+All required power sources are generated by five internal regulators.
+Each regulator generates 3.3 V (typical, without load) from VBUS (pin 2). Each regulator has an output pin and a
+ground return pin (as described in Table 6); this pair must be decoupled with an appropriate capacitor. Note that
+this capacitance affects inrush-current limitation. One band-gap reference circuit supplies reference voltage for all
+regulators. BGND (pin 1) is provided for reference ground of the band-gap reference.
+
+                                                 Table 6. Internal Regulator Summary
+                         SUPPLIED CIRCUIT                          OUTPUT                           RETURN
+                                 Digital                          VDD (pin 5)                     DGND (pin 6)
+                                 Analog                          VCCA (pin 15)                    AGND (pin 13)
+                           Headphone (L-ch)                      VCCL (pin 19)                    HGND (pin 20)
+                           Headphone (R-ch)                     VCCR (pin 21)                     HGND (pin 20)
+                                  PLL                            VCCP (pin 26)                    PGND (pin 25)
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                             Submit Documentation Feedback      23
+                                                        Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                                                                                               www.ti.com
+
+
+10 Application and Implementation
+
+                                                           NOTE
+               Information in the following applications sections is not part of the TI component
+               specification, and TI does not warrant its accuracy or completeness. TI’s customers are
+               responsible for determining suitability of components for their purposes. Customers should
+               validate and test their design implementation to confirm system functionality.
+
+
+10.1 Application Information
+The VBUS alerts the device when it has been plugged to a USB connection port. The /SSPND flag notifies when
+the USB input is idle for at least 5 ms; this flag can be used to control or notify subsequent circuits. More
+functional details can be found in Interface Sequence.
+
+10.2 Typical Application
+A bus-powered (Hi-power), +20-dB microphone amplifier application example is shown in Figure 37.
+                                                                                                           Headphone                                            Microphone
+
+
+
+
+                                                                                                           R11                 R8                     R5
+                                                                                          C16                                               C13
+                                                                                                                                                      C10
+                                                                                                           R10               R7
+
+
+
+                                                                                                                                                                    C9
+                                                                                                    C14                          C11
+
+                                                                       POWER 24          23      22        21       20       19         18      17 MBIAS
+                                                                                          MAMP
+
+                                                                                                   VOUTR
+
+                                                                                                             VCCR
+
+                                                                                                                      HGND
+                                                                                                                               VCCL
+
+                                                                                                                                        VOUTL
+
+
+                                                               C17
+                                                                        25   PGND                                                                     VIN 16
+
+                                                                        26   VCCP                                                                 VCCA 15                C8
+
+                                                                        27   TEST1                                                                    NC 14
+
+                                                                        28   TEST0                                                              AGND 13
+
+                                                                             SSPND
+                                                                                                    PCM2912A                                    VCOM2 12                 C7
+                                                                        29
+
+                                                                        30   MMUTE                                                              VCOM1 11                 C6
+                                                            Mic Mute
+                                                                        31   REC                                                                      FR 10              C5
+                                                                                                                               DGND
+
+
+
+
+                                                                        32   PLAY                                                                     FL    9            C4
+                                                                                         VBUS
+
+
+
+
+                                                                                                                                        XTO
+                                                                                                                    VDD
+
+
+
+
+                                                                                                                                                XTI
+                                                                                                            D+
+                                                                                                   D-
+
+
+
+
+                                                     R1 2      R1 3
+                                                                        BGND    1         2        3        4         5        6        7         8
+                                                                                    C18                                   C1
+                                                                                                                                                      R4
+
+                                               REC               PLAY                                                                                 X1
+                                                                                              R1        R2       R3
+                                                                                                                                   C2                 C3
+                                                                                    L1
+
+
+
+
+                                                                                                                             USB Connector
+                                                                                     V BUS D–              D+ GND
+
+
+
+
+     NOTE: X1: 6-MHz crystal resonator
+           C1, C8, C11, C14, C17, C18: 1 μF ceramic
+           C2, C3: 10 pF to 33 pF (depending on load capacitance of crystal resonator)
+           C4, C5: 100 pF ceramic
+           C6, C10: 3.3 μF
+           C7: 0.1 μF
+           C9: 0.22 μF electrolytic (depending on required frequency response for microphone input)
+           C13, C16: 100 μF electrolytic (depending on required frequency response for headphone output)
+           R1, R2: 22 Ω to 33 Ω
+           R3: 1.5 kΩ
+           R4: 1 MΩ
+           R5: 1 kΩ (depending on microphone characteristic)
+           R7, R8, R10, R11: 3.3 kΩ
+           R12, R13: 820 Ω (depending on LED drive current)
+           L1: 1 μH (DC resistance < 0.6 Ω)
+           It is possible to change maximum power if total power of actual application does not require over 100 mA (set
+           POWER = low to configure as low-power device).
+
+                                              Figure 37. USB Headset Application
+
+
+
+
+24       Submit Documentation Feedback                                                                                                                                Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                            Product Folder Links: PCM2912A
+                                                                                                                                  PCM2912A
+www.ti.com                                                                                   SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+Typical Application (continued)
+
+                                                            NOTE
+               The circuit in Figure 37 is for information only. Total board design should be considered in
+               order to meet the USB specification as a USB-compliant product.
+
+
+10.2.1 Design Requirements
+For this design example, use the parameters listed in Table 7.
+
+                                                           Table 7. Design Parameters
+                         DESIGN PARAMETER                                                             EXAMPLE VALUE
+                           Input voltage range                                                         4.35 V to 5.25 V
+                                 Current                                                               80 mA to 100 mA
+                          Input clock frequency                                                    11.994 MHz to 12.006 MHz
+
+
+10.2.2 Detailed Design Procedure
+The PCM2912A is a simple design device, as can connect directly to a USB port. The device only requires
+decoupling capacitors on the voltage source pins and the output filter for the headphone amplifier; a
+recommended output filter is the one implemented in the PCM2912AEVM, shown in the user's guide (SBAU141).
+
+10.2.3 Application Curves
+For the application curves, see the graphs listed in Table 8.
+
+                                                            Table 8. Table of Graphs
+                                                                                                                              FIGURE
+                                                                          Overall Characteristic                              Figure 1
+ADC Digital Decimation Filter Frequency                                  Stop Band Attenuation                                Figure 2
+Response                                                                    Passband Ripple                                   Figure 3
+                                                                        Transient Band Response                               Figure 4
+ADC Digital High-Pass Filter Frequency                                  Stop Band Characteristic                              Figure 5
+Response                                                                 Passband Characteristic                              Figure 6
+ADC Analog Antialiasing Filter Frequency                                Stop Band Characteristic                              Figure 7
+Response                                                                 Passband Characteristic                              Figure 8
+                                                                         Stop Band Attenuation                                Figure 9
+DAC Digital Interpolation Filter Frequency
+                                                                            Passband Ripple                                   Figure 10
+Response
+                                                                        Transient Band Response                               Figure 11
+                                                                        Stop Band Characteristic                              Figure 12
+DAC Analog FIR Filter Frequency Response
+                                                                         Passband Characteristic                              Figure 13
+DAC Analog Low-Pass Filter Frequency                                    Stop Band Characteristic                              Figure 14
+Response                                                                 Passband Characteristic                              Figure 15
+                                                                    THD+N at – 1 dB vs Temperature                            Figure 16
+                                                         Dynamic Range and Signal-to-Noise Ratio vs Temperature               Figure 17
+                                                                   THD+N at – 1 dB vs Supply Voltage                          Figure 18
+ADC                                                     Dynamic Range and Signal-to-Noise Ratio vs Supply Voltage             Figure 19
+                                                                 THD+N at – 1 dB vs Sampling Frequency                        Figure 20
+                                                          Dynamic Range and Signal-to-Noise Ratio vs Sampling
+                                                                                                                              Figure 21
+                                                                             Frequency
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                    Submit Documentation Feedback    25
+                                                           Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                              www.ti.com
+
+
+                                         Table 8. Table of Graphs (continued)
+                                                                                                                      FIGURE
+                                                            THD+N at 0 dB vs Temperature                             Figure 22
+                                              Dynamic Range and Signal-to-Noise Ratio vs Temperature                 Figure 23
+                                                           THD+N at 0 dB vs Supply Voltage                           Figure 24
+DAC                                          Dynamic Range and Signal-to-Noise Ratio vs Supply Voltage               Figure 25
+                                                         THD+N at 0 dB vs Sampling Frequency                         Figure 26
+                                                  Dynamic Range and Signal-to-Noise Ratio vs Sampling
+                                                                                                                     Figure 27
+                                                                     Frequency
+                                                           Supply Current vs Supply Voltage                          Figure 28
+Supply Current                                           Supply Current vs Sampling Frequency                        Figure 29
+                                                    Supply Current vs Temperature at Suspend Mode                    Figure 30
+
+
+
+
+26     Submit Documentation Feedback                                                 Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                  Product Folder Links: PCM2912A
+                                                                                                                                                    PCM2912A
+www.ti.com                                                                                                 SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015
+
+
+11 Power Supply Recommendations
+The voltage source to power the PCM2912A must be between 4.35 V and 5.25 V for proper operation (USB
+voltage). TI recommends placing a decoupling capacitor in every voltage source pin to help filter lower frequency
+power supply noise. Place these decoupling capacitors as close as possible to the PCM2912A.
+
+12 Layout
+
+12.1 Layout Guidelines
+The decoupling capacitors must be as close as possible to the PCM2912A pins. TI recommends following the
+output filter for the headphone amplifier used in the PCM2912A EVM. The analog input needs a series capacitor
+to eliminate any possible offset level. The PCM2912A is a low-power device, thus there is no need for a special
+heat sink PCB design.
+
+12.2 Layout Example
+
+
+                                                        820Ω                       1uF
+
+
+                                                        820Ω
+
+
+                                                                                                                             16Ω
+
+
+                                                                                                                             3.3KΩ       3.3KΩ
+                                                                                                                 0.022uF
+                                         1uF                                                                                         100uF
+
+  D-                                                                                                                                                  VOUT R
+                                          33Ω
+  D+                                                                                                                                                  VOUT L
+ VBUS                                                                                                             0.022uF
+                                                                                                                                     100uF
+
+ GND                       1uF
+                                          33Ω                           PCM2912A                     1uF                    3.3KΩ        3.3KΩ
+
+                                 1.5KΩ                                                               1uF
+
+                                                                                                                             16Ω
+
+ USB port
+
+                                                                                                                           1KΩ
+                                                                                                               10uF
+                                                                                             3.3uF
+                                                                                                                                     Analog Input
+                                                               100pF    10uF           1uF
+
+                                               1MΩ
+          Clock hardware for                                                                 Decoupling capacitors as
+                                                                100pF          0.1uF
+          built-in resonator                                                                 close as possible to de IC
+                                               6MHz
+
+                                     22pF        22pF
+
+
+
+
+                                                      Connection to ground plane
+
+                                                      Top layer traces                           Top layer ground plane
+
+
+
+
+Copyright © 2008–2015, Texas Instruments Incorporated                                                                 Submit Documentation Feedback            27
+                                                                        Product Folder Links: PCM2912A
+PCM2912A
+SLES230A – SEPTEMBER 2008 – REVISED AUGUST 2015                                                                                www.ti.com
+
+
+13 Device and Documentation Support
+
+13.1 Documentation Support
+13.1.1 Related Documentation
+For related documentation, see the following:
+• Operating Envronments for PCM2912 Applications, SLAA387
+• EVM User's Guide, SBAU141
+
+13.2 Community Resources
+The following links connect to TI community resources. Linked contents are provided "AS IS" by the respective
+contributors. They do not constitute TI specifications and do not necessarily reflect TI's views; see TI's Terms of
+Use.
+TI E2E™ Online Community TI's Engineer-to-Engineer (E2E) Community. Created to foster collaboration
+           among engineers. At e2e.ti.com, you can ask questions, share knowledge, explore ideas and help
+           solve problems with fellow engineers.
+Design Support TI's Design Support Quickly find helpful E2E forums along with design support tools and
+           contact information for technical support.
+
+13.3 Trademarks
+SpAct, E2E are trademarks of Texas Instruments.
+Audio Precision, System Two are trademarks of Audio Precision, Inc..
+All other trademarks are the property of their respective owners.
+13.4 Electrostatic Discharge Caution
+        These devices have limited built-in ESD protection. The leads should be shorted together or the device placed in conductive foam
+        during storage or handling to prevent electrostatic damage to the MOS gates.
+
+
+13.5 Glossary
+SLYZ022 — TI Glossary.
+   This glossary lists and explains terms, acronyms, and definitions.
+
+14 Mechanical, Packaging, and Orderable Information
+The following pages include mechanical, packaging, and orderable information. This information is the most
+current data available for the designated devices. This data is subject to change without notice and revision of
+this document. For browser-based versions of this data sheet, refer to the left-hand navigation.
+
+
+
+
+28     Submit Documentation Feedback                                                   Copyright © 2008–2015, Texas Instruments Incorporated
+
+                                                   Product Folder Links: PCM2912A
+                                                                                                                                                                     PACKAGE OPTION ADDENDUM
+
+       www.ti.com                                                                                                                                                                                                   10-Nov-2025
+
+
+
+
+PACKAGING INFORMATION
+
+       Orderable part number          Status     Material type      Package | Pins      Package qty | Carrier       RoHS             Lead finish/               MSL rating/          Op temp (°C)               Part marking
+                                        (1)            (2)                                                            (3)            Ball material              Peak reflow                                           (6)
+                                                                                                                                          (4)                       (5)
+
+           PCM2912APJT                Active      Production        TQFP (PJT) | 32          250 | JEDEC             Yes               NIPDAU            Level-1-260C-UNLIM             -25 to 85                PCM2912A
+                                                                                             TRAY (10+1)
+          PCM2912APJT.B               Active      Production        TQFP (PJT) | 32          250 | JEDEC             Yes               NIPDAU            Level-1-260C-UNLIM             -25 to 85                PCM2912A
+                                                                                             TRAY (10+1)
+          PCM2912APJTR                Active      Production        TQFP (PJT) | 32      1000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM             -25 to 85                PCM2912A
+         PCM2912APJTR.B               Active      Production        TQFP (PJT) | 32      1000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM             -25 to 85                PCM2912A
+         PCM2912APJTRG4               Active      Production        TQFP (PJT) | 32      1000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM             -25 to 85                PCM2912A
+        PCM2912APJTRG4.B              Active      Production        TQFP (PJT) | 32      1000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM             -25 to 85                PCM2912A
+
+(1)
+      Status: For more details on status, see our product life cycle.
+
+(2)
+   Material type: When designated, preproduction parts are prototypes/experimental devices, and are not yet approved or released for full production. Testing and final process, including without limitation quality assurance,
+reliability performance testing, and/or process qualification, may not yet be complete, and this item is subject to further changes or possible discontinuation. If available for ordering, purchases will be subject to an additional
+waiver at checkout, and are intended for early internal evaluation purposes only. These items are sold without warranties of any kind.
+
+(3)
+      RoHS values: Yes, No, RoHS Exempt. See the TI RoHS Statement for additional information and value definition.
+
+(4)
+   Lead finish/Ball material: Parts may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead finish/Ball material values may wrap to two lines if the finish value exceeds the maximum
+column width.
+
+(5)
+  MSL rating/Peak reflow: The moisture sensitivity level ratings and peak solder (reflow) temperatures. In the event that a part has multiple moisture sensitivity ratings, only the lowest level per JEDEC standards is shown.
+Refer to the shipping label for the actual reflow temperature that will be used to mount the part to the printed circuit board.
+
+(6)
+      Part marking: There may be an additional marking, which relates to the logo, the lot trace code information, or the environmental category of the part.
+
+Multiple part markings will be inside parentheses. Only one part marking contained in parentheses and separated by a "~" will appear on a part. If a line is indented then it is a continuation of the previous line and the two
+combined represent the entire part marking for that device.
+
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information provided by third parties, and
+makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and continues to take reasonable steps to provide representative
+and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals. TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers
+and other limited information may not be available for release.
+
+
+
+
+                                                                                                          Addendum-Page 1
+                                                                                                                                                                      PACKAGE OPTION ADDENDUM
+
+    www.ti.com                                                                                                                                                                            10-Nov-2025
+
+
+
+
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+
+
+
+
+                                                                                                          Addendum-Page 2
+                                                                               PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                                                       4-Sep-2026
+
+
+
+TAPE AND REEL INFORMATION
+
+       REEL DIMENSIONS                                                                      TAPE DIMENSIONS
+                                                                                       K0       P1
+
+
+
+                                                                                                                      B0 W
+                                        Reel
+                                      Diameter
+                                                                                    Cavity           A0
+                                                                A0   Dimension designed to accommodate the component width
+                                                                B0   Dimension designed to accommodate the component length
+                                                                K0   Dimension designed to accommodate the component thickness
+                                                                W    Overall width of the carrier tape
+                                                                P1   Pitch between successive cavity centers
+
+
+                                       Reel Width (W1)
+                              QUADRANT ASSIGNMENTS FOR PIN 1 ORIENTATION IN TAPE
+
+                                                                                                     Sprocket Holes
+
+
+                                                 Q1        Q2          Q1    Q2
+
+                                                 Q3        Q4          Q3    Q4                  User Direction of Feed
+
+
+
+                                                            Pocket Quadrants
+
+
+*All dimensions are nominal
+             Device           Package Package Pins              SPQ       Reel   Reel   A0                  B0         K0     P1     W     Pin1
+                               Type Drawing                             Diameter Width (mm)                (mm)       (mm)   (mm)   (mm) Quadrant
+                                                                          (mm) W1 (mm)
+     PCM2912APJTR              TQFP      PJT          32        1000        330.0        16.4        9.6    9.6       1.5    12.0   16.0    Q2
+   PCM2912APJTRG4              TQFP      PJT          32        1000        330.0        16.4        9.6    9.6       1.5    12.0   16.0    Q2
+
+
+
+
+                                                                      Pack Materials-Page 1
+                                                                PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                              4-Sep-2026
+
+
+
+ TAPE AND REEL BOX DIMENSIONS
+
+
+
+
+                                                               Width (mm)
+                                                                              H
+                      W
+
+
+
+
+                                                          L
+
+
+
+
+*All dimensions are nominal
+             Device           Package Type   Package Drawing   Pins         SPQ    Length (mm)   Width (mm)   Height (mm)
+     PCM2912APJTR                TQFP             PJT           32          1000      350.0        350.0         43.0
+    PCM2912APJTRG4               TQFP             PJT           32          1000      350.0        350.0         43.0
+
+
+
+
+                                                        Pack Materials-Page 2
+                                                                          PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                                    4-Sep-2026
+
+
+
+TRAY
+
+                                     L - Outer tray length without tabs                                                  KO -
+                                                                                                                        Outer
+                                                                                                                         tray
+                                                                                                                        height
+
+
+                                                                                                            W-
+                                                                                                           Outer
+                                                                                                            tray
+                                                                                                           width
+Text
+
+
+
+
+                                                       P1 - Tray unit pocket pitch
+             CW - Measurement for tray edge (Y direction) to corner pocket center
+              CL - Measurement for tray edge (X direction) to corner pocket center
+
+Chamfer on Tray corner indicates Pin 1 orientation of packed units.
+
+
+*All dimensions are nominal
+         Device               Package    Package      Pins     SPQ    Unit array Max      L (mm) W        K0     P1     CL     CW
+                               Name       Type                         matrix temperature       (mm)     (µm)   (mm)   (mm)   (mm)
+                                                                                 (°C)
+       PCM2912APJT             PJT         TQFP         32     250     10 x 25       150   315   135.9   7620   12.2   11.1   11.25
+    PCM2912APJT.B              PJT         TQFP         32     250     10 x 25       150   315   135.9   7620   12.2   11.1   11.25
+
+
+
+
+                                                                  Pack Materials-Page 3
+                                                                                                               PACKAGE OUTLINE
+PJT0032A                                                          SCALE 1.700
+                                                                                                              TQFP - 1.2 mm max height
+                                                                                                                                          PLASTIC QUAD FLATPACK
+
+
+
+                                                          7.2
+                                                                                               B
+                PIN 1 ID                                  6.8
+                                            32                                       25
+                           A
+
+
+
+                                1                                                                  24
+
+
+
+
+                       7.2                                                                              9.2
+                                                                                                            TYP
+                       6.8                                                                              8.8
+
+
+
+
+                                 8                                                                 17
+
+
+
+                                        9                                                 16
+
+                                 0.45
+                               32X
+                                 0.30                                                      28X 0.8
+                     0.2       C A B
+                                                         4X 5.6
+
+
+                                                                                                        1.2
+                                                                                                        1.0
+                                                                                                                   C
+
+                                                                                                                          SEATING PLANE
+
+         0.09-0.20                                                                                                0.1 C
+              TYP
+                                                 SEE DETAIL A
+
+
+                                                                                          0.25
+                                                                                   GAGE PLANE                                                     (1)
+
+
+
+                                                                                                                       0.75
+                                                                                                                                                        0.15
+                                                                                      0 -7                             0.45
+                                                                                                                                                        0.05
+                                                                                                                       DETAIL A
+                                                                                                                              DETAIL A
+                                                                                                                              SCALE: 15
+
+
+
+
+                                                                                                                          TYPICAL
+
+
+
+
+                                                                                                                                                4220861/A 07/2023
+NOTES:
+
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+   per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. Reference JEDEC registration MS-026.
+
+
+
+
+                                                                                www.ti.com
+                                                                              EXAMPLE BOARD LAYOUT
+PJT0032A                                                                                 TQFP - 1.2 mm max height
+                                                                                                      PLASTIC QUAD FLATPACK
+
+
+
+
+                                                               SYMM
+                                                32                                25
+                        32X (1.5)
+
+
+                                    1
+                                                                                                 24
+
+                   32X (0.55)
+
+
+
+                          SYMM
+                                                                                                                 (8.4)
+
+
+
+                        28X (0.8)
+
+
+                                    8                                                            17
+
+                   (R0.05) TYP
+
+
+
+                                                 9                                16
+                     SEE DETAILS
+
+                                                                (8.4)
+
+
+                                                     LAND PATTERN EXAMPLE
+                                                       EXPOSED METAL SHOWN
+                                                             SCALE:8X
+
+
+                               0.05 MAX                                                 0.05 MIN
+                           ALL AROUND                                               ALL AROUND
+
+                   EXPOSED                                                   EXPOSED
+                     METAL                                                     METAL
+
+                          METAL                SOLDER MASK                 SOLDER MASK                  METAL UNDER
+                                               OPENING                                                  SOLDER MASK
+                                NON SOLDER MASK                                           SOLDER MASK
+                                    DEFINED                                                 DEFINED
+
+                                                      SOLDER MASK DETAILS
+
+                                                                                                            4220861/A 07/2023
+NOTES: (continued)
+
+4. Publication IPC-7351 may have alternate designs.
+5. Solder mask tolerances between and around signal pads can vary based on board fabrication site.
+
+
+
+
+                                                                www.ti.com
+                                                                               EXAMPLE STENCIL DESIGN
+PJT0032A                                                                                   TQFP - 1.2 mm max height
+                                                                                                          PLASTIC QUAD FLATPACK
+
+
+
+
+                                                 32                                25
+                          32X (1.5)
+
+
+                                      1
+                                                                                                  24
+
+                     32X (0.55)
+
+
+
+                            SYMM
+                                                                                                         (8.4)
+
+
+
+                         28X (0.8)
+
+
+                                      8                                                           17
+
+                     (R0.05) TYP
+
+
+
+                                                  9                                16
+                                                                SYMM
+
+
+                                                                 (8.4)
+
+
+                                                      SOLDER PASTE EXAMPLE
+                                                 BASED ON 0.125 mm THICK STENCIL
+                                                            SCALE:8X
+
+
+
+
+                                                                                                                  4220861/A 07/2023
+NOTES: (continued)
+
+6. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+   design recommendations.
+7. Board assembly site may have different recommendations for stencil design.
+
+
+
+
+                                                                 www.ti.com
+                                         IMPORTANT NOTICE AND DISCLAIMER
+TI PROVIDES TECHNICAL AND RELIABILITY DATA (INCLUDING DATASHEETS), DESIGN RESOURCES (INCLUDING REFERENCE
+DESIGNS), APPLICATION OR OTHER DESIGN ADVICE, WEB TOOLS, SAFETY INFORMATION, AND OTHER RESOURCES “AS IS”
+AND WITH ALL FAULTS, AND DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION ANY
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD
+PARTY INTELLECTUAL PROPERTY RIGHTS.
+These resources are intended for skilled developers designing with TI products. You are solely responsible for (1) selecting the appropriate
+TI products for your application, (2) designing, validating and testing your application, and (3) ensuring your application meets applicable
+standards, and any other safety, security, regulatory or other requirements.
+These resources are subject to change without notice. TI grants you permission to use these resources only for development of an
+application that uses the TI products described in the resource. Other reproduction and display of these resources is prohibited. No license
+is granted to any other TI intellectual property right or to any third party intellectual property right. TI disclaims responsibility for, and you fully
+indemnify TI and its representatives against any claims, damages, costs, losses, and liabilities arising out of your use of these resources.
+TI’s products are provided subject to TI’s Terms of Sale, TI’s General Quality Guidelines, or other applicable terms available either on
+ti.com or provided in conjunction with such TI products. TI’s provision of these resources does not expand or otherwise alter TI’s applicable
+warranties or warranty disclaimers for TI products. Unless TI explicitly designates a product as custom or customer-specified, TI products
+are standard, catalog, general purpose devices.
+TI objects to and rejects any additional or different terms you may propose.
+IMPORTANT NOTICE
+
+                                                Copyright © 2026, Texas Instruments Incorporated
+                                                                Last updated 10/2025
+

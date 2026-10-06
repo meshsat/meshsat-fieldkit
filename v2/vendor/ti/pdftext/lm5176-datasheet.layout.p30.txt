@@ -1,0 +1,52 @@
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                       www.ti.com
+
+
+10 Layout
+10.1 Layout Guidelines
+The basic PCB board layout requires separation of sensitive signal and power paths. This checklist must be
+followed to get good performance for a well designed board.
+•    Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1,
+     and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck
+     operation.
+•    Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2,
+     and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost
+     operation.
+•    Use a combination of bulk capacitors and smaller ceramic capacitors with low series impedance for the input
+     and output capacitors. Place the smaller capacitors closer to the IC to provide a low impedance path for high
+     di/dt switching currents.
+•    Minimize the SW1 and SW2 loop areas as these are high dv/dt nodes.
+•    Layout the gate drive traces and return paths as directly as possible. Layout the forward and return traces
+     close together, either running side by side or on top of each other on adjacent layers to minimize the
+     inductance of the gate drive path.
+•    Use Kelvin connections to RSENSE for the current sense signals CS and CSG and run lines in parallel from
+     the RSENSE terminals to the IC pins. Avoid crossing noisy areas such as SW1 and SW2 nodes or high-side
+     gate drive traces. Place the filter capacitor for the current sense signal as close to the IC pins as possible.
+•    Place the CIN, COUT, and RSENSE ground pins as close as possible with thick ground trace and/or planes on
+     multiple layers.
+•    Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins. A 1-µF ceramic
+     capacitor is typically used.
+•    Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-µF
+     ceramic capacitor is typically used.
+•    Place the BOOT1 bootstrap capacitor close to the IC and connect directly to the BOOT1 to SW1 pins.
+•    Place the BOOT2 bootstrap capacitor close to the IC and connect directly to the BOOT2 to SW2 pins.
+•    Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-µF
+     ceramic capacitor is typically used. When using external BIAS, use a diode between input rails and VIN pins
+     to prevent reverse conduction when VIN < VCC.
+•    Connect the feedback resistor divider between the COUT positive terminal and AGND pin of the IC. Place the
+     components close to the FB pin.
+•    Use care to separate the power and signal paths so that no power or switching current flows through the
+     AGND connections which can either corrupt the COMP, SLOPE, or SYNC signals, or cause dc offset in
+     the FB sense signal. The PGND and AGND traces can be connected near the PGND pin, near the VCC
+     capacitor PGND connection, or near the PGND connection of the CS, CSG pin current sense resistor.
+•    When using the average current loop, divide the overall capacitor (CIN or COUT) between the two sides of the
+     sense resistor to ensure small cycle-by-cycle ripple. Place the average current loop filter capacitor close to
+     the IC between the ISNS(+) and ISNS(–) pins.
+
+
+
+
+30    Submit Document Feedback                                                    Copyright © 2021 Texas Instruments Incorporated
+
+                                              Product Folder Links: LM5176
+

@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-tps25740.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-tps25740.pdf",
+ "pdf_sha256": "60276c7a0e2a138ae3fcd68be7bd6f0c2e01e78ea60fb33ad0fb1b6874d89cd8",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tps25740.layout.txt",
+ "text_bytes": 346586,
+ "text_sha256": "dd372d8a1da5728ae8a0f2e935171c5b14d01e473a4812fa0fea03b0e7a4184d"
+}

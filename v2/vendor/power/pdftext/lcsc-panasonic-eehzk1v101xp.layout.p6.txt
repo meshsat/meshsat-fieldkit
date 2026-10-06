@@ -1,0 +1,69 @@
+                                                                      Matters to Be Observed When Using This Product
+
+■ The product life is given by the following equation.
+                      T1-(T2+⊿T)
+        L2 = L1 x 2       10                       ≧
+
+             L1   : Guaranteed life (h) at temperature T1 (℃)
+             L2   : Expected life (h) at temperature T2 (℃)    * In the case of a hybrid type, category temperature (℃)
+             T1   : Upper category temperature (℃)              + temperature increase caused by rated ripple current (℃)
+             T2   : Ambient temperature of capacitor (℃)
+             ⊿T   : Temperature increase caused by ripple current (℃)
+
+■ Do not use the product for a period longer than its specified service life. A capacitor with its service life ended may
+  cause the following problems: rapid degradation of the product characteristics, short circuit, unnecessary activation of
+  the pressure valve, electrolytic solution leakage, etc. Note that the estimated service life is not longer than 15 years due
+  to the limited environment-resistant property of the sealing rubber.
+
+■ When the capacitor is used under a high-temperature condition for a long period, minute cracks develop on the surface
+  of the sealing rubber or the case surface turns brown in some cases. These phenomena, however, have no effects on
+  the reliability of the capacitor.
+
+■ A capacitor conforming to "AEC-Q200" refers to a capacitor having passed some or all of evaluation test items defined
+  in AEC-Q200.
+  To know the detailed specifications of each capacitor or specific evaluation test scores, please contact us.
+  We issue a the product specifications sheet for each product ordered. Please confirm the product specifications
+  sheet when you place an order to us.
+
+Circuit design and circuit board design
+■ The electrical characteristics change as a result of temperature/frequency fluctuations. Take electrical characteristic
+  changes into consideration when working out a circuit design.
+
+  (1) Temperature fluctuations
+       High-temperature condition       : increase in leak current
+       Low-temperature condition        : decrease in capacitance, increase in the tangent to the loss angle,
+                                            increase in impedance (the hybrid type is excluded), etc.
+  (2) Frequency fluctuations
+        High-frequency condition        : decrease in capacitance, increase in the tangent to the loss angle,
+                                           decrease in impedance, etc.
+        Low-frequency condition         : more heat generation by ripple current as a result of an increase in
+                                           equivalent series resistance
+
+■ The group of factors described below may lead to rapid degradation of the capacitor characteristics, short circuit, or
+  electrolytic solution leakage. They may give rise to sharp heat/gas generation, too, in which case the increasing internal
+  pressure actuates the pressure valve, causes the electrolytic solution to leak out of the sealing part, and, in a worst-case
+  scenario, causes an explosion or ignition incident. When a capacitor bursts, it may scatter flammable materials
+  (electrolytic solution, etc.) in its surroundings.
+
+  (1) Reverse voltage: The capacitor has preset polarity. Do not apply a reverse voltage to the capacitor.
+     Confirm the polarity indicated on the capacitor and then use it.
+  (2) Charge/discharge: Avoid using the capacitor in a circuit that frequently repeats sharp charge/discharge cycles or a
+     circuit that requires relatively slow but highly frequent charge/discharge cycles. In cases where you use the capacitor
+     in such circuits, make sure to inform us of the charge/discharge conditions.
+     Ensure that a rush current does not exceed 100 A.
+  (3) ON/OFF: Avoid using the capacitor in an on/off circuit that repeatedly switches on and off more than 10,000 times a
+     day. In cases where you use the product in such circuits, make sure to inform us of the circuit conditions, etc.
+  (4) Overvoltage: Do not apply an overvoltage higher than the rated voltage (higher than the surge voltage when the
+     voltage application period is short). A peak value given by superposing a ripple voltage (AC component) on a DC
+     voltage must be equal to or lower than the rated voltage.
+  (5) Ripple current: Do not allow an excessively large ripple current (larger than the rated ripple current specified in the
+     specifications) to flow through the capacitor. Even if a ripple current flow in the capacitor is equal to or smaller than the
+     rated ripple current, a reverse voltage flow may be generated in the capacitor when the DC bias voltage is low flow in
+     the capacitor. Keep the ripple current flow within a range in which no reverse voltage is generated.
+     Even if the ripple current flow is kept equal to or smaller than the rated ripple current, using the capacitor for a period
+     longer than its service life intensifies the degradation of the ESR characteristics, resulting in an increase in internal
+     heating caused by the ripple current. As a result, the pressure valve is actuated, the exterior case or rubber swells,
+     the electrolytic solution leaks, and, in a worst-case scenario, the capacitor short-circuits and ignites or explodes.
+
+                                                                                                                               1-Dec-23
+
