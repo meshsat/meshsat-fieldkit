@@ -1,5 +1,13 @@
 """Draft 2 of Layer 4's DESK-gate assessment (MESHSAT-1357, 6 October 2026), held as predicates on its text and on the files it
-cites: v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft2.md.
+cites: v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md (draft 2, L4-DESK-GATE-ASSESSMENT.draft2.md, renamed at its adoption).
+
+Restated by W27 at the adoption on the promoted revision PROM = dd1aed00 (6 October 2026; basis: the coordinator's values of
+10:40:38 CEST, INTEGRATED = CANDIDATE = PROMOTED = dd1aed00d0a0a521063b5792550bc510c4707c59): the header predicate reads the adopted
+status and no placeholder sha left; the verdict predicate holds the judgement HELD (the placeholder in its line, the two stopped
+sentences named against the ledger at PROM) or, once the coordinator inserts it, its five headings and no placeholder; the
+acceptance predicate takes the coordinator's verdict words NOT PASSED as it takes the filed NOT CLOSED, and still refuses a bare
+PASSED; and the facts the adoption re-read at PROM are held by their own predicates beside the facts W12 read at CAND, which stay
+as W12 read them (CAND keeps its revision: W12's citations are read there).
 
 Draft 2 is Slot L's draft re-read on the committed integration commit 6bc4424e (CAND below); it is record text for the
 coordinator, not the assessment. It cites files by alias, `[ALIAS:N]` or `[ALIAS:N-M]`, through its own alias table: revision `cand`
@@ -36,8 +44,9 @@ import sys
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
-DRAFT = os.path.join(ROOT, "v2", "docs", "records", "l4close", "L4-DESK-GATE-ASSESSMENT.draft2.md")
-CAND = "6bc4424ec64592e1a501af5db2246f3391c525a0"
+DRAFT = os.path.join(ROOT, "v2", "docs", "records", "l4close", "L4-DESK-GATE-ASSESSMENT.md")  # draft 2 renamed at the adoption
+CAND = "6bc4424ec64592e1a501af5db2246f3391c525a0"  # where W12 read draft 2 (the aliases `cand`)
+PROM = "dd1aed00d0a0a521063b5792550bc510c4707c59"  # the promoted revision (the values file), the adoption's reading
 BASE = "bbba3e53e396d3fe0f8ddd2f38d0c169bcc99c45"
 SLOT_L = "249e9e4785a170238c69316742a422250908cd1f"
 sys.dont_write_bytecode = True
@@ -152,12 +161,18 @@ def _before_section(n):
 
 
 def t_the_header_says_what_it_is():
-    head = " ".join(_draft()[:2400].split())
-    assert head.startswith("# Layer 4's DESK gate"), "the title"
-    assert "**Status: DRAFT 2. This file is not the assessment.**" in head
-    assert CAND in head and SLOT_L in head, "the candidate or Slot L's tip is not named in full"
+    # restated at the adoption: the head is the text before "Two gates, never one" (the adopted status paragraph made it longer
+    # than the draft's 2400 characters); the status reads ADOPTED on PROM with the judgement HELD or inserted; the placeholders
+    # __INTEGRATED__ and __PROMOTED__ are bound (to PROM) and appear nowhere; draft 2's own paragraph is kept as filed.
+    d = _draft()
+    head = " ".join(d[:d.find("**Two gates, never one.**")].split())
+    assert head.startswith("# Layer 4's DESK gate (the owner's part 19): the assessment on the promoted revision `dd1aed00`"), "the title"
+    assert ("**Status: ADOPTED on the promoted revision `%s`; the coordinator's judgement HELD (section 6).**" % PROM) in head \
+        or ("**Status: ADOPTED on the promoted revision `%s`.**" % PROM) in head, "the adopted status"
+    assert "**Draft 2 as filed.** It is Slot L's draft" in head, "draft 2's own paragraph"
+    assert CAND in head and SLOT_L in head and PROM in head, "the candidate, Slot L's tip or the promoted revision is not named in full"
     assert "Prototype framing" in head and "nothing in the kit has been built, bought, powered or measured" in head
-    assert "`__INTEGRATED__`" in head and "`__PROMOTED__`" in head, "the two placeholders"
+    assert "__INTEGRATED__" not in d and "__PROMOTED__" not in d, "a placeholder sha left"
 
 
 def t_every_alias_row_names_an_existing_file():
@@ -342,12 +357,31 @@ def t_every_handed_over_item_has_one_acceptance_row():
     assert "ledger's twenty remaining-engineering items" in " ".join(s.split())
 
 
+JUDGEMENT_HEADS = ("### Layer 4's DESK gate: NOT PASSED", "### Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS",
+                   "### Power-design closure: BLOCKED. Fabrication release: BLOCKED.",
+                   "### Y6, item by item: is a desk-solvable defect parked in the handover?",
+                   "### The consequence the owner decides (reported, not asked)")
+
+
 def t_the_placeholder_and_the_completion_claims():
+    # restated at the adoption: section 6 is the coordinator's judgement on PROM. HELD (W27 stopped on two sentences): the
+    # placeholder stands in the verdict line on `dd1aed00` and in the header as code, and the note names the two sentences with
+    # the ledger's lines at PROM. INSERTED (the coordinator's step): no placeholder, the judgement's five headings, no HELD note.
     d = _draft()
-    assert d.count(PLACEHOLDER) == 2, "the placeholder: once in the header (as code) and once as the verdict"
-    assert d.count("`%s`" % PLACEHOLDER) == 1, "the header names the placeholder as code once"
     s6 = _section(6)
-    assert ("`__INTEGRATED__`: %s" % PLACEHOLDER) in s6, "the verdict line does not carry the placeholder"
+    assert s6.startswith("\n## 6. The coordinator's judgement on the promoted revision\n"), "section 6's heading"
+    if "**HELD at the adoption" in s6:
+        assert d.count(PLACEHOLDER) == 2, "the placeholder: once in the header (as code) and once as the verdict"
+        assert d.count("`%s`" % PLACEHOLDER) == 1, "the header names the placeholder as code once"
+        assert ("assessed on `dd1aed00`: %s" % PLACEHOLDER) in s6, "the verdict line does not carry the placeholder"
+        flat = " ".join(s6.split())
+        for c in ("[REMP:100]", "[REMP:649]", "[REMP:669]", "[REMP:692]", "[REMP:693-695]"):
+            assert c in flat, "the held note does not cite %s" % c
+        assert all(h not in s6 for h in JUDGEMENT_HEADS), "a judgement heading in the held state"
+    else:
+        assert PLACEHOLDER not in d, "the judgement inserted beside the placeholder"
+        assert all(h in s6 for h in JUDGEMENT_HEADS), "the judgement's five headings"
+    assert "### The draft's proposal, re-read" in s6, "W12's proposal kept below the judgement"
     for c in CLAIMS:
         assert len(re.findall("^" + re.escape(c), s6, re.M)) == 1, "the claim %r" % c
     assert "<INTEGRATED-SHA>`" not in d.replace("`<INTEGRATED-SHA>` with", ""), "Slot L's placeholder left in use"
@@ -366,7 +400,9 @@ def t_the_fixed_words_are_in_section_7_only():
 
 
 def t_nothing_outside_a_quotation_reads_as_an_acceptance():
-    u = _unquoted()
+    # restated at the adoption: the coordinator's verdict words NOT PASSED (its judgement of 10:45 CEST, recorded in section 6)
+    # are taken out first, as the filed NOT CLOSED is below; a bare PASSED still fails.
+    u = re.sub(r"\bNOT PASSED\b", "", _unquoted())
     for w in ("ACCEPTED", "ACCEPTS", "PASSES", "PASSED", "QUALIFIED:", "RELEASED"):
         assert w not in u, "the draft says %s outside a quotation" % w
     rest = re.sub(r"NOT CLOSED|CLOSED BY THE CORRECTION|CLOSED AS CONDITIONAL", "", u)
@@ -472,6 +508,72 @@ def t_no_em_or_en_dash():
     assert not any(d in _draft() for d in DASHES), "a dash in the draft"
     s = open(os.path.abspath(__file__), encoding="utf-8").read()
     assert not any(d in s for d in DASHES), "a dash in this module"
+
+
+def _prom_ok():
+    if not _has(PROM):
+        raise Skip("the promoted revision %s is not in this clone's object store" % PROM[:8])
+
+
+def t_the_adoption_reads_the_promoted_revision():
+    """The facts the adoption re-read at PROM (A2.3 and K-28 restated, the ticks of section 9, the basis resolutions)."""
+    _prom_ok()
+    d = " ".join(_draft().split())
+    lines = _show(PROM, L4O).splitlines()
+    for n in (55, 64, 67, 106):
+        m = re.match(r"^\s+\w+\s+([0-9a-f]{16})\s+(v2/\S+)$", lines[n - 1])
+        assert m, "line %d is not a pin at PROM" % n
+        assert hashlib.sha256(_showb(PROM, m.group(2))).hexdigest()[:16] == m.group(1), "line %d's pin differs at PROM" % n
+        assert ("%s" % m.group(1)) in d and ("[L4OP:%d]" % n) in d, "A2.3's restatement lacks pin %d" % n
+    con = _show(PROM, "v2/docs/records/l9t5/l9t5_connected.out").splitlines()
+    assert "L4-E9's own output refuses on this tree at its L4-E11 pin" in con[361], "K-28's sentence at PROM"
+    assert "its KEY holds on this tree: no part differs" in _show(PROM, "v2/docs/records/l4e7/l4e7_p0sol.out").splitlines()[30]
+    h = _git("log", "-1", "--format=%H", PROM, "--", CACHE[0][0]).strip()
+    assert h.startswith("c2a532a9") and "`c2a532a9`" in _draft(), "the cache's last commit at PROM"
+    rows = re.findall(r"^(v2/\S+) pass 1: sha256=([0-9a-f]{64}); pass 2: sha256=([0-9a-f]{64}); equal$", _show(PROM, STAB), re.M)
+    differ = [p for p, a, b in rows if hashlib.sha256(_showb(PROM, p) or b"").hexdigest() != b]
+    assert len(rows) == 18 and len(differ) == 17 and "differ from seventeen of them at `dd1aed00`" in d, "the digests at PROM"
+    assert _showb(PROM, PAGE) == _showb(CAND, PAGE), "L4-E9's page moved after the candidate"
+    for s in NEXT_SET:
+        if _has(s):
+            assert _rc("merge-base", "--is-ancestor", s, PROM) != 0, "%s is in the promoted revision" % s
+    assert _show(PROM, "v2/docs/records/l4close/P0-POWER-LIST.md").startswith("# P0: the power architecture's current blockers (one compact list; revision 2")
+    assert _show(PROM, "v2/docs/records/l4e7/SUPPLIER-P1-1-P0SOL.md") == _show(CAND, "v2/docs/records/l4e7/SUPPLIER-P1-1-P0SOL.md")
+    rem = _show(PROM, REM)
+    assert "Counts: remaining engineering 20; qualification 1; external architecture fact 3; closed 4; conditional 2." in rem.splitlines()[668]
+
+
+def t_the_y6_table_has_one_row_per_ledger_item():
+    """Section 6a: one row per RE item of the ledger at PROM, every REMP citation of a row inside that item's own lines, the class
+    the summary's row of that item, and the coordinator's reading at its end."""
+    _prom_ok()
+    t = _draft()
+    i = t.find("\n## 6a. ")
+    assert i >= 0, "no section 6a"
+    s = t[i:t.find("\n## 7. ")]
+    rem = _show(PROM, REM).splitlines()
+    spans, cur = {}, None
+    for n, l in enumerate(rem, 1):
+        m = re.match(r"^### (RE-\d+) ", l)
+        if m:
+            cur = m.group(1)
+            spans[cur] = [n, n]
+        elif l.startswith("## ") or l.startswith("### "):
+            cur = None
+        elif cur:
+            spans[cur][1] = n
+    summ = {m.group(1): n for n, l in enumerate(rem, 1) for m in [re.match(r"^\| (RE-\d+) \| remaining engineering \|", l)] if m}
+    rows = re.findall(r"^\| (RE-\d+) \|(.*)\|$", s, re.M)
+    assert [r for r, _ in rows] == sorted(spans, key=lambda k: spans[k][0]) and len(rows) == 12, "the Y6 rows: %s" % [r for r, _ in rows]
+    for rid, rest in rows:
+        c = [x.strip() for x in rest.split(" | ")]
+        assert len(c) == 6, "%s: %d cells" % (rid, len(c))
+        for cell in c[:5]:
+            for m in re.finditer(r"\[REMP:(\d+)(?:-(\d+))?\]", cell):
+                a, b = int(m.group(1)), int(m.group(2) or m.group(1))
+                assert spans[rid][0] <= a <= b <= spans[rid][1], "%s cites %s outside its item" % (rid, m.group(0))
+        assert c[5] == "remaining engineering [REMP:%d]" % summ[rid], "%s: class cell %r" % (rid, c[5])
+    assert s.rstrip().endswith("> The coordinator's reading: carried under an ended method, not parked."), "the coordinator's reading"
 
 
 for _n in [n for n in list(globals()) if n.startswith("t_")]:
