@@ -488,9 +488,10 @@ def t_the_l5f11_restatement_and_the_sweep_hold_on_the_tree_and_the_script_is_ide
     verbatim texts where it should test the presence of what that script did (its old texts removed), the way set 30 corrected
     apply_l4e9_changelist_p0.py's applied_state(). The script is record l5pwr's and pinned, so it is not edited here: this test expects
     its CURRENT answer, exact to the character, and the proposed correction is test_w14l5.PATCH_L5F11_ORDER (checked there on copies;
-    with it applied the answer becomes "not in the state this script applies to: F11-09: old text 0 time(s), new text absent", and
-    this expectation changes with it). In place of the old "already applied": the script's own state, read with its own functions as
-    its main() reads it after the ORDER check, is every old text gone, F11-01 to F11-08 and F11-10 to F11-14 verbatim, and F11-09
+    with it applied the answer becomes "not in the state this script applies to: F11-01: old text 0 time(s), new text present; ...",
+    naming its fourteen edits with F11-09's new text absent, and this expectation changes with it). In place of the old "already
+    applied": the script's own state, read with its own functions as its main() reads it after the ORDER check, is every old text
+    gone, F11-01 to F11-08 and F11-10 to F11-14 verbatim, and F11-09
     restated by W8 with the properties of _w14_restated (its one Layer 4 value, L4-E9 8a's D-10 sentence at L4_AT, is the sentence
     set 31 withdrew, decision 11 of the page, and stands in W8's history row instead)."""
     import collections
