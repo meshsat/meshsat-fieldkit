@@ -56,7 +56,7 @@ CLAIMS = ("- documents and editable artifacts: on main as a DESK candidate",
           "- power-design closure: BLOCKED")
 FIXED = ("C1 CONDITIONAL", "C2 FAIL", "C3 PASS", "C4 PASS", "C5 CONDITIONAL")  # the coordinator's words, as the INBOX gives them
 # the next-set branches' commits (NOT in the candidate) and the pre-freeze branches' tips (in it), as the coordinator's note names them
-NEXT_SET = ("686de0a2", "786aed2f", "cd19df59", "3e566c55", "1ab30f35", "02b0d30d")
+NEXT_SET = ("686de0a2", "786aed2f", "cd19df59", "3e566c55", "1ab30f35", "02b0d30d", "85b6f258")
 PRE_FREEZE = ("6ab17e21", "2080a0ff", "9802dfde", "99bbc0c6", "17ce29d5")
 STAB = "v2/docs/records/l9t5/stability/DIGESTS-cr3.txt"
 L4O = "v2/docs/records/l4e9/l4e9_power_path.out"
@@ -295,7 +295,7 @@ def t_standing_never_reads_closed_on_a_next_set_restatement_alone():
             if restated.startswith("next set:"):
                 assert any(r in NEXT_SET for r in revs), "%s: a next-set restatement cited on no next-set commit" % kid
                 assert CAND not in revs or "in the candidate" not in restated, kid
-        if kid in ("K-03", "K-15", "K-16", "K-17", "K-18", "K-22", "K-26", "K-28"):
+        if kid in ("K-03", "K-15", "K-16", "K-17", "K-18", "K-22"):
             assert standing.startswith("yes") and restated.startswith("none"), "%s: an item left to another file" % kid
 
 
@@ -317,7 +317,7 @@ def t_the_stated_counts_agree_with_the_k_table():
     assert m and int(m.group(1)) == len(yes), "the YES count"
     for n in re.findall(r"\((\d+) stand at YES", _draft()):
         assert int(n) == len(yes), "section 6 states %s at YES, table %d" % (n, len(yes))
-    words = {"Nineteen": 19, "twenty-eight": 28, "seventeen": 17, "eleven": 11, "nineteen": 19}
+    words = {"Nineteen": 19, "twenty-eight": 28, "seventeen": 17, "thirteen": 13, "nineteen": 19}
     a14 = re.search(r"- A1\.4 (\w+) of the ([\w-]+) contradictions of section 5 still stand on the candidate, (\w+) of them read YES "
                     r"in the column\s+Stumble; (\w+) of the (\w+) have a restatement", _draft())
     assert a14, "A1.4's counts"

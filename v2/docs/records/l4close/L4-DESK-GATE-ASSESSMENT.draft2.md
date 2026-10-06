@@ -26,8 +26,8 @@ history. A row with another commit is a file on another branch, cited as text on
 from its own tree): those lines were read with `git show <commit>:<path>` in this session. A branch named "next set" is NOT in the
 candidate: what it restates does not change what the promoted revision says. A path in backticks with no line is a repository path;
 `<worktrees>/...` is the coordinator's run folder outside the repository, named as the source of a coordinator's statement and never as
-engineering evidence. Every citation of a `.out` file (L4O, CON, F01, T10, SOLO, E11, DIST, P0R, RUN2, RUN4 and the outputs L5C's record
-writes) is at the committed candidate and is re-read on 2b. The module `v2/ecad/tools/tests/test_dgate2.py` holds every citation
+engineering evidence. Every citation of a regenerated `.out` file (L4O, CON, F01, T10, SOLO, E11, DIST, P0R) is at the committed candidate and is
+re-read on 2b. The module `v2/ecad/tools/tests/test_dgate2.py` holds every citation
 against its revision, every quotation against the file its citation names, every count this file states, the K table's columns, and
 every sha and branch named here.
 
@@ -99,6 +99,8 @@ every sha and branch named here.
 | W8HF | 1ab30f35 | `v2/docs/HW-FW-CONTRACT.md` (W8, next set) |
 | W9T5R | 02b0d30d | `v2/docs/records/l9t5/README.md` (W9, `fnd/w9l9t5`, next set) |
 | W9L8R2 | 02b0d30d | `v2/docs/records/l8r2/L8R2-KNOWN-DEFECTS.md` (W9, next set) |
+| W11T5R | 85b6f258 | `v2/docs/records/l9t5/README.md` (W11, `fnd/w11l9t5`, next set) |
+| W11CON | 85b6f258 | `v2/docs/records/l9t5/l9t5_connected.py` (W11, next set) |
 
 ## 0. The candidate this draft reads, and what moved after it
 
@@ -177,11 +179,12 @@ every sha and branch named here.
   candidate: LH-12 [H31:117], the re-pins and L4-E9's three l8p copies [H31:118-119], set 29's 45.88 K/W outside PC-05's places
   [H31:120-122] and R-176 row 3 [H31:123]. Each is restated, if at all, only on a next-set branch (section 5).
 - A1.4 Nineteen of the twenty-eight contradictions of section 5 still stand on the candidate, seventeen of them read YES in the column
-  Stumble; eleven of the nineteen have a restatement on a next-set branch, which the promoted revision does not carry.
+  Stumble; thirteen of the nineteen have a restatement on a next-set branch, which the promoted revision does not carry.
 - A1.5 Files still carry text the records withdrew or superseded: route B2's "unapproved PARTIAL proposal" in the change-list
   draft's docstring [CLP:23] and the heading "(a partial proposal)" [P0SOL:99] against "no owner action rests on B2" [B2:27] (L4-E9's
-  generator data was restated by set 31 [L4PY:4251]; the base read "an unapproved PARTIAL interface proposal" [L4PY0:4293], dated
-  history); Layer 5's handover row LH-12 still puts "the fans' supplies through FAN_OK, R-210 to R-212" [LH:28], left by set 31
+  generator data was restated by set 31 [L4PY:4251], with D-10's state now "OPEN (REMAINING ENGINEERING): D-10 is an UNRESOLVED
+  PROTECTION DEFECT in the present model" [L4PY:4233], printed in its output [L4O:600], re-read on 2b; the base read "an unapproved
+  PARTIAL interface proposal" [L4PY0:4293], dated history); Layer 5's handover row LH-12 still puts "the fans' supplies through FAN_OK, R-210 to R-212" [LH:28], left by set 31
   ("LAYER5-HANDOVER.md is not this author's file" [H31:117]); and Layer 5's contract files carry set 28's D-10 reading, record l5pwr's
   finding L5-F14 [L5C:309], restated only on `fnd/w8l5` [W8HF:261], [W8HF:313].
 - A1.6 Record pins of L4-E9's page and register are owed at the freeze ("records l4e10 and l4e11 pin this page's sha256 and l6r2 the
@@ -270,9 +273,10 @@ every sha and branch named here.
   result needs targeted verification before being credited" [OWN:845].
 - A3.3 Integration 1 and 2a (`7070f106`, `bbba3e53`), set 31's claim changes [H31:32-55] (merge `6fe398e9`), 2c (`53a68c7c`), the four
   pre-freeze merges and the merge of `origin/main` (section 0) all come after Slot D's classification, which binds `1c6d56f5` only
-  [I30:25]; their classification is in the coordinator's draft outside the repository
-  (`<worktrees>/_runs/int30/RESULT-classification.draft.md`), not in a committed record, and part 25 owes each substantive change
-  its targeted verification before credit.
+  [I30:25]; the coordinator's working draft outside the repository (`<worktrees>/_runs/int30/RESULT-classification.draft.md`, last
+  written 02:21 CEST) names by sha the commits to `7070f106` and the four commits of `origin/main`, and none of `bbba3e53`, `6fe398e9`,
+  `53a68c7c` or the four pre-freeze merges as read at 04:2x CEST; no committed record classifies them, and part 25 owes each
+  substantive change its targeted verification before credit.
 - A3.4 Five checks the records cite are not filed in the tree: V2RG, V2RF and V2R are "the integrator's" to file [E11R:7], [E11R:23],
   [E11R:38]; record l8p's V1 and V2 are read only through its own text [BRK:778-779].
 - A3.5 The eFuse record's round 2 says it has no independent check ("round 2 has none" [EFS:213]) while the P0 row that carries round 2
@@ -376,9 +380,10 @@ candidate** (yes or no, read from the candidate's committed files; "no" only whe
 W4 `fnd/w4l4e7`, W5 `fnd/w5l8p`, W7 `fnd/w7rem`, W8 `fnd/w8l5`, W9 `fnd/w9l9t5`, W11 `fnd/w11l9t5`; a next-set restatement does not
 change what the promoted revision says; an item its author left to another file stays standing with no restatement); and **Class**,
 the class the author gave in its file (set 31's classes [H31:14-16]: PRESENTATION OR BINDING, CLAIM CHANGE), or "none stated" where the
-author's file gives no class word. 19 entries stand on the candidate and 9 do not; of the 19, 11 have a restatement on a next-set
-branch and 8 have none in a committed file (K-26 and K-28 among the 8: W11's branch is being written; section 10). The column Stumble
-keeps Slot L's reading (SESSION, for the coordinator to keep or change); 17 read YES on the candidate. This draft settles none.
+author's file gives no class word. W8 restates no K item (its restatement is record l5pwr's L5-F14, section 8). 19 entries stand
+on the candidate and 9 do not; of the 19, 13 have a restatement on a next-set branch and 6 have none in a committed file (W11's tip
+`85b6f258`, read at the end of this draft, restates K-26 and K-28 in the generator only; section 10). The column Stumble keeps Slot
+L's reading (SESSION, for the coordinator to keep or change); 17 read YES on the candidate. This draft settles none.
 
 | Id | Sources | The contradiction (both citations, on the candidate) | Standing on the candidate | Restated where | Class | Stumble |
 |---|---|---|---|---|---|---|
@@ -386,7 +391,7 @@ keeps Slot L's reading (SESSION, for the coordinator to keep or change); 17 read
 | K-02 | S8 C2 | the register's count, 209 items [REG0:59] and 186 [PAGE0:969], against its rows | no | in the candidate: 235 items [PAGE:1612], set 31 row 15 [H31:46] | PRESENTATION OR BINDING [H31:46] | NO |
 | K-03 | S8 C3; PC-01; PC-08; LS30 1 | FAN_OK: R-210 to R-213 WITHDRAWN [REG:306-309] and R-28 without FAN_OK [REG:134] against LH-12's "the fans' supplies through FAN_OK, R-210 to R-212" [LH:28] | yes (LH-12) | none: set 31 left it [H31:117]; W7 and W3 leave it to its file [W7PAT:359], [W3ANX:290-291] | none stated | YES (LH-12, Layer 5's row) |
 | K-04 | S8 C4; H31 C | the P0 list's band 6.3522 to 6.9257 A and case at 15.1307 V [P0L:18] against the record's 6.3518 to 6.9259 A [F01:132] and 15.1308 V [F01:145] (the register's R-227 restated in the candidate [H31:56]) | yes (the P0 list's row) | next set: `fnd/w7rem` R-01 and R-02 [W7P0L:31], [W7P0L:56]; `fnd/w9l9t5` W9-07 [W9T5R:397] | PRESENTATION OR BINDING [W7P0L:43], [W7P0L:65], [W9T5R:397] | YES (the P0 list's row) |
-| K-05 | S8 C5; PC-09 | R-242, R-244, R-245 class SETTLED WORK [REG0:335] against their acceptance REMAINING ENGINEERING | no | in the candidate: KNOWN ENGINEERING DEFECT, ASSIGN [REG:337], [REG:339], [REG:340], set 31 row 17 [H31:48] | CLAIM CHANGE [H31:48] | NO |
+| K-05 | S8 C5; PC-09 | R-242, R-244, R-245 class SETTLED WORK [REG0:335] against their acceptance REMAINING ENGINEERING | no | in the candidate: KNOWN ENGINEERING DEFECT, ASSIGN [REG:337], [REG:339], [REG:340]; set 31 row 17 classes seven P0 rows so, R-225, R-227, R-232, R-238, R-242, R-244 and R-245 [H31:48] | CLAIM CHANGE [H31:48] | NO |
 | K-06 | S8 C6; PC-05; LS30 9 | set 29's 45.88 K/W per FET in D-14's rows, U-04's row and UDC-1's comparison [H31:120-122], [PAGE:1401] against R-159 restated from E11-29's row [REG:255] and TP-E11-29 NOT EXECUTABLE on the earlier cell [TP29:19], [TP29:712-715] | yes (the per-FET bar on L4-E9's page) | next set: `fnd/w7rem` P-01 to P-12 [W7PAT:1]; `fnd/w3annex` annex 6.3 [W3ANX:197-210] | CLAIM CHANGE [W7PAT:63] (W3: none stated, "The narrower statement" [W3ANX:206]) | YES (the per-FET bar) |
 | K-07 | S8 C7; PC-16 | set 29's P1-2 and P1-3 corrected at the desk [L8R2:10-12] against R-48 and R-190 assigned to the supplier [REG0:152], [REG0:284] | no | in the candidate: R-48 and R-190 restated to the check of record l8r2's drafts [REG:154], [REG:286], set 31 row 24 [H31:55]; next set adds the draft state on record l8r2's side, `fnd/w9l9t5` W9-12 [W9T5R:402] | CLAIM CHANGE [H31:55] | NO |
 | K-08 | S8 C8; PC-12; H31 C | E-1 is record l9stk's junction limit [PAGE:1128], [REG:255] and D-10's remaining engineering [P0SOL:101-102] | yes (one identifier, two items) | next set: `fnd/w9l9t5` W9-08 to W9-10 [W9T5R:398-400]; `fnd/w4l4e7` [W4SOL:130-133]; `fnd/w7rem` adds no bare E-1 [W7PAT:357-358] | PRESENTATION OR BINDING [W9T5R:398] (W4, W7: none stated) | YES (one identifier, two items) |
@@ -407,9 +412,9 @@ keeps Slot L's reading (SESSION, for the coordinator to keep or change); 17 read
 | K-23 | REM E | the lower-source back-feed among E-1's retained cases [CX46:95], and the ledger's narrower reading in the candidate [REM:722-725], against record l4e7's S1 added row (b) [P11:120-123] | yes (the ledger and record l4e7 differ, the ledger says so [REM:725-727]) | next set: `fnd/w4l4e7` [W4P11:57-63]; `fnd/w3annex` annex 6.4 [W3ANX:212-228] | none stated | YES (engineering or validation) |
 | K-24 | I30 1; PC-15 | route B2 "an unapproved PARTIAL proposal" in the change-list draft's docstring [CLP:23] and the heading "(a partial proposal)" [P0SOL:99] against "UNSELECTED and WITHDRAWN AS DRAFTED" [B2:4] (L4-E9's generator data restated in the candidate [L4PY:4244], set 31 row 23 [H31:54]) | yes ([CLP:23], [P0SOL:99]) | next set: `fnd/w4l4e7` the heading [W4SOL:121-126]; `fnd/w9l9t5` W9-11 [W9T5R:401]; [CLP:23] restated nowhere | CLAIM CHANGE [W9T5R:401] (W4: none stated) | YES (cx46 asked "throughout" [CX46:203]) |
 | K-25 | I30 2 | R-240 named D-10's item S1 against E-1 [P11:19] | no | in the candidate: R-240 names E-1 and S1 as its later validation step [REG:336] | none stated (resolved before set 31) | NO |
-| K-26 | I30 3 | the connected output's T10 row, "rev X on V-B20" and "CORRECTED IN DRAFT, UNCHECKED" [CON:350-351], against revision X HELD with no admission route [T10:645-647] and "cx45's Q3 NOT CLOSED" [T10:662] | yes (re-read on 2b) | none committed: W9 left it to the generated lines [W9T5R:409-410]; W11's branch is being written (section 10) | none stated | YES (a part admission) |
+| K-26 | I30 3 | the connected output's T10 row, "rev X on V-B20" and "CORRECTED IN DRAFT, UNCHECKED" [CON:350-351], against revision X HELD with no admission route [T10:645-647] and "cx45's Q3 NOT CLOSED" [T10:662] | yes (re-read on 2b) | next set: `fnd/w11l9t5` W11-04, the generator's lines [W11CON:1002-1004], [W11T5R:451]; the output left as committed [W11T5R:454-459] | CLAIM CHANGE [W11T5R:451] | YES (a part admission) |
 | K-27 | S8 head | Slot F frames criteria 1 to 5 as "the Layer 4 DESK gate assessed in record l4e9" [S8:12-14] against "The DESIGN gate (criteria 1 to 5 below) is not the DESK handover gate" [PAGE:965] | no | in the candidate: set 31's text governs [PAGE:965]; S8 is not merged | CLAIM CHANGE [H31:32] | NO |
-| K-28 | Slot L | the connected output: "L4-E9's own output refuses on this tree at its L4-E11 pin" [CON:362] against L4-E9's output pinning four outputs at bytes not in the candidate [L4O:55], [L4O:64], [L4O:67], [L4O:106] | yes (re-read on 2b) | none committed: W9 left it to the generated lines [W9T5R:409-411]; W11's branch is being written (section 10) | none stated | YES (a reproduction instruction) |
+| K-28 | Slot L | the connected output: "L4-E9's own output refuses on this tree at its L4-E11 pin" [CON:362] against L4-E9's output pinning four outputs at bytes not in the candidate [L4O:55], [L4O:64], [L4O:67], [L4O:106] | yes (re-read on 2b) | next set: `fnd/w11l9t5` W11-05, the generator's lines [W11CON:1013-1014], [W11T5R:452]; the output left as committed [W11T5R:454-459] | PRESENTATION OR BINDING [W11T5R:452] | YES (a reproduction instruction) |
 
 **Slot G's PC-01 to PC-16 as Slot H applied or left them** (set 31's table [H31:40-56], its left-out list [H31:115-125]; in the
 candidate since the merge `6fe398e9`; the column Next set names where a left item is restated, not in the candidate):
@@ -448,7 +453,7 @@ state at the candidate in brackets):
 - Y2. Each contradiction of section 5 that reads YES is either resolved or carried in the package with both citations, so that a
   receiving company meets it as a named item and not as a silent difference [CONST:21] (17 stand at YES on the candidate; each is
   named in at least one record or draft, and this draft found no single page in the candidate that lists them for a receiving
-  company; basis moved: eleven of the nineteen standing items now have a restatement, but only on next-set branches, which the
+  company; basis moved: thirteen of the nineteen standing items now have a restatement, but only on next-set branches, which the
   promoted revision does not carry).
 - Y3. The calculations reproduce from the repository plus the named fetches and the named box jobs, with every pin current: L4-E9's
   four pins [L4O:55] and record l4e7's key [SOLO:31] (both owed at the candidate; re-read on 2b and after the re-key).
@@ -541,15 +546,15 @@ inherit, PROVISIONAL or OPEN:
   restatement adopted in the next set changes the next set's reading, not this one.
 - **The verdict placeholder** appears once as the verdict (and once, as code, in the header); the completion claims (the brief's five
   and power-design closure) are written as briefed; the design-gate words appear in section 7 only.
-- **W11** (`fnd/w11l9t5`, K-26 and K-28): its tip as read at the end of this draft is in section 10; a later tip is the coordinator's
-  to read.
+- **W11** (`fnd/w11l9t5`, K-26 and K-28): read at its tip `85b6f258`; a later tip is the coordinator's to read. Its generator lines
+  reach the connected output only when the coordinator's cascade regenerates it in the next set [W11T5R:458-459].
 
 ## 10. Left out, and why
 
 - **The 2b sha and every line only a regenerated output can settle:** 2b is not committed when this is written; the lines are marked
   *re-read on 2b*.
-- **W11's restatement of K-26 and K-28:** `fnd/w11l9t5` is being written; at this draft's last read its tip was still W9's
-  `02b0d30d` (no W11 commit), so K-26 and K-28 have no committed restatement here.
+- **W11's output:** `fnd/w11l9t5` at `85b6f258` restates K-26 and K-28 in the generator only; its regen_out refused on the held
+  sheets not installed in its worktree [W11T5R:454-457], so how the regenerated output reads is not determined here.
 - **The classes W3, W4 and W5 did not state:** their files state readings ("The narrower statement" [W3ANX:206]) but no class word
   of set 31's scheme; the column reads "none stated" rather than this draft assigning one.
 - **The classification of the commits after `1c6d56f5`:** the coordinator's draft is outside the repository; not read as evidence.
