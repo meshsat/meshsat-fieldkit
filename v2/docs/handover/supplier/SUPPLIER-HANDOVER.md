@@ -23,16 +23,16 @@ qualification is part of the work requested; nothing in this package waits for i
 
 Added 6 October 2026 under MESHSAT-1357. Where this section and a later one disagree, this section is the current statement.
 `path:N` is line N of that file at commit `6fe398e9` (`6fe398e9f624160429411e975c26564e553714d3`), the commit this section was written
-from; `:N` repeats the path cited just before it; a path beginning `records/` is under `v2/docs/records/`. `__INTEGRATED__` is a
-placeholder the coordinator fills with the promoted commit at adoption; until then no revision of this section is promoted. Prototype
+from; `:N` repeats the path cited just before it; a path beginning `records/` is under `v2/docs/records/`. `dd1aed00d0a0a521063b5792550bc510c4707c59` is the
+promoted commit (main was fast-forwarded to it on 6 October 2026), filled in at the adoption. Prototype
 framing: nothing in the kit has been built, bought, powered or measured.
 
 ### 0a. The revisions
 
 | Revision | Commit | What it is |
 |---|---|---|
-| Tested | `__INTEGRATED__` | the commit the gated release suite ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
-| Packaged | `__INTEGRATED__` | the commit every file of this revision is taken from |
+| Tested | `dd1aed00d0a0a521063b5792550bc510c4707c59` | the commit the gated release suite ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
+| Packaged | `dd1aed00d0a0a521063b5792550bc510c4707c59` | the commit every file of this revision is taken from |
 | Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate the one targeted recheck cx46 read (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`) |
 | Earlier reviewed | `06077cee` (`06077cee85d0ed44c74c2a06c9fbb2030a0dedbc`) | the candidate the one focused check cx45 read (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:20`); its verdict as given: "P0 CANDIDATE: NOT CONFIRMED." (`:10`) |
 
@@ -41,14 +41,17 @@ framing: nothing in the kit has been built, bought, powered or measured.
 revisions and the intervening changes. If changes are only verified bindings or presentation, record that equivalence. If they change a
 circuit, assumption, model, limit or substantive claim, the affected result needs targeted verification before being credited. Passing
 the software suite alone cannot transfer an engineering verdict to altered claims." The integration record `records/int30/RESULT.md`
-(at adoption) binds `4d0ff8a2` and `__INTEGRATED__` and classifies every commit between them. Read each verdict as applying to the
-revision its checker read.
+binds `4d0ff8a2` and `dd1aed00d0a0a521063b5792550bc510c4707c59`, and `records/int30/CLASSIFICATION.md` classifies every commit between them. Read each verdict
+as applying to the revision its checker read.
+
+**What the promoted revision is, and is not**, in the integration record's words (`records/int30/RESULT.md`, sections 1, 2 and 6):
+"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit".
 
 ### 0b. The states, each apart
 
 | What | State |
 |---|---|
-| Documents and editable artifacts | on main as a DESK candidate (`__INTEGRATED__`) |
+| Documents and editable artifacts | on main as a DESK candidate (`dd1aed00d0a0a521063b5792550bc510c4707c59`) |
 | Design reviewed and accepted | NO |
 | Implemented | NONE |
 | Physical qualification | NONE |
@@ -59,8 +62,17 @@ The Layer 4 record states five of the six apart: "power-design closure BLOCKED, 
 implemented NONE, physical qualification NONE" (`records/l4e9/L4-POWER-ARCHITECTURE.md:965`); every circuit change is a release-guarded
 draft: "None is APPLIED" (`:401`). The constitution keeps them apart: "A promoted integration set is none of those by itself."
 (`v2/docs/EXECUTION-CONSTITUTION.md:23`). **Two gates, not one.** Layer 4's DESK gate (the owner's part 19: sequential desk acceptance
-per layer) is assessed by the coordinator in `records/l4close/L4-DESK-GATE-ASSESSMENT.md` (at adoption); this page states no verdict for
-it. The DESIGN gate, L4-E9's criteria 1 to 5 (`records/l4e9/L4-POWER-ARCHITECTURE.md`, section 8), is a different gate, and its words on
+per layer) is assessed by the coordinator in `records/l4close/L4-DESK-GATE-ASSESSMENT.md`, which records the coordinator's judgement on the
+promoted revision, dated 6 October 2026, 10:45 CEST: the gate and the three completion claims of the constitution's section 2, each
+apart and in the coordinator's words:
+
+- "Layer 4's DESK gate: NOT PASSED"
+- "Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS"
+- "Power-design closure: BLOCKED."
+- "Fabrication release: BLOCKED."
+
+The readiness word carries its own limit: ""Ready" here means complete and internally consistent as a package of open items, not that any item is resolved." (quoted in `records/int30/RESULT.md`, section 6).
+The DESIGN gate, L4-E9's criteria 1 to 5 (`records/l4e9/L4-POWER-ARCHITECTURE.md`, section 8), is a different gate, and its words on
 the set 30 candidate are "**Layer 4's power architecture closes: NO**: on the set 30 candidate **the power-design closure gate is
 BLOCKED**" (`:1005`), with the coordinator's readings "criterion 1 CONDITIONAL", "criterion 2 FAIL", "criterion 3 PASS", "criterion 4
 PASS" and "criterion 5 CONDITIONAL", and "A PASS here is the DESIGN gate's reading of that criterion on the desk package, never a
@@ -72,11 +84,11 @@ closure, a qualification or a release." (`:1003`).
 |---|---|
 | `v2/docs/records/l4close/REMAINING-ENGINEERING.md` | the remaining-engineering ledger: each finding cx46 left NOT CLOSED (its section 1, the RE- items) and each case the authors handed over (its section 2, the HO- items), with the failed cases, the attempted correction, the affected provisional outputs, the receiving company's task and its acceptance; in its own words it "is not an acceptance, a closure, a verdict, a check, a qualification or a release of anything" (`:11`) |
 | `v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md` | the supplier validation annex: U-02, the sealed case's heat rejection (section 1); U-04, the charger on the battery FET pair (section 2); U-01, the cell (section 3); E11-29, the three paralleled battery FETs, a qualification kept apart (section 4); each with the claim, the specimen, the measured quantity, the pass limit, the capability and the outputs kept PROVISIONAL |
-| `v2/docs/records/l4close/P0-POWER-LIST.md` | the P0 list, the power architecture's current blockers in one table; revision 3 at adoption, which replaces revision 2 of 5 October 2026, 16:50 CEST (`:1`) |
+| `v2/docs/records/l4close/P0-POWER-LIST.md` | the P0 list, the power architecture's current blockers in one table; revision 3, adopted on 6 October 2026, which replaces revision 2 of 5 October 2026, 16:50 CEST (`:1`), kept as `v2/docs/records/l4close/P0-POWER-LIST.rev2-2026-10-05.md` |
 | `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md`, section 8 | the DESIGN gate's criteria 1 to 5 read on the set 30 candidate, with the gate's words (section 0b) |
-| `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` (at adoption) | the coordinator's assessment of Layer 4's DESK gate; its contradictions list K-01 to K-28 is the register of known differences between records |
-| `v2/docs/handover/LAYER-STATUS.md`, the blocks headed "After set 30" (at adoption) | per layer, the items set 30's records move; a row not listed there keeps its earlier text |
-| `v2/docs/records/int30/RESULT.md` (at adoption) | the integration record: the reviewed and the integrated revisions bound, every intervening commit classified, the gate lines |
+| `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` | the coordinator's assessment of Layer 4's DESK gate; its contradictions list K-01 to K-28 is the register of known differences between records |
+| `v2/docs/handover/LAYER-STATUS.md`, the blocks headed "After set 30" | per layer, the items set 30's records move; a row not listed there keeps its earlier text |
+| `v2/docs/records/int30/RESULT.md`, with `v2/docs/records/int30/CLASSIFICATION.md` | the integration record: the reviewed and the integrated revisions bound, every intervening commit classified (the classification), the gate lines |
 | `v2/docs/records/l4close/CHECK-V6-POWER-DRAFTS-7a82e82a-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX44-F01-SELECTION-8c7c335f-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` | the four independent checks of 5 October 2026, each an AI review filed as received, every negative verdict kept |
 | `v2/docs/records/l9t5/`, `v2/docs/records/l8r2/`, `v2/docs/records/l8p/`, `v2/docs/records/efuse/`, `v2/docs/records/l4e11/`, `v2/docs/records/l4e7/` | the records the P0 round changed (each with its `README.md`), with their scripts, committed outputs and tests; `v2/docs/records/l9t5/stability/` keeps the cascade's two passes and their digests |
 | `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md` | the owner's instructions of 5 October 2026 as received, from part 12 (part 19: the deliverable is the desk package; part 24: an unsupported correction is handed over as remaining engineering; part 25: the binding rule of section 0a) |
@@ -117,7 +129,7 @@ We do NOT ask you:
 
 ### 0e. How to reproduce set 30's figures
 
-From a full git checkout at `__INTEGRATED__` (section 7, item 2 says why the ZIP alone does not suffice):
+From a full git checkout at `dd1aed00d0a0a521063b5792550bc510c4707c59` (section 7, item 2 says why the ZIP alone does not suffice):
 
 1. **The makers' sheets held back by their terms.** A record that reads one fetches it with its own script (`fetch_held_back.py`, or
    a `fetch_*.py`, section 7 item 2), run from the repository root, for example `python3 v2/docs/records/l9t5/fetch_held_back.py` ("exit 0: present and checked; 3: a mismatch",
@@ -132,8 +144,8 @@ From a full git checkout at `__INTEGRATED__` (section 7, item 2 says why the ZIP
    generator's part table as a KiCad-form netlist; "It is not KiCad's netlist" (`:15`), and KiCad's own export is the reading of record
    (`:17`). A schematic regenerates with KiCad 9.0.9 (`v2/docs/handover/REGENERATE.md`).
 4. **Tests.** `python3 v2/ecad/tools/tests/run.py <name substring>` runs the house fixtures; a test that needs `pcbnew` reports SKIP on a
-   host without KiCad. The gated release suite's line for `__INTEGRATED__` is in the package's `README.md` and in
-   `records/int30/RESULT.md` (at adoption).
+   host without KiCad. The gated release suite's line for `dd1aed00d0a0a521063b5792550bc510c4707c59` is in the package's `README.md` and in
+   `records/int30/RESULT.md`.
 
 ## 1. The product
 
@@ -375,7 +387,7 @@ minimum (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:44`).
   quotation, with this review attached. Power-design closure and fabrication release remain BLOCKED."
   (`v2/docs/records/l4close/REVIEW-SUPPLIER-DELTA-AA76C894-AS-RECEIVED.md:5`); its two P1 findings, DELTA-01 and DELTA-02, are mapped in
   `v2/docs/EXECUTION-PLAN.md`, "Register additions, 4 October 2026 21:05 CEST".
-- **6 October 2026: set 30, the revision `__INTEGRATED__`** (section 0). The P0 power candidate after cx46: the findings cx46 left NOT
+- **6 October 2026: set 30, the revision `dd1aed00d0a0a521063b5792550bc510c4707c59`** (section 0). The P0 power candidate after cx46: the findings cx46 left NOT
   CLOSED and the cases the authors handed over carried as remaining engineering (`v2/docs/records/l4close/REMAINING-ENGINEERING.md`),
   U-01, U-02, U-04 and E11-29 in the supplier validation annex, the P0 list, the DESIGN gate's reading ("closes: NO",
   `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005`) and the DESK-gate assessment kept apart from it. No circuit change is applied, and nothing in it accepts, closes or promotes a design claim.

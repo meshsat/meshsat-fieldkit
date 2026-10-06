@@ -28,6 +28,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from harness import Skip, need  # noqa: E402
+# Restated by W30 at the adoption (Q-04b, 6 October 2026), only where this module pinned the placeholder: the placeholder is
+# filled with the promoted commit and the "(at adoption)" marks are gone, so a file written at adoption that this branch does not
+# carry is accepted only while it lands with its adoption branch (test_w30entry.landing_error: that branch's commit carries it
+# and is not yet in the tree); the words "(at adoption)" and "revision 3 at adoption" are no longer required on the pages.
+from test_w30entry import landing_error  # noqa: E402
 
 START = "v2/docs/handover/START-HERE.md"
 SUPPLIER = "v2/docs/handover/supplier/SUPPLIER-HANDOVER.md"
@@ -233,7 +238,7 @@ def _adoption_marked(text, p):
 MARK_AFTER = re.compile(r"[^`]{0,40}?\(at adoption\)")
 
 
-def _missing_paths(text, exists):
+def _missing_paths(text, exists, lands=lambda p: False):
     """The paths the text names that are absent, less the declared exceptions: a file written at adoption while the text
     still carries the literal placeholder and calls it so at EVERY mention, and a gitignored folder."""
     filled = PLACEHOLDER not in text
@@ -245,6 +250,8 @@ def _missing_paths(text, exists):
         if exists(p) or p in GITIGNORED:
             continue
         if p in AT_ADOPTION and not filled and MARK_AFTER.match(text, m.end()):
+            continue
+        if filled and lands(p):   # W30: filled, a record adopted on another adoption branch lands with it
             continue
         bad.append(p)
     return sorted(set(bad))
@@ -286,7 +293,7 @@ def _commit_cell(cell):
 # ------------------------------------------------------------------------------------------------------------ the tree
 def t_every_cited_path_exists():
     for p in PAGES:
-        bad = _missing_paths(_page(p), lambda q: os.path.exists(os.path.join(ROOT, q)))
+        bad = _missing_paths(_page(p), lambda q: os.path.exists(os.path.join(ROOT, q)), lambda q: landing_error(q) is None)
         assert not bad, "%s names %d path(s) that do not exist and are not declared: %s" % (p, len(bad), bad)
 
 
@@ -357,8 +364,8 @@ def t_a_filled_placeholder_names_one_promoted_commit_and_the_adopted_files():
     assert _git("cat-file", "-e", c + "^{commit}").returncode == 0, "%s is not a commit of this repository" % c
     for anc in (REVIEWED, WRITTEN_AT):
         assert _git("merge-base", "--is-ancestor", anc, c).returncode == 0, "%s does not descend from %s" % (c, anc[:8])
-    for f in AT_ADOPTION:
-        assert os.path.exists(os.path.join(ROOT, f)), "filled, but %s is not adopted" % f
+    for f in AT_ADOPTION:   # W30: adopted in the tree, or landing with its adoption branch
+        assert landing_error(f) is None, "filled, but %s is not adopted: %s" % (f, landing_error(f))
     assert "**After set 30" in open(os.path.join(ROOT, LS), encoding="utf-8").read(), "filled, but LAYER-STATUS has no After set 30"
 
 
@@ -382,7 +389,7 @@ def t_the_reviewed_revision_carries_its_verdict_and_the_binding_rule():
     rule = [q for q in QUOTES if q[0] == OWN and q[1] == 844][0][3]
     for p in PAGES:
         s0 = _norm(_section0(p))
-        for w in ('"P0 RECHECK: CORRECTIONS NOT CLOSED."', rule, "int30/RESULT.md` (at adoption)", "4d0ff8a2"):
+        for w in ('"P0 RECHECK: CORRECTIONS NOT CLOSED."', rule, "int30/RESULT.md`", "4d0ff8a2"):   # W30: the mark is gone
             assert _norm(w) in s0, "%s section 0 lacks: %s" % (p, w[:60])
 
 
@@ -391,9 +398,9 @@ def t_the_new_contents_are_named_in_each_page():
         s0 = _section0(p)
         for f in NEW_CONTENTS:
             assert "`%s`" % f in s0, "%s section 0 does not name %s" % (p, f)
-        for f in AT_ADOPTION:
-            assert _adoption_marked(s0, f), "%s does not mark %s as written at adoption" % (p, f)
-        for w in ("K-01 to K-28", '"After set 30"', "revision 3 at adoption"):
+        for f in AT_ADOPTION:   # W30: while the placeholder stood, each was marked; filled, the mark is gone
+            assert _adoption_marked(s0, f) == (PLACEHOLDER in s0), "%s: the at-adoption mark of %s disagrees with the placeholder" % (p, f)
+        for w in ("K-01 to K-28", '"After set 30"', "revision 3"):   # W30: was "revision 3 at adoption"
             assert w in s0, "%s section 0 lacks %s" % (p, w)
 
 
