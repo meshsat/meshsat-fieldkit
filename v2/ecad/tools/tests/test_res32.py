@@ -44,6 +44,10 @@ l8r2_pdftext.py: a module docstring and a PDFTEXT dict and nothing else, read wi
 still requires; it reads the committed texts at the tip (176 with 176 sidecars) and at W34_TIP (b397aada: 171, the count W34's rows
 gave and the inventory's totals line states with its bytes), and section 9's "and 176 committed (171 before)" at the tip.
 
+W95's restatement (6 October 2026, from 23:35 CEST): the record names its patch file `int32/ENTRY-PAGES.patch.md` (the rows for the four
+adoption pages, held by test_patch32), so the fill tool's template covers it; section 8's template statement counts it as a third
+file (p_placeholders, and _template_texts reads it at the template's commit). Nothing else here changes.
+
 What fails here: a commit of set 32's five branch ranges missing, doubled or out of order; a short sha that is not its full sha's prefix; a
 date, subject or file count that is not git's; a class outside W39's fixed set; a row that touches a file cx46 read without the words
 "UNREVIEWED since cx46"; a REVIEWED-INPUT CHANGED row that touches no file of the reviewed tree (present at 4d0ff8a2), or one that
@@ -76,6 +80,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 REC = "v2/docs/records/int32"
 RESULT = REC + "/RESULT.md"
 CLASS = REC + "/CLASSIFICATION.md"
+PATCH = REC + "/ENTRY-PAGES.patch.md"     # W95: the rows for the four adoption pages, named by RESULT so the fill tool reaches them
 LINEAGE = "aa3322806da156d12f2b23dbe9fc98a8805926f0"         # set 31's lineage tip as W73 read it (fnd/int31regen, the re-key's cache)
 ASSESS_AT = "3057ae43f4fb7fc5e3d6282ce52d448c8ee27929"       # the revision the three claims are quoted at (an ancestor of LINEAGE)
 # (branch, base, tip, against): base = git merge-base <against> <tip>; the chain's merge order (_runs/int32/chain.sh, steps a2 to a3c)
@@ -405,29 +410,38 @@ def p_placeholders(texts):
     # W78: section 8's statement of the fill tool's template rows equals the tokens in the two files (one row per occurrence, no KEEP);
     # W80: it states the template BEFORE the fill, so after the fill it is compared with the newest committed revision of RESULT.md that
     # still holds the re-key's token (git), its two files read at that commit
+    # W95: the tool's template covers the patch file the record names too (fill_res.py's set_files), so the statement counts it
     flat = " ".join(texts[RESULT].split())
-    m = re.search(r"before the fill, the tool's template rows are (\d+) \(RESULT\.md (\d+), CLASSIFICATION\.md (\d+); GATE (\d+), REKEY (\d+), "
-                  r"PROMOTED (\d+), CANDIDATE (\d+), ADOPTION (\d+); no KEEP row\)", flat)
-    src = texts if st == 0 else _template_texts()
+    m = re.search(r"before the fill, the tool's template rows are (\d+) \(RESULT\.md (\d+), CLASSIFICATION\.md (\d+), ENTRY-PAGES\.patch\.md (\d+); "
+                  r"GATE (\d+), REKEY (\d+), PROMOTED (\d+), CANDIDATE (\d+), ADOPTION (\d+); no KEEP row\)", flat)
+    src = dict(texts, **{PATCH: texts.get(PATCH, _read_opt(PATCH))}) if st == 0 else _template_texts()
     if src is None:
         bad.append("after the fill, no committed revision of RESULT.md holds the template (the re-key's token)")
         return bad
-    cr, cc = Counter(PH.findall(src[RESULT])), Counter(PH.findall(src[CLASS]))
-    al = cr + cc
-    want = (sum(al.values()), sum(cr.values()), sum(cc.values())) + tuple(al["__%s__" % k] for k in ("GATE", "REKEY", "PROMOTED", "CANDIDATE", "ADOPTION"))
+    cr, cc, cp = Counter(PH.findall(src[RESULT])), Counter(PH.findall(src[CLASS])), Counter(PH.findall(src[PATCH]))
+    al = cr + cc + cp
+    want = (sum(al.values()), sum(cr.values()), sum(cc.values()), sum(cp.values())) + tuple(al["__%s__" % k] for k in ("GATE", "REKEY", "PROMOTED", "CANDIDATE", "ADOPTION"))
     if not m or tuple(int(x) for x in m.groups()) != want:
         bad.append("section 8's template rows are not the %s tokens %s" % ("files'" if st == 0 else "template revision's", want))
     return bad
 
 
+def _read_opt(rel):
+    """W95: a file of the record that may not exist yet (the patch file before W95's commit): its text, or the empty string."""
+    p = os.path.join(REPO, rel)
+    return open(p, encoding="utf-8").read() if os.path.isfile(p) else ""
+
+
 def _template_texts():
-    """The two files at the newest commit touching RESULT.md whose RESULT.md still holds `__REKEY__` (the template the fill filled)."""
+    """The files at the newest commit touching RESULT.md whose RESULT.md still holds `__REKEY__` (the template the fill filled); W95:
+    with the patch file at that commit (empty where it did not exist there)."""
     if "tmpl" not in _C:
         _C["tmpl"] = None
         for c in _git("log", "--format=%H", "--", RESULT).split():
             t = "\n".join(_show(c, RESULT))
             if "`__REKEY__`" in t:
-                _C["tmpl"] = {RESULT: t, CLASS: "\n".join(_show(c, CLASS))}
+                has = PATCH in _git("ls-tree", "-r", "--name-only", c, "--", PATCH).split("\n")
+                _C["tmpl"] = {RESULT: t, CLASS: "\n".join(_show(c, CLASS)), PATCH: "\n".join(_show(c, PATCH)) if has else ""}
                 break
     return _C["tmpl"]
 
@@ -1082,7 +1096,8 @@ def t_every_placeholder_is_a_declared_token():
     _mutant_refused(p_placeholders, texts, RESULT, "(a DESK candidate once set 32 is promoted, ", "(a DESK candidate once promoted, ")
     _mutant_refused(p_placeholders, texts, RESULT, "(set 32's promotion) |", "(the promotion) |")
     _mutant_refused(p_placeholders, texts, CLASS, "| 31 | not determined |", "| 31 | `__GATE__` |")
-    _mutant_refused(p_placeholders, texts, RESULT, "CLASSIFICATION.md 2; GATE 58,", "CLASSIFICATION.md 2; GATE 57,")
+    _mutant_refused(p_placeholders, texts, RESULT, "ENTRY-PAGES.patch.md 25; GATE 66,", "ENTRY-PAGES.patch.md 25; GATE 65,")
+    _mutant_refused(p_placeholders, texts, RESULT, "CLASSIFICATION.md 2, ENTRY-PAGES.patch.md 25;", "CLASSIFICATION.md 2, ENTRY-PAGES.patch.md 24;")
     if st == 0:
         _mutant_refused(p_placeholders, texts, RESULT, "`__GATE__`", "`__GATE_LINE__`")
     else:
