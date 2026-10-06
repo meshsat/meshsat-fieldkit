@@ -35,6 +35,15 @@ whose anchor was a token the fill removes use anchors that stay, or the cell the
 (p_alternatives reads which rows carry which row's change) and N2 (p_carried: a REVIEWED-INPUT CHANGED row without the second sentence's
 source must carry the first sentence's old and new value and its cx46 item) are added, each with the mutant W79 found passing.
 
+W85's restatement (6 October 2026, from 22:26 CEST, queue item Q-104, after the coordinator moved the chain's pin SRC_PDFTEXT to W81's
+62300318): fnd/w34pdftext's range is aed4bd23..62300318 (17 commits); W81's four commits after W73's tip b397aada are rows 13.1 to 13.4
+(DOTTED: numbered after row 13 so that no later row moves, as set 31's rows 3.4 and 3.5), so _order() numbers them so and the row lists
+of the wider readings read dotted rows (_nums, _rk); fnd/s32attr's base is its merge base with the new tip (still 5b3153aa). The counts
+follow from git as before. p_counts separates the three declaration-only modules W81 added (l5r4_pdftext.py, l8p_pdftext.py,
+l8r2_pdftext.py: a module docstring and a PDFTEXT dict and nothing else, read with ast) from the 26 converted generators, whose count it
+still requires; it reads the committed texts at the tip (176 with 176 sidecars) and at W34_TIP (b397aada: 171, the count W34's rows
+gave and the inventory's totals line states with its bytes), and section 9's "and 176 committed (171 before)" at the tip.
+
 What fails here: a commit of set 32's five branch ranges missing, doubled or out of order; a short sha that is not its full sha's prefix; a
 date, subject or file count that is not git's; a class outside W39's fixed set; a row that touches a file cx46 read without the words
 "UNREVIEWED since cx46"; a REVIEWED-INPUT CHANGED row that touches no file of the reviewed tree (present at 4d0ff8a2), or one that
@@ -70,12 +79,16 @@ CLASS = REC + "/CLASSIFICATION.md"
 LINEAGE = "aa3322806da156d12f2b23dbe9fc98a8805926f0"         # set 31's lineage tip as W73 read it (fnd/int31regen, the re-key's cache)
 ASSESS_AT = "3057ae43f4fb7fc5e3d6282ce52d448c8ee27929"       # the revision the three claims are quoted at (an ancestor of LINEAGE)
 # (branch, base, tip, against): base = git merge-base <against> <tip>; the chain's merge order (_runs/int32/chain.sh, steps a2 to a3c)
-BRANCHES = (("fnd/w34pdftext", "aed4bd234644c80fa494299b21099acf6d2454c1", "b397aada17befd8c6ee8be09550a785139c45066", LINEAGE),
+BRANCHES = (("fnd/w34pdftext", "aed4bd234644c80fa494299b21099acf6d2454c1", "62300318cbf256a178659d7635ecfd4a318c47d3", LINEAGE),
             ("fnd/s32attr", "5b3153aa4136f08ab186a2b5da53c1c4f0c3ecac", "9210ab541e8144af530f928c1da98b96f90c89fd",
-             "b397aada17befd8c6ee8be09550a785139c45066"),
+             "62300318cbf256a178659d7635ecfd4a318c47d3"),
             ("fnd/s32small", "eff28be3b80f882db545a849b0da1def0217f63d", "7b7219a7d0a695b6b866435116905964a68f5578", LINEAGE),
             ("fnd/res32", "3057ae43f4fb7fc5e3d6282ce52d448c8ee27929", "7ae6175814b7824b3a9f69357ec75e9810a41da4", LINEAGE),
             ("fnd/l4e7cache", "31928583c612ea43df17df5d7e0cbb2f66090f8e", "5ee1e66eb8787a788647305509ae6c2700144d9a", LINEAGE))
+# W85: W81's commits after W73's tip of fnd/w34pdftext are rows 13.1 to 13.4: {branch: (the commit after which rows are dotted, the
+# row they follow)}; W34_TIP ends W34's to W55's rows (171 committed texts, the inventory's totals line)
+W34_TIP = "b397aada17befd8c6ee8be09550a785139c45066"
+DOTTED = {"fnd/w34pdftext": (W34_TIP, 13)}
 CHAIN_LABELS = {"pdftext": "fnd/w34pdftext", "s32attr": "fnd/s32attr", "s32small": "fnd/s32small", "res32": "fnd/res32",
                 "l4e7cache": "fnd/l4e7cache"}                # chain.sh's merge_one labels and the branch each merges
 REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"      # cx46's candidate
@@ -155,12 +168,20 @@ def _order():
     out = []
     n = 0
     for name, base, tip, _against in BRANCHES:
+        dot = DOTTED.get(name)
+        after = set(_git("rev-list", "%s..%s" % (dot[0], tip)).split()) if dot else set()
+        k = 0
         for c in _git("rev-list", "--topo-order", "--reverse", "%s..%s" % (base, tip)).split():
-            n += 1
+            if c in after:             # W85: a dotted row follows its anchor's row; the anchor must be that row
+                k += 1
+                num = "%d.%d" % (n, k) if n == dot[1] else "%d+%d" % (n, k)
+            else:
+                n += 1
+                num = str(n)
             ps = _git("rev-list", "--parents", "-n1", c).split()[1:]
             date, subj = _git("log", "-1", "--date=format-local:%Y-%m-%d %H:%M:%S", "--format=%ad%x09%s", c).rstrip("\n").split("\t", 1)
             names = _git("show", "--name-only", "--format=", c).split()
-            out.append((str(n), name, c, ps, date, subj, names))
+            out.append((num, name, c, ps, date, subj, names))
     _C["order"] = out
     return out
 
@@ -575,7 +596,11 @@ def p_counts(texts, order):
     vend = [l.split() for l in tree if "/pdftext/" in l]
     texts_ = [x for x in vend if x[-1].endswith(".txt")]
     side = [x for x in vend if x[-1].endswith(".meta.json")]
-    gens = [f for f in fa if f.startswith("v2/docs/records/") and f.endswith(".py") and "/_lib/" not in f and "/w42cite/" not in f]
+    pys = [f for f in fa if f.startswith("v2/docs/records/") and f.endswith(".py") and "/_lib/" not in f and "/w42cite/" not in f]
+    decl = sorted(f for f in pys if _decl_only("\n".join(_show(pa[2], f))))      # W85: W81's declaration-only modules
+    gens = [f for f in pys if f not in decl]
+    w34 = [l.split() for l in _git("ls-tree", "-r", "-l", W34_TIP).split("\n") if "/pdftext/" in l]
+    w34t = [x for x in w34 if x[-1].endswith(".txt")]
     rows = _real(texts[CLASS])
     first = Counter(_classes(c)[0] for c in rows)
     touch = [c for c in rows if "UNREVIEWED since cx46" in c[7]]
@@ -600,16 +625,24 @@ def p_counts(texts, order):
                "%d of the %d touch a file cx46 read (%d distinct files:" % (len(touch), len(rows), len(rv)),
                "%d record generators read each maker's PDF text" % len(gens),
                "%d extractions committed beside their PDFs with a sidecar each (%d files)" % (len(texts_), len(vend)),
+               "%d extractions committed beside their PDFs with a sidecar each (%d files)" % (len(w34t), len(w34)),
+               "in %d declaration-only modules (%s:" % (len(decl), ", ".join("`%s`" % os.path.basename(f) for f in decl)),
                "a change of how %d record generators read" % len(gens)]
     for w in want_r:
         if w not in r:
             bad.append("RESULT.md does not read %r (git's numbers)" % w)
-    if len(texts_) != len(side) or len(gens) != 26:
-        bad.append("the tip holds %d texts, %d sidecars, %d converted generators (W34's 25 and W55's l8p_c4)" % (len(texts_), len(side), len(gens)))
-    tb_bytes = sum(int(x[3]) for x in texts_)
-    inv = _show(pa[2], "v2/docs/records/_lib/PDFTEXT-INVENTORY.md")
-    if not any(("%s committed (%s bytes of text" % (len(texts_), format(tb_bytes, ","))) in l for l in inv):
-        bad.append("the inventory's total is not the tip's %d texts of %d bytes" % (len(texts_), tb_bytes))
+    if len(texts_) != len(side) or len(gens) != 26 or len(decl) != 3:
+        bad.append("the tip holds %d texts, %d sidecars, %d converted generators (W34's 25 and W55's l8p_c4), %d declaration-only modules "
+                   "(W81's 3)" % (len(texts_), len(side), len(gens), len(decl)))
+    if 2 * len(w34t) != len(w34):
+        bad.append("W34_TIP holds %d texts in %d files, not one sidecar each" % (len(w34t), len(w34)))
+    tb_bytes = sum(int(x[3]) for x in w34t)
+    inv = _show(W34_TIP, "v2/docs/records/_lib/PDFTEXT-INVENTORY.md")
+    if not any(("%s committed (%s bytes of text" % (len(w34t), format(tb_bytes, ","))) in l for l in inv):
+        bad.append("the inventory's total at W34_TIP is not its %d texts of %d bytes" % (len(w34t), tb_bytes))
+    inv = " ".join("\n".join(_show(pa[2], "v2/docs/records/_lib/PDFTEXT-INVENTORY.md")).split())
+    if "and %d committed (%d before)." % (len(texts_), len(w34t)) not in inv:
+        bad.append("the inventory's section 9 at the tip does not read %d committed (%d before)" % (len(texts_), len(w34t)))
     for a, b, span in (("16:32:57", "16:33:50", "53 s"),):
         s = [int(x) for x in a.split(":")]
         e = [int(x) for x in b.split(":")]
@@ -617,6 +650,17 @@ def p_counts(texts, order):
         if "%d s" % d != span or ("%s to %s, %s" % (a, b, span)) not in r:
             bad.append("the elapsed time %s to %s is not %s" % (a, b, span))
     return bad
+
+def _decl_only(src):
+    """W85: a declaration-only module (W81's class): a module docstring and one PDFTEXT dict assignment, nothing else (ast)."""
+    try:
+        b = ast.parse(src).body
+    except SyntaxError:
+        return False
+    return (len(b) == 2 and isinstance(b[0], ast.Expr) and isinstance(b[0].value, ast.Constant) and isinstance(b[0].value.value, str)
+            and isinstance(b[1], ast.Assign) and [getattr(x, "id", None) for x in b[1].targets] == ["PDFTEXT"]
+            and isinstance(b[1].value, ast.Dict))
+
 
 ROW_NUMSTAT = (("82e1e1c6", "v2/docs/handover/supplier/SUPPLIER-HANDOVER.md", "(+%d -%d)"),
                ("886704ea", "v2/docs/records/_lib/PDFTEXT-INVENTORY.md", "(+%d -%d)"),
@@ -633,7 +677,23 @@ ROW_NUMSTAT = (("82e1e1c6", "v2/docs/handover/supplier/SUPPLIER-HANDOVER.md", "(
                ("849e66c7", "v2/ecad/tools/tests/test_l4e7_cachekey.py", "(%d lines, new)"),
                ("2178cae5", "v2/docs/records/l4e7/l4e7_p0sol.py", "(+%d -%d)"),
                ("935584bf", "v2/ecad/tools/tests/test_l4e7.py", "(+%d -%d)"),
-               ("5ee1e66e", "v2/docs/records/l4e7/CACHE-BOUNDARY-L4E11.md", "(+%d -%d)"))
+               ("5ee1e66e", "v2/docs/records/l4e7/CACHE-BOUNDARY-L4E11.md", "(+%d -%d)"),
+               # W85: W81's four rows
+               ("2184a968", "v2/docs/records/l8p/l8p_drafts.py", "(+%d -%d"),
+               ("877d81c5", "v2/ecad/tools/tests/test_l8r2.py", "(+%d -%d)"),
+               ("877d81c5", "v2/ecad/tools/tests/test_l3r5.py", "(+%d -%d)"),
+               ("877d81c5", "v2/ecad/tools/tests/test_l5r4.py", "(+%d -%d)"),
+               ("877d81c5", "v2/docs/records/l8r2/l8r2_drafts.py", "(+%d -%d"),
+               ("877d81c5", "v2/docs/records/l5r4/l5r4_pdftext.py", "(%d lines)"),
+               ("da81447d", "v2/docs/records/l8p/l8p_pdftext.py", "(%d lines)"),
+               ("da81447d", "v2/docs/records/l8r2/l8r2_pdftext.py", "(%d lines)"),
+               ("da81447d", "v2/docs/records/l8p/l8p_drafts.py", "(+%d -%d)"),
+               ("da81447d", "v2/docs/records/l8r2/l8r2_drafts.py", "(+%d -%d)"),
+               ("da81447d", "v2/ecad/tools/tests/test_l8p.py", "(+%d -%d)"),
+               ("da81447d", "v2/ecad/tools/tests/test_l8r2.py", "(+%d -%d)"),
+               ("da81447d", "v2/ecad/tools/tests/test_pdftext_input.py", "(+%d -%d)"),
+               ("62300318", "v2/docs/records/_lib/PDFTEXT-INVENTORY.md", "(+%d -%d)"),
+               ("62300318", "v2/ecad/tools/tests/test_pdftext_input.py", "(+%d -%d)"))
 
 
 def p_row_numbers(text):
@@ -763,7 +823,7 @@ def p_carried(text, s30_lines):
         if m:
             n, sha = m.groups()
             src = own.get(n)
-            if not src or _sha_cell(src)[0] != sha or _classes(src)[0] != RIC or int(n) >= int(c[0]):
+            if not src or _sha_cell(src)[0] != sha or _classes(src)[0] != RIC or _rk(n) >= _rk(c[0]):
                 bad.append("row %s: this table's row %s (%s) is not an earlier REVIEWED-INPUT CHANGED row of this table" % (c[0], n, sha))
             continue
         m = re.search(r"set 30's row (\d+)'s change \(`([0-9a-f]{8})`", c[7])
@@ -776,15 +836,25 @@ def p_carried(text, s30_lines):
     return bad
 
 
+def _rk(s):
+    """A row number as a sort key: '13.2' after '13' and before '14' (W85)."""
+    return tuple(int(x) for x in str(s).split("."))
+
+
 def _nums(s):
-    """'2, 3, 4, 9, 11, 25, 27 and 29' or '2 to 5, 7, 14 to 16 and 29' as a list of row numbers."""
+    """'2, 3, 4, 9, 11, 13.2, 25, 27 and 29' or '2 to 5, 7, 13.1 to 13.3, 14 to 16 and 29' as a list of row numbers (strings; W85: a
+    range runs over the last part of numbers that share the rest)."""
     out = []
     for part in re.split(r",\s*|\s+and\s+", s.strip()):
-        m = re.fullmatch(r"(\d+) to (\d+)", part.strip())
+        part = part.strip()
+        m = re.fullmatch(r"(\d+(?:\.\d+)?) to (\d+(?:\.\d+)?)", part)
         if m:
-            out += list(range(int(m.group(1)), int(m.group(2)) + 1))
-        elif re.fullmatch(r"\d+", part.strip()):
-            out.append(int(part))
+            a, b = _rk(m.group(1)), _rk(m.group(2))
+            if len(a) != len(b) or a[:-1] != b[:-1] or a[-1] > b[-1]:
+                raise AssertionError("not a row range: %r" % part)
+            out += [".".join(str(x) for x in a[:-1] + (i,)) for i in range(a[-1], b[-1] + 1)]
+        elif re.fullmatch(r"\d+(?:\.\d+)?", part):
+            out.append(part)
         else:
             raise AssertionError("not a row list: %r" % s)
     return out
@@ -801,34 +871,35 @@ def p_alternatives(text, order):
     bad = []
     flat = " ".join(text.split("## 1. ", 1)[0].split())
     rows = _real(text)
-    first = {int(c[0]): _classes(c)[0] for c in rows}
+    first = {c[0]: _classes(c)[0] for c in rows}
     ric = {n for n, k in first.items() if k == RIC}
 
     def moved(to):
         f = Counter(RIC if n in to else k for n, k in first.items())
         return {k: v for k, v in f.items() if v}
-    m = re.search(r"rows ([\d, and]+?) would be REVIEWED-INPUT CHANGED too \((\d+) rows with rows ([\d, and]+?); by first class ([^)]+)\)", flat)
-    touch = {int(c[0]) for c in rows if "UNREVIEWED since cx46" in c[7]}
+    m = re.search(r"rows ([\d., and]+?) would be REVIEWED-INPUT CHANGED too \((\d+) rows with rows ([\d., and]+?); by first class ([^)]+)\)", flat)
+    touch = {c[0] for c in rows if "UNREVIEWED since cx46" in c[7]}
     if not m:
         bad.append("the first wider reading (a touched file of the delta alone) is not stated with its rows and totals")
     else:
         added, withr = set(_nums(m.group(1))), set(_nums(m.group(3)))
         if withr != ric or added & ric or added | ric != touch or int(m.group(2)) != len(touch):
-            bad.append("the first wider reading's rows are not the touching rows %s" % sorted(touch))
+            bad.append("the first wider reading's rows are not the touching rows %s" % sorted(touch, key=_rk))
         if _totals(m.group(4)) != moved(touch):
             bad.append("the first wider reading's totals are not the table's %s" % moved(touch))
-    m = re.search(r"present at `4d0ff8a2` \(rows ([^)]+)\) finds the same (\d+) rows, ([\d, and]+?):", flat)
+    m = re.search(r"present at `4d0ff8a2` \(rows ([^)]+)\) finds the same (\d+) rows, ([\d., and]+?):", flat)
     m2 = re.search(r"By first class under that reading: ([^.]+)\.", flat)
     if not m or not m2:
         bad.append("the second wider reading (any row's change) is not stated with its rows and totals")
         return bad
-    by = {int(o[0]): o for o in order}
-    intree = sorted(n for n, o in by.items() if [x for x in o[6] if x in _tree()])
+    by = {o[0]: o for o in order}
+    intree = sorted((n for n, o in by.items() if [x for x in o[6] if x in _tree()]), key=_rk)
     named = set(_nums(m.group(3)))
     if _nums(m.group(1)) != intree:
         bad.append("the rows touching a file present at 4d0ff8a2 are git's %s, not %s" % (intree, m.group(1)))
     if int(m.group(2)) != len(named) or not named <= set(intree) or not ric <= named:
-        bad.append("the second wider reading's rows %s are not a set of rows touching the reviewed tree holding the table's %s" % (sorted(named), sorted(ric)))
+        bad.append("the second wider reading's rows %s are not a set of rows touching the reviewed tree holding the table's %s"
+                   % (sorted(named, key=_rk), sorted(ric, key=_rk)))
     if _totals(m2.group(1)) != moved(named):
         bad.append("the second wider reading's totals are not the table's %s" % moved(named))
     # W80 (W79's N1): the clauses after the list say which row carries which row's change; the rows they name as carriers (and "as
@@ -836,23 +907,23 @@ def p_alternatives(text, order):
     seg = flat[m.end():].split(" By first class under that reading", 1)[0].split(" Rows 2 to 5 and 11 ", 1)[0]
     carriers = set()
     for clause in seg.split("; "):
-        a = re.match(r"\s*rows? ([\d]+(?:(?:, | and )\d+)*) as above\b", clause)
+        a = re.match(r"\s*rows? ([\d.]+(?:(?:, | and )[\d.]+)*) as above\b", clause)
         if a:
             if set(_nums(a.group(1))) != ric:
-                bad.append("the rows 'as above' %s are not the table's REVIEWED-INPUT CHANGED rows %s" % (a.group(1), sorted(ric)))
+                bad.append("the rows 'as above' %s are not the table's REVIEWED-INPUT CHANGED rows %s" % (a.group(1), sorted(ric, key=_rk)))
             carriers |= set(_nums(a.group(1)))
             continue
-        k = re.match(r"\s*rows? ([\d]+(?:(?:, | and )\d+)*)(?:'s [a-z ]+?)? (?:carry|carries|restate|restates) rows? "
-                     r"([\d]+(?:(?:, | and )\d+)*)'s ", clause)
+        k = re.match(r"\s*rows? ([\d.]+(?:(?:, | and )[\d.]+)*)(?:'s [a-z ]+?)? (?:carry|carries|restate|restates) rows? "
+                     r"([\d.]+(?:(?:, | and )[\d.]+)*)'s ", clause)
         if not k:
             bad.append("a clause of the second wider reading names no carrier and source: %r" % clause[:60])
             continue
         who, src = _nums(k.group(1)), _nums(k.group(2))
-        if any(s >= w or s not in first for w in who for s in src):
+        if any(_rk(s) >= _rk(w) or s not in first for w in who for s in src):
             bad.append("rows %s do not carry earlier rows of the table (%s)" % (who, src))
         carriers |= set(who)
     if carriers != named:
-        bad.append("the second wider reading lists rows %s but its clauses carry rows %s" % (sorted(named), sorted(carriers)))
+        bad.append("the second wider reading lists rows %s but its clauses carry rows %s" % (sorted(named, key=_rk), sorted(carriers, key=_rk)))
     return bad
 
 
@@ -979,6 +1050,12 @@ def t_the_rule_is_set_30s_line_11_verbatim_read_as_ruled():
     assert p_rule(t, s30, [l.replace("a verdict word", "a verdict") for l in tree]), "a changed copy of set 30's record passed"
 
 
+def _mut(text, old, new):
+    """W85: one replacement whose anchor must be in the text (a mutant that changes nothing would test nothing)."""
+    assert old in text, "the mutation's anchor %r is not in the text" % old[:50]
+    return text.replace(old, new, 1)
+
+
 def _line(text, start):
     ls = [l for l in text.split("\n") if l.startswith(start)]
     assert len(ls) == 1, "%d lines start with %r" % (len(ls), start[:40])
@@ -1070,17 +1147,31 @@ def t_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes():
     r2 = [l for l in t.split("\n") if l.startswith("| 2 |")][0]     # W78 (W75's F5): row 2's committer date is not its author date
     assert p_columns(t.replace(r2, r2.replace("| 2026-10-06 12:41:26 |", "| 2026-10-06 12:41:33 |"), 1), order), \
         "a committer date in place of the author date passed"
+    # W85: W81's rows 13.1 to 13.4: a dotted row renumbered, a row of them without UNREVIEWED since cx46, one dropped
+    r132 = _line(t, "| 13.2 |")
+    assert p_coverage(t.replace(r132, r132.replace("| 13.2 |", "| 14 |", 1), 1), order), "a dotted row renumbered passed"
+    r133 = _line(t, "| 13.3 |")
+    assert p_columns(t.replace(r133, r133.replace("UNREVIEWED since cx46", "unreviewed"), 1), order), \
+        "row 13.3, touching test_l8p.py and test_l8r2.py, passed without UNREVIEWED since cx46"
+    assert p_columns(t.replace(r133, r133.replace("reviewed files it touches (2)", "reviewed files it touches (1)"), 1), order), \
+        "row 13.3 counting one reviewed file passed"
+    assert p_coverage(t.replace(_line(t, "| 13.4 |") + "\n", "", 1), order), "row 13.4 dropped passed"
 
 
 def t_the_summary_and_the_bound_statement_are_the_tables():
     t = _read(CLASS)
     assert not p_summary(t), p_summary(t)
-    assert p_summary(t.replace("| `TOOLING` | 12 | 15 |", "| `TOOLING` | 11 | 15 |", 1)), "a wrong summary count passed"
+    assert p_summary(_mut(t, "| `TOOLING` | 15 | 18 |", "| `TOOLING` | 14 | 18 |")), "a wrong summary count passed"
     assert p_summary(t.replace("fnd/s32small, 4 rows: RECORD TEXT 3, TOOLING 1", "fnd/s32small, 4 rows: RECORD TEXT 2, TOOLING 2", 1)), \
         "a wrong per-branch count passed"
-    assert p_summary(t.replace("15 RECORD TEXT first", "14 RECORD TEXT first", 1)), \
+    assert p_summary(_mut(t, "16 RECORD TEXT first", "15 RECORD TEXT first")), \
         "a wrong statement count passed"
-    assert p_summary(t.replace("(21 file touches, 16", "(20 file touches, 16", 1)), "a wrong file-touch count passed"
+    assert p_summary(_mut(t, "(24 file touches, 17", "(23 file touches, 17")), "a wrong file-touch count passed"
+    assert p_summary(_mut(t, "fnd/w34pdftext, 17 rows: RECORD TEXT 6, TEST 1, TOOLING 10", "fnd/w34pdftext, 13 rows: RECORD TEXT 5, TEST 1, TOOLING 7")), \
+        "the per-branch line without W81's rows passed"
+    r133 = _line(t, "| 13.3 |")       # W85: row 13.3 re-classed with the counts left as they are
+    assert p_summary(t.replace(r133, r133.replace("| TOOLING + TEST |", "| REVIEWED-INPUT CHANGED + TOOLING + TEST |", 1), 1)), \
+        "a re-classed W81 row with the old counts passed"
     assert p_summary(t.replace("(row 15, carrying row 14)", "(carrying row 14)", 1)), "an unnamed REVIEWED-INPUT CHANGED row passed"
     r = [l for l in t.split("\n") if l.startswith("| 8 |")][0]
     assert p_summary(t.replace(r, r.replace("| RECORD TEXT |", "| TOOLING |"), 1)), "a re-classed row with the old counts passed"
@@ -1091,7 +1182,7 @@ def t_every_count_typed_is_gits():
     texts = _texts()
     order = _order()
     assert not p_counts(texts, order), p_counts(texts, order)
-    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "prints 13;", "prints 12;", order)
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "prints 17;", "prints 13;", order)
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "171 extractions committed", "172 extractions committed", order)
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "16:33:50, 53 s", "16:33:50, 54 s", order)
     t = texts[CLASS]
@@ -1100,7 +1191,12 @@ def t_every_count_typed_is_gits():
                                    "68 committed extractions with their sidecars (138 files)", 1)), "a wrong file count in a reason passed"
     assert p_row_numbers(t.replace("(+69 -21)", "(+69 -20)", 1)), "a wrong line count in a reason passed"
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "Dates are the author dates", "Dates are the committer dates", order)
-    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "(16 distinct files)", "(15 distinct files)", order)
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "(17 distinct files)", "(16 distinct files)", order)
+    # W85: the tip's texts, W81's declaration-only modules, the vendor files
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "176 extractions committed", "175 extractions committed", order)
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "in 3 declaration-only modules", "in 2 declaration-only modules", order)
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "The 352 vendor files", "The 342 vendor files", order)
+    assert p_row_numbers(_mut(t, "`test_pdftext_input.py` (+528 -1)", "`test_pdftext_input.py` (+529 -1)")), "a wrong W81 line count passed"
 
 
 def t_every_commit_named_is_in_the_histories_read_or_declared_outside_them():
@@ -1168,11 +1264,13 @@ def t_the_wider_readings_are_the_tables():
     t = _read(CLASS)
     order = _order()
     assert not p_alternatives(t, order), p_alternatives(t, order)
-    assert p_alternatives(t.replace("TEST 1, TOOLING 5)", "TEST 1, TOOLING 6)", 1), order), "a wrong first reading's total passed"
-    assert p_alternatives(t.replace("REVIEWED-INPUT CHANGED 6, RECORD TEXT 13,", "REVIEWED-INPUT CHANGED 6, RECORD TEXT 14,", 1), order), \
+    assert p_alternatives(_mut(t, "TEST 1, TOOLING 6)", "TEST 1, TOOLING 7)"), order), "a wrong first reading's total passed"
+    assert p_alternatives(_mut(t, "REVIEWED-INPUT CHANGED 6, RECORD TEXT 14,", "REVIEWED-INPUT CHANGED 6, RECORD TEXT 15,"), order), \
         "a wrong second reading's total passed"
-    assert p_alternatives(t.replace("(rows 2 to 5, 7, 9, 11, 14", "(rows 2 to 5, 9, 11, 14", 1), order), \
-        "a wrong list of rows touching the reviewed tree passed"
+    assert p_alternatives(_mut(t, "11, 13.1 to 13.3, 14 to 16, 25 to 27 and 29)", "11, 14 to 16, 25 to 27 and 29)"), order), \
+        "a list of rows touching the reviewed tree without W81's rows passed"
+    assert p_alternatives(_mut(t, "13.2, 13.3, 25, 27 and 29 would be", "25, 27 and 29 would be"), order), \
+        "the first wider reading without W81's touching rows passed"
     # W80 (W79's N1, its probe passed at b279819e): row 26 listed for row 27, the same first class, so the totals do not move
     assert p_alternatives(t.replace("finds the same 6 rows, 7, 9, 14, 15, 27 and 29", "finds the same 6 rows, 7, 9, 14, 15, 26 and 29", 1), order), \
         "a listed row that no clause says carries a change passed"
