@@ -7,7 +7,7 @@ prototype design; nothing built, powered or measured; nothing applied to the tre
 55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
 54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
 eb1f5e9f5e1ca9ae v2/ecad/tools/lcsc_fill.py
-d6dedef36512d893 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+10b4c94c762360b8 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
 5ff0cf542b98a586 v2/docs/records/s120/README.md
 469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
 29dbe3a0c4938274 v2/docs/ASSEMBLY.md
@@ -49,7 +49,7 @@ fd750e4dc429a790 v2/ecad/tools/track_current.py
 d3bcdc7dd4ca44cb v2/vendor/diodes/diodes-ap64500.pdf
 3a8eb81d3f58e0a5 v2/ecad/tools/gen_pcb_e3.py
 b0e303a557e38898 v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
-54ea0dd9c424e1a6 v2/docs/records/l4e12/l4e12_thermal.out
+7fca5dd8d7938e84 v2/docs/records/l4e12/l4e12_thermal.out
 80070fefd8db6e8a v2/vendor/cm5/cm5-datasheet.pdf
 bd97a9e446861123 v2/vendor/cm5/linux-bcm2712-rpi-cm5.dtsi
 fae7e21365939be5 v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf

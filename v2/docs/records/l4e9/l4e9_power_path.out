@@ -52,7 +52,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l8p_breaker e8f1294bb0f76c75  v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-6eeb6cfe.txt
    l8p_enable c1fa1713c6e5fe29  v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-69b8c3bb.txt
    l8p_ptc   cedae4eb4572a6a5  v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-8e6a938c.txt
-   l4e10     2dffb64efb295450  v2/docs/records/l4e10/l4e10_cell_thermal.out
+   l4e10     b4a5022e9bf72fe8  v2/docs/records/l4e10/l4e10_cell_thermal.out
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
    reqs      8c8e26858293d6f7  v2/ecad/tools/pcb_requirements.yaml
    chgseq    44fdf9a022c49337  v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
@@ -61,10 +61,10 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    ecss      576256819950c443  v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md
    chain     a09ca0293afd1f7c  v2/ecad/tools/pcb_energy_chain.yaml
    l4e10md   0be7bf53a380b58d  v2/docs/records/l4e10/L4E10-CELL-THERMAL.md
-   l4e11     55379e0d7e129b2d  v2/docs/records/l4e11/l4e11_power.out
+   l4e11     4496ea7a4aa9b610  v2/docs/records/l4e11/l4e11_power.out
    l4e11md   101b9896de519561  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
    e11entry  a859aa4a63339f3a  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
-   l4e12     54ea0dd9c424e1a6  v2/docs/records/l4e12/l4e12_thermal.out
+   l4e12     7fca5dd8d7938e84  v2/docs/records/l4e12/l4e12_thermal.out
    l4e12md   b0e303a557e38898  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    cl_topwell 1ca762d83bbb58b2  v2/docs/records/l4e10/clarification/topwell-hl18650v.txt
    cl_eaton  9dffb95e8b4874fc  v2/docs/records/l4e10/clarification/eaton-scf9550.txt
@@ -103,7 +103,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l4e7md    8f6b173d8329c5dd  v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
    e7guard   eda720a68db60cd3  v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
    l4e7chk5  eec75531f82ced65  v2/docs/records/l4e7/checks/check-l4e7r-5.md
-   l4e7p0    03d24a1d6cc5f0df  v2/docs/records/l4e7/l4e7_p0sol.out
+   l4e7p0    061ddb2d6756e1e8  v2/docs/records/l4e7/l4e7_p0sol.out
    e11aux    3d0a7b1d7d0bd8bf  v2/docs/records/l4e11/apply_gen_sch_e_aux.py
    e11dock   04025bca610844dd  v2/docs/records/l4e11/apply_pcb_interfaces_dock.py
    pending: none: L4-E7R is accepted (the coordinator's check 4, fnd/l4e7 91e9a4b5; its figures at 675b8068): the CS101 correction moved the bulk ahead of the sense bank and filtered the trip input, so defect D-01 is resolved in design (drafted, not applied)
@@ -1772,7 +1772,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      CSxIN and CSxOUT pins; Analog Devices' question 6 drafted); (D) the TPS48111-Q1 not taken (its resistive peak alone meets the line from 1.64 uH, no floor
      claimed; at 1.00 uH U5 still 0.3262 V)
      D-12 (L4-E7's text): CS116 MEETS with the block on and off; CS115 MEETS with the block off and, with it on, is CONDITIONAL on R-174 (the cable's recorded loop current under 15.68 A, or U5's differential measured under 0.3 V).
-     R-176's acceptance, six rows: (1) the cut-off's rise and fall on a ramped supply (28.55 to 31.06 V rising, 27.07 V or more falling); (2) a 36 V supply connected cold: Q12 never conducts, D4 carries nothing, PV_F at most 85 V, its slew and INP inside their absolute ratings (their 10 % margin lines are not held at a connector fault near the envelope's least loop, round 5); (3) at layer 9, the waveforms at the IC pins: a 36 V supply stepped onto the port with the guard on, from about 7.5 V and from 25 V, through a loop measured first: U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off (at most 63 A, within 12 us), D4 carrying nothing, PV_P under 31.80 V, PV_F under the recommended operating 80 V row (OPEN at round 2's loop, 83.47 V); no loop is claimed to pass (round 5): at 3.30 uH the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides; (4) a reversed bench panel's curve (no current; the high side's pins against GND); (5) Q13's leakage at the hot end, under 32.1 uA; (6) no short-circuit trip with C126 at 330 pF in operation and under CS116 (R-174)
+     R-176's acceptance, six rows: (1) the cut-off's rise and fall on a ramped supply (28.55 to 31.06 V rising, 27.07 V or more falling); (2) a 36 V supply connected cold: Q12 never conducts, D4 carries nothing, PV_F at most 85 V, its slew and INP inside their absolute ratings (their 10 % margin lines are not held at a connector fault near the envelope's least loop, round 5); (3) at layer 9, the waveforms at the IC pins: a 36 V supply stepped onto the port with the guard on, from about 7.5 V and from 25 V, through a loop measured first: U5's CSPIN to CSNIN within +-0.240 V (under R-240, drafted, not applied: under 10 mV in magnitude, a layout check, L4E7-P0SOL.md section 5), U21 turning Q12 off (at most 63 A, within 12 us), D4 carrying nothing, PV_P under 31.80 V, PV_F under the recommended operating 80 V row (OPEN at round 2's loop, 83.47 V); no loop is claimed to pass (round 5): at 3.30 uH the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides; (4) a reversed bench panel's curve (no current; the high side's pins against GND); (5) Q13's leakage at the hot end, under 32.1 uA; (6) no short-circuit trip with C126 at 330 pF in operation and under CS116 (R-174)
    the remedies as L4-E7 compared them:
    (1) the TPS48110-Q1 alone driving back-to-back FETs (SLUSEE5E Figure 9-14); D-10 closed; D-11 its VS, CS+ and ISCP pins rated -1 V see the reversal; not taken (L4-E7)
    (2) the LM74700-Q1 ideal diode ahead of the TPS48110-Q1 (the vehicle entry's pair); D-10 closed; D-11 closed; not taken: CATHODE to ANODE 76.21 V under CS116's negative lobes against 75 V, and CS101's ripple rectified inside M2's band (L4-E7)
