@@ -13,7 +13,7 @@ dash. Each predicate is also run on a mutant it must refuse.
 
 The coordinator's logs (`<worktrees>/_runs`, outside the repository) are read by ONE test, which raises Skip where they are absent
 (a rented box): run it in the runner pass (the record's section 8). When the coordinator adds the rows after `f0748b49` at the
-adoption, TIP below moves with them.
+adoption, TIP below moves with them (the record last read the lineage at the merge of main, `d5d9c252`).
 
 Read-only: git is read with `git log`, `git show`, `git diff`, `git rev-list` and `git cat-file`; nothing is written. No pytest is
 needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
@@ -33,12 +33,12 @@ CLASS = REC + "/CLASSIFICATION.md"
 PATCH = REC + "/ENTRY-PAGES.patch.md"
 SOURCES = REC + "/inputs/SOURCES.txt"
 BASE = "dd1aed00d0a0a521063b5792550bc510c4707c59"          # set 30's promoted revision, set 31's base
-TIP = "f0748b490e183082b2da4361a5d24ee60d5fba40"           # set 31's lineage when the record was written
+TIP = "d5d9c252db128bc71db42d068477e1b370e750b4"           # set 31's lineage as the record last read it (the merge of main eff28be3)
 REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"      # cx46's candidate
 CX45 = "06077cee"                                           # the delta cx46 read: git diff 06077cee 4d0ff8a2 (its line 17)
 L4E9_EXTRA = ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "v2/docs/records/l4e9/l4e9_power_path.out")
 FIXED = ("REVIEWED-INPUT CHANGED", "RECORD TEXT", "GENERATOR DATA (text)", "TEST", "DIGEST RE-PIN", "MERGE", "TOOLING")
-DECLARED = ("__CANDIDATE__", "__REKEY__", "__PROMOTED__", "__GATE__", "__ADOPTION__")
+DECLARED = ("__ROUND2__", "__CANDIDATE__", "__REKEY__", "__PROMOTED__", "__GATE__", "__ADOPTION__")
 PATCH_TOKENS = ("__PROMOTED__", "__ADOPTION__")
 # main's commits named by the record, not in this branch's history until main is merged into set 31's lineage
 OUTSIDE = {"eff28be3b80f882db545a849b0da1def0217f63d": "main's follow-up after set 30's adoption, the copies' source",
@@ -152,7 +152,7 @@ def _classes(cells):
 
 
 def _placeholder_row(cells):
-    return bool(re.match(r"`__[A-Z]+__`$", cells[1]))
+    return bool(re.match(r"`__[A-Z0-9]+__`$", cells[1]))
 
 
 # ---- predicates: each returns a list of problems (empty when the record holds) ----
@@ -169,9 +169,25 @@ def p_hygiene(texts):
     return bad
 
 
+def _without_subjects(text):
+    """The classification with each table row's subject cell blanked: a subject is git's text, and set 30's commits name their own
+    placeholders in it (rows 31.6, 31.16, 31.17), which are not this record's."""
+    out = []
+    for line in text.split("\n"):
+        if line.startswith("| ") and not line.startswith("| # ") and "\n## 1. " in text and line.count("|") > 8:
+            cells = CELL_SPLIT.split(line)
+            if len(cells) > 4 and re.match(r" `[0-9a-f]{8}` / `[0-9a-f]{40}` $", cells[2]):
+                cells[4] = " "
+                line = "|".join(cells)
+        out.append(line)
+    return "\n".join(out)
+
+
 def p_placeholders(texts):
     bad = []
     for name, t in texts.items():
+        if name == CLASS:
+            t = _without_subjects(t)
         for tok in set(PH.findall(t)):
             if tok not in DECLARED:
                 bad.append("%s: %s is not a declared placeholder" % (name, tok))
@@ -237,6 +253,7 @@ def p_summary(text):
     first = Counter(_classes(c)[0] for c in rows)
     carry = Counter(k for c in rows for k in set(_classes(c)))
     sec = text.split("\n## 2. ", 1)[1]
+    flat = " ".join(sec.replace("\n> ", "\n").split())   # the bound statement is a wrapped quotation: joined before it is read
     for k in FIXED:
         m = re.search(r"^\| `%s` \| (\d+) \| (\d+) \|$" % re.escape(k), sec, re.M)
         if not m or int(m.group(1)) != first[k] or int(m.group(2)) != carry[k]:
@@ -253,10 +270,10 @@ def p_summary(text):
         if named != [(_sha_cell(c)[0], c[0]) for c in ri]:
             bad.append("the REVIEWED-INPUT CHANGED list is not the table's rows in order")
     merges = [c for c in rows if _classes(c)[0] == "MERGE"]
-    stmt = re.search(r"the (\d+) commits of `git rev-list dd1aed00\.\.f0748b49` \((\d+)\n?> ?commits, (\d+) merges\) change a file cx46 read in (\d+) commits", sec)
+    stmt = re.search(r"the (\d+) commits of `git rev-list dd1aed00\.\.%s` \((\d+)\n?> ?commits, (\d+) merges\) change a file cx46 read in (\d+) commits" % TIP[:8], sec)
     if not stmt or [int(x) for x in stmt.groups()] != [len(rows), len(rows) - len(merges), len(merges), len(ri)]:
         bad.append("the bound statement's commit counts are not the table's")
-    other = re.search(r"The other (\d+) rows change no", sec)
+    other = re.search(r"The other (\d+) rows change no", flat)
     if not other or int(other.group(1)) != len(rows) - len(ri):
         bad.append("the bound statement's other rows are not %d" % (len(rows) - len(ri)))
     return bad
@@ -271,7 +288,7 @@ def p_counts(texts, order):
     files = len(_git("diff", "--name-only", BASE, TIP).split())
     delta = len(set(_git("diff", "--name-only", CX45, REVIEWED).split()))
     inrev = len([f for f in _git("diff", "--name-only", BASE, TIP).split() if f in _reviewed()])
-    want = ["`git rev-list --count dd1aed00..f0748b49` prints %d: %d commits and %d merges" % (n, n - merges, merges),
+    want = ["`git rev-list --count dd1aed00..%s` prints %d: %d commits and %d merges" % (TIP[:8], n, n - merges, merges),
             "`--first-parent` prints %d" % fp, "the other %d are the branch commits" % (n - fp),
             "the %d files of `git diff --name-only 06077cee 4d0ff8a2`" % delta,
             "%d of the range's %d changed files are in that set" % (inrev, files)]
@@ -281,7 +298,7 @@ def p_counts(texts, order):
     r = " ".join(texts[RESULT].split())
     rows = [c for c in _rows(t) if not _placeholder_row(c)]
     first = Counter(_classes(c)[0] for c in rows)
-    line = ("73 commits of `git rev-list dd1aed00..f0748b49` (%d commits and %d merges)" % (n - merges, merges)).replace("73", str(n))
+    line = "%d commits of `git rev-list dd1aed00..%s` (%d commits and %d merges)" % (n, TIP[:8], n - merges, merges)
     if line not in r:
         bad.append("RESULT.md section 2 does not read %r" % line)
     cl = ("REVIEWED-INPUT CHANGED %d; RECORD TEXT %d; GENERATOR DATA (text) %d; TEST %d; DIGEST RE-PIN %d; MERGE %d; TOOLING %d; total %d"
@@ -480,14 +497,15 @@ def t_the_summary_and_the_bound_statement_are_the_tables():
     t = _read(CLASS)
     assert not p_summary(t), p_summary(t)
     assert p_summary(t.replace("| `TOOLING` | 2 | 3 |", "| `TOOLING` | 3 | 3 |", 1)), "a wrong summary count passed"
-    assert p_summary(t.replace("The other 59 rows change no", "The other 58 rows change no", 1)), "a wrong statement count passed"
+    assert "other 86 rows change no" in t, "the mutation's anchor is not in the table's statement"
+    assert p_summary(t.replace("other 86 rows change no", "other 85 rows change no", 1)), "a wrong statement count passed"
 
 
 def t_every_count_typed_is_gits():
     texts = _texts()
     order = _order()
     assert not p_counts(texts, order), p_counts(texts, order)
-    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "prints 73: 58 commits", "prints 73: 57 commits", order)
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "prints 101: 76 commits", "prints 101: 75 commits", order)
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "1 h 31 min 11 s", "1 h 31 min 12 s", order)
 
 
