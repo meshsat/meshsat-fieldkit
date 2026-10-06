@@ -106,7 +106,38 @@ the page at `W8_COMMIT` (8840adda) through `git_show`, not the tree, so it accep
 set to None it would read the tree and fail on Q-55's moved V-E16 line already, before this row). W40's script inserts its
 Q-55 block above that assertion; W47's lines extend that block (the third row of the table above).
 
-TESTS: see the section "Checked on a scratch clone (W47)" below.
+**Checked on a scratch clone (W47, 6 October 2026, removed afterwards):** a sparse clone (v2/docs, v2/ecad) of set 31's
+`3057ae43` with fnd/s32small `44891f15` merged (clean). `--check` held every check and named four files (HW-FW-CONTRACT.md
+f26757c7c5004cdd to 12b6ea059a68b5c5, test_w8l5.py 318fd7e85b72df85 to 9dba4249ee9d94cc, test_l5pwr.py a6c6dbf11e4a9e78 to
+92b77706c28c3dd0, TP-SOLAR.md 18325bbf0e24cf1d to e750c424b544cff9); the run exited 0 and printed the page's sha256
+12b6ea059a68b5c5f0eb4d67513283af2bd8a011f9e80bea7d047e5955b1e99a; a second run and a second `--check` exit 3; a tree with
+only edit 6 applied is refused (exit 2, "half applied"); on this branch's own tree it refuses (exit 2, test_w8l5.py absent).
+tp_check.py on the applied tree: exit 0, "RESULT: ALL PASS (10 procedures, 123 quotes, 17 TBDs; the bring-up page with 8
+TBDs)"; its print differs from the committed tp_check.out in five lines (TP-SOLAR.md's pin, "4 text", "6 paths from v2/", the
+index row's quote count 23, the RESULT line's 123 quotes).
+
+run.py over 13 modules (W40's 11 that read HW-FW-CONTRACT.md, plus test_test_procedures and test_w3annex, which read the
+procedures): before the apply `tests: 178 passed, 28 failed, 2 skipped`; after it `tests: 175 passed, 31 failed, 2 skipped`, the
+three new failures all pins: `test_l5r2.t_r3_output_reproduced_and_every_finding_resolved FAIL l5r3_panel.out is not what the
+reader prints`, `test_test_procedures.t_the_committed_out_is_what_the_script_prints FAIL tp_check.out is not what tp_check.py
+prints` and `test_w24l4e9.t_the_four_typed_in_pins_equal_their_files FAIL v2/docs/records/l4e9/l4e9_power_path.py:75 pins
+v2/docs/HW-FW-CONTRACT.md at f26757c7...`; with both PINS["hwfw"] re-pinned and tp_check.out and l5r3_panel.out regenerated
+through `_bin/regen_out.py` on the clone, `tests: 178 passed, 28 failed, 2 skipped` with the failure list identical to the one
+before (the 28: the clone's environment, no firmware tree, no vendor files, the registry's unheld documents, and
+test_l5pwr.t_output_reproduced_byte_for_byte, l5r2's refusal and W20-18, all failing before the apply too). test_w8l5: 6 of 6
+pass after the apply; test_test_procedures 14 of 14 after the regeneration; test_w3annex 10 of 10 throughout.
+
+Mutations (on the applied clone, each restored): Q-55's change record row deleted fails test_w8l5 ("Q-55's change record row is
+not once, after W8's"); its date changed fails it ("Q-55's row is not in W8's form"); the quote's words altered ("under 11 mV")
+fail test_w8l5 ("TP-SOLAR.md does not quote the register's annotated U5 line once") and test_test_procedures'
+t_the_checker_passes_on_the_tree (C3, "a text quote is not found verbatim"); the quote block deleted fails test_w8l5.
+
+**What set 32's chain must do after the script (W40's list, with W47's addition):** re-pin `PINS["hwfw"]` in
+`v2/docs/records/l4e11/l4e11_power.py:54` and `v2/docs/records/l4e9/l4e9_power_path.py:75` to the sha256 the script prints
+(12b6ea05... on set 31's 3057ae43; the page moves by both the V-E16 edit and the appended row); re-key the l4e7 KEY; one
+dependency pass re-pinning l4e11_power.out, l4e9_power_path.out, l5r2_interfaces.out, l5r3_panel.out, l8gnd_drafts.out and
+l9t5_t10.out; and regenerate `v2/docs/test-procedures/tp_check.out` (`_bin/regen_out.py <tree> v2/docs/test-procedures/tp_check.py
+v2/docs/test-procedures/tp_check.out`), which no other output depends on.
 
 ## Session decisions (authority SESSION, W40)
 
