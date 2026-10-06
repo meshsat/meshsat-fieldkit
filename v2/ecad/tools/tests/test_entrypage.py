@@ -230,15 +230,21 @@ def _adoption_marked(text, p):
     return re.search(r"`" + pat + r"`[^`]{0,40}?\(at adoption\)", text) is not None
 
 
+MARK_AFTER = re.compile(r"[^`]{0,40}?\(at adoption\)")
+
+
 def _missing_paths(text, exists):
     """The paths the text names that are absent, less the declared exceptions: a file written at adoption while the text
-    still carries the literal placeholder and calls it so, and a gitignored folder."""
+    still carries the literal placeholder and calls it so at EVERY mention, and a gitignored folder."""
     filled = PLACEHOLDER not in text
     bad = []
-    for p, _, _ in _paths(text):
+    for m in PATH_TOK.finditer(text):
+        if "<" in m.group(1) or "*" in m.group(1):
+            continue
+        p = _repo(m.group(1))
         if exists(p) or p in GITIGNORED:
             continue
-        if p in AT_ADOPTION and not filled and _adoption_marked(text, p):
+        if p in AT_ADOPTION and not filled and MARK_AFTER.match(text, m.end()):
             continue
         bad.append(p)
     return sorted(set(bad))
@@ -320,13 +326,19 @@ def t_the_placeholder_is_literal_and_alone():
     texts = {p: _page(p) for p in PAGES}
     errs = _placeholder_errors(texts)
     assert not errs, errs
+    held = PLACEHOLDER in _page(SUPPLIER)
     for p in PAGES:
         s0 = _section0(p)
         for label in ("Tested", "Packaged"):
             cell = _row(s0, label)
             assert cell is not None, "%s section 0 has no %s row" % (p, label)
-            assert _commit_cell(cell), "%s: the %s revision is neither the literal placeholder nor a commit: %s" % (p, label, cell)
+            got = _commit_cell(cell)
+            assert got, "%s: the %s revision is neither the literal placeholder nor a commit: %s" % (p, label, cell)
+            assert (got == PLACEHOLDER) == held, "%s: the %s revision reads %s while the pages %s the placeholder elsewhere" % (
+                p, label, got, "carry" if held else "do not carry")
         assert REVIEWED in _row(s0, "Reviewed"), "%s: the Reviewed row does not carry %s" % (p, REVIEWED)
+        doc = dict((r.split(" | ")[0], r) for r in re.findall(r"^\| (Documents and editable artifacts \| .+?) \|$", s0, re.M))
+        assert (PLACEHOLDER in doc.get("Documents and editable artifacts", "")) == held, "%s: the documents row and the revisions disagree" % p
 
 
 def t_a_filled_placeholder_names_one_promoted_commit_and_the_adopted_files():
@@ -442,6 +454,8 @@ def t_the_checkers_refuse_their_defects():
     # an absent path is refused, a file written at adoption only while the literal placeholder stands and the text says so
     assert _missing_paths("`v2/docs/NOPE.md`", lambda q: False) == ["v2/docs/NOPE.md"]
     assert _missing_paths(good, lambda q: False) == []
+    assert _missing_paths(good + " and again `v2/docs/records/int30/RESULT.md` unmarked", lambda q: False) == \
+        ["v2/docs/records/int30/RESULT.md"]
     assert _missing_paths(good.replace(PLACEHOLDER, "0123abcd"), lambda q: False) == ["v2/docs/records/int30/RESULT.md"]
     assert _missing_paths("`v2/docs/records/int30/RESULT.md`, written later; `__INTEGRATED__`", lambda q: False) == \
         ["v2/docs/records/int30/RESULT.md"]
