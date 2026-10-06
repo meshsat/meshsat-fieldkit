@@ -1033,8 +1033,10 @@ def t_p0_connected_the_change_list_carries_every_composed_draft():
     """V6-m11: every circuit draft the candidate composes has a register row in L4-E9's change list, in the composition's order; FAN_OK's
     rows are WITHDRAWN; the page's section 3 table is the script's change list (the record's other generated sections are owed)"""
     tree_reg = open(os.path.join(L4E9_DIR, "DOWNSTREAM-REGISTER.md"), encoding="utf-8").read()
-    assert "| R-220 |" not in tree_reg, "the draft is the integrator's to apply, not this branch's"
     d, files, ch, m, reg = _l4e9()
+    # set 30's integration (commit 7070f106) applied the draft to the tree; before it the register carried no R-220 and patch_all() patched in
+    # memory, after it the draft's applied_state() reads the applied tree (the same rows, verbatim). Either state is the one the test judges.
+    assert ("| R-220 |" in tree_reg) == bool(getattr(m, "ALREADY_APPLIED", False)), "the register's R-220 and the draft's applied state disagree"
     assert ch == m.cons_changes(reg)
     named = {}
     for c in ch:

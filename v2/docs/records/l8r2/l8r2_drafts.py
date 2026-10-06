@@ -77,7 +77,7 @@ MINE_A = [("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn"), ("l8r2", 
 AFTER_CHARGER = [("l8r2", "slotlm")]
 # board E's round in the change list's order (L4-POWER-ARCHITECTURE.md's table; section 6b prints whether the page still says so)
 E_ROUND = [("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"), ("l4e9", "f1"),
-           ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e11", "aux"), ("l8p", "enable"), ("d8dec31", "cin")]
+           ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e7", "p0sol"), ("l4e11", "aux"), ("l8p", "enable"), ("d8dec31", "cin")]
 MINE_E = [("l8r2", "packrtn")]
 L8_B = [("l8gnd", "gnd002"), ("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4"), ("l8r2", "rt500")]
 MINE_B = [("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4"), ("l8r2", "rt500")]
