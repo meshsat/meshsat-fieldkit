@@ -47,7 +47,7 @@ a path in backticks is a repository path from the root. Line numbers are those o
 amendment of 6 October 2026 added (HO-L, its rows in sections 4 and 5, HO-F's back-feed reading, section 6's items E and G) are at
 `6fe398e9`: under the aliases CX46, P0L, ANX, OWN, E11, E11P, TIQ, P11, B2 and SOLO the files are byte-identical at `1c6d56f5` and
 `6fe398e9`, so either revision reads the same lines; under L4E9 and REG (both changed by set 31 between the two) the line numbers
-are those of `6fe398e9` only. The module
+are those of `6fe398e9` only. On set 31 (6 October 2026) the citations under BRK, B2, P11 and P0SOL are re-cited to their lines at `a6e3a066`, where set 31's merges of records l8p and l4e7 moved them, apart from [P11:89-92], which still names the lines of `1c6d56f5` (the passage it cited is rewritten at `a6e3a066`). The module
 `v2/ecad/tools/tests/test_remeng.py` holds every citation to an existing file and range and every quoted verdict to its filed text.
 
 | Alias | File |
@@ -338,21 +338,21 @@ as filed.
   l9stk's allowance remain unrestated. Smallest correction: state the changed circuit/case explicitly, reconcile the allowance
   consumers and regenerate affected startup/protection rows. Until then this propagation is REMAINING ENGINEERING."
 - **Failed case.** The guard's draw on DOCK_EN_OUT rises from 18.25 uA to at most 36.00 uA cold and 47.02 uA tripped (PRINTED maxima,
-  the worst single fault) against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2) ([BRK:1385-1387]); cx46's DC check at
+  the worst single fault) against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2) ([BRK:1407-1409]); cx46's DC check at
   180 uA gives about 3.447 V on DOCK_EN_OUT at the low-source corner, MODEL ([CX46:92]).
 - **Attempted correction and the disposition.** L4-E11 section 28 states the changed circuit and executes both allowance cases, 40
   and 50 uA and the first form's 50 and 180 uA ([E11:2036-2054]); its disposition: "these rows hold on the delta's intact circuit at
   both allowance cases; PROVISIONAL, not closed" ([E11:2066-2071]); the consumers drafted for their owners, not applied
-  ([BRK:1387-1391]).
+  ([BRK:1409-1413]).
 - **Unresolved.** The owners' restatement of the allowance (Layer 5's row, record l9stk 15.9: still 30 uA, [E11:2043-2044]) and "the
   replay of the dependent start-up and protection rows (20f's timing against U47's and U48's tSD at the owners' restated allowance,
   22's bleed with path 2's VBAT load)" ([E11:2068-2071]).
-- **Affected provisional outputs.** Every row resting on the allowance ([BRK:1391-1392]); the connected guard row ([CON:201-203]).
+- **Affected provisional outputs.** Every row resting on the allowance ([BRK:1413-1414]); the connected guard row ([CON:201-203]).
 - **Receiving company's task.** The replay named above, against L4-E11's own windows (the held reading under 0.7755 V, the powered
   reading at most 1.981 V, RET/OUT at 0.4707 or more, the breaker's start no sooner than the RC hold's least 0.110 s)
   ([E11:2046-2065]).
 - **Reproduce.** `python3 v2/docs/records/l4e11/l4e11_power.py` (section 28) and `python3 v2/docs/records/l8p/l8p_c4.py` (10c).
-- **State on this tip.** NOT CLOSED: L8P-R9-F2 OPEN ([BRK:1385], [BRK:1398-1400]).
+- **State on this tip.** NOT CLOSED: L8P-R9-F2 OPEN ([BRK:1407], [BRK:1420-1422]).
 
 ### RE-10 (cx46 item 10): the guard's common-path faults and an automatic diagnostic (L8P-R9-F1, the retry heating)
 
@@ -363,28 +363,28 @@ as filed.
   v2/docs/records/l8p/L8P-BREAKER.md:1350-1375: single-path retry heating is unbounded and the latent double failure removes the
   trip, despite broad positive C-PROT language. Smallest correction: qualify every such verdict as OPEN/PROVISIONAL and transfer
   bounded retry-energy analysis plus automatic diagnostic or fault-tolerant redesign as REMAINING ENGINEERING."
-- **Failed cases.** The three latent single failures of round 8's guard with UNBOUNDED intervals ([BRK:1328-1333]); the exposure
+- **Failed cases.** The three latent single failures of round 8's guard with UNBOUNDED intervals ([BRK:1350-1355]); the exposure
   while the guard is lost: the battery FETs reach 150 C held at 20.53 A from the 76.25 C air (DERIVED), a held current from 20.53 A
-  to the breaker's limit puts a series part over its limit below the trip ([BRK:1323-1327]); with path 1 lost, path 2's relaxation
+  to the breaker's limit puts a series part over its limit below the trip ([BRK:1345-1349]); with path 1 lost, path 2's relaxation
   lets the FETs carry current at most 43.8 ms in every 0.154 s or more, "the junction's rise in each on-time NOT BOUNDED here"
   ([C4:283-286]); a latent first failure followed by a second removes the trip ([C4:332-338]).
 - **Attempted correction.** `v2/docs/records/l8p/apply_gen_sch_a_thgfs.py`, two guard paths sharing only the pour and the loop (Slot
-  C's `f04aa0b4`, merged at `64a65943`; change-list row R-244), composed (731 parts), seven mutations FAIL ([BRK:1334-1345],
-  [C4:342-354], [T5R:172]); SESSION L8P-D10 ([BRK:1369-1373]).
+  C's `f04aa0b4`, merged at `64a65943`; change-list row R-244), composed (731 parts), seven mutations FAIL ([BRK:1356-1367],
+  [C4:342-354], [T5R:172]); SESSION L8P-D10 ([BRK:1391-1395]).
 - **What the recheck said does not stand.** Protection after a latent first failure and under path 2's retries ([CX46:93]).
 - **Unresolved fact or design decision.** "the bounded retry-energy analysis of path 2 alone after path 1 is lost, and an AUTOMATIC
   diagnostic with a bounded detection and response interval covering faults after start-up and faults of the diagnostic itself (the
-  owner's part 24), or a fault-tolerant redesign" ([BRK:1380-1384]); why no diagnostic is drafted: "one that tests a shunt opens the
+  owner's part 24), or a fault-tolerant redesign" ([BRK:1402-1406]); why no diagnostic is drafted: "one that tests a shunt opens the
   breaker in service, and a cross-check of the two VTEMP outputs sees the switches, not the gate networks or the shunts"
-  ([BRK:1378-1380]).
+  ([BRK:1400-1402]).
 - **Affected provisional outputs.** "C-PROT rev 1 for the guard is PROVISIONAL at every claim that rests on this" ([C4:274-275]);
-  "L8P-R9-F1 weakens every C-PROT claim for the guard" ([BRK:1384]); L4-E11 section 28 ([E11:2066-2068]); the connected guard row
-  ([CON:194-203], [CON:326-327]); E-13b (e) ([BRK:1395-1397]).
-- **Receiving company's task.** As stated above ([BRK:1380-1384]); acceptance: C-PROT rev 1, every series part within its limits below
-  and above the trip ([BRK:1321-1322]), the FETs' 150 C behind the guard ([CON:199]).
+  "L8P-R9-F1 weakens every C-PROT claim for the guard" ([BRK:1406]); L4-E11 section 28 ([E11:2066-2068]); the connected guard row
+  ([CON:194-203], [CON:326-327]); E-13b (e) ([BRK:1417-1419]).
+- **Receiving company's task.** As stated above ([BRK:1402-1406]); acceptance: C-PROT rev 1, every series part within its limits below
+  and above the trip ([BRK:1343-1344]), the FETs' 150 C behind the guard ([CON:199]).
 - **Reproduce.** `python3 v2/docs/records/l8p/l8p_c4.py` (sections 10b, 10c; output [C4]); `v2/docs/records/l8p/check_l8p_fs.py`
   reads the composed delta ([C4:345-347]).
-- **State on this tip.** NOT CLOSED: "C-PROT rev 1 for the guard PROVISIONAL; L8P-R9-F1, F2 and F3 OPEN" ([BRK:1398-1400]).
+- **State on this tip.** NOT CLOSED: "C-PROT rev 1 for the guard PROVISIONAL; L8P-R9-F1, F2 and F3 OPEN" ([BRK:1420-1422]).
 
 ### RE-13 (cx46 item 13): the connected coordination and service claims
 
@@ -415,7 +415,7 @@ as filed.
   ([CX46:108]) and ([CX46:109]), quoted under RE-10 and RE-13.
 - **Failed cases.** The handed-over cases HO-A to HO-E (section 2), with cx46's statement of their effects ([CX46:97]).
 - **Attempted correction and the disposition.** The effects written at each claim: [CON:320-335], [T10:662-667], [C4:355-358],
-  [BRK:1347-1400], [E11:2066-2071]; section 4 of this ledger lists each claim with the row that names it.
+  [BRK:1369-1422], [E11:2066-2071]; section 4 of this ledger lists each claim with the row that names it.
 - **Unresolved, of substance.** The cases themselves (HO-A to HO-E).
 - **Affected provisional outputs.** Section 4.
 - **Receiving company's task.** Those of HO-A to HO-E.
@@ -434,13 +434,13 @@ as filed.
 - **Failed case.** A wording defect; the engineering defects of the draft are HO-G.
 - **Attempted correction and the disposition.** The solar author's `4d1d02de`: "Route B2 is UNSELECTED and WITHDRAWN AS DRAFTED" and
   the page "asks no decision, recommends nothing for adoption and credits B2 with no protection" ([B2:4-6]); no owner item, the
-  approved interface stands ([B2:27-29]); the baseline does not depend on B2 ([B2:22-25]); the same in [P0SOL:132-143] and [P11:62-70].
-- **Unresolved, of substance.** P2 and P3 (and the latent P1) as REMAINING ENGINEERING outside the baseline ([B2:145-152],
-  [B2:173-174]): HO-G.
-- **Affected provisional outputs.** None in the baseline ([B2:22-25]).
+  approved interface stands ([B2:39-41]); the baseline does not depend on B2 ([B2:34-37]); the same in [P0SOL:176-188] and [P11:91-99].
+- **Unresolved, of substance.** P2 and P3 (and the latent P1) as REMAINING ENGINEERING outside the baseline ([B2:157-164],
+  [B2:193-194]): HO-G.
+- **Affected provisional outputs.** None in the baseline ([B2:34-37]).
 - **Receiving company's task.** HO-G, only if a presence-pair route is ever taken up again as a new route with its own check
-  ([B2:145-152]).
-- **Reproduce.** `python3 v2/docs/records/l4e7/l4e7_p0sol.py` (section 5, the separate composition `ORDER_E_B2`) ([B2:24-25]).
+  ([B2:157-164]).
+- **Reproduce.** `python3 v2/docs/records/l4e7/l4e7_p0sol.py` (section 5, the separate composition `ORDER_E_B2`) ([B2:36-37]).
 - **State on this tip.** The wording defect is disposed of in the cited passages; HO-G stays REMAINING ENGINEERING outside the
   baseline.
 
@@ -449,21 +449,21 @@ as filed.
 ### HO-A: L8P-R9-F1, the guard's latent first failure followed by a second (REMAINING ENGINEERING; inside RE-10)
 
 - **Failed case.** "a first failure that silently removes ONE path is found only by E-13b, each path on its own, and no service
-  interval bounds that; a second failure in the other path before it is found removes the trip" ([BRK:1376-1379]); no approved
-  requirement permits a latent state ([BRK:1317-1322]).
-- **Attempted correction.** The two-path delta (RE-10): "this delta (single failures survived at once)" ([BRK:1380]).
-- **Unresolved.** An automatic diagnostic with a bounded interval, or a fault-tolerant redesign ([BRK:1381-1384]).
-- **Affected outputs.** "10c's disposition, C-PROT rev 1 for the guard (every claim), L4-E11 section 28" ([BRK:1380-1381]).
+  interval bounds that; a second failure in the other path before it is found removes the trip" ([BRK:1398-1401]); no approved
+  requirement permits a latent state ([BRK:1339-1344]).
+- **Attempted correction.** The two-path delta (RE-10): "this delta (single failures survived at once)" ([BRK:1402]).
+- **Unresolved.** An automatic diagnostic with a bounded interval, or a fault-tolerant redesign ([BRK:1403-1406]).
+- **Affected outputs.** "10c's disposition, C-PROT rev 1 for the guard (every claim), L4-E11 section 28" ([BRK:1402-1403]).
 - **Task and acceptance.** As RE-10. **Reproduce.** As RE-10.
 
 ### HO-B: the single-path retry heating after path 1 is lost (REMAINING ENGINEERING; inside RE-10)
 
 - **Failed case.** With path 1 lost, path 2 relaxes: the FETs carry current at most 43.8 ms in every 0.154 s or more (DERIVED), the
   junction's rise per on-time NOT BOUNDED ([C4:281-286]); "with path 1 lost the protection under those retries is NOT shown (cx46 item
-  10, the retry-energy analysis REMAINING ENGINEERING)" ([BRK:1359-1362]).
+  10, the retry-energy analysis REMAINING ENGINEERING)" ([BRK:1381-1384]).
 - **Unresolved.** "the bounded retry-energy analysis of path 2 alone" ([C4:339]).
 - **Affected outputs.** "every claim resting on path 2 alone is PROVISIONAL" ([C4:285-286]).
-- **Task and acceptance.** The analysis, against C-PROT rev 1 and the FETs' 150 C ([BRK:1321-1322], [CON:199]). **Reproduce.** As RE-10.
+- **Task and acceptance.** The analysis, against C-PROT rev 1 and the FETs' 150 C ([BRK:1343-1344], [CON:199]). **Reproduce.** As RE-10.
 
 ### HO-C: L9T5-F21, a TX pin toggled as a GPIO under the limiter's share (REMAINING ENGINEERING; inside RE-5)
 
@@ -501,49 +501,49 @@ as filed.
 - **Failed cases (MODEL, record l4e7's own transient model on the C2 circuit, a stiff 36 V source, no source resistance credited).**
   F1 at 0.30 uH: PV_F 321.9 V, Q12's VDS 307.4 V, INP 64.3 V, against U21's 100 V and 20 V absolute, the port bank's 100 V, Q12's
   100 V; F2 at about 1.04 uH: PV_F 118.5 V; F3 at the 3.30 uH reference loop: PV_F 83.48 V over the TPS4811-Q1's recommended 80 V row;
-  F4 with the guard off at the least loop: slew 56.10 V/us over the 54 V/us SESSION line ([P11:25-34]). The lower-source back-feed: a
+  F4 with the guard off at the least loop: slew 56.10 V/us over the 54 V/us SESSION line ([P11:42-51]). The lower-source back-feed: a
   stiff source below the stage's voltage arriving after a withdrawal draws the stage's charge back through Q12's body diode, "Not
-  computed here" ([B2:168-170], [SOLO:399-404]). It is an open case, not a failed one: no record computes it, so it neither fails
+  computed here" ([B2:181-190], [SOLO:399-404]). It is an open case, not a failed one: no record computes it, so it neither fails
   nor passes; cx46 counts it inside E-1: "D-10's E-1 retains F1-F4 and the lower-source back-feed case." ([CX46:95], [CX46:188]).
 - **Requirements, unchanged, no new exclusion.** REQ-015's 9 to 36 V source class, REQ-016's window, every part inside its absolute
-  maximum, the controller inside its recommended conditions while it must act, the SESSION 10 % lines ([P11:40-49]).
-- **Attempted correction.** P0-7's sense arrangement C2 (D-16 corrected in draft; U5's sense retired) ([P0SOL:99-121]); the desk's
-  alternatives: B1 rejected, B2 withdrawn ([P11:58-70]).
+  maximum, the controller inside its recommended conditions while it must act, the SESSION 10 % lines ([P11:68-77]).
+- **Attempted correction.** P0-7's sense arrangement C2 (D-16 corrected in draft; U5's sense retired) ([P0SOL:121-162]); the desk's
+  alternatives: B1 rejected, B2 withdrawn ([P11:87-99]).
 - **Unresolved.** "something must bound the current the source drives into the stage's capacitance through the closed guard, or the
-  energy and voltage it delivers to the port when Q12 opens, at every loop" ([P0SOL:117-121]); the routes open to a supplier's
-  investigation ([P11:51-80]).
+  energy and voltage it delivers to the port when Q12 opens, at every loop" ([P0SOL:156-161]); the routes open to a supplier's
+  investigation ([P11:79-109]).
 - **Affected outputs.** PROVISIONAL until E-1's correction and S1: IF-01's D-10 claim, R-173 as a protection, R-176 rows 2 and 3, R-180,
-  the port's parts and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows ([P11:85-89]);
+  the port's parts and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows ([P11:114-119]);
   completed independently: D-16's correction and its rows ([P11:89-92]).
 - **Task and acceptance.** The correction or a model revision on measured loops only, then S1 on the corrected circuit: PV_F under
   80 V and under 90 V always, INP under 18 V, slew under 54 V/us, Q12 inside its derated SOA, TRK_VS under 31.8 V, the bank under
-  1.8 V ([P11:51-56], [P11:110-120]); S1's added rows (a) a source in parallel with a connected panel and (b) the back-feed
-  ([P11:120-123]).
+  1.8 V ([P11:79-85], [P11:144-154]); S1's added rows (a) a source in parallel with a connected panel and (b) the back-feed
+  ([P11:154-160]).
 - **The back-feed, this ledger's reading (the narrower one; section 6, item E; SESSION).** The lower-source back-feed is REMAINING
-  ENGINEERING inside E-1: its model is not computed ([B2:168-170], [SOLO:401-402]), so the receiving company computes it on E-1's
+  ENGINEERING inside E-1: its model is not computed ([B2:181-190], [SOLO:401-402]), so the receiving company computes it on E-1's
   corrected circuit as part of E-1's correction, against E-1's own requirements, "every part within its makers' absolute maximum
-  ratings during the fault" ([P11:44]), with S1's own criterion for the case, "Q12's body-diode current inside its pulsed rating"
-  ([P11:123]); S1's row (b) is the later validation of that computation, not a substitute for it. Grounds: the owner's part 23,
+  ratings during the fault" ([P11:72]), with S1's own criterion for the case, "Q12's body-diode current inside its pulsed rating"
+  ([P11:160]); S1's row (b) is the later validation of that computation, not a substitute for it. Grounds: the owner's part 23,
   "Supplier item S1 must carry that engineering problem, rather than presenting it solely as an unperformed validation test."
   ([OWN:681]) and "A planned measurement alone does not establish that the selected protection works." ([OWN:702]); part 24, the
   handover of an unsupported correction "not as qualification-only tasks or accepted corrections" ([OWN:799]); part 25, "D-10 remains
   receiving-company engineering item E-1." ([OWN:826]); cx46, "S1 is expressly subsequent qualification of a correction, not closure
-  of the current circuit." ([CX46:95]). E-1's acceptance as filed names the cases F1 to F4 ([P11:149-152]); this reading adds the
-  back-feed to the cases E-1's correction answers, sets no new limit and changes no record's text. Why the narrower reading (SESSION,
+  of the current circuit." ([CX46:95]). E-1's acceptance as filed names the cases F1 to F4 ([P11:186-191]); this reading adds the
+  back-feed to the cases E-1's correction answers, sets no new limit and, as written, changes no record's text (6 October 2026: once `fnd/w4l4e7` at `786aed2f` is adopted, record l4e7's own page places the back-feed the same way, "It is REMAINING ENGINEERING inside E-1" ([P0SOL:144-145] at `786aed2f`)). Why the narrower reading (SESSION,
   under the coordinator's brief of 6 October 2026): it claims less, since a validation row alone would present an uncomputed case
   as if only a test were missing. Reversed by: a record that computes the back-feed on the present circuit inside its limits, or the
   coordinator's revision of record l4e7's placement.
-- **Reproduce.** `python3 v2/docs/records/l4e7/l4e7_p0sol.py` (about 70 s; output [SOLO]) ([P0SOL:179]); its results cache key does
+- **Reproduce.** `python3 v2/docs/records/l4e7/l4e7_p0sol.py` (about 70 s; output [SOLO]) ([P0SOL:233]); its results cache key does
   not hold on this tree ([SOLO:31]) and the long L4-E7 cache recompute is the box's ([CX46:68]).
 
 ### HO-G: route B2's own defects P2 and P3 (REMAINING ENGINEERING, outside the baseline)
 
 - **Failed cases.** P2, INP's core shorted to a positive core of the lead: INP at PV_F, over its 20 V absolute maximum from PV_F
   20.0 V (84.62 V at the arriving ring's worst); P3, R96's core shorted to a positive core: as P2; P1, the two presence cores shorted:
-  B2's function lost, LATENT ([B2:136-140]).
+  B2's function lost, LATENT ([B2:148-152]).
 - **Unresolved.** "monitored or fault-tolerant presence detection" and "INP held inside its absolute maximum", then the timing proof
-  ([B2:145-152]); neither is drafted ([B2:151]).
-- **Affected outputs.** None in the baseline ([B2:22-25]). **Task.** Only for a presence-pair route taken up again ([B2:145-152]).
+  ([B2:157-164]); neither is drafted ([B2:163]).
+- **Affected outputs.** None in the baseline ([B2:34-37]). **Task.** Only for a presence-pair route taken up again ([B2:157-164]).
   **Reproduce.** As RE-18.
 
 ### HO-H: E11-29, the three paralleled battery FETs' sharing (QUALIFICATION, kept apart)
@@ -640,9 +640,9 @@ as filed.
 | Id | cx46's words, as filed | The scope it states (never widened here) | What stays open beside it |
 |---|---|---|---|
 | CL-3 | "3. Q1 obsolete draft-script texts: CLOSED BY THE CORRECTION" ([CX46:126]) | "apply_gen_sch_a_paloop.py:29-36,98-107 and apply_gen_sch_d_paloop.py:43-48 replace the obsolete band and printed-corner guarantee with the MODEL band and PROVISIONAL status. No additional blocker for this textual correction." ([CX46:128]); on this tip [PALA:33-35], [PALD:46-52] | RE-2 (F01 PROVISIONAL) |
-| CL-11 | "11. Q6 cold-connection guarantee: CLOSED BY THE CORRECTION" ([CX46:166]) | "This closes the unsupported guarantee's disposition, not B2's engineering." ([CX46:168]); [B2:110-129] | HO-G; HO-F |
-| CL-12 | "12. Q6 presence-pair short and protection credit: CLOSED BY THE CORRECTION" ([CX46:171]) | "Protection credit is removed; baseline ORDER_E excludes B2. No claim that B2 closes D-10 survives in those corrected disposition rows." ([CX46:173]); [B2:131-152] | HO-G (P2, P3); HO-F |
-| CL-15 | "15. D-10 retained as remaining engineering: CLOSED BY THE CORRECTION" ([CX46:186]) | "This disposition is correct; D-10 itself remains OPEN REMAINING ENGINEERING." ([CX46:188]); [P11:19-92] | HO-F (D-10 / E-1 itself) |
+| CL-11 | "11. Q6 cold-connection guarantee: CLOSED BY THE CORRECTION" ([CX46:166]) | "This closes the unsupported guarantee's disposition, not B2's engineering." ([CX46:168]); [B2:122-141] | HO-G; HO-F |
+| CL-12 | "12. Q6 presence-pair short and protection credit: CLOSED BY THE CORRECTION" ([CX46:171]) | "Protection credit is removed; baseline ORDER_E excludes B2. No claim that B2 closes D-10 survives in those corrected disposition rows." ([CX46:173]); [B2:143-164] | HO-G (P2, P3); HO-F |
+| CL-15 | "15. D-10 retained as remaining engineering: CLOSED BY THE CORRECTION" ([CX46:186]) | "This disposition is correct; D-10 itself remains OPEN REMAINING ENGINEERING." ([CX46:188]); [P11:33-126] | HO-F (D-10 / E-1 itself) |
 | CO-14 | "14. Q7 regeneration and stable bindings: CLOSED AS CONDITIONAL" ([CX46:181]) | Condition: "retain or reproduce successful byte-identical repeated output runs on these inputs. Fresh stability replay was not performed here; the explicitly identified long L4-E7 cache recompute was skipped and remains the box's task." ([CX46:183]); kept in `v2/docs/records/l9t5/stability/` ([T5R:129-132]); blocker ([CX46:110]): "14. v2/docs/records/l9t5/README.md:130 claims identical second-pass outputs. Input identity is verified, but fresh stability execution is not established by this review. Smallest evidence step: retain the two pinned-run outputs and successful process records or reproduce their byte identity through the coordinator's authorised workflow; the long cache recompute remains separately identified." | the condition on the tip read: section 6, item C |
 | CO-16 | "16. P0-4 eFuse conditions retained: CLOSED AS CONDITIONAL" ([CX46:191]) | "Those conditions must be fulfilled before the affected design claims become unconditional." ([CX46:193]); the conditions: the connector contacts at the inside air PROVISIONAL with the supplier's 76 C chamber task (pass at or under 85 C for J_LIME, 105 C for the IDC socket and cable) ([EFS:150-161], [EFO:425-431]); the RockBLOCK charge pads OPEN as a build condition ([EFS:162-165], [EFO:432-434]); the exact part and value obligations ([EFO:621-622]) | EF-F01 to EF-F03 each read as a DESIGN DEFECT, OPEN, corrected by a DRAFTED change, in the register ([EFO:614-617]); round 2 has no independent check of its own ([EFS:213-214]) |
 
@@ -650,7 +650,7 @@ as filed.
 
 | Claim | Where the candidate states it | Weakened by | State it reads (cited) |
 |---|---|---|---|
-| The thermal guard's C-PROT rev 1 verdict | [CON:194-203]; [C4:271-275] | HO-A, HO-B (RE-10); L8P-R9-F2 (RE-9) | PROVISIONAL: "C-PROT rev 1 for the guard PROVISIONAL" ([BRK:1398-1400]); the connected row "reads REMAINING ENGINEERING" ([CON:199-200]) |
+| The thermal guard's C-PROT rev 1 verdict | [CON:194-203]; [C4:271-275] | HO-A, HO-B (RE-10); L8P-R9-F2 (RE-9) | PROVISIONAL: "C-PROT rev 1 for the guard PROVISIONAL" ([BRK:1420-1422]); the connected row "reads REMAINING ENGINEERING" ([CON:199-200]) |
 | The supervisors' LDOs' 125 C sustained bound (rev V, R602 14.0 k) | [CON:213-216]; [CON:293-317]; [T10:614-633] | RE-7 (the periodic peak); RE-6 and HO-D (the latent rail trip) | the universal sustained bound WITHDRAWN, PROVISIONAL ([T10:620], [T10:664-665]); the worst-case margin row PROVISIONAL/OPEN ([CON:314-317]) |
 | CON-004's quorum service | [T10:587-606]; [CON:130-139] | HO-C, HO-D (RE-5) | OPEN ([T10:603], [T10R:221]) |
 | FW-B22, the quorum's schedule | [HWFW:76-82]; [T10:554-561] | HO-C, HO-D; HO-E (service) | PROVISIONAL, a traffic MODEL ([T10:560-561], [HWFW:11]) |
@@ -660,7 +660,7 @@ as filed.
 | The return's ratings (the distributed study) | [CON:163-176]; [DIST:112-124] | RE-4 (V6-B1); L8R2-F43, L8R2-F44 (vendor curves) | V6-B1 OPEN, REMAINING ENGINEERING ([CON:174], [DIST:125]) |
 | J_PA's VH lead at the cap's top 6.9259 A | [CON:157-161] | RE-2 (the cap); L8R2-F43 (JST's curve MISSING) | PROVISIONAL ([CON:160-161], [T5R:194-196]) |
 | L4-E11 section 28's 20c and 20f rows with the guard | [E11:2036-2065] | HO-A, HO-B; RE-9 | PROVISIONAL, not closed ([E11:2066-2071]) |
-| IF-01's protection of the solar entry against D-10; R-173 as a protection | [P11:29-34] | HO-F | PROVISIONAL until E-1's correction and S1 ([P11:85-89]) |
+| IF-01's protection of the solar entry against D-10; R-173 as a protection | [P11:46-51] | HO-F | PROVISIONAL until E-1's correction and S1 ([P11:114-119]) |
 | The eFuses' downstream contacts at the inside air | [CON:179-186]; [EFS:143-161] | CO-16's conditions | PROVISIONAL at the inside air ([EFO:425-431]) |
 | The battery switch's gate drive: D-14 with UDC-1's (S1), the three BUK6Y10-30P on one BATDRV, and E-1's installed acceptance at (i)(a) (cited at `6fe398e9`) | [L4E9:1131-1135]; [L4E9:1401]; [E11:1453-1458] | HO-L (E11-37) | OPEN: "E11-37 OPEN (TI or the bench)" ([E11:1465]); D-14 "CONDITIONAL on E11-29, E11-30 and E11-36 with E11-37 OPEN" ([L4E9:1134]); R-183 OWED ([REG:279]) |
 
@@ -718,13 +718,14 @@ Counts: remaining engineering 20; qualification 1; external architecture fact 3;
   and 127.54 C (the record's reproduction) ([T10:619-620]). Neither difference changes a state: both sides read over 125 C and over
   0.2 s.
 - **E. The lower-source back-feed's placement.** cx46 counts it among E-1's retained cases ([CX46:95], [CX46:188]); the records list it
-  as "not computed here" and carry it as an added row (b) of S1, a validation run ([B2:168-170], [SOLO:399-404], [P11:120-123]), while
-  E-1's failing-case table lists F1 to F4 only ([P11:29-34]). Part 23 asks S1 to carry D-10's engineering, not to present it as an
+  as "not computed here" and carry it as an added row (b) of S1, a validation run ([B2:181-190], [SOLO:399-404], [P11:154-160]), while
+  E-1's failing-case table lists F1 to F4 only ([P11:46-51]). Part 23 asks S1 to carry D-10's engineering, not to present it as an
   unperformed test ([OWN:681]). **The ledger's reading (amendment of 6 October 2026) is the narrower one** (HO-F): the back-feed is
   REMAINING ENGINEERING inside E-1, computed by the receiving company as part of E-1's correction, and S1's row (b) is the later
-  validation of that computation, not a substitute for it. Record l4e7's own text stands as written ([B2:168-170],
-  [SOLO:399-404], [P11:120-123]): it is not this ledger's file, and the contradiction between that text and this reading is the
-  coordinator's to carry to the next set.
+  validation of that computation, not a substitute for it. Record l4e7's own text stands as written ([B2:181-190],
+  [SOLO:399-404], [P11:154-160]): it is not this ledger's file, and the contradiction between that text and this reading is the
+  coordinator's to carry to the next set. (6 October 2026: once `fnd/w4l4e7` at `786aed2f` is adopted, record l4e7's L4E7-P0SOL.md
+  section 4 (a) carries this reading ([P0SOL:141-149] at `786aed2f`), which answers the contradiction on record l4e7's side.)
 - **F. The P0 list is revision 2 (RE-1)** ([P0L:1]) while the records carry the cx46 disposition ([T5R:1]).
 - **G. E11-37's references and class (added 6 October 2026, cited at `6fe398e9`).** The P0 list's row P0-8 cites "(V2R)" and
   "(L4-E11 round 16)" for the bound and the rebinding ([P0L:25]); L4-E11's rounds 14 to 16, which answer V2R, V2RF and V2RG, are
