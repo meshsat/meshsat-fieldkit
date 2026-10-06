@@ -43,7 +43,7 @@ PAGE = os.path.join(ROOT, "v2", "docs", "records", "l4e9", "L4-POWER-ARCHITECTUR
 REG = os.path.join(ROOT, "v2", "docs", "records", "l4e9", "DOWNSTREAM-REGISTER.md")
 L4E7 = [os.path.join(ROOT, "v2", "docs", "records", "l4e7", f) for f in ("L4E7-P0SOL.md", "l4e7_p0sol.out")]
 BASE = "53a68c7c"     # integration commit 2c on fnd/p0pwr: the files as set 28 left the five statements
-W8_COMMIT = None      # the commit carrying the restatement (set after it is committed); None reads the tree while authoring
+W8_COMMIT = "8840adda"   # fnd/w8l5: the commit carrying the restatement (in this branch's history); None reads the tree
 FIELDS = ("protection", "bench", "l4_defects")
 ROWS = ("| R-173 the solar guard", "| V-E16 |")
 
