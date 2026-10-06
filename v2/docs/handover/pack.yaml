@@ -56,6 +56,14 @@ groups:
   L12: "layer 12, firmware: the panel controller's firmware against PANEL.md and the hardware and firmware contract"
 
 rules:
+  # ---------------------------------------------------------------- the compact kit's folder is not the V2 field kit's handover
+  # MESHSAT-1500 (6 October 2026, main 989b30f3 and c0ec8b77): `compact/` holds the pocket node's version table and the v2 printed
+  # enclosure package (OpenSCAD source, print STLs, coupons, renders, the makers' reference CAD), the owner's design made on the
+  # laptop; it is a separate product line documented from README.md and the meshsat-esp32 repository, outside this handover's
+  # layers and records. Set 30 (the coordinator, a session choice under the owner's standing rule of 26 September 2026): excluded
+  # by kind, so the spec classifies every file of the tree; reversed by an include rule above this one.
+  - {action: exclude, kind: other-product-line, glob: "compact/**",
+     reason: "the compact kit (MESHSAT-1500): a separate product line's package, not an input or a record of the V2 field kit's engineering handover"}
   # ---------------------------------------------------------------- snapshots never contain snapshots
   - {action: exclude, kind: earlier-snapshot, glob: ["v2/release/handover/[!_]*/**", "v2/release/handover/*.zip", "v2/release/handover/*.zip.sha256", "v2/release/handover/*.MANIFEST.tsv"],
      reason: "an earlier handover snapshot: snapshots are immutable copies, never inputs of the next one"}
