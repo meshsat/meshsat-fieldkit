@@ -358,11 +358,16 @@ stands; the notes here name what set 31's records restate.
 - The chain. REVIEWED: `4d0ff8a2`, unchanged: no independent check of the engineering read a later revision, and cx46's verdict stands as filed,
   `31928583:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.`. The base:
   set 30's promoted revision `dd1aed00`. The lineage: `31928583`, 103 commits over the base, `5f910eb5:v2/docs/records/int31/RESULT.md:72` `(78 commits and 25
-  merges)`, with record l4e7's results cache re-keyed on it in `aa332280`, 104 commits over the base. CANDIDATE: `__CANDIDATE__`,
+  merges)`, with record l4e7's results cache re-keyed on it in `aa332280`, 104 commits over the base; the re-key's dependents
+  regenerated in `d0e283aa`, set 31's first candidate, whose four-log gate FAILED (one test of the lineage over a whole-suite rule,
+  and a tracked page the suite rewrote from a stale INT-001 reading; `v2/docs/records/int31/RESULT.md`, section 4a), and the
+  coordinator's test correction `5f25daf3`, 106 commits over the base. CANDIDATE: `__CANDIDATE__`,
   the commit the gated release suite and the promotion gate ran on, to which main was fast-forwarded (written at the adoption). The
   gate, suite_gate's verdict line over the four pass logs: `__GATE__`.
-- Unreviewed changes after cx46. Set 31's classification (`v2/docs/records/int31/CLASSIFICATION.md`, section 2) classes the 104
-  commits of `dd1aed00..aa332280` (the candidate commit's row after them) under set 30's rule as the coordinator ruled it (reading A): `5f910eb5:v2/docs/records/int31/RESULT.md:78` `None of the 24
+- Unreviewed changes after cx46. Set 31's classification (`v2/docs/records/int31/CLASSIFICATION.md`, section 2) classes the 106
+  commits of `dd1aed00..5f25daf3` (the second candidate's row last) under set 30's rule as the coordinator ruled it (reading A): 25
+  REVIEWED-INPUT CHANGED, the 24 to `aa332280` and the first candidate's regeneration (row 35: record l4e7's paragraph 0a, with the
+  coordinator's known item). The record's words, written over the 103 to `31928583`, hold for the 25: `5f910eb5:v2/docs/records/int31/RESULT.md:78` `None of the 24
   REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,`, and `5f910eb5:v2/docs/records/int31/RESULT.md:79`
   `never credited, and owes its own targeted verification before any credit.`. They come beside set 30's 14 over
   `4d0ff8a2..dd1aed00` (the set 30 block below).

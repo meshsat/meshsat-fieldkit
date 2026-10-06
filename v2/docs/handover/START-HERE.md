@@ -107,7 +107,7 @@ has been built, bought, powered or measured.
 
 **Set 31 over set 30 (6 October 2026).** This section was written for set 30. Set 31 changes the Tested and Adopted revisions below,
 adds its integration record to the list of what set 30 adds, and changes none of the states: Layer 4's DESK gate and the three
-completion claims stand as the assessment gives them on set 30. Its classification counts 24 commits that change what cx46 read or
+completion claims stand as the assessment gives them on set 30. Its classification counts 25 commits that change what cx46 read or
 carry another row's change into a file of the reviewed tree (set 30's rule, reading A), each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2).
 
 **The revisions.**
@@ -125,7 +125,7 @@ that equivalence. If they change a circuit, assumption, model, limit or substant
 verification before being credited. Passing the software suite alone cannot transfer an engineering verdict to altered claims." The
 integration record `v2/docs/records/int30/RESULT.md` binds the two revisions, and `v2/docs/records/int30/CLASSIFICATION.md` classifies
 every commit between them. What set 30's promoted revision is, and is not, in the integration record's words (its sections 1, 2 and 6):
-"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 104 commits of `dd1aed00..aa332280`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
+"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
 
 **The states, each apart.**
 
