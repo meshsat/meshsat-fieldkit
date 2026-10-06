@@ -9,7 +9,9 @@ in a temporary directory (never this tree), with no results cache and no solver:
 - a registry edit committed after the freeze refuses, both as a new commit and when a manifest is recorded on it;
 - a registry edit left uncommitted refuses;
 - a missing or changed evidence file refuses, in check and in the evidence check before rendering;
-- an output declared unbound must really be unbound, and an empty evidence list is refused.
+- an output declared unbound must really be unbound, and an empty evidence list is refused;
+- an evidence list holding none of the board gates' outputs (no file under v2/ecad/ in an `out/` folder) is refused unless
+  `--no-board-evidence REASON` is given, and the reason is then written into the manifest (set 31, 6 October 2026).
 """
 import json
 import os
@@ -123,5 +125,64 @@ def t_a_declared_unbound_output_must_be_unbound_and_no_evidence_is_refused():
         shutil.rmtree(os.path.join(top, "v2/ecad/out"))
         rc, out = _run("record", "--out", man, "--allow-unbound", "v2/docs/records/h/h.out", cwd=top)
         assert rc == 2 and "no evidence file" in out, out
+    finally:
+        shutil.rmtree(d)
+
+
+def _fixture_without_board_evidence():
+    """A repository whose only ignored file lies OUTSIDE v2/ecad/ (a held maker's sheet), as a fresh worktree's default evidence
+    list was on set 30's first manifest (70 files, none of the board gates' outputs); returns (top, manifest path, scratch dir)."""
+    d = tempfile.mkdtemp(prefix="cg-")
+    top = os.path.join(d, "repo"); os.makedirs(top)
+    _git(top, "init", "-q")
+    w = lambda rel, text: (os.makedirs(os.path.dirname(os.path.join(top, rel)), exist_ok=True),
+                          open(os.path.join(top, rel), "w", encoding="utf-8").write(text))
+    w(".gitignore", "v2/vendor/*/held/\nv2/ecad/out/\nv2/ecad/pcb-*/out/\n")
+    w("v2/ecad/tools/pcb_requirements.yaml", "records: [REQ-001]\n")
+    w("v2/vendor/ti/held/sheet.txt", "a held maker's sheet\n")
+    _git(top, "add", "-A"); _git(top, "commit", "-q", "-m", "candidate")
+    return top, os.path.join(d, "manifest.json"), d
+
+
+def t_a_manifest_without_the_board_gates_outputs_is_refused_unless_declared():
+    """Set 31, stream W31 (item 3 of the integrator's row Q-41, 6 October 2026): set 30's first manifest, recorded in a fresh
+    worktree with the default evidence list, carried 70 evidence files against set 29's 984 and none of the board gates'
+    outputs (`v2/ecad/out/`, `v2/ecad/pcb-*/out/`), so the board-gate tests skipped on the suite box and the gate's G7 refused
+    them after the pass had run. record now refuses an evidence list with no file under v2/ecad/ in an `out/` folder, unless
+    `--no-board-evidence REASON` declares why, and the reason is written into the manifest.
+
+    OBSERVED AGAINST THE OLD candidate_guard.py (base dd1aed00), this test through `tests/run.py` itself on the runner on
+    6 October 2026 at 11:42 CEST, its result line verbatim (the old guard recorded the manifest with the one sheet and exited 0):
+
+        tests: test_candidate_guard.t_a_manifest_without_the_board_gates_outputs_is_refused_unless_declared FAIL candidate_guard: recorded 4cc939827403ae8f68efeaecf93b18d4ca6b6c68: 1 evidence file(s), 0 declared unbound output(s), 0 results cache(s) -> /tmp/cg-xzecev0u/manifest.json
+    """
+    top, man, d = _fixture_without_board_evidence()
+    try:
+        sheet = "v2/vendor/ti/held/sheet.txt"
+        rc, out = _run("record", "--out", man, cwd=top)
+        assert rc == 2 and "C5 no board gate output in the evidence list" in out and not os.path.exists(man), out
+        assert "install the previous set's evidence archive under v2/ecad/ or re-run the gates" in out, out
+        lst = os.path.join(d, "evidence.list")
+        open(lst, "w", encoding="utf-8").write("%s  %s\n" % (_sha(os.path.join(top, sheet)), sheet))
+        rc, out = _run("record", "--out", man, "--evidence-list", lst, cwd=top)
+        assert rc == 2 and "C5 no board gate output in the evidence list" in out and not os.path.exists(man), out
+        rc, out = _run("record", "--out", man, "--no-board-evidence", "  ", cwd=top)
+        assert rc == 2 and "C5" in out and "a reason" in out and not os.path.exists(man), out
+        why = "fixture: a candidate whose checks read no board gate output"
+        rc, out = _run("record", "--out", man, "--no-board-evidence", why, cwd=top)
+        assert rc == 0, out
+        m = json.load(open(man, encoding="utf-8"))
+        assert m["no_board_evidence"] == why, m
+        assert m["evidence"] == [{"path": sheet, "sha256": _sha(os.path.join(top, sheet))}], m
+        os.remove(man)
+        gate = "v2/ecad/pcb-a-power/out/drc.verdict.json"
+        os.makedirs(os.path.dirname(os.path.join(top, gate)))
+        open(os.path.join(top, gate), "w", encoding="utf-8").write("{\"verdict\": \"PASS\"}\n")
+        rc, out = _run("record", "--out", man, cwd=top)
+        assert rc == 0, out
+        m = json.load(open(man, encoding="utf-8"))
+        assert "no_board_evidence" not in m and [e["path"] for e in m["evidence"]] == [gate, sheet], m
+        rc, out = _run("record", "--out", man + ".2", "--no-board-evidence", why, cwd=top)
+        assert rc == 2 and "may not be declared absent" in out and not os.path.exists(man + ".2"), out
     finally:
         shutil.rmtree(d)

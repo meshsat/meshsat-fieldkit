@@ -7,7 +7,8 @@ A candidate is a full commit plus the gitignored evidence its checks read (readi
 MANIFEST names both. It is written OUTSIDE the tree, keyed by the commit, so it is never an input of a generated output and never
 part of the candidate it describes.
 
-  candidate_guard.py record --out MANIFEST [--evidence-list FILE] [--allow-unbound OUT ...]   (in the candidate's checkout)
+  candidate_guard.py record --out MANIFEST [--evidence-list FILE] [--allow-unbound OUT ...] [--no-board-evidence REASON]
+                                                                                            (in the candidate's checkout)
   candidate_guard.py check  --manifest MANIFEST [--dir CHECKOUT]
   candidate_guard.py evidence --manifest MANIFEST [--dir CHECKOUT]     (the evidence half of check, before rendering)
 
@@ -17,7 +18,11 @@ record refuses unless, in the checkout:
      <hex>" (the patterns of _bin/regen_out.py's R4) equals the start of that file's sha256, except the outputs named with
      --allow-unbound (historical snapshots the integrator declares by path; each must exist and must really be unbound);
   C3 every evidence file is present (the list: sha256sum lines, from the archive; default every ignored file under v2 except
-     __pycache__, *.pyc and regen_out's temporaries).
+     __pycache__, *.pyc and regen_out's temporaries);
+  C5 the evidence list holds at least one board gate output (a file under v2/ecad/ in an `out/` folder: v2/ecad/out/,
+     v2/ecad/pcb-*/out/), unless --no-board-evidence gives the reason, which the manifest then carries; the flag is refused when
+     the list holds one. Set 31, 6 October 2026: set 30's first manifest, recorded in a fresh worktree with the default list,
+     carried 70 evidence files against set 29's 984 and no board gate output, so the board-gate tests skipped on the suite box.
 It writes the commit, its tree, the evidence list with each sha256, the declared unbound outputs, and the frozen part of every
 results cache it finds (L4-E7's KEY over its source, the files it read, its scans and its solver; the interpreter and pdftotext
 versions are the host's and are recorded, not frozen).
@@ -86,6 +91,12 @@ def evidence_default(top):
     return sorted(p for p in out if p and not SKIP_EVIDENCE.search(p))
 
 
+def board_output(rel):
+    """A board gate's output: a file under v2/ecad/ inside an `out/` folder (v2/ecad/**/out/**)."""
+    parts = rel.split("/")
+    return rel.startswith("v2/ecad/") and "out" in parts[2:-1]
+
+
 def read_list(path):
     rows = []
     for line in open(path, encoding="utf-8"):
@@ -146,6 +157,15 @@ def do_record(a):
         rows = [(p, sha256(os.path.join(top, p))) for p in evidence_default(top)]
     if not rows:
         bad.append("C3 no evidence file: a candidate's checks read gitignored evidence, so an empty list is refused")
+    nboard = sum(1 for p, _ in rows if board_output(p))
+    if nboard and a.no_board_evidence is not None:
+        bad.append("C5 --no-board-evidence: the evidence list holds %d board gate output(s), so it may not be declared absent" % nboard)
+    elif not nboard and a.no_board_evidence is None:
+        bad.append("C5 no board gate output in the evidence list (no file under v2/ecad/ in an out/ folder: v2/ecad/out/, "
+                   "v2/ecad/pcb-*/out/), so the board-gate tests would skip on the suite box. Restore: install the previous set's "
+                   "evidence archive under v2/ecad/ or re-run the gates; or declare why with --no-board-evidence REASON")
+    elif not nboard and not a.no_board_evidence.strip():
+        bad.append("C5 --no-board-evidence needs a reason (it is written into the manifest)")
     caches = {}
     for c, s in CACHES.items():
         if os.path.isfile(os.path.join(top, c)):
@@ -160,6 +180,9 @@ def do_record(a):
     head = git(top, "rev-parse", "HEAD").strip()
     man = dict(schema=1, commit=head, tree=git(top, "rev-parse", "HEAD^{tree}").strip(), allow_unbound=allow,
                evidence=[{"path": p, "sha256": h} for p, h in rows], caches=caches)
+    if a.no_board_evidence is not None:
+        man["no_board_evidence"] = a.no_board_evidence
+        print("candidate_guard: NOTE no board gate output in the evidence list, declared: %s" % a.no_board_evidence)
     with open(a.out, "w", encoding="utf-8") as f:
         json.dump(man, f, indent=1, sort_keys=True)
         f.write("\n")
@@ -210,6 +233,7 @@ def main(argv):
     sub = ap.add_subparsers(dest="cmd")
     r = sub.add_parser("record"); r.add_argument("--out", required=True); r.add_argument("--evidence-list")
     r.add_argument("--allow-unbound", action="append", default=[])
+    r.add_argument("--no-board-evidence", metavar="REASON")
     for name in ("check", "evidence"):
         c = sub.add_parser(name); c.add_argument("--manifest", required=True); c.add_argument("--dir", default=".")
     a = ap.parse_args(argv)
