@@ -1248,9 +1248,14 @@ def t_round6_t10_cx45_q3_the_containment_and_the_envelope_are_re_solved():
                "silenced when its share passes 4.7 to 12.3 %", "0.2183 to 0.2452 A at the tolerances", "is WITHDRAWN (cx46 6)",
                "127.54 C, OVER 125 C: the universal sustained bound and its positive margin are WITHDRAWN",
                "NOT an acceptance of the sustained bound", "revision X is HELD with no admission route", "CON-004's quorum verdict (OPEN)",
-               "DISPOSITION (10j, after cx46): cx45's Q3 NOT CLOSED", "REMAINING ENGINEERING, for the receiving company", "L9T5-F25"):
+               # restated by W53 (6 October 2026; basis: W38's F10 and W48's residual, the checks as received: cx45 reads "P0-3: NOT
+               # CONFIRMED" [CX45:10], "NOT CLOSED" is cx46's word for its items 5 to 8 [CX46:136-151]; W41's form at
+               # l9t5_connected.py line 1003 on fnd/int31regen): each word attributed to its check, the old words in `bad` below
+               "DISPOSITION (10j, after cx46): Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'",
+               "REMAINING ENGINEERING, for the receiving company", "L9T5-F25"):
         assert s_ in sec, s_
-    for bad in ("desk acceptance MET", "CORRECTED IN DRAFT", "the trip's maximum holds 125 C", "within 0.2 s and the supervisor"):
+    for bad in ("desk acceptance MET", "CORRECTED IN DRAFT", "the trip's maximum holds 125 C", "within 0.2 s and the supervisor",
+                "cx45's Q3 NOT CLOSED"):
         assert bad not in sec, bad
     preds = out.split("12. THE PREDICATES")[1]
     assert "the countermodel stays under the trip's least filtered current and over 125 C" in preds and "V-B23's 0.2 s" in preds
@@ -1263,6 +1268,12 @@ def t_round6_t10_cx45_q3_the_containment_and_the_envelope_are_re_solved():
                "- **Revision X: HELD**", "**SUPERSEDED (round 6, and the recheck cx46's item 8)", "Consequence (SUPERSEDED in its admission clauses"):
         assert s_ in page, s_
     assert "For a rev X part: PROVISIONAL" not in page and "L9T5-D9 (round 6)" not in page
+    # W53 (6 October 2026; basis as above): the page's first line keeps the old words as labelled history (W9's convention on this
+    # page, test_w9l9t5: no base text removed) and carries each word attributed to its check after them
+    first = page.splitlines()[0]
+    old = "cx45's Q3 stays NOT CLOSED"
+    assert first.count(old) == 1 and first.split(old, 1)[1].startswith(" [as written at this disposition, 5 October 2026; W53, 6 October 2026")
+    assert "Q3: cx45 'P0-3: NOT CONFIRMED' (" in first and "cx46's items 5 to 8 'NOT CLOSED' (" in first, first[:300]
 
 def t_record_hygiene():
     files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__), DRAFTS, DRAFTS_OUT, CHECK, NEW["a"], NEW["b"], A1, A1_OUT,
