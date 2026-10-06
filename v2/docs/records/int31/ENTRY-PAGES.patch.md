@@ -80,7 +80,7 @@ has been built, bought, powered or measured.
 
 **Set 31 over set 30 (6 October 2026).** This section was written for set 30. Set 31 changes the Tested and Adopted revisions below,
 adds its integration record to the list of what set 30 adds, and changes none of the states: Layer 4's DESK gate and the three
-completion claims stand as the assessment gives them on set 30. Its classification counts 14 commits that change a file cx46 read,
+completion claims stand as the assessment gives them on set 30. Its classification counts 15 commits that change a file cx46 read,
 each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2).
 ```
 Basis: `v2/docs/records/int31/RESULT.md`, section 6 (the three claims unchanged) and section 2.
@@ -129,7 +129,7 @@ Old text:
 ```
 New text:
 ```text
-(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 14 commits that change a file cx46 read over the 73 commits of `dd1aed00..f0748b49`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2), with the rows after `f0748b49` as that file gives them at the adoption.
+(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 15 commits that change a file cx46 read over the 101 commits of `dd1aed00..d5d9c252`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2), with the rows after `d5d9c252` as that file gives them at the adoption.
 ```
 Basis: `v2/docs/records/int31/CLASSIFICATION.md`, section 2.
 
@@ -211,7 +211,7 @@ framing: nothing in the kit has been built, bought, powered or measured.
 restatements its authors wrote during set 30's integration, the filed patch rows applied to L4-E9's page, register and generator, and
 the citation re-takes, regenerated to convergence. It changes the Tested and Adopted revisions of 0a, adds its integration record to
 0c, and changes none of the states of 0b: "Set 31 closes NO power item." (`records/int31/RESULT.md`, section 6). Its classification
-counts 14 commits that change a file cx46 read, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2).
+counts 15 commits that change a file cx46 read, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2).
 ```
 Basis: `v2/docs/records/int31/RESULT.md`, sections 2 and 6.
 
@@ -259,7 +259,7 @@ Old text:
 ```
 New text:
 ```text
-(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 14 commits that change a file cx46 read over the 73 commits of `dd1aed00..f0748b49`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2), with the rows after `f0748b49` as that file gives them at the adoption.
+(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 15 commits that change a file cx46 read over the 101 commits of `dd1aed00..d5d9c252`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2), with the rows after `d5d9c252` as that file gives them at the adoption.
 ```
 Basis: as S-08.
 
