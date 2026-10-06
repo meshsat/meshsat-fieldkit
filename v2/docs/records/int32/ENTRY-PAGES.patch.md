@@ -45,6 +45,14 @@ the assessment's three headings verbatim (`v2/docs/records/l4close/L4-DESK-GATE-
 set 32: the rows were written before its promotion, and its adoption commit dates it (the Adopted row); taken under the owner's
 standing rule of 26 September 2026 (authority SESSION, W95), reversed by adding the promotion's date by hand at the adoption.
 
+**How the rows were checked (W95, 6 October 2026, from 23:35 CEST).** On this branch (the pages read at `b06ee99f` with set 31's
+fill in memory) `test_patch32` and `test_res32` read 24 passed; in a scratch clone of W95's own, with stand-in commits for the
+re-key (on `5f25daf3`, holding the five pinned tips), the candidate and the adoption: the fill tool's template read 97 rows (25 of
+them this file's), its first run applied 79 lines with 3 ADOPTION occurrences deferred, its second 3 lines, a third refused, and the
+two modules read 24 passed before the fill and after each run; with the four pages written as set 31's adoption leaves them
+(stand-in values for set 31's ADOPTION and GATE) `test_patch32` read 9 passed, and with these rows applied to them 9 passed. AI
+work, not a qualified review; no page of the tree was edited.
+
 ## START-HERE.md
 
 ### S-01. `v2/docs/handover/START-HERE.md`, line 3: the current revision

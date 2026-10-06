@@ -7,7 +7,8 @@ its page, its line, one line of old text, the new text and its basis, in the for
 The revision the rows are written for is the pages as they read after set 31's adoption. Which pages this test reads is decided by
 the tree's own START-HERE.md, its line 3:
   "Current revision: set 31"  the tree holds set 31's adoption: the rows are read against the tree's pages (the target revision);
-  "Current revision: set 32"  the rows are applied: every row's new text must stand on its page (a token or the value filled);
+  "Current revision: set 32"  the rows are applied: every row's new text must stand on its page (a token or the value filled), and
+                              set 32's blocks stand first under their headings and last in the plan;
   anything else               this branch before set 31's adoption reaches it: the pages of fnd/adopt31 at AT, read through git, with
                               set 31's fill values applied in memory (FILL31: the CANDIDATE and PROMOTED tokens, set 31's candidate
                               5f25daf3); set 31's ADOPTION and GATE occurrences are left as they stand, and no old text may reach
@@ -55,7 +56,7 @@ BODY = re.compile(r"\A\s*Old text:\n```text\n(.*?)\n```\nNew text:\n```text\n(.*
 GIT_ANCHOR = re.compile(r"`([0-9a-f]{8,40}):([^`:\s]+):(\d+)` `((?:[^`\\]|\\.)+)`")
 QUOTE_SEC = (re.compile(r"((?:\"[^\"]+\"; )*\"[^\"]+\") \(`([^`]+\.md)`,\s+section (\w+)\)"),
              re.compile(r"`([^`]+\.md)`, section (\w+): \"([^\"]+)\"\)"))
-DASHES = ("—", "–")
+DASHES = ("\u2014", "\u2013")
 
 
 def T(name):
@@ -233,6 +234,26 @@ def p_applied(rows, pages):
         new = _r[-2]
         if not re.search(_loose(new), pages[pre]):
             bad.append("%s: its new text is not on %s" % (rid, PAGES[pre]))
+    return bad
+
+
+def p_placed_applied(pages):
+    """Stage S: on the applied pages, set 32's head paragraph follows set 31's, each of the five layers' first block is set 32's, and the
+    plan's last entry is set 32's milestone."""
+    bad = []
+    ls = pages["L"].split("\n")
+    h31 = [i for i, x in enumerate(ls) if x.startswith("**After set 31 (6 October 2026, an adoption")]
+    h32 = [i for i, x in enumerate(ls) if x.startswith("**After set 32 (an adoption")]
+    if len(h31) != 1 or len(h32) != 1 or next((x for x in ls[h31[0] + 1:] if x.strip()), None) != ls[h32[0]]:
+        bad.append("set 32's head paragraph does not follow set 31's")
+    for lay in LAYERS:
+        i = [k for k, x in enumerate(ls) if x.startswith(lay)]
+        nxt = next((x for x in ls[i[0] + 1:] if x.strip()), "") if len(i) == 1 else ""
+        if not nxt.startswith("**After set 32: IN_PROGRESS"):
+            bad.append("%s: its first block is not set 32's" % lay.strip())
+    heads = [x for x in pages["P"].split("\n") if x.startswith("### ")]
+    if not heads or not heads[-1].startswith("### Milestone: integration set 32 promoted"):
+        bad.append("the plan's last entry is not set 32's milestone")
     return bad
 
 
@@ -446,7 +467,7 @@ def _pt():
 def t_the_patch_file_carries_no_dash_and_opens_with_its_state_line():
     t = _pt()
     assert not p_hygiene(t), p_hygiene(t)
-    assert p_hygiene(_mut(t, "Record text only:", "Record text only —")), "an em dash passed"
+    assert p_hygiene(_mut(t, "Record text only:", "Record text only \u2014")), "an em dash passed"
     assert p_hygiene(_mut(t, "**NOT DONE:**", "**NOT YET:**")), "a state line without NOT DONE passed"
 
 
@@ -459,7 +480,8 @@ def t_every_row_is_well_formed_with_its_tokens_and_basis():
         "a row naming another prefix's page passed"
     assert p_rows(_mut(t, "set 32's paragraph in the edition history\n\nOld text:\n```text\n(`v2",
                        "set 32's paragraph in the edition history\n\nOld text:\n```text\n(`%s` `v2" % T("GATE"))), "an old text with a token passed"
-    assert p_rows(_mut(t, s07[7], s07[7].replace(T("ADOPTION"), T("PROMOTED"), 1))), "a PROMOTED token passed"
+    assert p_rows(_mut(t, s07[7], s07[7].replace("set 32's adoption commit,", "set 32's adoption commit `%s`," % T("PROMOTED"), 1))), \
+        "a PROMOTED token passed"
     assert p_rows(_mut(t, "netlist changed.\n\n**Set 32** (the revision", "netlist changed!\n\n**Set 32** (the revision")), \
         "an after-line row not beginning with its old text passed"
     assert p_rows(_mut(t, "Basis: the Tested row (S-06).", "Basis: `v2/docs/records/int32/NOWHERE.md`.")), "a basis naming no file passed"
@@ -473,6 +495,8 @@ def t_every_old_text_holds_once_on_its_line_of_the_pages_read():
     stage, pages = _stage_pages()
     if stage == "S":
         assert not p_applied(rows, pages), p_applied(rows, pages)
+        assert p_applied(rows, dict(pages, U=pages["U"].replace("### 0e. How to reproduce set 32's figures", "### 0e. How to reproduce", 1))), \
+            "a row's new text missing from its page passed"
         return
     assert not p_pages(rows, pages), p_pages(rows, pages)
     assert p_pages([x if x[0] != "S-06" else x[:6] + (x[6].replace("set 31's", "set 30's", 1),) + x[7:] for x in rows], pages), \
@@ -487,7 +511,10 @@ def t_the_set_32_blocks_are_placed_newest_first_and_the_plan_entry_last():
     rows = _rows(t)
     stage, pages = _stage_pages()
     if stage == "S":
-        raise Skip("the rows are applied; their placement was read before (the stage the page's line 3 gives)")
+        assert not p_placed_applied(pages), p_placed_applied(pages)
+        assert p_placed_applied(dict(pages, L=pages["L"].replace("\n\n**After set 32: IN_PROGRESS.** Set 32 carries Q-55", "\n\nmoved\n\n"
+                                                                     "**After set 32: IN_PROGRESS.** Set 32 carries Q-55", 1))), "a block not first passed"
+        return
     assert not p_placement(rows, pages), p_placement(rows, pages)
     assert p_placement(_rows(_mut(t, "\n\n**After set 32: IN_PROGRESS.** Set 32 carries Q-55",
                                   "\n\n**After set 31 (6 October 2026): IN_PROGRESS.** Set 32 carries Q-55")), pages), \
