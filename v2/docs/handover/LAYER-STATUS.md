@@ -374,8 +374,8 @@ its "After set 29" or H2 row, and where a row differs from a record it cites, th
   second negative, which ended the review method. Then the integration's commits I1 `3d2746c9` to I11 `d83d9f2d` (commit 2b) as W18's
   draft 3 lists them (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:40-50`); the two corrections that draft leaves pending after
   W16's review of 2b (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:51-52`), since committed: `33efca07` (record l6r2's composition
-  names board D's ptt draft once, W16's finding 1) and `2d4f6df5` (the change-list applier's D1 regression test, W16's finding 3),
-  merged at `c4492dd3`, the tip. INTEGRATED: `__CANDIDATE__`, the candidate commit with record l4e7's re-keyed results cache, not yet
+  names board D's ptt draft once, W16's finding 1) and `2d4f6df5` (the change-list applier's D1 regression test, W16's finding 3,
+  merged at `c4492dd3`, the tip). INTEGRATED: `__CANDIDATE__`, the candidate commit with record l4e7's re-keyed results cache, not yet
   made. PROMOTED: `__PROMOTED__`, main after the promotion, not yet made.
 - Unreviewed changes after cx46. W15 classes the commits between REVIEWED and `6bc4424e`,
   `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:7` `prints 38: 28 commits and 10 merges`: REVIEWED-INPUT CHANGED in 13,
@@ -494,7 +494,7 @@ above stays as Slot I wrote it at `7070f106`):**
   on L4-E9's side as rows WP-01 to WP-27, `56ab0d01:v2/docs/records/l4e9/L4E9-W5-PATCH.md:1` `written as 27 exact rows for the
   coordinator`, applying nothing.
 - 4.13 to 4.18 (d), at `c4492dd3`: L4-E9's decision row reads D-16 `c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1389`
-  `ADDRESSED IN DRAFTS`, and its section 6 `c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1031` `not independently accepted
+  `ADDRESSED IN DRAFTS`, and its section 8a `c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1031` `not independently accepted
   as closing D-16`, where the row quotes the connected output's D-16 CORRECTED in draft (still so at
   `c4492dd3:v2/docs/records/l9t5/l9t5_connected.out:205` `D-16 CORRECTED in draft`); W15 classes the move off OPEN as not only
   narrowing, an unreviewed change (the chain above); D-10 stays OPEN, `c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1384`
@@ -743,11 +743,12 @@ above stays as Slot I wrote it at `7070f106`):**
   integrator, at 7070f106`, with W9's twelve restatements W9-01 to W9-12 (the two upper bounds, 15.1308 V, record l4e7's E-1; Layer
   4's notes 4.10, (b) and (e)); its output not regenerated.
 - 9.20, at `c4492dd3`: 17 of the eighteen DIGESTS-cr3 outputs differ from their digest and `v2/docs/records/l9t5/l9t5_f01_drafts.out`
-  alone equals it (read with git show and sha256sum at `c4492dd3`, held by test_lstat32): 2b regenerated them and `33efca07` record
-  l6r2's again; the integration's own repeated run is integrate7's, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:134` `cascade
-  twice, pass 2 changing no byte`, its targeted passes converging (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:135-138`); record
-  l4e7's cache, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:197` `On 2b the KEY is a MISMATCH, expected until the re-key`, the
-  re-key's KEY installed by the candidate commit (Layer 4's chain).
+  alone equals it (read with git show and sha256sum at `c4492dd3`, held by test_lstat32): the 17 changed between CANDIDATE 3's
+  `ac8efbca` and commit 2b `d83d9f2d` (git diff --name-only), and `33efca07` changed record l6r2's again; the integration's own
+  repeated run is integrate7's, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:134` `cascade twice, pass 2 changing no byte`, its
+  targeted passes converging (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:135-138`); record l4e7's cache,
+  `b8912eef:v2/docs/records/int30/RESULT.draft3.md:197` `On 2b the KEY is a MISMATCH, expected until the re-key`, the re-key's KEY
+  installed by the candidate commit (Layer 4's chain).
 
 **After set 29 (4 October 2026): IN_PROGRESS.** Layer 9's power budget (`records/l9pwr`, item 9.1) and its stackups, copper and protection (`records/l9stk`, item 9.12 and the pack path) landed; nothing was routed, built or measured. The rows below are the items set 29's records move; every other item keeps its H2 row below.
 
