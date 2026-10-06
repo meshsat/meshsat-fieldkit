@@ -286,7 +286,10 @@ STANDINS = {}
 # PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
 # absent, so this script never runs pdftotext; section 1 prints each text's sha256 among the inputs.
 # Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8p
+# W81 (6 October 2026): TDK's held sheet added. This script types TDK_B59721 from it and prints those figures; test_l8p reads them
+# against the sheet through pdftext() (W66's full dry run: the read refused, the sheet in no table). Held back, its text under held/.
 PDFTEXT = {
+    "v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf": [["-layout"]],
     "v2/vendor/battery/murata-nxrt15xh103fa1b.pdf": [["-layout"]],
     "v2/vendor/battery/murata-prf-series.pdf": [["-layout"]],
     "v2/vendor/battery/ti-bq4050.pdf": [["-layout"]],
