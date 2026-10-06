@@ -1101,11 +1101,15 @@ def t_round9_part22_the_delta_corrects_the_three_failures_on_c_prot_and_composes
                "reads THG FAIL on it, as it must", "check_dd7_netlist (its round 18 admits C268 and Q61): DRAWN",
                "the delta a second time: refused; on the tree's own generator: refused (NOT RELEASED)", "the delta without round 8's guard: REFUSED",
                "15 scripts, every one OK", "HANDED OVER AS REMAINING ENGINEERING", "no latent-fault exception presumed", "(finding L8P-R9-F1)",
-               "DISPOSITION (10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends): V6-m7 and cx45's Q5 NOT CLOSED",
+               # restated by W53 (6 October 2026; basis: W38's F10 and W48's residual, the checks as received: cx45 reads "P0-5: NOT
+               # CONFIRMED" [CX45:10], "NOT CLOSED" is cx46's word for its items 9 and 10 [CX46:156-161]; V6-m7's NOT CLOSED is this
+               # record's own state, L8P-BREAKER.md line 1420): each word attributed to its check, the old words in `bad` below
+               "DISPOSITION (10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends): V6-m7 NOT CLOSED; Q5: cx45 'P0-5: NOT"
+               " CONFIRMED', cx46's items 9 and 10 'NOT CLOSED'",
                "the intact circuit's desk rows hold, the composition reads DRAWN and its mutations FAIL", "both UNRESTATED (L8P-R9-F2"):
         assert s_ in sec, s_
     assert sec.count("     mutated, ") == 7 and sec.count(" THG FAIL: ") == 7
-    for bad in ("CORRECTED IN DRAFT", "desk acceptance MET", "acceptance MET by its author"):
+    for bad in ("CORRECTED IN DRAFT", "desk acceptance MET", "acceptance MET by its author", "cx45's Q5 NOT CLOSED"):
         assert bad not in sec and bad not in o.split("\n11. VERDICT")[1].split("\n12. PREDICATES")[0], bad
     assert sum(1 for l in sec.splitlines() if "before the hold's least 0.110 s" in l) == 3 and "AFTER the hold" not in sec
     chk = need(os.path.join(REC, "check_l8p_fs.py"), "check_l8p_fs")
