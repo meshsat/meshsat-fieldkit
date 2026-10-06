@@ -520,8 +520,8 @@ adoption from the second freeze's logs (never from the first's).
 
 **Set 31 closes NO power item.** It adopts record text prepared during set 30's integration, with the regenerated outputs and pins that
 text moves. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, section 2). Its 25
-REVIEWED-INPUT CHANGED commits narrow, tighten, restate, carry, re-take, re-adopt or annotate; none is a checked correction, and none is
-credited.
+REVIEWED-INPUT CHANGED commits are not all narrowing (restated by W91 after W92's finding: the earlier wording, "narrow, tighten, restate, carry, re-take, re-adopt or annotate", read softer than the evidence). W90's read of them (section 4; an AI review, not a qualified one) names upgrades, `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md:22` `Upgrades (a state or claim moved toward done): D-16 off OPEN (rows 3.1, 31.3, 31.5, 31.12, 31.16); "B6-ENG-2 answered at the desk" (3.1); the change list APPLIED (4.4, 13, 25: restates a set 30 fact, no draft accepted); P0-6 stability "met for`
+`4d0ff8a2`" (31.12); KEY holds (35), and of the rest `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md:22` `Everything else narrows, tightens, withdraws or restates.` None is a checked correction, none is credited, and each stays UNREVIEWED since cx46; W90's read changes no class or count of section 2.
 
 **Layer 4's DESK gate stays NOT PASSED** as the coordinator judged it on set 30, in the assessment's words (quoted from the verbatim
 copy of `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` at main `eff28be3`; set 31 changes no line of it):
