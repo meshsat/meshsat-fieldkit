@@ -1,11 +1,18 @@
-"""W17 (MESHSAT-1357, 6 October 2026): the P0 list's revision 3, draft 3, held as predicates on record text.
+"""W17 (MESHSAT-1357, 6 October 2026): the P0 list's revision 3, held as predicates on record text; restated by W27 (6 October
+2026) to the adopted file.
 
-The file: v2/docs/records/l4close/P0-POWER-LIST.rev3.draft3.md, Slot K's draft 2 with W7's rows R-01 to R-09 of
+The file: v2/docs/records/l4close/P0-POWER-LIST.md, revision 3, adopted on the promoted revision dd1aed00 (W17's draft 3,
+P0-POWER-LIST.rev3.draft3.md, renamed: Slot K's draft 2 with W7's rows R-01 to R-09 of
 v2/docs/records/l4close/P0-POWER-LIST.rev3.patch.md applied, every citation, figure and class re-read at the candidate's commit 2b
-d83d9f2d. Each predicate is run on the draft and on a mutant of it that it must refuse:
+d83d9f2d). The candidate CAND is now the promoted revision dd1aed00 (basis: the coordinator's values of 6 October 2026 10:40:38
+CEST, INTEGRATED = CANDIDATE = PROMOTED = dd1aed00d0a0a521063b5792550bc510c4707c59), so every bare citation is read there.
+Revision 2 is kept unchanged as v2/docs/records/l4close/P0-POWER-LIST.rev2-2026-10-05.md. Each predicate is run on the adopted
+file and on a mutant of it that it must refuse:
 
-- the revision block carries the two placeholders, the REVIEWED sha, revision 3 and the no-closure sentence, and names exactly the
-  rows whose table cell is marked changed after the review;
+- the revision block carries the candidate and promoted shas in full where the draft had its two placeholders (no placeholder
+  left), the REVIEWED sha, revision 3 adopted on dd1aed00 and the no-closure sentence, and names exactly the rows whose table
+  cell is marked changed after the review;
+- the dated history file is revision 2 byte for byte as bbba3e53 and the promoted revision carry it;
 - every line citation resolves: a bare `path:N` reads the same lines at bbba3e53 (draft 2's convention) and at the candidate, except
   the three the draft lists as reading at bbba3e53 only, whose quotations are on their lines there and whose candidate lines are
   given beside them; a `<sha>:path:N` names lines that exist at that revision (a `:N` continues the citation before it);
@@ -17,7 +24,8 @@ d83d9f2d. Each predicate is run on the draft and on a mutant of it that it must 
   candidate), every ledger item sits in exactly one row and on the row its own identifier or heading names, and the bold class
   words of the row's state cell are the classes of its items;
 - the nine patch rows' new texts are present and their old texts absent (outside the new texts);
-- no em or en dash, the prototype framing, the first line DONE / NOT DONE / NEXT.
+- no em or en dash, the prototype framing, and no DONE / NOT DONE / NEXT line (W17's line, dropped at the adoption as its own
+  NEXT asked).
 
 Read-only: git is read with `git show`; nothing is written. A checkout without git or without the commits raises Skip. These are
 predicates on record text: they establish no electrical or thermal property, close nothing and accept nothing.
@@ -33,11 +41,13 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, TOOLS)
 from harness import need, Skip  # noqa: E402
 
-D3 = "v2/docs/records/l4close/P0-POWER-LIST.rev3.draft3.md"
+D3 = "v2/docs/records/l4close/P0-POWER-LIST.md"  # the adopted revision 3 (W17's draft 3 renamed at the adoption)
+REV2 = "v2/docs/records/l4close/P0-POWER-LIST.rev2-2026-10-05.md"  # revision 2 as dated history
 P0P = "v2/docs/records/l4close/P0-POWER-LIST.rev3.patch.md"
 LEDGER = "v2/docs/records/l4close/REMAINING-ENGINEERING.md"
 BASE = "bbba3e53e396d3fe0f8ddd2f38d0c169bcc99c45"       # draft 2's convention
-CAND = "d83d9f2d720878ca5267dbf59bdc571c6890fd92"       # the integration's commit 2b, read as the candidate
+CAND = "dd1aed00d0a0a521063b5792550bc510c4707c59"       # the promoted revision (was 2b d83d9f2d in the draft; the values file)
+TWOB = "d83d9f2d720878ca5267dbf59bdc571c6890fd92"       # the integration's commit 2b, where W17 read the draft
 REVIEWED = "4d0ff8a2"
 DASHES = (chr(0x2013), chr(0x2014))
 MARK = "changed after the review"
@@ -131,10 +141,13 @@ def _rev(sha, path, a, exc):
 def p_revision_block(text):
     bad = []
     head = text.split("**Revision block.**", 1)[-1].split("**Draft 3**", 1)[0]
-    for w in ("__CANDIDATE__", "__PROMOTED__", "Revision: **3**", "`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`",
+    for w in ("- Candidate: `%s`" % CAND, "- Promoted: `%s`" % CAND, "Revision: **3**, adopted on the promoted revision `dd1aed00`",
+              "`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`", "`%s`" % TWOB,
               "**No row is closed by this revision.**", "Power-design closure: BLOCKED", "Fabrication release: BLOCKED"):
         if w not in head:
             bad.append("revision block lacks %r" % w)
+    if "__CANDIDATE__" in text or "__PROMOTED__" in text or "(pending)" in head:
+        bad.append("a placeholder or a pending sha left")
     named = set(re.findall(r"\*\*(P0-\d|U-0\d|E11-29)\*\* \(", head))
     marked = {ln.split(" | ")[0][2:] for ln in text.split("\n") if ln.startswith("| ") and MARK in ln}
     if not named or named != marked:
@@ -355,7 +368,8 @@ def p_hygiene(text):
     bad = []
     if any(ch in text for ch in DASHES):
         bad.append("a dash")
-    if not text.startswith("**DONE:**") or "**NOT DONE:**" not in text.split("\n")[0] or "**NEXT:**" not in text.split("\n")[0]:
+    # restated at the adoption: W17's DONE / NOT DONE / NEXT line asked to be dropped, so the file opens with its title
+    if not text.startswith("# P0: ") or "**DONE:**" in text or "**NOT DONE:**" in text or "**NEXT:**" in text:
         bad.append("first line")
     if "Prototype framing" not in _norm(text):
         bad.append("prototype framing")
@@ -375,7 +389,8 @@ def _both(pred, mutate):
 
 
 def t_revision_block_and_marks():
-    _both(p_revision_block, lambda t: t.replace("- Promoted: `__PROMOTED__`", "- Promoted: pending", 1))
+    _both(p_revision_block, lambda t: t.replace("- Promoted: `%s`" % CAND, "- Promoted: `__PROMOTED__`", 1))
+    _both(p_revision_block, lambda t: t.replace("- Candidate: `%s`" % CAND, "- Candidate: `%s`" % TWOB, 1))
     _both(p_revision_block, lambda t: t.replace("; **changed after the review**: the rail trip's average and transient (row note)", "", 1))
 
 
@@ -404,11 +419,23 @@ def t_the_nine_patch_rows_applied():
 
 def t_no_dashes_and_the_framing():
     _both(p_hygiene, lambda t: t.replace("Prototype framing", "Framing"))
+    _both(p_hygiene, lambda t: "**DONE:** x. **NOT DONE:** y. **NEXT:** z.\n\n" + t)
     me = open(os.path.abspath(__file__), encoding="utf-8").read()
     assert not any(ch in me for ch in DASHES)
 
 
+def t_revision_2_kept_as_dated_history():
+    """Revision 2 is kept unchanged: the dated file equals the list at bbba3e53 and at the promoted revision, byte for byte."""
+    _need_commits()
+    old = open(need(os.path.join(ROOT, REV2), "revision 2's dated file"), encoding="utf-8").read()
+    assert old == _git_show(BASE, "v2/docs/records/l4close/P0-POWER-LIST.md"), "revision 2 differs from bbba3e53's list"
+    assert old == _git_show(CAND, "v2/docs/records/l4close/P0-POWER-LIST.md"), "revision 2 differs from the promoted revision's list"
+    assert "revision 2, 5 October 2026, 16:50 CEST" in old.split("\n", 1)[0]
+    assert "`%s`" % REV2 in _draft(), "the adopted list does not name its revision 2 file"
+
+
 test_revision_block_and_marks = t_revision_block_and_marks
+test_revision_2_kept_as_dated_history = t_revision_2_kept_as_dated_history
 test_every_citation_reads_at_the_candidate = t_every_citation_reads_at_the_candidate
 test_every_figure_is_on_its_cited_lines = t_every_figure_is_on_its_cited_lines
 test_every_quotation_reads_on_its_cited_lines = t_every_quotation_reads_on_its_cited_lines
