@@ -4,17 +4,21 @@ exact rows (S-nn for START-HERE.md, U-nn for SUPPLIER-HANDOVER.md, L-nn for LAYE
 its page, its line, one line of old text, the new text and its basis, in the form of set 31's rows
 (`records/int31/ENTRY-PAGES.patch.md`, W39, applied by W65).
 
-The revision the rows are written for is the pages as they read after set 31's adoption. Which pages this test reads is decided by
-the tree's own START-HERE.md, its line 3:
-  "Current revision: set 31"  the tree holds set 31's adoption: the rows are read against the tree's pages (the target revision);
+The revision the rows are written for is the four pages as set 32's integration holds them before the rows are applied: main after
+set 31's adoption (AT, ad757edb), merged with the four other branches set 32's chain pins (PINS) and the chain's step a5 (W42's
+apply_supplier_0e_pointer.py); fnd/w34pdftext adds 7 lines to SUPPLIER-HANDOVER.md's section 7, so U-16 reads line 414 there, not
+main's 407 (W99's B1). Which pages this test reads is decided by the tree's own START-HERE.md, its line 3:
+  "Current revision: set 31"  the tree holds set 31's adoption (the integrated tree after the chain's merges): the rows are read
+                              against the tree's own pages (W99: the right mechanism);
   "Current revision: set 32"  the rows are applied: every row's new text must stand on its page (a token or the value filled), and
                               set 32's blocks stand first under their headings and last in the plan;
-  anything else               this branch before set 31's adoption reaches it: the pages of fnd/adopt31 at AT, read through git, with
-                              set 31's fill values applied in memory (FILL31: the CANDIDATE and PROMOTED tokens, set 31's candidate
-                              5f25daf3); set 31's ADOPTION and GATE occurrences are left as they stand, and no old text may reach
-                              them (an old text carries no token). Where AT is absent from the repository, Skip with that reason.
-The record (its paragraph "What the rows are read against") gives why git and not copies under `inputs/`: copies would carry set 31's
-tokens into set 32's tree for good (taken under the owner's standing rule of 26 September 2026, W95; reversal named there).
+  anything else               this branch before the integration: main's pages at AT, read through git with no fill (no token is left
+                              on them; W99's C4, where W95 read fnd/adopt31's b06ee99f with set 31's fill in memory), each pinned
+                              branch's own change to the page applied in memory (its diff from its merge base with AT; a change an
+                              earlier pin already made is not applied twice) and step a5's apply() from the script at its pin. Where
+                              AT or a pin is absent from the repository, Skip with that reason.
+The record (its paragraph "What the rows are read against") gives why git and not copies under `inputs/` (taken under the owner's
+standing rule of 26 September 2026, W95, restated by W102; reversal named there).
 
 What fails here: a row whose page, line or old text does not hold on the pages read (the old text not exactly once on its line, or
 not once on the line the rows before it on that line left, applied bottom-up per page); an old text that is not one line or carries a
@@ -23,9 +27,15 @@ sequence or a page other than its prefix's; a token in a new text other than the
 set left after the fill's stage (read from RESULT's section 1 role rows, as test_res32 reads them) or a filled value that is not the
 role's commit at the place the template revision holds the token; a citation `<sha>:path:N` whose quote is not on that line at that
 commit; a quote followed by its file and section that is not in that section of that file; a count the rows type that is not the
-classification's at REC_AT or the pages'; a set 32 block not directly under its layer's heading above the set 31 block, or the plan's
-entry not after set 31's; the record not naming the patch file in the way the fill tool finds it; an em or en dash; the paragraph
-after the title not the DONE / NOT DONE / NEXT line. Each predicate is also run on a mutant it must refuse.
+tree's classification's over the branch rows (the adopted one at the adoption, W99's C1), whitespace flattened, with every
+occurrence required (C5), or not the pages' for sets 31 and 30, or a typed figure (generators, numbers, MiB, held-back texts) not
+the record's; a claim the rows carry (the DESK gate, the three claims in full, no circuit change, no item raised to MET, no
+independent check of the engineering, each "UNREVIEWED since cx46") missing from its row (W99's N2); set 31's known item without its
+source (paragraph 0a of l4e7_p0sol.out at the candidate) or said to be corrected while that paragraph still names set 30's
+integrator, or, after the fill, a value that is not in that paragraph (W99's C2); a set 32 block not directly under its layer's
+heading above the set 31 block, or the plan's entry not after set 31's; the record not naming the patch file in the way the fill
+tool finds it; an em or en dash; the paragraph after the title not the DONE / NOT DONE / NEXT line. Each predicate is also run on a
+mutant it must refuse.
 
 This file never writes a token of the fill tool literally (it builds them with T()), so the placeholder check of set 32's chain needs
 no deferral row for it. Read-only: git is read with `git show`, `git log`, `git cat-file`; nothing is written. No pytest is needed
@@ -42,9 +52,14 @@ REC = "v2/docs/records/int32"
 PATCH = REC + "/ENTRY-PAGES.patch.md"
 RESULT = REC + "/RESULT.md"
 CLASS = REC + "/CLASSIFICATION.md"
-AT = "b06ee99fab04ab8fdfcbe39a30684efe9a1b8222"      # fnd/adopt31's tip when the rows were written (set 31's adoption pages)
-REC_AT = "ee9407426c27541fb77404dee1bc7100672af42f"  # this record's revision the rows count from (the 34 commits of five branches)
-S31_CAND = "5f25daf3"                                 # set 31's candidate = its promotion (main fast-forwarded to it)
+AT = "ad757edb1be7e0fe3b586f986d2d704c9836fdcf"      # main after set 31's adoption (the fill's second run), W99's C4
+PINS = ("62300318cbf256a178659d7635ecfd4a318c47d3",   # set 32's chain pins other than this branch (_runs/int32/chain.sh SRC_*):
+        "9210ab541e8144af530f928c1da98b96f90c89fd",   # fnd/w34pdftext, fnd/s32attr, fnd/s32small, fnd/l4e7cache
+        "7b7219a7d0a695b6b866435116905964a68f5578",
+        "5ee1e66eb8787a788647305509ae6c2700144d9a")
+A5 = ("62300318cbf256a178659d7635ecfd4a318c47d3", "v2/docs/records/w42cite/apply_supplier_0e_pointer.py")  # the chain's step a5
+P0SOL = "v2/docs/records/l4e7/l4e7_p0sol.out"         # set 31's known item: its paragraph 0a at the candidate (W99's C2)
+KNOWN_ROWS = ("S-05", "U-03", "L-02", "P-01")
 PAGES = {"S": "v2/docs/handover/START-HERE.md", "U": "v2/docs/handover/supplier/SUPPLIER-HANDOVER.md",
          "L": "v2/docs/handover/LAYER-STATUS.md", "P": "v2/docs/EXECUTION-PLAN.md"}
 COUNTS = {"S": 15, "U": 16, "L": 6, "P": 1}
@@ -173,22 +188,67 @@ def p_hygiene(text):
 
 # ---- the pages ----
 
+def _hunks(diff):
+    """[(old lines, new lines)] of a unified diff of one file (context and removed lines; context and added lines)."""
+    out, cur = [], None
+    for ln in diff.split("\n"):
+        if ln.startswith("@@"):
+            cur = ([], [])
+            out.append(cur)
+        elif cur is not None and ln[:1] in (" ", "-", "+"):
+            if ln[:1] in (" ", "-"):
+                cur[0].append(ln[1:])
+            if ln[:1] in (" ", "+"):
+                cur[1].append(ln[1:])
+    return out
+
+
+def _find(ls, block):
+    return [i for i in range(len(ls) - len(block) + 1) if ls[i:i + len(block)] == block]
+
+
+def _apply_hunks(text, hunks, where):
+    """The page with each hunk applied where its old lines stand exactly once; a hunk whose new lines already stand once (an earlier
+    pin made the same change) is not applied again; anything else is a failure naming the page and the pin."""
+    ls = text.split("\n")
+    for old, new in hunks:
+        at = _find(ls, old)
+        if len(at) == 1:
+            ls[at[0]:at[0] + len(old)] = new
+        elif len(_find(ls, new)) != 1:
+            raise AssertionError("%s: a hunk does not apply (its old lines stand %d times)" % (where, len(at)))
+    return "\n".join(ls)
+
+
+def _integrated():
+    """Main's four pages at AT with each pin's own change to them and step a5, in memory (read-only: git show, git diff, merge-base)."""
+    for c in (AT,) + PINS:
+        if not _has(c):
+            raise Skip("the tree's pages are not set 31's adoption and %s is not in this repository" % c[:8])
+    out = {}
+    for k, p in PAGES.items():
+        t = _show(AT, p)
+        for pin in PINS:
+            mb = _git("merge-base", AT, pin).strip()
+            t = _apply_hunks(t, _hunks(_git("diff", "-U3", mb, pin, "--", p)), "%s at %s" % (p, pin[:8]))
+        out[k] = t
+    ns = {"__name__": "a5_in_memory"}
+    exec(compile(_show(A5[0], A5[1]), A5[1], "exec"), ns)
+    out["U"] = ns["apply"](out["U"])
+    return out
+
+
 def _stage_pages():
-    """("A", pages) on the tree's own pages at set 31; ("S", pages) once the rows are applied; ("P", pages) at AT with FILL31."""
+    """("A", pages) on the tree's own pages at set 31 (the integrated tree); ("S", pages) once the rows are applied; ("P", pages):
+    this branch before the integration, main's pages at AT with the pins and step a5 in memory (no fill: W99's C4)."""
     head = _read(PAGES["S"]).split("\n")[2]
     if head.startswith("**Current revision: set 31 "):
         return "A", {k: _read(p) for k, p in PAGES.items()}
     if head.startswith("**Current revision: set 32"):
         return "S", {k: _read(p) for k, p in PAGES.items()}
-    if not _has(AT):
-        raise Skip("the tree's pages are not set 31's adoption and fnd/adopt31's %s is not in this repository" % AT[:8])
-    out = {}
-    for k, p in PAGES.items():
-        t = _show(AT, p)
-        for name in ("CANDIDATE", "PROMOTED"):
-            t = t.replace(T(name), S31_CAND)
-        out[k] = t
-    return "P", out
+    if "P" not in _C:
+        _C["P"] = _integrated()
+    return "P", dict(_C["P"])
 
 
 def p_pages(rows, pages):
@@ -337,45 +397,150 @@ def p_quotes(rows):
     return bad
 
 
+CELL_SPLIT = re.compile(r"(?<!\\)\|")
+
+
 def _class_counts():
-    t = _show(REC_AT, CLASS)
-    tot = re.search(r"^\| total \| (\d+) \|", t, re.M)
-    ric = re.search(r"^\| `REVIEWED-INPUT CHANGED` \| (\d+) \|", t, re.M)
-    touch = re.search(r"The rows that touch a file cx46 read: (\d+), all UNREVIEWED since cx46\.", t)
-    return int(tot.group(1)), int(ric.group(1)), int(touch.group(1))
+    """The branch rows' counts from the tree's classification (the adopted one at the adoption; W99's C1, not a fixed revision): the
+    classified rows numbered below 31 (rows 31 to 33 and their sub-rows are the integration's), their total, how many touch a file
+    cx46 read (their reason names "UNREVIEWED since cx46", as test_res32 reads it) and how many are REVIEWED-INPUT CHANGED first."""
+    sec = _read(CLASS).split("## 1. ", 1)[1].split("\n## 2. ", 1)[0]
+    tot = touch = ric = 0
+    for line in sec.split("\n"):
+        if not line.startswith("| ") or line.startswith("| # ") or line.startswith("|---"):
+            continue
+        c = [x.strip() for x in CELL_SPLIT.split(line.strip())[1:-1]]
+        if not re.match(r"\d+(\.\d+)?$", c[0]) or float(c[0].split(".")[0]) >= 31 or not re.match(r"`[0-9a-f]{8}` / `[0-9a-f]{40}`$", c[1]):
+            continue
+        tot += 1
+        touch += "UNREVIEWED since cx46" in c[7]
+        ric += c[6].split(" + ")[0].strip() == "REVIEWED-INPUT CHANGED"
+    return tot, ric, touch
+
+
+def _flat(s):
+    return " ".join(s.split())
 
 
 TYPED = (re.compile(r"of the (\d+) commits of its five branches, (\d+) touch a file cx46 read, (\d+) of them REVIEWED-INPUT CHANGED"),
-         re.compile(r"counts (\d+) REVIEWED-INPUT CHANGED commits among the (\d+) of its five branches and\s+(\d+) that touch a file cx46 read"),
-         re.compile(r"classes the (\d+)\s+commits of its five branches, `[^`]+` `(\d+) of the \d+ touch a file cx46 read`, (\d+) of\s+them REVIEWED-INPUT CHANGED"))
+         re.compile(r"counts (\d+) REVIEWED-INPUT CHANGED commits among the (\d+) of its five branches and (\d+) that touch a file cx46 read"),
+         re.compile(r"classes the (\d+) commits of its five branches, `[^`]+` `(\d+) of the \d+ touch a file cx46 read`, (\d+) of them REVIEWED-INPUT CHANGED"))
+BESIDE = re.compile(r"set 31's (\d+),? (?:counted )?over all (\d+) of its commits")
+BESIDE30 = re.compile(r"set 30's (\d+) over its (\d+)")
+SCOPE = "counted over the branch commits alone"
 
 
 def p_counts(text, pages):
-    """The counts the rows type: the classification's at REC_AT (34 rows, 2 REVIEWED-INPUT CHANGED, 12 touching), set 31's 25 and set
-    30's 14 as the pages read them, and the 26 converted generators as set 32's record states them."""
-    if not _has(REC_AT):
-        raise Skip("%s is not in this repository" % REC_AT[:8])
+    """The counts the rows type, whitespace flattened (W99's C5): the tree's classification's over the branch rows (34 rows, 2
+    REVIEWED-INPUT CHANGED, 12 touching at this record), each of the four sentences stating that scope (C1); set 31's 25 over its 106
+    commits and set 30's 14 over its 45 as the pages read them, every occurrence (S-10, U-09, L-02, P-01 for set 31; L-02, P-01 for
+    set 30)."""
     tot, ric, touch = _class_counts()
-    bad, n = [], 0
-    for m in TYPED[0].finditer(text):
-        n += 1
-        if tuple(int(x) for x in m.groups()) != (tot, touch, ric):
-            bad.append("typed %s, the classification's (total, touching, RIC) %s" % (m.groups(), (tot, touch, ric)))
-    for m in TYPED[1].finditer(text):
-        n += 1
-        if tuple(int(x) for x in m.groups()) != (ric, tot, touch):
-            bad.append("typed %s, the classification's (RIC, total, touching) %s" % (m.groups(), (ric, tot, touch)))
-    for m in TYPED[2].finditer(text):
-        n += 1
-        if tuple(int(x) for x in m.groups()) != (tot, touch, ric):
-            bad.append("typed %s, the classification's (total, touching, RIC) %s" % (m.groups(), (tot, touch, ric)))
+    flat, bad, n = _flat(text), [], 0
+    for i, order in ((0, (tot, touch, ric)), (1, (ric, tot, touch)), (2, (tot, touch, ric))):
+        for m in TYPED[i].finditer(flat):
+            n += 1
+            if tuple(int(x) for x in m.groups()) != order:
+                bad.append("typed %s, the classification's %s" % (m.groups(), order))
     if n != 4:
         bad.append("the classification's counts are typed %d times, not 4 (S-10, U-09, L-02, P-01)" % n)
-    if "beside set 31's 25 and set 30's 14" in text and not ("counts 25 commits that change what cx46 read" in pages["S"]
-                                                              and "(14 over the 45 commits of" in pages["S"]):
-        bad.append("set 31's 25 or set 30's 14 is not the page's")
-    if text.count("26 record generators") < 3 or "so 26 record generators read each maker's PDF text" not in _show(REC_AT, RESULT):
-        bad.append("the 26 converted generators are not set 32's record's")
+    if flat.count(SCOPE) != 4:
+        bad.append("the branch-only scope is stated %d times, not 4 (W99's C1)" % flat.count(SCOPE))
+    s = _flat(pages["S"])
+    m31 = re.search(r"Set 31 adds its own: (\d+) commits that change what cx46 read .*? over the (\d+) commits of `dd1aed00\.\.5f25daf3`", s)
+    m30 = re.search(r"\((\d+) over the (\d+) commits of `4d0ff8a2\.\.dd1aed00`", s)
+    if not m31 or not m30:
+        return bad + ["the pages do not state set 31's and set 30's counts as these rows read them"]
+    b31, b30 = BESIDE.findall(flat), BESIDE30.findall(flat)
+    if len(b31) != 4 or any(x != m31.groups() for x in b31):
+        bad.append("set 31's count over its commits is typed %s, not %s four times" % (b31, m31.groups()))
+    if len(b30) != 2 or any(x != m30.groups() for x in b30):
+        bad.append("set 30's count over its commits is typed %s, not %s twice" % (b30, m30.groups()))
+    return bad
+
+
+def p_figures(text):
+    """The figures the rows type are the record's (W99's N2: E19 to E21): the converted generators, the numbers the KEY holds, the
+    ZIP's cap and the held-back texts, each at every occurrence."""
+    flat, res, bad = _flat(text), _flat(_read(RESULT)), []
+    want = {"generators": re.search(r"committed verbatim inputs of (\d+) record generators", res),
+            "numbers": re.search(r"KEY holding the (\w+) numbers the record reads", res),
+            "MiB": re.search(r"raised to (\d+) MiB", res),
+            "held": re.search(r"\(352 files\), (\d+) held back", res)}
+    if not all(want.values()):
+        return ["RESULT.md does not state %s" % [k for k, v in want.items() if not v]]
+    for k, pat, least in (("generators", r"(\d+) record generators", 5), ("numbers", r"the (\w+) numbers (?:the record|it) reads", 4),
+                          ("MiB", r"(\d+) MiB", 2), ("held", r"re-taken after the fetch(?:, as section 7 gives it)?: (\d+) texts", 4)):
+        got = re.findall(pat, flat)
+        if len(got) < least or any(g != want[k].group(1) for g in got):
+            bad.append("%s typed %s, not the record's %s at least %d times" % (k, got, want[k].group(1), least))
+    return bad
+
+
+CLAIMS = {
+    "P-01": ("engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release "
+             "BLOCKED. Layer 4's DESK gate NOT PASSED.", "\"Set 32 closes NO power item.\""),
+    "U-16": ("No circuit change is applied, and nothing in it accepts, closes or promotes a design claim; Layer 4's DESK gate and the "
+             "three completion claims stand as set 30's assessment gives them.",),
+    "L-01": ("No item is raised to MET by set 32 and no layer from 4 on is COMPLETE",),
+    "S-09": ("unchanged in set 31 and in set 32: no independent check of the engineering read a later revision",),
+    "U-07": ("unchanged in set 31 and in set 32: no independent check of the engineering read a later revision",),
+    "S-10": ("each \"UNREVIEWED since cx46\"",), "U-09": ("each \"UNREVIEWED since cx46\"",),
+    "S-05": ("\"Layer 4's DESK gate: NOT PASSED\"", "\"Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS\"",
+             "\"Power-design closure: BLOCKED. Fabrication release: BLOCKED.\"", "\"Set 32 closes NO power item.\""),
+    "U-03": ("\"Layer 4's DESK gate: NOT PASSED\"", "\"Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS\"",
+             "\"Power-design closure: BLOCKED. Fabrication release: BLOCKED.\"", "\"Set 32 closes NO power item.\""),
+}
+
+
+def p_claims(rows):
+    """Each claim a row carries stands in its new text exactly once, in full (W99's N2: E1 to E5, E7, E14, E28)."""
+    by, bad = {r[0]: _flat(r[7]) for r in rows}, []
+    for rid, claims in CLAIMS.items():
+        for c in claims:
+            if by.get(rid, "").count(c) != 1:
+                bad.append("%s does not carry, once and in full: %r" % (rid, c[:70]))
+    return bad
+
+
+KNOWN = re.compile(r"is planned to be corrected by (?:that|set 32's one|set 32's) re-key and (?:the regeneration of its dependents|its "
+                   r"dependents' regeneration)(?: \(no set had run it when these rows were written\))?; the regenerated `(?:v2/docs/)?"
+                   r"records/l4e7/l4e7_p0sol\.out` at the candidate prints in its paragraph 0a: `([^`]+)`")
+
+
+def _para_0a(cand):
+    t = _show(cand, P0SOL)
+    m = re.search(r"\n  0a (.*?)\n  0b ", t, re.S)
+    return _flat(m.group(1)) if m else None
+
+
+def p_known(rows, result):
+    """Set 31's known item in S-05, U-03, L-02 and P-01: its GATE's source is paragraph 0a of l4e7_p0sol.out at the candidate, never the
+    dependents' log; after the fill the value stands in that paragraph; "is corrected" only where that paragraph no longer names set
+    30's integrator (W99's C2)."""
+    by, bad = {r[0]: _flat(r[7]) for r in rows}, []
+    st, cand, _a = _fill_stage(result)
+    para = None
+    if st in (1, 2):
+        if not _has(cand):
+            raise Skip("the candidate %s is not in this repository" % cand[:8])
+        para = _para_0a(cand)
+        if para is None:
+            return ["%s at the candidate prints no paragraph 0a" % P0SOL]
+    for rid in KNOWN_ROWS:
+        txt = by.get(rid, "")
+        ms = KNOWN.findall(txt)
+        if len(ms) != 1:
+            bad.append("%s: the known item is not stated once with paragraph 0a at the candidate as its source" % rid)
+            continue
+        if "dependents' log" in txt:
+            bad.append("%s: the known item's source is the dependents' log" % rid)
+        if st == 0 and ms[0] != T("GATE"):
+            bad.append("%s: the known item's value is written before the fill" % rid)
+        if para is not None and _flat(ms[0].strip('"')) not in para:
+            bad.append("%s: the known item's value is not in paragraph 0a at the candidate: %r" % (rid, ms[0][:60]))
+        if re.search(r"\bis corrected\b", txt) and (para is None or "set 30's integrator" in para):
+            bad.append("%s: says the known item is corrected, which paragraph 0a at the candidate does not show" % rid)
     return bad
 
 
@@ -488,8 +653,8 @@ def t_every_row_is_well_formed_with_its_tokens_and_basis():
 
 
 def t_every_old_text_holds_once_on_its_line_of_the_pages_read():
-    """The revision read: set 31's adoption in the tree, else fnd/adopt31's AT with set 31's fill values in memory; or, once the rows
-    are applied, every new text on its page."""
+    """The revision read: the integrated tree's own pages (set 31's adoption in the tree), else main's AT with the pins and step a5 in
+    memory (W99's B1 and C4); or, once the rows are applied, every new text on its page."""
     t = _pt()
     rows = _rows(t)
     stage, pages = _stage_pages()
@@ -504,6 +669,9 @@ def t_every_old_text_holds_once_on_its_line_of_the_pages_read():
     assert p_pages([x if x[0] != "U-13" else x[:5] + (x[5] + 1,) + x[6:] for x in rows], pages), "a row on the wrong line passed"
     assert p_pages([x if x[0] != "S-08" else x[:5] + (x[5], "` | set 31's adoption commit") + x[7:] for x in rows] +
                    [x for x in rows if x[0] == "S-08"], pages), "a second row whose old text the first consumed passed"
+    assert p_pages([x if x[0] != "U-16" else x[:5] + (407,) + x[6:] for x in rows], pages), "U-16 on main's line 407 passed (W99's B1)"
+    if stage == "P":
+        assert p_pages(rows, dict(pages, U=_show(AT, PAGES["U"]))), "main's supplier page without the pinned branches' lines passed"
 
 
 def t_the_set_32_blocks_are_placed_newest_first_and_the_plan_entry_last():
@@ -554,6 +722,61 @@ def t_every_count_typed_is_the_classifications_and_the_pages():
     assert p_counts(_mut(t, "counts 2 REVIEWED-INPUT CHANGED commits", "counts 3 REVIEWED-INPUT CHANGED commits"), pages), "a wrong RIC count passed"
     assert p_counts(_mut(t, "of the 34 commits of its five branches, 12", "of the 34 commits of its branches, 12"), pages), \
         "a count dropped from the pattern passed"
+    assert p_counts(_mut(t, "beside set 31's 25\n  over all 106", "beside set 31's 24\n  over all 106"), pages), "set 31's 25 typed 24 passed (E18)"
+    assert p_counts(_mut(t, "beside set 31's 25 over all 106\nof its commits", "beside set 31's 26 over all 106\nof its commits"), pages), \
+        "the wrapped occurrence typed 26 passed (W99's C5)"
+    assert p_counts(_mut(t, "and set 30's 14 over its 45.", "and set 30's 15 over its 45."), pages), "set 30's 14 typed 15 passed"
+    assert p_counts(_mut(t, "section 2), counted over the branch commits alone; the integration's own commits are that file's rows 31 to 33",
+                         "section 2); the integration's own commits are that file's rows 31 to 33"), pages), "a count without its scope passed (C1)"
+
+
+def t_every_figure_and_claim_the_rows_carry_is_the_records():
+    """W99's N2: the typed figures (E19 to E21 and the held-back texts) and the claims in full (E1 to E5, E7, E14, E28)."""
+    t = _pt()
+    assert not p_figures(t), p_figures(t)
+    for old, new, what in (("over set 31: 26 record generators read their\nmakers'", "over set 31: 27 record generators read their\nmakers'", "E19"),
+                           ("keyed on the sixteen numbers the record reads of `l4e11_power.out` (WP-B), with ONE",
+                            "keyed on the seventeen numbers the record reads of `l4e11_power.out` (WP-B), with ONE", "E20"),
+                           ("ZIP's cap is raised to 100 MiB (Q-53)", "ZIP's cap is raised to 50 MiB (Q-53)", "E21"),
+                           ("sheet and re-taken after the fetch: 57 texts), the verdict", "sheet and re-taken after the fetch: 52 texts), the verdict", "held")):
+        assert p_figures(_mut(t, old, new)), "%s passed" % what
+    rows = _rows(t)
+    assert not p_claims(rows), p_claims(rows)
+    for old, new, what in (("Layer 4's DESK gate NOT PASSED.\n", "Layer 4's DESK gate PASSED.\n", "E1"),
+                           ("DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED;", "DESK PACKAGE OF OPEN ITEMS; power-design closure CLOSED;", "E2"),
+                           ("; unchanged in set 31 and in set 32: no independent check of the engineering read a later revision (`v2/docs/records/int31",
+                            "; unchanged in set 31; in set 32 an independent check of the engineering read a later revision (`v2/docs/records/int31", "E3"),
+                           ("No item is raised to MET by set 32", "Two items are raised to MET by set 32", "E4"),
+                           ("(`v2/docs/records/int32/RESULT.md`). No circuit change is applied", "(`v2/docs/records/int32/RESULT.md`). A circuit change is applied", "E5"),
+                           ("(reading A), each \"UNREVIEWED since cx46\" (`v2/docs/records/int32/CLASSIFICATION.md`",
+                            "(reading A) (`v2/docs/records/int32/CLASSIFICATION.md`", "E7"),
+                           ("; unchanged in set 31 and in set 32: no independent check of the engineering read a later revision (`records/int31",
+                            "; unchanged in set 31, superseded in set 32 by W64's read (`records/int31", "E14"),
+                           ("\"Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN\nITEMS\"", "\"Engineering-handover readiness: READY\"", "E28")):
+        assert p_claims(_rows(_mut(t, old, new))), "%s passed" % what
+
+
+def t_set_31s_known_item_reads_paragraph_0a_at_the_candidate():
+    """W99's C2: the source is paragraph 0a of l4e7_p0sol.out at the candidate, never the dependents' log; the value (after the fill)
+    stands in that paragraph; no row says the item is corrected while that paragraph still names set 30's integrator."""
+    t = _pt()
+    result = _read(RESULT)
+    rows = _rows(t)
+    assert not p_known(rows, result), p_known(rows, result)
+    assert p_known(_rows(_mut(t, "regeneration of its dependents (no set had run it when these rows were\nwritten); the regenerated",
+                                  "regeneration of its dependents, as the dependents' log shows; the regenerated")), result), \
+        "the dependents' log as the source passed"
+    assert p_known(_rows(_mut(t, "is planned to be corrected by that\n  re-key", "is corrected by that\n  re-key")), result), \
+        "the known item said corrected passed"
+    st = _fill_stage(result)[0]
+    if st == 0:
+        assert p_known(_rows(_mut(t, "candidate prints in its paragraph 0a: `%s`.\n```\nBasis: `v2/docs/records/int32/RESULT.md`, the paragraph" % T("GATE"),
+                                  "candidate prints in its paragraph 0a: `a line`.\n```\nBasis: `v2/docs/records/int32/RESULT.md`, the paragraph")), result), \
+            "a value written before the fill passed"
+    else:
+        m = re.search(r"records/l4e7/l4e7_p0sol\.out` at the candidate prints in its paragraph 0a: `([^`]+)`", t)
+        assert p_known(_rows(t.replace("paragraph 0a: `%s`" % m.group(1), "paragraph 0a: `a sentence 0a never printed`", 1)), result), \
+            "a value outside paragraph 0a passed"
 
 
 def t_the_tokens_are_the_rows_and_the_fill_stage_is_resultss():
@@ -594,5 +817,7 @@ test_the_set_32_blocks_are_placed_newest_first_and_the_plan_entry_last = _pytest
 test_every_citation_is_on_its_cited_line = _pytest(t_every_citation_is_on_its_cited_line)
 test_every_quote_with_its_section_is_in_that_section = _pytest(t_every_quote_with_its_section_is_in_that_section)
 test_every_count_typed_is_the_classifications_and_the_pages = _pytest(t_every_count_typed_is_the_classifications_and_the_pages)
+test_every_figure_and_claim_the_rows_carry_is_the_records = _pytest(t_every_figure_and_claim_the_rows_carry_is_the_records)
+test_set_31s_known_item_reads_paragraph_0a_at_the_candidate = _pytest(t_set_31s_known_item_reads_paragraph_0a_at_the_candidate)
 test_the_tokens_are_the_rows_and_the_fill_stage_is_resultss = _pytest(t_the_tokens_are_the_rows_and_the_fill_stage_is_resultss)
 test_the_record_names_the_patch_file_so_the_fill_reaches_it = _pytest(t_the_record_names_the_patch_file_so_the_fill_reaches_it)

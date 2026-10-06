@@ -105,7 +105,9 @@ DECLARED = ("__REKEY__", "__CANDIDATE__", "__GATE__", "__PROMOTED__", "__ADOPTIO
 OUTSIDE = {"4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31's tip, set 31's RESULT and CLASSIFICATION drafts (W39)",
            # W78 (W75's F2 and F4): set 31's classification at W75's read and set 31's candidate, after this record's lineage tip
            "f535bbcabab190f2489e168c09caa45fcc6e6d31": "fnd/res31 at W75's read, set 31's CLASSIFICATION with its caveat on row 44",
-           "d0e283aa52ceb7f303358862b539161b721475e5": "set 31's candidate, l4e7_p0sol.out's paragraph 0a and its KNOWN ITEM"}
+           "d0e283aa52ceb7f303358862b539161b721475e5": "set 31's candidate, l4e7_p0sol.out's paragraph 0a and its KNOWN ITEM",
+           # W102 (W99's B1 and C4): main after set 31's adoption, the pages the patch file's rows are read against with the pins
+           "ad757edb1be7e0fe3b586f986d2d704c9836fdcf": "main after set 31's adoption (the fill's second run), set 32's integration base"}
 ASSESS = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
 S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
 S30C = "v2/docs/records/int30/CLASSIFICATION.md"
