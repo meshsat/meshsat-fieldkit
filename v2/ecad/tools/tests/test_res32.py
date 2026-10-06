@@ -51,7 +51,10 @@ file (p_placeholders, and _template_texts reads it at the template's commit). No
 W113's restatement (7 October 2026, from 01:43 CEST, on W109's F2 to F4 and W110's C1): the record names the chain's base, main's tip
 at the run's start (CHAIN_BASE, be07863b, the chain's log's first line), apart from its BASE row (set 31's promoted revision); the
 chain's base is declared in OUTSIDE (it is in no history this record's branch reads until main is merged), and a mutant naming a
-commit that is neither is refused.
+commit that is neither is refused. W110's B2: p_filled read "the re-key's cache commit follows BASE on the first-parent line", which
+no true re-key meets on the lineage the chain builds (set 31's promoted revision is a second parent of main's merge of set 31's
+adoption, never on main's first-parent line); restated: BASE is an ancestor of the re-key's cache commit and of the chain's base, and
+the chain's base is on the re-key's first-parent line before it (a mutant naming the chain's base itself as the re-key is refused).
 
 What fails here: a commit of set 32's five branch ranges missing, doubled or out of order; a short sha that is not its full sha's prefix; a
 date, subject or file count that is not git's; a class outside W39's fixed set; a row that touches a file cx46 read without the words
@@ -315,8 +318,16 @@ def p_filled(texts):
         return bad
     if f["BASE"] == LINEAGE or LINEAGE not in _fp(f["BASE"]):
         bad.append("BASE %s does not follow set 31's lineage tip %s on the first-parent line" % (r["BASE"], LINEAGE[:8]))
-    if f["REKEY"] == f["BASE"] or f["BASE"] not in _fp(f["REKEY"]):
-        bad.append("the re-key's cache commit %s does not follow BASE on the first-parent line" % r["REKEY"])
+    # W113 (W110's B2): set 32's chain runs on main's tip at its start (CHAIN_BASE), whose first-parent line never holds set 31's
+    # promoted revision (a second parent of main's merge of set 31's adoption): BASE must be an ancestor of the re-key's cache commit
+    # and of the chain's base, and the chain's base must be on the re-key's first-parent line, before it
+    anc = lambda a, b: subprocess.run(["git", "-C", REPO, "merge-base", "--is-ancestor", a, b], capture_output=True).returncode == 0
+    if f["REKEY"] == f["BASE"] or not anc(f["BASE"], f["REKEY"]):
+        bad.append("the re-key's cache commit %s does not descend from BASE %s" % (r["REKEY"], r["BASE"]))
+    if not _has(CHAIN_BASE) or not anc(f["BASE"], CHAIN_BASE):
+        bad.append("the chain's base %s is absent or does not descend from BASE %s" % (CHAIN_BASE[:8], r["BASE"]))
+    elif f["REKEY"] == CHAIN_BASE or CHAIN_BASE not in _fp(f["REKEY"]):
+        bad.append("the re-key's cache commit %s does not follow the chain's base %s on the first-parent line" % (r["REKEY"], CHAIN_BASE[:8]))
     for b in BRANCHES:
         if subprocess.run(["git", "-C", REPO, "merge-base", "--is-ancestor", b[2], f["REKEY"]], capture_output=True).returncode:
             bad.append("the re-key's cache commit %s does not hold %s's tip %s" % (r["REKEY"], b[0], b[2][:8]))
@@ -1147,6 +1158,7 @@ def t_the_integration_rows_and_the_filled_commits():
     moved("BASE", LINEAGE[:8])                 # set 31's lineage tip itself, not its promoted revision
     moved("BASE", r["REKEY"])                  # a later commit as the base
     moved("REKEY", r["BASE"])                  # the re-key at the base itself
+    moved("REKEY", CHAIN_BASE[:8])             # W113 (W110's B2): the re-key at the chain's base itself, not after it
     moved("REKEY", BRANCHES[4][2][:8])         # a commit that is not on the lineage after the base
     moved("CANDIDATE", r["REKEY"])             # the candidate equal to the re-key
     moved("PROMOTED", r["BASE"])               # set 32's promotion naming set 31's

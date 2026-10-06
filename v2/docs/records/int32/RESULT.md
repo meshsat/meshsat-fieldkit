@@ -19,7 +19,9 @@ fill's first run fills the four pages' CANDIDATE and GATE tokens and its second 
 S-07 and U-05) with the rest, since W103 extended `fill_res.py --set 32` to the four pages (queue item Q-124; W106's N-a), confirms
 W99's notes N6 and N7 before the adoption commit (the patch file's NEXT, item 3; W106's N-b), writes
 the classification's row 31 in full (it carries no token) and its rows 32 and 33's other cells from git by hand, recomputes its section
-2, extends the ranges of `test_res32.py` over the integration's commits, restates this header and the patch file's for the state
+2, extends the ranges of `test_res32.py` over the integration's commits (the chain's base, main's tip at its start, to the candidate
+on the first-parent line; set 31's promoted revision, the BASE row, is an ancestor of that base and never on that line: W110's B2),
+restates this header and the patch file's for the state
 after the fill and the adoption, and adopts this file with `CLASSIFICATION.md`; then the coordinator's dependency pass for the
 changed pages (l8gnd's pin of LAYER-STATUS and its cascade), as after set 31.
 
