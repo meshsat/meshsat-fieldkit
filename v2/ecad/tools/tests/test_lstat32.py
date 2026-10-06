@@ -11,8 +11,9 @@ The predicates: Slot I's lines of the head paragraph and of the four blocks are 
 inside its own; every dated citation names a commit in the object store, a file at that commit and lines inside it, and each quote
 right after one is found in those lines; every sha the notes name is a commit; the branch containments the notes state hold, the
 eight next-set tips are not in the integration's tip, the integration's tip carries the chain the notes name, and fnd/lstat31's tip
-is this branch's base; the placeholders __CANDIDATE__ and __PROMOTED__ stand once each in Layer 4's chain and the DESK-gate cell
-keeps its placeholder; the three completion claims each stand once with their own state word, W18's table gives the same, and no
+is this branch's base; the placeholders __CANDIDATE__ and __PROMOTED__ are filled in Layer 4's chain with the promoted revision
+and the DESK-gate cell carries the coordinator's three claims in place of its placeholder (restated by W27 at the adoption, 6 October
+2026; basis: the coordinator's values of 10:40:38 CEST and its judgement of 10:45 CEST); the three completion claims each stand once with their own state word, W18's table gives the same, and no
 percentage is written; the counts the notes copy are their sources' (W15's 38 commits and 13 REVIEWED-INPUT CHANGED rows with the
 six that do not only narrow, W12's K table 19 standing, 13 restated only on next-set branches, 6 unrestated and 9 not standing,
 the ledger's twelve RE items of cx46 and its counts line at the tip against Slot I's at 7070f106, D-10 as E-1 and D-17 as RE-2, the
@@ -46,7 +47,11 @@ from harness import Skip, need  # noqa: E402
 DASHES = (chr(0x2013), chr(0x2014))  # the en dash and the em dash, by code point
 HEAD = "**After set 30 (6 October 2026, the P0 power candidate's integration, MESHSAT-1357).**"
 W21HEAD = "**After set 30, at the integration's tip (dated 6 October 2026, folded by W21"
-DESK = "[COORDINATOR: the DESK-gate assessment]"
+DESK = "[COORDINATOR: the DESK-gate assessment]"  # Slot I's placeholder, replaced at the adoption by DESK_CELL
+PROM = "dd1aed00d0a0a521063b5792550bc510c4707c59"  # INTEGRATED = CANDIDATE = PROMOTED (the coordinator's values file)
+DESK_CELL = ("**The Layer 4 DESK gate:** the coordinator's judgement of 6 October 2026, 10:45 CEST, on the promoted revision `dd1aed00`: "
+             "Layer 4's DESK gate NOT PASSED; engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS; power-design closure "
+             "BLOCKED; fabrication release BLOCKED (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6")
 LAYERS = {"4": "## Layer 4. System architecture\n", "8": "## Layer 8. Schematics\n",
           "9": "## Layer 9. Pre-layout design analysis\n",
           "12": "## Layer 12. Firmware, bring-up, test plans and build documentation\n"}
@@ -177,6 +182,8 @@ def t_slot_is_lines_are_kept_in_order_inside_their_blocks():
         cur = _block(t, n).splitlines()
         k = 0
         for line in _block(old, n).splitlines():
+            if line == "**The Layer 4 DESK gate:** " + DESK:
+                line = next((x for x in cur if x.startswith(DESK_CELL)), line)  # the cell the adoption replaced
             while k < len(cur) and cur[k] != line:
                 k += 1
             assert k < len(cur), "layer %s: Slot I's line is gone or out of order: %r" % (n, line[:80])
@@ -233,13 +240,16 @@ def t_the_chain_and_the_branch_containments_hold():
 
 
 def t_the_placeholders_stand():
+    # restated at the adoption (W27): the two placeholders are filled with the promoted revision, once each, in Layer 4's chain,
+    # and the DESK-gate cell carries the coordinator's three claims, citing the assessment, in place of its placeholder.
     t = _page()
     l4 = _block(t, "4")
     for p in ("__CANDIDATE__", "__PROMOTED__"):
-        assert t.count(p) == 1, "%s stands %d times on the page" % (p, t.count(p))
-        assert p in l4, "%s is not in Layer 4's block" % p
-    assert "INTEGRATED: `__CANDIDATE__`" in _norm(l4) and "PROMOTED: `__PROMOTED__`" in _norm(l4)
-    assert t.count(DESK) == 1 and ("**The Layer 4 DESK gate:** " + DESK) in l4, "the DESK-gate cell lost its placeholder"
+        assert p not in t, "%s still stands on the page" % p
+    assert ("INTEGRATED: `%s`" % PROM) in _norm(l4) and ("PROMOTED: `%s`" % PROM) in _norm(l4), "the chain's two shas"
+    assert DESK not in t, "the DESK-gate placeholder still stands"
+    assert sum(1 for x in l4.splitlines() if x.startswith(DESK_CELL)) == 1, "the DESK-gate cell is not the coordinator's claims"
+    assert t.count("**The Layer 4 DESK gate:**") == 1, "the DESK-gate cell doubled"
     assert "[COORDINATOR:" not in _notes(), "the notes write a coordinator placeholder"
 
 

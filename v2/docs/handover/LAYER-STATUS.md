@@ -375,8 +375,8 @@ its "After set 29" or H2 row, and where a row differs from a record it cites, th
   draft 3 lists them (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:40-50`); the two corrections that draft leaves pending after
   W16's review of 2b (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:51-52`), since committed: `33efca07` (record l6r2's composition
   names board D's ptt draft once, W16's finding 1) and `2d4f6df5` (the change-list applier's D1 regression test, W16's finding 3,
-  merged at `c4492dd3`, the tip). INTEGRATED: `__CANDIDATE__`, the candidate commit with record l4e7's re-keyed results cache, not yet
-  made. PROMOTED: `__PROMOTED__`, main after the promotion, not yet made.
+  merged at `c4492dd3`, the tip). INTEGRATED: `dd1aed00d0a0a521063b5792550bc510c4707c59`, the candidate commit with record l4e7's re-keyed results cache
+  (`c2a532a9`). PROMOTED: `dd1aed00d0a0a521063b5792550bc510c4707c59`, main after the promotion (10:36:57 CEST).
 - Unreviewed changes after cx46. W15 classes the commits between REVIEWED and `6bc4424e`,
   `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:7` `prints 38: 28 commits and 10 merges`: REVIEWED-INPUT CHANGED in 13,
   `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:85` `rows: 13, not empty.`, seven of them narrowing, withdrawing, tightening
@@ -397,7 +397,7 @@ its "After set 29" or H2 row, and where a row differs from a record it cites, th
   these 13 was checked by an independent checker after cx46.`, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:90` `never as checked,
   never credited, each owing its own targeted verification before any credit`. W15's range ends at `6bc4424e`; W18 reads commit 2b
   from its diff and names record l8r2's gndret output in it as not a binding-only change (W16's finding 2, Layer 9 below); the commits
-  after 2b are in no classification draft yet.
+  after 2b are in no classification draft yet. Dated at the adoption (W27, 6 October 2026): at `dd1aed00`: 14 of 45 (`records/int30/CLASSIFICATION.md` rows 39 to 45; `records/int30/RESULT.md` section 2).
 - Remaining engineering. The ledger at the tip carries cx46's twelve, `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:100`
   `The twelve cx46 findings NOT CLOSED, each a REMAINING ENGINEERING item`; D-10 as E-1,
   `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:499` `HO-F: D-10 / E-1, the solar guard-on failing cases F1 to F4 and the
@@ -420,7 +420,7 @@ its "After set 29" or H2 row, and where a row differs from a record it cites, th
   `33efca07` and `2d4f6df5` above; 2 and 4 to 7 notes for the next set; `b8912eef:v2/docs/records/int30/RESULT.draft3.md:231` `Nothing
   here blocks the freeze on what was read`. It is a reviewer's reading of commit 2b, not a verdict on the power design.
 
-**The Layer 4 DESK gate:** [COORDINATOR: the DESK-gate assessment]
+**The Layer 4 DESK gate:** the coordinator's judgement of 6 October 2026, 10:45 CEST, on the promoted revision `dd1aed00`: Layer 4's DESK gate NOT PASSED; engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6, where the judgement's text is held at the adoption on two sentences for the coordinator to restate).
 
 **The completion claims, each reported apart** (the five of the owner's instruction of 2 October 2026,
 `v2/docs/handover/OWNER-INSTRUCTION-2026-10-02.md:45-51`, with power-design closure reported separately,

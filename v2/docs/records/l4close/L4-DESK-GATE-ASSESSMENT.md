@@ -460,7 +460,7 @@ candidate since the merge `6fe398e9`; the column Next set names where a left ite
 ## 6. The coordinator's judgement on the promoted revision
 
 **HELD at the adoption (W27, 6 October 2026).** The coordinator's judgement on Layer 4's DESK gate, dated 6 October 2026, 10:45
-CEST (`<worktrees>/_runs/int30/Q05-verdict.final.md`, outside the repository), belongs under this heading verbatim, its introduction
+CEST, one count corrected at 11:15 by its own label (thirteen to fourteen unreviewed changes; `<worktrees>/_runs/int30/Q05-verdict.final.md`, outside the repository), belongs under this heading verbatim, its introduction
 and its five sections. W27 did not insert it: two of its sentences read differently from the ledger at `dd1aed00`, and the adoption's
 rule is to stop on such a sentence and report it, never to edit it. The coordinator restates them and replaces the verdict line below
 with the judgement whole. The two sentences, each with the record it reads against:
@@ -514,7 +514,7 @@ state at the candidate in brackets):
   classification binds `1c6d56f5` only [I30:25]; basis moved: integration 1, 2a, set 31, 2c, the four pre-freeze merges and the merge
   of `origin/main` are in no committed classification record). *on `dd1aed00`:* the basis holds for the promoted revision, which
   carries no classification record of these commits; W15's classification, filed with this adoption, names 13 rows REVIEWED-INPUT
-  CHANGED [CLS:74], [CLS:85], adopted on `fnd/adopt30a` by the other adoption author, and no check has read any of them.
+  CHANGED [CLS:74], [CLS:85] to `6bc4424e`, and at `dd1aed00`: 14 of 45 (`records/int30/CLASSIFICATION.md` rows 39 to 45; `records/int30/RESULT.md` section 2), adopted on `fnd/adopt30a` by the other adoption author, and no check has read any of them.
 - Y5. The outstanding work is clearly scoped: the annex's four items [ANX:111-119] and the ledger's twenty remaining-engineering
   items, one qualification and three external architecture facts [REM:669] (basis moved: E11-37 is placed as HO-L on the candidate
   [REM:584-636] and the back-feed's reading is settled in the ledger [REM:522-526]; its class against the P0 list (A4.4) and record
