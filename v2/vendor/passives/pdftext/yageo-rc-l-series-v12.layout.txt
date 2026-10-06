@@ -1,0 +1,729 @@
+    DATA SHEET
+GENERAL PURPOSE CHIP RESISTORS
+                            RC_L series
+              ±0.1%, ±0.5%, ±1%, ±5%
+          Sizes 0075/0100/0201/0402/0603/0805/
+                     1206/1210/1218/2010/2512
+
+             RoHS compliant & Halogen free
+
+
+
+
+                                                 Product specification – August 02, 2022 V.12
+                                                                                                          Product specification   2
+
+                Chip Resistor Surface Mount
+                                                                                                                                  11
+                                                       RC_L       SERIES     0075 to 2512
+
+
+
+
+SCOPE                                 ORDERING INFORMATION - GLOBAL PART NUMBER
+This specification describes RC       Global part numbers are identified by the series, size, tolerance, packing
+series chip resistors with lead       type, temperature coefficient, taping reel and resistance value.
+free terminations made by thick
+film process.                         GLOBAL PART NUMBER
+                                      RC XXXX X X X XX XXXX L
+                                                 (1)     (2) (3) (4)   (5)    (6)    (7)
+APPLICATIONS
+ All general purpose application     (1) SIZE
+                                          0075/0100/0201/0402/0603/0805/1206/1210/1218/2010/2512
+FEATURES                              (2) TOLERANCE
+ Halogen Free Epoxy                     B = ± 0.1%
+ RoHS compliant                         D = ± 0.5%
+   Products with lead free              F = ± 1.0%
+    terminations meet RoHS               J = ± 5.0% (for jumper ordering, use code of J)
+    requirements
+                                      (3) PACKAGING TYPE
+   Pb-glass contained in
+    electrodes, resistors element        R = Paper taping reel
+    and glass are exempted by            K = Embossed taping reel
+    RoHS                                 S = ESD safe reel (0075/0100 only)
+ Reducing environmentally            (4) TEMPERATURE COEFFICIENT OF RESISTANCE
+  hazardous wastes
+                                              = Based on spec.
+ High component and equipment
+  reliability                         (5) TAPING REEL & POWER
+ Saving of PCB space                    07 = 7 inch dia. Reel & Standard power
+ None forbidden-materials used in       10 = 10 inch dia. Reel
+  products/production                    13 = 13 inch dia. Reel
+ MSL class: MSL 1                       7W = 7 inch dia. Reel & 2 x standard power
+                                         7D = 7 inch dia. Reel & 2 x Standard Quantity (0201/0402 only)
+                                         7N = 7 inch dia. Reel, ESD safe reel (0075/0100 only)
+                                         3W = 13 inch dia. Reel & 2 x standard power
+                                      (6) RESISTANCE VALUE
+                                         There are 2~4 digits indicated the resistance value.
+                                         Letter R/K/M is decimal point
+                                         Example:
+                                         97R6 = 97.6Ω
+                                         9K76 = 9760Ω
+                                         1M = 1,000,000Ω
+                                      (7) DEFAULT CODE
+                                          Letter L is the system default code for ordering only.(Note)
+
+                                      ORDERING EXAMPLE
+                                      The ordering code for a RC0402 0.0625W chip resistor value 100K with
+                                        5% tolerance, supplied in 7-inch tape reel of 10,000 units per reel is:
+                                      RC0402JR-07100KL.
+                                      NOTE
+                                      1. All our RSMD products meet RoHS compliant and Halogen Free. "LFP" of the internal 2D
+                                         reel label mentions "Lead Free Process".
+                                      2. On customized label, "LFP" or specific symbol can be printed.
+
+
+
+                                                                                                                 www.yageo.com
+Aug. 02, 2022 V.12
+                                                                                                               Product specification   3
+
+                 Chip Resistor Surface Mount
+                                                                                                                                       11
+                                                               RC_L      SERIES    0075 to 2512
+
+
+
+
+MARKING
+RC0075 / RC0100 / RC0201 / RC0402
+
+
+
+                                            No Marking
+                                  ynsc007
+
+
+
+   Fig. 1
+
+RC0603
+
+
+
+                             YNSC037
+                                            1%, 0.5%,E24 exception values 10/11/13/15/20/75 of E24 series
+   Fig. 2   240 = 24 × 100 = 24
+
+
+
+                                            1%, 0.5%, E96 refer to EIA-96 marking method, including values
+                             YNSC038        10/11/13/15/20/75 of E24 series
+   Fig. 3 88A = 806 × 100 = 806 Ω
+
+
+
+                                            5%, E24 series : 3 digits
+                                  YNSC001   First two digits for significant figure and 3rd digit for number of zeros
+   Fig. 4 Value = 10 KΩ
+
+
+RC0805 / RC1206 / RC1210 / RC2010 / RC2512
+
+
+                                            1%, 0.5%, E24/E96 series : 4 digits
+                             YNSC004
+                                            First three digits for significant figure and 4th digit for number of zeros
+   Fig. 5 Value = 10 KΩ
+
+
+
+                                            5%, E24 series : 3 digits
+                             YNSC001
+                                            First two digits for significant figure and 3rd digit for number of zeros
+   Fig. 6 Value = 10 KΩ
+
+RC1218
+
+
+                                            E-24 series: 3 digits, ± 5%
+                         YNSC099            First two digits for significant figure and 3rd digit for number of zeros
+   Fig. 7 Value = 10 KΩ
+
+
+
+                                            Both E-24 and E-96 series: 4 digits, ± 1% & ± 0.5%
+                        YNSC103             First three digits for significant figure and 4th digit for number of zeros
+   Fig. 8 Value = 10 KΩ
+
+
+
+For further marking information, please see special data sheet "Chip resistors marking".
+
+
+
+
+                                                                                                                      www.yageo.com
+Aug. 02, 2022 V.12
+                                                                                                                           Product specification        4
+
+                  Chip Resistor Surface Mount
+                                                                                                                                                        11
+                                                            RC_L        SERIES           0075 to 2512
+
+
+
+
+CONSTRUCTION                                                       Outlines
+The resistor is constructed on top of a high-grade                      For dimensions, please refer to Table 1
+ceramic body. Internal metal electrodes are added
+on each end to make the contacts to the thick                                                                            marking layer
+
+
+film resistive element. The composition of the                                                                           overcoat
+
+
+resistive element is a noble metal imbedded into a                                                                       primary glass layer
+
+                                                                                                                         resistive layer
+glass and covered by a second glass to prevent                                                                           (Jumper chip is a conductor)
+
+environmental influences. The resistor is laser
+                                                                                                                         inner electrode
+                                                                            H                                            termination(Ni/matte tin)
+
+trimmed to the rated resistance value. The                                                                               inner electrode
+
+
+resistor is covered with a protective epoxy                                         I2                                   ceramic substrate
+
+
+coat, finally the two external terminations (matte                                                                       overcoat
+tin on Ni-barrier) are added, as shown in Fig.9.                                    I1
+
+
+
+
+                                                                            W
+
+
+
+
+                                                                                                                         YNSC086
+
+                                                                                                     L
+
+                                                                    9
+
+DIMENSION                                                               Fig. 9 Chip resistor outlines
+    Table 1
+TYPE                                L (mm)            W (mm)                     H (mm)                       I1 (mm)                          I2 (mm)
+RC0075                            0.30± 0.01          0.15± 0.01                0.13± 0.01                  0.08± 0.03                       0.08± 0.03
+RC0100                            0.40± 0.02          0.20± 0.02                0.13± 0.02                  0.10± 0.03                       0.10± 0.03
+RC0201                            0.60± 0.03          0.30± 0.03                0.23± 0.03                  0.10± 0.05                       0.15± 0.05
+RC0402                            1.00± 0.05          0.50± 0.05                0.35± 0.05                  0.20± 0.10                       0.25± 0.10
+RC0603                            1.60± 0.10          0.80± 0.10                0.45± 0.10                  0.25± 0.15                       0.25± 0.15
+RC0805                            2.00± 0.10          1.25± 0.10                0.50± 0.10                  0.35± 0.20                       0.35± 0.20
+RC1206                            3.10± 0.10          1.60± 0.10                0.55± 0.10                  0.45± 0.20                       0.45± 0.20
+RC1210                            3.10± 0.10          2.60± 0.15                0.55± 0.10                  0.45± 0.15                       0.50± 0.20
+RC1218                            3.10± 0.10          4.60± 0.10                0.55± 0.10                  0.45± 0.20                       0.40± 0.20
+RC2010                            5.00± 0.10          2.50± 0.15                0.55± 0.10                  0.60± 0.20                       0.55± 0.20
+RC2512                            6.35± 0.10          3.10± 0.15                0.55± 0.10                  0.60± 0.20                       0.60± 0.20
+
+
+ELECTRICAL CHARACTERISTICS
+  Table 2
+CHARAC-          POWER        OPERATING     MAXIMUM    MAXIMUM     DIELECTRIC                   RESISTANCE         TEMPERATURE                  JUMPER
+TERISTICS                   TEMPERATURE     WORKING   OVERLOAD WITHSTANDING                          RANGE          COEFFICIENT                CRITERIA
+                                  RANGE     VOLTAGE    VOLTAGE       VOLTAGE
+                                                                                                     5% (E24)        10Ω≦R<100Ω Rated Current
+                                                                                              10Ω≦R≦1MΩ           -200~+600ppm°C        0.5A
+RC0075            1/50 W     -55℃ to 125℃       10V          25V                  25V            1% (E24/E96)      100Ω≦R≦1MΩ       Maximum
+Fig. 4   Chip resistor outlines                                                               10Ω≦R≦1MΩ                ± 200ppm°C     Current
+                                                                                               Jumper<50mΩ                              1.0A
+                                                                                                     5% (E24)          1Ω≦R<10Ω Rated Current
+                                                                                              1Ω≦R≦22MΩ            -200~+600ppm°C       0.5A
+                                                                                                 1% (E24/E96)       10Ω≤ R < 100Ω:  Maximum
+                                                                                              1Ω≦R≦10MΩ                 ± 300ppm/°C   Current
+RC0100            1/32 W     -55℃ to 125℃       15V          30V                  30V
+                                                                                                                   100Ω≤ R ≤ 10MΩ:
+                                                                                               0.5% (E24/E96)                           1.0A
+                                                                                                                        ± 200ppm/°C
+                                                                                             33Ω≦R≦470KΩ
+                                                                                                                  10MΩ< R ≤ 22MΩ:
+                                                                                               Jumper<50mΩ              ± 250ppm/°C
+
+
+
+
+                                                                                                                                    www.yageo.com
+Aug. 02, 2022 V.12
+                                                                                                             Product specification   5
+
+                Chip Resistor Surface Mount
+                                                                                                                                     11
+                                                      RC_L     SERIES         0075 to 2512
+
+
+
+
+  Table 2
+
+CHARAC-       POWER       OPERATING    MAXIMUM    MAXIMUM     DIELECTRIC            RESISTANCE         TEMPERATURE           JUMPER
+TERISTICS               TEMPERATURE    WORKING   OVERLOAD WITHSTANDING                   RANGE          COEFFICIENT         CRITERIA
+                              RANGE    VOLTAGE    VOLTAGE       VOLTAGE
+                                                                                          5% (E24)       1Ω≦R≦10Ω Rated Current
+                                                                                   1Ω≦R≦10MΩ         -100~+350ppm°C       0.5A
+                                                                                      1% (E24/E96)     10Ω<R≦10MΩ     Maximum
+                                                                                   1Ω≦R≦10MΩ              ± 200ppm°C    Current
+RC0201         1/20 W   -55℃ to 125℃       25V         50V              50V         0.5% (E24/E96)                        1.0A
+                                                                                    1Ω≦R≦1MΩ
+                                                                                    0.1% (E24/E96)
+                                                                                   10Ω≦R≦1MΩ
+                                                                                    Jumper<50mΩ
+                                                                                          5% (E24)       1Ω≦R≦10Ω Rated Current
+                                                                                   1Ω≦R≦22MΩ              ± 200ppm°C      1.0A
+                                                                                      1% (E24/E96)     10Ω<R≦10MΩ     Maximum
+                                                                                   1Ω≦R≦10MΩ              ± 100ppm°C    Current
+               1/16 W   -55℃ to 155℃       50V        100V          100V            0.5% (E24/E96)   10MΩ<R≦22MΩ          2.0A
+                                                                                    1Ω≦R≦1MΩ              ± 200ppm°C
+RC0402                                                                              0.1% (E24/E96)
+                                                                                   10Ω≦R≦1MΩ
+                                                                                    Jumper<50mΩ
+                                                                                         5% (E24)
+                                                                                    1Ω≦R≦1MΩ            1Ω≦R≦1MΩ
+                 1/8W   -55℃ to 155℃       50V        100V          100V             1% (E24/E96)         ± 200ppm°C
+                                                                                    1Ω≦R≦1MΩ
+                                                                                          5% (E24)       1Ω≦R≦10Ω Rated Current
+                                                                                   1Ω≦R≦22MΩ              ± 200ppm°C      1.0A
+                                                                                      1% (E24/E96)     10Ω<R≦10MΩ     Maximum
+                                                                                   1Ω≦R≦10MΩ              ± 100ppm°C    Current
+               1/10 W   -55℃ to 155℃       75V        150V          150V            0.5% (E24/E96)   10MΩ<R≦22MΩ          2.0A
+                                                                                    1Ω≦R≦1MΩ              ± 200ppm°C
+RC0603                                                                              0.1% (E24/E96)
+                                                                                   10Ω≦R≦1MΩ
+                                                                                    Jumper<50mΩ
+                                                                                         5% (E24)       1Ω≦R≦1MΩ
+                                                                                    1Ω≦R≦1MΩ              ± 200ppm°C
+                1/5 W   -55℃ to 155℃       75V        150V          150V
+                                                                                     1% (E24/E96)
+                                                                                    1Ω≦R≦1MΩ
+                                                                                         5% (E24)         1Ω≦R≦10Ω Rated Current
+                                                                                 1Ω≦R≦100MΩ                ± 200ppm°C      2.0A
+                                                                                     1% (E24/E96)       10Ω<R≦10MΩ     Maximum
+                                                                                  1Ω≦R≦10MΩ                ± 100ppm°C    Current
+                                                                                   0.5% (E24/E96)     10MΩ<R≦22MΩ          5.0A
+                1/8 W   -55℃ to 155℃      150V        300V          300V           1Ω≦R≦1MΩ                ± 200ppm°C
+                                                                                   0.1% (E24/E96)    24MΩ<R≦100MΩ
+RC0805                                                                            10Ω≦R≦1MΩ                ± 300ppm°C
+                                                                                   10%, 20% (E24)
+                                                                               24MΩ≦R≦100MΩ
+                                                                                   Jumper<50mΩ
+                                                                                        5% (E24)        1Ω≦R≦1MΩ
+                                                                                   1Ω≦R≦1MΩ               ± 200ppm℃
+                1/4 W   -55℃ to 155℃      150V        300V          300V
+                                                                                    1% (E24/E96)
+                                                                                   1Ω≦R≦1MΩ
+
+
+
+
+                                                                                                                    www.yageo.com
+Aug. 02, 2022 V.12
+                                                                                                               Product specification    6
+
+                Chip Resistor Surface Mount
+                                                                                                                                        11
+                                                         RC_L      SERIES       0075 to 2512
+
+
+
+
+FOOTPRINT AND SOLDERING PROFILES
+For recommended footprint and soldering profiles, please refer to data sheet “Chip resistors mounting”
+  Table 3
+CHARAC-       POWER         OPERATING    MAXIMUM    MAXIMUM     DIELECTRIC             RESISTANCE        TEMPERATURE           JUMPER
+TERISTICS                 TEMPERATURE    WORKING   OVERLOAD WITHSTANDING                    RANGE         COEFFICIENT         CRITERIA
+                                RANGE    VOLTAGE    VOLTAGE       VOLTAGE
+                                                                                           5% (E24)       1Ω≦R≦10Ω Rated Current
+                                                                                   1Ω≦R≦100MΩ              ± 200ppm°C      2.0A
+                                                                                       1% (E24/E96)     10Ω<R≦10MΩ     Maximum
+                                                                                    1Ω≦R≦10MΩ              ± 100ppm°C    Current
+                                                                                     0.5% (E24/E96)   10MΩ<R≦22MΩ         10.0A
+                1/4 W     -55℃ to 155℃      200V        400V             500V        1Ω≦R≦1MΩ              ± 200ppm°C
+                                                                                     0.1% (E24/E96) 24MΩ≦R≦100MΩ
+                                                                                    10Ω≦R≦1MΩ              ± 300ppm°C
+RC1206                                                                               10%, 20% (E24)
+                                                                                 24MΩ≦R≦100MΩ
+                                                                                     Jumper<50mΩ
+                                                                                           5% (E24)       1Ω≦R≦1MΩ
+                                                                                      1Ω≦R≦1MΩ              ± 200ppm°C
+                1/2 W     -55℃ to 155℃      200V        400V             500V          1% (E24/E96)
+                                                                                      1Ω≦R≦1MΩ
+
+                                                                                             5% (E24)       1Ω≦R≦10Ω Rated Current
+                                                                                     1Ω≦R≦22MΩ               ± 200ppm°C      2.0A
+                                                                                         1% (E24/E96)     10Ω<R≦10MΩ     Maximum
+RC1210          1/2 W     -55℃ to 155℃      200V        500V             500V        1Ω≦R≦10MΩ               ± 100ppm°C    Current
+                                                                                 0.1%, 0.5% (E24/E96)   10MΩ<R≦22MΩ         10.0A
+                                                                                     10Ω≦R≦1MΩ               ± 200ppm°C
+                                                                                       Jumper<50mΩ
+
+                                                                                         5% (E24)          1Ω≦R≦10Ω Rated Current
+                                                                                      1Ω≦R≦1MΩ              ± 200ppm°C                  6.0A
+                                                                                       1% (E24/E96)       10Ω<R≦1MΩ            Maximum
+RC1218               1W   -55℃ to 155℃      200V        500V             500V         1Ω≦R≦1MΩ              ± 100ppm°C           Current
+                                                                                 0.1%, 0.5% (E24/E96)                                  10.0A
+                                                                                     10Ω≦R≦1MΩ
+                                                                                      Jumper<50mΩ
+
+                                                                                         5% (E24)          1Ω≦R≦10Ω Rated Current
+                                                                                     1Ω≦R≦22MΩ              ± 200ppm°C                  2.0A
+                                                                                       1% (E24/E96)      10Ω<R≦10MΩ            Maximum
+RC2010          3/4 W     -55℃ to 155℃      200V        500V             500V        1Ω≦R≦10MΩ              ± 100ppm°C           Current
+                                                                                 0.1%, 0.5% (E24/E96)   10MΩ<R≦22MΩ                    10.0A
+                                                                                     10Ω≦R≦1MΩ              ± 200ppm°C
+                                                                                      Jumper<50mΩ
+
+                                                                                         5% (E24)          1Ω≦R≦10Ω Rated Current
+                                                                                     1Ω≦R≦22MΩ              ± 200ppm°C                  2.0A
+                                                                                       1% (E24/E96)      10Ω<R≦10MΩ            Maximum
+                     1W   -55℃ to 155℃      200V        500V             500V        1Ω≦R≦10MΩ              ± 100ppm°C           Current
+                                                                                 0.1%, 0.5% (E24/E96)   10MΩ<R≦22MΩ                    10.0A
+RC2512                                                                               10Ω≦R≦1MΩ              ± 200ppm°C
+                                                                                      Jumper<50mΩ
+
+                                                                                         5% (E24)         1Ω≦R≦1MΩ
+                                                                                      1Ω≦R≦1MΩ              ± 200ppm°C
+                     2W   -55℃ to 155℃      200V        400V             500V
+                                                                                       1% (E24/E96)
+                                                                                      1Ω≦R≦1MΩ
+
+
+
+
+                                                                                                                      www.yageo.com
+Aug. 02, 2022 V.12
+                                                                                                                              Product specification   7
+
+                  Chip Resistor Surface Mount
+                                                                                                                                                      11
+                                                            RC_L          SERIES      0075 to 2512
+
+
+
+PACKING STYLE AND PACKAGING QUANTITY
+  Table 4 Packing style and packaging quantity
+
+                                                                            ESD SAFE REEL (S)
+                                                                          (4MM WIDTH, 1MM
+                                                                              PITCH PLASTIC
+PACKING STYLE                  PAPER TAPING REEL (R)                             EMBOSSED)                     EMBOSSED TAPING REEL
+REEL DIMENSION          7" (178 mm)   10" (254mm)       13" (330 mm)                 7" (178 mm)              7" (178 mm)      13" (330 mm)
+
+RC0075                          ---             ---                 ---                         20000                   ---                     ---
+RC0100                       20000              ---            80000                            40000                   ---                     ---
+RC0201                       10000         20000               50000                                ---                 ---                     ---
+RC0402                       10000         20000               50000                                ---                 ---                     ---
+RC0603                        5000         10000               20000                                ---                 ---                     ---
+RC0805                        5000         10000               20000                                ---                 ---                     ---
+RC1206                        5000         10000               20000                                ---                 ---                     ---
+RC1210                        5000         10000               20000                                ---                 ---                     ---
+RC1218                          ---             ---                 ---                             ---             4000                        ---
+
+RC2010                          ---             ---                 ---                             ---             4000                 16000
+RC2512                          ---             ---                 ---                             ---             4000                        ---
+
+NOTE
+For tape and reel specification/dimensions, please refer to data sheet “Chip resistors packing”.
+
+FUNCTIONAL DESCRIPTION
+OPERATING TEMPERATURE RANGE
+                                                                                 Pmax                                                  MRA632
+RC0402 to RC2512 Range: -55 to +155                   (Fig. 10-1)              (%Prated)
+RC0075 to RC0201 Range: -55           to +125         (Fig. 10-2)                    100
+
+POWER RATING
+Each type rated power at 70       :                                                    50
+RC0075=1/50W
+RC0100=1/32W
+RC0201=1/20W                                                                               0
+                                                                                               55         0        50 70      100        155
+RC0402=1/16W, 1/8W                                                                                                                     Tamb ( C)
+RC0603=1/10W, 1/5W
+RC0805=1/8W, 1/4W                                                           Fig. 10-1 Maximum dissipation (P) in percentage of rated
+RC1206=1/4W, 1/2W                                                                     poweras a function of the operating ambient
+                                                                                      temperature (Tamb)
+RC1210=1/2W
+RC1218=1W
+RC2010=3/4W                                                                handbook,
+                                                                                 P halfpage                                            MLB206
+                                                                                 max
+RC2512=1W, 2W                                                                 (%Prated)
+                                                                                    100
+RATED VOLTAGE
+The DC or AC (rms) continuous working voltage
+corresponding to the rated power is determined by the
+                                                                                     50
+following formula:
+ V=      (PxR )
+                                                                                       0
+ or max. working voltage whichever is less                                                 55             0        50   70     100 125
+                                                                                                                                     o
+ Where                                                                                                                         Tamb ( C)
+
+ V = Continuous rated DC or AC (rms) working voltage (V)                    Fig. 10-2 Maximum dissipation (P) in percentage of rated
+ P = Rated power (W)                                                                  poweras a function of the operating ambient
+                                                                                      temperature (Tamb)
+ R = Resistance value (Ω)
+
+
+
+                                                                                                                                     www.yageo.com
+Aug. 02, 2022 V.12
+                                                                                                                    Product specification   8
+
+                 Chip Resistor Surface Mount
+                                                                                                                                            11
+                                                             RC_L          SERIES     0075 to 2512
+
+
+
+
+TESTS AND REQUIREMENTS
+   Table 5 Test condition, procedure and requirements
+TEST                 TEST METHOD              PROCEDURE                                              REQUIREMENTS
+Temperature          MIL-STD-202 Method 304   At +25/–55°C and +25/+125°C                            Refer to table 2
+Coefficient of
+Resistance                                    Formula:
+(T.C.R.)
+                                                        R2 − R1
+                                              T.C.R=                 × 106 (ppm/°C)
+                                                       R1( t 2 − t1)
+                                               Where
+                                              t1=+25 °C or specified room temperature
+                                              t2=–55 °C or +125 °C test temperature
+                                              R1=resistance at reference temperature in ohms
+                                              R2=resistance at test temperature in ohms
+
+Life/                MIL-STD-202 Method 108   At 70± 2°C for 1,000 hours; RCWV applied for           0075: ± (5%+100mΩ)
+Endurance            IEC 60115-1 7.1          1.5 hours on and 0.5 hour off, still air required            <100mΩ for jumper
+                                                                                                     01005: ± (3% +50mΩ)
+                                                                                                            <100mΩ for jumper
+                                                                                                     Others:
+                                                                                                     ± (1%+50mΩ) for B/D/F tol
+                                                                                                     ± (3%+50mΩ) for J tol
+                                                                                                     <100mR for jumper
+
+High                 MIL-STD-202 Method 108   1,000 hours at maximum operating temperature           0075: ± (5%+100mΩ)
+Temperature                                   depending on specification, unpowered.                       <100mΩ for jumper
+Exposure                                                                                             01005: ± (1% +50mΩ)
+                                                                                                          < 50mΩ for jumper
+                                                                                                     Others:
+                                                                                                     ± (1%+50mΩ) for B/D/F tol
+                                                                                                     ± (2%+50mΩ) for J tol
+                                                                                                           <50mR for jumper
+
+Moisture             MIL-STD-202 Method 106   Each temperature / humidity cycle is defined at        0075: ± (2%+100mΩ)
+Resistance                                    8 hours, 3 cycles / 24 hours for                              <100mΩ for jumper
+                                                                                                     01005: ± (2% +50mΩ)
+                                              10d with 25°C / 65°C 95% R.H, without steps
+                                                                                                            < 100mΩ for jumper
+                                              7a & 7b, unpowered                                     Others:
+                                              Parts mounted on test-boards, without                  ± (0.5%+50mΩ) for B/ D/F tol
+                                              condensation on parts
+                                                                                                     ± (2%+50mΩ) for J tol
+                                                                                                     <100mR for jumper
+
+
+Humidity             IEC 60115-1 10.4         Steady state for 1000 hours at 40°C / 95% R.H.         0075: ± (5%+100mΩ)
+                                              RCWV applied for 1.5 hours on and                      01005: ± (3% +50mΩ)
+                                                                                                             < 100mΩ for jumper
+                                              0.5 hour off
+                                                                                                     Others:
+                                                                                                     ± (1%+50mΩ) for B/D/F tol
+                                                                                                     ± (2%+50mΩ) for J tol
+                                                                                                           <100mR for jumper
+
+
+
+
+                                                                                                                           www.yageo.com
+Aug. 02, 2022 V.12
+                                                                                                                 Product specification   9
+
+                 Chip Resistor Surface Mount
+                                                                                                                                         11
+                                                            RC_L        SERIES      0075 to 2512
+
+
+
+
+TEST                 TEST METHOD              PROCEDURE                                            REQUIREMENTS
+Thermal              MIL-STD-202 Method 107   -55/+125°C                                           0075/01005: ± (1% +50mΩ)
+Shock                                         Note Number of cycles required is 300.                       < 50mΩ for jumper
+                                              Devices mounted                                      Others:
+                                              Maximum transfer time is 20 seconds.                 ± (0.5%+50mΩ) for B/D/F tol
+                                              Dwell time is 15 minutes. Air - Air                  ± (1%+50mΩ) for J tol
+                                                                                                           < 50mR for jumper
+
+Short Time           IEC 60115-1 8.1          2.5 times RCWV or maximum overload voltage           0075/01005: ± (2% +50mΩ)
+Overload                                      which is less for 5 seconds at room temperature              < 50mΩ for jumper
+                                                                                                   Others:
+                                                                                                   ± (1%+50mΩ) for B/D/F tol
+                                                                                                   ± (2%+50mΩ) for J tol
+                                                                                                            <50mR for jumper
+                                                                                                   No visible damage
+
+
+Board Flex/          IEC 60115-1 9.8          Device mounted or as described only 1 board          0075/01005: ± (1% +50mΩ)
+Bending                                       bending required                                             < 50mΩ for jumper
+                                              bending time: 60± 5 seconds                          Others:
+                                              0075/0100/0201/0402:5mm;                             ± (1%+50mΩ) for B/D/F/J tol
+                                              0603/0805:3mm;                                               <50mR for jumper
+                                              1206 and above:2mm                                   No visible damage
+
+
+Solderability        J-STD-002 test B1        Electrical Test not required Magnification 50X SMD   Well tinned
+- Wetting                                     conditions:                                          (>95% covered)
+                                              1st step: aging 4 hours at 155°C dry heat            No visible damage
+                                              2nd step: method B1, leadfree solder bath at
+                                                        245± 3°C
+                                              Dipping time: 3± 0.5 seconds
+
+
+-Leaching            J-STD-002 test D         Leadfree solder ,260°C, 30 seconds immersion time    No visible damage
+
+
+-Resistance to       MIL-STD-202 Method 210   Condition B, no pre-heat of samples                  0075: ± (3%+50mΩ)
+Soldering                                     Leadfree solder, 260°C ± 5°C, 10 ± 1 seconds               <50mΩ for jumper
+Heat                                                                                               01005: ± (1% +50mΩ)
+                                              immersion time
+                                                                                                           < 50mΩ for jumper
+                                              Procedure 2 for SMD: devices fluxed and
+                                                                                                   Others:
+                                              cleaned with isopropanol
+                                                                                                   ± (0.5% +50mΩ) for B/D/F tol.
+                                                                                                   ± (1% +50mΩ) for J tol.
+                                                                                                   <50mR for jumper
+                                                                                                   No visible damage
+
+
+
+
+                                                                                                                        www.yageo.com
+Aug. 02, 2022 V.12
+                                                                                                                                                                Product specification   10
+
+                           Chip Resistor Surface Mount
+                                                                                                                                                                                        11
+                                                                                                        RC_L            SERIES        0075 to 2512
+
+
+
+
+REVISION HISTORY
+REVISION                DATE                        CHANGE NOTIFICATION                                       DESCRIPTION
+                                                                                                                                                TEMPERATURE COEFFICIENT
+Version 12
+         TYPE Aug. 02, 2022                         -                          POWER                   - I2 dimension RESISTANCE
+                                                                                                     TOLERANCE                        RANGE
+                                                                                                                      updated, for size 1206, size 2010, size 2512.
+                                                                                                                                                                OF RESISTANCE
+                                                                                                              - Extend RC0201, RC0402, RC0603, RC0805, RC1206 D tol resistance
+Version 11 May 15, 2020 -
+         0603 1/10W, 1/5W, 3/10W, 2/5W, 1/2W                                                                    range to 1ohm 5 m      R < 100 m
+Version 10 Dec. 12, 2018 -                                                                                    - Updated 0075 dimensions
+         0805             1/8W, 1/4W, 1/3W, 1/2W                                                                              4m       R < 100 m
+                                                                                                              - Add 0.5%/1% marking rule for RC0603 ~ RC2512 based on marking
+Version 9  Mar. 06, 2018 -
+         1206                         1/4W, 1/2W                                                                datasheet     3m       R < 100 m
+Version 8  July 10,    1W -
+                    2017
+                1/2W,                                                                                         - Add "3W" part number coding for 13" Reel & double power
+Version 7               Mar.The  resistors
+                             7, 2017    - are constructed                                                     - Add 10" packing
+                using outstanding TCR level
+Version 6 Feb.15, 2017       -                                                                                - Extend RC0805 and RC1206 resistance range to 100Mohm
+                material, which makes Yageo PF
+Version 5 Oct.resistors
+                 06, 2016 excellent
+                             -        for current                                                             - Description: Update Dimension of I2 of RC2512 (2W)
+Version 4       sensing
+          Jan. 22, 2016   application
+                             -        in battery                                                              - Update resistance range
+                charger circuit & DC-DC
+Version 3 Dec. 24, 2015 -                                                                                     - Updated test and requirements
+                converter.
+Version 2 Jul. 23,
+                The2015      -
+                     composition    of the resistive                                                          ±- Updated
+                                                                                                                  1%     test and requirements
+PF 12010
+Version         material
+          Jan. 21, 2015 is adjusted
+                             -         to give the                                                             -± ESD           5m
+                                                                                                                  2% Safe Reel update    R < 100 m                           75 ppm/°C
+                approximate required resistance
+Version 0 Dec. 15, 2014 -                                                                                     -± First
+                                                                                                                 5% issue of this specification
+                and is covered with a protective
+                coating, which printed with the
+                resistance value.
+                Finally, the three external
+                terminations (Ni / matte Tin) are
+                added, as shown in Fig. 4.
+
+
+
+                                                                                1W, 2W                                           1m        R < 100 m
+               2512
+                                                                                        3W                                       1m        R      50 m
+
+               4527                                                     2W, 3W, 5W                                                    6m          R<1
+NOTE: 1. PLEASE CONTACT WITH SALES OFFICES, DISTRIBUTORS AND REPRESENTATIVES IN YOUR REGION BEFORE ORDERING
+
+
+
+
+                                                                                                                                                                       www.yageo.com
+Aug. 02, 2022 V.12
+                                                                                                      Product specification   11
+
+                Chip Resistor Surface Mount
+                                                                                                                              11
+                                                      RC_L      SERIES    0075 to 2512
+
+
+
+
+LEGAL DISCLAIMER
+
+
+YAGEO, its distributors and agents (collectively, “YAGEO”), hereby disclaims any and all liabilities for any
+errors, inaccuracies or incompleteness contained in any product related information, including but not limited
+to product specifications, datasheets, pictures and/or graphics. YAGEO may make changes, modifications and/or
+improvements to product related information at any time and without notice.
+
+
+YAGEO makes no representation, warranty, and/or guarantee about the fitness of its products for any
+particular purpose or the continuing production of any of its products. To the maximum extent permitted by
+law, YAGEO disclaims (i) any and all liability arising out of the application or use of any YAGEO product, (ii)
+any and all liability, including without limitation special, consequential or incidental damages, and (iii) any and all
+implied warranties, including warranties of fitness for a particular purpose, non -infringement and
+merchantability.
+
+
+YAGEO products are designed for general purpose applications under normal operation and usage conditions.
+Please contact YAGEO for the applications listed below which require especially high reliability for the
+prevention of defects which might directly cause damage to the third party's life, body or property: Aerospace
+equipment (artificial satellite, rocket, etc.), Atomic energy -related equipment, Aviation equipment, Disaster
+prevention equipment, crime prevention equipment, Electric heating apparatus, burning equipment, Highly
+public information network equipment, data-processing equipment , Medical devices, Military equipment, Power
+generation control equipment, Safety equipment, Traffic signal equipment, Transportation equipment and
+Undersea equipment, or for any other application or use in which the failure of YAGEO products could result
+in personal injury or death, or serious property damage. Particularly YAGEO Corporation and its affiliates
+do not recommend the use of commercial or automotive grade products for high reliability
+applications or manned space flight.
+
+
+Information provided here is intended to indicate product specifications only. YAGEO reserves all the rights
+for revising this content without further notification, as long as products are unchanged. Any product change
+will be announced by PCN.
+
+
+
+
+                                                                                                             www.yageo.com
+Aug. 02, 2022 V.12
+

@@ -1,0 +1,57 @@
+Circular Data Connectors / 4000 Series - C-Type USB Buccaneer
+
+
+PXP4043/C Datasheet
+
+   Product Name // PXP4043/C Series Rear Panel Mount / C-                                                                           View Product Page
+
+   Type Micro USB
+
+
+
+
+  // Product Description:
+
+
+       Rear Panel Mount Micro USB Type B Socket To 2 * 12 Way                      Mate with PXP4040 Cable Connector
+       Header                                                                      USB 3.2 Gen 2 provided host and drive are 3.2 USB capable
+       Sealed to IP66, IP67, IP68, IP69K when mated with compatible
+       connector
+       PXP4083 Sealing Cap available separately to maintain IP rating
+       of unmated connectors
+
+
+
+
+  // General Information:
+
+
+  Product Display Title:                                                  Rear Panel Mount / C-Type Micro USB
+  Product Family:                                                         Circular Data Connectors
+  Product Series:                                                         4000 Series - C-Type USB Buccaneer
+  Grouped Cad:                                                            https://www.traceparts.com/els/bulgin/goto?CatalogPath=BULGIN%3ABU
+                                                                          LGIN.010.010.020.010.030.040.010
+  Body Material:                                                          Polycarbonate/Polybutylene Terephthalate (PC/PBT)
+  Body Material Type:                                                     Plastic Body
+  Cable Length:                                                           2m
+  Flamability Rating:                                                     UL94V-0
+  Ip Rating:                                                              IP67, IP68, IP69K
+  Max Operating Temperature:                                              +70°C
+  Min Operating Temperature:                                              -40°C
+  Number Of Contacts:                                                     24 Contacts
+
+
+
+
+  // Product PDF Links                                // Product 3D CAD Model Links
+
+
+       C-Type Technical Product Datasheet                  PXP4043/C3D CAD Model
+
+
+
+
+         Have a question or project enquiry
+         you'd like to talk to us about?                                                                                  Bulgin Datasheets        1
+                                                            Click Here To Contact Us
+

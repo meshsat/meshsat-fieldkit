@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/d38999/cables/lapp-olflex-robust-210-product-information.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/d38999/cables/lapp-olflex-robust-210-product-information.pdf",
+ "pdf_sha256": "535cc7900e32bed34ea2dcb277708650bb90e06eb39f41d7dfb4ced4660ec2ba",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/d38999/cables/pdftext/lapp-olflex-robust-210-product-information.layout.txt",
+ "text_bytes": 25002,
+ "text_sha256": "fc6b5cdd6264c3c8542ce6aede47975435c5023c0651f3ae294f8281c3324b31"
+}

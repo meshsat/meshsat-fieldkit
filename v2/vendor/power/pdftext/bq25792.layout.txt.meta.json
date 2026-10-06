@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/power/bq25792.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/power/bq25792.pdf",
+ "pdf_sha256": "cc451e71123d24d4580bf867fcda0f000b5cf343622b5101f693137ac7be0c15",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/bq25792.layout.txt",
+ "text_bytes": 536855,
+ "text_sha256": "80e6619aa41e768e356acca3371007cb8e1ec3940c4c4bdaaf2b58eabc2fb034"
+}

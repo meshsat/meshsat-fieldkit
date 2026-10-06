@@ -35,6 +35,28 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 sys.dont_write_bytecode = True
 
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 among the pins (keys pdftext NN), l9t5_paloop.py's and record l9pwr's with them.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9t5
+PDFTEXT = {
+    "v2/vendor/battery/samsung-35e-orbtronic.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-bq4050.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-csd18510q5b.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout"]],
+    "v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-ina250-sbos511c.pdf": [["-layout"]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-ina226.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tlv758p.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tlv9062-op-amp.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tps62933.pdf": [["-layout"]],
+    "v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {
     "budget": "v2/docs/records/l9pwr/l9pwr_budget.py",
     "budget_out": "v2/docs/records/l9pwr/l9pwr_budget.out",
@@ -112,11 +134,7 @@ _PDF = {}
 
 def pdf(key):
     if key not in _PDF:
-        try:
-            r = subprocess.run(["pdftotext", "-layout", rel(PINS[key]), "-"], capture_output=True, check=True)
-        except (OSError, subprocess.CalledProcessError) as e:
-            refuse("pdftotext could not read %s (%s)" % (PINS[key], e))
-        _PDF[key] = r.stdout.decode("utf-8", "replace")
+        _PDF[key] = PT.pdf_text(ROOT, PINS[key], ["-layout"], PDFTEXT, "v2/docs/records/l9t5")
     return _PDF[key]
 
 
@@ -222,7 +240,8 @@ def compute():
     m = budget_module()
     B = m.compute()
     pb, F, D, hc = B["d11_rv_record"], B["F"], B["cfgs"]["DRAFTED"], B["hc"]
-    R = {"pins": {k: (p, sha(p)) for k, p in PINS.items()}, "in": I, "bud_pred_ok": all(B["pred"].values())}
+    R = {"pins": dict({k: (p, sha(p)) for k, p in PINS.items()}, **{"pdftext %02d" % i: (t, (h or "ABSENT")[:16]) for i, (t, h, _held)
+                                                                  in enumerate(PT.inputs(ROOT, PT.merge(PDFTEXT, *(PT.declared_in(os.path.join(ROOT, x)) for x in ("v2/docs/records/l9t5/l9t5_paloop.py", "v2/docs/records/l9pwr/l9pwr_budget.py")))), 1)}), "in": I, "bud_pred_ok": all(B["pred"].values())}
     ca = B["calltx"]
     case = ca["new"]
     vals = dict(ca["vals"])

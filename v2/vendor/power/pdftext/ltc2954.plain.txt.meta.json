@@ -1,0 +1,14 @@
+{
+ "command": "pdftotext v2/vendor/power/ltc2954.pdf -",
+ "held_back": false,
+ "options": [],
+ "pdf": "v2/vendor/power/ltc2954.pdf",
+ "pdf_sha256": "1e9e2567d15e569ecc95023a40e4fb99eb0288db842803ff78cd14fdd621d8ae",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/ltc2954.plain.txt",
+ "text_bytes": 33754,
+ "text_sha256": "1d2b80b0886c490029f72ad11f3ac189f8d42c77aa04414ad47103ef7d4b96d3"
+}

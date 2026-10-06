@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/fans/samesky-cfm-60bg68-dc-axial-fan-2024-09-12.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/fans/samesky-cfm-60bg68-dc-axial-fan-2024-09-12.pdf",
+ "pdf_sha256": "72dd06bea8f5498b49676924d6dab50785bed5b01c2a2e0e0b73549140f4a3dc",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/fans/pdftext/samesky-cfm-60bg68-dc-axial-fan-2024-09-12.layout.txt",
+ "text_bytes": 23468,
+ "text_sha256": "13e8851031f1cc156918ffd426abe07589317789602640bf5a1e8516b7db85d0"
+}

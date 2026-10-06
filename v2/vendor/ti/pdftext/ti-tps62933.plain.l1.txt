@@ -1,0 +1,172 @@
+TPS62933, TPS62932, TPS62933F, TPS62933P, TPS62933O
+SLUSEA4D – JUNE 2021 – REVISED AUGUST 2022
+
+TPS6293x 3.8-V to 30-V, 2-A, 3-A Synchronous Buck Converters in a SOT583 Package
+•
+
+•
+
+•
+
+•
+
+Configured for a wide range of applications
+– 3.8-V to 30-V input voltage range
+– 0.8-V to 22-V output voltage range
+– Ultra-low quiescent current: 12 μA (TPS62932,
+TPS62933, and TPS62933P)
+– Integrated 76-mΩ and 32-mΩ MOSFETs
+– 0.8 V ± 1% reference voltage (25°C)
+– Maximum 98% duty cycle operation
+– Precision EN threshold
+– 2-A (TPS62932) and 3-A (TPS62933 and
+TPS62933x) continuous output current
+– –40°C to 150°C operating junction temperature
+Numerous pin-compatible options
+– TPS62932, TPS62933, and TPS62933F with
+the SS pin for adjustable soft-start time
+– TPS62933P and TPS62933O with the PG pin
+for a power-good indicator
+– TPS62932, TPS62933, and TPS62933P with
+pulse frequency modulation (PFM) for high
+light-load efficiency
+– TPS62933F with forced continuous current
+modulation (FCCM)
+– TPS62933O with out-of-audio (OOA) feature
+Ease of use and small solution size
+– Peak current control mode with internal
+compensation
+– 200-kHz to 2.2-MHz selectable frequency
+– EMI friendly with frequency spread spectrum
+(TPS62932, TPS62933, TPS62933P and
+TPS62933O)
+– Supports start-up with prebiased output
+– Cycle-by-cycle OC limit for both high-side and
+low-side MOSFETs
+– Non-latched protections for OTP, OCP, OVP,
+UVP, and UVLO
+– 1.6-mm × 2.1-mm SOT583 package
+Create a custom design with the TPS6293x using
+the WEBENCH® Power Designer
+
+2 Applications
+•
+•
+•
+•
+•
+
+Building automation, appliances, industrial PC
+Multifunction printers, enterprise projectors
+Portable electronics, connected peripherals
+Smart speakers, monitors
+Distributed power systems with 5-V, 12-V, 19-V,
+and 24-V input
+
+range of 3.8 V to 30 V, and supports up to 2-A
+(TPS62932) and 3-A (TPS62933 and TPS62933x)
+continuous output current and 0.8-V to 22-V output
+voltage.
+The device employs fixed-frequency peak current
+control mode for fast transient response and good
+line and load regulation. The optimized internal
+loop compensation eliminates external compensation
+components.
+The TPS62932, TPS62933, and TPS62933P operate
+in pulse frequency modulation for high light load
+efficiency. The TPS62933F operates in forced
+continuous current modulation which maintains
+lower output ripple during all load conditions. The
+TPS62933O operates in out of audio mode to avoid
+audible noise.
+Device Information
+
+(1)
+
+Part Number
+
+Package(1)
+
+Body Size (NOM)
+
+TPS6293x
+
+SOT583 (8)
+
+1.60 mm × 2.10 mm
+
+For all available packages, see the orderable addendum at
+the end of the data sheet.
+
+VIN
+
+VIN
+
+BST
+CBST
+
+CIN
+
+L
+GND
+
+VOUT
+
+SW
+RFBT
+
+EN
+
+VEN
+
+COUT
+
+FB
+RFBB
+
+SS
+
+RT
+
+Simplified Schematic
+100
+
+80
+Efficiency (%)
+
+1 Features
+
+60
+
+40
+
+20
+
+0
+0.001
+
+VOUT=3.3V
+VOUT=5V
+VOUT=12V
+0.005
+
+0.02
+
+0.05 0.1 0.2
+I-Load (A)
+
+0.5
+
+1
+
+2 3
+
+TPS62933 Efficiency, VIN = 24 V, fSW = 500 kHz
+
+3 Description
+The TPS6293x is a high-efficiency, easy-to-use
+synchronous buck converter with a wide input voltage
+An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+intellectual property matters and other important disclaimers. PRODUCTION DATA.
+
+

@@ -1,0 +1,69 @@
+                                                                      Matters to Be Observed When Using This Product
+
+■ Because the impedance of the capacitor is close to the circuit impedance, capacitors connected in parallel in the circuit
+  may damage the whole current balance, in which, a ripple current higher than the rated ripple current may flow in some of
+  the capacitors. To prevent concentration of ripple current on the low-impedance side, use capacitors with the same part
+  number and avoid the partiality of cable impedances. Do not use capacitors connected in series.
+
+■ When the capacitor is mounted on a double-side wiring board, do not place the wiring pattern directly underneath where
+  the product is mounted. In case the electrolytic solution leaks out, it may short-circuit the pattern and cause tracking or
+  migration. Consider a case where the product is a radial lead capacitor and is mounted on a board with through-holes.
+  In this case, if the sealing part of the capacitor and the board surface stick close to each other, solder flows up to the
+  capacitor during a dip soldering process, which may cause short circuit between the anode and cathode of the capacitor.
+  In such a case, the outer laminate of the product may be damaged. The position of holes, therefore, must be
+  determined properly.
+
+■ When designing a printed board carrying radial lead capacitors, make through-holes across the gap equal to the gap
+  between the leads (terminals) of the capacitor. If the gap between the through-holes is narrower or wider than the gap
+  between the leads, stress is applied to the leads when the capacitor is inserted in the holes.
+  This may result in increasing leak current, short circuit, wire breaking, or electrolytic solution leakage.
+
+■ A capacitor which has the pressure valve on the case must be provided with a space formed above the pressure valve
+  so that the pressure valve operates without hinderance. When the product is 6.3 mm to 16 mm in diameter, form a
+  space of 2 mm or larger. When the product is 18 mm in diameter, form a space of 3 mm or larger.
+  If the space is not large enough, it will impair the operability of the pressure valve and may lead to an explosion
+  incident.
+
+■ Design the circuit in such that the pattern, especially a line pattern carrying high voltage or large current, is not
+  formed above the pressure valve. Upon its activation, the pressure valve emits a flammable high-temperature gas
+  of over 100 ℃. This may cause a secondary accident, such as the gas condensing on the pattern and the wire
+  sheathing being melted and catching on fire.
+
+■ Be careful with resonance of the capacitor mounted on the board. When a large load is applied to the capacitor at the
+  frequency close to the resonance frequency, it may cause the capacitor to come off or widely change its characteristics.
+
+■ Completely isolate the case of the capacitor from the cathode terminal and the circuit pattern.
+
+■ The laminate or outer sleeve covering of the product is for displaying information on the product and does not
+  have a guaranteed insulating function.
+  The laminate may turn brown under a high-temperature condition. However, that does not cause problems with
+  markings recognition on the product surface or electrical performance.
+  The outer sleeve may crack when dipped in a xylene or toluene solution and exposed to high temperature.
+
+
+Mounting conditions
+■ Do not reuse a capacitor that was incorporated in a circuit set and energized in the past. Do not use a capacitor that
+  was dropped on the floor.
+  Do not use a capacitor in its compressed form. Compressing the capacitor makes it less airtight, resulting in poor
+  performance, shorter guaranteed life, and electrolyte leakage.
+
+■ A re-striking voltage is generated in a capacitor in some cases. In such a case, let the capacitor discharge through
+  a resistor of about 1 kΩ.
+
+■ When a capacitor is kept in storage for a long period, you may find the leak current from the capacitor has increased.
+  In such a case, make voltage adjustment through a resistor of about 1 kΩ.
+
+■ Before mounting the capacitor on the board, confirm the ratings (capacitance, rated voltage, etc.) and polarity of the
+  capacitor. Before mounting a surface-mounted type capacitor, confirm its terminal dimensions and land size.
+  Before mounting a radial lead type capacitor, confirm its terminal interval and hole interval. If the terminal interval is
+  not the specified one, stress is applied to internal elements, which may cause problems, such as a short circuit
+  and insufficient mounting strength.
+  When the terminal interval and the hole interval of the radial lead type capacitor do not match and therefore the
+  capacitor’s leads need to be readjusted, make sure that the readjustment does not apply any stress to the capacitor’s
+  body.
+
+
+
+
+                                                                                                                               1-Dec-23
+

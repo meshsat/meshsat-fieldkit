@@ -1,0 +1,408 @@
+                                                       CUI Devices is now Same Sky!                                Learn More
+
+                                                               Additional Resources: Product Page                 |   3D Model                                 date     09/12/2024
+                                                                                                                                                               page 1 of 8
+
+
+
+SERIES: CFM-60BG68 | DESCRIPTION: DC AXIAL FAN
+
+FEATURES
+• IP68 rated
+• dual ball bearing system
+• 60 x 60 mm frame
+• multiple speed options
+• PWM/tachometer wires available
+
+
+
+
+MODEL                                              input
+                                                  voltage
+                                                                                   input
+                                                                                  current1
+                                                                                                                   input
+                                                                                                                  power1
+                                                                                                                                         rated
+                                                                                                                                        speed1
+                                                                                                                                                    airflow2     static
+                                                                                                                                                               pressure3
+                                                                                                                                                                             noise4
+
+                                          rated           range            typ               max           typ             max           typ                                  typ
+                                          (Vdc)           (Vdc)            (A)               (A)           (W)             (W)        (RPM±10%)      (CFM)     (inch H2O)    (dBA)
+CFM-6025BG68-135-253                        12         10.8~13.2          0.06            0.09            0.72             0.86          3,500        14.7       0.15         25.3
+CFM-6025BG68-150-349                        12         10.8~13.2           0.11              0.17         1.32             2.04          5,000       21.31       0.30         34.9
+CFM-6025BG68-170-434                        12         10.8~13.2          0.45            0.54            5.40             6.48          7,000       29.8        0.58         43.4
+CFM-6025BG68-1100-535                       12         10.8~13.2          0.88               1.06        10.56             12.72        10,000       43.4        1.20         53.5
+CFM-6025BG68-1120-587                       12         10.8~13.2          1.48               1.78         17.76            21.36        12,000       52.4        1.69         58.7
+CFM-6025BG68-235-253                       24          21.8~26.4          0.04            0.06            0.96             1.44          3,500        14.7       0.15         25.3
+CFM-6025BG68-250-349                       24          21.8~26.4          0.07               0.11         1.68             2.64          5,000       21.31       0.30         34.9
+CFM-6025BG68-270-434                       24          21.8~26.4          0.25            0.35            6.00             8.40          7,000       29.8        0.58         43.4
+CFM-6025BG68-2100-535                      24          21.6~26.4          0.50            0.60           12.00             14.40        10,000       43.4        1.20         53.5
+CFM-6025BG68-2120-587                      24          21.6~26.4          0.80            0.96           19.20           23.04          12,000       52.4        1.69         58.7
+Notes:   1. At rated voltage, after 3 minutes.
+         2. At rated voltage, room temperature, 65% humidity, 0 inch H20 static pressure.
+         3. At rated voltage, 0 CFM airflow.
+         4. Measured in an anechoic chamber as per ISO3745/GB4214-84 at rated voltage, with background noise 20±2 dBA at 1 m from the fan intake.
+         5. All specifications are measured at 25°C, 65% relative humidity unless otherwise specified.
+
+
+PART NUMBER KEY
+
+
+                                          CFM - 6025BG68 - 135 - 253 - XX - CXX
+
+                                         Base Number                                  Fan Signals                                                      Reserved for Custom
+                                                                                      “blank” = no signals                                               Configurations
+                                                                                      20 = tachometer signal
+                                                                                      22 = tachometer signal / PWM control signal
+
+
+
+
+                                                                                   sameskydevices.com
+                                                                      Additional Resources: Product Page   |   3D Model
+
+SAME SKY | SERIES: CFM-60BG68 | DESCRIPTION: DC AXIAL FAN                                                                            date 09/12/2024 | page 2 of 8
+
+
+
+
+INPUT
+parameter                                            conditions/description                                          min     typ            max          units
+                                                     12 Vdc input models                                             10.8    12             13.2          Vdc
+operating input voltage6
+                                                     24 Vdc input models                                             21.6    24             26.4          Vdc
+                                                     12 Vdc input models                                                       7                          Vdc
+starting voltage
+                                                     24 Vdc input models                                                      14                          Vdc
+Note:        6. See Model section on page 1 for specific input voltage ranges.
+
+
+PERFORMANCE7
+parameter                                            conditions/description                                          min     typ            max          units
+rated speed                                          at rated voltage, 25°C, after 3 minutes                        3,500                  12,000        RPM
+air flow                                             at 0 inch H2O, see performance curves                           14.7                   52.4         CFM
+static pressure                                      at 0 CFM, see performance curves                                0.15                   1.69        inch H2O
+noise                                                at 1 m, rated speed                                             25.3                   58.7          dBA
+Note:        7. See Model section on page 1 for specific values.
+
+
+PROTECTIONS / FEATURES8
+parameter                                            conditions/description                                          min     typ            max          units
+auto restart                                         on all models
+polarity protection                                  on all models
+soft start                                           on all models
+tachometer signal                                    available on “20” and “22” models
+PWM control signal                                   available on “22” models
+Notes:       8. See Application Notes for details.
+
+
+SAFETY & COMPLIANCE
+parameter                                            conditions/description                                          min     typ            max          units
+insulation resistance                                at 500 Vdc between frame and positive terminal                   10                                  MΩ
+dielectric strength                                  at 500 Vac, 60 Hz, 1 minute between housing and positive terminal                        5           mA
+safety approvals                                     UL/cUL 507, TUV (EN/IEC 62368-1:2020+A11)
+EMI/EMC                                              EN 55032:2015, EN 55035:2017
+life expectancy                                      at 40°C, 65% RH, 90% confidence level                                  70,000                       hours
+RoHS                                                 yes
+IP level                                             IP68 (motor sealed coating by waterproof glue)
+
+ENVIRONMENTAL
+parameter                                            conditions/description                                          min     typ            max          units
+operating temperature                                                                                                -10                     70            °C
+storage temperature                                                                                                  -40                     75            °C
+operating humidity                                   non-condensing                                                   35                     85            %
+storage humidity                                     non-condensing                                                   35                     85            %
+
+
+
+
+                                                                                   sameskydevices.com
+                                                Additional Resources: Product Page                                      |   3D Model
+
+SAME SKY | SERIES: CFM-60BG68 | DESCRIPTION: DC AXIAL FAN                                                                                       date 09/12/2024 | page 3 of 8
+
+
+
+
+PERFORMANCE CURVES
+CFM-6025BG68-135-253                                                    CFM-6025BG68-150-349
+
+
+
+
+                                                                          Static Pressure (mm H O)
+   Static Pressure (mm H O)
+
+
+
+
+                                                                                               2
+                        2
+
+
+
+
+                              Air Flow (CFM)                                                                                           Air Flow (CFM)
+
+
+
+
+CFM-6025BG68-170-434                                                    CFM-6025BG68-1100-535
+                                                                        Static Pressure (mm H O)
+ Static Pressure (mm H O)
+
+
+
+
+                                                                                             2
+                      2
+
+
+
+
+                              Air Flow (CFM)                                                                                           Air Flow (CFM)
+
+
+
+
+CFM-6025BG68-1120-587                                                   CFM-6025BG68-235-253
+Static Pressure (mm H O)
+
+
+
+
+                                                                                             Static Pressure (mm H O)
+                     2
+
+
+
+
+                                                                                                                  2
+
+
+
+
+                               Air Flow (CFM)                                                                                          Air Flow (CFM)
+
+
+
+
+                                                             sameskydevices.com
+                                                  Additional Resources: Product Page                                 |   3D Model
+
+SAME SKY | SERIES: CFM-60BG68 | DESCRIPTION: DC AXIAL FAN                                                                                    date 09/12/2024 | page 4 of 8
+
+
+
+
+PERFORMANCE CURVES (CONTINUED)
+CFM-6025BG68-250-349                                                       CFM-6025BG68-270-434
+
+
+
+
+                                                                                          Static Pressure (mm H O)
+      Static Pressure (mm H O)
+
+
+
+
+                                                                                                               2
+                           2
+
+
+
+
+                                 Air Flow (CFM)                                                                                     Air Flow (CFM)
+
+
+
+
+CFM-6025BG68-2100-535                                                      CFM-6025BG68-2120-587
+                                                                         Static Pressure (mm H O)
+ Static Pressure (mm H O)
+
+
+
+
+                                                                                              2
+                      2
+
+
+
+
+                                 Air Flow (CFM)                                                                                     Air Flow (CFM)
+
+
+
+
+                                                               sameskydevices.com
+                                                                 Additional Resources: Product Page    |    3D Model
+
+SAME SKY | SERIES: CFM-60BG68 | DESCRIPTION: DC AXIAL FAN                                                                                   date 09/12/2024 | page 5 of 8
+
+
+
+
+MECHANICAL
+parameter                                         conditions/description                                           min              typ             max         units
+motor                                             4 pole DC brushless
+bearing system                                    dual ball bearing
+direction of rotation                             counter-clockwise viewed from front of fan blade
+dimensions                                        60 x 60 x 25                                                                                                   mm
+material                                          PBT (UL94V-0)
+weight                                                                                                                              88.3                          g
+
+MECHANICAL DRAWING
+units: mm
+                                                                                                                        MOUNTING SCREW (Pan Head)
+2 wire versions (+Vin & -Vin): UL 1430, 24 AWG
+3 wire versions (+Vin, -Vin, & tach): UL 1430, 24 AWG                                                      Screw Type        Size             Standard         Torque
+4 wire versions (+Vin, -Vin, tach, & PWM): UL 1430, 26 AWG                                            Machine Screw          M4            JIS B1111-1974    7.5 kgf-cm
+                                                                                                     Self-tapping Screw     M4.8          JIS B1122 Type 2   7.5 kgf-cm
+
+
+
+     WIRE CONNECTIONS
+ Wire Color           Function
+     Red                +Vin
+    Black               -Vin
+   Yellow   9
+                    Tach Signal
+    Blue9               PWM
+
+
+
+
+Notes: 9. Wires only present on versions with output signals.
+
+                                                                              sameskydevices.com
+                                                Additional Resources: Product Page   |    3D Model
+
+SAME SKY | SERIES: CFM-60BG68 | DESCRIPTION: DC AXIAL FAN                                                         date 09/12/2024 | page 6 of 8
+
+
+
+
+APPLICATION NOTES
+Auto Restart Protection
+When the fan motor is locked by an external force, the device will temporarily turn off electrical power to the motor and restart
+automatically when the locked rotor condition is released.
+Polarity Protection
+Able to withstand 10 minutes of reverse polarity connection between the positive and negative wires without causing damage.
+
+
+Tachometer Signal (Yellow Wire)
+The tachometer signal is for detecting the rotational speed of the fan motor. The output will be a square wave when fan is operating and
+VFG or VCE depending on the locked rotor position when fan motor is locked (See Figures 1~2 below).
+                                 Figure 1: Tachometer
+                                    Output Circuit
+                                                                                         Output Type: Open Collector
+                                                                                         Vs: (VFG)
+                                                                                         5 V fan: 3.3~5 V
+                                                                                         All others: 3.3~15 V
+                                                                                         Ic≤5 mA
+                                                                                         R≥Vs/Ic
+                                                                                         VCE(sat)≤0.5 V
+
+
+
+
+                                             Figure 2: Tachometer
+                                               Output Waveform
+                                                                                                            4 Pole Motor
+                                                                                                            N=RPM
+                                                                                                            T=60/N (sec)
+                                                                                                            FG=1/T*2 (Hz)
+                                                                                                            N=FG*30
+
+
+
+
+PWM Signal (Blue Wire)
+This wire is for speed control of the fan motor using a PWM input signal from the customer circuit (See Figure 3 below).
+                          Figure 3: PWM Input Signal
+                                                                           PWM Duty Cycle (%) = T1/T x 100%
+                                                                           PWM Frequency Range: 20~30 kHz
+                                                                           PWM VIH = 2.5~5.0 V
+                                                                           PWM VIL = 0~0.6 V
+
+
+
+
+Soft Start
+When the fan power is on, the current will increase slowly (~15 seconds) until the fan reaches the rated speed.
+
+                                                             sameskydevices.com
+                                                Additional Resources: Product Page    |   3D Model
+
+SAME SKY | SERIES: CFM-60BG68 | DESCRIPTION: DC AXIAL FAN                                                         date 09/12/2024 | page 7 of 8
+
+
+
+
+APPLICATION NOTES (CONTINUED)
+PWM Signal (Blue Wire)
+This wire is for speed control of the fan motor using a PWM input signal from the customer circuit (See Figure 3 below).
+                          Figure 3: PWM Input Signal
+
+
+
+
+ PWM Duty Cycle (%) = T1/T x 100%
+
+                                                                                                     PWM Frequency PWM VIH PWM VIL
+                                                                                     Model
+                                                                                                      Range (kHz)    (V)     (V)
+                                                                     CFM-6025BG68-135-253-22               10~60            2.5~6     0~0.7
+                                                                     CFM-6025BG68-150-349-22               10~60            2.5~6     0~0.7
+                                                                     CFM-6025BG68-170-434-22               10~60            2.5~6     0~0.7
+                                                                     CFM-6025BG68-1100-535-22              2~60             2.8~6     0~0.7
+                                                                     CFM-6025BG68-1120-587-22              2~60             2.8~6     0~0.7
+                                                                     CFM-6025BG68-235-253-22              0.5~50            2.5~5    -0.3~0.7
+                                                                     CFM-6025BG68-250-349-22              0.5~50            2.5~5    -0.3~0.7
+                                                                     CFM-6025BG68-270-434-22              0.5~50            2.5~5    -0.3~0.7
+                                                                     CFM-6025BG68-2100-535-22             0.5~50            2.5~5    -0.3~0.7
+                                                                     CFM-6025BG68-2120-587-22              2~60             2.8~6     0~0.7
+
+Soft Start
+When the fan power is on, the current will increase slowly (~15 seconds) until the fan reaches the rated speed.
+
+
+
+
+                                                             sameskydevices.com
+                                               Additional Resources: Product Page                    |   3D Model
+
+SAME SKY | SERIES: CFM-60BG68 | DESCRIPTION: DC AXIAL FAN                                                                                       date 09/12/2024 | page 8 of 8
+
+
+
+
+REVISION HISTORY
+
+            rev.                                                 description                                                                           date
+
+             1.0                                                initial release                                                                  10/26/2023
+             1.01                                        updated PWM details                                                                     03/07/2024
+            1.02                              CUI Devices rebranded to Same Sky                                                                  09/12/2024
+                            The revision history provided is for informational purposes only and is believed to be accurate.
+
+
+
+
+                              Same Sky offers a one (1) year limited warranty. Complete warranty information is listed on our website.
+
+                              Same Sky reserves the right to make changes to the product at any time without notice. Information provided by Same Sky is believed to be accurate and
+                              reliable. However, no responsibility is assumed by Same Sky for its use, nor for any infringements of patents or other rights of third parties which may result
+                              from its use.
+
+                              Same Sky products are not authorized or warranted for use as critical components in equipment that requires an extremely high level of reliability. A critical
+                              component is any component of a life support device or system whose failure to perform can be reasonably expected to cause the failure of the life support
+                              device or system, or to affect its safety or effectiveness.
+
+                              sameskydevices.com
+

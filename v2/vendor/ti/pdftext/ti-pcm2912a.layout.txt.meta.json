@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-pcm2912a.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-pcm2912a.pdf",
+ "pdf_sha256": "61d048c255190975933032c6ff712c6b780d8390cbc40821a54fd29b62adbf32",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-pcm2912a.layout.txt",
+ "text_bytes": 164979,
+ "text_sha256": "b9a517f9ce233a5ca5bc1b8f728ddebf87856d7e896d20cccb9db185db74efc5"
+}

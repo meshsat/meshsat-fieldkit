@@ -39,6 +39,29 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 sys.dont_write_bytecode = True
 
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 among the pins (keys pdftext NN).
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9stk
+PDFTEXT = {
+    "v2/vendor/battery/amass-xt60-spec-tme.pdf": [["-layout"]],
+    "v2/vendor/battery/murata-nxrt15xh103fa1b.pdf": [["-layout"]],
+    "v2/vendor/battery/murata-prf-series.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-csd17570q5b.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-csd18510q5b.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout"]],
+    "v2/vendor/keystone/littelfuse-297-ficcorp.pdf": [["-layout"]],
+    "v2/vendor/power/jscj-2n7002-c8545.pdf": [["-layout"]],
+    "v2/vendor/power/littelfuse-smcj-series-tvs.pdf": [["-layout"]],
+    "v2/vendor/power/mdd-smbj-series-tvs.pdf": [["-layout"]],
+    "v2/vendor/power/st-semtech-1n4148w-c81598.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-slva673a.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-lm5069.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {
     "copper": "v2/docs/records/l9stk/l9stk_copper.py",
     "copper_out": "v2/docs/records/l9stk/l9stk_copper.out",
@@ -113,11 +136,7 @@ def need(t, pat, what, flags=re.M):
 
 
 def pdf(key):
-    try:
-        r = subprocess.run(["pdftotext", "-layout", rel(PINS[key]), "-"], capture_output=True, check=True)
-    except (OSError, subprocess.CalledProcessError) as e:
-        refuse("pdftotext could not read %s (%s)" % (PINS[key], e))
-    return r.stdout.decode("utf-8", "replace")
+    return PT.pdf_text(ROOT, PINS[key], ["-layout"], PDFTEXT, "v2/docs/records/l9stk")
 
 
 def e6(x, up):
@@ -488,7 +507,8 @@ def compute():
     CR = cm.compute()
     C = CR["in"]
     I = read()
-    R = {"pins": {k: (p, sha(p)) for k, p in PINS.items()}, "in": I, "cu": C}
+    R = {"pins": dict({k: (p, sha(p)) for k, p in PINS.items()},
+                      **{"pdftext %02d" % i: (t, (h or "ABSENT")[:16]) for i, (t, h, _held) in enumerate(PT.inputs(ROOT, PDFTEXT), 1)}), "in": I, "cu": C}
     refs = C["fet_refs"]                                   # round 3: the battery FETs as L4-E11's charger draft writes them
     third = [x for x in refs if x not in ("Q39", "Q40")]
     R["fet_names"] = ", ".join(refs[:-1]) + " and " + refs[-1]

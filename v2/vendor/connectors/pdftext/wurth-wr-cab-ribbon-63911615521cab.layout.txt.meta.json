@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/connectors/wurth-wr-cab-ribbon-63911615521cab.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/connectors/wurth-wr-cab-ribbon-63911615521cab.pdf",
+ "pdf_sha256": "b076f824f67b9ee7bf5fe475cba663448b2d7d214abc43ddb22bac28a80e8d98",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/connectors/pdftext/wurth-wr-cab-ribbon-63911615521cab.layout.txt",
+ "text_bytes": 64670,
+ "text_sha256": "f26f01c2e181120b007ddbff98bf6418b179796b7464f99d2533e9d129efc0b4"
+}

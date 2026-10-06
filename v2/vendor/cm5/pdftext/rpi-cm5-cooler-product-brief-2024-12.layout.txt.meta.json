@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/cm5/rpi-cm5-cooler-product-brief-2024-12.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/cm5/rpi-cm5-cooler-product-brief-2024-12.pdf",
+ "pdf_sha256": "98fd27302cffd3a6de96fc2b1e90deb577a4e675c30d3cab8e5afea37998ca28",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/cm5/pdftext/rpi-cm5-cooler-product-brief-2024-12.layout.txt",
+ "text_bytes": 7822,
+ "text_sha256": "d777db6b621c32aaae8888d06b167ffaae5d3ca8e8a48b7f45718bc328c5e6b2"
+}

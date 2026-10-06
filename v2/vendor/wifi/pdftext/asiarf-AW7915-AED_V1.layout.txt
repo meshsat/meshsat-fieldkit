@@ -1,0 +1,262 @@
+                                                                                                                                                         w w w. a s i a r f .c o m
+                                                                                                                                                     TEL: +886 2 29407880
+
+
+
+
+                                     WiFi 6 11ax M.2 AE Key Module AW7915-AED
+
+
+
+
+Description
+The AW7915-AED is a WiFi6 M.2 AE key Module based on the Mediatek MT7915DAN chipset. It supports a PHY rate of 573+1201 Mbps and
+
+complies with IEEE 802.11ax/ac standards. It offers feature-rich wireless connectivity in Dual Bands Dual Concurrent (DBDC) mode, supporting
+
+simultaneous operation in the 2.4GHz and 5GHz bands.
+
+
+
+The module features optimized RF architecture and baseband algorithms, providing superb performance and low power consumption. Its intelligent
+
+MAC design offloads Wi-Fi tasks from the host processor. The MT7915DAN chipset supports standard-based features for security, quality of
+
+service, and international regulations.
+
+
+
+Deep sleep mode is supported with multiple power domains implemented on the chip, enabling low power consumption. The module includes two
+
+CPU systems with 32-bit RISC MCU subsystems for clock control, power management, and host interface configuration. PDMA engines support
+
+on-the-fly data buffer management.
+
+The MT7915DAN chipset combines the WiFi MAC and BBP subsystems, working together with the MT7975DN, to deliver best-in-class radio
+
+performance and low power consumption. It also supports MU-MIMO with different configurations for enhanced multi-user connectivity.
+
+The module utilizes PCIe2.1 for stable bandwidth between the host platform and the chipset. It provides high data throughput over WiFi and is
+
+designed for optimal performance and power efficiency.
+
+
+
+In summary, the AW7915-AED M.2 AE key Module offers reliable WiFi6 connectivity, optimized performance, and power efficiency in a compact
+
+form factor.
+
+
+                                                                                                                                                                   Version: 1.0
+
+                                                                                                                                                     Release date: 2023-08-17
+
+
+
+                                                                                                                                                                    Page 1 of 6
+
+
+               Copyright © AsiaRF All rights reserved. While every eﬀort is made to ensure the informa on is accurate, AsiaRF does not accept
+                                       liability for any errors or mistakes that may arise. All specifica ons are subject to change without no ce.
+                                       AsiaRF Co., Ltd. | www.asiarf.com | (+886) 2 8943 1001 | sales@asiarf.com | Last Updated: 30/05/2023
+                                                                                                                                                   w w w. a s i a r f .c o m
+                                                                                                                                               TEL: +886 2 29407880
+
+
+
+
+Features
+   2T2R in 2.4G+2T2R in 5G with support of up to 573+1201Mbps PHY rate
+
+   Supports 20, 40, 80 channels
+
+   HE MCS0-11 BW20/40/80MHz with Nss=1~2
+
+   Short Guard Interval
+
+   Space-time block code (STBC)
+
+   Low Density Partiy check (LDPC)
+
+   Support digital pre-distortion to enhance PA performance
+
+   Smoothing (channel estimation) extension to MIMO case
+
+   DFS radar detection
+
+   Embedded ARM Cortex R4 processor for full host CPU offload
+
+   Embedded 32-bit RISC microprocessor
+
+   Support STBC, LDPC, TX Beamformer and RX Beamformee
+
+    Decoded BW20/40/80 up to 4x2 MU materix feedback
+
+   Greenfield, mixed mode, legacy modes support
+
+   Highly integrated RF with 40nm low power process
+
+   Noise mitigation:
+
+         Supports background scan function for fast channel switching
+
+         Supports spectrum analysis for non-Wi-Fi signals
+
+   Intelligent power saving
+
+   WFA WMM, WMM PS (QoS)
+
+   Integrate high efficiency internal 2.4G/5G PAs
+
+   Intelligent Calibration (iCal) reduces the production time
+
+
+
+
+                                                                                                                                                              Page 2 of 6
+
+
+         Copyright © AsiaRF All rights reserved. While every eﬀort is made to ensure the informa on is accurate, AsiaRF does not accept
+                                 liability for any errors or mistakes that may arise. All specifica ons are subject to change without no ce.
+                                 AsiaRF Co., Ltd. | www.asiarf.com | (+886) 2 8943 1001 | sales@asiarf.com | Last Updated: 30/05/2023
+                                                                                                                                                      w w w. a s i a r f .c o m
+                                                                                                                                                  TEL: +886 2 29407880
+
+
+
+
+Specifications
+Standard                                                              Wireless: IEEE 802.11ax/ac/b/g/n (2Tx2R)
+
+BUS Interface                                                         M.2 AE Key
+
+Data Rate                                                             IEEE 802.11ax 1201Mbps@TX/RX
+                                                                      IEEE 802.11ac 1773Mbps@TX/RX IEEE
+                                                                      802.11a/n 600Mbps@TX/RX
+                                                                      IEEE 802.11a/g 108Mbps
+                                                                      IEEE 802.11b 22Mbps
+                                                                      IEEE 802.11ac up to 1733Mbps
+
+Output Power                                                          11b: 23dbm+/- 1.5dbm @ 11Mbps
+                                                                      11g: 20dbm+/- 1.5dbm @ 54Mbps
+                                                                      11g/n: 20dBm +/- 1.5dbm @MCS7,HT20, 17dBm@MCS7,HT40
+                                                                      11a: 19.5dBm +/- 1.5dbm @ 54Mbps
+                                                                      11a/n: 19.5dBm+/- 1.5dbm @MCS7,HT20, 17dBm@MCS7,HT40
+                                                                      11ac HT20: 20+/-1.5dBm@MCS8
+                                                                      11ac HT40: 17+/-1.5dBm@MCS9
+                                                                      11ac HT80: 14.5+/-1.5dBm@MCS9
+                                                                      11ax HT20: 20+/-1.5dBm@MCS9
+                                                                      11ax HT40: 17+/-1.5dBm@MCS9
+                                                                      11ax HT80: 14.5+/-1.5dBm@MCS11
+
+Receiver Sensitivity                                                  11b: -99dBm@11Mbps
+                                                                      11g: -95dBm@54Mbps
+                                                                      11g/n: -90dBm@HT20,MCS7, -86dBm@HT40,MCS7
+                                                                      11a: -90Bm@54Mbps
+                                                                      11a/n: -85dBm@HT20,MCS7, -81dBm@HT40,MCS7
+                                                                      11ac: -90dBm+/-2dBm @VHT20 MCS8
+                                                                      11ac: -85dBm+/-2dBm @VHT40 MCS9
+                                                                      11ac: -68dBm+/-2dBm @VHT80 MCS9
+                                                                      11ax: -61dBm+/-2dBm @HE20 MCS11
+                                                                      11ax: -58dBm+/-2dBm @HE40 MCS11
+                                                                      11ax: -55dBm+/-2dBm @HE80 MCS11
+
+Antenna                                                               External Antenna connector (IPEX) x2
+
+Frequency Range                                                       US, Canada 2.412GHz~2.462 GHz (CH1~CH11)
+                                                                      EU, Japan: 2.412GHz~2.472GHz (CH1~CH13)
+                                                                      5.15GHz ~5.875GHz
+
+Software                                                              Security: 64/128-bit WEP Encryption, WPA, WPA2
+                                                                      Driver: Linux
+
+Operating Voltage                                                     DC 3.3V ± 5%
+
+Temperature                                                           Operating: 0°C ~ +70°C
+                                                                      Storage : -20°C ~ +90°C
+
+Humidity                                                              Operating Humidity: 10%~90% non-condensing
+                                                                      Storage Humidity: 10%~90% non-condensing
+
+Dimension                                                             50.95(H) x 30(W)mm
+
+Weight                                                                0.0125 kg
+
+
+
+
+                                                                                                                                                                 Page 3 of 6
+
+
+            Copyright © AsiaRF All rights reserved. While every eﬀort is made to ensure the informa on is accurate, AsiaRF does not accept
+                                    liability for any errors or mistakes that may arise. All specifica ons are subject to change without no ce.
+                                    AsiaRF Co., Ltd. | www.asiarf.com | (+886) 2 8943 1001 | sales@asiarf.com | Last Updated: 30/05/2023
+                                                                                                                                                       w w w. a s i a r f .c o m
+                                                                                                                                                   TEL: +886 2 29407880
+
+
+
+Power consumption maximum is 9.1W, average is 7W. Main board Power Supply design please provide 3.3V 3.5A, minimum 3.3V 3A.
+
+
+
+
+11ax related reading:
+
+Introduction to 802.11ax High-Efficiency Wireless - NI
+
+IEEE 802.11ax - Wikipedia
+
+
+
+AW7915-AED Block Diagram
+
+
+
+
+                                                                                                                                                                  Page 4 of 6
+
+
+             Copyright © AsiaRF All rights reserved. While every eﬀort is made to ensure the informa on is accurate, AsiaRF does not accept
+                                     liability for any errors or mistakes that may arise. All specifica ons are subject to change without no ce.
+                                     AsiaRF Co., Ltd. | www.asiarf.com | (+886) 2 8943 1001 | sales@asiarf.com | Last Updated: 30/05/2023
+                                                                                                                                               w w w. a s i a r f .c o m
+                                                                                                                                           TEL: +886 2 29407880
+
+
+
+
+Dimension (mil [mm])
+
+
+
+
+                                                                                                                                                          Page 5 of 6
+
+
+     Copyright © AsiaRF All rights reserved. While every eﬀort is made to ensure the informa on is accurate, AsiaRF does not accept
+                             liability for any errors or mistakes that may arise. All specifica ons are subject to change without no ce.
+                             AsiaRF Co., Ltd. | www.asiarf.com | (+886) 2 8943 1001 | sales@asiarf.com | Last Updated: 30/05/2023
+                                                                                                                                          w w w. a s i a r f .c o m
+                                                                                                                                      TEL: +886 2 29407880
+
+
+
+
+                                                                Top side
+
+
+
+
+                                                             Bottom side
+
+
+
+
+                                                                                                                                                     Page 6 of 6
+
+
+Copyright © AsiaRF All rights reserved. While every eﬀort is made to ensure the informa on is accurate, AsiaRF does not accept
+                        liability for any errors or mistakes that may arise. All specifica ons are subject to change without no ce.
+                        AsiaRF Co., Ltd. | www.asiarf.com | (+886) 2 8943 1001 | sales@asiarf.com | Last Updated: 30/05/2023
+

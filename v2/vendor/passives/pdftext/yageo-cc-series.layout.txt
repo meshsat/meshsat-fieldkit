@@ -1,0 +1,1454 @@
+        DATA SHEET
+           SURFACE-MOUNT CERAMIC
+            MULTILAYER CAPACITORS
+General Purpose & High Capacitance
+                        Class 2, X7R
+                          6.3 V TO 250 V
+                           100 pF to 47 µF
+
+
+
+
+                                             Product Specification – November 19, 2024 V.26
+                                                                                                              Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors              General Purpose & High Cap.      X7R    6.3 V to 250 V
+
+
+
+
+SCOPE                                ORDERING INFORMATION - GLOBAL PART NUMBER, PHYCOMP
+This specification describes X7R     CTC & 12NC
+series chip capacitors with lead-    All part numbers are identified by the series, size, tolerance, TC material,
+free terminations.                   packing style, voltage, process code, termination and capacitance value.
+
+                                     YAGEO BRAND ordering code
+APPLICATIONS
+                                     GLOBAL PART NUMBER (PREFERRED )
+ PCs, Hard disk, Game PCs
+ DVDs, Video cameras                CC     XXXX X X          X7R X BB XXX
+ Mobile phones                               (1)   (2) (3)      (4)           (5)
+ Data processing
+                                     (1) SIZE – INCH BASED (METRIC)
+                                        0201 (0603)
+FEATURES
+                                        0402 (1005)
+ Supplied in tape on reel
+                                        0603 (1608)
+ Nickel-barrier end termination
+                                        0805 (2012)
+ RoHS compliant
+                                        1206 (3216)
+ Halogen Free compliant
+                                        1210 (3225)
+ MSL class : level 1
+                                        1812 (4532)
+                                        2220 (5750)
+                                     (2) TOLERANCE
+                                          J = ± 5% (1)
+                                        K = ± 10%
+                                        M = ± 20%
+                                     (3) PACKING STYLE
+                                        R = Paper/PE taping reel; Reel 7 inch
+                                        K = Blister taping reel; Reel 7 inch
+                                        P = Paper/PE taping reel; Reel 13 inch
+                                        F = Blister taping reel; Reel 13 inch
+                                     (4) RATED VOLTAGE
+                                        5 = 6.3 V                  0 = 100 V
+                                        6 = 10 V                   A = 200 V
+                                        7 = 16 V                   Y = 250 V
+                                        8 = 25 V
+                                        9 = 50 V
+                                     (5) CAPACITANCE VALUE
+                                        2 significant digits+number of zeros
+                                        The 3rd digit signifies the multiplying factor, and letter R is decimal point
+                                        Example: 103 = 10 x 103 = 10,000 pF = 10 nF
+
+
+                                     NOTE
+                                     1. Tolerance ± 5% is not available for full product range, please contact local sales force
+                                        before ordering
+
+
+
+
+                                                                                                                      www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                     Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors                    General Purpose & High Cap.       X7R    6.3 V to 250 V
+
+
+
+
+CONSTRUCTION
+The capacitor consists of a
+rectangular block of ceramic
+dielectric in which a number of
+interleaved metal electrodes are
+contained. This structure gives
+rise to a high capacitance per
+unit volume.
+The inner electrodes are
+connected to the two end
+terminations and finally covered
+with a layer of plated tin (NiSn).
+The terminations are lead-free. A
+cross section of the structure is                  Fig. 1 Surface mounted multilayer ceramic capacitor construction
+shown in Fig.1.
+
+
+DIMENSION
+
+   Table 1 For outlines see fig. 2
+                                                                                              OUTLINES
+                                                  L2 / L3 (mm)    L4 (mm) DIMENSION
+TYPE     L1 (mm)      W (mm)         T (mm)
+                                                  min.   Max.     min.      CODE                For dimension see Table 1
+0201     0.6 ± 0.03   0.3 ± 0.03     0.3 ± 0.03   0.1    0.2      0.2       BA
+         1.0 ± 0.05   0.5 ± 0.05     0.5 ± 0.05   0.15   0.35     0.3       CA
+0402
+         1.0 ± 0.20   0.5 ± 0.20     0.5 ± 0.20   0.15   0.35     0.3       CD
+         1.6 ± 0.1    0.8 ± 0.1      0.8 ± 0.1    0.2    0.6      0.4       DA
+0603     1.6 ± 0.15   0.8 ± 0.15     0.8 ± 0.15   0.2    0.6      0.4       DB
+         1.6 ± 0.2    0.8 ± 0.2      0.8 ± 0.2    0.2    0.6      0.4       DC
+         2.0 ± 0.1    1.25 ± 0.1     0.6 ± 0.1    0.25   0.75     0.7       E0
+0805     2.0 ± 0.2    1.25 ± 0.2     0.85 ± 0.1   0.25   0.75     0.7       EA
+         2.0 ± 0.2    1.25 ± 0.2     1.25 ± 0.2   0.25   0.75     0.7       EB                    Fig. 2 Surface mounted multilayer
+         3.2 ± 0.15   1.6 ± 0.15     0.85 ± 0.1   0.25   0.75     1.4       F0                           ceramic capacitor dimension
+         3.2 ± 0.2    1.6 ± 0.2      1.0 ± 0.1    0.25   0.75     1.4       F1
+         3.2 ± 0.2    1.6 ± 0.2      1.15 ± 0.1   0.25   0.75     1.4       FA
+1206
+         3.2 ± 0.3    1.6 ± 0.2      1.25 ± 0.2   0.25   0.75     1.4       FB
+         3.2 ± 0.3    1.6 ± 0.2      1.6 ± 0.2    0.25   0.8      1.4       FC
+         3.2 ± 0.3    1.6 ± 0.3      1.6 ± 0.3    0.3    0.9      1.4       FD
+         3.2 ± 0.2    2.5 ± 0.2      0.85 ± 0.1   0.25   0.75     1.4       G0
+         3.2 ± 0.4    2.5 ± 0.3      1.25 ± 0.2   0.25   0.75     1.4       GA
+         3.2 ± 0.4    2.5 ± 0.3      1.6 ± 0.2    0.25   0.75     1.4       G2
+1210     3.2 ± 0.4    2.5 ± 0.3      1.9 ± 0.2    0.25   0.75     1.4       GB
+         3.2 ± 0.4    2.5 ± 0.3      2.0 ± 0.2    0.25   0.75     1.4       G3
+         3.2 ± 0.4    2.5 ± 0.3      2.5 ± 0.2    0.25   0.75     1.0       GC
+         3.2 ± 0.4    2.5 ± 0.3      2.5 ± 0.3    0.25   0.75     1.0       GD
+         4.5 ± 0.4    3.2 ± 0.3      0.85 ± 0.1   0.25   0.75     2.2       JA
+1812     4.5 ± 0.4    3.2 ± 0.2      1.25 ± 0.2   0.25   0.75     2.2       JB
+         4.5 ± 0.4    3.2 ± 0.4      1.6 ± 0.2    0.25   0.75     2.2       JC
+2220     5.7± 0.4     5.0± 0.3       1.15± 0.1    0.25   0.75     3.8       KA
+
+
+
+
+                                                                                                                             www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                              Product specification
+
+
+               Surface-Mount Ceramic Multilayer Capacitors                               General Purpose & High Cap.    X7R    6.3 V to 250 V
+
+
+
+
+CAPACITANCE RANGE & THICKNESS FOR X7R
+  Table 2 Sizes from 0201 to 0402
+CAP.          0201                                                               0402
+              6.3 V      10 V     16 V                 25 V             50 V     6.3 V        10 V      16 V       25 V          50 V          100 V
+    100 pF            BA          BA         BA            BA            BA        CA           CA        CA           CA           CA                CA
+
+    150 pF            BA          BA         BA            BA            BA        CA           CA        CA           CA           CA                CA
+
+    220 pF            BA          BA         BA            BA            BA        CA           CA        CA           CA           CA                CA
+
+    330 pF            BA          BA         BA            BA            BA        CA           CA        CA           CA           CA                CA
+
+    470 pF            BA          BA         BA            BA            BA        CA           CA        CA           CA           CA                CA
+
+    680 pF            BA          BA         BA            BA            BA        CA           CA        CA           CA           CA                CA
+
+     1.0 nF           BA          BA         BA            BA            BA        CA           CA        CA           CA           CA                CA
+
+     1.5 nF           BA          BA         BA            BA                      CA           CA        CA           CA           CA                CA
+
+     2.2 nF           BA          BA         BA            BA                      CA           CA        CA           CA           CA                CA
+
+     3.3 nF           BA          BA         BA            BA                      CA           CA        CA           CA           CA                CA
+
+     4.7 nF           BA          BA         BA            BA                      CA           CA        CA           CA           CA                CA
+
+     6.8 nF           BA          BA         BA            BA                      CA           CA        CA           CA           CA                CA
+
+      10 nF           BA          BA         BA            BA                      CA           CA        CA           CA           CA                CA
+
+      15 nF           BA                                                           CA           CA        CA           CA           CA
+
+      22 nF           BA                                                           CA           CA        CA           CA           CA
+
+      33 nF           BA                                                           CA           CA        CA           CA           CA
+
+      47 nF           BA                                                           CA           CA        CA           CA           CA
+
+      68 nF           BA                                                           CA           CA        CA           CA           CA
+
+    100 nF            BA          BA                                               CA           CA        CA           CA           CA
+
+    150 nF                                                                                                CA           CA
+
+    220 nF                                                                         CA           CA        CA           CA
+
+    330 nF
+
+    470 nF                                                                         CA           CA
+
+    680 nF
+
+       1 µF                                                                        CA           CA
+
+     2.2 µF                                                                       CD
+
+NOTE
+1. Values in shaded cells indicate thickness class in mm
+2. Capacitance value of non E-6 series is on request
+3. For product with 5% tolerance, please contact local sales force before ordering
+
+ CASE SIZE            L (mm)           W (mm)              T (mm)              DIMENSION CODE
+    0201             0.6 ± 0.03        0.3 ± 0.03          0.3 ± 0.03                BA
+                     1.0 ± 0.05        0.5 ± 0.05          0.5 ± 0.05                CA
+    0402
+                     1.0 ± 0.20        0.5 ± 0.20          0.5 ± 0.20                CD
+
+
+
+
+                                                                                                                                      www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                         Product specification
+
+
+               Surface-Mount Ceramic Multilayer Capacitors                           General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+
+CAPACITANCE RANGE & THICKNESS FOR X7R
+  Table 3 Sizes from 0603
+CAP.                  0603
+                           6.3 V            10 V              16 V        25 V            50 V         100V              200V              250V
+
+         100 pF              DA              DA                DA          DA               DA           DA
+         150 pF              DA              DA                DA          DA               DA           DA
+         220 pF              DA              DA                DA          DA               DA           DA               DA                 DA
+         330 pF              DA              DA                DA          DA               DA           DA               DA                 DA
+         470 pF              DA              DA                DA          DA               DA           DA               DA                 DA
+         680 pF              DA              DA                DA          DA               DA           DA               DA                 DA
+          1.0 nF             DA              DA                DA          DA               DA           DA               DA                 DA
+          1.5 nF             DA              DA                DA          DA               DA           DA               DA                 DA
+          2.2 nF             DA              DA                DA          DA               DA           DA               DA                 DA
+          3.3 nF             DA              DA                DA          DA               DA           DA               DA                 DA
+          4.7 nF             DA              DA                DA          DA               DA           DA               DA                 DA
+          6.8 nF             DA              DA                DA          DA               DA           DA               DA                 DA
+           10 nF             DA              DA                DA          DA               DA           DA               DA                 DA
+           15 nF             DA              DA                DA          DA               DA           DA               DA                 DA
+           22 nF             DA              DA                DA          DA               DA           DA               DA                 DA
+           33 nF             DA              DA                DA          DA               DA           DA
+           47 nF             DA              DA                DA          DA               DA           DA
+           68 nF             DA              DA                DA          DA               DA           DA
+         100 nF              DA              DA                DA          DA               DA           DA
+         150 nF              DA              DA                DA          DA               DA
+         220 nF              DA              DA                DA          DA               DA
+         330 nF              DA              DA                DA          DA
+         470 nF              DA              DA                DA          DA               DA
+         680 nF              DA              DA                DA          DA               DB
+            1 µF             DA              DA                DA          DA               DB
+          2.2 µF             DA              DA                DC
+          4.7 µF             DC
+
+NOTE
+1. Values in shaded cells indicate thickness class in mm
+2. Capacitance value of non E-6 series is on request
+3. For product with 5% tolerance, please contact local sales force before ordering
+
+  CASE SIZE          L (mm)            W (mm)              T (mm)        DIMENSION CODE
+                     1.6 ± 0.1         0.8 ± 0.1           0.8 ± 0.1                 DA
+    0603             1.6 ± 0.15        0.8 ± 0.15          0.8 ± 0.15                DB
+                     1.6 ± 0.2         0.8 ± 0.2           0.8 ± 0.2                 DC
+
+
+
+
+                                                                                                                                 www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                         Product specification
+
+
+               Surface-Mount Ceramic Multilayer Capacitors                           General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+
+CAPACITANCE RANGE & THICKNESS FOR X7R
+   Table 4 Sizes from 0805
+CAP.                       0805
+                           6.3 V            10 V             16 V         25 V            50 V         100V          200V                 250V
+         100 pF                  E0           E0                E0          E0              E0            E0              EA                 EA
+         150 pF                  E0           E0                E0          E0              E0            E0              EA                 EA
+         220 pF                  E0           E0                E0          E0              E0            E0              EA                 EA
+         330 pF                  E0           E0                E0          E0              E0            E0              EA                 EA
+         470 pF                  E0           E0                E0          E0              E0            E0              EA                 EA
+         680 pF                  E0           E0                E0          E0              E0            E0              EA                 EA
+          1.0 nF                 E0           E0                E0          E0              E0            E0              EA                 EA
+          1.5 nF                 E0           E0                E0          E0              E0            E0              EA                 EA
+          2.2 nF                 E0           E0                E0          E0              E0            E0              EA                 EA
+          3.3 nF                 E0           E0                E0          E0              E0            E0              EA                 EA
+          4.7 nF                 E0           E0                E0          E0              E0            E0              EA                 EA
+          6.8 nF                 E0           E0                E0          E0              E0            E0              EB                     EB
+           10 nF                 E0           E0                E0          E0              E0            E0              EB                     EB
+           15 nF                 E0           E0                E0          E0              E0           EA               EB                     EB
+           22 nF                 E0           E0                E0          E0              E0           EA               EB                     EB
+           33 nF              EA              EA                EA          EA              EA            EB              EB                     EB
+
+           47 nF              EA              EA                EA          EA              EA            EB              EB                     EB
+
+           68 nF              EA              EA                EA          EA              EA            EB              EB                     EB
+         100 nF               EA              EA                EA          EA              EA            EB              EB                     EB
+         150 nF               EA              EA                EA          EA              EA            EB
+         220 nF               EA              EA                EA          EA              EB            EB
+         330 nF                  EB           EB                EB          EB              EB            EB
+         470 nF                  EB           EB                EB          EB              EB            EB
+         680 nF                  EB           EB                EB          EB              EB            EB
+            1 µF                 EB           EB                EB          EB              EB            EB
+          2.2 µF                 EB           EB                EB          EB              EB
+          4.7 µF                 EB           EB                EB          EB
+           10 µF                 EB           EB                EB
+
+NOTE
+1. Values in shaded cells indicate thickness class in mm
+2. Capacitance value of non E-6 series is on request
+3. For product with 5% tolerance, please contact local sales force before ordering
+
+  CASE SIZE          L (mm)            W (mm)              T (mm)        DIMENSION CODE
+                     2.0 ± 0.1         1.25 ± 0.1          0.6 ± 0.1                 E0
+    0805             2.0 ± 0.2         1.25 ± 0.2          0.85 ± 0.1                EA
+                     2.0 ± 0.2         1.25 ± 0.2          1.25 ± 0.2                EB
+
+
+
+
+                                                                                                                                 www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                         Product specification
+
+
+                Surface-Mount Ceramic Multilayer Capacitors                          General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+CAPACITANCE RANGE & THICKNESS FOR X7R
+  Table 5 Size 1206
+
+CAP.                     1206
+                        6.3 V           10 V            16 V            25 V              50 V        100V           200V                 250V
+       220 pF               F0             F0              F0              F0               F0           F0               F0                     F0
+       330 pF               F0             F0              F0              F0               F0           F0               F0                     F0
+       470 pF               F0             F0              F0              F0               F0           F0               F0                     F0
+       680 pF               F0             F0              F0              F0               F0           F0               F0                     F0
+       1.0 nF               F0             F0              F0              F0               F0           F0               F0                     F0
+       1.5 nF               F0             F0              F0              F0               F0           F0               F0                     F0
+       2.2 nF               F0             F0              F0              F0               F0           F0               F0                     F0
+       3.3 nF               F0             F0              F0              F0               F0           F0               F0                     F0
+       4.7 nF               F0             F0              F0              F0               F0           F0               F0                     F0
+       6.8 nF               F0             F0              F0              F0               F0           F0               F0                     F0
+        10 nF               F0             F0              F0              F0               F0           F0               F0                     F0
+        15 nF               F0             F0              F0              F0               F0           F0               F0                     F0
+        22 nF               F0             F0              F0              F0               F0           F0               FB                     FB
+        33 nF               F0             F0              F0              F0               F0           F0               FB                     FB
+        47 nF               F0             F0              F0              F0               F0           F0               FB                     FB
+        68 nF               F0             F0              F0              F0               F0           FB               FB                     FB
+       100 nF               F0             F0              F0              F0               F0           FB               FC                     FC
+       150 nF               F0             F0              F0              F0              FA            FB               FC                     FC
+       220 nF               F0             F0              F0              F0              FA            FB               FC                     FC
+       330 nF               F0             F0              F0              F0               F0           FC
+       470 nF               F0             F0              F0              F0               F1           FC
+       680 nF              FA             FA              FA              FA               FC            FC
+         1 µF              FA             FA              FA              FA               FC            FC
+       2.2 µF              FA             FA              FA              FA               FC            FC
+       4.7 µF              FC             FC              FC              FC               FC
+       10 µF               FC             FC              FC              FC
+       22 µF               FC             FC              FD
+NOTE
+1. Values in shaded cells indicate thickness class in mm
+2. Capacitance value of non E-6 series is on request
+3. For product with 5% tolerance, please contact local sales force before ordering
+4. Please contact local sales force for special ordering code before ordering
+  CASE SIZE          L (mm)           W (mm)            T (mm)          DIMENSION CODE
+                     3.2 ± 0.15       1.6 ± 0.15       0.85 ± 0.1                    F0
+                     3.2 ± 0.2        1.6 ± 0.2         1.0 ± 0.1                    F1
+                     3.2 ± 0.2        1.6 ± 0.2        1.15 ± 0.1                    FA
+    1206
+                     3.2 ± 0.3        1.6 ± 0.2        1.25 ± 0.2                    FB
+                     3.2 ± 0.3        1.6 ± 0.2         1.6 ± 0.2                    FC
+                     3.2 ± 0.3        1.6 ± 0.3         1.6 ± 0.3                    FD
+
+
+
+
+                                                                                                                                 www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                         Product specification
+
+
+                Surface-Mount Ceramic Multilayer Capacitors                          General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+
+CAPACITANCE RANGE & THICKNESS FOR X7R
+  Table 6 Sizes from 1210
+
+CAP.                     1210
+                         6.3 V            10 V              16 V          25 V            50 V         100V          200V                  250V
+       2.2 nF              G0               G0                G0            G0             G0            G0               G0                     G0
+       3.3 nF              G0               G0                G0            G0             G0            G0               G0                     G0
+       4.7 nF              G0               G0                G0            G0             G0            G0               G0                     G0
+       6.8 nF              G0               G0                G0            G0             G0            G0               G0                     G0
+        10 nF              G0               G0                G0            G0             G0            G0               G0                     G0
+        15 nF              G0               G0                G0            G0             G0            G0               G0                     G0
+        22 nF              G0               G0                G0            G0             G0            G0              GA                  GA
+        33 nF              G0               G0                G0            G0             G0            G0              GA                  GA
+        47 nF              G0               G0                G0            G0             G0            G0              GA                  GA
+        68 nF              G0               G0                G0            G0             G0            G0              GA                  GA
+       100 nF              G0               G0                G0            G0             G0            G0              GA                  GA
+       150 nF              G0               G0                G0            G0             GA            GA              GA                  GA
+       220 nF              G0               G0                G0            G0             GA            GA              GA                  GA
+       330 nF              G0               G0                G0            G0             GA            GA
+       470 nF              GA              GA                 GA           GA              GA            GA
+       680 nF              GA              GA                 GA           GA              GA            G3
+         1 µF              GA              GA                 GA           GA              GA            G3
+       2.2 µF              G3               G3                G3            G3             G3            G3
+       4.7 µF              GB               GB                GB            GB             GD           GD
+        10 µF              GB               GB                GB            GB             GD
+        22 µF              GC              GC                GC            GC
+        47 µF              GC              GC
+
+NOTE
+1. Values in shaded cells indicate thickness class in mm
+2. Capacitance value of non E-6 series is on request
+3. For product with 5% tolerance, please contact local sales force before ordering
+4. Please contact local sales force for special ordering code before ordering
+
+  CASE SIZE          L (mm)            W (mm)              T (mm)         DIMENSION CODE
+                     3.2 ± 0.2         2.5 ± 0.2           0.85 ± 0.1                G0
+                     3.2 ± 0.4         2.5 ± 0.3           1.25 ± 0.2                GA
+                     3.2 ± 0.4         2.5 ± 0.3           1.6 ± 0.2                 G2
+     1210            3.2 ± 0.4         2.5 ± 0.3           1.9 ± 0.2                 GB
+                     3.2 ± 0.4         2.5 ± 0.3           2.0 ± 0.2                 G3
+                     3.2 ± 0.4         2.5 ± 0.3           2.5 ± 0.2                 GC
+                     3.2 ± 0.4         2.5 ± 0.3           2.5 ± 0.3                 GD
+
+
+
+
+                                                                                                                                 www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                          Product specification
+
+
+               Surface-Mount Ceramic Multilayer Capacitors                           General Purpose & High Cap.    X7R    6.3 V to 250 V
+
+
+
+
+   Table 7 Sizes from 1812 to 2220
+
+CAP.                                     1812                                                                                               2220
+                                         50 V                     100V                  200V                250V                            50 V
+
+               4.7 nF                       JA                          JA                 JA                  JA
+
+               6.8 nF                       JA                          JA                 JA                  JA
+
+               10 nF                        JA                          JA                 JA                  JA
+
+               15 nF                        JA                          JA                 JA                  JA
+
+               22 nF                        JA                          JA                 JA                  JA
+
+               33 nF                        JA                          JA                 JA                  JA
+
+               47 nF                        JA                          JA                 JB                  JB
+
+               68 nF                        JA                          JA                 JB                  JB
+
+              100 nF                         JB                         JB                 JB                  JB
+
+              150 nF                         JB                         JB                 JB                  JB
+
+              220 nF                         JB                         JB                 JC                  JC
+
+              330 nF                         JB                         JB                 JC                  JC
+
+              470 nF                         JB                         JC                 JC                  JC                                 KA
+
+              680 nF                        JC                          JC
+
+                 1 µF                       JC                          JC                                                                        KA
+
+NOTE
+1. Values in shaded cells indicate thickness class in mm
+2. Capacitance value of non E-6 series is on request
+3. For product with 5% tolerance, please contact local sales force before ordering
+4. Please contact local sales force for special ordering code before ordering
+
+  CASE SIZE          L (mm)            W (mm)              T (mm)            DIMENSION CODE
+                     4.5 ± 0.4         3.2 ± 0.3           0.85 ± 0.1                 JA
+     1812            4.5 ± 0.4         3.2 ± 0.3           1.25 ± 0.2                 JB
+                     4.5 ± 0.4         3.2 ± 0.4           1.6 ± 0.2                  JC
+     2220            5.7± 0.4          5.0 ± 0.3           1.15 ± 0.1                 KA
+
+
+
+
+                                                                                                                                  www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                          Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors            General Purpose & High Cap.   X7R     6.3 V to 250 V
+
+
+
+
+THICKNESS CLASSES AND PACKING QUANTITY
+  Table 8
+SIZE                                                     Ø 180 MM / 7 INCH      Ø 330 MM / 13 INCH
+         C                                                 Paper     Blister      Paper      Blister
+         O
+         D     THICKNESS                  TAPE WIDTH                                                              QUANTITY
+         E CLASSIFICATION            QUANTITY PER REEL                                                        PER BULK CASE
+0201                 0.3 ± 0.03 mm               8 mm     15,000         ---      50,000            ---                             ---
+0402                 0.5 ± 0.05 mm               8 mm     10,000         ---      50,000            ---                      50,000
+0603                  0.8 ± 0.1 mm               8 mm      4,000         ---      15,000            ---                      15,000
+                      0.6 ± 0.1 mm               8 mm      4,000         ---      20,000            ---                      10,000
+0805                 0.85 ± 0.1 mm               8 mm      4,000         ---      15,000            ---                           8,000
+                     1.25 ± 0.2 mm               8 mm        ---       3,000          ---      10,000                             5,000
+                      0.6 ± 0.1 mm               8 mm      4,000         ---      20,000            ---                             ---
+                     0.85 ± 0.1 mm               8 mm      4,000         ---      15,000            ---                             ---
+            1.00 / 1.15 ± 0.1 mm                 8 mm        ---       3,000          ---      10,000                               ---
+1206
+                     1.25 ± 0.2 mm               8 mm        ---       3,000          ---      10,000                               ---
+                     1.6 ± 0.15 mm               8 mm        ---       2,500          ---      10,000                               ---
+                      1.6 ± 0.2 mm               8 mm        ---       2,000          ---      10,000                               ---
+               0.6 / 0.7 ± 0.1 mm                8 mm        ---       4,000          ---      15,000                               ---
+                     0.85 ± 0.1 mm               8 mm        ---       4,000          ---      10,000                               ---
+                      1.0 ± 0.1 mm               8 mm        ---       3,000          ---      10,000                               ---
+                     1.15 ± 0.1 mm               8 mm        ---       3,000          ---      10,000                               ---
+                 1.15 ± 0.15 mm                  8 mm        ---       3,000          ---      10,000                               ---
+1210                 1.25 ± 0.2 mm               8 mm        ---       3,000          ---           ---                             ---
+                      1.5 ± 0.1 mm               8 mm        ---       2,000          ---           ---                             ---
+               1.6 / 1.9 ± 0.2 mm                8 mm        ---       2,000          ---           ---                             ---
+                      2.0 ± 0.2 mm               8 mm        ---       2,000          ---           ---                             ---
+                                                                       1,000
+                      2.5 ± 0.2 mm               8 mm        ---                      ---           ---                             ---
+                                                                        500
+                 1.15 ± 0.15 mm                  12 mm       ---       3,000          ---           ---                             ---
+                     1.25 ± 0.2 mm               12 mm       ---       3,000          ---           ---                             ---
+                 1.35 ± 0.15 mm                  12 mm       ---       2,000          ---           ---                             ---
+1808
+                      1.5 ± 0.1 mm               12 mm       ---       2,000          ---           ---                             ---
+                      1.6 ± 0.2 mm               12 mm       ---       2,000          ---           ---                             ---
+                      2.0 ± 0.2 mm               12 mm       ---       2,000          ---           ---                             ---
+             0.6 / 0.85 ± 0.1 mm                 12 mm       ---       2,000          ---           ---                             ---
+                     1.15 ± 0.1 mm               12 mm       ---       1,000          ---           ---                             ---
+                 1.15 ± 0.15 mm                  12 mm       ---       1,000          ---           ---                             ---
+                 1.35 ± 0.15 mm                  12 mm       ---       1,000          ---           ---                             ---
+1812
+                      1.5 ± 0.1 mm               12 mm       ---       1,000          ---           ---                             ---
+                      1.6 ± 0.2 mm               12 mm       ---       1,000          ---           ---                             ---
+                      2.0 ± 0.2 mm               12 mm       ---       1,000          ---           ---                             ---
+                      2.5 ± 0.2 mm               12 mm       ---        500           ---           ---                             ---
+
+
+
+
+                                                                                                                  www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                                        Product specification
+
+
+                 Surface-Mount Ceramic Multilayer Capacitors                                 General Purpose & High Cap.          X7R    6.3 V to 250 V
+
+
+
+
+PAPER/PE TAPE SPECIFICATION
+
+
+
+
+    Fig. 3 Paper/PE tape
+
+
+
+
+   Table 9 Dimensions of paper/PE tape for relevant chip size; see Fig.3
+
+SIZE     SYMBOL                                                                                                                                                 Unit: mm
+CODE A0              B0          W          E         F           P0 (1)     P1         P2         Ø D0           K0                         T
+
+01005 0.24 ± 0.03 0.45 ± 0.03 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.05 2.0 ± 0.05 2.0 ± 0.05 1.50 ± 0.1       0.24 ± 0.03                0.36 ± 0.01
+
+0201     0.39 ± 0.06 0.70 ± 0.06 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.05 2.0 ± 0.05 2.0 ± 0.05 1.55 ± 0.03   0.38 ± 0.05                (0.47 / 0.55)± 0.10
+
+0402     0.70 ± 0.15 1.21 ± 0.12 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.05 2.0 ± 0.05 2.0 ± 0.05 1.50 +0.1 /-0 (0.75 / 0.60)± 0.10        (0.85 / 0.70)± 0.10
+
+0603     1.05 ± 0.14 1.86 ± 0.13 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.50 +0.1 /-0 (1.05 / 0.95 / 0.75)± 0.10 (1.15 / 1.05 / 0.85)± 0.10
+
+0805     1.50 ± 0.15 2.26 ± 0.20 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.50 +0.1 /-0 (1.05 / 0.95 / 0.75)± 0.10 (1.15 / 1.05 / 0.85)± 0.10
+
+1206     1.90 ± 0.15 3.50 ± 0.20 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.50 +0.1 /-0 (0.95 / 0.75)± 0.10        (1.05 / 0.85)± 0.10
+
+4 × 0402 1.50 ± 0.15 2.26 ± 0.20 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.50 +0.1 /-0 (1.05 / 0.95 / 0.75)± 0.10 (1.15 / 1.05 / 0.85)± 0.10
+
+4 × 0603 1.90 ± 0.15 3.50 ± 0.20 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.50 +0.1 /-0 (0.95 / 0.75)± 0.10        (1.05 / 0.85)± 0.10
+
+0508     1.50 ± 0.15 2.26 ± 0.20 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.50 +0.1 /-0 (1.05 / 0.95 / 0.75)± 0.10 (1.15 / 1.05 / 0.85)± 0.10
+
+0612     1.90 ± 0.15 3.50 ± 0.20 8.0 ± 0.20 1.75 ± 0.1 3.50 ± 0.05 4.0 ± 0.10 4.0 ± 0.10 2.0 ± .05 1.50 +0.1 /-0 (0.95 / 0.75)± 0.10         (1.05 / 0.85)± 0.10
+
+NOTE
+1. P0 pitch tolerance over any 10 pitches is 0.2 mm
+2. 4 x 0402 stands for 0508 array
+3. 4 x 0603 stands for 0612 array
+
+
+
+
+                                                                                                                                                 www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                                    Product specification
+
+
+                Surface-Mount Ceramic Multilayer Capacitors                             General Purpose & High Cap.           X7R     6.3 V to 250 V
+
+
+
+
+BLISTER TAPE SPECIFICATION
+
+
+  For dimension see Table 4
+                                                                                           P0
+                                                            D0                        P2
+                     K0
+
+
+                                                                                                                                           E
+
+
+
+
+              cover tape                                                                                                                   F
+                                                                                                                                                W
+
+                                                                                                                                 B0
+
+
+
+
+                                                                                                                                           SCM015
+                                                                       A0                        D1
+
+                              T2                                                P1
+
+                                                                                                       K0: so chosen that the orientation of the component
+                                                                       direction of unreeling              cannot change
+                                                                                                       For W = 8 mm: T2 = 3.5 mm max.
+                                                                                                       For W = 12 mm: T2 = 6.5 mm max.
+
+    Fig. 4 Blister tape
+
+
+
+
+    Table 10 Dimensions of blister tape for relevant chip size; see Fig.4
+
+     SYMBOL                                                                                                                                          Unit: mm
+SIZE                                                                                                              (2)
+     A0     B0                     K0         W         E          F             Ø D0           Ø D1         P0          P1           P2            T2
+CODE
+          Min. Max. Min. Max. Min. Max.                                                         Min.                                                Min. Max.
+0805      1.29 1.65 2.09 2.60 1.25 1.62 8.1 ± 0.20 1.75 ± 0.1 3.5 ± 0.05 1.5 +0.1/-0.0 1 +0.1/-0.0 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.30 1.67
+
+1206      1.65 2.12 3.30 3.75 1.22 2.15 8.1 ± 0.20 1.75 ± 0.1 3.5 ± 0.05 1.5 +0.1/-0.0 1 +0.1/-0.0 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.27 2.20
+
+1210      2.55 3.02 3.31 3.88 0.97 2.92 8.1 ± 0.20 1.75 ± 0.1 3.5 ± 0.05 1.5 +0.1/-0.0 1 +0.1/-0.0 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.02 2.97
+
+1808      2.05 2.55 4.80 5.45 1.30 2.45 12.1 ± 0.20 1.75 ± 0.1 5.5 ± 0.05 1.5 +0.1/-0.0 1.5 +0.1/-0.0 4.0 ± 0.10 4.0 ± 0.10 2.0 ± 0.05 1.35 2.50
+
+1812      3.35 3.75 4.70 5.33 0.70 2.40 12.1 ± 0.20 1.75 ± 0.1 5.5 ± 0.05 1.5 +0.1/-0.0 1.5 +0.1/-0.0 4.0 ± 0.10 8.0 ± 0.10 2.0 ± 0.05 0.75 2.45
+
+2220      5.12 5.32 5.84 6.04 1.28 1.48 12.0 ± 0.20 1.75 ± 0.1 5.5 ± 0.05 1.5 +0.1/-0.0 1.5 +0.1/-0.0 4.0 ± 0.10 8.0 ± 0.10 2.0 ± 0.05 1.33 1.53
+
+NOTE
+1. Typical capacitor displacement in pocket
+2. P0 pitch tolerance over any 10 pitches is ±0.2 mm
+
+
+
+
+                                                                                                                                               www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                       Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors   General Purpose & High Cap.       X7R       6.3 V to 250 V
+
+
+
+
+REEL SPECIFICATION
+
+
+                                                                              W2
+
+
+
+
+                                                                                   C      N        A
+
+
+
+
+                                                                                          HBK039
+
+                                                                              W1
+
+
+   Fig. 5 Reel
+
+
+  Table 11 Reel dimensions; see Fig.5
+                         SYMBOL                                                                                        Unit: mm
+TAPE WIDTH
+                         A                N                  C                                W1                          W2max.
+
+8 (Ø 178 mm/7")           178 ± 1.0       60 ± 1.0           13 +0.50/-0.20                   9.4 ± 1.5                        14.4
+8 (Ø 330 mm/13")          330 ± 1.0       100 ± 1.0          13 +0.50/-0.20                   9.0 ± 0.2                        14.4
+12 (Ø 178 mm/7")          178 ± 1.0       60 ± 1.0           13 +0.50/-0.20                   13.4 ± 1.5                       18.4
+
+
+P ROPERTIES OF REEL
+Material: polystyrene
+Surface resistance: <10 10 X/sq.
+
+
+
+
+                                                                                                               www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                                Product specification
+
+
+                  Surface-Mount Ceramic Multilayer Capacitors                         General Purpose & High Cap.        X7R      6.3 V to 250 V
+
+
+
+ELECTRICAL CHARACTERISTICS
+X7R DIELECTRIC CAPACITORS; NISN TERMINATIONS
+Unless otherwise specified, all test and measurements shall be made under standard atmospheric conditions for
+testing as given in 5.3 of IEC 60068-1:
+   - Temperature: 15     C to 35 C
+   - Relative humidity: 25% to 75%
+   - Air pressure: 86 kPa to 106 kPa
+Before the measurements are made, the capacitor shall be stored at the measuring temperature for a time
+sufficient to allow the entire capacitor to reach this temperature.
+The period as prescribed for recovery at the end of a test is normally sufficient for this purpose.
+    Table 12
+DESCRIPTION                                                                                                                                       VALUE
+Capacitance range                                                                                                                      100 pF to 47 µF
+Capacitance tolerance                                                                                                              ± 5%, ± 10%, ± 20%
+Dissipation factor (D.F.)
+X7R        0201             0402             0603            0805             1206             1210              1812             2220             D.F.
+           100pF to 10nF    100pF to 100nF 100pF to 220nF 100pF to 2.2µF      220pF to 2.2µF   2.2nF to 2.2µF    6.8nF to 1µF                      ≤ 5%
+                                            270nF to 1µF                                                                                           ≤ 7%
+≤ 6.3V                      220nF to 470nF,
+           15nF to 100nF                    2.2µF to 4.7µF   4.7µF to 10µF    4.7µF to 22µF    4.7µF to 47µF                                       ≤ 10%
+                            2.2µF
+                            1µF                                                                                                                    ≤ 12.5%
+           100pF to 10nF    100pF to 100nF 100pF to 220nF 100pF to 2.2µF      220pF to 2.2µF   2.2nF to 2.2µF    6.8nF to 1µF                      ≤ 5%
+                                             270nF to 1µF                                                                                          ≤ 7%
+10V
+           100nF            220nF to 470nF 2.2µF to 4.7µF    4.7µF to 10µF    4.7µF to 22µF    4.7µF to 47µF                                       ≤ 10%
+                            1µF                                                                                                                    ≤ 12.5%
+           100pF to 1.2nF   100pF to 22nF    100pF to 220nF 100pF to 470nF 220pF to 1µF        2.2nF to 1µF      6.8nF to 1µF                      ≤ 3.5%
+           1.5nF to 10nF    27nF to 100nF                    680nF to 2.2µF   2.2µF            2.2µF                                               ≤ 5%
+16V
+                                             270nF to 1µF                                                                                          ≤ 7%
+                            220nF            2.2µF           4.7µF to 10µF    4.7µF to 22µF    4.7µF to 22µF                                       ≤ 10%
+                            100pF to 10nF    100pF to 39nF   100pF to 180nF 220pF to 180nF 2.2nF to 1µF          6.8nF to 1µF                      ≤ 2.5%
+           100pF to 470pF 12nF to 47nF       47nF to 220nF   220nF to 470nF 220nF to 1µF                                                           ≤ 3.5%
+25V        560pF to 10nF    56nF to 100nF                    560nF to 2.2µF   2.2µF            2.2µF                                               ≤ 5%
+                                             270nF to 1µF                                                                                          ≤ 7%
+                            120nF to 220nF                   4.7µF            4.7µF to 10µF    4.7µF to 22µF                                       ≤ 10%
+                            100pF to 10nF    100pF to 39nF   100pF to 180nF 220pF to 180nF 2.2nF to 1µF          6.8nF to 1µF     470nF to 1µF ≤ 2.5%
+           100pF to 470pF 12nF to 33nF       47nF to 220nF   220nF to 470nF 220nF to 1µF                                                           ≤ 3.5%
+50V        560pF to 1nF                                      560nF to 680nF                                                                        ≤ 5%
+                            47nF to 82nF                                                                                                           ≤ 7%
+                            100nF            470nF to 1µF    1µF to 2.2µF     2.2µF to 4.7µF   2.2µF to 10µF                                       ≤ 10%
+                            100pF to 10nF    100pF to 10nF   100pF to 470nF 220pF to 470nF 2.2nF to 680nF        6.8nF to 1µF                      ≤ 2.5%
+                                                                              560nF to 820nF
+                                                                                             1µF to 2.2µF                                          ≤ 3.5%
+100V                                                                          1µF
+                                             12nF to 100nF   560nF to 1µF     1µF to 2.2µF                                                         ≤ 5%
+                                                                                               4.7µF                                               ≤10%
+200/250V                                     220pF to 22nF   100pF to 100nF 220pF to 220nF 2.2nF to 220nF        6.8nF to 470nF                    ≤ 2.5%
+Insulation resistance after 1 minute at Ur (DC)                               Rins ≥ 10 GΩ or Rins     × C ≥ 500/100/50* seconds whichever is less
+                                                                                                          r
+
+Maximum capacitance change as a function of temperature
+(temperature characteristic/coefficient):                                                                                                           ± 15%
+Operating temperature range:                                                                                                      –55 °C to +125 °C
+
+                                                                                                                                         www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                                  Product specification
+
+
+                 Surface-Mount Ceramic Multilayer Capacitors                            General Purpose & High Cap.         X7R    6.3 V to 250 V
+
+
+
+
+NOTE
+X7R      0201          0402            0603              0805          1206              1210             1812             2220 * I.R.
+                                                                                                                                   Rins ≥ 10 GΩ or
+         100pF to 10nF 100pF to 100nF 100pF to 470nF 100pF to 2.2µF 220pF to 2.2µF 2.2nF to 4.7µF         6.8nF to 1µF
+                                                                                                                                   Rins × Cr ≥ 500Ω.F
+≤ 6.3V 15nF to 100nF                   560nF to 2.2µF    4.7µF to 10µF 4.7µF to 47µF     10µF to 47µF                              Rins × Cr ≥ 100Ω.F
+                       220nF to 1µF    4.7µF                                                                                       Rins × Cr ≥ 50Ω.F
+                                                                                                                                   Rins ≥ 10 GΩ or
+         100pF to 10nF 100pF to 100nF 100pF to 470nF 100pF to 2.2µF 220pF to 2.2µF 2.2nF to 4.7µF         6.8nF to 1µF
+                                                                                                                                   Rins × Cr ≥ 500Ω.F
+10V
+         100nF                         560nF to 2.2µF    4.7µF to 10µF 4.7µF to 47µF     10µF to 47µF                              Rins × Cr ≥ 100Ω.F
+                       220nF to 1µF                                                                                                Rins × Cr ≥ 50Ω.F
+                                                                                                                                   Rins ≥ 10 GΩ or
+         100pF to 10nF 100pF to 100nF 100pF to 470nF 100pF to 2.2µF 220pF to 2.2µF 2.2nF to 4.7µF         6.8nF to 1µF
+                                                                                                                                   Rins × Cr ≥ 500Ω.F
+16V                                    560nF to 1µF      4.7µF to 10µF 4.7µF to 22µF     10µF to 22µF                              Rins × Cr ≥ 100Ω.F
+                       220nF           2.2µF                                                                                       Rins × Cr ≥ 50Ω.F
+                                                                                                                                   Rins ≥ 10 GΩ or
+         100pF to 10nF 100pF to 100nF 100pF to 220nF 100pF to 1µF 220pF to 2.2µF 2.2nF to 2.2µF           6.8nF to 1µF
+                                                                                                                                   Rins × Cr ≥ 500Ω.F
+25V
+                                       270nF to 1µF      2.2µF to 4.7µF 4.7µF to 10µF    4.7µF to 10µF                             Rins × Cr ≥ 100Ω.F
+                       220nF                                                                                                       Rins × Cr ≥ 50Ω.F
+                                                                                                                                   Rins ≥ 10 GΩ or
+         100pF to 1nF 100pF to 82nF    100pF to 220nF 100pF to 1µF 220pF to 100nF 2.2nF to 1µF            6.8nF to 330nF 470nF
+50V                                                                                                                                Rins × Cr ≥ 500Ω.F
+                       100nF           270nF to 1µF      2.2µF         120nF to 4.7µF 2.2µF to 10µF       470nF to 1µF     1µF     Rins × Cr ≥ 100Ω.F
+                                                                                                                                   Rins ≥ 10 GΩ or
+                       100pF to 10nF   100pF to 100nF 100pF to 1µF 220pF to 100nF 2.2nF to 56nF           6.8nF to 330nF
+100V                                                                                                                               Rins × Cr ≥ 500Ω.F
+                                                                       120nF to 2.2µF 68nF to 4.7µF       470nF to 1µF             Rins × Cr ≥ 100Ω.F
+                                                                                                                                   Rins ≥ 10 GΩ or
+200/                                   220pF to 22nF     100pF to 100nF220pF to 22nF 2.2nF to 33nF        6.8nF to 120nF
+                                                                                                                                   Rins × Cr ≥ 500Ω.F
+250V
+                                                                       27nF to 220nF 39nF to 220nF        150nF to 470nF           Rins × Cr ≥ 100Ω.F
+
+
+
+
+SOLDERING RECOMMENDATION
+       Table 13
+                                    SIZE
+SOLDERING
+METHOD                            ≤ 0402                   0603                 0805                     1206               ≥ 1210
+Reflow                         Reflow only              > 1.0 µF            > 2.2 µF               > 4.7 µF              Reflow only
+Reflow/Wave                                             ≤ 1.0 µF             ≤ 2.2 µF              ≤ 4.7 µF                       ---
+
+
+
+
+                                                                                                                                          www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                     Product specification
+
+
+                 Surface-Mount Ceramic Multilayer Capacitors                     General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+
+     Fig. 6     Typical capacitance change as a function of
+                temperature
+
+
+
+  Size 0201 10 nF / 16 V
+  Solid lines: Impedance / Dotted lines: ESR
+
+
+
+
+    Fig. 7 Impedance ESR vs. frequency characteristics for multilayer chip capacitors
+
+
+
+
+                                                                                                                             www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                    Product specification
+
+
+                Surface-Mount Ceramic Multilayer Capacitors                     General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+
+ Size 0402 100 nF / 16 V
+ Solid lines: Impedance / Dotted lines: ESR
+
+
+
+
+   Fig. 8 Impedance ESR vs. frequency characteristics for multilayer chip capacitors
+
+
+
+
+ Size 0603 1 µF / 16 V
+ Solid lines: Impedance / Dotted lines: ESR
+
+
+
+
+   Fig. 9 Impedance ESR vs. frequency characteristics for multilayer chip capacitors
+
+
+
+
+                                                                                                                            www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                      Product specification
+
+
+                 Surface-Mount Ceramic Multilayer Capacitors                      General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+
+ Size 0805 1 µF / 16 V
+ Solid lines: Impedance / Dotted lines: ESR
+
+
+
+
+   Fig. 10 Impedance ESR vs. frequency characteristics for multilayer chip capacitors
+
+
+
+
+ Size 1206 1 µF / 25 V
+ Solid lines: Impedance / Dotted lines: ESR
+
+
+
+
+   Fig. 11 Impedance ESR vs. frequency characteristics for multilayer chip capacitors
+
+
+
+
+                                                                                                                              www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                      Product specification
+
+
+                 Surface-Mount Ceramic Multilayer Capacitors                      General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+
+ Size 1206 10 µF / 10 V
+ Solid lines: Impedance / Dotted lines: ESR
+
+
+
+
+   Fig. 12 Impedance ESR vs. frequency characteristics for multilayer chip capacitors
+
+
+
+
+                                                                                                                              www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                         Product specification
+
+
+                Surface-Mount Ceramic Multilayer Capacitors                         General Purpose & High Cap.    X7R    6.3 V to 250 V
+
+
+
+
+TESTS AND REQUIREMENTS
+   Table 14 Test procedures and requirements
+TEST                   TEST METHOD             PROCEDURE                                                          REQUIREMENTS
+Mounting               IEC 60384-     4.3      The capacitors may be mounted on printed-circuit boards or         No visible damage
+                       21/22                   ceramic substrates
+
+
+Visual Inspection                     4.4      Any applicable method using × 10 magnification                     In accordance with
+and Dimension                                                                                                     specification
+Check
+
+Capacitance (1)                       4.5.1    Class II:                                                          Within specified tolerance
+Dissipation                           4.5.2    At 20°C, 24 hrs after annealing
+Factor (D.F.) (1)
+                                               Cap ≤ 1 µF, f = 1 KHz, measuring at voltage 1 Vrms at 20°C
+                                               Cap > 1 µF, f = 1 KHz for C ≤ 10 µF, rated voltage > 6.3 V,
+                                               measuring at voltage 1 Vrms at 20°C
+                                               f = 1 KHz, for C ≤ 10 µF, rated voltage ≤ 6.3 V, measuring at
+                                               voltage 0.5 Vrms at 20°C
+                                               f = 120 Hz for C > 10 µF, measuring at voltage 0.5 Vrms at 20°C
+
+
+
+Insulation                            4.5.3    At Ur (DC) for 1 minute                                            In accordance with
+Resistance                                                                                                        specification
+
+
+
+NOTE:
+1. For individual product specification, please contact local sales.
+
+
+
+
+                                                                                                                                 www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                    Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors                       General Purpose & High Cap.   X7R     6.3 V to 250 V
+
+
+
+
+TEST                 TEST METHOD        PROCEDURE                                                 REQUIREMENTS
+Temperature          IEC 60384-   4.6   Capacitance shall be measured by the steps shown in the   Class II:
+Characteristic                                                                                    X7R: ∆ C/C: ±15%
+                     21/22              following table.
+                                        The capacitance change should be measured after 5 min
+                                        at each specified temperature stage.
+                                        Step       Temperature(°C)
+                                        a          25± 2
+                                        b          Lower temperature± 3°C
+                                        c          25± 2
+                                        d          Upper Temperature± 2°C
+                                        e          25± 2
+
+                                        Class II
+                                        Capacitance Change shall be calculated from the formula
+                                        as below
+                                                 C2 - C1
+                                        ∆C =             x 100%
+                                                  C1
+                                        C1: Capacitance at step c
+                                        C2: Capacitance at step b or d
+
+
+Adhesion                          4.7   A force applied for 10 seconds to the line joining the    Force
+                                        terminations and in a plane parallel to the substrate     size ≥ 0603: 5N
+                                                                                                  size = 0402: 2.5N
+                                                                                                  size = 0201: 1N
+
+
+
+
+                                                                                                                            www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                  Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors                General Purpose & High Cap.        X7R    6.3 V to 250 V
+
+
+
+
+TEST             TEST METHOD PROCEDURE                                                   REQUIREMENTS
+Bending Strength          4.8 Mounting in accordance with IEC 60384-22                   No visible damage
+                                  paragraph 4.3
+                                  Conditions: bending 1 mm at a rate of 1 mm/s,          ∆C/C
+                                  radius jig 5 mm                                        Class II:
+
+                                                                                         <General purpose series>
+                                                                                         X7R: ± 10%
+                                                                                         <High Capacitance series>
+                                  Test Substrate:
+                                                                                         X7R: ± 12.5%
+                                                       b                     Y NSC 147
+                                                                       4.5
+                                                                                                     Dimension(mm)
+                                                                                         Type          a      b            c
+                                                                                         0201         0.3    0.9         0.3
+                                                        C                      40
+                                                                                         0402         0.4    1.5         0.5
+                                                       a
+                                                                                         0603         1.0    3.0         1.2
+                                                      100                                0805         1.2    4.0         1.65
+                                                                              unit:mm 1206            2.2    5.0         1.65
+                                                                                      1210            2.2    5.0         2.0
+                                                                                         1808         3.5    7.0         3.7
+
+
+
+Resistance to               4.9   Precondition: 150 +0/–10°C for 1 hour, then keep       Dissolution of the end face plating shall not
+Soldering Heat                    for 24 ± 1 hours at room temperature                   exceed 25% of the length of the edge
+                                  Preheating: for size ≤ 1206: 120°C to 150°C for 1      concerned
+                                  minute
+                                  Preheating: for size >1206: 100°C to 120°C for 1       ∆C/C
+                                  minute and 170°C to 200°C for 1 minute                 Class II:
+                                  Solder bath temperature: 260 ± 5°C                     X7R: ± 10%
+                                  Dipping time: 10 ± 0.5 seconds
+                                  Recovery time: 24 ± 2 hours                            D.F. within initial specified value
+                                                                                         Rins within initial specified value
+
+
+
+
+                                                                                                                          www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                          Product specification
+
+
+                Surface-Mount Ceramic Multilayer Capacitors                      General Purpose & High Cap.        X7R    6.3 V to 250 V
+
+
+
+
+TEST                 TEST METHOD PROCEDURE                                                      REQUIREMENTS
+Solderability        IEC 60384- 4.10   Preheated to a temperature of 80°C to 140°C and          The solder should cover over 95% of the
+                     21/22             maintained for 30 seconds to 60 seconds.                 critical area of each termination
+
+                                       1. Temperature: 235± 5°C / Dipping time: 2 ± 0.5 s
+                                       2. Temperature: 245± 5°C / Dipping time: 3 ± 0.5 s
+                                         (lead free)
+                                       Depth of immersion: 10mm
+
+Rapid Change of                 4.11   Preconditioning;                                         No visual damage
+Temperature                            150 +0/–10°C for 1 hour, then keep for
+                                       24 ± 1 hours at room temperature                         ∆C/C
+                                                                                                Class II:
+                                       5 cycles with following detail:
+                                                                                                X7R: ± 15%
+                                       30 minutes at lower category temperature
+                                       30 minutes at upper category temperature
+                                                                                                D.F. meet initial specified value
+                                       Recovery time 24 ± 2 hours                               Rins meet initial specified value
+
+
+Damp Heat with       IEC 60384- 4.13   1. Preconditioning, Class II only:                       No visual damage after recovery
+Ur Load              21/22                150 +0/-10°C /1 hour, then keep for
+                                          24 ± 1 hour at room temp                              <General Purpose series>
+                                       2. Initial measure:                                      ∆C/C
+                                          Spec: refer to initial spec C, D, IR                  Class II:
+                                       3. Damp heat test:                                       X7R: ± 15%
+                                          500 ± 12 hours at 40 ± 2 C;                           D.F.
+                                          90 to 95% R.H. 1.0 Ur applied                         Class II:
+                                       4. Recovery:                                             X7R
+                                          Class II: 24 ± 2 hours
+                                                                                                ≤ 16V: ≤ 7% or 2 x initial value whichever is
+                                       5. Final measure: C, D, IR                               greater
+                                                                                                ≥ 25V: ≤ 5% or 2 x initial value whichever is
+                                       P.S. If the capacitance value is less than the minimum   greater
+                                       value permitted, then after the other measurements       Rins
+                                       have been made the capacitor shall be
+                                       preconditioned according to “IEC 60384 4.1” and          Class II:
+                                                                                                X7R: ≥ 500 MΩ or Rins x Cr ≥ 25s
+                                       then the requirement shall be met.
+                                                                                                whichever is less
+
+                                       * Note
+                                                                                                <High Capacitance series>
+                                                                                                ∆C/C
+                                                                                                Class II:
+                                                                                                X7R: ± 20%
+                                                                                                D.F.
+                                                                                                Class II:
+                                                                                                X7R: 2 x initial value max
+                                                                                                Rins
+                                                                                                Class II:
+                                                                                                X7R: 500 MΩ or Rins x Cr ≥ 5s
+                                                                                                whichever is less
+
+
+
+
+                                                                                                                                  www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                       Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors                       General Purpose & High Cap.      X7R    6.3 V to 250 V
+
+
+
+
+* Note
+   X7R               0201           0402            0603             0805             1206             1210            1812      Product Type
+            100pF to 10nF 100pF to 100nF 100pF to 470nF      220pF to 1µF     220pF to 1µF      2.2nF to 1µF                    General Purpose
+  ≤ 6.3V
+            15nF to 100nF 220nF to 2.2µF    560nF to 4.7µF   2.2µF to 10µF    2.2µF to 22µF    2.2µF to 47µF                   High Capacitance
+            100pF to 10nF 100pF to 100nF 100pF to 470nF      220pF to 1µF     220pF to 1µF      2.2nF to 1µF                    General Purpose
+   10V
+                     100nF   220nF to 1µF   560nF to 4.7µF   2.2µF to 10µF    2.2µF to 22µF    2.2µF to 47µF                   High Capacitance
+            100pF to 10nF 100pF to 100nF 100pF to 470nF      220pF to 1µF     220pF to 1µF      2.2nF to 1µF                    General Purpose
+   16V
+                                    220nF   560nF to 2.2µF   2.2µF to 10µF    2.2µF to 22µF    2.2µF to 22µF                   High Capacitance
+
+            100pF to 10nF 100pF to 100nF 100pF to 470nF      220pF to 1µF     220pF to 1µF      2.2nF to 1µF                    General Purpose
+   25V
+                                             560nF to 1µF    2.2µF to 4.7µF   2.2µF to 10µF    2.2µF to 22µF                   High Capacitance
+
+             100pF to 1nF    100pF to 47nF 100pF to 220nF    220pF to 1µF     220pF to 1µF      2.2nF to 1µF    4.7nF to 1µF General Purpose
+   50V
+                                    100nF    560nF to 1µF            2.2µF    2.2µF to 4.7µF   2.2µF to 10µF                   High Capacitance
+
+                             100pF to 10nF 100pF to 100nF    220pF to 1µF     220pF to 1µF      2.2nF to 1µF 4.7nF to 470nF General Purpose
+   100V
+                                                                                      2.2µF    2.2µF to 4.7µF                  High Capacitance
+200V/250V                                   220pF to 22nF 220pF to 100nF 220pF to 220nF 2.2nF to 220nF 4.7nF to 470nF General Purpose
+
+
+
+
+                                                                                                                               www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                                       Product specification
+
+
+                Surface-Mount Ceramic Multilayer Capacitors                                  General Purpose & High Cap.         X7R    6.3 V to 250 V
+
+
+
+
+TEST                   TEST METHOD                PROCEDURE                                                     REQUIREMENTS
+Endurance              IEC 60384-        4.14     1. Preconditioning, class 2 only:                             No visual damage
+                       21/22                         150 +0/-10 °C /1 hour, then keep for
+                                                                                                                <General Purpose series>
+                                                     24 ± 1 hour at room temp
+                                                                                                                ∆C/C
+                                                  2. Initial measure:
+                                                                                                                Class II:
+                                                     Spec: refer to initial spec C, D, IR
+                                                                                                                X7R: ± 15%
+                                                  3. Endurance test:
+                                                                                                                D.F.
+                                                     Temperature: X7R: 125 °C
+                                                     Specified stress voltage applied for 1,000 hours:          Class II:
+                                                     Applied 2.0 x Ur for general products*                     X7R
+                                                     Applied 1.5 x Ur for high cap. Products*                   ≤ 16V: ≤ 7% or 2 x initial value whichever
+                                                  4. Recovery time: 24 ± 2 hours                                is greater
+                                                  5. Final measure: C, D, IR                                    ≥ 25V: ≤ 5% or 2 x initial value whichever
+                                                                                                                is greater
+                                                  P.S. If the capacitance value is less than the minimum
+                                                  value permitted, then after the other measurements            Rins
+                                                  have been made the capacitor shall be
+                                                                                                                Class II:
+                                                  preconditioned according to “IEC 60384 4.1” and
+                                                                                                                X7R: ≥ 1,000 MΩ or Rins x Cr ≥ 50s
+                                                  then the requirement shall be met.
+                                                                                                                whichever is less
+
+                                                  * Note                                                        <High Capacitance series>
+                                                                                                                ∆C/C
+                                                                                                                Class II:
+                                                                                                                X7R: ± 20%
+                                                                                                                D.F.
+                                                                                                                Class II:
+                                                                                                                X7R: 2 x initial value max
+                                                                                                                Rins
+                                                                                                                Class II:
+                                                                                                                X7R: 1,000 MΩ or Rins x Cr ≥ 10s
+                                                                                                                whichever is less
+
+* Note
+X7R 0201                0402               0603             0805             1206            1210             1812           2220           Test voltage
+        100pF to 10nF 100pF to 100nF 100pF to 470nF 220pF to 1µF             220pF to 1µF    2.2nF to 1µF                                   200% x Rated voltage
+≤6.3V
+        100nF           220nF to 2.2µF     560nF to 4.7µF 2.2µF to 10µF      2.2µF to 22µF   2.2µF to 47µF                                  150% x Rated voltage
+        100pF to 10nF 100pF to 100nF 100pF to 470nF 220pF to 1µF             220pF to 1µF    2.2nF to 1µF                                   200% x Rated voltage
+10V
+                        220nF to 1µF       560nF to 4.7µF 2.2µF to 10µF      2.2µF to 22µF   2.2µF to 47µF                                  150% x Rated voltage
+        100pF to 10nF 100pF to 100nF 100pF to 470nF 220pF to 1µF             220pF to 1µF    2.2nF to 1µF                                   200% x Rated voltage
+16V
+                        220nF              560nF to 2.2µF 2.2µF to 10µF      2.2µF to 22µF   2.2µF to 22µF                                  150% x Rated voltage
+        100pF to 10nF 100pF to 100nF 100pF to 470nF 220pF to 1µF             220pF to 1µF    2.2nF to 1µF                                   200% x Rated voltage
+25V
+                                           560nF to 1µF     2.2µF to 4.7µF   2.2µF to 10µF   2.2µF to 22µF                                  150% x Rated voltage
+        100pF to 1nF    100pF to 47nF      100pF to 330nF 220pF to 1µF       220pF to 1µF    2.2nF to 1µF     4.7nF to 1µF   470nF to 1µF 200% x Rated voltage
+50V
+                        100nF              470nF to 1µF     2.2µF            2.2µF to 4.7µF 2.2µF to 10µF                                   150% x Rated voltage
+                        100pF to 10nF      100pF to 100nF 220pF to 680nF 220pF to 1µF        2.2nF to 1µF     4.7nF to 1µF                  200% x Rated voltage
+100V
+                                                            1µF              2.2µF           2.2µF to 4.7µF                                 150% x Rated voltage
+250V                                       220pF to 22nF    220pF to 100nF 220pF to 100nF 2.2nF to 220nF 4.7nF to 470nF                     150% x Rated voltage
+
+
+
+
+                                                                                                                                               www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                                  Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors                     General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+
+TEST                 TEST METHOD         PROCEDURE                                                  REQUIREMENTS
+Voltage Proof        IEC 60384-1   4.6   1. Specified stress voltage applied for 1~5 seconds        No breakdown or flashover
+                                         2. Ur ≤ 100 V: series applied 2.5 Ur
+                                         3. 100 V < Ur ≤ 200 V series applied (1.5 Ur + 100)
+                                         4. 200 V < Ur ≤ 500 V series applied (1.3 Ur + 100)
+                                         Charge/Discharge current is less than 50 mA
+
+
+
+
+                                                                                                                          www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                            Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors           General Purpose & High Cap.       X7R    6.3 V to 250 V
+
+
+
+
+REVISION HISTORY
+REVISION       DATE              CHANGE NOTIFICATION   DESCRIPTION
+Version 26     Nov. 19, 2024     -                     - Add 0201, 100nF, 10V
+                                                       - Add 0805, 68nF to 100nF, 200V/250V
+                                                       - Add 1206, 150nF to 220nF, 200V/250V
+                                                       - 1812 Dimension updated
+Version 25     May 31, 2024      -                     - Add X7R/1210/100V/4.7uF
+Version 24     Mar. 12, 2024     -                     - Modify X7R/0805/15nF to 22nF/100V dimension typo.
+Version 23     Nov. 29, 2023     -                     - 0805, 100V, 5.6nF to 10nF dimension updated
+Version 22     Oct. 07, 2022     -                     - 1206/4.7uF/6.3V to 16V I.R. updated
+Version 21     Sep. 06, 2022     -                     - Add 100V to 250V product range.
+                                                       - Dissipation factor and I.R. spec updated
+Version 20     Sep. 8, 2020      -                     - 0402, 220nF to 470nF, 10V Insulation resistance after 1 minute at Ur
+                                                         (DC) updated
+Version 19     Aug. 17, 2020     -                     - Add 0402/220nF/25V
+Version 18     May. 11th, 2017   -                     - Add 1210/10uF/50V
+Version 17     Mar. 7th, 2017    -                     - 0805 L4 spec updated
+                                                       - Dimension updated
+Version 16     Dec. 7th, 2016    -                     - Dimension updated
+Version 15     Oct. 3rd, 2016    -                     - Dimension updated, Soldering recommendation updated
+Version 14     May 31st, 2016    -                     - Dimension updated
+Version 13     Dec. 30, 2015     -                     - Dimension on 0603 and 1206 case size updated
+Version 12     May 26, 2015      -                     - 1210, 25V dissipation factor updated
+Version 11     Jan. 06, 2015     -                     - 0402, 100nF, 50V Dissipation factor (D.F.) updated.
+Version 10     Jul. 08, 2014     -                     - Dimension updated
+Version 9      Aug. 19, 2013     -                     - Dimension updated
+Version 8      Oct. 13, 2011     -                     - Dimension updated
+                                                       - 50V Dissipation factor(D.F) updated
+Version 7      Jan. 13, 2011     -                     - Dimension updated
+Version 6      Oct. 13, 2010     -                     - Rated voltage of 0201 extend to 50 V
+                                                       - Capacitance range of 0201 X7R 6.3V to 16V extend to 100 pF
+                                                       - Capacitance range of 0805 X7R 10V extend to 10 µF
+                                                       - Capacitance range of 0805 X7R 50V extend to 1 µF
+                                                       - Capacitance range of 1210 X7R 10V extend to 22 µF
+                                                       - Figures of impedance ESR updated
+
+Version 5      Jul 27, 2010      -                     - Dimension on 0603 and 1206 case size updated
+                                                       - 16V to 25V Dissipation factor(D.F) updated
+Version 4      Apr 21, 2010      -                     - The statement of "Halogen Free" on the cover added
+                                                       - Dimension updated
+Version 3      Oct 26, 2009      -                     - Capacitance range of 0402 X7R 25 V extend to 100 nF
+                                                       - 16V Dissipation factor updated
+
+
+
+
+                                                                                                                    www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                      Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors       General Purpose & High Cap.     X7R    6.3 V to 250 V
+
+
+
+
+REVISION HISTORY
+REVISION  DATE                CHANGE NOTIFICATION   DESCRIPTION
+Version 2      May 11, 2009   -                     - Product range updated
+Version 1      Apr 24, 2009   -                     - Ordering code updated
+Version 0      Apr 15, 2009   -                     - New datasheet for general purpose and high capacitance X7R series
+                                                      with RoHS compliant
+                                                    - Replace the "6.3V to 50V" part of pdf files: X7R_10V_9, X7R_16V-to-
+                                                      100V_9, X7R_16-to-500V_9, UP-X5R_X7R_HighCaps_6.3-to-25V_11,
+                                                      UY-X5R_X7R_HighCaps_6.3-to-25V_11
+                                                    - Combine 0201 from pdf files: UP-NP0X5RX7RY5V_0201_6.3-to-
+                                                      50V_2 and UY-NPOX5RX7RY5V_0201_6.3-to-50V_2
+                                                    - Define global part number
+                                                    - Description of "Halogen Free compliant" added
+                                                    - Test method and procedure updated
+
+
+
+
+                                                                                                              www.yageo.com
+Nov. 19, 2024 V.26
+                                                                                                        Product specification
+
+
+              Surface-Mount Ceramic Multilayer Capacitors           General Purpose & High Cap.   X7R    6.3 V to 250 V
+
+
+
+
+LEGAL DISCLAIMER
+
+
+YAGEO, its distributors and agents (collectively, “YAGEO”), hereby disclaims any and all liabilities for any
+errors, inaccuracies or incompleteness contained in any product related information, including but not limited
+to product specifications, datasheets, pictures and/or graphics. YAGEO may make changes, modifications and/or
+improvements to product related information at any time and without notice.
+
+
+YAGEO makes no representation, warranty, and/or guarantee about the fitness of its products for any
+particular purpose or the continuing production of any of its products. To the maximum extent permitted by
+law, YAGEO disclaims (i) any and all liability arising out of the application or use of any YAGEO product, (ii)
+any and all liability, including without limitation special, consequential or incidental damages, and (iii) any and all
+implied warranties, including warranties of fitness for a particular purp ose, non -infringement and
+merchantability.
+
+
+YAGEO products are designed for general purpose applications under normal operation and usage conditions.
+Please contact YAGEO for the applications listed below which require especially high reliability for the
+prevention of defects which might directly cause damage to the third party's life, body or property: Aerospace
+equipment (artificial satellite, rocket, etc.), Atomic energy -related equipment, Aviation equipment, Disaster
+prevention equipment, crime prevention equipment, Electric heating apparatus, bu rning equipment, Highly
+public information network equipment, data-processing equipment , Medical devices, Military equipment, Power
+generation control equipment, Safety equipment, Traffic signal equipment, Transportation equipment and
+Undersea equipment, or for any other application or use in which the failure of YAGEO products could result
+in personal injury or death, or serious property damage. Particularly YAGEO Corporation and its affiliates
+do not recommend the use of commercial, automotive, and/or CO TS grade products for high
+reliability applications or manned space flight.
+
+
+Information provided here is intended to indicate product specifications only. YAGEO reserves all the rights
+for revising this content without further notification, as long as products are unchanged. Any product change
+will be announced by PCN.
+
+
+
+
+                                                                                                                www.yageo.com
+Nov. 19, 2024 V.26
+

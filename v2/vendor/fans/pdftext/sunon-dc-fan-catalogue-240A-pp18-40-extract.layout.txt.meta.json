@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf",
+ "pdf_sha256": "fae7e21365939be5c3bbf156be3522b364037a637590f5079538d63456bca63b",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/fans/pdftext/sunon-dc-fan-catalogue-240A-pp18-40-extract.layout.txt",
+ "text_bytes": 7714,
+ "text_sha256": "0da9230ae92ea2cadb79b21a36775ad73bbdcb129fec598e871cc5a1a2014183"
+}

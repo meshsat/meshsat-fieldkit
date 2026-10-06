@@ -1,0 +1,761 @@
+                                                                                                                         Data Sheet
+                                                                                                                            PRF Series
+
+
+
+
+PRF Series
+
+
+PTC Thermistor
+PRF Series
+
+
+Features                                                              Applications
+                                                                           Automotive
+    Faster response
+                                                                            (LED Lamp/Navigation/Motor/Electrical Component)
+    Wide Sensing Temperature
+    Compact Design to save Board space                                    LED Bulb
+
+    Low profile                                                           Mobile phone
+    High Reliability                                                      Note PC, Tablet PC
+    RoHS Compliant and Halogen Free                                       Battery
+    Safety Standard                                                       Power Supply
+     (UL : E137188 VDE, TUV etc.)
+                                                                           Motor and Motor Controller
+
+
+
+
+Overview
+
+Exploiting the PTC characteristic (a sharp increase in resistance above a certain temperature), the PRF series chip
+PTC thermistors are used for overheat sensing in FETs, power ICs, and other heat generating areas. Use of the sharp
+change in electrical resistance translates into outstanding noise resistance. Sharp changes in resistance make it
+possible to accurately detect overheating in multiple areas using a very simple circuit connecting PTC thermistors in
+series.
+This allows the customer to reduce the number of IC ports, thereby downsizing equipment.
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                               Doc..No. DM-SA16-E056 Rev.1 201608                                           1 / 16
+                                                                                                                         Data Sheet
+                                                                                                                              PRF Series
+
+
+ TABLE OF CONTENT
+
+   1. Introduction                                                                                                       1
+
+
+   2. Selection Guide                                                                                                    3
+   2.1 Part Numbering
+
+
+   3. Specifications                                                                                                     4
+   3.1 Line up
+   3.2 Resistance-Temperature Characteristics Typical Curve
+   3.3 Electrical characteristics
+   3.4 Mechanical characteristics
+   3.5 Environmental characteristics
+
+
+   4. Measurement direction                                                                                              8
+   4.1 Resistance - Temperature characteristics Range (Reference)
+   4.2 Circuit (Reference)
+
+
+   5. Dimension, Land Pattern                                                                                            9
+
+
+   6. Packing                                                                                                            10
+   6.1 Taping Specification
+   6.2 Reeling
+
+
+   7.        CAUTION                                                                                                     12
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                               Doc..No. DM-SA16-E056 Rev.1 201608                                             2 / 16
+                                                                                                                              Data Sheet
+                                                                                                                                      PRF Series
+
+
+2. Selection Guide
+2.1 Part Numbering
+
+
+   PTC Thermistors (POSISTOR®) for Overheat Sensing Chip Type
+
+
+
+
+   1. Product ID
+Product ID                                                                    5. Resistance
+      PR                   PTC Thermistors Chip Type                          Expressed by three figures. The unit is (Ω).
+                                                                              The firstand second figures are significant digits, and the
+
+   2.Series                                                                   third figure expresses the number of zeros which follow
+
+     Code                             Series                                  the two figures.
+
+       F                    for Overheat Sensing                                    Ex.)
+                                                                                    Code                                 Resistance
+   3. Dimensions                                                                  471                                    470 Ω
+                                                                                  102                                     1k Ω
+     Code                         Dimensions
+                                                                                  103                                    10k Ω
+       15                       1.00 × 0.50mm
+       18                       1.60 × 0.80mm
+                                                                              6. Resistance Tolerance
+       21                       2.00 × 1.25mm
+                                                                                 Code                        Sensing Temp. Tolerance
+                                                                                   Q                                     +/-5 ℃
+   4. Temperature Characteristics
+                                                                                   R                                     +/-3 ℃
+     Code               Temperature Characteristics
+      AS                     Curie Point 130°C
+                                                                              7. Individual Specifications
+      AR                     Curie Point 120°C
+                                                                                 Ex.)
+      BA                     Curie Point 110°C
+                                                                                 Code                      Individual Specifications
+      BB                     Curie Point 100°C
+                                                                             B5, B6, B7                         Structure, others
+      BC                      Curie Point 90°C
+      BD                      Curie Point 80°C
+                                                                              8. Packaging
+      BE                      Curie Point 70°C
+                                                                                 Code                                    Packaging
+      BF                      Curie Point 60°C
+                                                                                  RA            Plastic Taping 4mm Pitch (4000pcs.)
+      BG                      Curie Point 50°C
+                                                                                  RB            Paper Taping 4mm Pitch (4000pcs.)
+
+                                                                                  RC            Paper Taping 2mm Pitch (10000pcs.)
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                               Doc..No. DM-SA16-E056 Rev.1 201608                                                     3 / 16
+                                                                                                                     Data Sheet
+                                                                                                                            PRF Series
+
+
+3. Specifications
+3.1 Line up
+                                                               *at 4.7kohm              *at 47kohm
+     Size                                 Resistance             Sensing                 Sensing                 Max. Voltage     Operation Temp.
+                   Part Number
+   [ mm/in.]                            at 25℃ [ ohm ]       Temparature(℃)         Temparature(2) (℃)             [ VDC ]             [℃]
+               PRF21AS471QB5RA            470+/-50%               145+/-5                     -                      32V            -20～+ 160
+               PRF21AR471QB5RA            470+/-50%               135+/-5                     -                      32V            -20～+ 150
+               PRF21BA471QB5RA            470+/-50%               125+/-5                     -                      32V            -20～+ 140
+  2012/0805    PRF21BB471QB5RA            470+/-50%               115+/-5                     -                      32V            -20～+ 130
+               PRF21BC471QB5RA            470+/-50%               105+/-5                     -                      32V            -20～+ 120
+               PRF21BD471QB5RA            470+/-50%                95+/-5                     -                      32V            -20～+ 110
+               PRF21BE471QB5RA            470+/-50%                85+/-5                     -                      32V            -20～+ 100
+               PRF18AS471QB5RB            470+/-50%               145+/-5                     -                      32V            -20～ + 160
+               PRF18AR471QB5RB            470+/-50%               135+/-5                 150+/-7                    32V            -20～+ 160
+               PRF18BA471QB5RB            470+/-50%               125+/-5                 140+/-7                    32V            -20～ + 150
+               PRF18BB471QB5RB            470+/-50%               115+/-5                 130+/-7                    32V            -20～ + 140
+               PRF18BC471QB5RB            470+/-50%               105+/-5                 120+/-7                    32V            -20～ + 130
+               PRF18BD471QB5RB            470+/-50%                95+/-5                 110+/-7                    32V            -20～ + 120
+               PRF18BE471QB5RB            470+/-50%                85+/-5                 100+/-7                    32V            -20～ + 110
+               PRF18BF471QB5RB            470+/-50%                75+/-5                  90+/-7                    32V            -20～ + 100
+               PRF18BG471QB5RB            470+/-50%                65+/-5                  80+/-7                    32V             -20～+ 90
+  1608/0603
+               PRF18BB471RB5RB            470+/-50%               115+/-3                 130+/-7                    32V            -20～ + 140
+               PRF18BC471RB5RB            470+/-50%               105+/-3                 120+/-7                    32V            -20～ + 130
+               PRF18BD471RB5RB            470+/-50%                95+/-3                 110+/-7                    32V            -20～ + 120
+               PRF18BE471RB5RB            470+/-50%                85+/-3                 100+/-7                    32V            -20～ + 110
+               PRF18BF471RB5RB            470+/-50%                75+/-3                  90+/-7                    32V            -20～ + 100
+               PRF18BG471RB5RB            470+/-50%                65+/-3                  80+/-7                    32V             -20～+ 90
+               PRF18BC471MB7RB            470+/-20%               105+/-3                     -                      32V            -20～ + 130
+               PRF18BD471MB7RB            470+/-20%                95+/-3                     -                      32V            -20～ + 120
+               PRF18BE471MB7RB            470+/-20%                85+/-3                     -                      32V            -20～ + 110
+                                                                *at 10kohm             *at 100kohm
+     Size                                 Resistance             Sensing                 Sensing                 Max. Voltage     Operation Temp.
+                   Part Number
+   [ mm/in.]                            at 25℃ [ ohm ]       Temparature(℃)         Temparature(2) (℃)             [ VDC ]              [℃]
+               PRF15AR102RB6RC             1k+/-50%               135+/-5                 150+/-3                    32V            -40～+ 160
+               PRF15BA102RB6RC             1k+/-50%               125+/-5                 140+/-3                    32V             -40～+150
+               PRF15BB102RB6RC             1k+/-50%               115+/-5                 130+/-3                    32V             -40～+140
+               PRF15BC102RB6RC             1k+/-50%               105+/-5                 120+/-3                    32V             -40～+130
+  1005/0402    PRF15BD102RB6RC             1k+/-50%                95+/-5                 110+/-3                    32V             -40～+120
+               PRF15BE102RB6RC             1k+/-50%                85+/-5                 100+/-3                    32V             -40～+110
+               PRF15BF102RB6RC             1k+/-50%                75+/-5                  90+/-3                    32V             -40～+100
+               PRF15BG102RB6RC             1k+/-50%                65+/-5                  80+/-3                    32V              -40～+90
+                                                               *at 100kohm             *at 4.7Mohm
+     Size                                 Resistance             Sensing                 Sensing                 Max. Voltage     Operation Temp.
+                   Part Number
+   [ mm/in.]                            at 25℃ [ ohm ]       Temparature(℃)         Temparature(2) (℃)             [ VDC ]              [℃]
+               PRF15BB103RB6RC            10k+/-50%                ＞110                   130+/-3                    32V             -20～+140
+               PRF15BE103RB6RC            10k+/-50%                   -                   100+/-3                    32V             -20～+110
+  1005/0402
+               PRF15BG103RB6RC            10k+/-50%                   -                    80+/-3                    32V              -20～+90
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                            4 / 16
+                                                                                                                     Data Sheet
+                                                                                                                         PRF Series
+
+
+3.2 Resistance-Temperature Characteristics Typical Curve
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                         5 / 16
+                                                                                                                     Data Sheet
+                                                                                                                         PRF Series
+
+
+3.3 Electrical characteristics
+
+                Item                       Specification                                           Test Condition
+3.3.1 Resistance              Within the specified range                  After applying maximum operating voltage for
+        value at 25°C                                                     3 mins.
+                                                                          and leaving for 2 hours in 25°C, measured by
+                                                                          applying voltage less than DC1.0V.
+
+
+3.3.2 Temperature             The resistance change with                  Resistance at each ambient temperature is
+        characteristics       temperature typical curve                    Measured by the measurement current of
+                              shown in Graph-1.                           1mA or less.
+
+
+
+
+3.4 Mechanical characteristics
+
+                Item                      Specification                                           Test Condition
+3.4.1 Vibration               • Resistance (R25) change:                Reference standard: IEC 60068-2-6 (1995)
+                                Less than +/-20% (#)                    •Soldered PTC to PCB (##)
+                              • Appearance:                             •Frequency range: 10~55Hz
+                                No defects or abnormalities             •Amplitude: 1.5mm
+                                                                        •Sweep rate: 1octave/min.
+                                                                        •Direction: X-Y-Z (3 direction)
+                                                                        •24 cycles in each axis
+3.4.2 Solderability           Wetting      of    soldering      area: Reference standard: IEC 60068-2-58 (2004)
+                              >95%                                      •Solder: Sn-3.0Ag-0.5Cu
+                                                                        •Solder temp.: 245+/-5°C
+                                                                        •Immersion time: 3+/-0.3s
+3.4.3 Resistance to           • Resistance (R25) change:                Reference standard: IEC 60068-2-58 (2004)
+        soldering heat          Less than +/-20% (#)                    [ Solder bath method ]
+                              • Appearance:                             •Solder: Sn-3.0Ag-0.5Cu
+                                No defects or abnormalities             •Preheat: 150+/-5°C, 90~120s
+                                                                        •Solder temp.: 260+/-5°C
+                                                                        •Immersion time: 10+/-1s
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                         6 / 16
+                                                                                                                     Data Sheet
+                                                                                                                         PRF Series
+
+
+3.5 Environmental characteristics
+                Item                      Specification                                           Test Condition
+3.5.1 Dry Heat                                                          Reference standard: IEC 60068-2-2 (2007)
+                                                                        • Soldered PTC to PCB (##)
+                                                                        • (Max. operating temp.)+/-2°C
+                                                                        • 1000+48/-0 hrs.
+3.5.2 Cold                                                              Reference standard: IEC 60068-2-1 (2007)
+                                                                        • Soldered PTC to PCB (##)
+                                                                        • (Min. operating temp.)+/-3°C
+                                                                        • 1000+48/-0 hrs
+3.5.3 Damp heat                                                         Reference standard: IEC 60068-2-67 (1995)
+                                                                        • Soldered PTC to PCB (##)
+                                                                        • +85+/-2°C, 85+/-5%RH
+                                                                        • 1000+48/-0 hrs
+                              • Resistance (R25) change:
+3.5.4 Thermal shock                                                     Reference standard: IEC 60068-2-14 (2009)
+                                Less than +/-20% (#)
+                                                                        [ Test Na ]
+                              • Appearance:
+                                                                        • Soldered PTC to PCB (##)
+                                No defects or abnormalities
+                                                                        • Transport time: <3 min.
+                                                                        • Test condition: See below table
+
+                                                                           Step                    Condition                 Time
+
+                                                                             1       (Min. operating temp.)+/-3°C           30min.
+
+                                                                             2       (Max. operating temp.)+/-2°C           30min.
+
+                                                                        • Test cycle: 5cycles
+3.5.5 High                                                              Reference standard: IEC 60068-2-2 (2007)
+         temperature                                                    • Soldered PTC to PCB (##)
+         load                                                           • (Max. operating temp.)+/-2°C
+                                                                        • Applied max. voltage
+                                                                        • 1000+48/-0 hrs.
+    # The resistance value after the test,
+       It is measured by applying voltage less than DC1.0V after left at 25±2°C for 2hrs.
+## Above mentioned soldering is done following condition at our side.
+     Glass-Epoxy PC board
+     Standard land dimension
+     Standard solder paste
+     Standard solder profile
+      Above conditions are mentioned in Notice.
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                         7 / 16
+                                                                                                                     Data Sheet
+                                                                                                                         PRF Series
+
+
+4. Measurement direction
+4.1 Resistance - Temperature characteristics Range (Reference)
+Example PRF18 Series / BB Type
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                         8 / 16
+                                                                                                                     Data Sheet
+                                                                                                                            PRF Series
+
+
+4.2 Circuit (Reference)
+Example
+
+
+
+
+5. Dimension, Land Pattern
+
+
+
+
+              Size[ mm/in.]              L1                 W                 H              L2 and L3          L4 (Min.)
+               1005/0402            1.00±0.05          0.50±0.05         0.50±0.05          0.15～0.35               0.3
+               1608/0603            1.60±0.15          0.80±0.15         0.80±0.15          0.10 ~ 0.60              -
+               2012/0805            2.00±0.20          1.25±0.20         0.90±0.20           Min. 0.20          Min. 0.50
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                            9 / 16
+                                                                                                                           Data Sheet
+                                                                                                                               PRF Series
+
+
+6. Packing
+
+6.1 Taping Specification
+    6.1.1 Dimensions of plastic tape (*Typical data of PRF18_RB Series)
+
+
+
+
+                                                                                                 1.75±0.1
+                                                   2.0±0.05
+                                                           4.0±0.1           φ1.5 + 0.1
+                                                                                    -0                         0.8 Max.
+
+
+
+
+                                                                                       3.5±0.1
+                * 1.15
+
+
+
+
+                                                                                                            8.0±0.3
+                                                        *
+                                                            0.65       *:Reference
+                                                                                                                      ( mm )
+                                                                   Direction of feed
+
+(1) Products shall be packaged in the cavity of the base tape and sealed by top tape and bottom tape.
+(2) Top tape and bottom tape have no joints and products shall be packaged and sealed in the cavity
+of the base tape, continuously.
+
+
+    6.1.2 Tape strength
+ (1)Pull strength of top tape and bottom tape shall be specified as follows:
+                  Size[ mm/in.]                      Plastic tape                       Cover tape
+                         1005/0603                  5N minimum                         5N minimum
+                         1608/0402
+                         2012/0805                  5N minimum                       10N minimum
+ (2) Peeling force of top tape
+
+
+
+
+*1 peeling angle : 165 to 180 degree against the fixed surface of tape.
+*2 peeling speed : 300mm/min.
+*3 Peeling force : 0.1 ~ 0.6 N
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                              10 / 16
+                                                                                                                     Data Sheet
+                                                                                                                         PRF Series
+
+
+6.2 Reeling
+    6.1.1 Quantity (Standard Quantity)
+                                Part Number                           Products quantity in a reel
+                                 PRF15_RC                                 10,000 pcs. /reel
+                                 PRF18_RB                                    4,000 pcs. /reel
+                                 PRF21_RA                                    4,000 pcs. /reel
+         (2) A tape in a reel contains Leader unit and Trailer unit where products are not packed.
+            (See the following figure.)
+
+
+
+
+           * The reeling specification above shall not be applied for the order less than Standard Quantity.
+         (3) The plastic tape and cover tape are not attached at the end of the tape (Vacant section)
+                for a minimum of 5 pithes.
+         (4) A label shall be attached on the reel.
+            (MURATA’s part number, inspection number and quantity shall be marked on the lavel.)
+         (5) Dimensions of reel.
+
+
+
+
+    6.1.2 Packing
+       The reeling shall be packed in a package.The label shall be attached on the package.
+       (Customer's name, order number, customer's part number, MURATA's part number and quantity shall be
+       marked on a label.)
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                         11 / 16
+                                                                                                                     Data Sheet
+                                                                                                                         PRF Series
+
+
+7. Caution
+             CAUTION
+1. This product is designed for application, which is used under ordinary environment. (room temperature,
+  normal humidity, normal pressure) Do not expose this to the following environments, because all these
+  factors can deteriorate the characteristic of this and can cause failure or burn out.
+   (1) Corrosive gas or deoxidizing gases (Cl2, H2S, NH3, SOx, NOx etc.)
+   (2) Volatile, flammable gas
+   (3) Dusty place
+   (4) Place in a vacuum, reducing or putting pressure
+   (5) Place in splashed water, or high humidity and dewing place
+   (6) Salt water, oil, chemical liquid and solvent
+   (7) Vibratile place
+   (8) Other place equivalent to the above
+
+2. Limitation of Applications
+  Please contact us before using our products for the under-mentioned applications requiring especially high
+  reliability in order to prevent defects which might directly cause damage to other party’s life body or property
+  (listed below).
+   (1) Aircraft equipment        (2) Aerospace equipment          (3) Undersea equipment
+   (4) Power plant control equipment         (5) Medical equipment
+   (6) Transportation equipment (automobiles, trains, ships, etc.)       (7) Traffic signal equipment
+   (8) Disaster prevention / Crime prevention equipment           (9) Data-processing equipment
+   (10) Applications of similar complexity or with reliability requirements comparable to the applications listed in
+      the above
+
+3. Be sure to provide an appropriate fail-safe function on your product to prevent a second damage
+   that may be caused by the abnormal function or the failure of our product.
+
+     Notice
+1. Do not apply abnormal voltage exceeding the specified maximum value.
+    Because they may deteriorate or destroy PTC element.
+
+2. Use this product within the specified temperature. A higher temperature may deteriorate
+    the characteristic or material.
+
+3. The body of this product is not insulated. Please keep an adequate distance to surrounding
+     components and wiring.
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                        12 / 16
+                                                                                                                     Data Sheet
+                                                                                                                         PRF Series
+
+
+4. Storage conditions
+To keep solderability from declining, following storage condition is recommended.
+(1) Condition          Temperature : -10 to +40°C
+                        Humidity             : Less than 75%RH (not dewing condition)
+(2) Term: Please use this POSISTOR within 6 months after shipment by first-in and first-out stocking
+system.
+(3) Handling after seal open: After unpacking of the minimum package, reseal it promptly or store it
+inside a sealed container with a drying agent.
+(4) Place: Do not store this product in corrosive gas (SOx, Cl etc) or under sunlight.
+
+
+5. Solder and Flux
+   (1) Solder Paste
+     Use Sn:Pb=60:40wt% , Sn:Pb=63:37wt% , Sn:Ag:Cu=96.5:3.0:0.5wt% or equivalent type of
+     solder paste.
+                Do not use strong acidic flux (with halide content exceeding 0.2wt%).
+     Use of the solder containing Zn may reduce adhesive strength. When you use the solder
+     containing Zn, please contact us in advance. For your reference, we are using
+                 ‘63Sn/37Pb RMA9086 90-3-M18’, manufactured by Alpha Metals Japan Ltd.,
+                 ’96.5Sn/3.0Ag/0.5Cu M705-GRN360-K2-V’, manufactured by Senju Metal Industry Co., LTD.
+                for any Internal tests of this product.
+   (2) Flux
+     Use rosin type flux in soldering process.
+     If below flux is used, some problems might be caused in the product characteristics and reliability.
+     Please do not use below flux.
+     ･Strong acidic flux (with halide content exceeding 0.2wt%).
+     ･Water-soluble flux(*Water-soluble flux can be defined as non rosin type flux including wash-type flux
+     and non-wash-type flux.)
+
+6. For removing the flux after soldering, observe the following points in order to avoid deterioration of the
+   characteristics or any change of the external electrodes quality.
+   (1) Cleaning Conditions
+
+       Solvent           Dipping Cleaning                  Ultrasonic Cleaning
+                         Less than 5 min.
+                                                           Less than 1 min.
+                          at room temp.                                                          A sufficient cleaning shall
+                                                             20W/L max.
+     2-propanol                 or                                                               be applied to remove flux
+                                                     Frequency of several 10 kHz
+                         Less than 2 min.                                                        completely.
+                                                         to several 100 kHz.
+                          at 40°C max.
+
+   (2) Drying: After cleaning, dry promptly this product.
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                          13 / 16
+                                                                                                                        Data Sheet
+                                                                                                                           PRF Series
+
+
+7. In your mounting process, observe the following points in order to avoid deterioration of the
+  characteristics or destruction of this product. The mounting quality of this product may also be affected by
+  the mounting conditions, shown the points below.
+  This product is for only reflow soldering. Flow soldering shall not be allowed.
+  Please mount this product by soldering. When mounted by other methods, such as conductive adhesives,
+  please contact us in advance.
+   (1) Standard Land Size
+     Too big land size gives too much solder paste on the land. It may cause destruction of this product,
+     because of the mechanical stress especially in the case of board bending.
+
+                                          Soldering Methods            Size(mm/inch)               a                b           c
+                                            Flow Soldering               2012/0805             1.0~1.2          0.9~1.0      1.0~1.2
+                    b                      Reflow Soldering              2012/0805             1.0~1.2          0.5~0.7      1.0~1.2
+            a               c               Flow Soldering               1608/0603             0.6~1.0          0.8~0.9      0.6~0.8
+                                           Reflow Soldering              1608/0603             0.6~0.8          0.6~0.7      0.6~0.8
+                                           Reflow Soldering              1005/0402                0.5           0.4~0.5        0.5
+
+  (2) Printing Conditions of Solder Paste
+    i. Standard thickness of solder paste printing shall be from 0.10 to 0.15 mm.
+    ii. After soldering, the solder fillet shall be a height from 0.2 mm to the thickness of this product.
+      (See the figures below.)
+
+
+
+
+     iii. Too much solder gives too strong mechanical stress to this product, such stress may cause cracking
+       or any mechanical damage. And also, it can destroy the electrical performance of this product.
+
+
+     (3) Reflow soldering conditions
+       The following figure and table show our recommended reflow profile.
+                Temp. (°C)
+
+                  270°C
+                  250°C
+                  220°C
+                                                                                                        Limit profile
+
+
+                  180°C
+                  150°C
+                                                                                              Standard profile
+
+
+
+
+                                                                                                        Time (s)
+                                             90±30s                     30～60s
+                                                                          90s
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                          14 / 16
+                                                                                                                     Data Sheet
+                                                                                                                         PRF Series
+
+
+                                                             Standard profile                     Limit profile
+                               Preheat                                      150~180°C, 90±30s
+                    Soldering time (>220°C)                        30~60s                              90s
+                           Soldering time                      20s(245°C)                          45s(250°C)
+                            Peak temp.                              250°C                             270°C
+                            Reflow cycle                        Max. 2times                       Max. 2times
+
+        I. Insufficient preheating may cause a crack on ceramic body.
+          The temperature difference between preheat and peak should be control within 100°C to
+          prevent this.
+        II. The excessive soldering conditions may cause dissolution of metallization or deterioration of
+          solder-wetting on the external electrode.
+        III. Rapid cooling by dipping in solvent or by other means is not recommended.
+        IV. Please evaluate it on your condition if you will do mounting using not applying condition to the
+          above-mentioned.
+
+     (5) There is a fear of unexpected failures (tombstone, insufficient solder-wetting, etc.) in your
+       mounting process, caused by the mounting conditions. Please evaluate if this product is
+       correctly mounted under your mounting conditions.
+
+     (6) Conditions with Soldering Iron
+       When hand soldering by iron is applied, be sure to keep following conditions.
+                     Item                                                     Conditions
+          Preheating                                                 at 150°C for 1 to 2 minute
+          Temperature of Iron-tip                                            350°C max.
+          Soldering Iron Wattage                                              30W max.
+          Diameter of Iron-tip                                             3mm dia. max.
+          Soldering Time                                                      5sec. max.
+          Solder                               H60A (Sn:Pb=60:40wt%) type ,
+                                               H63A (Sn:Pb=63:37wt%) type, Sn:Ag:Cu=96.5:3.0:0.5wt%
+                                               or equivalent type.
+          Flux                                 Do not use strong acidic flux (with halide content exceeding
+                                               0.2wt%).
+          Caution                              Do not allow the iron-tip to directly touch the ceramic body.
+                                               Preheat the ceramic body and mounting board.
+
+8. Do not give this product a strong press-force nor a mechanical shock. Because such                                    mechanical
+forces
+   may cause cracking or chipping of this ceramic product.
+
+9. Rapid cooling or heating during soldering is not recommended.
+   Such treatment may destroy the element.
+
+10. Resin coating
+  Please select the resin of which hardness shrinkage is much less, on selecting a resin materials.
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                        15 / 16
+                                                                                                                      Data Sheet
+                                                                                                                              PRF Series
+
+
+11. Location on Printed Circuit Board(PC Board)
+              <Component Direction>                                      <Mounting Close to Board Separation Line>
+            Locate this product horizontal to                          Put this product on the PC Board near the Slit,
+            the direction in which stress acts.                        not near the Perforation Holes.
+                                                                       Keep this product on the PC Board away from
+                                                                       the Separation Line.
+
+                 (Worse)               (Better)                             Worst          ”A”-“C”-“B”-“D”               Better
+                                                                               Perforation Holes
+
+                                                                                                             C
+                                                                                                       B
+
+                                                                                                A
+                                                                                                             D
+                                                                                                Slit
+
+                                                                                                    Separation Line
+
+
+
+
+           Note
+1. Please make sure that your product has been evaluated in view of your specifications with our product being
+   mounted to your product.
+
+2. You are requested not to use our product deviating from the agreed specifications.
+
+3. We consider it not appropriate to include any terms and condition with regard to the business
+   transaction in the product specification, drawings or other technical documents. Therefore, if your technical
+   documents as above include such terms and conditions such as warranty clause, product liability clause,
+   intellectual property infringement liability clause, or export control clause, they will be deemed to be invalid.
+
+
+
+
+Attention:
+This datasheet is downloaded from the website of Murata Manufacturing Co., Ltd.
+Therefore, it’s specifications are subject to change or our products in it may be discontinued without advance notice.
+Please check with our sales representatives or product engineers before ordering.
+
+http://www.murata.com                              Doc..No. DM-SA16-E056 Rev.1 201608                                             16 / 16
+

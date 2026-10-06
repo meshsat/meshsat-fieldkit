@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf",
+ "pdf_sha256": "38509e478ba394d0c87d25b3d16442d8f77d0eb3ccb90357a5a4639010fcc248",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/connectors/pdftext/wurth-wr-bhd-box-header-61202621621.layout.txt",
+ "text_bytes": 89329,
+ "text_sha256": "eef7675bf24fdcb76bbf5ac8ef1fa9bf2afc02259c5cdb221999def0a0712ebe"
+}

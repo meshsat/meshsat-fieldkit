@@ -1,0 +1,63 @@
+                                                                                                                              BQ25731
+www.ti.com                                                                                   SLUSE66A – JUNE 2020 – REVISED JANUARY 2021
+
+                                                                 RAC
+                                                                                                          Q1
+
+
+                           6x10uF
+                                                 RACP                          RACN
+                                             4.99ohm                           4.99ohm
+                                                                                   10nF(0402) 1nF(0402)
+                                                               CDIFF
+                                                          10nF for 400kHz
+                                         CACP                                       CACN
+                                                          Open for 800kHz
+                                         33nF                                       33nF
+
+
+
+                                                        ACP              ACN
+                                                                                HIDRV1
+
+
+
+
+                                                  Figure 10-3. ACN-ACP Input Filter
+
+10.2.2.3 Inductor Selection
+The BQ25731 has two selectable fixed switching frequency. Higher switching frequency allows the use of
+smaller inductor and capacitor values. Inductor saturation current should be higher than the charging current
+(ICHG) plus half the ripple current (IRIPPLE):
+
+      ISAT ³ ICHG + (1/2) IRIPPLE                                                                                              (2)
+
+The inductor ripple current in buck operation depends on input voltage (VIN), duty cycle (DBUCK = VOUT/VIN),
+switching frequency (fS) and inductance (L):
+
+      IRIPPLE_BUCK = VIN × DBUCK× (1-DBUCK) / (fS × L)                                                                         (3)
+
+During boost operation, the duty cycle is:
+DBOOST = 1 – (VIN/VBAT)
+and the ripple current is:
+IRIPPLE_BOOST = (VIN × DBOOST) / (fS × L)
+The maximum inductor ripple current happens with D = 0.5 or close to 0.5. For example, the battery charging
+voltage range is from 9 V to 12.6 V for 3-cell battery pack. For 20-V adapter voltage, 10-V battery voltage gives
+the maximum inductor ripple current. Another example is 4-cell battery, the battery voltage range is from 12 V to
+16.8 V, and 12-V battery voltage gives the maximum inductor ripple current.
+Usually inductor ripple is designed in the range of (20 – 40%) maximum charging current as a trade-off between
+inductor size and efficiency for a practical design.
+10.2.2.4 Input Capacitor
+Input capacitor should have enough ripple current rating to absorb input switching ripple current. The worst case
+RMS ripple current is half of the charging current (plus system current there is any system load) when duty cycle
+is 0.5 in buck mode. If the converter does not operate at 50% duty cycle, then the worst case capacitor RMS
+current occurs where the duty cycle is closest to 50% and can be estimated by Equation 4:
+
+      ICIN = ICHG ´        D × (1 - D)                                                                                         (4)
+
+Low ESR ceramic capacitor such as X7R or X5R is preferred for input decoupling capacitor and should be
+placed in front of RAC current sensing and as close as possible to the power stage half bridge MOSFETs.
+
+Copyright © 2022 Texas Instruments Incorporated                                                            Submit Document Feedback    85
+                                                          Product Folder Links: BQ25731
+

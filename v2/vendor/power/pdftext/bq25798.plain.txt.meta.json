@@ -1,0 +1,14 @@
+{
+ "command": "pdftotext v2/vendor/power/bq25798.pdf -",
+ "held_back": false,
+ "options": [],
+ "pdf": "v2/vendor/power/bq25798.pdf",
+ "pdf_sha256": "631d541679512116b5cf7ade0516000e78bc95f060b8b958e726c1b6eb74c27f",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/bq25798.plain.txt",
+ "text_bytes": 270711,
+ "text_sha256": "5582af1b4036777af7d068bab45ee4b52fa55c912256c6705667b65fb2aebe26"
+}

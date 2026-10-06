@@ -1,0 +1,145 @@
+Raspberry Pi Cooler
+For Raspberry Pi Compute Module 5
+Published December 2024
+
+
+
+
+Raspberry Pi Ltd
+Overview
+
+
+
+
+The Raspberry Pi Cooler for Raspberry Pi Compute Module 5 is a passive heatsink that
+helps Compute Module 5 dissipate heat, improving CPU performance, and protects it
+from mechanical damage.
+
+
+Thermally conductive silicone on the underside of the Cooler effectively couples it to the
+surface of the Compute Module 5 CPU, wireless module, and power management chip
+for optimal heat dissipation.
+
+
+
+
+Raspberry Pi Cooler for Raspberry Pi Compute Module 5 – Raspberry Pi Ltd                 2
+Specification
+
+
+Form factor:                      56 mm × 41 mm × 12.7 mm
+
+Product material:                 Aluminium profile, thermally conductive silicone
+
+Production lifetime:               he Raspberry Pi Cooler for Raspberry Pi Compute Module 5
+                                  T
+                                  will remain in production until at least January 2036
+
+Compliance:                        or a full list of local and regional product approvals, please
+                                  F
+                                  visit pip.raspberrypi.com
+
+List price:                       $5
+
+
+
+
+Raspberry Pi Cooler for Raspberry Pi Compute Module 5 – Raspberry Pi Ltd                        3
+Assembly instructions
+
+
+   NOTE
+
+ Before installing, please remove the protective white paper from the thermal silicone.
+
+
+1.	Install Compute Module 5 onto the Compute Module 5 IO Board (or other carrier
+    board), if using.
+
+2. Place four M2.5 × H1.5 or M2.5 × H3 nylon washers (supplied) between Compute
+   Module 5 and the IO Board, around the four mounting holes.
+
+3.	
+   As shown in the diagram below, place the Cooler onto Compute Module 5,
+   align the mounting holes, insert four M2.5 × 8 screws (supplied) upwards from
+   beneath the IO Board, and tighten.
+
+
+
+
+Raspberry Pi Cooler for Raspberry Pi Compute Module 5 – Raspberry Pi Ltd                  4
+     Physical specification
+
+
+
+                                                   2.7 2.710   10
+
+
+
+
+                            56   56                                 48   48
+
+                                                                                             4 × M2.5
+                                                                                        4 × M2.5          Note: Note:
+
+                                                                                                                All dimensions
+                                                                                                          All dimensions in mmin mm
+
+                                                                                                                All dimensions
+                                                                                                          All dimensions        are approximate
+                                                                                                                          are approximate   and forand for
+                                                                                                                reference
+                                                                                                          reference       purposes
+                                                                                                                     purposes        only.dimensions
+                                                                                                                               only. The   The dimensions
+41       41                                                                               33   33         shownshown
+                                                                                                                 shouldshould
+                                                                                                                         not benot be for
+                                                                                                                                used   used  for producing
+                                                                                                                                          producing
+                                                                                                                production
+                                                                                                          production  data data
+
+                                                                                                               The dimensions
+                                                                                                          The dimensions       are subject
+                                                                                                                         are subject to parttoand
+                                                                                                                                               part and
+                                                                                                               manufacturing
+                                                                                                          manufacturing       tolerances
+                                                                                                                        tolerances
+
+                                                                                                               Dimensions
+                                                                                                          Dimensions      may
+                                                                                                                     may be   be subject
+                                                                                                                            subject       to change
+                                                                                                                                    to change
+
+
+
+
+     WARNINGS
+     •	This product should only be used with Raspberry Pi Compute Module 5.
+     •	This product should be operated in a well-ventilated environment, and if used inside a case, the case should not be
+        covered.
+     •	Make sure the metal cooler does not touch any electronic components on Compute Module 5 or any accessories, to
+        avoid the risk of unwanted electrical contact and shorting.
+     •	Ensure the thermal pads are present and undamaged before use. If the pads are missing or damaged, you will need
+        to replace them before using the Cooler.
+     •	Ensure the screws are undamaged and can screw into the Cooler securely before use. Discontinue use of the Cooler
+        and replace the screws if they are damaged or deformed, or if they do not screw in securely.
+     •	Take care when using the Cooler, as the metal parts of the product may become hot during operation.
+
+
+     SAFETY INSTRUCTIONS
+     To avoid malfunction or damage to this product, please observe the following:
+     •        Do not expose to water or moisture, or place on a conductive surface whilst in operation.
+     •	Do not expose to heat from any source; the Raspberry Pi Cooler for Raspberry Pi Compute Module 5 is designed for
+        reliable operation at normal ambient temperatures.
+
+
+
+
+         Raspberry Pi Cooler for Raspberry Pi Compute Module 5 – Raspberry Pi Ltd                                                                5
+Raspberry Pi Cooler for Raspberry Pi Compute Module 5 – Raspberry Pi Ltd   6
+Raspberry Pi is a trademark of Raspberry Pi Ltd
+

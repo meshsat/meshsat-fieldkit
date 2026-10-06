@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/connectors/wurth-wr-bhd-idc-socket-61201623021.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61201623021.pdf",
+ "pdf_sha256": "9477ffdc02af63552cbb1919ff84abc44abbc6446fa3ab00c1573d0f11b97913",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/connectors/pdftext/wurth-wr-bhd-idc-socket-61201623021.layout.txt",
+ "text_bytes": 64013,
+ "text_sha256": "5e1931d6b56c0b053bc857ad874f1835e317d89ea3f6ce1bc3264b3eec77e281"
+}

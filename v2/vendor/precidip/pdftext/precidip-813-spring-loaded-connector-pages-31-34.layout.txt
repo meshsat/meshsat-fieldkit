@@ -1,0 +1,127 @@
+                                                                                     SPRING-LOADED CONNECTORS
+                                                                                     PAD CONNECTORS
+                                                                                     GENERAL SPECIFICATIONS
+WWW.PRECIDIP.COM      TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+
+
+                                                                                                                                                               SPRING–LOADED CONNECTORS
+The values listed below are general specs applying for PRECI-DIP spring-loaded connectors. Please see individual catalog page for additional and
+product specific technical data.
+
+OPERATING TEMPERATURE RANGE                  -55 ... +125 °C (-55 °… +85 °C with music wire spring)
+CLIMATIC CATEGORY (IEC)                      55/85/21
+OPERATING HUMIDIT Y RANGE                    Annual mean 75%
+MA X. WORKING VOLTAGE                        100 VRMS /150 VDC (2.54 mm grid)
+
+              PRECI-DIP connectors designated « Series Preci-Dip Connector » are recognized by UL LLC and listed under « Connectors for Use
+              in Data, Signal, Control and Power Applications », File Nr. E174442.
+
+
+
+MECHANICAL CHARACTERISTICS                                                                            PACKAGING
+                            BASIC                  LOW RESISTANCE        LOW RESISTANCE
+                                                                                                      • Standard connector packaging is card box.
+                            HOLLOW PISTON T YPE    SHAPED PISTON T YPE   CLIP IN-LINE DESIGN T YPE
+                                                                                                      • SMD mount connectors available on request
+MIN. INITIAL HEIGHT         3 mm                   6 mm                  10 mm                          with Tape & Reel packaging acc. to EIA Standard 481.
+STROKE/HEIGHT RATIO         Max. 0.3               Max. 0.2              Max. 0.15                      These products are marked with the symbol:
+MA X STROKE                 2 mm                   2 mm                  1.5 mm
+MIN. INITIAL SPRING FORCE   0.2 N                  0.2 N                 0.2 N
+
+
+                                                                                                      T & R Packaging
+ELECTRICAL CHARACTERISTICS
+INSUL ATION RESISTANCE BETWEEN ANY TWO ADJACENT CONTACTS          Min. 10’000 M: at 500 VAC           Please consult www.precidip.com for availability,
+CAPACITANCE BETWEEN ANY TWO ADJACENT CONTACTS                     Max. 1 pF                           size of tape, size of reel, number of components
+                                                                                                      per reel, packing units and part numbers.
+ENVIRONMENTAL CHARACTERISTICS
+The sockets withstand the following environmental tests without mechanical
+and electrical defects:
+• Dry heat steady state IEC 60512-11-9.11i / 60068-2-2.Bb: 125 °C, 16 h
+• Damp heat cyclic IEC 60512-11-12.11m / 60068-2-30.Db: 25/55 °C, 90 – 100 %rH,
+  1 cycle of 24 h
+• Cold steady state IEC 60512-11-10.11j / 60068-2-1.A: -55 °C, 2 h
+• Thermal shock IEC 60512-11-4.11d / 60068-2-14.Na: -55/125 °C, 5 cycles 30 min
+• Sinusoidal vibrations IEC 60512-6-4.6d / 60068-2-6.Fc: 10 to 500 Hz, 10 g,
+  1 octave/min, 10 cycles for each axis
+• Shock IEC 60512-6-3.6c / 60068-2-27.Ea: 50 g, 11 ms, 3 shocks in three axis
+During the above two tests, no contact interruption >50 ns does appear.
+
+• Solderability J-STD-002A, Test A, 245 °C, 5 s, solder alloy SnAg3.8Cu0.7
+• Resistance to soldering heat J-STD-020C, 260 °C, 20 s
+• Moisture sensitivity J-STD-020C level 1
+
+
+
+
+Due to technical progress, all information provided is subject to change without prior notice.                                                         31
+                                                                                    SPRING-LOADED CONNECTORS
+                                                                                    2.54 mm GRID / SINGLE ROW / DOUBLE ROW / SOLDER TAIL
+
+WWW.PRECIDIP.COM     TEL +41 32 421 04 00   SALES@PRECIDIP.COM
+
+
+Low resistance modular connectors with spring-loaded contacts (SLC), solder tail. Contacts with improved, shaped piston design.
+
+TECHNICAL SPECIFICATIONS (FOR GENERAL SPECS, SEE PAGE 31)
+INSUL ATOR                Black glass filled polyester PCT-GF30-FR
+FL AMMABILIT Y            UL 94V-O
+PISTON AND BARREL         Brass CuZn36Pb3 (C36000)
+SPRING                    Music wire DIN 17223, gold plated
+MA X. STROKE              1.4 mm
+FORCES                    0.25 N initial            0.85 N at 1/2 stroke
+MECHANICAL LIFE           50'000 cycles
+OPERATING CURRENT         Max. 3.5 A
+CONTACT RESISTANCE        10 m: (static measurement, halfway position)
+
+ORDERING INFORMATION ROHS COMPLIANT PARTS
+PL ATING CODE             BARREL                       PISTON
+
+S1                        0.25 μm gold                 0.5 μm gold
+SS                        0.5 μm gold                  0.5 μm gold                 See page 178 for plating specs.
+                                                                                   NNN number of poles: Replace NNN with the requested number of poles,
+                                                                                   e.g. 813-S1-NNN-10-014101 for a double row version with 16 pins
+                                                                                   becomes 813-S1-016-10-014101.
+
+
+
+
+811-S1-NNN-10-XXX101
+Straight SLC connector, low profile, solder tail, single row
+AVAIL ABILIT Y FROM  2 to 64 contacts
+                     (standard number of contacts: 64)
+
+
+
+
+813-S1-NNN-10-XXX101
+Straight SLC connector, low profile, solder tail, double row
+AVAIL ABILIT Y FROM  4 to 72 contacts
+                     (standard number of contacts: 72)
+
+
+
+
+813-SS-NNN-10-474101
+Straight SLC connector, solder tail, double row
+AVAIL ABILIT Y FROM  4 to 64 contacts
+                     (standard number of contacts: 64)
+
+
+
+
+                                                                                   AVAILABLE CONNECTOR HEIGHTS
+                                                                                   INITIAL HEIGHT A (mm)   PL ASTIC BODY HEIGHT B (mm)   X X X CODE
+
+                                                                                   6                       4                             014
+                                                                                   6.5                     4                             015
+                                                                                   7                       4                             016
+                                                                                   7.5                     4                             017
+
+
+
+
+34                                                               Due to technical progress, all information provided is subject to change without prior notice.
+

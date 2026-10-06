@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/bulgin/bulgin-4000-series-sealed-usb-c.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/bulgin/bulgin-4000-series-sealed-usb-c.pdf",
+ "pdf_sha256": "bc353c794cafec7a6108fa6e8abdca3bc64d5e3f550d53c4741640e098365dea",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/bulgin/pdftext/bulgin-4000-series-sealed-usb-c.layout.txt",
+ "text_bytes": 14834,
+ "text_sha256": "bbcd62da269f04a7206c2c503f97fb17efb04132678ab28fa1518da7b46435ce"
+}

@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf",
+ "pdf_sha256": "bb89f067e6a7902867bf6b82eaab762167f403ae8464a29ec4f318ab0c71628f",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tcan334-can-fd-transceiver.layout.txt",
+ "text_bytes": 206588,
+ "text_sha256": "810dc4dbcf529687603e0c079f2a5575df3558543b5e4732440e6dd7177e2bee"
+}

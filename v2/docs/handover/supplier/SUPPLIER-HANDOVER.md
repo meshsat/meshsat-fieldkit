@@ -313,7 +313,14 @@ Three levels, and what each needs:
    the repository with `git rev-parse --show-toplevel` and several read earlier committed versions of their inputs with
    `git show <commit>:<path>` (for example `v2/docs/records/l4e9/l4e9_power_path.py`); they refuse when a pinned input differs.
    They also read makers' documents that are not redistributed: each record's `fetch_held_back.py` (or `fetch_*.py`) fetches them
-   from the makers' sites into ignored `held/` folders and checks their sha256 (`SOURCES-HELD-BACK.md` lists them). Then
+   from the makers' sites into ignored `held/` folders and checks their sha256 (`SOURCES-HELD-BACK.md` lists them). The records
+   read a maker's PDF as its extracted text, a committed input beside the PDF (`v2/docs/records/_lib/pdftext.py`), never by running
+   `pdftotext` themselves; a held-back sheet's text is held back with the sheet, so after the fetch it is re-taken:
+   `python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/<record>`, on a host with poppler's `pdftotext` 22.12.0 and the
+   `poppler-data` package (the versions every text was taken with; each text's `.meta.json` sidecar names them), before the record's
+   script runs. A record whose text is absent refuses and names the fetch script and this command; the fetch script is not always
+   the reading record's own. The committed outputs print each text's sha256, so a text taken with another poppler makes the output
+   differ from the committed `.out` and the records that pin that output refuse it: a refusal, not a silent change. Then
    `python3 v2/docs/records/<record>/<script>.py` prints the output byte for byte and `python3 v2/ecad/tools/tests/run.py
    <module>` runs the tests (Python 3.11, PyYAML, numpy, poppler's `pdftotext` for some readers). The schematics regenerate from
    their generators with KiCad 9.0.9 in a full checkout (`v2/docs/handover/REGENERATE.md` describes the September handover
