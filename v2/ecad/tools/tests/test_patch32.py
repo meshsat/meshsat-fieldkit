@@ -37,6 +37,11 @@ heading above the set 31 block, or the plan's entry not after set 31's; the reco
 tool finds it; an em or en dash; the paragraph after the title not the DONE / NOT DONE / NEXT line. Each predicate is also run on a
 mutant it must refuse.
 
+W113's restatement (7 October 2026, from 01:50 CEST, on W106's N-c and W110's M3, which found a re-wrapped candidate_guard line passing
+every test while the fill tool's three-host NOTE fell silent): P-01's candidate_guard line is one physical line holding its GATE token
+(p_rows), and after the fill its value is three parts joined by "; ", each "candidate_guard: PASS candidate <the candidate>" as
+candidate_guard prints it on each host (p_fill; set 31's guard logs give the form); each with a mutant it refuses.
+
 This file never writes a token of the fill tool literally (it builds them with T()), so the placeholder check of set 32's chain needs
 no deferral row for it. Read-only: git is read with `git show`, `git log`, `git cat-file`; nothing is written. No pytest is needed
 (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
@@ -60,6 +65,13 @@ PINS = ("62300318cbf256a178659d7635ecfd4a318c47d3",   # set 32's chain pins othe
 A5 = ("62300318cbf256a178659d7635ecfd4a318c47d3", "v2/docs/records/w42cite/apply_supplier_0e_pointer.py")  # the chain's step a5
 P0SOL = "v2/docs/records/l4e7/l4e7_p0sol.out"         # set 31's known item: its paragraph 0a at the candidate (W99's C2)
 KNOWN_ROWS = ("S-05", "U-03", "L-02", "P-01")
+# W113 (W106's N-c, W110's M3): P-01's candidate_guard line stands as ONE physical line with its GATE on it, so the fill tool's suggestion
+# (fill_res.py's "candidate_guard check, every host", hosts=3) reaches the token and its three-host NOTE fires; after the fill the value
+# is the three hosts' PASS lines joined by "; ", each as candidate_guard prints it on set 31's hosts
+# (`<worktrees>/_runs/int31s1/guard.log:2`, `candidate_guard: PASS candidate 5f25daf3762ecd69c8764bf60de81a80f4119eab: 997 evidence ...`)
+GUARD_LINE = "The candidate_guard check, every host, its PASS line on each host in one value: `"
+GUARD_HOSTS = 3
+GUARD_PART = re.compile(r"candidate_guard: PASS candidate ([0-9a-f]{8,40})\b")
 PAGES = {"S": "v2/docs/handover/START-HERE.md", "U": "v2/docs/handover/supplier/SUPPLIER-HANDOVER.md",
          "L": "v2/docs/handover/LAYER-STATUS.md", "P": "v2/docs/EXECUTION-PLAN.md"}
 COUNTS = {"S": 15, "U": 16, "L": 6, "P": 1}
@@ -169,6 +181,10 @@ def p_rows(text):
                 bad.append("%s: its basis names %s, absent from the tree" % (rid, p))
         if not basis:
             bad.append("%s: no basis" % rid)
+        if rid == "P-01":       # W113 (W106's N-c): the guard line unwrapped, its GATE (or the value the fill wrote) on that line
+            gl = [x for x in new.split("\n") if "candidate_guard check, every host" in x]
+            if len(gl) != 1 or not re.fullmatch(re.escape(GUARD_LINE) + r"(?:%s|[^`\n]+)`\." % re.escape(T("GATE")), gl[0]):
+                bad.append("P-01: the candidate_guard line is not one physical line %r<GATE or its value>`. (W106's N-c)" % GUARD_LINE[:40])
     for pre, n in COUNTS.items():
         if seen.get(pre) != list(range(1, n + 1)):
             bad.append("the %s rows are %s, not 01 to %02d in order" % (pre, seen.get(pre), n))
@@ -588,6 +604,12 @@ def p_fill(text, result):
         bad.append("fill stage %d leaves %s in the patch file, not %s" % (st, left, sorted(want)))
     if st == 0:
         return bad
+    gl = [x for x in text.split("\n") if x.startswith(GUARD_LINE)]     # W113 (W106's N-c, W110's suggestion): the three hosts' lines
+    parts = gl[0][len(GUARD_LINE):].rsplit("`.", 1)[0].split("; ") if len(gl) == 1 else []
+    shas = [GUARD_PART.match(x) for x in parts]
+    if len(parts) != GUARD_HOSTS or not all(shas) or any(not (m.group(1).startswith(cand) or cand.startswith(m.group(1))) for m in shas):
+        bad.append("the candidate_guard value is not %d parts joined by '; ', each 'candidate_guard: PASS candidate <the candidate>': %r"
+                   % (GUARD_HOSTS, (gl or [""])[0][len(GUARD_LINE):][:80]))
     tmpl = _template()
     if tmpl is None:
         return bad + ["after the fill, no committed revision of the patch file holds the template"]
@@ -650,6 +672,13 @@ def t_every_row_is_well_formed_with_its_tokens_and_basis():
     assert p_rows(_mut(t, "netlist changed.\n\n**Set 32** (the revision", "netlist changed!\n\n**Set 32** (the revision")), \
         "an after-line row not beginning with its old text passed"
     assert p_rows(_mut(t, "Basis: the Tested row (S-06).", "Basis: `v2/docs/records/int32/NOWHERE.md`.")), "a basis naming no file passed"
+    # W113 (W106's N-c, W110's M3): P-01's candidate_guard line wrapped back, so its value moves off the line the fill tool's
+    # suggestion matches; and the line's words changed
+    gl = [x for x in t.split("\n") if x.startswith(GUARD_LINE)]
+    assert len(gl) == 1, "the patch file holds %d candidate_guard lines" % len(gl)
+    assert p_rows(_mut(t, gl[0], gl[0].replace("in one value: `", "in one\nvalue: `", 1))), "P-01's guard line wrapped passed (N-c)"
+    assert p_rows(_mut(t, gl[0], gl[0].replace("every host, its PASS line", "each host, its PASS line", 1))), \
+        "P-01's guard line in other words passed"
 
 
 def t_every_old_text_holds_once_on_its_line_of_the_pages_read():
@@ -789,6 +818,11 @@ def t_the_tokens_are_the_rows_and_the_fill_stage_is_resultss():
         assert p_fill(_mut(t, "the gate lines |", "the gate lines `%s` |" % T("REKEY")), result), "a REKEY token passed"
     else:
         assert p_fill(_mut(t, "set 32, the revision `", "set 32, the revision `0"), result), "a wrong filled value passed"
+        # W113 (W106's N-c): the guard value with one host's line only, and a host line naming another commit
+        gl = [x for x in t.split("\n") if x.startswith(GUARD_LINE)][0]
+        v = gl[len(GUARD_LINE):].rsplit("`.", 1)[0]
+        assert p_fill(_mut(t, gl, gl.replace(v, v.split("; ")[0], 1)), result), "a one-part candidate_guard value passed"
+        assert p_fill(_mut(t, gl, gl.replace("PASS candidate ", "PASS candidate 0", 1)), result), "a guard line naming another commit passed"
 
 
 def t_the_record_names_the_patch_file_so_the_fill_reaches_it():
