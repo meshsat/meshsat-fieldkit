@@ -1251,7 +1251,7 @@ board_to_board:
         (R-122; PROVISIONAL); the solar guard: U21 TPS48110-Q1 with Q12 CSD19532Q5B as an over-voltage cut-off rising at 28.55 to
         31.06 V and falling at 27.07 V or more (aged), Q13 CSD19532Q5B in the return against a reversed panel (CONDITIONAL on its
         leakage above +25 C, printed at 25 C only), D11 SMCJ40CA at the port, the port bank C131, C132, C135, C136 (Samsung
-        CL32B225KCJSNNE), C133 and C134 (CL32B106KBJNNNE), R97 28.0k, C126 330 pF; a stiff 36 V source stepping on with the
+        CL32B225KCJSNNE), C133 and C134 (CL32B106KBJNNNE), R97 28.0k (24.9k under R-240, drafted, not applied), C126 330 pF; a stiff 36 V source stepping on with the
         guard already on (D-10, restated for the next set from L4-E9's D-10 as set 31 left it, finding L5-F14 of record l5pwr): D-10
         is OPEN, in L4-E9's words 'an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining
         engineering item E-1: the guard's port-level transient (F1 and F2 absolute-rating violations below about 2.4 uH, F1 PV_F
