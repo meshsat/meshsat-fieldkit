@@ -18,7 +18,19 @@
 
 schema: 1
 title: MeshSat field kit V2 engineering handover
-max_zip_bytes: 52428800
+# max_zip_bytes: the handover ZIP's cap; `handover_pack.py build` exits 3 over it (and still writes the snapshot so it can
+# be read). 104,857,600 bytes (100 MiB) since 6 October 2026 (MESHSAT-1357, Q-53); 52,428,800 bytes (50 MiB) before, from
+# H1 of 27 September 2026. Why it rose: the DESK package's own material grew. Measured at main eff28be3 (deflate level 9
+# per tracked file): the records' generators take about 4.8 MB, their outputs about 2.5 MB and the pages about 3.9 MB
+# compressed, and with them the ZIP grew from H2's 51.9 MB into an estimated 70.2 MB (v2/docs/records/h3/zip_size_estimate.py
+# at that commit: 70,175,272 bytes) against the 52.4 MB cap, which was a budget H1 and H2 set themselves, not an external
+# limit. The vendor PDFs stay referenced (the `reference` rules below, unchanged); referencing the records instead would
+# defeat the package (the constitution, section 11: the changed sources, calculations and verdicts travel with it), and a
+# second archive would split what a reviewer reads together. Decided on 6 October 2026 at 13:35 CEST by the coordinator
+# under the owner's standing rule of 26 September 2026 (authority SESSION), reported in checkpoint 32; the owner may
+# overrule it, and setting the value back restores the old cap. test_handover_pack holds this value and a positive margin
+# of the estimate at the tree's commit.
+max_zip_bytes: 104857600
 sources_yaml: v2/vendor/SOURCES.yaml
 
 public:             # named in SOURCE.txt so a recipient can fetch what the snapshot references (H1.1, checker finding M5)
@@ -72,9 +84,10 @@ rules:
   # H2 (27 September 2026): the five patches of H1.1 are SUPERSEDED (board B's round 8 merged at b76c18cb, the layer 2,
   # 3, 5 and 7 closers at 95e078a1, 53292f81, 0da2778b and c351115d from later worktree states) and their bytes are in
   # the repository at every commit since 98ce9f83, so they are the lowest-value bundled files: moved to `reference` to
-  # keep the ZIP under max_zip_bytes (about 3.9 MB compressed; the H2 exports and the case release outgrew the margin
-  # H1.1 left). The README stays bundled; REFERENCED-SOURCES.tsv lists each patch with its git blob sha, and
-  # REGENERATE.md section 1a fetches one from the public repository. Deleting the `reference` rule bundles them again.
+  # keep the ZIP under max_zip_bytes as it then stood, 52,428,800 bytes (about 3.9 MB compressed; the H2 exports and the
+  # case release outgrew the margin H1.1 left). Dated history: the cap is 104,857,600 bytes since 6 October 2026 (Q-53,
+  # above), and the patches stay referenced. The README stays bundled; REFERENCED-SOURCES.tsv lists each patch with its
+  # git blob sha, and REGENERATE.md section 1a fetches one from the public repository. Deleting the `reference` rule bundles them again.
   - {action: include, group: EV, glob: "v2/docs/handover/candidates/README.md",
      role: "the candidates of H1.1 (SUPERSEDED since, each merged from a later state): base, sha256, layer and last review of each patch, and where each landed"}
   - {action: reference, glob: "v2/docs/handover/candidates/*.patch",
@@ -84,7 +97,9 @@ rules:
   # stay the six (START-HERE.md names the others). RELEASE-H3.md travels as the draft of the source commit: a snapshot
   # cannot carry its own checksum, and the page's head says where to read the build's figures instead. The maker
   # document the representative calculation needs (Mill-Max's catalogue page 28, 3.8 MB) stays referenced: H2 was
-  # 534,063 bytes under max_zip_bytes and v2/docs/records/h3/zip_size_estimate.py gives H3's margin before the build.
+  # 534,063 bytes under max_zip_bytes as it then stood (52,428,800 bytes; dated history, the cap is 104,857,600 bytes since
+  # 6 October 2026, Q-53, above) and v2/docs/records/h3/zip_size_estimate.py gives H3's margin before the build (it reads
+  # the cap of the commit it is given).
   # Session choice under the owner's standing rule of 26 September 2026; reversed by a rule above this one.
   - {action: include, group: H0, glob: "v2/docs/handover/**",
      role: "handover page, pack specification or regeneration instructions"}
@@ -221,7 +236,9 @@ rules:
   # and these seven files (about 20.7 MB) are the ones pcb_requirements.yaml cites that no other include rule carries
   # (diodes-ap64500.pdf rides with the energy chain above). With them the registry's citations of 26 September resolve
   # from the ZIP; CON-017's three ST documents (merged later the same day, about 21 MB compressed, RM0433 alone 40.7 MB)
-  # are left referenced so the ZIP stays under max_zip_bytes, and the validator reports those four citations.
+  # were left referenced so the ZIP stayed under max_zip_bytes as it then stood (52,428,800 bytes; dated history, the cap
+  # is 104,857,600 bytes since 6 October 2026, Q-53, above, and they stay referenced), and the validator reports those
+  # four citations.
   # Deleting this rule returns them to REFERENCED-SOURCES.tsv and the validator then reports each citation as missing.
   - {action: include, group: L3, glob: ["v2/vendor/rockblock/rb9704-sch-2B1.pdf", "v2/vendor/cm5/cm5-datasheet.pdf", "v2/vendor/ti/ti-pca9555.pdf", "v2/vendor/microchip/microchip-atecc608b-datasheet.pdf", "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf", "v2/vendor/ti/bq25731-datasheet.pdf", "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf"],
      role: "a maker document pcb_requirements.yaml cites as a requirement's source; bundled so rules_lib.py requirements validates from the snapshot"}
