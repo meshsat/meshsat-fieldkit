@@ -397,7 +397,7 @@ and the coordinator items the queue lists as Q-27.
 - W16's findings 2 and 4 to 7 are carried as notes for the next set, not resolved here; the two corrections it asked before the
   candidate commit are committed (`33efca07`; `2d4f6df5` merged at `c4492dd3`).
 - The count of unreviewed changes: W15's range to `6bc4424e` holds 13; on the promoted revision the record counts 14 (commit 2b,
-  section 2). The coordinator's Q-05 text counts thirteen on W15's classification; this record does not restate the Q-05 text.
+  section 2). The coordinator's Q-05 text counted thirteen on W15's classification when first written and was corrected to fourteen (this classification's rows 39 to 45) before its insertion into the assessment at 11:15 CEST; both counts stand in this record.
 - `v2/docs/records/int30/RESULT.draft2.md` stays in the tree, unchanged: `test_recpack.py` reads it there and the P0 list's drafts
   cite it by path (draft 3 was renamed to this file; W15's draft to `CLASSIFICATION.md`). A SESSION choice of the adoption's author,
   reversed by removing the file once those readers are restated.

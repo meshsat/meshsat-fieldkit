@@ -50,6 +50,8 @@ amendment of 6 October 2026 added (HO-L, its rows in sections 4 and 5, HO-F's ba
 are those of `6fe398e9` only. The module
 `v2/ecad/tools/tests/test_remeng.py` holds every citation to an existing file and range and every quoted verdict to its filed text.
 
+At the adoption of the P0 list's revision 3 (6 October 2026, 11:23 CEST) revision 3 took the list's path and revision 2 stayed at its dated name, `P0-POWER-LIST.rev2-2026-10-05.md`, byte-identical to the list at `1c6d56f5` and at `dd1aed00`; this ledger's statements about the list describe revision 2 as it stood, so they cite P0L2 (revision 2) and the lines are revision 2's.
+
 | Alias | File |
 |---|---|
 | CX46 | `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` |
@@ -57,6 +59,7 @@ are those of `6fe398e9` only. The module
 | CX44 | `v2/docs/records/l4close/CHECK-CX44-F01-SELECTION-8c7c335f-AS-RECEIVED.md` |
 | V6 | `v2/docs/records/l4close/CHECK-V6-POWER-DRAFTS-7a82e82a-AS-RECEIVED.md` |
 | P0L | `v2/docs/records/l4close/P0-POWER-LIST.md` |
+| P0L2 | `v2/docs/records/l4close/P0-POWER-LIST.rev2-2026-10-05.md` |
 | ANX | `v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md` |
 | OWN | `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md` |
 | T5R | `v2/docs/records/l9t5/README.md` |
@@ -94,7 +97,7 @@ are those of `6fe398e9` only. The module
   regenerating (the commit `1c6d56f5`, read with `git show`; see section 6, item C).
 - The connected electrical verdict reads ([CON:336]) "REMAINING ENGINEERING. No row of sections 5 to 10 is a positive electrical
   acceptance", on seven open fault rows ([CON:320-335]).
-- The P0 list on this tip is still "revision 2, 5 October 2026, 16:50 CEST" ([P0L:1]); its row states are the coordinator's
+- The P0 list on this tip is still "revision 2, 5 October 2026, 16:50 CEST" ([P0L2:1]); its row states are the coordinator's
   ([T5R:1]). This ledger cites the current state from the records, never from that list's 16:50 column (RE-1).
 
 ## 1. The twelve cx46 findings NOT CLOSED, each a REMAINING ENGINEERING item
@@ -110,15 +113,15 @@ as filed.
   v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:663 and v2/docs/records/l4close/P0-POWER-LIST.md:18-24: the supplied governing file
   stops at part 22 and the current list is stale. Smallest correction: install the exact missing owner instructions and reconcile all
   twelve states against this verdict. REMAINING ENGINEERING must remain visible for unresolved design rows."
-- **Failed cases.** No electrical case: a record defect. The list's rows P0-1 to P0-7 ([P0L:18-24]) carry the 16:50 states cx46
+- **Failed cases.** No electrical case: a record defect. The list's rows P0-1 to P0-7 ([P0L2:18-24]) carry the 16:50 states cx46
   names ([CX46:81]).
 - **Attempted correction and the disposition.** Main `0d5f855e` merged into the candidate: parts 23 to 25 and the four checks filed
   ([T5R:1]); the owner file now holds part 23 ([OWN:671]), part 24 ([OWN:735]) and part 25 ([OWN:808]).
-- **Unresolved.** The list's reconciliation: [P0L:1] still reads revision 2 and its rows [P0L:18-24] are unchanged on this tip.
-- **Affected outputs.** Any reader of [P0L:18-24] reads superseded states (for example P0-2 "NEXT for Slot A" at [P0L:19] against
+- **Unresolved.** The list's reconciliation: [P0L2:1] still reads revision 2 and its rows [P0L2:18-24] are unchanged on this tip.
+- **Affected outputs.** Any reader of [P0L2:18-24] reads superseded states (for example P0-2 "NEXT for Slot A" at [P0L2:19] against
   V6-B1 OPEN at [CON:174]).
 - **Receiving company's task.** None of engineering: read each row's state from the records this ledger cites (sections 1 to 4),
-  not from [P0L:18-24]. The list's revision is the coordinator's ([T5R:1]).
+  not from [P0L2:18-24]. The list's revision is the coordinator's ([T5R:1]).
 - **Reproduce.** Not applicable (text).
 - **State on this tip.** Half done: the governing instructions are in the tree; the twelve-row reconciliation is not.
 
@@ -133,7 +136,7 @@ as filed.
   resistor-dependent residual corners, correct the printed-only label, and round the B-PA1 acceptance conservatively. Keep F01 and
   dependent service claims PROVISIONAL as REMAINING ENGINEERING."
 - **Failed cases.** C-ALLTX rev 3 (every transmitter keyed 60 s from a 15.5 V rest, fans running) needs 15.5162 V nominal and
-  16.0718 V with the printed bounds against REQ-018's 15.5 V before any correction ([P0L:18], [F01:31]). With the PA drain-current
+  16.0718 V with the printed bounds against REQ-018's 15.5 V before any correction ([P0L2:18], [F01:31]). With the PA drain-current
   cap the case reads 15.1308 V, MODEL on PRINTED bounds, margin 0.3692 V ([CON:123-124]). The defect cx46 names inside that
   correction: Q551 holding PA_ISP near ground loads the reference U552 through R559, "approximately 0.55/549 + 3.3551/1000 =
   4.3569 mA, MODEL" against the sheet's accuracy printed at IOUT = 1 mA only and a load regulation of 0.030 V/A TYPICAL
@@ -184,7 +187,7 @@ as filed.
   real source/load sites and a justified distributed resistance envelope."
 - **Failed cases.** V6-B1: "the acceptance assumes each board is one node; the boards' own plane resistance can consume the whole
   margin, and it is not among the conditions." ([V6:34-35]); the list's case: 0.62 mOhm cold puts a ribbon conductor at 1.218 A
-  against 1 A ([P0L:19]). On the study, at +76.25 C, the declared upper bound 27.8159 A puts the ribbon at 0.6299 A against its least
+  against 1 A ([P0L2:19]). On the study, at +76.25 C, the declared upper bound 27.8159 A puts the ribbon at 0.6299 A against its least
   rating 0.5995 A and a VH pin 2 at 6.4485 A against 5.9948 A, both least ratings INFERRED; every printed row holds and the service
   cases (C-DEV rev 2 20.4746 A, the largest steady state 22.8711 A) hold on the least ratings ([CON:163-176], [DIST:112-123]).
 - **Attempted correction.** Record l8r2's dedicated-return drafts (`v2/docs/records/l8r2/apply_gen_sch_a_gndrtn.py`,
@@ -200,9 +203,9 @@ as filed.
 - **Affected provisional outputs.** The return's rows ([CON:163-176]); T10-A3's shift with the dedicated return ([CON:332-333]); the
   averaged 0.0205 V the T10-A3 chain uses ([CON:224-227], [DIST:123-124]); V6-B2's indirect paths PROVISIONAL on vendor tasks
   (Hirose U.FL, Molex HDMI, UNSENT) ([L8R2:1063], [CON:175], [CON:343-345]); V6-m8, the XT60 board end MISSING ([L8R2:1065]); P0-2's row
-  ([P0L:19]); Layer 10 places from the reserved sites ([DIST:26-27]).
+  ([P0L2:19]); Layer 10 places from the reserved sites ([DIST:26-27]).
 - **Receiving company's task.** The scope above, with the requirement as the list states it: "every ground branch inside its
-  printed rating over every permitted aged-contact corner" ([P0L:19]), on the service cases and the declared upper bound
+  printed rating over every permitted aged-contact corner" ([P0L2:19]), on the service cases and the declared upper bound
   ([CON:166-169]); the vendor curves L8R2-F43 (JST VH) and L8R2-F44 (Wurth WR-CAB) ([L8R2:1046], [DIST:117-122]).
 - **Reproduce.** `python3 v2/docs/records/l8r2/l8r2_dist.py` (output [DIST]), with `v2/docs/records/l8r2/l8r2_p0.py` and
   `v2/docs/records/l8r2/l8r2_gndret.py`; tests `test_l8r2` (`v2/docs/records/l8r2/README.md`).
@@ -550,8 +553,8 @@ as filed.
 
 - **The item.** TP-E11-29 (`v2/docs/test-procedures/TP-E11-29.md`) is "written and NOT EXECUTABLE until L4-E9 restates R-159 and a
   supplier agrees in writing to the fixture requirement": at most 10 mW net heat at each heating lead's joint; targets Zw at most
-  37.59 K/W, R17 at most 0.294 K/W, the pours 0.1 mOhm; specimen the FET pair and Q42 on a coupon ([ANX:101-109], [P0L:29]).
-- **Class.** "(a QUALIFICATION, kept apart from the architecture blockers)" ([ANX:101]); "3 (qualification, not ARCH)" ([P0L:29]).
+  37.59 K/W, R17 at most 0.294 K/W, the pours 0.1 mOhm; specimen the FET pair and Q42 on a coupon ([ANX:101-109], [P0L2:29]).
+- **Class.** "(a QUALIFICATION, kept apart from the architecture blockers)" ([ANX:101]); "3 (qualification, not ARCH)" ([P0L2:29]).
 - **Fallback if the sharing fails.** "lower-resistance FETs or a fourth, a design change inside UDC-1, not an architecture change"
   ([ANX:108-109]).
 
@@ -562,7 +565,7 @@ as filed.
   not guaranteed at temperature" ([ANX:83-87]).
 - **Routes.** (a) Saft's statement (UNSENT), (b) the one-cell screen, (c) the mock-up fit, (d) the HL18650V alternative; adoption of a
   4S1P Saft pack is a separate owner decision, NOT requested; the pack baseline stands ([ANX:89-99]).
-- **Affected outputs.** The cell-limit rows LO-01d to g and the dependents PROVISIONAL ([P0L:26]).
+- **Affected outputs.** The cell-limit rows LO-01d to g and the dependents PROVISIONAL ([P0L2:26]).
 
 ### HO-J: U-02, the sealed case's heat rejection (EXTERNAL ARCHITECTURE FACT)
 
@@ -584,7 +587,7 @@ as filed.
 ### HO-L: E11-37, the charger's gate drive into three battery FETs (REMAINING ENGINEERING; the P0 list's row P0-8)
 
 - **Class, and why (SESSION, this ledger's reading).** The P0 list files the row as "E11-37, the charger's gate drive into three FETs",
-  its class 2 ([P0L:25]), "missing evidence boundable at the desk" ([P0L:11]); L4-E9 reads it as "a qualification gap, not a
+  its class 2 ([P0L2:25]), "missing evidence boundable at the desk" ([P0L2:11]); L4-E9 reads it as "a qualification gap, not a
   demonstrated failure of the battery FETs" ([L4E9:1134-1135]). This ledger classes it REMAINING ENGINEERING by its own definition
   above (a missing bound the desk could not close): "E11-37 STAYS OPEN: no printed figure decides a three-device gate load against
   TI's 5 nF" ([E11:1459]), and its answer decides a design choice rather than testing a finished one, the evidence blocking only
@@ -602,7 +605,7 @@ as filed.
   are 42.48 us on at -15 V, 51.66 us on near 0 V and 18.08 us off (MAKER, INFERRED) ([E11:1111-1112]); the charge inhibit's Q49
   moves at most 192 nC and BATDRV sinks at most 3.83 mA while it holds ([E11:1450-1451]). Not bounded by any printed figure: what
   TI's 5 nF protects, and so whether the three's gate load is inside it ([E11:944], [E11:1459-1461]). The P0 list's row says
-  "bounded from the printed limit (V2R); the third FET and E11-37 rebound (L4-E11 round 16)" ([P0L:25]); on this tree the bound
+  "bounded from the printed limit (V2R); the third FET and E11-37 rebound (L4-E11 round 16)" ([P0L2:25]); on this tree the bound
   is in L4-E11's rounds 9 and 11 (section 6, item G).
 - **Attempted correction (the desk's comparison).** Round 11 compared three approaches ([E11:1418-1447]): (i)(a) the three kept,
   SELECTED (SESSION) with E-1's bar 40.78 K/W; (ii) two FETs, the BUK6Y10-30P pair the only one under 5 nF, and only on a TYPICAL
@@ -612,7 +615,7 @@ as filed.
 - **The vendor question, drafted and UNSENT.** Q-TI-17 ([TIQ:74-78]), extended to the three devices with its items (a) to (d)
   ([TIQ:96-110]) and given (e) and (f) in round 11 ([TIQ:112-125]); the file's own words: "Nothing here has been sent, and no
   answer is assumed." ([TIQ:3-4]), and "an answer stated as a limit settles the row for production, a typical figure does not"
-  ([TIQ:6-7]). The P0 list: "TI's answer Q-TI-17, UNSENT (vendor)" ([P0L:25]); the annex keeps OW-7's questions to TI "drafted and
+  ([TIQ:6-7]). The P0 list: "TI's answer Q-TI-17, UNSENT (vendor)" ([P0L2:25]); the annex keeps OW-7's questions to TI "drafted and
   UNSENT" ([ANX:76]).
 - **Affected provisional outputs.** D-14, "CONDITIONAL on E11-29, E11-30 and E11-36 with E11-37 OPEN" ([L4E9:1134]); UDC-1's
   selection (S1), reversed by "a negative Ciss answer or bench (R-183)" ([L4E9:1401]); R-183, OWED ([REG:279]); E-1's installed
@@ -670,7 +673,7 @@ Counts: remaining engineering 20; qualification 1; external architecture fact 3;
 
 | Item | Class | Receiving company's task | Affected outputs | Reproduce |
 |---|---|---|---|---|
-| RE-1 | remaining engineering | none of engineering; read states from the records (the list is the coordinator's) | P0 list rows P0-1 to P0-7 ([P0L:18-24]) | text |
+| RE-1 | remaining engineering | none of engineering; read states from the records (the list is the coordinator's) | P0 list rows P0-1 to P0-7 ([P0L2:18-24]) | text |
 | RE-2 | remaining engineering | bound the reference at its held load and release; then V-PA-REF, B-PA1, B-PA2 | F01 / D-17, C-ALLTX rev 3 at the cap, U13's room, PA rail rows, R-227, R-238 | `v2/docs/records/l9t5/l9t5_f01.py` |
 | RE-4 | remaining engineering | XT60-F lands, real sites, justified distributed resistance, each LDO's shift | the return's rows, T10-A3's shift, P0-2 | `v2/docs/records/l8r2/l8r2_dist.py` |
 | RE-5 | remaining engineering | peer-silence or diagnostic circuit and recovery proof | CON-004, FW-B22, L9T5-F21, L9T5-F16, R-245 | `v2/docs/records/l9t5/l9t5_t10.py` |
@@ -725,12 +728,12 @@ Counts: remaining engineering 20; qualification 1; external architecture fact 3;
   validation of that computation, not a substitute for it. Record l4e7's own text stands as written ([B2:168-170],
   [SOLO:399-404], [P11:120-123]): it is not this ledger's file, and the contradiction between that text and this reading is the
   coordinator's to carry to the next set.
-- **F. The P0 list is revision 2 (RE-1)** ([P0L:1]) while the records carry the cx46 disposition ([T5R:1]).
+- **F. The P0 list is revision 2 (RE-1)** ([P0L2:1]) while the records carry the cx46 disposition ([T5R:1]).
 - **G. E11-37's references and class (added 6 October 2026, cited at `6fe398e9`).** The P0 list's row P0-8 cites "(V2R)" and
-  "(L4-E11 round 16)" for the bound and the rebinding ([P0L:25]); L4-E11's rounds 14 to 16, which answer V2R, V2RF and V2RG, are
+  "(L4-E11 round 16)" for the bound and the rebinding ([P0L2:25]); L4-E11's rounds 14 to 16, which answer V2R, V2RF and V2RG, are
   TP-E11-29's fixture and heavy leads and name no E11-37 ([E11:1749-1998]); the rebinding to the three devices is round 9's 19d
   ([E11:1110-1116]) and the three approaches round 11's section 21 ([E11:1405-1466]), the round the check V2 read
-  ([E11P:2465-2467]). The class: the P0 list's 2, "missing evidence boundable at the desk" ([P0L:11], [P0L:25]), and L4-E9's
+  ([E11P:2465-2467]). The class: the P0 list's 2, "missing evidence boundable at the desk" ([P0L2:11], [P0L2:25]), and L4-E9's
   "a qualification gap, not a demonstrated failure of the battery FETs" ([L4E9:1134-1135]), against this ledger's REMAINING
   ENGINEERING (HO-L), the narrower claim about the design (it does not treat the three-device network as a finished design awaiting
   a test). The list and L4-E9 are the coordinator's; this ledger edits neither.
