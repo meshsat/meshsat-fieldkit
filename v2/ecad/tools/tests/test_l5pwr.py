@@ -317,28 +317,134 @@ def t_the_apply_script_refuses_a_second_run_on_the_tree_and_applies_once_to_the_
         shutil.rmtree(d)
 
 
+# W14 (6 October 2026): the evidence basis of the restatement of the two tests below (the coordinator's brief W14; W10's adoption
+# read, _runs/int31/PLAN.draft.md section 5). W8 (fnd/w8l5 8840adda, adopted in the NEXT set; finding L5-F14 of this record)
+# restated, in pcb_interfaces.yaml IF-EXT-DC `protection`, `bench` and `l4_defects` and in HW-FW-CONTRACT.md section 4.1's R-173 row
+# and V-E16, five texts the two contract scripts wrote (apply_l5pwr2_contracts.py L5-F09 a to d, apply_l5f11_contracts.py F11-09) to
+# L4-E9's D-10 as set 31 left it, and kept the superseded wording verbatim as dated history in the change record row
+# "| 2 (W8, L5-F14) |". Reproduced on W14's base 27cd9cd2 (`run.py test_l5pwr.`: 14 passed, 2 failed, 0 skipped): line 341 failed
+# with (3, '', '... L5-F09 a: old text 0 time(s), new text absent; ... refusing, nothing written') and line 392 with (3, '',
+# 'apply_l5f11_contracts: ORDER: apply_l5pwr2_contracts.py is not applied to these files (...)'). The scripts' rule
+# (apply_l5pwr2_contracts.py docstring lines 24 to 26, apply_l5f11_contracts.py lines 32 and 33) reads "already applied" only while
+# every new text stands verbatim and refuses anything else, and decision 11's Reverse (b) of L5-POWER-CONTRACTS.md has both refuse
+# "until the contracts and the scripts are restated". So each test now expects the script's answer on the tree as W8 left it, and
+# holds what the old "already applied" held on what W8 did not touch (verbatim) and, on what W8 restated, three properties in its
+# place: every Layer 4 value the script's text printed still stands in the field, the superseded part of the script's text is in
+# W8's change record row and gone from the field, and the field claims no more (OPEN, PROVISIONAL, no loop claimed to pass).
+# apply_l5pwr2's answer is the one its docstring prescribes (decision (a)); apply_l5f11's refusal is right but its ORDER reason is
+# not (decision (b)): test_w14l5.py carries the proposed correction PATCH_L5F11_ORDER and checks it on copies, never on the script.
+W8_ROW = "| 2 (W8, L5-F14) |"
+W8_RESTATED = ("L5-F09 a", "L5-F09 b", "L5-F09 c", "L5-F09 d", "F11-09")
+
+
+def _w14_load(path, name):
+    sp = importlib.util.spec_from_file_location(name, path)
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
+def _w14_live(flat, tg, where, texts):
+    """The live text an edit targets: the YAML field parsed (a contract's key, or a full key path), or the one table row whose first
+    cell `where` opens."""
+    if tg == "yaml":
+        import yaml
+        node = yaml.safe_load(texts["yaml"])
+        for k in (("board_to_board", "contracts") + tuple(where) if len(where) == 2 else where):
+            node = node[k]
+        return flat(node if isinstance(node, str) else str(node))
+    rows = [ln for ln in texts["hwfw"].split("\n") if ln.startswith(where)]
+    assert len(rows) == 1, "%d rows open with %r" % (len(rows), where)
+    return flat(rows[0])
+
+
+def _w14_history(flat, texts):
+    """The quoted superseded wordings of W8's change record row (one row)."""
+    rows = [ln for ln in texts["hwfw"].split("\n") if ln.startswith(W8_ROW)]
+    assert len(rows) == 1, "%d change record rows %s" % (len(rows), W8_ROW)
+    return [flat(q) for q in re.findall(r'"([^"]+)"', rows[0])]
+
+
+def _w14_restated(flat, i, new, live, quotes, values, nopass, withdrawn=()):
+    """An edit W8 restated: every Layer 4 value its text printed still in the field (a value in `withdrawn`, one set 31 withdrew,
+    instead recorded in W8's row and gone from the field), the superseded part in W8's row and not in the field, and the field no
+    wider than the script's text (OPEN, PROVISIONAL, no loop claimed to pass)."""
+    vals = [v for v in values if len(v) > 1 and v in new]
+    for v in vals:
+        if v in withdrawn:
+            assert v not in live and any(v in q for q in quotes), "%s: %r is neither gone nor recorded as history" % (i, v)
+        else:
+            assert v in live, "%s: a value the script printed is gone: %r" % (i, v)
+    hist = [q for q in quotes if q in flat(new) or flat(new) in q]   # a part of the script's text, or the whole of it in context
+    assert hist, "%s: W8's change record row quotes none of the script's text" % i
+    assert not [q for q in hist if q in live], "%s: a superseded wording is still in the field" % i
+    for w in ("OPEN", "PROVISIONAL", nopass):
+        assert w in live, "%s: the restated field lacks %r" % (i, w)
+    return vals
+
+
+def _w14_l5f11_state(a, V, texts):
+    """apply_l5f11_contracts.py's own per-edit state on `texts`, read with its own functions as its main() reads it after the ORDER
+    check (lines 195 to 209): (id, old matches, new text present)."""
+    st = []
+    for i, tg, _w, old, new in a.edits(V):
+        if isinstance(new, tuple):
+            _k, applied, build = new
+            ms = list(a.rx(old).finditer(texts[tg]))
+            mm = list(a.rx(applied).finditer(texts[tg]))
+            kept = ms[0].group(1) if len(ms) == 1 else (mm[0].group(1) if len(mm) == 1 else "?")
+            new = build(a.flat(kept), V)
+        st.append((i, len(list(a.rx(old).finditer(texts[tg]))), a.flat(new) in a.flat(texts[tg])))
+    return st
+
+
+def _w14_l5pwr2_answer(E):
+    """apply_l5pwr2_contracts.py's refusal on the tree as W8 left it, as its main() prints it (lines 251 to 254)."""
+    return "apply_l5pwr2_contracts: not in the state this script applies to: %s; refusing, nothing written\n" % "; ".join(
+        "%s: old text 0 time(s), new text %s" % (i, "absent" if i in W8_RESTATED else "present") for i, _t, _w, _o, _n in E)
+
+
 def t_the_contract_restatement_of_l5f09_and_l5f10_is_in_the_tree_and_idempotent():
-    """No withdrawn text of L5-F09 or L5-F10 in the tree's contract files; the tree carries the restatement as the Layer 4 files
-    printed it when the script was applied; the script applies once to the files at BASE2 and a second run writes nothing.
+    """No withdrawn text of L5-F09 or L5-F10 in the tree's contract files; the script writes nothing on the tree; the tree carries
+    L5-F10's two texts as the Layer 4 files printed them when the script was applied, and L5-F09's four as W8 restated them with
+    every Layer 4 value the script printed still in them; the script applies once to the files at BASE2 and a second run writes
+    nothing.
 
     Evidence basis of the narrowed reading (W1, 6 October 2026): until set 31 the script read the tree's Layer 4 files and this test
     read "the restatement as the Layer 4 files print it now". Set 31 (v2/docs/records/l4e9/SET31-CHANGES.md items 2 and 23) restated
     L4-E9's D-10, so the D-10 sentence the script quotes is matched 0 times on the tree and the script refused, although the contracts
     carry what it wrote (the integration's log of 6 October 2026). The script now reads the Layer 4 files at its L4_AT (a49a2b13,
-    where both contract scripts had been applied); the assertions below are unchanged, and that the contracts lag the page is finding
-    L5-F14 of L5-POWER-CONTRACTS.md, which t_s27b6_reads_d10_as_set31_left_it holds on the page."""
+    where both contract scripts had been applied), and that the contracts lag the page is finding L5-F14 of L5-POWER-CONTRACTS.md,
+    which t_s27b6_reads_d10_as_set31_left_it holds on the page.
+
+    W14 (6 October 2026), decision (a): W8 restated L5-F09 a to d (the comment above these helpers), so on the tree the script answers
+    what its docstring prescribes for a state that is neither (lines 24 to 26): exit 3, nothing written, each edit's state named
+    (L5-F10 a and b applied verbatim, L5-F09 a to d with their old texts gone and their new texts absent). That answer is correct, and
+    it is now the expectation, exact to the character; "already applied" was true until W8 and is what test_w14l5 shows the files at
+    W8's base still read. Nothing the old assertion held is dropped: no old text (unchanged), L5-F10's texts verbatim (unchanged),
+    and in place of L5-F09's verbatim texts the three properties of _w14_restated."""
     import collections
+    import hashlib
     need(APPLY2, "the contract script")
-    sp = importlib.util.spec_from_file_location("apply_l5pwr2_under_test", APPLY2)
-    a = importlib.util.module_from_spec(sp)
-    sp.loader.exec_module(a)
+    a = _w14_load(APPLY2, "apply_l5pwr2_under_test")
     E = a.edits(collections.defaultdict(str))
     assert len(E) == 6
     tree = {"yaml": open(YAML, encoding="utf-8").read(), "hwfw": open(HWFW, encoding="utf-8").read()}
     for i, tg, _w, old, _n in E:
         assert not a.rx(old).search(tree[tg]), "%s: a withdrawn text is still in %s" % (i, tg)
+    shas = [hashlib.sha256(open(p, "rb").read()).hexdigest() for p in (YAML, HWFW)]
     r = _run([APPLY2, "--check"])
-    assert r.returncode == 0 and "already applied" in r.stdout, (r.returncode, r.stdout[-200:], r.stderr[-300:])
+    assert r.returncode == 3 and r.stdout == "" and r.stderr == _w14_l5pwr2_answer(E), (r.returncode, r.stdout[-200:], r.stderr[-400:])
+    assert shas == [hashlib.sha256(open(p, "rb").read()).hexdigest() for p in (YAML, HWFW)], "the check wrote a contract file"
+    V = a.l4()
+    quotes = _w14_history(a.flat, tree)
+    for i, tg, where, _old, new in a.edits(V):
+        live = _w14_live(a.flat, tg, where, tree)
+        if i in W8_RESTATED:
+            assert a.flat(new) not in live, "%s: the script's text stands verbatim, so W8 did not restate it" % i
+            assert _w14_restated(a.flat, i, new, live, quotes, V.values(), "no loop is claimed to pass"), i
+        else:
+            assert a.flat(new) in live, "%s: the text the script wrote is not in the tree" % i
     d = tempfile.mkdtemp(prefix="l5pwr2-apply-")
     try:
         y = os.path.join(d, "pcb_interfaces.yaml")
@@ -371,14 +477,26 @@ def t_the_contract_restatement_of_l5f09_and_l5f10_is_in_the_tree_and_idempotent(
 
 
 def t_the_l5f11_restatement_and_the_sweep_hold_on_the_tree_and_the_script_is_idempotent():
-    """L5-F11 and set 28's sweep: no withdrawn wording in the tree's contract files; the second script reads already applied on the
-    tree, applies once to the files at BASE3, writes nothing on a second run, and refuses on the files at BASE2 (ORDER)."""
+    """L5-F11 and set 28's sweep: no withdrawn wording in the tree's contract files; the second script writes nothing on the tree,
+    and its own state there reads thirteen of its fourteen texts verbatim and F11-09 as W8 restated it; it applies once to the files
+    at BASE3, writes nothing on a second run, and refuses on the files at BASE2 (ORDER).
+
+    W14 (6 October 2026), decision (b): on the tree as W8 left it the script refuses at its ORDER check (lines 187 to 191), because
+    apply_l5pwr2_contracts.py no longer answers "already applied" there (t_the_contract_restatement_of_l5f09_and_l5f10_is_in_the_tree_
+    and_idempotent). The refusal is right (nothing may be written), its reason is not: every old text of apply_l5pwr2_contracts.py is
+    gone from the tree, so it WAS applied, and four of its texts were then restated by W8. The detector tests the first script's
+    verbatim texts where it should test the presence of what that script did (its old texts removed), the way set 30 corrected
+    apply_l4e9_changelist_p0.py's applied_state(). The script is record l5pwr's and pinned, so it is not edited here: this test expects
+    its CURRENT answer, exact to the character, and the proposed correction is test_w14l5.PATCH_L5F11_ORDER (checked there on copies;
+    with it applied the answer becomes "not in the state this script applies to: F11-09: old text 0 time(s), new text absent", and
+    this expectation changes with it). In place of the old "already applied": the script's own state, read with its own functions as
+    its main() reads it after the ORDER check, is every old text gone, F11-01 to F11-08 and F11-10 to F11-14 verbatim, and F11-09
+    restated by W8 with the properties of _w14_restated (its one Layer 4 value, L4-E9 8a's D-10 sentence at L4_AT, is the sentence
+    set 31 withdrew, decision 11 of the page, and stands in W8's history row instead)."""
     import collections
     import re as _re
     need(APPLY3, "the L5-F11 script")
-    sp = importlib.util.spec_from_file_location("apply_l5f11_under_test", APPLY3)
-    a = importlib.util.module_from_spec(sp)
-    sp.loader.exec_module(a)
+    a = _w14_load(APPLY3, "apply_l5f11_under_test")
     E = a.edits(collections.defaultdict(str))
     assert len(E) == 14
     tree = {"yaml": open(YAML, encoding="utf-8").read(), "hwfw": open(HWFW, encoding="utf-8").read()}
@@ -388,8 +506,20 @@ def t_the_l5f11_restatement_and_the_sweep_hold_on_the_tree_and_the_script_is_ide
         flat = " ".join(t.split())
         for pat in WITHDRAWN:
             assert not _re.search(pat, flat), "%s carries a withdrawn wording: %s" % (k, pat)
+    b = _w14_load(APPLY2, "apply_l5pwr2_for_order")
+    E2 = b.edits(collections.defaultdict(str))
+    assert not [i for i, tg, _w, old, _n in E2 if b.rx(old).search(tree[tg])], "an old text of apply_l5pwr2_contracts.py is in the tree"
+    want = "apply_l5f11_contracts: ORDER: apply_l5pwr2_contracts.py is not applied to these files (%s); refusing, nothing written\n" \
+        % _w14_l5pwr2_answer(E2).strip()[:160]
     r = _run([APPLY3, "--check"])
-    assert r.returncode == 0 and "already applied" in r.stdout, (r.returncode, r.stdout[-200:], r.stderr[-300:])
+    assert r.returncode == 3 and r.stdout == "" and r.stderr == want, (r.returncode, r.stdout[-200:], r.stderr[-400:])
+    V = a.l4()
+    assert _w14_l5f11_state(a, V, tree) == [(i, 0, i not in W8_RESTATED) for i, _t, _w, _o, _n in E]
+    quotes = _w14_history(a.flat, tree)
+    for i, tg, where, _old, new in a.edits(V):
+        if i in W8_RESTATED:
+            live = _w14_live(a.flat, tg, where, tree)
+            assert _w14_restated(a.flat, i, new, live, quotes, V.values(), "no loop claimed to pass", withdrawn=(V["d10"],)), i
     d = tempfile.mkdtemp(prefix="l5f11-apply-")
     try:
         y = os.path.join(d, "pcb_interfaces.yaml")
