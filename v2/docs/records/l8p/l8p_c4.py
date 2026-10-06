@@ -1025,7 +1025,7 @@ def main():
             w("     mutated, %-62s THG %s: %s\n" % (lab + ":", v, why[:90]))
     else:
         w("     the generator FAILED (%r)\n" % X.get("gen_rc"))
-    w("   DISPOSITION (10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends): V6-m7 and cx45's Q5 NOT CLOSED. Drafted and\n")
+    w("   DISPOSITION (10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends): V6-m7 NOT CLOSED; Q5: cx45 'P0-5: NOT CONFIRMED', cx46's items 9 and 10 'NOT CLOSED'. Drafted and\n")
     w("     reproducible: the two paths (the intact circuit's desk rows %s, the composition %s). PROVISIONAL: C-PROT rev 1 for the guard (L8P-R9-F1,\n"
       % ("hold" if fs_ok else "DO NOT HOLD", "reads DRAWN and its mutations FAIL" if comp_ok else "NOT as drafted"))
     w("     the retry heating with path 1 lost), the allowances (L8P-R9-F2, unrestated by their owners). REMAINING ENGINEERING: the retry-\n")
