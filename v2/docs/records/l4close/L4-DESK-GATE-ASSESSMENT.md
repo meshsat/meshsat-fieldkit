@@ -1,6 +1,6 @@
 # Layer 4's DESK gate (the owner's part 19): the assessment on the promoted revision `dd1aed00` (MESHSAT-1357, 6 October 2026)
 
-**Status: ADOPTED on the promoted revision `dd1aed00d0a0a521063b5792550bc510c4707c59`; the coordinator's judgement HELD (section 6).** Prototype framing:
+**Status: ADOPTED on the promoted revision `dd1aed00d0a0a521063b5792550bc510c4707c59`.** The coordinator's judgement is inserted in section 6 (11:19 CEST). Prototype framing:
 nothing in the kit has been built, bought, powered or measured. W12's draft 2 adopted by worker W27 on branch `fnd/adopt30b`
 (6 October 2026, from 10:43 CEST): the integrated and the promoted sha bound from the coordinator's values of 10:40:38 CEST
 (INTEGRATED = CANDIDATE = PROMOTED = `dd1aed00d0a0a521063b5792550bc510c4707c59`, main fast-forwarded at 10:36:57 CEST), each mark *basis moved* resolved and the
@@ -12,8 +12,8 @@ sentences of the coordinator's judgement of 10:45 CEST that read differently fro
 at `249e9e4785a170238c69316742a422250908cd1f`, kept unchanged beside it as filed) re-read on the current committed integration,
 `fnd/p0pwr` at `6bc4424ec64592e1a501af5db2246f3391c525a0` (the candidate below), with sections 0 and 5 brought to the present and every
 citation checked. The coordinator adopts, edits or rejects it at promotion, binding the final integrated sha and the promoted sha
-where draft 2 read their placeholders (both bound at the adoption: `dd1aed00`). The verdict word is the coordinator's and stands below as the
-literal placeholder `[COORDINATOR: DESK-gate verdict]`. Nothing here accepts, closes, verifies or promotes anything; it designs nothing,
+where draft 2 read their placeholders (both bound at the adoption: `dd1aed00`). The verdict word is the coordinator's and stands in section 6
+(inserted at the adoption, 11:15 CEST: NOT PASSED, with the three completion claims apart). Nothing here accepts, closes, verifies or promotes anything; it designs nothing,
 runs no generator, suite or box job and consumes no review. Written by worker W12 on branch `fnd/dgate2`, read from 04:05 CEST on
 6 October 2026. The coordinator's commit 2b (the regenerated outputs) is not committed when this is written: every line that a
 regenerated output may move is marked *re-read on 2b*. Prototype framing: nothing in the kit has been built, bought, powered or
@@ -459,7 +459,7 @@ candidate since the merge `6fe398e9`; the column Next set names where a left ite
 
 ## 6. The coordinator's judgement on the promoted revision
 
-**HELD at the adoption (W27, 6 October 2026).** The coordinator's judgement on Layer 4's DESK gate, dated 6 October 2026, 10:45
+**The adoption's history (W27, 6 October 2026: the judgement held on two sentences, then inserted whole by the coordinator at 11:19 CEST)** after restating the two sentences W27 named and three more it noted (the guard's own words, every output binds but the four declared, in place of the earlier every pin binds; part 19's header quoted as the file reads it; the owner's parts 23 and 24 quoted in the consequence section; the next set's branches named as such); the HELD paragraph stays as the adoption's history. The coordinator's judgement on Layer 4's DESK gate, dated 6 October 2026, 10:45
 CEST, one count corrected at 11:15 by its own label (thirteen to fourteen unreviewed changes; `<worktrees>/_runs/int30/Q05-verdict.final.md`, outside the repository), belongs under this heading verbatim, its introduction
 and its five sections. W27 did not insert it: two of its sentences read differently from the ledger at `dd1aed00`, and the adoption's
 rule is to stop on such a sentence and report it, never to edit it. The coordinator restates them and replaces the verdict line below
@@ -482,7 +482,29 @@ file and the queue's entry of 10:50 CEST give them): Layer 4's DESK gate NOT PAS
 PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED. They are the coordinator's, recorded here for the
 page that cites this file; they replace none of the judgement's text.
 
-**Layer 4's DESK gate (the owner's part 19 [OWN:477]), assessed on `dd1aed00`: [COORDINATOR: DESK-gate verdict].**
+**Layer 4's DESK gate (the owner's part 19 [OWN:477]), assessed on `dd1aed00`: NOT PASSED; engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED (the coordinator's judgement, inserted whole below at 11:15 CEST).**
+
+This is the coordinator's own judgement (authority: the plan of 5 October, section 5, and the owner's part 19, whose header line reads "each layer accepted at its DESK gate in order" [OWN:7]); it is not a review of the design and credits no engineering result. It is read against W12's draft 2 (sections 5 and 6: Y1 to Y7, N1 to N5) and the records at `dd1aed00`. The three completion claims the constitution's section 2 names are reported apart; no blended word.
+
+### Layer 4's DESK gate: NOT PASSED
+
+The gate's own premise is not met. Part 19 lets the DESK gate pass with U-01, U-02 and U-04 written as scoped supplier validation and their dependents provisional ONCE every desk-fixable defect is corrected and independently checked. On this revision twelve corrections of the P0 round are NOT CLOSED by the one targeted recheck (cx46 on 4d0ff8a2, "P0 RECHECK: CORRECTIONS NOT CLOSED." [CX46:10]), the method ended by the owner's two-negatives rule, and those twelve are carried as the receiving company's REMAINING ENGINEERING with their claims OPEN or PROVISIONAL (the ledger: its section 1 holds the twelve items with their cases, lines 105 to 445 at dd1aed00; its section 4, lines 649 to 665, the claims each item weakens). Fourteen commits after the recheck change reviewed inputs (the classification at dd1aed00, rows 1 to 45: W15's thirteen to 6bc4424e and commit 2b, d83d9f2d, which carried the applied rows into the reviewed outputs; seven of them not only narrowing) and none was independently checked, so they are UNREVIEWED CHANGES. (Corrected at about 10:59 by the clock from "thirteen": W26's adoption applied W15's own rule to the commits after 6bc4424e.) Of W12's conditions: Y1, Y3, Y5 and Y7 hold (the sources compose and regenerate; every output binds but the four declared unbound (the guard's own line) and the l4e7 KEY matches; the outstanding work is scoped in the ledger and the annex; nothing is claimed accepted); Y2 holds only through the assessment itself (the nineteen contradictions standing on the revision are listed in one place, thirteen of them restated only on the next set's branches, which this revision does not carry); Y4 holds in its weaker half (every change classified, the substantive ones not credited); Y6 is judged item by item below. Of the denials, none is triggered as written; the denial that applies is the premise: the desk-fixable defects are not closed and checked.
+
+### Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS
+
+What a receiving company gets at `dd1aed00`: editable sources that compose and regenerate; the calculations with every output binding but the four declared and the results cache keyed to the runner's environment; the four checks as given with their negative verdicts kept (V6, cx44, cx45, cx46); the P0 list revision 3; the ledger's twenty-four items as it counts them at line 669 (twenty remaining engineering: the twelve RE items of the P0 round and the handover items HO-A to HO-G and HO-L; one qualification, E11-29 as HO-H; three external architecture facts, U-01, U-02 and U-04 as HO-I to HO-K); the annex's four supplier items; the classification of every change after the review; this assessment's list of the standing contradictions with their set 31 restatements. That is part 19's deliverable in the state the records give it: its remaining engineering named, never qualification-only, never accepted. "Ready" here means complete and internally consistent as a package of open items, not that any item is resolved.
+
+### Power-design closure: BLOCKED. Fabrication release: BLOCKED.
+
+As the page's rows and the connected output state at this revision (L4-POWER-ARCHITECTURE.md, the power-design closure row; l9t5_connected.out line 4) and the ledger's HO rows.
+
+### Y6, item by item: is a desk-solvable defect parked in the handover?
+
+For each of the twelve REMAINING ENGINEERING items the ledger's section 1 names the failing case, the P0 round's attempted correction, the checker's words (cx46) and the affected outputs; none is listed as qualification-only and none is handed over without its attempt. The coordinator's reading: carried under an ended method, not parked. (The row-by-row table with the ledger's line citations at dd1aed00 is in the assessment's section 6a.)
+
+### The consequence the owner decides (reported, not asked)
+
+Part 19 opens Layer 5 at Layer 4's DESK gate; part 23 says "After the Layer 4 desk gate is assessed honestly, continue sequentially with stable work" [OWN:731], and part 24 "when that gate permits" [OWN:789]. The coordinator reads the two together as: the gate is assessed honestly here and does not permit; set 31's record work (prepared and in its chain) is the stable work that continues; Layer 5's engineering stays paused until the owner rules that a handover-ready desk package with its remaining engineering named opens it. Reported, not asked.
 
 ### The draft's proposal, re-read
 

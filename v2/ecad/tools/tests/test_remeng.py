@@ -237,7 +237,9 @@ HO_L_FIELDS = ("**Class, and why", "**The open case.**", "**What is bounded, and
 # The amendment's key citations (read at 6fe398e9), each with a phrase the cited line or range carries: a citation that
 # drifts off its subject (a revised P0 list, a re-cut record) fails here and is re-cited, never left pointing elsewhere.
 AMENDMENT_CITES = (
-    ("P0L", 25, 25, "| P0-8 | E11-37"), ("P0L", 11, 11, "missing evidence boundable at the desk"),
+    # the adoption of 6 October 2026 moved revision 3 onto the list's path and kept revision 2 at its dated name; the ledger's
+    # statements about the list describe revision 2 and cite P0L2 (the key added to the ledger's table); the lines are revision 2's
+    ("P0L2", 25, 25, "| P0-8 | E11-37"), ("P0L2", 11, 11, "missing evidence boundable at the desk"),
     ("E11", 508, 508, "E11-37 | EVIDENCE"), ("E11", 1110, 1116, "E11-37 REBOUND TO THE THREE-DEVICE NETWORK"),
     ("E11", 1459, 1459, "E11-37 STAYS OPEN"), ("E11", 1465, 1465, "E11-37 OPEN (TI or the bench)"),
     ("E11P", 1551, 1551, "| Row E11-37 |"), ("E11P", 1673, 1690, "Block E11-37"),

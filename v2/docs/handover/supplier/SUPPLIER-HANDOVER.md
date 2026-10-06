@@ -36,7 +36,7 @@ framing: nothing in the kit has been built, bought, powered or measured.
 | Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate the one targeted recheck cx46 read (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`) |
 | Earlier reviewed | `06077cee` (`06077cee85d0ed44c74c2a06c9fbb2030a0dedbc`) | the candidate the one focused check cx45 read (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:20`); its verdict as given: "P0 CANDIDATE: NOT CONFIRMED." (`:10`) |
 
-**The reviewed revision is not the packaged revision, and no verdict moves between them by itself.** The owner's binding rule (part 25,
+**The reviewed revision is not the packaged revision, and no verdict moves between them by itself.** The records adopted after the promotion (RESULT.md, CLASSIFICATION.md, the P0 list revision 3, the assessment, LAYER-STATUS and these pages) are committed on main after the tested commit; a page cannot carry its own commit's sha, so the supplier delta's README.md names that adoption commit (6 October 2026). The owner's binding rule (part 25,
 `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:844`): "Use the existing integration gate to record the reviewed and integrated
 revisions and the intervening changes. If changes are only verified bindings or presentation, record that equivalence. If they change a
 circuit, assumption, model, limit or substantive claim, the affected result needs targeted verification before being credited. Passing
