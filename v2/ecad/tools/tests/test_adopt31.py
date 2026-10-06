@@ -12,8 +12,11 @@ fast-forwarded to), __ADOPTION__ (the adoption commit) and __GATE__ (a gate's lo
 `_runs/int31/freeze/fill_res31.py` fills (the coordinator's ruling, authority SESSION, in its brief to W65; W39's rows used
 __PROMOTED__ for the tested revision and were renamed, test_res31's PATCH_TOKENS with them).
 
-The predicates: each entry page equals its copy with the rows and extras applied, every token literal or filled with one commit
-throughout both pages; each row and extra reads once on its copy's line and its new text differs; each page carries only its
+The predicates: every row and extra is applied on the entry page it names, located by its TEXT, not by a line number (W103,
+7 October 2026, below): its new text reads exactly once on that page, every token literal or filled with one commit throughout
+both pages; its old text survives neither on the line or lines that hold the new text nor anywhere on the page beyond what the
+copy with every row applied keeps; and the rows of a page stand in their copy's order; each row and extra reads once on its copy's
+line and its new text differs; each page carries only its
 declared tokens and none carries __PROMOTED__ or __REKEY__; fill_res31.py (where the run folder exists) knows the tokens;
 the set 31 blocks sit first under their headings, one per layer named and none elsewhere, the head paragraph between W21's
 paragraph and the reading guide; every dated citation of set 31's text resolves at its commit (the lineage 31928583 or fnd/res31's
@@ -23,6 +26,17 @@ classified to the second candidate, 25 REVIEWED-INPUT CHANGED; W83) are the clas
 one, last, and states the three claims and the gate apart; set 31's text carries no em or en dash, no acceptance word outside a
 quotation and no percentage. Fixtures show that each checker refuses the defect it is for. These are software predicates on
 record text: they establish no electrical or thermal property and accept, close or promote nothing.
+
+Restated by W103 (7 October 2026; basis: W99's note N1, `_runs/claude/w99readpatch32/REPORT-FULL-AS-RECEIVED.md`): the entry
+pages were compared WHOLE with their copies, so set 32's own branches, which edit the supplier page (fnd/w34pdftext adds seven lines
+to its section 7; the chain's step a5 rewrites one line of section 0e), failed this module on the integrated tree before any set 32
+row ("line 931 reads ..." before a5, "line 761 ..." after it), although every set 31 row stood applied. The row check now locates
+each row by its text, the copy's line kept only as a hint in the message; a row whose new text is missing, doubled or on the other
+page, a row whose old text survives, a token filled with two values and two rows out of their copy's order still fail (fixtures in
+t_the_checkers_refuse_their_defects). What it no longer judges, taken under the owner's standing rule of 26 September 2026
+(authority SESSION, W103): an edit outside every row of the two pages, which a later set makes by its own rows and holds by its own
+tests (test_patch32 for set 32); reversed by restoring the whole-page comparison (`page_errors`, kept below) in
+t_the_entry_pages_are_the_copies_with_every_row_applied.
 
 Runs under the suite's runner (`python3 v2/ecad/tools/tests/run.py test_adopt31.`) and under pytest (each t_ function has a
 test_ alias). Without git or a cited commit, the predicates that read it skip with their reason."""
@@ -102,7 +116,6 @@ CLAIMS = {492: "### Layer 4's DESK gate: NOT PASSED",
 DCITE = re.compile(r"`([0-9a-f]{7,40}):([^`\s:]+):(\d+(?:-\d+)?)`(?:\s+`([^`]+)`)?")
 PH = re.compile(r"__[A-Z0-9]+(?:_[A-Z0-9]+)*__")
 DASHES = (chr(0x2013), chr(0x2014))  # the en dash and the em dash, by code point
-SEP = "\n\x00 the next page \x00\n"
 _C = {}
 
 
@@ -189,6 +202,48 @@ def page_errors(want, got):
         if x != y and not re.fullmatch(fill_pattern(x), y):
             return ["line %d reads %r, the rows give %r" % (i + 1, y[:70], x[:70])]
     return ["%d lines, the rows give %d (or a token filled with two values)" % (len(b), len(a))]
+
+
+def row_errors(rows, pages, copies):
+    """W103: every row located on its page by its TEXT. rows: (page, line at the copy, old, new); pages: {page: its text now};
+    copies: {page: the copy the rows were written against}. A row's new text must read exactly once on the page the row names (each
+    token of HEXTOK literal or one commit, the same throughout every page); the line or lines holding it must carry the old text no
+    more often than the copy's line with the row applied; the page must carry the old text no more often than the copy with every
+    row applied; and the rows of a page stand in their copy's order. The copy's line number is a hint in the messages only."""
+    errs, vals, at = [], {}, {}
+    want = {p: apply_rows(copies[p], p, rows) for p in copies}
+    for p, n, old, new in rows:
+        t = pages[p]
+        ms = list(re.finditer(fill_pattern(new), t))
+        hint = "%s, the row of the copy's line %d" % (p, n)
+        if len(ms) != 1:
+            errs.append("%s: its new text reads %d times on the page, not once: %r" % (hint, len(ms), new[:60]))
+            continue
+        m = ms[0]
+        now = t.count("\n", 0, m.start()) + 1
+        for k, v in m.groupdict().items():
+            if v is not None:
+                vals.setdefault(k, set()).add(v)
+        at.setdefault(p, []).append((n, m.start(), now))
+        a = t.rfind("\n", 0, m.start()) + 1
+        b = t.find("\n", m.end())
+        held = t[a:len(t) if b < 0 else b]
+        line = copies[p].split("\n")[n - 1].replace(old, new, 1)
+        if held.count(old) > line.count(old):
+            errs.append("%s (now line %d): its old text survives on the line that holds the new text: %r" % (hint, now, old[:60]))
+        if t.count(old) > want[p].count(old):
+            errs.append("%s (new text now at line %d): its old text reads %d times on the page, the rows leave %d: %r"
+                        % (hint, now, t.count(old), want[p].count(old), old[:60]))
+    for p, xs in at.items():
+        xs.sort()
+        for (n1, s1, l1), (n2, s2, l2) in zip(xs, xs[1:]):
+            if s2 <= s1:
+                errs.append("%s: the row of the copy's line %d (now line %d) stands before the row of line %d (now line %d)"
+                            % (p, n2, l2, n1, l1))
+    for k, v in sorted(vals.items()):
+        if len(v) > 1:
+            errs.append("__%s__ reads as %d values across the pages: %s" % (k, len(v), sorted(v)))
+    return errs
 
 
 # ------------------------------------------------------------------------------------------------------ set 31's text
@@ -309,9 +364,8 @@ def t_each_row_and_extra_reads_once_on_its_copy_line_and_changes_it():
 
 
 def t_the_entry_pages_are_the_copies_with_every_row_applied():
-    want = expected(START) + SEP + expected(SUPPLIER)
-    got = _read(START) + SEP + _read(SUPPLIER)
-    errs = page_errors(want, got)
+    # W103 (W99's N1): each row located by its text on the page it names, no longer the whole page against the copy (docstring)
+    errs = row_errors(all_rows(_read(PATCH)), {p: _read(p) for p in COPIES}, {p: _read(COPIES[p]) for p in COPIES})
     assert not errs, errs
 
 
@@ -440,6 +494,31 @@ def t_the_checkers_refuse_their_defects():
         except AssertionError:
             continue
         raise AssertionError("a bad row applied: %r" % (rows,))
+    # W103: a row located by its text. Lines moved above the rows pass; a new text missing, doubled or on the other page, an old
+    # text that survives (on the row's line or elsewhere on the page), a token filled with two values and two rows out of their
+    # copy's order each fail
+    cp = {START: "h\nold one here\nmid\nkeep two\nend `__CANDIDATE__` x", SUPPLIER: "s\nthird old\nt"}
+    rs = [(START, 2, "old one", "new one `__ADOPTION__`"), (START, 4, "keep two", "keep two\nadded `__CANDIDATE__` line"),
+          (SUPPLIER, 2, "third old", "third new `__CANDIDATE__`")]
+    good = {p: apply_rows(cp[p], p, rs) for p in cp}
+    assert not row_errors(rs, good, cp)
+    filled = {p: good[p].replace("__CANDIDATE__", "0123abcd").replace("__ADOPTION__", "4567abcd") for p in good}
+    moved = dict(filled, **{START: "seven\nnew\nlines\nmove\nevery\nrow\ndown\n" + filled[START], SUPPLIER: "x\n" + filled[SUPPLIER]})
+    assert not row_errors(rs, moved, cp), row_errors(rs, moved, cp)
+    mutants = {
+        "a new text missing (the row not applied)": dict(good, **{START: good[START].replace("new one", "old one")}),
+        "a new text doubled": dict(good, **{START: good[START] + "\nnew one `__ADOPTION__`"}),
+        "an old text surviving elsewhere on the page": dict(good, **{START: good[START] + "\nthe old one again"}),
+        "an old text surviving on the row's line": dict(good, **{SUPPLIER: good[SUPPLIER].replace("third new", "third old third new")}),
+        "a new text on the other page": {START: good[START].replace("\nnew one `__ADOPTION__` here", "\n here"),
+                                         SUPPLIER: good[SUPPLIER] + "\nnew one `__ADOPTION__`"},
+        "a token filled with two values": dict(filled, **{SUPPLIER: good[SUPPLIER].replace("__CANDIDATE__", "89abcdef")}),
+        "a token literal on one page and filled on the other": dict(good, **{SUPPLIER: filled[SUPPLIER]}),
+        "two rows out of their copy's order": dict(good, **{START: "h\nkeep two\nadded `__CANDIDATE__` line\nmid\nnew one `__ADOPTION__` "
+                                                                    "here\nend `__CANDIDATE__` x"}),
+    }
+    for name, pages in mutants.items():
+        assert row_errors(rs, pages, cp), "row_errors accepts %s" % name
     # tokens: an undeclared one, __PROMOTED__
     assert token_errors(START, "x `__GATE__`") and token_errors(START, "x `__PROMOTED__`") and not token_errors(START, "`__ADOPTION__`")
     # placement: the real page passes; set 31's Layer 9 block moved below its set 30 block fails
