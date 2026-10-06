@@ -11,14 +11,14 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
    3ef9b8c49a01b728 v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
    6e46bc5651e17d8d v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
-   a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   f247b65f2cf3bcf1 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    b57b1ec493540f6e v2/docs/records/l8r2/inputs/l9pwr_budget-841e6c7e.txt
    a17be97cb9f813f4 v2/docs/records/l8r2/inputs/l9t5_drafts-841e6c7e.txt
    69e6ac4fc0417d3c v2/docs/records/l8r2/inputs/l9t5-apply_gen_sch_a_iocbuck-841e6c7e.py
    b30615af5e6b4507 v2/docs/records/l8r2/checks/astra-check-t5-recheck-cx41.md
    0be579949c22eab1 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-04-rev3.md
    9fc459cada3dbad2 v2/docs/records/l8r2/inputs/SOURCES.txt
-   3bdd5e3ebba68b07 v2/docs/records/l4e12/l4e12_thermal.out
+   0cfa115bdace6fee v2/docs/records/l4e12/l4e12_thermal.out
    3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
    393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
@@ -36,7 +36,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    a533c3262b835db7 v2/docs/records/l8r2/check_l8r2_netlist.py
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    fe9e3979b8a18d33 v2/docs/records/l8gnd/check_gnd002_netlist.py
-   701f6181c41fcf83 v2/docs/records/l8r2/l8r2_drafts.py
+   d4495c6d51895288 v2/docs/records/l8r2/l8r2_drafts.py
    6b9d1d051c21e052 v2/docs/records/l6r2/apply_gen_sch_b_intent.py
    a96c72c07fca8671 v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py
    8016267ff0da3889 v2/docs/records/l6r2/apply_gen_sch_b_xal_land.py
@@ -88,14 +88,26 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
 
 1. THE REPRODUCTION (scratch copies of v2/ecad/tools/gen_sch_b.py; each draft applied with --write, the generator run as record l8p's gen_netlist.py runs it)
    L4-E9's change list, board B's rows in application order (v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md section 3, parsed):
-     step 60 R-107 none: a missing draft
-     step 61 R-163 none: a missing draft
-     step 62 R-166 none: a missing draft
-     step 63 R-195 apply_gen_sch_b_gnd002.py
-     step 64 R-190 apply_gen_sch_b_fans12.py
-     step 65 R-203 apply_gen_sch_b_rt500.py
-     step 66 R-211 none: a missing draft
-   its drafted rows are apply_gen_sch_b_gnd002.py, apply_gen_sch_b_fans12.py, apply_gen_sch_b_rt500.py: as this record composes them; this record's panel5v and ph4 (Layer 5's findings L5R2-F03 and F04, no change-list row) are
+     step 71 R-107 none: a missing draft
+     step 72 R-163 none: a missing draft
+     step 73 R-166 none: a missing draft
+     step 74 R-195 apply_gen_sch_b_gnd002.py
+     step 75 R-190 apply_gen_sch_b_fans12.py
+     step 76 R-228 apply_gen_sch_b_fandec.py
+     step 77 R-229 apply_gen_sch_b_panel5v.py
+     step 78 R-230 apply_gen_sch_b_ph4.py
+     step 79 R-203 apply_gen_sch_b_rt500.py
+     step 80 R-211 none: a missing draft
+     step 81 R-231 apply_gen_sch_b_gndret.py
+     step 82 R-232 apply_gen_sch_b_gndrtn.py
+     step 83 R-233 apply_gen_sch_b_iocbuck.py
+     step 84 R-234 apply_gen_sch_b_iocpre.py
+     step 85 R-243 apply_gen_sch_b_iocset.py
+     step 86 R-235 apply_gen_sch_b_canshdn.py
+     step 87 R-245 apply_gen_sch_b_iocguard.py
+     step 88 R-236 apply_gen_sch_b_u23ilm.py
+     step 89 R-237 apply_gen_sch_b_u24ilm.py
+   its drafted rows are apply_gen_sch_b_gnd002.py, apply_gen_sch_b_fans12.py, apply_gen_sch_b_fandec.py, apply_gen_sch_b_panel5v.py, apply_gen_sch_b_ph4.py, apply_gen_sch_b_rt500.py, apply_gen_sch_b_gndret.py, apply_gen_sch_b_gndrtn.py, apply_gen_sch_b_iocbuck.py, apply_gen_sch_b_iocpre.py, apply_gen_sch_b_iocset.py, apply_gen_sch_b_canshdn.py, apply_gen_sch_b_iocguard.py, apply_gen_sch_b_u23ilm.py, apply_gen_sch_b_u24ilm.py: NOT THE ORDER THIS RECORD COMPOSES; this record's panel5v and ph4 (Layer 5's findings L5R2-F03 and F04, no change-list row) are
    composed between them as rounds 1 to 6 and record l9t5 compose them; Layer 9's draft follows the circuit drafts (its own text)
    as committed                       GND handed to intent: 10.0 A typical, 21.0 A peak, 4 sources, 38 loads summing 19.743 A (limit 1.02 x peak = 21.42 A): RUNS to its end
    + gnd002                           GND handed to intent: 10.0 A typical, 21.0 A peak, 4 sources, 38 loads summing 19.743 A (limit 1.02 x peak = 21.42 A): RUNS to its end

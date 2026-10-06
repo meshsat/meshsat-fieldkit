@@ -404,9 +404,10 @@ def t_8_draft_reproduces_the_integration_commit_apart_from_its_classified_edit()
 # ---- the mutations: each predicate fails on the regression it exists to catch ----
 
 def t_m1_pristine_predicate_fails_when_the_reader_takes_every_tree_as_applied():
-    """Mutant: applied_state() without its R-220 test, so the pristine tree enters the reader (and is refused). Predicate (1)
-    fails. Evidence basis: bbba3e53 (the reader returns None on the pristine tree)."""
-    _fails(p1_pristine, '    if "| R-220 |" not in reg:\n        return None\n', '    if False:\n        return None\n')
+    """Mutant: applied_state() without its pristine test (no added row present), so the pristine tree enters the reader (and is
+    refused as partially applied). Predicate (1) fails. Evidence basis: bbba3e53 (the reader returns None on the pristine tree);
+    integration 2b's fix_applier_partial.py (W2's D1: the reader decides on ALL added ids; the anchor is its "not present" line)."""
+    _fails(p1_pristine, '    if not present:\n        return None\n', '    if False:\n        return None\n')
 
 
 def t_m2_applied_predicate_fails_without_the_reader():
@@ -417,9 +418,10 @@ def t_m2_applied_predicate_fails_without_the_reader():
 
 def t_m3_restated_row_predicate_fails_on_the_verbatim_row_test():
     """Mutant: the reader's row test as bbba3e53 wrote it (every added row verbatim). Predicate (3) fails on the restated R-233.
-    Evidence basis: 53a68c7c (integration 2c replaced that test by presence because set 31 edited the applied texts)."""
-    _fails(p3_edited, '    missing = [i for i in ids if "| %s |" % i not in reg]\n',
-           "    missing = [r[:40] for _a, rows in REG_ADD for r in rows if r not in reg]\n")
+    Evidence basis: 53a68c7c (integration 2c replaced that test by presence because set 31 edited the applied texts); integration 2b's
+    fix_applier_partial.py (D1: the presence list is `present`, counted against every added id)."""
+    _fails(p3_edited, '    present = [i for i in ids if "| %s |" % i in reg]\n',
+           "    present = [i for i, r in zip(ids, [r for _a, rows in REG_ADD for r in rows]) if r in reg]\n")
 
 
 def t_m3b_restated_row_predicate_fails_on_a_verbatim_note_test():
@@ -431,15 +433,16 @@ def t_m3b_restated_row_predicate_fails_on_a_verbatim_note_test():
 def t_m4_half_applied_predicate_fails_without_the_presence_test():
     """Mutant: the reader without its presence test (no row counted missing). Predicate (4) fails: the half-applied tree is no
     longer refused by the reader with exit 3 naming the row (L4-E9's own cons_changes refuses it with exit 4 instead, naming no
-    row). Evidence basis: 53a68c7c."""
-    _fails(p4_half_applied, '    missing = [i for i in ids if "| %s |" % i not in reg]\n', "    missing = []\n")
+    row). Evidence basis: 53a68c7c; integration 2b's fix_applier_partial.py (D1: every added id counted present = applied)."""
+    _fails(p4_half_applied, '    present = [i for i in ids if "| %s |" % i in reg]\n', "    present = list(ids)\n")
 
 
 def t_m5_no_note_predicate_fails_without_the_note_test():
     """Mutant: the reader without its test of the page's P0 note. Predicate (5) fails: the page without the note reads APPLIED.
-    Evidence basis: bbba3e53 and 53a68c7c."""
-    _fails(p5_no_note, '    if missing or not any(l.startswith("**The P0 round (record l9t5") for l in page.split("\\n")):\n',
-           "    if missing:\n")
+    Evidence basis: bbba3e53 and 53a68c7c; integration 2b's fix_applier_partial.py (D1 moved the missing-row refusal ahead of the
+    note test, so the note test stands alone)."""
+    _fails(p5_no_note, '    if not any(l.startswith("**The P0 round (record l9t5") for l in page.split("\\n")):\n',
+           "    if False:\n")
 
 
 def t_m6_write_applied_predicate_fails_when_write_does_not_refuse():

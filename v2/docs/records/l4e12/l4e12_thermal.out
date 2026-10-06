@@ -1608,7 +1608,7 @@ Pinned inputs (sha256):
    5790bc7e444bebc4b6b7b6616c4641dfe602185631992d19aeb223eb51e9feec v2/docs/records/hc2/pwr_red2.py
    e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218 v2/docs/records/l3batt/load_trace.out
    59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d v2/docs/records/l4e/l4e_replay.out
-   bbacc459552e22c520ed92846b38e7abe88fab69eb1be81d56691589cdf91317 v2/docs/records/l4e10/l4e10_cell_thermal.out
+   bb2d9e8d6447a2a7a1f2ecd90f7a3ac4eef6f9820142dc9df95ed3fba12ffd30 v2/docs/records/l4e10/l4e10_cell_thermal.out
    c6181037bede1fec6b183bcb1d8eab66e0023bc23ae5e5374be4d22eedaf4333 v2/docs/records/l4e8/ripple_dense.out
    5a616902d2ddab82f25d34ab55d848d06011fb6fbe48c147221d6b442783e462 v2/docs/records/rv-pwr/pwr_budget.json
    58e40cf604804cc9d70c7fbeb1012be4552563fcc8ae7ef6755003c33acb902f v2/docs/records/rv-pwr/pwr_budget.out

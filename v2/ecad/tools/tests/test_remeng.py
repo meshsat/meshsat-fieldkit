@@ -247,8 +247,10 @@ AMENDMENT_CITES = (
     ("CX46", 95, 95, "lower-source back-feed"), ("CX46", 188, 188, "lower-source back-feed"),
     ("B2", 168, 170, "below the stage's voltage"), ("SOLO", 399, 404, "BELOW the stage's voltage"),
     ("P11", 120, 123, "back-feeding PV_F through Q12's body diode"),
-    ("OWN", 680, 680, "Supplier item S1 must carry that engineering problem"),
-    ("OWN", 825, 825, "D-10 remains receiving-company engineering item E-1."),
+    # the owner file's lines moved by one at 6bc4424e (origin/main's b0a67a45 filed part 26 with a table row at line 29); the ledger's
+    # citations were shifted the same way in commit 2b; the phrases are unchanged (lines 681 and 826 of the file at that merge)
+    ("OWN", 681, 681, "Supplier item S1 must carry that engineering problem"),
+    ("OWN", 826, 826, "D-10 remains receiving-company engineering item E-1."),
 )
 
 

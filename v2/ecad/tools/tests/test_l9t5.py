@@ -1069,14 +1069,25 @@ def t_p0_connected_the_change_list_carries_every_composed_draft():
             assert e.code == 3
     for r in reg:
         if r[0] in ("R-210", "R-211", "R-212") or (r[0].startswith("R-2") and int(r[0][2:]) >= 220):
-            want = ("DO: nothing: WITHDRAWN by the owner's rejection of FAN_OK (P0 brief, 5 October 2026); D-17's correction is R-227 and "
+            # the WITHDRAWN rows' next action as set 31's register writes it (SET31-CHANGES.md row 9, "FAN_OK withdrawn everywhere"; the
+            # register's R-210 to R-212 column 9 at 6fe398e9: "WITHDRAWN, the owner's rejection ..."; set 30's draft wrote "WITHDRAWN by")
+            want = ("DO: nothing: WITHDRAWN, the owner's rejection of FAN_OK (P0 brief, 5 October 2026); D-17's correction is R-227 and "
                     "R-238; never applied") if r[6] == "WITHDRAWN" else (
                 "DO: step %s (%s), no open question; it continues while the open items are worked" % (r[7], r[6]))
-            assert r[1] == "IMPLEMENTATION" and r[8] == "SETTLED WORK" and r[9] == want, r[0]
+            # set 31 (SET31-CHANGES.md row 17; PC-09): the seven P0 rows whose drafts cx46 left NOT CLOSED read KNOWN ENGINEERING DEFECT,
+            # ASSIGNED to the ledger's remaining-engineering items (RE_ROWS, RE_TASK in the generator); every other applied row stays SETTLED WORK
+            if r[0] in ("R-225", "R-227", "R-232", "R-238", "R-242", "R-244", "R-245"):
+                assert r[1] == "IMPLEMENTATION" and r[8] == "KNOWN ENGINEERING DEFECT", r[0]
+                assert r[9].startswith("ASSIGN to the receiving company's remaining engineering item") and "REMAINING-ENGINEERING.md" in r[9], r[0]
+            else:
+                assert r[1] == "IMPLEMENTATION" and r[8] == "SETTLED WORK" and r[9] == want, r[0]
             assert r[4] in m.OWNERS, r[0]
-    # D-10 restated from record l4e7's S1 rewrite (the owner's part 23): an unresolved protection defect; B2 never its resolution
+    # D-10 restated from record l4e7's S1 rewrite (the owner's part 23): an unresolved protection defect, the receiving company's item E-1;
+    # set 31 (SET31-CHANGES.md rows 2 and 23; L4E7-P0SOL.md section 4) words it "OPEN (REMAINING ENGINEERING)" and names route B2
+    # UNSELECTED and WITHDRAWN AS DRAFTED in place of set 30's "does not resolve D-10"; never a resolution either way
     dd = {x["id"]: x for x in m.DEFECTS}
-    assert dd["D-10"]["state"].startswith("OPEN: AN UNRESOLVED PROTECTION DEFECT") and "does not resolve D-10" in dd["D-10"]["state"]
+    assert dd["D-10"]["state"].startswith("OPEN (REMAINING ENGINEERING): D-10 is an UNRESOLVED PROTECTION DEFECT"), dd["D-10"]["state"][:120]
+    assert "remaining engineering item E-1" in dd["D-10"]["state"] and "Route B2 (not a baseline row) is UNSELECTED and WITHDRAWN AS DRAFTED" in dd["D-10"]["state"]
     assert dd["D-16"]["state"].startswith("ADDRESSED IN DRAFTS")
     # a broken order is refused: the PA cap's board A half before fb01
     saved = list(m.CHANGE_ORDER)
