@@ -78,6 +78,7 @@ FETCH = {
     "v2/vendor/battery/held/samsung-inr18650-30q-v1.0-2015.pdf": ("l4e10",),
     "v2/vendor/battery/held/samsung-inr18650-30q6-draft-v0.1-2024.pdf": ("l4e10",),
     "v2/vendor/battery/held/samsung-inr18650-30q6-v1.0-2020.pdf": ("l4e10",),
+    "v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf": ("l8p",),   # W81: l8p_drafts' table (test_l8p's read)
     "v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf": ("l4e11",),
     "v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf": ("l4e11", "l6pwr"),
     "v2/vendor/nexperia/held/nexperia-pxp9r1-30ql.pdf": ("l4e11",),
