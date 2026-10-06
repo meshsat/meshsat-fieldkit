@@ -359,7 +359,7 @@ stands; the notes here name what set 31's records restate.
   `31928583:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.`. The base:
   set 30's promoted revision `dd1aed00`. The lineage: `31928583`, 103 commits over the base, `5f910eb5:v2/docs/records/int31/RESULT.md:72` `(78 commits and 25
   merges)`, with record l4e7's results cache re-keyed on it in `aa332280`, 104 commits over the base; the re-key's dependents
-  regenerated in `d0e283aa`, set 31's first candidate, whose four-log gate FAILED (one test of the lineage over a whole-suite rule,
+  regenerated in `d0e283aa`, set 31's first candidate, whose four-log gate FAILED (four fixed-size source windows added in two of the lineage's test modules, `test_w11l9t5.py` and `test_w4l4e7.py`, so that `test_rule_windows` read "fixed-size source windows in the suite: 87 against the declared 83",
   and a tracked page the suite rewrote from a stale INT-001 reading; `v2/docs/records/int31/RESULT.md`, section 4a), and the
   coordinator's test correction `5f25daf3`, 106 commits over the base. CANDIDATE: `__CANDIDATE__`,
   the commit the gated release suite and the promotion gate ran on, to which main was fast-forwarded (written at the adoption). The

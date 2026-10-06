@@ -31,7 +31,8 @@ followed by `__CANDIDATE__` before the fill, or after it by a commit that must b
 first candidate on the first-parent line (never `d0e283aa`, `aa332280` or another commit; never in another row; never twice). Every
 other predicate is unchanged in what it refuses; the mutations whose anchor was a token that the fill removes insert an undeclared
 token beside a sentence that stays. After the fill's second run the patch rows name the adoption commit, which a commit named in the
-records may be only there and only when it descends from the named candidate.
+records may be only there and only when it descends from the named candidate. W91 (6 October 2026, W86's N1) added section 4a's
+predicate: the first candidate's FAILED gate and the coordinator's known item, each with a mutant it must refuse.
 
 Read-only: git is read with `git log`, `git show`, `git diff`, `git rev-list` and `git cat-file`; nothing is written. No pytest is
 needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
@@ -689,6 +690,29 @@ def p_logs(texts, runs):
     return bad
 
 
+# W91 (6 October 2026, W86's N1: no predicate pinned section 4a's statements; W86's mutants M20, the known-item paragraph removed, and
+# M22, "FAILED its gate" softened, passed every test). Section 4a, from its heading to section 5's, must keep the first candidate's
+# FAILED gate with suite_gate's last line, the sentence that it was not promoted and is superseded, and the coordinator's known item
+# with the words that carry it (false for set 31's cache, to be corrected with set 32's single re-key). Matched on whitespace-normalised
+# text between the two headings, never a fixed-size window.
+SEC4A_HEAD = "### 4a. The first candidate `d0e283aa`: its gate FAILED; the correction, the re-take and the known item"
+SEC4A = ("`<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:7` `suite_gate: FAIL`",
+         "The first candidate FAILED its gate and was not promoted; it is SUPERSEDED by the second candidate below.",
+         "**The coordinator's known item, carried and not corrected in set 31.**",
+         "which is false for set 31's cache",
+         "carried as a declared known item in the candidate's commit message and named here, to be corrected with set 32's single re-key")
+
+
+def p_section4a(result):
+    t = " ".join(result.split())
+    a = t.find(SEC4A_HEAD)
+    b = t.find("## 5. Compute", a + 1)
+    if a < 0 or b < 0:
+        return ["RESULT.md has no section 4a heading %r before section 5" % SEC4A_HEAD[:40]]
+    s = t[a:b]
+    return ["section 4a does not read %r" % w[:70] for w in SEC4A if w not in s]
+
+
 def _texts():
     return {RESULT: _read(RESULT), CLASS: _read(CLASS), PATCH: _read(PATCH), SOURCES: _read(SOURCES)}
 
@@ -878,6 +902,23 @@ def t_every_cited_log_exists_and_carries_its_quote():
     _mutant_refused(p_logs, texts, RESULT, "tests-w41-1802-f8.log:127` `tests: 124 passed", "tests-w41-1802-f8.log:127` `tests: 125 passed", runs)
 
 
+def t_section_4a_keeps_the_failed_gate_and_the_known_item():
+    """W91 (W86's N1): the first candidate's FAILED gate and the coordinator's known item, each refused when softened or removed."""
+    r = _read(RESULT)
+    assert not p_section4a(r), p_section4a(r)
+    m22 = "The first candidate FAILED its gate and was not promoted"
+    assert m22 in r, "the mutation's anchor is not in RESULT.md"
+    assert p_section4a(r.replace(m22, "The first candidate did not complete its gate and was not promoted", 1)), "a softened FAILED passed (M22)"
+    a = r.index("**The coordinator's known item, carried and not corrected in set 31.**")
+    b = r.index("**The second candidate.**", a)
+    assert p_section4a(r[:a] + r[b:]), "section 4a without the known-item paragraph passed (M20)"
+    g = "\n- `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:7` `suite_gate: FAIL`"   # section 4a's bullet (section 1 cites it too)
+    assert r.count(g) == 1, "the mutation's anchor (section 4a's last gate line) is not once in RESULT.md"
+    assert p_section4a(r.replace(g, g.replace("FAIL`", "PASS`"), 1)), "a gate read PASS passed"
+    k = "which is false for set 31's cache"
+    assert p_section4a(r.replace(k, "which holds for set 31's cache", 1)), "the known item's falsity softened passed"
+
+
 def _pytest(fn):
     def run():
         try:
@@ -905,3 +946,4 @@ test_the_copies_are_mains_bytes_and_the_three_claims_are_quoted_verbatim = _pyte
     t_the_copies_are_mains_bytes_and_the_three_claims_are_quoted_verbatim)
 test_every_patch_row_reads_against_the_copied_page = _pytest(t_every_patch_row_reads_against_the_copied_page)
 test_every_cited_log_exists_and_carries_its_quote = _pytest(t_every_cited_log_exists_and_carries_its_quote)
+test_section_4a_keeps_the_failed_gate_and_the_known_item = _pytest(t_section_4a_keeps_the_failed_gate_and_the_known_item)

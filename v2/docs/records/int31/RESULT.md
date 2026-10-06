@@ -7,10 +7,10 @@ and its findings, W41's corrections, W48's recheck, the classification's reconci
 chain runs as logged, the refusals, the KEY before and after the re-key, the two spent re-keys as rework, the first candidate with
 its gate's verdict, its two causes, the correction and the re-take, and the coordinator's known item (section 4a), the compute, the
 three claims as the assessment gives them, the classification bound (W69 wrote the re-key's results and W68's findings in, 6
-October 2026 from 19:46 CEST; W83 the first candidate, its gate and the second candidate, from 21:55 CEST). **NOT DONE:** what the
-second candidate's freeze, its gate and the promotion will give (the placeholders for the candidate commit, the promoted revision and
-the gate lines, sections 1, 2c, 4, 6 and 8). **NEXT:** the coordinator fills the placeholders line by line from git and the logs at
-the adoption (`fill_res.py --set 31`, FREEZE-PLAN step 12) and adopts this file with `CLASSIFICATION.md` and `ENTRY-PAGES.patch.md`.
+October 2026 from 19:46 CEST; W83 the first candidate, its gate and the second candidate, from 21:55 CEST; W91 W86's conditions and
+W90's read in section 4, from 23:18 CEST); the second candidate's freeze, its four-log gate and the promotion, their lines filled by the coordinator line by line from git and the logs at the adoption (`fill_res.py --set 31`, FREEZE-PLAN step 12; sections 1, 2c, 4, 6 and 8), and this file
+adopted with `CLASSIFICATION.md` and `ENTRY-PAGES.patch.md` in the adoption commit (named by the second run). **NOT DONE:** no power item closes (section 6); the 25 unreviewed changes of section 2 stay UNREVIEWED since cx46 (W90's read, section 4, credits nothing); the coordinator's known item of section 4a is carried, not corrected.
+**NEXT:** `<worktrees>/_runs/int30/QUEUE.md`, entry "SET 31 PROMOTED", `then the dependency pass for the changed pages (l8gnd's pin of LAYER-STATUS and its cascade); then set 32 on 5f25daf3`, whose single re-key is to correct the known item (section 4a). This header was restated for the state after the fill and the adoption by W91 after W86's N5.
 
 **Status: a draft for adoption** at set 31's promotion (queue item Q-58), written by worker W39 on branch fnd/res31 (base fnd/int31regen
 `f0748b490e183082b2da4361a5d24ee60d5fba40`) on 6 October 2026 from 15:28 CEST, brought to `31928583` by worker W56 from 18:11 CEST
@@ -406,7 +406,7 @@ The re-key that counts ran on `31928583` (section 3e; its cache commit `aa332280
 | Runner pass (`test_l4e7`, and the modules that read `_runs`, section 8) | `__GATE__` | `__GATE__` |
 | suite_gate with G7 over the logs | `__GATE__` | `__GATE__` |
 | Promotion: fast-forward of main, push, the mirror, the guard on main | `__GATE__` | `__PROMOTED__` |
-| Targeted verification of the 25 unreviewed changes of section 2 | the coordinator's choice of verifier; not the ended review method | owed; none performed |
+| Targeted verification of the 25 unreviewed changes of section 2 | the coordinator's choice of verifier, not the ended review method: W90's read (queue item Q-111; an AI review, not a qualified one), `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md` | performed by W90 (read 23:04:21 to 23:16:00 CEST), each of the 25 classed by its most material change: FIGURE or CLAIM 20 (13 carrying a FIGURE, 7 CLAIM without a FIGURE), STATE 2, PIN 1, CITATION 1, TEXT 1; four of the 20 (rows 3.1, 31.3, 31.5 and 31.16) change only files outside the 62 cx46 read. Its first re-check items: D-16 moved off OPEN, record l4e7's paragraph 0a at the tip, the figures of the P0 list's revision 3 and the stability claim "met for `4d0ff8a2`". In its words, `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md:54` `this is one bounded AI read. No verdict is changed and nothing is credited; every change above stays UNREVIEWED since cx46 until a qualified check reads it.` The 25 stay UNREVIEWED since cx46: no verdict changes and nothing is credited; section 2's classes are unchanged by it |
 
 ### 4a. The first candidate `d0e283aa`: its gate FAILED; the correction, the re-take and the known item
 
@@ -441,8 +441,8 @@ line above).
 **Why neither was found before the freeze**, in the coordinator's words: `<worktrees>/_runs/int30/QUEUE.md`, entry "about 21:45 to 21:47 THE FOUR-LOG GATE ON d0e283aa FAILED", `the preflight's affected-test selection never picks a global ratchet (no literal names a changed file), the runner pass runs 7 modules, and neither checks rule readings against their config's commits`
 (two items added to W82's preflight task, queue item Q-102).
 
-Neither cause is in a circuit draft, a figure, a verdict or a case: one is a defect of the lineage's tests, the other a stale
-reading in the evidence the freeze installed. Both are defects the four-log gate exists to find, and it refused the candidate on them.
+W83's reading, not the coordinator's words (restated by W91 after W86's C3): neither cause is in a circuit draft, a figure or a case; one is a defect of the lineage's tests, the other a stale reading in the evidence the freeze installed, and that reading is a
+rule's verdict: INT-001's reading went stale against `pcb_interfaces.yaml`, its config input, changed in rows 3.1 and 13 of the classification (both REVIEWED-INPUT CHANGED), and is re-taken on the committed tree below. The four-log gate refused the candidate on both causes.
 
 **The correction.** The coordinator's commit `5f25daf3` (21:48:00; row 36 of the classification, TEST) converts the four windows in
 `test_w4l4e7.py` (+15 -2) and `test_w11l9t5.py` (+4 -1): the first reads the note and the D-16 sentence to their own raw
@@ -456,7 +456,7 @@ the second candidate's suite holds is the gate's (section 4).
 the re-taken verdict carries its own stamp (`ts` 2026-10-06T19:49:00Z, `version` 5f25daf3762e; the int31 worktree's gitignored
 evidence, `v2/ecad/out/interfaces.verdict.json`). A first run from the wrong folder wrote evidence where it does not belong and was
 undone before the correct run: `<worktrees>/_runs/int30/QUEUE.md`, entry "21:48 to 21:52 CORRECTION", `A first run from v2/ecad/tools wrote into tools/out (six evidence files overwritten, two created): restored from the tar and removed`.
-The evidence page re-renders byte-identical, `<worktrees>/_runs/int30/QUEUE.md`, entry "21:48 to 21:52 CORRECTION", `rules_render: 16 document(s), 0 out of date`. The re-take is evidence,
+The evidence page re-renders byte-identical, `<worktrees>/_runs/int30/QUEUE.md`, entry "21:48 to 21:52 CORRECTION", `rules_render: 16 document(s), 0 out of date`. The same entry records the registry's run and three test modules (W86's N3): `<worktrees>/_runs/int30/QUEUE.md`, entry "21:48 to 21:52 CORRECTION", `rules_status x3 (exit 1: the registry's FAIL 39 of 338 is the design's state)`; `<worktrees>/_runs/int30/QUEUE.md`, entry "21:48 to 21:52 CORRECTION", `test_requirements, test_layout_entry_stages, test_artefact_recording 94 passed and the tree stays clean`. The re-take is evidence,
 not a commit: it changes no tracked file; the second candidate's evidence tar carries it (`<worktrees>/_runs/int30/QUEUE.md`, entry "21:52 to 22:05 RE-FREEZE of the NEW CANDIDATE", `tar 191877120 bytes (the same 997 paths; the re-taken readings)`).
 
 **The coordinator's known item, carried and not corrected in set 31.** Record l4e7's paragraph 0a on the regenerated output is
@@ -502,10 +502,18 @@ adoption from the second freeze's logs (never from the first's).
   `<worktrees>/_runs/vast/LOG-20261006.md:23` `RENTED 54526562 meshsat-1357-recbox31-2041`, at the listed 0.0681 and 0.0516 USD/h
   (copied, not measured costs); the records box stopped after its fetch,
   `<worktrees>/_runs/vast/LOG-20261006.md:24` `STOPPED after the fetch of the records pass (disk kept)`; their passes are section
-  4a's (the first candidate's, FAILED at the gate). For the second candidate's freeze the suite box was relaunched and a fresh records
-  box rented, `<worktrees>/_runs/vast/LOG-20261006.md:25` `RENTED 54535223 meshsat-1357-recbox31-2202` (the stopped 54526562 did not
-  resume); their stops come after the vast log's line 25, as this record was last written.
-- No other instance was rented for set 31 to the second candidate's freeze (the vast log's lines 13 to 25 name these six boxes alone); every earlier instance stays
+  4a's (the first candidate's, FAILED at the gate). For the second candidate's freeze the suite box was relaunched,
+  `<worktrees>/_runs/int30/QUEUE.md`, entry "21:52 to 22:05 RE-FREEZE of the NEW CANDIDATE", `Suite pass relaunched on 54526559 at 20:04:45Z (22:04:45 CEST`,
+  and stopped after both suite passes on `5f25daf3`, `<worktrees>/_runs/vast/LOG-20261006.md:31` `54526559 suite31-2041: STOPPED after the fetch of both suite passes on 5f25daf3 (disk kept)`.
+- **The second candidate's records box: four rentals, one records pass** (brought to the vast log's lines 25 to 32 by W91 after W86's C4):
+  - 54535223, recbox31-2202: `<worktrees>/_runs/vast/LOG-20261006.md:25` `RENTED 54535223 meshsat-1357-recbox31-2202` (the stopped 54526562 did not resume);
+    `<worktrees>/_runs/vast/LOG-20261006.md:26` `54535223 recbox31-2202: STOPPED (setup failed: the mirror clone stalled twice at 257 MB, HTTP/2 then HTTP/1.1; disk kept; nothing of the pass on it)`.
+  - 54538369, recbox31-2231: `<worktrees>/_runs/vast/LOG-20261006.md:27` `RENTED 54538369 meshsat-1357-recbox31-2231 (offer 52494644, the host whose clone stalled) and STOPPED at once by the coordinator before its setup (disk kept)`.
+  - 54538454, recbox31-2232: `<worktrees>/_runs/vast/LOG-20261006.md:28` `RENTED 54538454 meshsat-1357-recbox31-2232 (debian:12, disk 40; offer 53989928, South Korea, 0.0627 USD/h`
+    (the listed rate, copied, not a measured cost); `<worktrees>/_runs/vast/LOG-20261006.md:29` `54538454 recbox31-2232: STOPPED (never came up: uptime None, no direct ports, the ssh proxy refused for 13 min; disk kept)`.
+  - 54539923, recbox31-2245, the box that ran the records pass on `5f25daf3`: `<worktrees>/_runs/vast/LOG-20261006.md:30` `RENTED 54539923 meshsat-1357-recbox31-2245 (debian:12, disk 40; offer 54011726`;
+    `<worktrees>/_runs/vast/LOG-20261006.md:32` `54539923 recbox31-2245: STOPPED after the fetch of the records pass on 5f25daf3 (disk kept)`.
+- No other instance was rented for set 31 through the second candidate's gate (the vast log's lines 13 to 32 name these nine boxes alone); every earlier instance stays
   stopped with its disk kept, none destroyed (the vast log's 10:38 line, `<worktrees>/_runs/vast/LOG-20261006.md:12` `Running instances: none.`).
 
 ## 6. What set 31 closes and what it does not
