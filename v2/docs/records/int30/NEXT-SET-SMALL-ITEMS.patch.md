@@ -25,7 +25,7 @@
 
 ## 2. How to apply
 
-Each Old text occurs exactly once in its file at `c4492dd3` (the module `v2/ecad/tools/tests/test_w20oneliners.py` reads every one there through git, and at the branch tip a row waits for where the row names one). A row marked "after" a branch is applied once that branch is merged (its Old text was checked once at that tip too). Pairs are applied in the same commit (the page's generated blocks are tested equal to the generator's data). Kinds: "fragment" replaces the Old text inside the named line; "line" and "lines" replace whole lines; New texts keep the file's indentation as written in the block.
+Each Old text occurs exactly once in its file at `c4492dd3` (the module `v2/ecad/tools/tests/test_w20oneliners.py` reads every one there through git, and at the tip of the branch a row waits for wherever that branch rewrites the file). A row marked "after" a branch is applied once that branch is merged (where the branch leaves the file alone, the merge keeps the integration's text). Pairs are applied in the same commit (the page's generated blocks are tested equal to the generator's data). Kinds: "fragment" replaces the Old text inside the named line; "line" and "lines" replace whole lines; New texts keep the file's indentation as written in the block.
 
 ## 3. The rows
 
@@ -741,12 +741,12 @@ no edit; test_remeng reads B2-PRESENCE.md at 6fe398e9 by git
 no edit; test_remeng reads SUPPLIER-P1-1-P0SOL.md at 6fe398e9 by git
 ```
 
-  Sources: A, the map above; B, the ledger's own header (`REMAINING-ENGINEERING.md` lines 44 to 49 at `c4492dd3`).
+  Sources: A, the map above; B, the ledger's own header (`REMAINING-ENGINEERING.md` lines 46 to 48 at `c4492dd3`).
 
 ## 5. Items answered with no row, and the reasons
 
 - **README 220 of record l9t5 (W11's left-out):** the file table's row says what `apply_l4e9_changelist_p0.py` IS, "a text draft for the integrator", true of the file after 7070f106 applied it (W11: "the file table: 'a text draft for the integrator', what the file is", README.md:466 at `85b6f258`), and "it refuses a second run" stays true of `--write` (REVIEW-2B section 3: "`--write` refuses with exit 3 and writes nothing"). One observation for the coordinator, no row: the same cell lists "R-220 to R-239 and R-242 to R-244" where the draft's REG_ADD adds R-220 to R-239 and R-242 to R-245 (the draft's docstring line 9 at `c4492dd3`, "R-242 to R-245 after R-240"; REVIEW-2B section 3, "the 24 ids").
-- **83.47 V (register) against 83.48 V (page), W8's (d): both kept.** The register's R-176 (line 272) and the page's 5d bench row (757), D-10's history (1026, first figure) and B6-ENG-1's row (1095) print 83.47 V from L4-E7's round 5 at `1a73f5b4` (`v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md` lines 620 and 1024: "PV_F 83.47 V at that loop"). The page's F3 (lines 37, 134, 839, 875, 1026, 1765) prints 83.48 V from record l4e7's P0-7 (`SUPPLIER-P1-1-P0SOL.md:33`, "PV_F 83.48 V"; `L4E7-P0SOL.md:151`; cx46 quotes it, `CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:95`, "F3's 83.48 V is a MODEL result"). This file does not decide which rounding or which case each is; it names the record each line cites.
+- **83.47 V (register) against 83.48 V (page), W8's (d): both kept.** The register's R-176 (line 272) and the page's 5d bench row (757), 8a's D-10 row (1026, its first figure) and B6-ENG-1's row (1095) print 83.47 V from L4-E7's round 5 at `1a73f5b4` (`v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md` lines 620 and 1024: "PV_F 83.47 V at that loop"). The page's F3 (lines 37, 134, 839, 875, 1026, 1765) prints 83.48 V from record l4e7's P0-7 (`SUPPLIER-P1-1-P0SOL.md:33`, "PV_F 83.48 V"; `L4E7-P0SOL.md:151`; cx46 quotes it, `CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:95`, "F3's 83.48 V is a MODEL result"). This file does not decide which rounding or which case each is; it names the record each line cites.
 - **`l4e9_power_path.out:975`, "criterion 2 CONDITIONAL" (W15's finding):** the block carries its dated marker. Its heading is line 944, "13. UPDATE ROUND 3 (2 October 2026): L4-E13 ACCEPTED; U-03 A CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC)", printed by the generator's line 3534 block; line 1017's "criterion 2 FAIL with 2 defects open" sits under section 14's heading (line 978, "14. UPDATE ROUND 5"). No marker is added.
 - **REVIEW-2B finding 7 (`l9t5_connected.out` lines 60 to 62):** answered by W20-15, the generator literal that prints them (`l9t5_connected.py` lines 517 to 518); the output changes only through the cascade.
 
