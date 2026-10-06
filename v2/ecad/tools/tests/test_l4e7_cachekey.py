@@ -315,12 +315,13 @@ def t_f_d83d9f2d_and_31928583_read_to_equal_numbers():
 
 def t_g_a_unicode_digit_refuses_as_malformed():
     """W64's F-4 (W67, 6 October 2026): the declared form is a plain ASCII decimal. A consumed number printed in fullwidth digits
-    (７.２３), in Arabic-Indic digits (٧.٢٣) or with one fullwidth digit among ASCII ones (7.2３) is read by float() as 7.23, and a
-    Unicode \\d accepted it before; each now refuses with exit 3 as out of its declared form, naming the value and the file. Every
-    regular expression call of l4e11_numbers() passes re.ASCII (read with ast), so no \\d of the extractor reads a non-ASCII digit."""
+    (U+FF10 to U+FF19), in Arabic-Indic digits (U+0660 to U+0669) or with one fullwidth digit among ASCII ones is read by float()
+    as 7.23, and a Unicode \\d accepted it before; each now refuses with exit 3 as out of its declared form, naming the value and
+    the file. Every regular expression call of l4e11_numbers() passes re.ASCII (read with ast), so no \\d of the extractor reads
+    a non-ASCII digit."""
     import ast
     m = _m()
-    for tok in ("７.２３", "٧.٢٣", "7.2３"):
+    for tok in ("\uff17.\uff12\uff13", "\u0667.\u0662\u0663", "7.2\uff13"):
         assert float(tok) == 7.23
         bad = _with_token(m, "inp", 0, tok)
         code, err = _refusal(lambda: m.l4e11_numbers(text=bad))
