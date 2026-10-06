@@ -132,7 +132,19 @@ outside set 31's and set 32's blocks. The working tree's four pages are held by 
 adopted page at `ad757edb` with the own change of each pinned branch the judged revision holds, step a5 where the page carries its
 sentence, and these 38 rows, nothing else (so the eight texts of set 31's rows no set 32 row replaces, W106's N-d, are held there),
 the tokens as the fill's stage leaves them, and set 32's added text without a dash, an acceptance word or a percentage; it judges
-the newest revision whose START-HERE line 3 names set 32, so a later set's rows never fail it. AI work, not a qualified review.
+the newest revision whose START-HERE line 3 names set 32, so a later set's rows never fail it. In a scratch clone of W105's own, built as set 32's chain builds the tree (set 31's promoted `5f25daf3`, main
+`ad757edb` merged as step a1, W103's `33a7b7d5`, the five pins with fnd/res32 at `607cd157`, fnd/w34pdftext's one conflict in the
+annex taken as ours in the clone only, step a5 run), with stand-in commits for the re-key and the candidate, fnd/adopt32 at
+`564dc7f6` merged clean as set 31's step 12a merged its branch (U-16's paragraph follows its old text, which stands at line 427 of
+the merged page once the rows above it are in, line 414 before them); the ten modules `test_patch32`, `test_res32`, `test_adopt31`,
+`test_adopt32`, `test_entrypage`, `test_w30entry`, `test_lstat31`, `test_lstat32`, `test_res31` and `test_public_hygiene` read 113
+passed, 0 failed, 0 skipped before the fill; the fill tool's template read 122 rows (this file 25, RESULT.md 70, CLASSIFICATION.md 2,
+the four pages 25: START-HERE.md 8, SUPPLIER-HANDOVER.md 8, LAYER-STATUS.md 3, EXECUTION-PLAN.md 6), its first run applied 101 lines
+with 5 ADOPTION occurrences deferred, and the ten read 113 passed; with a stand-in adoption commit its second run applied 5 lines
+(S-07's and U-05's cells among them, no hand fill), no token was left in the seven files, and the ten read 113 passed; a third run
+refused (exit 2); with START-HERE's line 3 then rewritten as a later set's rows would, `test_adopt32` judged the newest commit naming
+set 32 and read 4 passed. The 43 mutants of the restated predicates (the bytes read at either adoption commit, or the tree's page,
+changed in memory) were each refused, on fnd/adopt32 and in that clone after the second run. AI work, not a qualified review.
 
 ## START-HERE.md
 
