@@ -27,7 +27,8 @@ earlier `_placeholder_row`, keyed on the token alone, read the filled row as an 
 placeholder row before the fill (its sha cell `__CANDIDATE__`) and after it (its sha cell the candidate commit, which must follow TIP on
 the first-parent line); either way its date and class read "not determined", it is not counted, and it is the only such row. Every
 other predicate is unchanged in what it refuses; the mutations whose anchor was a token that the fill removes now insert an
-undeclared token beside a sentence that stays.
+undeclared token beside a sentence that stays. After the fill's second run the patch rows name the adoption commit, which a commit
+named in the records may be only there and only when it descends from the named candidate.
 
 Read-only: git is read with `git log`, `git show`, `git diff`, `git rev-list` and `git cat-file`; nothing is written. No pytest is
 needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
@@ -539,6 +540,8 @@ def p_commits_named(texts):
     cand = _candidate(texts[CLASS])
     if cand and not p_candidate_row(texts[CLASS]):
         hist.add(cand)                         # the candidate the fill named (main is fast-forwarded to it: PROMOTED too)
+    else:
+        cand = None
     for name, t in texts.items():
         if "/inputs/" in name:
             continue
@@ -547,6 +550,12 @@ def p_commits_named(texts):
                 continue                       # 12- and 16-character tokens are file digests, not commits
             full = [s for s in hist if s.startswith(tok)]
             if len(full) == 1:
+                continue
+            # the adoption commit, which the fill's second run writes into the patch rows (W69, 6 October 2026: a simulated second
+            # run named it and this predicate refused it): accepted in the patch only, only once the candidate is named, and only
+            # when it descends from the candidate (the adoption merges the candidate before its commit, FREEZE-PLAN step 12a)
+            if name == PATCH and cand and _has(tok) and subprocess.run(
+                    ["git", "-C", REPO, "merge-base", "--is-ancestor", cand, tok], capture_output=True).returncode == 0:
                 continue
             out = [s for s in OUTSIDE if s.startswith(tok)]
             if out:
