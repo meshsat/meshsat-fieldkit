@@ -6,6 +6,18 @@ Q6; the owner's reviews, parts 24 and 25). This page is kept as the record of wh
 decision, recommends nothing for adoption and credits B2 with no protection. Prototype design: nothing is built, bought, mated or
 measured. Every figure below is printed by `l4e7_p0sol.py` (section 5 of `l4e7_p0sol.out`). Correspondence and orders: none.
 
+**Set 30 note (6 October 2026; record text only, on branch `fnd/w4l4e7` from set 30's integration commit 2c `53a68c7c`; adopted in
+the NEXT set, where the coordinator regenerates; the promoted sha `__INTEGRATED__`).** What moved since this page was written: the
+candidate merged set 31 (`6fe398e9`), whose L4-E9 data now reads route B2 UNSELECTED and WITHDRAWN AS DRAFTED with no owner item and
+D-10 "as P0-7 states it (E-1, F1 to F4, the lower-source back-feed)" (`v2/docs/records/l4e9/SET31-CHANGES.md:54`); and the
+remaining-engineering ledger's HO-F (`v2/docs/records/l4close/REMAINING-ENGINEERING.md` on `fnd/ledgerfix` `99bbc0c6`, cited as text
+only; its section 6, item E) places the lower-source back-feed as REMAINING ENGINEERING inside E-1, S1's row (b) its later
+validation, on the owner's part 23 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`). Section 7 now says the same for the
+back-feed and for the parallel source (both cases E-1 carries, not validation-only items; the parallel source's placement is this
+branch's reading, SESSION: it is E-1's guard-on step itself and the ledger's HO-F lists S1's row (a) under E-1's task; reversed by the
+coordinator's revision of the placement). Nothing else on this page moved: B2 stays
+UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline, with no protection credit and no owner item.
+
 **Standing:** D-10 is an UNRESOLVED PROTECTION DEFECT in the present model, carried as the receiving company's remaining engineering
 item E-1 (`SUPPLIER-P1-1-P0SOL.md`; the owner's review of checkpoint 4, part 23). The withdrawn draft was a presence loop intended
 to hold the guard off between a withdrawal and the next plug; this record proves no such effect, it would not change the port's
@@ -164,10 +176,18 @@ guard-on case stays with E-1.
 
 - **A second stiff source added on the same lead while a panel holds the presence loop closed** (a parallel connection behind the
   plug, or a source spliced onto the panel's own lead): the guard is on and the step is section 2b's guard-on case (at the reference
-  loop every rating but PV_F's recommended row holds; at the least loop the port fails). OPEN; validation P1-1's S1.
+  loop every rating but PV_F's recommended row holds; at the least loop the port fails). OPEN, inside E-1 (its guard-on step, cases
+  F1 to F3 of `SUPPLIER-P1-1-P0SOL.md`); P1-1's S1 row (a) is the later validation of E-1's correction for it (set 30 note).
 - **A stiff source below the stage's voltage arriving after a withdrawal:** while the guard is off, PV_P back-feeds PV_F through Q12's
   body diode, so such a source draws the stage's charge back through it (the reverse of the step; it would flow through the closed
-  channel without B2). Not computed here; validation P1-1's S1 (row added).
+  channel without B2). Not computed here: an OPEN case, not a failed one (no record computes it, so it neither fails nor passes), and
+  REMAINING ENGINEERING inside E-1: the receiving company computes it on E-1's corrected circuit as part of E-1's correction, against
+  E-1's requirements (`SUPPLIER-P1-1-P0SOL.md`, E-1 (a) and (b)); P1-1's S1 row (b) is the later validation of that computation, not
+  a substitute for it (set 30 note, 6 October 2026, in place of "validation P1-1's S1 (row added)": the remaining-engineering
+  ledger's HO-F and its section 6, item E, `fnd/ledgerfix` `99bbc0c6`; the owner's part 23, "Supplier item S1 must carry that
+  engineering problem, rather than presenting it solely as an unperformed validation test.",
+  `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`; cx46, "D-10's E-1 retains F1-F4 and the lower-source back-feed case.",
+  `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:95`).
 - **The presence loop under CS114** (bulk cable injection on the lead would cover the pair): C80 is a means, not evidence; no S2
   row rests on it while B2 is withdrawn.
 - **P2 and P3, the withdrawn draft's own defect, with the timing proof (section 5a) and the pair's fault detection (section 5b):**

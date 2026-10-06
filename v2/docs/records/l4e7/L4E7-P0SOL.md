@@ -1,4 +1,4 @@
-DONE: round 1 (D-16 CORRECTED in draft); round 2 (route B2 drafted and checked; since withdrawn as drafted); round 3 (the owner's review of checkpoint 4, part 23): D-10 rewritten as an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1 (SUPPLIER-P1-1-P0SOL.md: failing cases F1 to F4, requirements unchanged, the correction needed before any passing claim, PROVISIONAL and independent outputs); round 4 (Astra's check cx45, Q6): B2's cold-connection guarantee WITHDRAWN (the timing a proof needs listed, the .out's 5e) and its fault credit removed (the presence pair's faults solved and tabled, the .out's 5f; P2 and P3 an OPEN defect of the B2 draft); no protection credit for B2; round 5 (Astra's recheck cx46 and the owner's part 25): B2 UNSELECTED and WITHDRAWN AS DRAFTED throughout, no owner item, P2 and P3 REMAINING ENGINEERING outside the baseline. NOT DONE: E-1's correction; the presence-pair REMAINING ENGINEERING (P2 and P3, detection, INP protection, timing proof), owed only by a route that takes it up again; the record's cache re-key (a box recompute). NEXT: the coordinator's merge and the L4-E9 rows of section 5.
+DONE: round 1 (D-16 CORRECTED in draft; since set 31 ADDRESSED IN DRAFTS and PROVISIONAL on S3 and S4, not independently accepted as closing D-16); round 2 (5 October 2026: route B2 drafted and checked; since round 5 UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline); round 3 (the owner's review of checkpoint 4, part 23): D-10 rewritten as an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1 (SUPPLIER-P1-1-P0SOL.md: failing cases F1 to F4, requirements unchanged, the correction needed before any passing claim, PROVISIONAL and independent outputs); round 4 (Astra's check cx45, Q6): B2's cold-connection guarantee WITHDRAWN (the timing a proof needs listed, the .out's 5e) and its fault credit removed (the presence pair's faults solved and tabled, the .out's 5f; P2 and P3 an OPEN defect of the B2 draft); no protection credit for B2; round 5 (Astra's recheck cx46 and the owner's part 25): B2 UNSELECTED and WITHDRAWN AS DRAFTED throughout, no owner item, P2 and P3 REMAINING ENGINEERING outside the baseline; set 30 note (6 October 2026, branch `fnd/w4l4e7`, record text only, adopted in the NEXT set): this page's wording made consistent with the candidate's state (below the title). NOT DONE: E-1's correction, with the lower-source back-feed computed inside it (REMAINING ENGINEERING, the ledger's HO-F); the presence-pair REMAINING ENGINEERING (P2 and P3, detection, INP protection, timing proof), owed only by a route that takes it up again; the record's cache re-key (a box recompute). NEXT: the coordinator's merge in the NEXT set, with the regeneration of the outputs whose printed text still reads as before (l4e7_p0sol.out's 3 (d) and 5g; not this branch's files), and the L4-E9 rows of section 5.
 
 # P0-7: the solar stage's D-10 (a stiff source with the guard on) and D-16 (the input sense out of range) by circuit alternatives
 
@@ -9,6 +9,24 @@ powered or measured, and no generator, registry or page outside this record is e
 INFERRED, SESSION, NETLIST and CATALOGUE. The lead-inductance method is ended: no loop is searched and none is claimed to pass;
 the record's own transient model runs only at its 3.30 uH reference loop and at the envelope's ends, to check a changed circuit
 against the same failure case.
+
+**Set 30 note (6 October 2026; record text only, on branch `fnd/w4l4e7` from set 30's integration commit 2c `53a68c7c`; adopted in
+the NEXT set, where the coordinator regenerates; the promoted sha `__INTEGRATED__`).** What moved since this page was written: (1) the
+candidate merged set 31 (`6fe398e9`; `v2/docs/records/l4e9/SET31-CHANGES.md`), so L4-E9's page and register now read D-16
+ADDRESSED IN DRAFTS, "PROVISIONAL in A7's zero-differential output (S3) and in the regulation at 25 V (S4)"
+(`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:841`), "not independently accepted as closing D-16" (`:1031`), with the register's
+R-240 (this page's R-NEW) reading "A7's zero-differential output PROVISIONAL (the supplier's S3)"
+(`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:336`), and "D-10 as P0-7 states it (E-1, F1 to F4, the lower-source back-feed)" with
+route B2 UNSELECTED and WITHDRAWN AS DRAFTED and no owner item (`v2/docs/records/l4e9/SET31-CHANGES.md:54`); (2) the
+remaining-engineering ledger's HO-F (`v2/docs/records/l4close/REMAINING-ENGINEERING.md` on `fnd/ledgerfix` `99bbc0c6`, cited as text
+only; its section 6, item E) settles the lower-source back-feed as REMAINING ENGINEERING inside E-1, S1's row (b) its later
+validation, on the owner's part 23: "Supplier item S1 must carry that engineering problem, rather than presenting it solely as an
+unperformed validation test." (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`). This page now says the same: D-16 is
+CORRECTED IN DRAFT and PROVISIONAL (sections 3 and 4 (d)); the back-feed is an open case inside E-1 (section 4 (a)); section 4's
+heading carries the one wording for B2 that the owner's part 25 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:838`) and cx46
+item 18 (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:111`, `:201`) ask for; E-1 here is record l4e7's E-1, not
+record l9stk's (section 4). No figure, verdict, draft or output is changed: `l4e7_p0sol.out` still prints round 5's wording in its
+3 (d) and 5g until the next set regenerates it from a changed generator text, which is not this branch's file.
 
 ## 1. Both failing cases reproduced on the base (the .out's section 0)
 
@@ -73,7 +91,11 @@ the declared envelope.
   selected network: at the 25 V corner the bank's current never reverses (at least 0.43 A); U23's sense spans -167 to +165 mV
   with the bank's inductance at 5 nH unshared, its average inside the INA169's printed 10 to 150 mV rows and its peaks inside
   its 500 mV full scale; the negative inductive spikes it cannot follow make it read high by at most +1.34 %, so the regulation
-  errs to a lower input current, never toward the trip. U5's operating range is met by construction. **D-16: CORRECTED.**
+  errs to a lower input current, never toward the trip. U5's operating range is met by construction. **D-16: CORRECTED IN DRAFT**
+  on this record's own check (the draft not applied; not independently accepted as closing D-16; PROVISIONAL in A7's
+  zero-differential output, S3, section 3's 2h, and in the regulation at 25 V, S4: the register's R-240,
+  `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:336`, and L4-E9's D-16 rows, `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:841`,
+  `:1031`; set 30 note, 6 October 2026, in place of round 1's bare "CORRECTED").
 - **The regulation (2e).** On printed rows (EA2's 1.187 / 1.208 / 1.229 V and the record's design floor; the INA169's gm,
   nonlinearity, offset, CMR and PSR): nominal 2.5378 A, highest 2.9212 A, lowest 2.1839 A (the drafted A7 regulation: nominal
   2.5485 A, highest 2.9337 A). The trip reads the same bank, so the bank's tolerance, TCR, aging and heating cancel: the margin
@@ -96,10 +118,19 @@ the declared envelope.
   from -0.5 uA sinking to +1.0 uA sourcing); the question to Analog Devices is drafted,
   `clarification/analog-devices-lt8705a-p0sol.txt` (item 8), UNSENT.
 
-## 4. D-10: an unresolved protection defect, the remaining engineering item E-1, and route B2 (a partial proposal)
+## 4. D-10: an unresolved protection defect, the remaining engineering item E-1, and route B2 (UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline)
+
+Heading restated 6 October 2026 (set 30 note): round 3 (5 October 2026) described route B2 in the owner's part 23 terms; round 5
+withdrew it as drafted (the owner's part 25, `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:838`; cx46 item 18, which asked for
+the withdrawal "throughout", `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:111`, `:201`), and the heading now
+says so (K-24 of the DESK-gate draft, `fnd/dgate` `249e9e47`; item 1 of set 30's records pack, `fnd/recpack` `35dca639`).
 
 **D-10 is an UNRESOLVED PROTECTION DEFECT in the present model** (the owner's review of checkpoint 4, part 23), not a case that
-merely lacks evidence. It is written as the receiving company's remaining engineering item E-1 in `SUPPLIER-P1-1-P0SOL.md`:
+merely lacks evidence. It is written as the receiving company's remaining engineering item E-1 in `SUPPLIER-P1-1-P0SOL.md`.
+E-1 here is record l4e7's E-1 (the register's R-240: "item l4e7's E-1", `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:336`), not record
+l9stk's E-1, the junction limit that R-159 and L4-E9's E11-29 row carry ("l9stk's E-1", `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:255`,
+`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:750`); one identifier, two items (K-08 of the DESK-gate draft), named apart here
+without renaming either:
 
 - **(a) The failing cases** (MODELED, the record's own transient model on the C2 circuit): F1, a stiff 36 V source stepping onto
   the port with the guard on at the envelope's least loop 0.30 uH: PV_F 321.9 V, Q12's VDS 307.4 V, INP 64.3 V, TRK_VS 37.83 V
@@ -107,7 +138,16 @@ merely lacks evidence. It is written as the receiving company's remaining engine
   U18 and U23 (+2 V); F2, the same at about 1.04 uH: PV_F 118.5 V, VDS 108.5 V, INP 23.7 V; F3, at the 3.30 uH reference loop: PV_F
   83.48 V over the TPS4811-Q1's recommended operating 80 V row (L6P-F10); F4, a source arriving with the guard off at the least
   loop: slew 56.10 V/us over the 54 V/us SESSION line (inside the 60 V/us absolute maximum). Claims hit: IF-01's protection of the
-  solar entry against D-10, R-173's guard as a protection, the backstop's sensing through the event.
+  solar entry against D-10, R-173's guard as a protection, the backstop's sensing through the event. **E-1 also carries one OPEN
+  case that is not a failing case: the lower-source back-feed** (a stiff source below the stage's voltage arriving after a
+  withdrawal: while the guard is off, PV_P back-feeds PV_F through Q12's body diode and the source draws the stage's charge back
+  through it; `B2-PRESENCE.md` section 7, the .out's 5g). No record computes it, so it neither fails nor passes. It is REMAINING
+  ENGINEERING inside E-1, computed by the receiving company on E-1's corrected circuit as part of E-1's correction, against (b)'s
+  requirements and S1's own criterion for the case (Q12's body-diode current inside its pulsed rating); S1's added row (b) is the
+  later validation of that computation, not a substitute for it (set 30 note: the remaining-engineering ledger's HO-F and its
+  section 6, item E, `fnd/ledgerfix` `99bbc0c6`; the owner's part 23, `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`;
+  cx46: "D-10's E-1 retains F1-F4 and the lower-source back-feed case.",
+  `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:95`).
 - **(b) The requirements, unchanged:** L4-E9's single fault D-10 from REQ-015's 9 to 36 V source class; the owner's amendment of
   2 October 2026, item 3 (a bounded analysis against the approved fault exposure and component ratings, REQ-016's window kept);
   every part inside its absolute maximum ratings, the controller inside its recommended conditions while it must act, the SESSION
@@ -118,12 +158,16 @@ merely lacks evidence. It is written as the receiving company's remaining engine
   at every loop. B1 (a series choke) is rejected at the desk on Isat and on its CS101 resonance; route B2 is withdrawn as drafted
   (below); open to a supplier's investigation: a choke rated over the cut current and damped against CS101, a lower-impedance
   clamp or a snubber sized for the port's energy, a different cut-off element or method (an active current limit faster than the
-  loop's di/dt, a rise detector, a precharge path), and a model revision only on measured loops and resistances. S1 and S2 then
-  qualify the correction.
+  loop's di/dt, a rise detector, a precharge path), and a model revision only on measured loops and resistances; the correction's
+  analysis computes the lower-source back-feed of (a) on the corrected circuit. S1 and S2 then qualify the correction.
 - **(d) PROVISIONAL until then:** IF-01's D-10 protection claim, R-173 as a protection, R-176 rows 2 and 3, R-180, the port's parts
-  and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows. **Completed
-  independently, on the present port network:** D-16's correction (section 3), the regulation and its correlated margin, the 100 W
-  bound re-run, M2 with the selected sensing (to be re-run only if the correction changes the port), INP's divider ratio.
+  and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows. **Independent of E-1 (they do
+  not wait on its correction), on the present port network, and ADDRESSED IN DRAFTS, PROVISIONAL, not completed** (set 30 note,
+  6 October 2026, in place of round 3's "Completed independently": the drafts are not applied and not independently accepted;
+  K-13 of the DESK-gate draft; set 31's reading, `v2/docs/records/l4e9/SET31-CHANGES.md:113`): D-16's correction (section 3;
+  PROVISIONAL in S3 and S4, the register's R-240, `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:336`, and
+  `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:841`), the regulation and its correlated margin, the 100 W bound re-run, M2 with the
+  selected sensing (to be re-run only if the correction changes the port), INP's divider ratio.
 
 **Route B2** (drafted on the coordinator's task of 17:12; `B2-PRESENCE.md`; the .out's section 5) is **UNSELECTED and WITHDRAWN
 AS DRAFTED** (Astra's cx45 and cx46, Q6; the owner's reviews, parts 24 and 25). No owner item rests on it: the approved interface
@@ -139,9 +183,19 @@ presence core shorted to a positive core of the lead puts INP at PV_F, over its 
 a defect the draft introduces). **P2 and P3 are REMAINING ENGINEERING outside the baseline:** monitored or fault-tolerant
 detection, INP's protection and the timing proof are owed by any presence-pair route taken up again, as a new route with its own
 check. B2 would not change the port's response when a step happens, and it leaves a source added in parallel with a connected
-panel and a lower stiff source arriving after a withdrawal; it does not resolve D-10.
+panel and a lower stiff source arriving after a withdrawal (both inside E-1: the guard-on step of F1 to F3 and the lower-source
+back-feed of (a)); it does not resolve D-10.
 
 ## 5. Rows for L4-E9 and the register (the coordinator's; nothing of L4-E9's is edited here)
+
+**Set 30 note (6 October 2026; the promoted sha `__INTEGRATED__`).** The rows below are round 5's proposal of 5 October 2026,
+kept as dated history. Since then the P0 round entered R-NEW as R-240 (`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:336`), and set 31,
+merged into the candidate at `6fe398e9`, restated L4-E9's page, register and generator from them (`v2/docs/records/l4e9/SET31-CHANGES.md:41`,
+`:53`, `:54`): D-16 reads ADDRESSED IN DRAFTS, PROVISIONAL in S3 and S4 (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:841`) and
+"not independently accepted as closing D-16" (`:1031`), narrower than the D-16 row proposed below (S3 only); D-10 carries
+the lower-source back-feed beside F1 to F4 (`v2/docs/records/l4e9/SET31-CHANGES.md:54`), which section 4 (a) now places as REMAINING
+ENGINEERING inside E-1 (the ledger's HO-F); R-176 row 3's replacement below is not carried by set 31 ("a finding for the next set",
+`v2/docs/records/l4e9/SET31-CHANGES.md:123`). L4-E9's applied text, not the rows below, is the current record of these rows.
 
 - **D-10** (8a and 8c): "AN UNRESOLVED PROTECTION DEFECT in the present model (the owner's review of checkpoint 4, part 23),
   the receiving company's remaining engineering item E-1 (SUPPLIER-P1-1-P0SOL.md: the failing cases F1 to F4 with the parts and
