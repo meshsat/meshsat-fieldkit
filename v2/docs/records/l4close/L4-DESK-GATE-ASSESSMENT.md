@@ -1,10 +1,18 @@
-# Layer 4's DESK gate (the owner's part 19): the assessment text, DRAFT 2 for the coordinator (MESHSAT-1357, 6 October 2026)
+# Layer 4's DESK gate (the owner's part 19): the assessment on the promoted revision `dd1aed00` (MESHSAT-1357, 6 October 2026)
 
-**Status: DRAFT 2. This file is not the assessment.** It is Slot L's draft (`L4-DESK-GATE-ASSESSMENT.draft.md`, branch `fnd/dgate`
+**Status: ADOPTED on the promoted revision `dd1aed00d0a0a521063b5792550bc510c4707c59`; the coordinator's judgement HELD (section 6).** Prototype framing:
+nothing in the kit has been built, bought, powered or measured. W12's draft 2 adopted by worker W27 on branch `fnd/adopt30b`
+(6 October 2026, from 10:43 CEST): the integrated and the promoted sha bound from the coordinator's values of 10:40:38 CEST
+(INTEGRATED = CANDIDATE = PROMOTED = `dd1aed00d0a0a521063b5792550bc510c4707c59`, main fast-forwarded at 10:36:57 CEST), each mark *basis moved* resolved and the
+lines marked *re-read on 2b* re-read on `dd1aed00` (sections 6 and 9), the Y6 table added (section 6a). W27 stopped on two
+sentences of the coordinator's judgement of 10:45 CEST that read differently from the ledger at `dd1aed00` and did not insert it
+(section 6). The text from here to section 5 and in sections 7, 8 and 10 is draft 2's as W12 wrote it, read at `6bc4424e`.
+
+**Draft 2 as filed.** It is Slot L's draft (`L4-DESK-GATE-ASSESSMENT.draft.md`, branch `fnd/dgate`
 at `249e9e4785a170238c69316742a422250908cd1f`, kept unchanged beside it as filed) re-read on the current committed integration,
 `fnd/p0pwr` at `6bc4424ec64592e1a501af5db2246f3391c525a0` (the candidate below), with sections 0 and 5 brought to the present and every
-citation checked. The coordinator adopts, edits or rejects it at promotion, binding the final integrated sha where it reads
-`__INTEGRATED__` and the promoted sha where it reads `__PROMOTED__`. The verdict word is the coordinator's and stands below as the
+citation checked. The coordinator adopts, edits or rejects it at promotion, binding the final integrated sha and the promoted sha
+where draft 2 read their placeholders (both bound at the adoption: `dd1aed00`). The verdict word is the coordinator's and stands below as the
 literal placeholder `[COORDINATOR: DESK-gate verdict]`. Nothing here accepts, closes, verifies or promotes anything; it designs nothing,
 runs no generator, suite or box job and consumes no review. Written by worker W12 on branch `fnd/dgate2`, read from 04:05 CEST on
 6 October 2026. The coordinator's commit 2b (the regenerated outputs) is not committed when this is written: every line that a
@@ -22,7 +30,8 @@ gates again: "Keep physical qualification and fabrication-release gates separate
 **Citation form.** `[ALIAS:N]` is line N, `[ALIAS:N-M]` lines N to M, `[ALIAS]` the whole file, of the file the alias names at the
 revision the alias table gives. Revision `cand` is `6bc4424e` (the candidate as committed; this branch changes no existing file).
 Revision `base` is `bbba3e53` (set 30's integration 2a, Slot L's base), used only for a text the candidate no longer prints, as dated
-history. A row with another commit is a file on another branch, cited as text only (the worker rule that a record reads its inputs
+history. Revision `dd1aed00` is the promoted revision: the aliases REMP, L4OP, CONP and SOLOP, added at the adoption, read the
+promoted revision's files (W27's re-reading; W12's aliases keep their revisions). A row with another commit is a file on another branch, cited as text only (the worker rule that a record reads its inputs
 from its own tree): those lines were read with `git show <commit>:<path>` in this session. A branch named "next set" is NOT in the
 candidate: what it restates does not change what the promoted revision says. A path in backticks with no line is a repository path;
 `<worktrees>/...` is the coordinator's run folder outside the repository, named as the source of a coordinator's statement and never as
@@ -80,6 +89,11 @@ every sha and branch named here.
 | TP29 | cand | `v2/docs/test-procedures/TP-E11-29.md` |
 | L5C | cand | `v2/docs/records/l5pwr/L5-POWER-CONTRACTS.md` |
 | HAR | cand | `v2/ecad/tools/tests/harness.py` |
+| REMP | dd1aed00 | `v2/docs/records/l4close/REMAINING-ENGINEERING.md` (the promoted revision, read at the adoption) |
+| L4OP | dd1aed00 | `v2/docs/records/l4e9/l4e9_power_path.out` (the promoted revision) |
+| CONP | dd1aed00 | `v2/docs/records/l9t5/l9t5_connected.out` (the promoted revision) |
+| SOLOP | dd1aed00 | `v2/docs/records/l4e7/l4e7_p0sol.out` (the promoted revision) |
+| CLS | b8912eef | `v2/docs/records/int30/CLASSIFICATION.draft.md` (W15's classification as carried by `fnd/w18result`, adopted on `fnd/adopt30a`) |
 | DG1 | 249e9e47 | `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft.md` (Slot L, `fnd/dgate`; also in this branch's history) |
 | EVD | 7930ae68 | `v2/docs/records/l4close/L4-DESK-GATE-EVIDENCE.draft.md` (Slot D, `fnd/int30rec`) |
 | P0L3 | 7930ae68 | `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft.md` (Slot D) |
@@ -228,7 +242,12 @@ every sha and branch named here.
 - A2.3 L4-E9's own output does not reproduce from the candidate's committed bytes: it pins four cascade outputs at digests that are
   not the candidate's files [L4O:55], [L4O:64], [L4O:67], [L4O:106] (the coordinator's 2b bytes; Slot H: "The generator on this branch
   alone refuses at its pins of four cascade outputs" [H31:20]), while the connected output still reads "L4-E9's own output refuses on
-  this tree at its L4-E11 pin" [CON:362]. Both are regenerated outputs: re-read on 2b.
+  this tree at its L4-E11 pin" [CON:362]. Both are regenerated outputs: re-read on 2b. **Restated on the promoted revision
+  `dd1aed00` (W27, 6 October 2026):** L4-E9's four pins there equal their files, sha256/16 bb2d9e8d6447a2a7 for L4-E10's output
+  [L4OP:55], a2089b3f6682d7fd for L4-E11's [L4OP:64], 0cfa115bdace6fee for L4-E12's [L4OP:67] and 430d1591714b49de for record
+  l4e7's P0 output [L4OP:106] (held by the test), so L4-E9's output reproduces from the promoted revision's committed bytes; the
+  connected output still prints "L4-E9's own output refuses on this tree at its L4-E11 pin" [CONP:362], a generator sentence the
+  promoted revision's bytes no longer bear out (K-28, restated in its row).
 - A2.4 KiCad is needed for the reading of record and for everything after the schematic: "the KiCad export on the box (kicad-cli sch
   export netlist) is the reading of record" [GNL:14-15]; no ERC is run by the netlist tool [GNL:13]; no board has a layout
   [PAGE:885]; tests that need pcbnew or kicad-cli skip on a host without them [HAR:7].
@@ -412,9 +431,9 @@ L's reading (SESSION, for the coordinator to keep or change); 17 read YES on the
 | K-23 | REM E | the lower-source back-feed among E-1's retained cases [CX46:95], and the ledger's narrower reading in the candidate [REM:722-725], against record l4e7's S1 added row (b) [P11:120-123] | yes (the ledger and record l4e7 differ, the ledger says so [REM:725-727]) | next set: `fnd/w4l4e7` [W4P11:57-63]; `fnd/w3annex` annex 6.4 [W3ANX:212-228] | none stated | YES (engineering or validation) |
 | K-24 | I30 1; PC-15 | route B2 "an unapproved PARTIAL proposal" in the change-list draft's docstring [CLP:23] and the heading "(a partial proposal)" [P0SOL:99] against "UNSELECTED and WITHDRAWN AS DRAFTED" [B2:4] (L4-E9's generator data restated in the candidate [L4PY:4244], set 31 row 23 [H31:54]) | yes ([CLP:23], [P0SOL:99]) | next set: `fnd/w4l4e7` the heading [W4SOL:121-126]; `fnd/w9l9t5` W9-11 [W9T5R:401]; [CLP:23] restated nowhere | CLAIM CHANGE [W9T5R:401] (W4: none stated) | YES (cx46 asked "throughout" [CX46:203]) |
 | K-25 | I30 2 | R-240 named D-10's item S1 against E-1 [P11:19] | no | in the candidate: R-240 names E-1 and S1 as its later validation step [REG:336] | none stated (resolved before set 31) | NO |
-| K-26 | I30 3 | the connected output's T10 row, "rev X on V-B20" and "CORRECTED IN DRAFT, UNCHECKED" [CON:350-351], against revision X HELD with no admission route [T10:645-647] and "cx45's Q3 NOT CLOSED" [T10:662] | yes (re-read on 2b) | next set: `fnd/w11l9t5` W11-04, the generator's lines [W11CON:1002-1004], [W11T5R:451]; the output left as committed [W11T5R:454-459] | CLAIM CHANGE [W11T5R:451] | YES (a part admission) |
+| K-26 | I30 3 | the connected output's T10 row, "rev X on V-B20" and "CORRECTED IN DRAFT, UNCHECKED" [CON:350-351], against revision X HELD with no admission route [T10:645-647] and "cx45's Q3 NOT CLOSED" [T10:662]; on `dd1aed00` the two connected lines read as here [CONP:350-351] | yes (re-read on `dd1aed00`: unchanged) | next set: `fnd/w11l9t5` W11-04, the generator's lines [W11CON:1002-1004], [W11T5R:451]; the output left as committed [W11T5R:454-459] | CLAIM CHANGE [W11T5R:451] | YES (a part admission) |
 | K-27 | S8 head | Slot F frames criteria 1 to 5 as "the Layer 4 DESK gate assessed in record l4e9" [S8:12-14] against "The DESIGN gate (criteria 1 to 5 below) is not the DESK handover gate" [PAGE:965] | no | in the candidate: set 31's text governs [PAGE:965]; S8 is not merged | CLAIM CHANGE [H31:32] | NO |
-| K-28 | Slot L | the connected output: "L4-E9's own output refuses on this tree at its L4-E11 pin" [CON:362] against L4-E9's output pinning four outputs at bytes not in the candidate [L4O:55], [L4O:64], [L4O:67], [L4O:106] | yes (re-read on 2b) | next set: `fnd/w11l9t5` W11-05, the generator's lines [W11CON:1013-1014], [W11T5R:452]; the output left as committed [W11T5R:454-459] | PRESENTATION OR BINDING [W11T5R:452] | YES (a reproduction instruction) |
+| K-28 | Slot L | the connected output: "L4-E9's own output refuses on this tree at its L4-E11 pin" [CON:362] against L4-E9's output pinning four outputs at bytes not in the candidate [L4O:55], [L4O:64], [L4O:67], [L4O:106]; on `dd1aed00` the four pins equal their files [L4OP:55], [L4OP:64], [L4OP:67], [L4OP:106] while the sentence stands [CONP:362] (A2.3) | yes (re-read on `dd1aed00`: the sentence stands, its pins now bind) | next set: `fnd/w11l9t5` W11-05, the generator's lines [W11CON:1013-1014], [W11T5R:452]; the output left as committed [W11T5R:454-459] | PRESENTATION OR BINDING [W11T5R:452] | YES (a reproduction instruction) |
 
 **Slot G's PC-01 to PC-16 as Slot H applied or left them** (set 31's table [H31:40-56], its left-out list [H31:115-125]; in the
 candidate since the merge `6fe398e9`; the column Next set names where a left item is restated, not in the candidate):
@@ -438,33 +457,71 @@ candidate since the merge `6fe398e9`; the column Next set names where a left ite
 | PC-15 D-10 and route B2 | yes [H31:54] | [P0SOL:99], [CLP:23] (K-24) | `fnd/w4l4e7` [W4SOL:121-126] |
 | PC-16 R-48, R-190 | yes [H31:55] | none | none |
 
-## 6. The proposed verdict text, for the coordinator
+## 6. The coordinator's judgement on the promoted revision
 
-Slot L's proposal [DG1:362-409], re-read against the present facts; still a PROPOSAL. A sentence whose basis moved since Slot L wrote
-it carries the mark *basis moved*, with what moved.
+**HELD at the adoption (W27, 6 October 2026).** The coordinator's judgement on Layer 4's DESK gate, dated 6 October 2026, 10:45
+CEST (`<worktrees>/_runs/int30/Q05-verdict.final.md`, outside the repository), belongs under this heading verbatim, its introduction
+and its five sections. W27 did not insert it: two of its sentences read differently from the ledger at `dd1aed00`, and the adoption's
+rule is to stop on such a sentence and report it, never to edit it. The coordinator restates them and replaces the verdict line below
+with the judgement whole. The two sentences, each with the record it reads against:
 
-**Layer 4's DESK gate (the owner's part 19 [OWN:477]), assessed on `__INTEGRATED__`: [COORDINATOR: DESK-gate verdict].**
+1. Its section on Y6 says that for each of the twelve REMAINING ENGINEERING items the ledger's section 4 names the failing case, the
+   P0 round's attempted correction, the checker's words (cx46) and the affected outputs. At `dd1aed00` those are each item's own
+   fields in the ledger's section 1, "The twelve cx46 findings NOT CLOSED, each a REMAINING ENGINEERING item" [REMP:100], with the
+   fields Check's words, Failed cases, Attempted correction and Affected outputs under each heading [REMP:105-445]; the ledger's
+   section 4 is "The claims a remaining item weakens, and the state each reads on this tip" [REMP:649], a table of claims, the items
+   weakening each and the state each reads [REMP:651-665]. Section 6a below is built from section 1.
+2. Its section on engineering-handover readiness lists the ledger's twenty items as twelve remaining engineering, the qualification
+   E11-29, the architecture facts U-01, U-02 and U-04, HO-L and the rest. At `dd1aed00` the ledger counts "remaining engineering 20;
+   qualification 1; external architecture fact 3" [REMP:669]: its twenty are the twelve RE items with HO-A to HO-G and HO-L
+   [REMP:673-691], [REMP:696]; E11-29 is HO-H, qualification [REMP:692], and U-01, U-02 and U-04 are HO-I to HO-K, external
+   architecture facts [REMP:693-695], outside the twenty.
+
+The judgement's completion words, which neither sentence touches and which LAYER-STATUS carries for Layer 4 (as the coordinator's
+file and the queue's entry of 10:50 CEST give them): Layer 4's DESK gate NOT PASSED; engineering-handover readiness READY AS A DESK
+PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED. They are the coordinator's, recorded here for the
+page that cites this file; they replace none of the judgement's text.
+
+**Layer 4's DESK gate (the owner's part 19 [OWN:477]), assessed on `dd1aed00`: [COORDINATOR: DESK-gate verdict].**
+
+### The draft's proposal, re-read
+
+W12's proposed text as draft 2 wrote it (Slot L's proposal [DG1:362-409], re-read against the facts at `6bc4424e`; a PROPOSAL, never
+the verdict). Each mark *basis moved* is resolved against the promoted revision by W27: the resolution follows the mark, opened by
+*on `dd1aed00`:*, and says whether the sentence's basis now holds.
 
 **What acceptance at the desk gate with every dependant PROVISIONAL would require to be true** (each condition with its source; the
 state at the candidate in brackets):
 
 - Y1. The editable sources compose and regenerate on the integrated revision as on the base [CON:365-374] (true at the base; owed on
-  `__INTEGRATED__`; basis moved: 2c changed a generator line of record l8r2 and the reader of the change-list draft, re-read on 2b).
+  `dd1aed00`; basis moved: 2c changed a generator line of record l8r2 and the reader of the change-list draft, re-read on 2b). *on
+  `dd1aed00`:* the basis holds: the connected output's predicates read as at the base [CONP:365-374], "board A composes in L4-E9's
+  change-list order with every draft, every one with a row, and regenerates" [CONP:366] and "every mutation fails its check"
+  [CONP:374], on the regenerated outputs of 2b `d83d9f2d` and the candidate commit `c4438d6a`.
 - Y2. Each contradiction of section 5 that reads YES is either resolved or carried in the package with both citations, so that a
   receiving company meets it as a named item and not as a silent difference [CONST:21] (17 stand at YES on the candidate; each is
   named in at least one record or draft, and this draft found no single page in the candidate that lists them for a receiving
   company; basis moved: thirteen of the nineteen standing items now have a restatement, but only on next-set branches, which the
-  promoted revision does not carry).
+  promoted revision does not carry). *on `dd1aed00`:* the basis holds: no next-set commit is in the promoted revision (held by the
+  test), so the thirteen restatements are still on next-set branches only; read there, the standing count is 19 too, K-17 and K-28
+  standing in a changed form (section 9).
 - Y3. The calculations reproduce from the repository plus the named fetches and the named box jobs, with every pin current: L4-E9's
-  four pins [L4O:55] and record l4e7's key [SOLO:31] (both owed at the candidate; re-read on 2b and after the re-key).
+  four pins [L4O:55] and record l4e7's key [SOLO:31] (both owed at the candidate; re-read on 2b and after the re-key). *on
+  `dd1aed00`:* both current: the four pins equal their files [L4OP:55], [L4OP:64], [L4OP:67], [L4OP:106] (A2.3), and the cache's
+  KEY holds, "its KEY holds on this tree: no part differs" [SOLOP:31], the KEY MATCH df9030eaf2c8e7bf of section 9.
 - Y4. The review evidence is complete as given: the four checks filed, their negative verdicts kept [CX46:10], the method ended
   [CX46:206], every change after `4d0ff8a2` classified, and every substantive one verified or not credited [OWN:845] (Slot D's
   classification binds `1c6d56f5` only [I30:25]; basis moved: integration 1, 2a, set 31, 2c, the four pre-freeze merges and the merge
-  of `origin/main` are in no committed classification record).
+  of `origin/main` are in no committed classification record). *on `dd1aed00`:* the basis holds for the promoted revision, which
+  carries no classification record of these commits; W15's classification, filed with this adoption, names 13 rows REVIEWED-INPUT
+  CHANGED [CLS:74], [CLS:85], adopted on `fnd/adopt30a` by the other adoption author, and no check has read any of them.
 - Y5. The outstanding work is clearly scoped: the annex's four items [ANX:111-119] and the ledger's twenty remaining-engineering
   items, one qualification and three external architecture facts [REM:669] (basis moved: E11-37 is placed as HO-L on the candidate
   [REM:584-636] and the back-feed's reading is settled in the ledger [REM:522-526]; its class against the P0 list (A4.4) and record
-  l4e7's own text (A4.5) still differ).
+  l4e7's own text (A4.5) still differ). *on `dd1aed00`:* in part: the P0 list there is still revision 2, class 2 for E11-37
+  [P0L:25]; revision 3, adopted with this record (`v2/docs/records/l4close/P0-POWER-LIST.md`, row P0-8), gives the ledger's
+  class, HO-L remaining engineering [REMP:696], so A4.4's difference ends with that adoption; record l4e7's request is unchanged
+  between `6bc4424e` and `dd1aed00` and still carries the back-feed as S1's added row (b) [P11:120-123], so A4.5's difference stands.
 - Y6. No solvable circuit defect is parked in the supplier list [OWN:479]: the coordinator judges that the ledger's handover after
   the ended method [OWN:787] is not that parking, item by item for the desk-solvable ones (A4.1).
 - Y7. No unconditional completion is claimed: every dependant stays PROVISIONAL or OPEN as the records say [CON:336-340], [F01:212-214],
@@ -475,8 +532,9 @@ state at the candidate in brackets):
 - N1. A desk-solvable circuit defect found in the supplier annex, or handed over without its failed cases, attempted correction and
   affected outputs [OWN:787].
 - N2. A contradiction left on the promoted revision that changes an instruction, a state, a limit or a part (the YES rows of section
-  5), with no entry that names it [CONST:21] (basis moved: a next-set restatement is not on the promoted revision).
-- N3. A result credited on `__INTEGRATED__` that a substantive change after `4d0ff8a2` altered, without its targeted verification
+  5), with no entry that names it [CONST:21] (basis moved: a next-set restatement is not on the promoted revision). *on
+  `dd1aed00`:* the basis holds: no next-set commit is in the promoted revision (held by the test).
+- N3. A result credited on `dd1aed00` that a substantive change after `4d0ff8a2` altered, without its targeted verification
   [OWN:845].
 - N4. A calculation of the package that a receiving company cannot reproduce from the repository, the named held documents and the
   named box jobs on the promoted revision (A2.2, A2.3).
@@ -485,14 +543,42 @@ state at the candidate in brackets):
 
 **The completion claims, each reported apart** (the constitution [CONST:23]; Slot I's fold carries the same six lines [LS31:355-365]):
 
-- documents and editable artifacts: on main as a DESK candidate (the coordinator's promotion of `__INTEGRATED__` as `__PROMOTED__`; at
-  the candidate it is on its own branch);
+- documents and editable artifacts: on main as a DESK candidate (the coordinator's promotion of `dd1aed00` as `dd1aed00`, main
+  fast-forwarded at 10:36:57 CEST and the public mirror at the same sha; at the candidate it is on its own branch);
 - design reviewed and accepted: NO (cx45 and cx46, [CX45:10], [CX46:10]);
 - implemented: NONE ([PAGE:401], [PAGE:885]);
 - physical qualification: NONE ([REM:16-17]);
 - fabrication release: BLOCKED ([PAGE:885], [CON:4]);
 - power-design closure: BLOCKED ([PAGE:1005], [CON:4]) (basis moved: the base cited set 29's sentence [PAGE0:972]; set 31's page
-  states it at [PAGE:1005]).
+  states it at [PAGE:1005]). *on `dd1aed00`:* the basis holds: L4-E9's page there is set 31's byte for byte (held by the test), and
+  the connected output's line 4 reads "power-design closure and fabrication release stay BLOCKED" [CONP:4].
+
+## 6a. Y6, item by item: the twelve REMAINING ENGINEERING items at `dd1aed00`
+
+One row per item of the ledger's twelve cx46 findings NOT CLOSED at the promoted revision [REMP:100-103], built by W27 from each
+item's own fields (the brief named the ledger's section 4, whose rows are the claims the items weaken [REMP:649-665]; the fields are
+in section 1, see section 6, sentence 1). Each cell quotes the field's first words where they quote cleanly and cites the field's
+lines; the class is the summary's row [REMP:671-684]. Every row reads remaining engineering in the summary, none qualification, and
+every item carries an attempted-correction field. The cx46 words are each item's own classification entry, as the ledger quotes it.
+
+| Item | Ledger heading | The failing case | The P0 round's attempted correction | cx46's words | The affected outputs | Class (summary) |
+|---|---|---|---|---|---|---|
+| RE-1 | [REMP:105] | Failed cases: "No electrical case: a record defect. The list's rows P0-1 to P0-7" [REMP:113-114] | Attempted correction and the disposition: "Main 0d5f855e merged into the candidate: parts 23 to 25 and the four checks filed" [REMP:115-116] | "1. Missing governing inputs and twelve-row states: NOT CLOSED" [REMP:107] | Affected outputs: "Any reader of" [REMP:118-119] | remaining engineering [REMP:673] |
+| RE-2 | [REMP:125] | Failed cases: "C-ALLTX rev 3" [REMP:135-140] | Attempted correction: "The cap, correction" [REMP:141-146] | "2. Q1 reference loading, resistor corners and propagation: NOT CLOSED" [REMP:127] | Affected provisional outputs [REMP:155-159] | remaining engineering [REMP:674] |
+| RE-4 | [REMP:176] | Failed cases [REMP:185-189] | Attempted correction: "Record l8r2's dedicated-return drafts" [REMP:190-193] | "4. Q2 return placement and distributed solution: NOT CLOSED" [REMP:178] | Affected provisional outputs: "The return's rows" [REMP:200-203] | remaining engineering [REMP:675] |
+| RE-5 | [REMP:211] | Failed cases: "The fault table of the quorum" [REMP:219-222] | Attempted correction: "FW-B22, the quorum's message schedule" [REMP:223-227] | "5. Q3 CAN schedule, containment, quorum and recovery: NOT CLOSED" [REMP:213] | Affected provisional outputs [REMP:233-235] | remaining engineering [REMP:676] |
+| RE-6 | [REMP:243] | Failed cases: "V-B23's drafted acceptance, EN low within 0.2 s of a 0.30 A load, against the drafted" [REMP:252-256] | Attempted correction: "The rail trip per controller: 0.3 ohm sense, INA169 into 5.76 kOhm, a 1.17 s average, a" [REMP:257-259] | "6. Q3 independent clock/share/excess-current protection: NOT CLOSED" [REMP:245] | Affected provisional outputs: "V-B23's 0.2 s WITHDRAWN" [REMP:263-266] | remaining engineering [REMP:677] |
+| RE-7 | [REMP:274] | Failed case: "cx46's diagnostic countermodel, all ASSUMPTION inputs: 0.50 A for 0.40 s every 1.50 s, a" [REMP:283-286] | Attempted correction: "The rail trip's average bound and the constant-current figure 115.4 C at 0.2452 A" [REMP:287-288] | "7. Q3 sustained peak junction and qualification envelope: NOT CLOSED" [REMP:276] | Affected provisional outputs [REMP:293-297] | remaining engineering [REMP:678] |
+| RE-8 | [REMP:306] | Failed case: "Rev Y's rows, the cover for a rev X part, miss 125 C at the drop's worst corner" [REMP:315-316] | Attempted correction and the disposition: "Slot C's 6b768b1e: the old route" [REMP:317-320] | "8. Q3 consistency across active rows: NOT CLOSED" [REMP:308] | Affected provisional outputs: "Revision X HELD" [REMP:323-324] | remaining engineering [REMP:679] |
+| RE-9 | [REMP:331] | Failed case: "The guard's draw on DOCK_EN_OUT rises from 18.25 uA to at most 36.00 uA cold and 47.02 uA" [REMP:340-342] | Attempted correction and the disposition: "L4-E11 section 28 states the changed circuit and executes both allowance cases, 40 and 50" [REMP:343-346] | "9. Q5 guard propagation into L4-E11 and dependents: NOT CLOSED" [REMP:333] | Affected provisional outputs: "Every row resting on the allowance" [REMP:350] | remaining engineering [REMP:680] |
+| RE-10 | [REMP:357] | Failed cases: "The three latent single failures of round 8's guard with UNBOUNDED intervals" [REMP:366-370] | Attempted correction: "v2/docs/records/l8p/apply_gen_sch_a_thgfs.py, two guard paths sharing only the pour and" [REMP:371-373] | "10. Q5 common-path faults and automatic diagnostic: NOT CLOSED" [REMP:359] | Affected provisional outputs [REMP:380-382] | remaining engineering [REMP:681] |
+| RE-13 | [REMP:389] | Failed cases: "Those of RE-2, RE-4, RE-6, RE-7, RE-10, HO-C and HO-E, on which the connected rows rest" [REMP:398] | Attempted correction and the disposition: "l9t5_connected.out section 11 lists the seven fault rows, each with the cx46 item that" [REMP:399-402] | "13. Q7 connected coordination and service claims: NOT CLOSED" [REMP:391] | Affected provisional outputs: "Sections 5 to 10 of" [REMP:404] | remaining engineering [REMP:682] |
+| RE-17 | [REMP:409] | Failed cases: "The handed-over cases HO-A to HO-E" [REMP:416] | Attempted correction and the disposition: "The effects written at each claim" [REMP:417-418] | "17. Handed-over cases propagated to every affected claim: NOT CLOSED" [REMP:411] | Affected provisional outputs [REMP:420] | remaining engineering [REMP:683] |
+| RE-18 | [REMP:425] | Failed case: "A wording defect" [REMP:434] | Attempted correction and the disposition: "The solar author's 4d1d02de" [REMP:435-437] | "18. B2 uniformly unselected and withdrawn outside baseline: NOT CLOSED" [REMP:427] | Affected provisional outputs: "None in the baseline" [REMP:440] | remaining engineering [REMP:684] |
+
+The coordinator's reading, as its judgement of 10:45 CEST words it in the section on Y6 (held with the judgement, section 6):
+
+> The coordinator's reading: carried under an ended method, not parked.
 
 ## 7. The DESIGN gate, the coordinator's words (not this gate's)
 
@@ -532,24 +618,54 @@ inherit, PROVISIONAL or OPEN:
 
 ## 9. For the coordinator: what to check before adopting this text
 
+Each check below is followed by its tick at the adoption (W27, 6 October 2026, on `dd1aed00`), with the values copied from the
+coordinator's values file of 10:40:38 CEST.
+
 - **2b.** Bind the 2b sha; re-read every line marked *re-read on 2b* (F1.2, F2.1, A2.3, A2.6, Y1, Y3, K-26, K-28 and every `.out`
   citation); run `test_dgate2.` with `CAND` moved to the 2b sha (one constant) and read which citations move. The test holds that the
   eighteen DIGESTS-cr3 digests equal their files and that L4-E9's four pins differ from them at `6bc4424e`; on 2b the second is
   expected to turn, and the module's predicate then fails, which is the signal to restate A2.3 and K-28.
-- **The integrated and promoted shas.** Fill `__INTEGRATED__` (the final candidate commit, after 2b, the re-key and the candidate
-  commit) and `__PROMOTED__` (main after promotion); this draft replaces Slot L's `<INTEGRATED-SHA>` with `__INTEGRATED__`, the token
-  the supplier entry pages use. The counts of sections 4 and 5 hold only if no merge after `6bc4424e` changes the ledger or a K item's
-  file in the candidate.
-- **Slot D's citations.** Slot D's evidence draft cites L4-E9's page at `1c6d56f5` lines (criteria at 937 to 943 [EVD:39-43]); at
+  **Ticked.** 2b is `d83d9f2d`; the candidate after it is `c4438d6a` and the promoted revision `dd1aed00`. `test_dgate2.` run with
+  `CAND` moved to `dd1aed00` (a copy, the module unchanged): every alias row names a file there, every citation lies inside its file,
+  one quotation moves ("30 to 50 core-minutes" [SOLO:36]: record l4e7's paragraph 0a is rewritten for the re-keyed cache
+  [SOLOP:31-37]), and four read facts turn, each restated here: the four pins now bind (A2.3 and K-28, restated in place); the
+  eighteen DIGESTS-cr3 digests, equal to their files at `6bc4424e`, differ from seventeen of them at `dd1aed00`, since 2b and the
+  candidate commit regenerated the cascade after the cr3 runs (F2.1 and A2.6: the stability record predates the promoted revision, and
+  K-17 stands in a changed form, the ledger's item C [REMP:711-715] naming one differing digest where seventeen differ); L4-E11's
+  output is a2089b3f6682d7fd there [L4OP:64] and record l4e7's cache was last committed at `c2a532a9`, the re-key (F2.6 and A2.2:
+  "its KEY holds on this tree: no part differs" [SOLOP:31]). The lines marked *re-read on 2b*: F1.2 and Y1 read as at the base
+  [CONP:365-374]; K-26 unchanged [CONP:350-351]. The values: the l4e7 KEY, MATCH df9030eaf2c8e7bf (the cache keyed on Python 3.11
+  and pdftotext 22.12.0); the guard on every host, `candidate_guard: PASS` with 997 evidence files present and unchanged, every
+  output binding but the 4 declared and 1 results cache frozen (the runner at the freeze, the two boxes, main at the promotion);
+  the gate, `suite_gate: PASS` on candidate `dd1aed00`, 236 of 236 modules, 3116 PASS, 3 explained SKIP, 0 FAIL (the totals 2770,
+  48, 64 and 234 passed); the mirror, synced 2026-10-06T08:37:03Z, GitHub main at the same sha.
+- **The integrated and promoted shas.** Fill the integrated placeholder (the final candidate commit, after 2b, the re-key and the
+  candidate commit) and the promoted one (main after promotion); draft 2 replaced Slot L's `<INTEGRATED-SHA>` with the token the
+  supplier entry pages use. The counts of sections 4 and 5 hold only if no merge after `6bc4424e` changes the ledger or a K item's
+  file in the candidate. **Ticked.** Both bound: `dd1aed00d0a0a521063b5792550bc510c4707c59`, integrated, candidate and promoted alike. The ledger at `dd1aed00`
+  differs from `6bc4424e` in owner-file line numbers only (part 26's row moved them by one), no item, class or count: the summary
+  still reads "Counts: remaining engineering 20; qualification 1; external architecture fact 3; closed 4; conditional 2." [REMP:669]
+  (held by the test); every quotation of the K table is found at `dd1aed00` (the 2b tick's run), and the K table's standing
+  count holds at 19 (the 2b tick).
+- **Slot D's citations.** (Ticked: L4-E9's page is set 31's at `dd1aed00`, so the lines stand.) Slot D's evidence draft cites L4-E9's page at `1c6d56f5` lines (criteria at 937 to 943 [EVD:39-43]); at
   the base the same rows were [PAGE0:966-970] and on the candidate they are [PAGE:997-1001].
-- **The K table.** The column Standing reads "no" only where the candidate carries the correction (held by the test); a next-set
+- **The K table.** (Ticked: K-26 and K-28 re-read on `dd1aed00` in their rows; K-17 in the 2b tick.) The column Standing reads "no" only where the candidate carries the correction (held by the test); a next-set
   restatement adopted in the next set changes the next set's reading, not this one.
-- **The verdict placeholder** appears once as the verdict (and once, as code, in the header); the completion claims (the brief's five
+- **The verdict placeholder** (HELD: section 6; the coordinator's judgement replaces the verdict line once its two sentences are restated) appears once as the verdict (and once, as code, in the header); the completion claims (the brief's five
   and power-design closure) are written as briefed; the design-gate words appear in section 7 only.
-- **W11** (`fnd/w11l9t5`, K-26 and K-28): read at its tip `85b6f258`; a later tip is the coordinator's to read. Its generator lines
+- **W11** (`fnd/w11l9t5`, K-26 and K-28; ticked: `85b6f258` is not in `dd1aed00`, held by the test): read at its tip `85b6f258`; a later tip is the coordinator's to read. Its generator lines
   reach the connected output only when the coordinator's cascade regenerates it in the next set [W11T5R:458-459].
 
 ## 10. Left out, and why
+
+At the adoption (W27, 6 October 2026):
+
+- **The coordinator's judgement:** held, section 6, on its two sentences; inserted whole by the coordinator after restating them.
+- **A re-pointing of every `cand` citation to `dd1aed00`:** not done; W12's text keeps its revision, and the tick of section 9 lists
+  what moves at `dd1aed00` (one quotation and four read facts, each restated there or in place).
+- **The other files of the adoption** (RESULT.md and CLASSIFICATION.md): the other adoption author's, on `fnd/adopt30a`.
+
+Draft 2's own list:
 
 - **The 2b sha and every line only a regenerated output can settle:** 2b is not committed when this is written; the lines are marked
   *re-read on 2b*.
