@@ -1,6 +1,6 @@
 # Set 32: every commit of set 32's branches over their bases, classified (bound by `records/int32/RESULT.md`; the owner's part 25; MESHSAT-1357)
 
-**DONE:** the 30 commits of the five branches set 32's chain pins (fnd/w34pdftext `b397aada`, 13 commits over `aed4bd23`; fnd/s32attr `9210ab54`, 2 commits over `5b3153aa`; fnd/s32small `7b7219a7`, 4 commits over `eff28be3`; fnd/res32 `7ae61758`, 5 commits over `3057ae43`; fnd/l4e7cache `5ee1e66e`, 6 commits over `31928583`) classified, one row each, and the counts; W75's findings corrected and the coordinator's ruling on its F2 applied (row 15 `REVIEWED-INPUT CHANGED`; W78). **NOT DONE:** the rows of the integration's own commits (the chain's merges and converged outputs, this record's commits after `7ae61758`, the re-key's cache, the candidate commit), each a placeholder row below, and the rows of any commit a branch gains after this reading. **NEXT:** at the adoption, in this order: (1) the fill tool fills the sha cells of rows 32 and 33 with their commits (`<worktrees>/_bin/fill_res.py --set 32`: its template, the values, the apply; `test_res32.py` holds the record before the fill and after each of the tool's runs, W80); (2) the coordinator writes row 31 in full from git and the chain's log, one row per commit (31.1 onward, as W69 wrote set 31's row 34; row 31 carries no token), and rows 32 and 33's date, subject, files and class from git by hand, recomputes section 2 and extends the ranges of `test_res32.py` over the integration's commits (set 31's promoted revision to the candidate on the first-parent line, both named by the fill), as `test_res31.py`'s TIP moves with set 31's candidate row.
+**DONE:** the 34 commits of the five branches set 32's chain pins (fnd/w34pdftext `62300318`, 17 commits over `aed4bd23`; fnd/s32attr `9210ab54`, 2 commits over `5b3153aa`; fnd/s32small `7b7219a7`, 4 commits over `eff28be3`; fnd/res32 `7ae61758`, 5 commits over `3057ae43`; fnd/l4e7cache `5ee1e66e`, 6 commits over `31928583`) classified, one row each, and the counts; W75's findings corrected and the coordinator's ruling on its F2 applied (row 15 `REVIEWED-INPUT CHANGED`; W78); W81's four commits on fnd/w34pdftext classified as rows 13.1 to 13.4 (W85). **NOT DONE:** the rows of the integration's own commits (the chain's merges and converged outputs, this record's commits after `7ae61758`, the re-key's cache, the candidate commit), each a placeholder row below, and the rows of any commit a branch gains after this reading. **NEXT:** at the adoption, in this order: (1) the fill tool fills the sha cells of rows 32 and 33 with their commits (`<worktrees>/_bin/fill_res.py --set 32`: its template, the values, the apply; `test_res32.py` holds the record before the fill and after each of the tool's runs, W80); (2) the coordinator writes row 31 in full from git and the chain's log, one row per commit (31.1 onward, as W69 wrote set 31's row 34; row 31 carries no token), and rows 32 and 33's date, subject, files and class from git by hand, recomputes section 2 and extends the ranges of `test_res32.py` over the integration's commits (set 31's promoted revision to the candidate on the first-parent line, both named by the fill), as `test_res31.py`'s TIP moves with set 31's candidate row.
 
 **What this is.** Drafted by worker W44 on branch fnd/res32 (base `3057ae43`, set 31's lineage as the coordinator gave it) on 6
 October 2026 from 16:36 CEST, for adoption with `records/int32/RESULT.md` at set 32's promotion (queue item Q-64), in the form of set 31's
@@ -43,16 +43,31 @@ fill tool's runs, rows 32 and 33 unclassified in either form, and the NEXT line 
 fill's first run, when the commits that bound them are named. No row changes class and no count moves; no verdict, figure or claim of
 any file was changed.
 
+**Brought to W81's commits (6 October 2026, from 22:26 CEST).** Worker W85 (queue item Q-104, `<worktrees>/_runs/int30/QUEUE.md`,
+entry "| Q-104 |", `set 32's record gains W81's four fnd/w34pdftext commits`) classified the four commits W81 added to fnd/w34pdftext
+after W66's full dry run stopped on a test (`2184a968`, `877d81c5`, `da81447d` and the fix `62300318`), when the coordinator moved the
+chain's pin to W81's tip (`<worktrees>/_runs/int30/QUEUE.md`, entry "22:16 (clock) chain.sh EDITED BY THE COORDINATOR", `SRC_PDFTEXT b397aada -> 62300318`).
+Each was read with `git show -U0` over every file, and every file present at `4d0ff8a2` line by line. They are rows 13.1 to 13.4,
+numbered after row 13 so that no later row moves (W85, a SESSION decision under the owner's standing rule of 26 September 2026, as
+set 31's classification numbered its rows 3.4 and 3.5: the coordinator's ruling on W75's F2, W75's findings and the queue name rows 14
+to 33 by number; reversed by renumbering the table 1 to 37 and restating those references). Their classes are the rule's as this
+table applies it (reading A, the paragraph "Applied to the five branches"): none is `REVIEWED-INPUT CHANGED`; rows 13.2 and 13.3 touch
+two files of the delta cx46 read and say UNREVIEWED since cx46. Section 2 is recomputed: 34 rows, 12 touching rows, 24 file touches, 17
+distinct files; the wider readings count 12 rows and 6 rows. The dated paragraphs above keep the counts and row lists their authors
+wrote. No verdict, figure or claim of any file was changed.
+
 **The bounds.** Set 32's base is set 31's promoted revision (RESULT.md section 1; it does not exist when this table is written).
 Each branch is read over the commit where it leaves set 31's lineage, main or a branch merged before it in the chain's order, so that
 every commit has exactly one row: set 31's lineage tip as last read is fnd/int31regen `aa3322806da156d12f2b23dbe9fc98a8805926f0` (the
 re-key's cache commit on W41's converged commit, read with `git rev-parse` at 20:30 CEST), an ancestor of the promoted revision once set
 31 promotes it.
 
-- fnd/w34pdftext (the chain's step a2), tip `b397aada17befd8c6ee8be09550a785139c45066`, over `aed4bd234644c80fa494299b21099acf6d2454c1`
-  (`git merge-base aa332280 b397aada` prints it), `git rev-list --count aed4bd23..b397aada` prints 13;
+- fnd/w34pdftext (the chain's step a2), tip `62300318cbf256a178659d7635ecfd4a318c47d3` (W81's fix, the chain's pin since 22:16 CEST,
+  `<worktrees>/_runs/int32/chain.sh` `SRC_PDFTEXT=${SRC_PDFTEXT:-62300318}`; W73 read the tip `b397aada17befd8c6ee8be09550a785139c45066`,
+  13 commits), over `aed4bd234644c80fa494299b21099acf6d2454c1` (`git merge-base aa332280 62300318` prints it),
+  `git rev-list --count aed4bd23..62300318` prints 17;
 - fnd/s32attr (step a2b), tip `9210ab541e8144af530f928c1da98b96f90c89fd`, over `5b3153aa4136f08ab186a2b5da53c1c4f0c3ecac` (W53 cut
-  it from fnd/w34pdftext's commit 5b3153aa, which step a2 has merged: `git merge-base b397aada 9210ab54` prints it),
+  it from fnd/w34pdftext's commit 5b3153aa, which step a2 has merged: `git merge-base 62300318 9210ab54` prints it, as `git merge-base b397aada 9210ab54` did),
   `git rev-list --count 5b3153aa..9210ab54` prints 2;
 - fnd/s32small (step a3), tip `7b7219a7d0a695b6b866435116905964a68f5578`, over `eff28be3b80f882db545a849b0da1def0217f63d` (main's
   follow-up after set 30's adoption, in set 31's lineage since its merge `d5d9c252`), `git rev-list --count eff28be3..7b7219a7` prints 4;
@@ -63,10 +78,11 @@ re-key's cache commit on W41's converged commit, read with `git rev-parse` at 20
   prints 6. The brief's "seven" counts `31928583` too, the parent of `849e66c7`: it is set 31's commit, classified there, not here.
 
 No range holds a merge (`--merges` prints nothing on all five). Main needs no merge: the chain's step a1 asks whether main is in the
-lineage and merges it only if not, and on set 31's promoted revision it is. The tips were read with `git rev-parse` at 20:30 CEST; the
+lineage and merges it only if not, and on set 31's promoted revision it is. The tips were read with `git rev-parse` at 20:30 CEST
+(fnd/w34pdftext's again by W85 at 22:33 CEST, `62300318`); the
 chain's merge pins were read at 20:32 CEST, among them `<worktrees>/_runs/int32/chain.sh` `SRC_L4E7CACHE=${SRC_L4E7CACHE:-5ee1e66e}`
 (at about 20:25 it still read `2d81d8b2`; W71's completion moved it, `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W71 at about 20:21 CEST", `W66 told to replace PIN 2d81d8b2 by 5ee1e66e`).
-Rows 1 to 13 are fnd/w34pdftext's commits, 14 and 15 fnd/s32attr's, 16 to 19 fnd/s32small's, 20 to 24 fnd/res32's and 25 to 30
+Rows 1 to 13 and 13.1 to 13.4 are fnd/w34pdftext's commits (the paragraph "Brought to W81's commits"), 14 and 15 fnd/s32attr's, 16 to 19 fnd/s32small's, 20 to 24 fnd/res32's and 25 to 30
 fnd/l4e7cache's, each oldest first (`git rev-list --topo-order --reverse`), in the chain's merge order; every commit of the five ranges
 has exactly one row.
 
@@ -80,10 +96,11 @@ extracted texts and their sidecars under a `pdftext/` folder) and every file und
 **The delta cx46 read, the set each row's reason states membership in** ("a reviewed file" and "a file cx46 read" below mean a file of
 it; the class itself is set 30's rule, the paragraph after next). This table takes the set as W39 took it: the 60 files of `git diff --name-only 06077cee 4d0ff8a2` (the delta cx46 read; cx46's own base is
 `3057ae43:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8` `"base_commit": "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e",`)
-plus the L4-E9 page `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` and its output `l4e9_power_path.out`. 16 of the five ranges' 397
+plus the L4-E9 page `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` and its output `l4e9_power_path.out`. 17 of the five ranges' 413
 changed files are in that set: on fnd/w34pdftext `l8r2_gndret.py`, `l8r2_p0.py`, `l4e11_power.py`, `l4e9_power_path.py`, `l9t5_f01.py`,
-`l9t5_paloop.py`, `l9t5_t10.py`, `l8p_c4.py` and `SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`; on fnd/s32attr record l8p's and record
-l9t5's `README.md`, `T10-ROUND5.md`, `test_l8p.py` and `test_l9t5.py` (with `l8p_c4.py` and `l9t5_t10.py` again); on fnd/l4e7cache
+`l9t5_paloop.py`, `l9t5_t10.py`, `l8p_c4.py`, `SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`, and in W81's rows `test_l8r2.py` and
+`test_l8p.py`; on fnd/s32attr record l8p's and record l9t5's `README.md`, `T10-ROUND5.md` and `test_l9t5.py` (with `l8p_c4.py`,
+`l9t5_t10.py` and `test_l8p.py` again); on fnd/l4e7cache
 `l4e7_p0sol.py` and `test_l4e7.py`; none on fnd/s32small or fnd/res32. No baseline circuit draft (`apply_gen_sch_*`), no board generator
 (`gen_sch_*`), no netlist and no `.out` file changed on any of the five. Every row that touches a reviewed file says so at the end of its
 reason and says **UNREVIEWED since cx46**: no independent checker read any change of these ranges against cx46's candidate (W36's read of
@@ -111,7 +128,17 @@ they obtain a maker's PDF text (the extraction call becomes the helper's call on
 the text), never a figure, state word, composition, case, requirement or limit in their diff, and the annex's change is five line
 numbers in citations whose cited words are unchanged and one sentence inside its citation-form paragraph's line; no row of that branch
 carries another row's change into a file of the reviewed tree (W49's reconciliation, section 3, for rows 1 to 10; W73's reading for rows
-11 to 13). The precedent is set 30's row 44, a guard's logic corrected in `l4e7_p0sol.py`, a generator of cx46's delta, with its printed
+11 to 13). W81's rows 13.1 to 13.4 (W85's reading) declare the PDF text reads of three tests (`test_l5r4`, `test_l8p`, `test_l8r2`) and move
+three tests from the host's pdftotext to committed or held texts (`test_l3r5`, `test_l5r4`, `test_l8r2`; `test_l8p` had read through
+a generator's table that does not declare its sheet): each test's asserted sentences, figures and patterns are unchanged, only its read route; the
+entries rows 13.1 and 13.2 put in two generators' tables (`l8p_drafts.py`, `l8r2_drafts.py`, files of the reviewed tree outside the
+delta cx46 read) are removed by row 13.3, so both files at `62300318` are byte-identical to `b397aada`; rows 13.2 and 13.3 touch
+`test_l8r2.py` and `test_l8p.py`, files of the delta cx46 read, with no figure, state word, composition, case, requirement or limit in
+their diff and no REVIEWED-INPUT CHANGED row's words carried, so none of the four is REVIEWED-INPUT CHANGED; a test's read route is
+TEST and a table or declaration-only module is TOOLING (an input route), by their content (W85, a SESSION decision under the owner's
+standing rule of 26 September 2026, which reads the brief's "a row that changes or quotes into a file cx46 read" as the rule's two
+sentences, as this table read rows 2 to 4, 9, 11, 25, 27 and 29; reversed by re-classing rows 13.2 and 13.3 and recounting section 2).
+The precedent is set 30's row 44, a guard's logic corrected in `l4e7_p0sol.py`, a generator of cx46's delta, with its printed
 figures unchanged and classed DIGEST RE-PIN and GENERATOR DATA (text) there, its reason reading
 `eff28be3:v2/docs/records/int30/CLASSIFICATION.md:68` `no figure or verdict word moved`: rows 2, 3, 4 and 11 are that case; row 9's
 moved citation line numbers are also set 30's rows 1 and 13 (one line of a delta file changed, RECORD TEXT). WP-B's rows 27 and 29
@@ -128,19 +155,20 @@ coordinator's ruling on W75's F2, quoted in the paragraph "Corrected on W75's re
 table's own method for row 14. The first draft's precedent for classing it TEST, set 31's rows 3.4 and 3.5, does not hold: those rows
 came from a scan that excluded tests (`<worktrees>/_runs/claude/w49recon/REPORT-AS-RECEIVED.md:110` `(tests excluded)`), and their
 file, `test_l5pwr.py`, lies outside the delta cx46 read. Read with the wider rule (a touched reviewed file alone), rows 2, 3, 4, 9, 11,
-25, 27 and 29 would be REVIEWED-INPUT CHANGED too (10 rows with rows 14 and 15; by first class REVIEWED-INPUT CHANGED 10, RECORD TEXT
-14, TEST 1, TOOLING 5); row 15 is not among the rows that reading adds, because it is classed by quotation, not by its touch alone; set
+13.2, 13.3, 25, 27 and 29 would be REVIEWED-INPUT CHANGED too (12 rows with rows 14 and 15; by first class REVIEWED-INPUT CHANGED 12,
+RECORD TEXT 15, TEST 1, TOOLING 6); row 15 is not among the rows that reading adds, because it is classed by quotation, not by its touch alone; set
 30's rows 1, 13 and 44 did not take it (each touched a file of cx46's delta and was not classed REVIEWED-INPUT CHANGED). A second wider
 alternative reads "another row's change" in the second sentence as any row's change, a TOOLING row's included. W73 counted 3 rows under
-it; W75 (its F3) counted at least 6; W78's recount over every row that touches a file present at `4d0ff8a2` (rows 2 to 5, 7, 9, 11, 14
-to 16, 25 to 27 and 29) finds the same 6 rows, 7, 9, 14, 15, 27 and 29: rows 14 and 15 as above; rows 27 and 29 carry row 25's new KEY
+it; W75 (its F3) counted at least 6; W78's recount, extended by W85 to W81's rows, over every row that touches a file present at `4d0ff8a2` (rows 2
+to 5, 7, 9, 11, 13.1 to 13.3, 14 to 16, 25 to 27 and 29) finds the same 6 rows, 7, 9, 14, 15, 27 and 29: rows 14 and 15 as above; rows 27 and 29 carry row 25's new KEY
 part (`l4e11_numbers`, the evidence field) into paragraph 0a of `l4e7_p0sol.py`, a file of the delta; row 9's moved citations restate
 row 3's moved lines of `l4e11_power.py` in the annex (`81ecc1f2:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:183` `[E11PY:6019]`);
 row 7 restates rows 1 and 6's re-take route in `SUPPLIER-HANDOVER.md`, a file present at `4d0ff8a2`
 (`82e1e1c6:v2/docs/handover/supplier/SUPPLIER-HANDOVER.md:158` `python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/<record>`).
 Rows 2 to 5 and 11 call row 1's helper and declare their own reads (a call, and a table of a module's own reads, quote no other row's
-change), row 16 carries the coordinator's decision Q-53, not a row's, and rows 25 and 26 change the extractor they introduce or correct.
-By first class under that reading: REVIEWED-INPUT CHANGED 6, RECORD TEXT 13, TEST 1, TOOLING 10. W51's method looks a carried word up
+change), rows 13.1 to 13.3 declare three tests' reads and call row 1's helper from four tests (a declaration and a call; row 13.3
+removes the entries rows 13.1 and 13.2 put in two generators' tables), row 16 carries the coordinator's decision Q-53, not a row's, and rows 25 and 26 change the extractor they introduce or correct.
+By first class under that reading: REVIEWED-INPUT CHANGED 6, RECORD TEXT 14, TEST 1, TOOLING 13. W51's method looks a carried word up
 in the reasons of the `REVIEWED-INPUT CHANGED` rows, so a tool's own state is not such a change; this table takes that reading. W44's
 choice of the narrower reading for rows 2 to 4 and 9, and W73's for rows 11, 25, 27 and 29 (SESSION decisions under the owner's
 standing rule of 26 September 2026) rest on those precedents, set 31's caveat included; reversed by re-classing the named rows and
@@ -184,6 +212,10 @@ generator lines reach `l9t5_t10.out` and `l8p_c4.out` there, as set 31's row 33 
 | 11 | `4f558357` / `4f558357960458f0105b26a787e116f29431ad93` | 2026-10-06 18:15:41 | fix(records): l8p_c4.py declares and reads its three makers' texts through the helper with its own PDFTEXT table (the BZT52C read was in no table and refused on this branch, W53's finding; the texts are the committed BZT52C and 2N7002 extractions and the held-back LM26LV one, the re-take UNCHANGED); with pdftotext and pdftocairo refused it exits 0 with no call, its output the committed one plus three text lines and two moved source pins [MESHSAT-1357] | fnd/w34pdftext (W55, Q-74) | 1: v2/docs/records/l8p/ (1) | TOOLING + GENERATOR DATA (text) | record l8p's `l8p_c4.py` (+26 -4) reads its three makers' texts (the BZT52C, 2N7002 and LM26LV sheets) through the helper with its own `PDFTEXT` table, W53's finding (the BZT52C read was in no table and refused on the branch): `5b3153aa:v2/docs/records/l8p/l8p_c4.py:183` `t = G.pdftext(BZT)` now `4f558357:v2/docs/records/l8p/l8p_c4.py:183` `t = pdftext(BZT)`, the table and reader placed last (`4f558357:v2/docs/records/l8p/l8p_c4.py:1113` `PDFTEXT = {`) so that no line above moves; its input list gains the texts (printed as input lines when the output is regenerated); no new extraction (the texts are those `l8p_drafts.py` and `l8p_guard.py` declare); no figure, state word, composition, case, requirement or limit in the diff, so not REVIEWED-INPUT CHANGED under the rule stated above; no output committed; reviewed files it touches (1): `l8p_c4.py`; UNREVIEWED since cx46 |
 | 12 | `f26a52c4` / `f26a52c4474a37219e5731410630bf9df08dd30f` | 2026-10-06 18:25:20 | chore(records): checkpoint W55: test_pdftext_input gains the static declaration check (every extraction site the converted generators and four readers reach, resolved with ast through wrappers and callers, against the table it names; fixtures, the tree, the mutation at 5b3153aa naming l8p_guard.py:102 with the BZT52C sheet), every table's texts present, l8p_c4 run with both tools refused; the inventory and the helper's header list l8p_c4 [MESHSAT-1357] | fnd/w34pdftext (W55) | 3: v2/docs/records/_lib/ (2), v2/ecad/tools/ (1) | TEST + RECORD TEXT | `test_pdftext_input.py` (+704 -1) gains the static declaration check (every extraction site the converted generators and four readers reach, resolved with `ast` through wrappers and callers, against the table it names; the mutation at `5b3153aa` names `l8p_guard.py:102` with the BZT52C sheet); the inventory (+8 -3) and the helper's module docstring (+4 -1, text only) list `l8p_c4.py` as W55's conversion; no generator, output or file cx46 read |
 | 13 | `b397aada` / `b397aada17befd8c6ee8be09550a785139c45066` | 2026-10-06 18:30:01 | fix(records): the PDF text conversion gap closed for set 32: the inventory records l8p_c4's undeclared read (W53's finding), the correction, every converted generator and reader run once to scratch with pdftotext and pdftocairo refused (exit 0 and no call of their own; l4e13 and ripple_dense reach the l4e7 KEY group, l4e9 and l4e11 pdftocairo at the pinned sites) and the static declaration check; test_pdftext_input 16 passed, public hygiene 4 [MESHSAT-1357] | fnd/w34pdftext (W55) | 1: v2/docs/records/_lib/ (1) | RECORD TEXT | the inventory (+91 -0), its section 8: `l8p_c4.py`'s undeclared read (W53's finding), the correction, every converted generator and reader run once to scratch with pdftotext and pdftocairo refused, and the static declaration check; no generator, output or file cx46 read |
+| 13.1 | `2184a968` / `2184a9685243f81ff90c8743c5c491dd742db4b1` | 2026-10-06 21:46:47 | chore(records): checkpoint W81: TDK's held PTC sheet declared with -layout in l8p_drafts.py's PDFTEXT table (test_l8p.py:665 read it through pdftext() and refused in W66's full dry run) and in pdftext.FETCH (l8p's fetch script); the held text re-taken beside the sheet under held/pdftext/ (written, then unchanged on a second run; held back, never committed) [MESHSAT-1357] | fnd/w34pdftext (W81, Q-101) | 2: v2/docs/records/_lib/ (1), v2/docs/records/l8p/ (1) | TOOLING + GENERATOR DATA (text) | W66's finding (set 32's full dry run stopped at `test_l8p.py:665`: the test read TDK's held sheet through `l8p_drafts.pdftext()`, whose table did not declare it, and the helper refused): TDK's held sheet declared with `-layout` in `l8p_drafts.py`'s `PDFTEXT` table (+3 -0, one entry and two comment lines: `2184a968:v2/docs/records/l8p/l8p_drafts.py:292` `"v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf": [["-layout"]],`) and in `pdftext.FETCH` (l8p's fetch script, +1 -0); the held text re-taken beside the sheet under `held/pdftext/` and held back, no extraction committed; an entry of a generator's input table, which the generator prints among its inputs when its output is regenerated (`b397aada:v2/docs/records/l8p/l8p_drafts.py:287` `section 1 prints each text's sha256 among the inputs.`), although `l8p_drafts.py` does not read the sheet; row 13.3 removes the entry (the file at `da81447d` is byte-identical to `b397aada`); `l8p_drafts.py` is a file of the reviewed tree outside the delta cx46 read; a declaration, no figure, state word, composition, case, requirement or limit in the diff and no other row's change carried; no output committed; no file cx46 read |
+| 13.2 | `877d81c5` / `877d81c52e3c1fd1c7de09ffe07cf09307a30dbd` | 2026-10-06 21:53:14 | chore(records): checkpoint W81: three test-side direct pdftotext reads moved to committed extractions: test_l8r2's four held San Ace pages declared in l8r2_drafts.py's table (held back, pdftext.FETCH names l8r2's fetch script), test_l3r5's two Samsung 35E sheets read from l4e10's declared texts, test_l5r4's five RP2040 datasheet pages declared in the new l5r4/l5r4_pdftext.py (texts and sidecars committed); each re-taken twice, the second run unchanged; the three tests pass [MESHSAT-1357] | fnd/w34pdftext (W81) | 16: v2/docs/records/_lib/ (1), v2/docs/records/l5r4/ (1), v2/docs/records/l8r2/ (1), v2/ecad/tools/ (3), v2/vendor/ (10) | TOOLING + TEST + GENERATOR DATA (text) | W81's census of the test modules: three tests ran the host's pdftotext themselves, and each now reads an extraction through row 1's helper against a declared table: `test_l8r2.py` (+2 -1) its four held San Ace pages, declared in `l8r2_drafts.py`'s table (+6 -0, and `pdftext.FETCH` +4 -0), for example `b397aada:v2/ecad/tools/tests/test_l8r2.py:454` `txt = {k: " ".join(subprocess.run(["pdftotext", "-layout", p, "-"], capture_output=True).stdout.decode().split()) for k, p in HELD_FAN.items()}` now `877d81c5:v2/ecad/tools/tests/test_l8r2.py:456` `txt = {k: " ".join(m.pdf_text(os.path.relpath(p, ROOT)).split()) for k, p in HELD_FAN.items()}`; `test_l3r5.py` (+12 -6) its two Samsung 35E sheets from the texts record l4e10 already declares (no new text); `test_l5r4.py` (+9 -5) five RP2040 datasheet pages declared in the new `l5r4/l5r4_pdftext.py` (14 lines), a declaration-only module (a docstring and a `PDFTEXT` table, nothing runs); 5 committed extractions with their sidecars (10 files under `v2/vendor/rp2040/pdftext/`); each test's asserted sentences, figures and patterns unchanged, only its read route (TEST; the tables and the module are an input route, TOOLING, the more material); `l8r2_drafts.py`'s four entries would print the held texts among its inputs when its output is regenerated (`b397aada:v2/docs/records/l8r2/l8r2_drafts.py:774` `(section 1 prints each text's sha256 after the held sheets).`), GENERATOR DATA (text), and row 13.3 removes them; no figure, state word, composition, case, requirement or limit in the diff and no REVIEWED-INPUT CHANGED row's change carried, so not REVIEWED-INPUT CHANGED under the rule stated above; no output committed; reviewed files it touches (1): `test_l8r2.py`; UNREVIEWED since cx46 |
+| 13.3 | `da81447d` / `da81447d6c193420b13d3cb7add17531326fe8f8` | 2026-10-06 22:06:11 | chore(records): checkpoint W81: the tests' own PDF text reads declared in declaration-only tables (l8p_pdftext.py: TDK's held sheet, test_l8p.py:665's refusal in W66's dry run; l8r2_pdftext.py: four held San Ace pages; l5r4_pdftext.py), the generators back to b397aada; test_pdftext_input walks every test module as a caller (fixtures, the tree, the TDK mutation) and holds the census of the other routes as KNOWN; 27 passed [MESHSAT-1357] | fnd/w34pdftext (W81) | 8: v2/docs/records/_lib/ (1), v2/docs/records/l8p/ (2), v2/docs/records/l8r2/ (2), v2/ecad/tools/ (3) | TOOLING + TEST | the route of rows 13.1 and 13.2 corrected: a module's table holds its own reads (the inventory's section 2), so the tests' reads move to two new declaration-only modules, `l8p/l8p_pdftext.py` (15 lines) for TDK's held sheet and `l8r2/l8r2_pdftext.py` (19 lines) for the four San Ace pages, each a docstring and a `PDFTEXT` table that nothing runs (TOOLING, an input route); the entries rows 13.1 and 13.2 put in `l8p_drafts.py` (+0 -3) and `l8r2_drafts.py` (+0 -6) removed, both files at `da81447d` byte-identical to `b397aada`, so no generator's printed inputs move; `test_l8p.py` (+4 -1) and `test_l8r2.py` (+4 -2) read through the new tables, for example `b397aada:v2/ecad/tools/tests/test_l8p.py:665` `t = m.pdftext(m.TDK_SHEET)` now `da81447d:v2/ecad/tools/tests/test_l8p.py:667` `t = m.PT.pdf_text(ROOT, os.path.relpath(m.TDK_SHEET, ROOT), ["-layout"], m.PT.declared_in(os.path.join(REC, "l8p_pdftext.py")),`, their assertions unchanged; `test_pdftext_input.py` (+528 -1) walks every test module as a caller (its predicates (n) to (p): fixtures, the tree, the TDK mutation, the census of the other routes as KNOWN) (TEST); the two `pdftext.FETCH` comments restated; no figure, state word, composition, case, requirement or limit in the diff and no REVIEWED-INPUT CHANGED row's change carried, so not REVIEWED-INPUT CHANGED under the rule stated above; no output committed; reviewed files it touches (2): `test_l8p.py`, `test_l8r2.py`; UNREVIEWED since cx46 |
+| 13.4 | `62300318` / `62300318cbf256a178659d7635ecfd4a318c47d3` | 2026-10-06 22:14:25 | fix(records): the PDF text reads the tests make, declared and checked (W66's full dry run stopped at test_l8p.py:665 on TDK's undeclared held sheet): inventory section 9 with the census of every test module, the helper header's declaration-only class, the reflowed declaration modules; test_pdftext_input 19 passed, test_public_hygiene 4 [MESHSAT-1357] | fnd/w34pdftext (W81) | 5: v2/docs/records/_lib/ (2), v2/docs/records/l8p/ (1), v2/docs/records/l8r2/ (1), v2/ecad/tools/ (1) | RECORD TEXT + TEST | the inventory (+68 -2): its section 9 (`62300318:v2/docs/records/_lib/PDFTEXT-INVENTORY.md:379` `**The gap.** Set 32's full dry run stopped on a test, not a generator:`; the census of every test module's extraction routes, W81's decisions D-W81-1 to D-W81-3, the texts, the check) and its DONE line; the helper's module docstring (+3 -0, text only) gains the declaration-only class (`62300318:v2/docs/records/_lib/pdftext.py:48` `DECLARATION ONLY (3, W81, 6 October 2026; a docstring and a PDFTEXT literal, nothing runs)`); the two declaration-only modules' docstrings reflowed (`l8p_pdftext.py` +2 -1, `l8r2_pdftext.py` +4 -2, text only); `test_pdftext_input.py` (+2 -1) raises its floor of test calls of a reader to 50 and adds a floor of 41 sites read; no generator, output or file cx46 read |
 | 14 | `4d07a401` / `4d07a401e54e2b694b0854fb28563d208f96da2d` | 2026-10-06 18:02:39 | chore(records): checkpoint W53: NOT CLOSED attributed to its check at the three sites W48 named and the l8p README's line 3 (l9t5_t10.py 10j and l8p_c4.py 10c generator text, cx45 'P0-3/P0-5: NOT CONFIRMED', cx46's items 5 to 8 and 9 to 10 'NOT CLOSED'; T10-ROUND5.md line 1 and l8p README line 3 labelled history with the restatement), W11's rows W11-02 and W11-05 gain a dated pointer to W41's restatement; outputs not regenerated [MESHSAT-1357] | fnd/s32attr (W53, Q-72) | 5: v2/docs/records/l8p/ (2), v2/docs/records/l9t5/ (3) | REVIEWED-INPUT CHANGED + GENERATOR DATA (text) + RECORD TEXT | classed REVIEWED-INPUT CHANGED under set 30's rule's second sentence as ruled (reading A), as set 31's row 32 classed W38's F10 at `l9t5_connected.py` (the worked example, `records/int31/CLASSIFICATION.md` on fnd/res31): it carries set 30's row 8's change (`6b768b1e`, the disposition after cx46, which wrote "cx45's Q3 NOT CLOSED" and "cx45's Q5 NOT CLOSED") with each check's own word into four files of the reviewed tree, all in the delta cx46 read: `5b3153aa:v2/docs/records/l9t5/l9t5_t10.py:1378` `DISPOSITION (10j, after cx46): cx45's Q3 NOT CLOSED.` now `4d07a401:v2/docs/records/l9t5/l9t5_t10.py:1378` `DISPOSITION (10j, after cx46): Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'.` and `5b3153aa:v2/docs/records/l8p/l8p_c4.py:1028` `V6-m7 and cx45's Q5 NOT CLOSED.` now `4d07a401:v2/docs/records/l8p/l8p_c4.py:1028` `V6-m7 NOT CLOSED; Q5: cx45 'P0-5: NOT CONFIRMED', cx46's items 9 and 10 'NOT CLOSED'.` (GENERATOR DATA (text); the two outputs move at the integration), and `T10-ROUND5.md` line 1 and record l8p's `README.md` line 3 keep the old words as labelled history with the restatement after them (RECORD TEXT); cx45's word is now its own ("NOT CONFIRMED"), no figure changed and no state moved off OPEN (narrower or equal, as set 31's row 32 reads the same restatement); record l9t5's `README.md` rows W11-02 and W11-05 gain dated pointers to W41's restatement (RECORD TEXT); reviewed files it touches (5): `README.md` (l8p), `l8p_c4.py`, `README.md` (l9t5), `T10-ROUND5.md`, `l9t5_t10.py`; UNREVIEWED since cx46 |
 | 15 | `9210ab54` / `9210ab541e8144af530f928c1da98b96f90c89fd` | 2026-10-06 18:07:45 | fix(records): NOT CLOSED attributed to its check at set 32's remaining sites (cx45 'P0-3: NOT CONFIRMED' and 'P0-5: NOT CONFIRMED', cx46's items 5 to 8 and 9 to 10 'NOT CLOSED'): test_l8p's and test_l9t5's pins restated with their basis and the old words refused, test_recpack's anchor at bbba3e53 kept with its basis; outputs left for set 32's chain [MESHSAT-1357] | fnd/s32attr (W53) | 3: v2/ecad/tools/ (3) | REVIEWED-INPUT CHANGED + TEST | classed REVIEWED-INPUT CHANGED under set 30's rule's second sentence as ruled (reading A; the coordinator's ruling on W75's F2): it quotes this table's row 14's change (`4d07a401`, which carries set 30's row 8's) into two files of the reviewed tree, both in the delta cx46 read: `test_l9t5.py` (+13 -2) pins `9210ab54:v2/ecad/tools/tests/test_l9t5.py:1254` `"DISPOSITION (10j, after cx46): Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'"` and `test_l8p.py` (+6 -2) pins `9210ab54:v2/ecad/tools/tests/test_l8p.py:1104` `V6-m7 NOT CLOSED; Q5: cx45 'P0-5: NOT`, each with its basis and refusing the old words; `test_recpack.py` (+3 -0) keeps its anchor read at `bbba3e53` with its basis (TEST); the first draft classed the row TEST on set 31's rows 3.4 and 3.5, which do not apply (they came from a scan that excluded tests, and their file is outside the delta: the paragraph "Applied to the five branches"); no figure changed and no state moved off OPEN; reviewed files it touches (2): `test_l8p.py`, `test_l9t5.py`; UNREVIEWED since cx46 |
 | 16 | `dabfe4ca` / `dabfe4ca04095b8818f6c32961540fd3a84b8010` | 2026-10-06 15:54:30 | chore(handover): Q-53, the handover ZIP's cap raised to 104,857,600 bytes (100 MiB) with its reason in pack.yaml, the comments quoting the old cap dated as history, and a test of the cap and of the estimate's positive margin at the tree [MESHSAT-1357] | fnd/s32small (W40, Q-59 (Q-53)) | 2: v2/docs/handover/ (1), v2/ecad/tools/ (1) | TOOLING + RECORD TEXT + TEST | the handover packer's refusal threshold: `eff28be3:v2/docs/handover/pack.yaml:21` `max_zip_bytes: 52428800` now `dabfe4ca:v2/docs/handover/pack.yaml:33` `max_zip_bytes: 104857600`, the coordinator's reason in the comment above it, three comments quoting the old cap dated as history; a new test of the cap and of the estimate's positive margin in `test_handover_pack.py`; a packaging limit, not a requirement or limit of the design; not a file cx46 read |
@@ -207,43 +239,45 @@ generator lines reach `l9t5_t10.out` and `l8p_c4.out` there, as set 31's row 33 
 
 ## 2. Summary
 
-**Counts per class** over the 30 commits of the five ranges (the first class of each row; each row counted once; the three placeholder
+**Counts per class** over the 34 commits of the five ranges (the first class of each row; each row counted once; the three placeholder
 rows not counted; recomputed by `test_res32.py` from the table; row 15 counted `REVIEWED-INPUT CHANGED` by the coordinator's ruling on W75's F2):
 
 | Class | Rows (first class) | Rows carrying it at all |
 |---|---|---|
 | `REVIEWED-INPUT CHANGED` | 2 | 2 |
-| `RECORD TEXT` | 15 | 22 |
-| `GENERATOR DATA (text)` | 0 | 8 |
-| `TEST` | 1 | 19 |
+| `RECORD TEXT` | 16 | 23 |
+| `GENERATOR DATA (text)` | 0 | 10 |
+| `TEST` | 1 | 22 |
 | `DIGEST RE-PIN` | 0 | 0 |
 | `MERGE` | 0 | 0 |
-| `TOOLING` | 12 | 15 |
-| total | 30 | |
+| `TOOLING` | 15 | 18 |
+| total | 34 | |
 
-**Per branch** (first class): fnd/w34pdftext, 13 rows: RECORD TEXT 5, TEST 1, TOOLING 7; fnd/s32attr, 2 rows: REVIEWED-INPUT CHANGED 2; fnd/s32small, 4 rows: RECORD TEXT 3, TOOLING 1; fnd/res32, 5 rows: RECORD TEXT 5; fnd/l4e7cache, 6 rows: RECORD TEXT 2, TOOLING 4.
+**Per branch** (first class): fnd/w34pdftext, 17 rows: RECORD TEXT 6, TEST 1, TOOLING 10; fnd/s32attr, 2 rows: REVIEWED-INPUT CHANGED 2; fnd/s32small, 4 rows: RECORD TEXT 3, TOOLING 1; fnd/res32, 5 rows: RECORD TEXT 5; fnd/l4e7cache, 6 rows: RECORD TEXT 2, TOOLING 4.
 
-**The rows that touch a file cx46 read: 10, all UNREVIEWED since cx46.** In table order: `e50fa0e9` (2), `acdcb22e` (3), `4f66a0f1` (4),
-`81ecc1f2` (9), `4f558357` (11), `4d07a401` (14), `9210ab54` (15), `849e66c7` (25), `2178cae5` (27), `935584bf` (29); 21 file touches among
-them, each named in its row (16 distinct files).
+**The rows that touch a file cx46 read: 12, all UNREVIEWED since cx46.** In table order: `e50fa0e9` (2), `acdcb22e` (3), `4f66a0f1` (4),
+`81ecc1f2` (9), `4f558357` (11), `877d81c5` (13.2), `da81447d` (13.3), `4d07a401` (14), `9210ab54` (15), `849e66c7` (25), `2178cae5` (27), `935584bf` (29); 24 file touches among
+them, each named in its row (17 distinct files).
 
 **The statement RESULT.md binds** (every number from the table above):
 
-> Set 32's five branches carry 30 commits over their bases (fnd/w34pdftext 13 over `aed4bd23`, fnd/s32attr 2 over `5b3153aa`,
+> Set 32's five branches carry 34 commits over their bases (fnd/w34pdftext 17 over `aed4bd23`, fnd/s32attr 2 over `5b3153aa`,
 > fnd/s32small 4 over `eff28be3`, fnd/res32 5 over `3057ae43`, fnd/l4e7cache 6 over `31928583`; no merge). By first class: 2
-> REVIEWED-INPUT CHANGED first, 15 RECORD TEXT first, 1 TEST first, 12 TOOLING first. The two REVIEWED-INPUT CHANGED rows are W53's
+> REVIEWED-INPUT CHANGED first, 16 RECORD TEXT first, 1 TEST first, 15 TOOLING first. The two REVIEWED-INPUT CHANGED rows are W53's
 > attribution of cx45's and cx46's words in four files of the delta cx46 read (row 14, carrying set 30's row 8) and the tests that
-> quote its words in two files of that delta (row 15, carrying row 14). 10 of the 30 touch a file cx46 read (21 file touches, 16
-> distinct files: eight generators' input route, the annex's citation line numbers, the attribution and its tests, and record
-> l4e7's paragraph 0a logic and its test); each is UNREVIEWED since cx46, never credited. The outputs those generators write, several
+> quote its words in two files of that delta (row 15, carrying row 14). 12 of the 34 touch a file cx46 read (24 file touches, 17
+> distinct files: eight generators' input route, the annex's citation line numbers, the attribution and its tests, two tests' read
+> routes (W81's), and record l4e7's paragraph 0a logic and its test); each is UNREVIEWED since cx46, never credited. The outputs those generators write, several
 > of them files cx46 read, move only at the integration, whose rows are placeholders until the adoption. Passing the suite transfers no
 > engineering verdict to any row.
 
 **Not determined here:**
 
-- The rows after the five tips (placeholder rows 31 to 33, and any commit a branch gains after `b397aada`, `9210ab54`, `7b7219a7`,
-  `7ae61758` or `5ee1e66e`); this table's counts are over the 30 rows only.
+- The rows after the five tips (placeholder rows 31 to 33, and any commit a branch gains after `62300318`, `9210ab54`, `7b7219a7`,
+  `7ae61758` or `5ee1e66e`); this table's counts are over the 34 rows only.
 - Whether a second reader classes the same rows: W75 read this table independently (an AI review, not a qualified one; its F2 moved
-  row 15, as the coordinator ruled), and no second independent table of these ranges exists; set 32's lineage read is a later queue item.
-- The 342 vendor files (171 texts, 171 sidecars) were counted and grouped, not read line by line; W36 compared all of them with this
-  host's pdftotext (RESULT.md, section 2).
+  row 15, as the coordinator ruled; it read rows 1 to 33 before W81's rows existed, so no reader read rows 13.1 to 13.4), and no second
+  independent table of these ranges exists; set 32's lineage read is a later queue item.
+- The 352 vendor files (176 texts, 176 sidecars) were counted and grouped, not read line by line; W36 compared the 171 texts of W34's
+  rows with this host's pdftotext (RESULT.md, section 2); W81's five (row 13.2) were re-taken twice by W81, written and then unchanged,
+  and read by no independent reader.
