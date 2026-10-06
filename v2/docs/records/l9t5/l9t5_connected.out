@@ -7,23 +7,23 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
 
 0. PINS (sha256/16 path)
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
-   3e3c80cea11d4952 v2/docs/records/l4e9/l4e9_power_path.py
+   93a29dadc337082a v2/docs/records/l4e9/l4e9_power_path.py
    a2e63ac72de83586 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
-   d6dedef36512d893 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   10b4c94c762360b8 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    e90c11e00aeecbfb v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
    336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
-   a3aa39fc2b240a5d v2/docs/records/l9pwr/l9pwr_budget.out
-   66bcd44bf9056180 v2/docs/records/l9t5/l9t5_drafts.out
-   9a87c24ad73d4e72 v2/docs/records/efuse/efuse_check.out
-   4567223ca918a873 v2/docs/records/l9stk/l9stk_protection.out
+   2a6f27a98837476f v2/docs/records/l9pwr/l9pwr_budget.out
+   ce01a85a6561a242 v2/docs/records/l9t5/l9t5_drafts.out
+   7c88024d426e011e v2/docs/records/efuse/efuse_check.out
+   b09dd72fea5cc50a v2/docs/records/l9stk/l9stk_protection.out
    3dbd9bda6bce760d v2/docs/records/l8p/l8p_c4.out
-   557d846dc4651c25 v2/docs/records/l9t5/l9t5_t10.out
-   3f56104f2f0f8af6 v2/docs/records/l9t5/l9t5_f01.out
-   904c76d0daf2ab72 v2/docs/records/l8r2/l8r2_p0.out
-   03d24a1d6cc5f0df v2/docs/records/l4e7/l4e7_p0sol.out
-   398fc8a09de87bca v2/docs/records/l8r2/l8r2_dist.out
+   37da1d7c5ebc13d8 v2/docs/records/l9t5/l9t5_t10.out
+   656f1c3b810643c4 v2/docs/records/l9t5/l9t5_f01.out
+   c49afe8fd4bc67f3 v2/docs/records/l8r2/l8r2_p0.out
+   061ddb2d6756e1e8 v2/docs/records/l4e7/l4e7_p0sol.out
+   074ce2fd42379a1c v2/docs/records/l8r2/l8r2_dist.out
    f8960d36a62b8ee9 v2/docs/records/l8r2/l8r2_dist.py
-   4f62b9d5b49179e0 v2/docs/records/l4e7/l4e7_p0sol.py
+   34541a3d3a6c800a v2/docs/records/l4e7/l4e7_p0sol.py
    e91265091bfd67b0 v2/docs/records/l9t5/l9t5_t10.py
    aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
    2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
