@@ -10,8 +10,8 @@ reads; a quote that is not on its cited line at its revision; the three claims n
 outside the five tokens the coordinator declared; an em or en dash. Each predicate is also run on a mutant it must refuse.
 
 The coordinator's files (`<worktrees>/_runs`, outside the repository) are read by ONE test, which raises Skip where they are absent (a
-rented box): run it in the runner pass (the record's section 8). The two branch tips are read as last read by the record; a commit a
-branch gains later fails the coverage test until the coordinator adds its row at the adoption, which is the point.
+rented box): run it in the runner pass (the record's section 8). The two branch tips below are the ones the record read; a commit a
+branch gains later is outside these ranges, so the coordinator adds its row and moves the tip here at the adoption.
 
 Read-only: git is read with `git log`, `git show`, `git diff`, `git rev-list`, `git merge-base`, `git ls-tree` and `git cat-file`;
 nothing is written. No pytest is needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
@@ -329,6 +329,32 @@ def p_counts(texts, order):
     return bad
 
 
+ROW_NUMSTAT = (("82e1e1c6", "v2/docs/handover/supplier/SUPPLIER-HANDOVER.md", "(+%d -%d)"),
+               ("886704ea", "v2/docs/records/_lib/PDFTEXT-INVENTORY.md", "(+%d -%d)"),
+               ("a7a485ab", "v2/docs/records/s32small/apply_q55_ve16.py", "(%d lines)"),
+               ("a7a485ab", "v2/docs/records/s32small/README.md", "(%d lines)"))
+
+
+def p_row_numbers(text):
+    """The per-row numbers the reasons type: the committed extractions and their files, and the line counts named."""
+    bad = []
+    rows = {(_sha_cell(c) or ("", ""))[0]: c for c in _real(text)}
+    for short, c in rows.items():
+        m = re.search(r"(\d+) committed extractions with (?:their )?sidecars \((\d+) files", c[7])
+        if m:
+            names = _git("show", "--name-only", "--format=", short).split()
+            pt = [n for n in names if "/pdftext/" in n]
+            want = (len([n for n in pt if n.endswith(".txt")]), len(pt))
+            if (int(m.group(1)), int(m.group(2))) != want:
+                bad.append("%s: %s extractions in %s files typed, git has %d in %d" % (short, m.group(1), m.group(2), want[0], want[1]))
+    for short, path, form in ROW_NUMSTAT:
+        add, rem = _git("diff", "--numstat", short + "^", short, "--", path).split()[:2]
+        want = form % ((int(add), int(rem)) if form.count("%d") == 2 else (int(add),))
+        if short not in rows or want not in rows[short][7]:
+            bad.append("%s: the reason does not read %r for %s" % (short, want, path))
+    return bad
+
+
 def p_commits_named(texts):
     bad = []
     hist = set(_git("rev-list", LINEAGE, BRANCHES[0][2], BRANCHES[1][2]).split())
@@ -472,6 +498,11 @@ def t_every_count_typed_is_gits():
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "prints 10;", "prints 11;", order)
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "171 extractions committed", "172 extractions committed", order)
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "16:33:50, 53 s", "16:33:50, 54 s", order)
+    t = texts[CLASS]
+    assert not p_row_numbers(t), p_row_numbers(t)
+    assert p_row_numbers(t.replace("68 committed extractions with their sidecars (136 files)",
+                                   "68 committed extractions with their sidecars (138 files)", 1)), "a wrong file count in a reason passed"
+    assert p_row_numbers(t.replace("(+69 -21)", "(+69 -20)", 1)), "a wrong line count in a reason passed"
 
 
 def t_every_commit_named_is_in_the_histories_read_or_declared_outside_them():
