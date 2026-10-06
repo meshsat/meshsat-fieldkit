@@ -144,7 +144,10 @@ def quote_fails(text):
 
 
 ANCHORS = {  # every citation of sections 6 to 8 that no quotation checks: the text its cited lines must hold
-    "[REM:520-552]": ("### HO-H: E11-29", "### HO-K: U-04"),
+    # five keys moved with W23's re-cite of the annex (fnd/int31cite 1b2d5123; the ledger re-cited at 92b754c5, W4's rewrite of
+    # record l4e7's pages at 786aed2f): REM 520 to 552 to 549 to 581, P11 44 to 72, 110 to 144, 120 to 123 to 154 to 160, whose words W4
+    # rewrote ("(b) the panel withdrawn" is now "(b) the lower-source back-feed"); every range read at this tree by W25
+    "[REM:549-581]": ("### HO-H: E11-29", "### HO-K: U-04"),
     "[ANX:73]": ("E11-37's own row is section 7",),
     "[ANX:87]": ("D-06 in this section is the foundation decision of the pack",),
     "[ANX:93]": ("D-06's pocket (58 x 160 x 48 mm under B16's overhang)",),
@@ -165,9 +168,9 @@ ANCHORS = {  # every citation of sections 6 to 8 that no quotation checks: the t
     "[TP29:839-840]": ("If TP-E11-37's answer is negative:", "with two gates against the fallback line"),
     "[SET31:111-112]": ("D-06 the decision against D-06 the defect",),
     "[SET31:120-122]": ("45.88 K/W outside PC-05's stated places", "U-04's choice row"),
-    "[P11:44]": ("every part within its makers' absolute maximum ratings during the fault",),
-    "[P11:110]": ("**S1, a stiff 36 V source stepping onto the port with the guard on",),
-    "[P11:120-123]": ("(b) the panel withdrawn", "Q12's body-diode current inside its pulsed rating"),
+    "[P11:72]": ("every part within its makers' absolute maximum ratings during the fault",),
+    "[P11:144]": ("**S1, a stiff 36 V source stepping onto the port with the guard on",),
+    "[P11:154-160]": ("(b) the lower-source back-feed", "Q12's body-diode current inside its pulsed rating"),
     "[L4E9:1022]": ("| D-06 | the vehicle entry's interconnect",),
     "[L4E9:1380]": ("| D-06 | RESOLVED |",),
     "[E11:508]": ("E11-37 | EVIDENCE", "at -20, 25 and 70 C"),
