@@ -1,0 +1,370 @@
+MAXIMUM SOLUTIONS
+Rugged, High Current Spring Pins
+
+Mill-Max now offers a series of rugged spring pins capable of carrying 9 amps continuous current at a low 10° C temperature rise. The Mill-Max 0850, 0851, 0852 and 0853 spring pins are
+the perfect solution for rugged applications and for use in circuits operating at currents above
+signal level.
+The 085X series is characterized by a greater mass and surface area which provides a lower
+resistance electrical path than miniature spring pins. Because they are designed and built with
+the same precision of our miniature spring pins they exhibit excellent signal integrity in shock
+and vibration environments.
+These large scale spring pins feature a gold plated stainless steel spring, .050”(1.27 mm) diameter solid plunger and thick wall construction to withstand the rigors of demanding applications. Designed for through hole mounting, each pin has a large diameter post and flange
+providing for a perpendicular and secure PCB attachment.
+The 085X series provides a generous .045”(1.14 mm) mid-stroke and .090” (2.29 mm) maximum stroke allowing for use in applications where stack up tolerances are great. Applications
+include board stacking, docking stations, cable assemblies, quick connects and anywhere there
+is a blind mate situation.
+Rated at 1,000,000 cycles minimum, the Mill-Max 085X series spring pins are the best choice for
+higher-current, high reliability spring pin requirements.
+For more information, visit: www.mill-max.com/PR617.
+
+(4/14 -- PR617)
+Mill-Max Mfg. Corp. • 190 Pine Hollow Road, Oyster Bay, NY 11771
+516-922-6000 • Fax: 516-922-9253 • www.mill-max.com
+
+SPRING-LOADED PINS
+',6&5(7(635,1*-/2$'('&217$&76s32:(5635,1*3,16
+
+0850
+
+0851
+
+0853
+
+0852
+
+Power spring pin
+4PMEFS.PVOUJONJONPVOUJOHIPMF
+
+Power spring pin
+4PMEFS.PVOUJONJONPVOUJOHIPMF
+
+Power spring pin
+4PMEFS.PVOUJONJONPVOUJOHIPMF
+
+Power spring pin
+4PMEFS.PVOUJONJONPVOUJOHIPMF
+
+0850-0-15-20-83-14-11-0
+
+0851-0-15-20-82-14-11-0
+
+0853-0-15-20-82-14-11-0
+
+MID
+STROKE
+
+MID
+STROKE
+
+MID
+STROKE
+
+.045
+
+0852-0-15-20-83-14-11-0
+
+.045
+
+.045
+
+.045
+
+.050 DIA.
+
+.050 DIA.
+
+.050 DIA.
+
+.090
+
+.090 STROKE
+
+.095 DIA.
+
+.095 DIA.
+.153 DIA.
+
+.095 DIA.
+
+.030
+
+.030
+
+.304
+.087 DIA.
+
+.318
+
+.111 DIA.
+
+.095 DIA.
+.288
+.125 DIA.
+
+.087 DIA.
+
+.060
+
+.030
+
+.304
+
+.092 DIA.
+
+.265
+
+.153 DIA.
+
+.204
+
+MAX
+
+.090 STROKE
+
+MAX
+
+.050 DIA.
+
+MAX
+.090 STROKE
+
+.030
+
+.087 DIA.
+
+.204
+
+(2x)
+
+.087 DIA.
+
+.090
+
+.040 DIA.
+
+.060
+
+0854
+
+0855
+
+0856
+
+0861
+
+Power spring pin, Soldercup
+"DDFQUTXJSFTJ[FTVQUPu%JB
+
+Power spring pin, Wire termination for
+XJSFTJ[FT"8(.BY"8(.JO
+
+Power spring pin
+4PMEFS.PVOUJONJONPVOUJOHIPMF
+
+4PMEFS.PVOUJONJONPVOUJOHIPMF
+'PSDF!.JE4USPLFH
+
+0854-0-15-20-82-14-11-0
+
+MID
+.045 STROKE
+
+.050 DIA.
+
+0855-0-15-20-82-14-11-0
+
+MAX
+
+.090 STROKE
+
+.050 DIA.
+
+MID
+.045 STROKE
+
+0856-0-15-20-82-14-11-0
+
+0861-0-15-20-82-14-11-0
+
+MAX
+
+.090 STROKE
+
+.050 DIA.
+
+.045
+
+MID
+STROKE .090
+
+.030
+
+.030
+.125 DIA.
+.509
+
+.087 DIA.
+
+.260
+
+.100 DIA.
+
+.265
+
+.153 DIA.
+
+.067 DIA.
+HOLE
+
+.155 DIA.
+
+.040 DIA.
+
+.310
+
+.158 DIA.
+
+.090
+
+.310
+.220
+
+.090
+
+.140 DIA.
+
+.030
+.559
+
+.087 DIA.
+.180
+
+.080
+
+.318
+
+.095 DIA.
+
+.125 DIA.
+.087 DIA.
+
+.100 DIA.
+
+.112
+
+6*A
+<=;84.
+
+.040
+.092 DIA.
+
+.095 DIA.
+
+.095 DIA.
+
+62<=;84.
+MAX
+STROKE
+
+.187 DIA.
+.125
+
+.051
+
+.040 DIA.
+
+.125
+
+.067 DIA.
+HOLE
+
+0871
+
+0871-0-15-20-82-14-11-0
+-POHTUSPLF 4VSGBDF.PVOU
+'PSDF!.JE4USPLFH
+62<=;84.
+
+6*A
+<=;84.
+
+.040
+
+.080
+
+PAGE 28 | SPRING-LOADED CONNECTORS
+
+.092 DIA.
+
+.090
+
+.140 DIA.
+.155 DIA.
+
+.310
+
+.158 DIA.
+.187 DIA.
+
+.051
+
+Material Specifications:
+Sleeve & Plunger Material: Copper Alloy
+Spring Material: 4UBJOMFTT4UFFM
+Sleeve & Plunger Finish: Pu(PMEPWFS/JDLFM
+Spring Finish: Pu(PMEPWFS/JDLFM
+Dimensions: Inches
+Tolerances On: -FOHUIT
+RoHS - 2
+%JBNFUFST
+2011/65/EU
+"OHMFT
+
+Mechanical & Electrical Specifications:
+
+Order Code: 08XX - X - 15 - 20 - 8X - 14 - 11 - 0
+
+Durability:   DZDMFT
+Rated Current (Free air):
+$POUJOVPVTBNQT!$UFNQFSBUVSFSJTF
+Contact Resistance: N: max.
+
+Spring Number
+Spring
+Number
+
+Mid.
+Stroke
+
+Max.
+Stroke
+
+82
+83
+
+
+
+
+
+
+
+Initial Force
+Force @
+Mid. Stroke (Pre-Load)
+
+Environmental Specifications:
+Operating temperature range:   C
+82, 83 Springs are not
+interchangeable
+
+
+
+H
+H
+
+.JMM.BY.GH$PSQt1JOF)PMMPX3PBE 10#PY 0ZTUFS#BZ /:tt'BYtXXXNJMMNBYDPN
+
+25 g
+25 g
+
+

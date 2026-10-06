@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 6 -l 6 v2/vendor/connectors/jst-vh-catalogue.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "6",
+  "-l",
+  "6"
+ ],
+ "pdf": "v2/vendor/connectors/jst-vh-catalogue.pdf",
+ "pdf_sha256": "d51e669c597988b20c0963daf5bef7356cbd2104c1f867e9107c6fa6cd2b899c",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.p6.txt",
+ "text_bytes": 2784,
+ "text_sha256": "7fa687969bf36d291dd1c8afd516f02ef3cf8425e9b4cca246fb49d565e33907"
+}

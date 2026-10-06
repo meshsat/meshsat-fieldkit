@@ -1,0 +1,46 @@
+                                                                                                              VH CONNECTOR
+
+   Model number allocation
+
+Headers with posts omitted (standard type)
+
+  1）Polarized header (N-1) with post omitted                           Example） Circuit No.   1   2   3   4   5   6   7
+     However, this only applies when 4 posts or more are used                    Circuit (post) ○ ○ ○ ○ ○ × ○ ○: with post
+                                                                                 Model No.      B6P7-VH       ×: without post
+            B＊1 P＊2 -VH
+
+  2）Polarized header with circuit No. 2 post omitted                   Example） Circuit No.   1   2   3   4   5   6   7
+     However, this only applies when 4 posts or more are used
+                                                                                 Circuit (post) ○ × ○ ○ ○ ○ ○ ○: with post
+                                                                                                              ×: without post
+            B＊1 P＊2 -VH-L                                                        Model No.      B6P7-VH-L
+
+
+
+  3）Header with pitch size doubled by omitting even numbered posts
+     However, this only applies if the total number of circuits
+     (including circuits without posts) is an odd number.
+
+          ①Header with pitch size doubled (7.92 mm)                    Example） Circuit No.   1   2   3   4   5   6   7
+                                                                                 Circuit (post) ○ × ○ × ○ × ○ ○: with post
+            B＊1 P＊2 -VH                                                          Model No.      B4P7-VH       ×: without post
+
+
+          ②Header with pitch size tripled (11.88 mm)                   Example） Circuit No.   1   2   3   4   5   6   7
+                                                                                 Circuit (post) ○ × × ○ × × ○ ○: with post
+            B＊1 P＊2 -VH                                                          Model No.      B3P7-VH       ×: without post
+
+
+          ③Header with pitch size quadrupled (15.84 mm)                Example） Circuit No.   1   2   3   4   5   6   7   8   9
+                                                                                 Circuit (post) ○ × × × ○ × × × ○ ○: with post
+            B＊1 P＊2 -VH                                                          Model No.      B3P9-VH           ×: without post
+
+
+Note) ＊1: Actual number of circuits (actual number of posts)
+      ＊2: Total number of circuits (including post-omitted circuits)
+
+
+
+
+                                                                        ‑6‑
+

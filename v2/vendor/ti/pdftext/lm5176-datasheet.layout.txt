@@ -1,0 +1,2699 @@
+                                                                                                                                                                    LM5176
+                                                                                                                                   SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+             LM5176 55-V Wide VIN Synchronous 4-switch Buck-boost Controller
+
+1 Features                                                                                                       3 Description
+•   Functional Safety-Capable                                                                                    The LM5176 is a synchronous four-switch buck-boost
+    – Documentation available to aid functional safety                                                           DC/DC controller capable of regulating the output
+        system design                                                                                            voltage at, above, or below the input voltage. The
+•   Single inductor buck-boost controller for step-up/                                                           LM5176 operates over a wide input voltage range of
+    step-down DC/DC conversion                                                                                   4.2 V to 55 V (60-V absolute maximum) to support a
+•   Wide VIN: 4.2 V (2.5 V with bias) to 55 V (60 V                                                              variety of applications.
+    maximum)                                                                                                     The LM5176 uses current-mode control both in
+•   Flexible VOUT: 0.8 V to 55 V                                                                                 buck and boost modes of operation for superior
+•   VOUT short protection                                                                                        load and line regulation. The switching frequency
+•   High efficiency buck-boost transition                                                                        is programmed by an external resistor and can be
+•   Adjustable switching frequency                                                                               synchronized to an external clock signal.
+•   Optional frequency sync and dithering
+•   Integrated 2-A MOSFET gate drivers                                                                           The device also features a programmable soft-start
+•   Cycle-by-cycle current limit and optional hiccup                                                             function and offers protection features including cycle-
+•   Optional input or output average current limiting                                                            by-cycle current limiting, input undervoltage lockout
+•   Programmable input UVLO and soft start                                                                       (UVLO), output overvoltage protection (OVP), and
+•   Power Good and output overvoltage protection                                                                 thermal shutdown. In addition, the LM5176 features
+•   Available in HTSSOP-28 and QFN-28 packages                                                                   optional average input or output current limiting,
+•   Create a custom design using the LM5176 with the                                                             optional spread spectrum to reduce peak EMI, and
+    WEBENCH Power Designer                                                                                       optional hiccup mode protection in sustained overload
+                                                                                                                 conditions.
+2 Applications
+                                                                                                                                  Device Information
+•   Industrial PC power supplies
+                                                                                                                   PART NUMBER         PACKAGE              BODY SIZE
+•   USB power delivery
+                                                                                                                                   HTSSOP (28)         9.70 mm × 4.40 mm
+•   Battery-powered systems                                                                                      LM5176
+•   LED lighting                                                                                                                   QFN (28)            5.00 mm × 4.00 mm
+
+                             VIN
+
+
+
+
+                                                                                                                    VCC                       VOUT
+                                                             VISNS
+
+
+                                                                            VIN
+
+
+                                                                                   ISNS(-)
+
+
+                                                                                               ISNS(+)
+
+
+
+
+                                       Enable   EN/UVLO                                                  BOOT1
+
+
+                                                                                                         HDRV1
+                                   Power Good   PGOOD
+
+                                                                                                          SW1
+                                                SS
+                                                                                                         LDRV1
+
+                                                SLOPE
+                                                                       LM5176                               CS
+
+                                                RT/SYNC
+                                                                                                          CSG
+
+
+                                                COMP                                                     LDRV2
+
+
+                                                                                                          SW2
+                                                AGND
+
+                                                                                                         BOOT2        VCC
+                                                PGND
+                                                                                                         HDRV2
+                                                                     MODE
+
+
+
+
+                                                VCC
+                                                          DITH
+
+
+
+
+                                                                                             BIAS
+
+
+
+
+                                                                                                         VOSNS
+                                                                                  FB
+
+
+
+
+                                                                        Simplified Schematic
+
+
+
+
+     An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+     intellectual property matters and other important disclaimers. PRODUCTION DATA.
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                                                       www.ti.com
+
+
+                                                                        Table of Contents
+1 Features............................................................................1   8 Application and Implementation.................................. 21
+2 Applications..................................................................... 1       8.1 Application Information............................................. 21
+3 Description.......................................................................1       8.2 Typical Application.................................................... 21
+4 Revision History.............................................................. 2        9 Power Supply Recommendations................................29
+5 Pin Configuration and Functions...................................3                     10 Layout...........................................................................30
+6 Specifications.................................................................. 5        10.1 Layout Guidelines................................................... 30
+  6.1 Absolute Maximum Ratings........................................ 5                    10.2 Layout Example...................................................... 31
+  6.2 ESD Ratings............................................................... 5        11 Device and Documentation Support..........................32
+  6.3 Recommended Operating Conditions.........................5                            11.1 Device Support........................................................32
+  6.4 Thermal Information....................................................6              11.2 Documentation Support.......................................... 32
+  6.5 Electrical Characteristics.............................................6              11.3 Receiving Notification of Documentation Updates.. 32
+  6.6 Typical Characteristics................................................ 9             11.4 Support Resources................................................. 32
+7 Detailed Description......................................................13              11.5 Trademarks............................................................. 32
+  7.1 Overview................................................................... 13        11.6 Electrostatic Discharge Caution.............................. 32
+  7.2 Functional Block Diagram......................................... 14                  11.7 Glossary.................................................................. 33
+  7.3 Feature Description...................................................14            12 Mechanical, Packaging, and Orderable
+  7.4 Device Functional Modes..........................................19                   Information.................................................................... 33
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+Changes from Revision C (June 2020) to Revision D (August 2021)                                             Page
+• Updated the numbering format for tables, figures, and cross-references throughout the document. ................1
+
+Changes from Revision B (June 2020) to Revision C (June 2020)                                                                                 Page
+• Added functional safety bullet to the Section 1 ..................................................................................................1
+
+
+
+
+2       Submit Document Feedback                                                                                           Copyright © 2021 Texas Instruments Incorporated
+
+                                                                      Product Folder Links: LM5176
+                                                                                                                                                          LM5176
+www.ti.com                                                                                              SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+5 Pin Configuration and Functions
+
+
+
+
+                                                                                                                   EN/UVLO
+
+
+
+
+                                                                                                                                   HDRV1
+
+
+                                                                                                                                           BOOT1
+    EN/UVLO        1                                    28        SW1
+
+
+
+
+                                                                                                VISNS
+
+
+
+
+                                                                                                                             SW1
+                                                                                                         VIN
+          VIN      2                                    27        HDRV1
+
+
+
+
+                                                                                                28
+
+
+                                                                                                         27
+
+
+                                                                                                                   26
+
+
+                                                                                                                             25
+
+
+                                                                                                                                   24
+
+
+                                                                                                                                           23
+        VISNS      3                                    26        BOOT1
+
+        MODE       4                                    25        LDRV1         MODE     1                                                         22   LDRV1
+
+         DITH      5                                    24        BIAS
+                                                                                  DITH   2                                                         21   BIAS
+
+           RT      6                                    23        VCC
+                                                                                   RT    3                                                         20   VCC
+       SLOPE       7                                    22        PGND
+                                   LM5176
+                                  HTSSOP-28                                     SLOPE    4                                                         19   PGND
+           SS      8                                    21        LDRV2
+
+        COMP       9                                    20        BOOT2            SS    5                                                         18   LDRV2
+
+        AGND       10                                   19        HDRV2
+                                                                                COMP     6                                                         17   BOOT2
+
+           FB      11                                   18        SW2
+                                                                                 AGND    7                                                         16   HDRV2
+       VOSNS       12                                   17        PGOOD
+                                                                                   FB    8                                                         15   SW2
+       ISNS(±)     13                                   16        CS
+
+       ISNS(+)     14                                   15        CSG
+
+
+
+
+                                                                                                         10
+
+
+                                                                                                                   11
+
+
+                                                                                                                             12
+
+
+                                                                                                                                   13
+
+
+                                                                                                                                           14
+                                                                                                9
+                                                                                                VOSNS
+
+
+                                                                                                         ISNS(±)
+
+
+                                                                                                                   ISNS(+)
+
+
+                                                                                                                             CSG
+
+
+                                                                                                                                   CS
+
+
+                                                                                                                                           PGOOD
+      Figure 5-1. PWP Package 28-Pin HTSSOP With
+                   PowerPAD™ Top View
+                                                                                  Figure 5-2. RHF Package 28-Pin QFN With
+                                                                                             PowerPAD Top View
+
+                                                             Table 5-1. Pin Functions
+                   PIN
+                                              I/O                                            DESCRIPTION
+ NAME              HTSSOP        QFN
+                                                      Enable pin. For EN/UVLO < 0.4 V, the LM5176 is in a low current shutdown mode. For
+ EN/UVLO                1          26             I   EN/UVLO > 1.22 V, the PWM function is enabled, provided VCC exceeds the VCC UV
+                                                      threshold.
+ VIN                    2          27         I/P     The input supply pin to the IC. Connect VIN to a supply voltage between 4.2 V and 55 V.
+ VISNS                  3          28             I   VIN sense input. Connect to power stage input rail.
+                                                      1.38 V < MODE < 2.22 V: CCM, hiccup enabled (set RMODE resistor to AGND = 93.1 kΩ)
+ MODE                   4          1              I   2.6 V < MODE < VCC: CCM, hiccup disabled (set RMODE resistor to AGND = 200 kΩ or
+                                                      connect to VCC)
+                                                      A capacitor connected between the DITH pin and AGND is charged and discharged with a
+                                                      current source. As the voltage on the DITH pin ramps up and down the oscillator frequency
+ DITH                   5          2              I   is modulated by 10% of the nominal frequency set by the RT resistor. Grounding the DITH
+                                                      pin will disable the dithering feature. In the external Sync mode, the DITH pin voltage is
+                                                      ignored.
+                                                      Switching frequency programming pin. An external resistor is connected to the RT/SYNC
+ RT/SYNC                6          3              I   pin and AGND to set the switching frequency. This pin can also be used to synchronize the
+                                                      PWM controller to an external clock.
+                                                      A capacitor connected between the SLOPE pin and AGND provides the slope
+ SLOPE                  7          4              I
+                                                      compensation ramp for stable current mode operation in both buck and boost mode.
+                                                      Soft-start programming pin. A capacitor between the SS pin and AGND pin programs
+ SS                     8          5              I
+                                                      soft-start time.
+                                                      Output of the error amplifier. An external RC network connected between COMP and
+ COMP                   9          6              O
+                                                      AGND compensates the regulator feedback loop.
+ AGND                   10         7              G   Analog ground of the IC
+                                                      Feedback pin for output voltage regulation. Connect a resistor divider network from the
+ FB                     11         8              I
+                                                      output of the converter to the FB pin.
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                                              Submit Document Feedback              3
+                                                             Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                          www.ti.com
+
+                                             Table 5-1. Pin Functions (continued)
+                    PIN
+                                       I/O                                            DESCRIPTION
+    NAME           HTSSOP      QFN
+    VOSNS             12         9      I      VOUT sense input. Connect to the power stage output rail.
+                                               Input or output current sense amplifier inputs. An optional current sense resistor connected
+                                               between ISNS(+) and ISNS(–) can be located either on the input side or on the output
+    ISNS(–)           13        10             side of the converter. If the sensed voltage across the ISNS(+) and ISNS(-) pins reaches
+                                        I
+    ISNS(+)           14        11             50 mV, a slow constant current (CC) control loop becomes active and starts discharging
+                                               the soft-start capacitor to regulate the drop across ISNS(+) and ISNS(–) to 50 mV. Short
+                                               ISNS(+) and ISNS(–) together to disable this feature.
+                                               The negative or ground input to the PWM current sense amplifier. Connect directly to the
+    CSG               15        12      I
+                                               low-side (ground) of the current sense resistor.
+    CS                16        13      I      The positive input to the PWM current sense amplifier
+                                               Power-Good open drain output. PGOOD is pulled low when FB is outside a -9%/+10%
+    PGOOD             17        14     O
+                                               regulation window around the 0.8-V VREF.
+    SW2               18        15
+                                        I      The boost and the buck side switching nodes, respectively.
+    SW1               28        25
+    HDRV2             19        16             Output of the high-side gate drivers. Connect directly to the gates of the high-side
+                                       O
+    HDRV1             27        24             MOSFETs.
+    BOOT2             20        17             An external capacitor is required between the BOOT1, BOOT2 pins and the SW1, SW2
+                                       P
+    BOOT1             26        23             pins respectively to provide bias to the high-side MOSFET gate drivers.
+    LDRV2             21        18             Output of the low-side gate drivers. Connect directly to the gates of the low-side
+                                       O
+    LDRV1             25        22             MOSFETs.
+    PGND              22        19     G       Power ground of the IC. The high current ground connection to the low-side gate drivers
+    VCC               23        20    I/O/P    Output of the VCC bias regulator. Connect capacitor to ground.
+                                               Optional input to the VCC bias regulator. Powering VCC from an external supply instead
+    BIAS              24        21     I/P     of VIN can reduce power loss at high VIN. For VBIAS > 8 V, the VCC regulator draws power
+                                               from the BIAS pin.
+                                               Solder the PowerPAD to the analog ground. If possible, use thermal vias to connect to a
+    PowerPAD™         —         —      —
+                                               PCB ground plane for improved power dissipation.
+
+
+
+
+4          Submit Document Feedback                                                                Copyright © 2021 Texas Instruments Incorporated
+
+                                                     Product Folder Links: LM5176
+                                                                                                                                       LM5176
+www.ti.com                                                                                        SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+6 Specifications
+6.1 Absolute Maximum Ratings
+(1)
+
+                                                                                                              MIN          MAX        UNIT
+ VIN, EN/UVLO, VISNS, VOSNS, ISNS(+), ISNS(–)                                                                 –0.3            60        V
+ BIAS                                                                                                         –0.3            40        V
+ FB, SS, DITH, RT/SYNC, SLOPE, COMP                                                                           –0.3           3.6        V
+ SW1, SW2                                                                                                         –1          60        V
+ SW1, SW2 (20 ns transient)                                                                                   –5.0            65        V
+ VCC, MODE, PGOOD                                                                                             –0.3           8.5        V
+ LDRV1, LDRV2                                                                                                 –0.3           8.5        V
+ BOOT1, HDRV1 with respect to SW1                                                                             –0.3           8.5        V
+ BOOT2, HDRV2 with respect to SW2                                                                             –0.3           8.5        V
+ BOOT1, BOOT2                                                                                                 –0.3            68        V
+ ISNS(+) with respect to ISNS(-)                                                                              -0.3           0.3        V
+ CS, CSG                                                                                                      –0.3           0.3        V
+ Operating junction temperature                                                                                –40          150
+                                                                                                                                       °C
+ Storage temperature, Tstg                                                                                     –65          150
+
+(1)     Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress
+        ratings only, which do not imply functional operation of the device at these or any other conditions beyond those indicated under
+        Recommended Operating Conditions. Exposure to absolute-maximum-rated conditions for extended periods may affect device
+        reliability.
+
+6.2 ESD Ratings
+                                                                                                                           VALUE        UNIT
+                 Human body model (HBM) ESD stress voltage(2)                                                              ±2000
+ VESD (1)                                                                                                                                   V
+                 Charged device model (CDM) ESD stress voltage(3)                                                           ±750
+
+(1)     Electrostatic discharge (ESD) to measure device sensitivity and immunity to damage caused by assembly line electrostatic discharges
+        into the device.
+(2)     Level listed above is the passing level per ANSI/ESDA/JEDEC JS-001. JEDEC document JEP155 states that 500 V HBM allows safe
+        manufacturing with a standard ESD control process.
+(3)     Level listed above is the passing level per EIA-JEDEC JESD22-C101. JEDEC document JEP157 states that 250 V CDM allows safe
+        manufacturing with a standard ESD control process.
+
+6.3 Recommended Operating Conditions
+over operating free-air temperature range (unless otherwise noted)(1)
+                                                                                                           MIN              MAX       UNIT
+ VIN                          Input bias voltage                                                            4.2                55       V
+ VISNS                        Input power stage voltage with external bias (BIAS ≥ 5 V or VIN ≥             2.5                55
+                                                                                                                                        V
+                              4.5 V)
+ BIAS                         Bias supply voltage (when VCC in regulation)                                    8                36       V
+ VOSNS                        Output voltage range                                                          0.8                55       V
+ EN/UVLO                      Enable voltage range                                                            0                55       V
+ ISNS(+), ISNS(–)             Average current sense common mode range                                         0                55       V
+ TJ                           Operating temperature(2)                                                      –40              125        °C
+ fsw                          Operating frequency                                                           100              600       kHz
+
+(1)     Recommended Operating Conditions are conditions under the device is intended to be functional. For specifications and test
+        conditions, see Section 6.5.
+(2)     High junction temperatures degrade operating lifetimes. Operating lifetime is de-rated for junction temperatures greater than 125°C.
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                               Submit Document Feedback          5
+                                                         Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                                www.ti.com
+
+6.4 Thermal Information
+                                                                                             LM5176
+                               THERMAL METRIC(1)                                PWP (HTSSOP)           RHF (QFN)                  UNIT
+                                                                                             28 PINS
+    RθJA         Junction-to-ambient thermal resistance                               32.6               34.7                     °C/W
+    RθJC(top)    Junction-to-case (top) thermal resistance                            21.4               26.6                     °C/W
+    RθJB         Junction-to-board thermal resistance                                  8.2                6.3                     °C/W
+    ψJT          Junction-to-top characterization parameter                            0.3                0.3                     °C/W
+    ψJB          Junction-to-board characterization parameter                          8.3                6.2                     °C/W
+    RθJC(bot)    Junction-to-case (bottom) thermal resistance                           1                 2.0                     °C/W
+
+(1)        For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+           report.
+
+6.5 Electrical Characteristics
+Typical values correspond to TJ = 25°C. Minimum and maximum limits apply over the –40°C to 125°C junction temperature
+range unless otherwise stated. VIN = 24 V unless otherwise stated.(1)
+                            PARAMETER                                       TEST CONDITION                      MIN     TYP       MAX       UNIT
+    SUPPLY VOLTAGE (VIN)
+    IQ                VIN shutdown current                        VEN/UVLO = 0 V                                          2.6        10      µA
+                      VIN operating current                       VEN/UVLO = 2 V, VFB = 0.9 V                               2         4      mA
+    VCC
+    VVCC(VIN)         Regulation voltage                          VBIAS = 0 V, VCC open                         6.95    7.35       7.88       V
+    VUV(VCC)          VCC undervoltage lockout                    VCC increasing                                3.11    3.27       3.43       V
+                      Undervoltage hysteresis                                                                            176                 mV
+    IVCC              VCC current limit                           VVCC = 0 V                                     65                          mA
+    ROUT(VCC)         VCC regulator output impedance              IVCC = 30 mA, VIN = 4 V                                   8        16       Ω
+    BIAS
+    VBIAS(SW)         BIAS switchover voltage                     VIN = 24 V                                    7.25        8      8.75       V
+    EN/UVLO
+    VEN(STBY)         Standby threshold                           EN/UVLO rising                                0.55    0.82       0.97       V
+    IEN(STBY)         Standby source current                      VEN/UVLO = 1.1 V                                1         2         3      µA
+    VEN(OP)           Operating threshold                         EN/UVLO rising                                1.17    1.22       1.29       V
+    ΔIHYS(OP)         Operating hysteresis current                VEN/UVLO = 1.5 V                              2.15    3.15       4.25      µA
+    SS
+    ISS               Soft-start pullup current                   VSS = 0 V                                     3.75        5      6.35      µA
+    VSS(CL)           SS clamp voltage                            SS open                                               1.21                  V
+    VFB - VSS         FB to SS offset                             VSS = 0 V                                              –18                 mV
+    EA (ERROR AMPLIFIER)
+    VREF              Feedback reference voltage                  FB = COMP                                 0.788      0.800      0.812       V
+    gmEA              Error amplifier gm                                                                                1.31                 mS
+    ISINK/ISOURCE     COMP sink/source current                    VFB=VREF ± 300 mV                                      280                 µA
+    ROUT              Amplifier output resistance                                                                         20                 MΩ
+    BW                Unity gain bandwidth                                                                                  2               MHz
+    IBIAS(FB)         Feedback pin input bias current             FB in regulation                                                   25      nA
+    FREQUENCY
+    fSW(1)            Switching frequency 1                       RT = 40 kΩ                                    175      200        225
+                                                                                                                                             kHz
+    fSW(2)            Switching frequency 2                       RT = 20 kΩ                                    350      390        430
+
+
+6            Submit Document Feedback                                                                    Copyright © 2021 Texas Instruments Incorporated
+
+                                                              Product Folder Links: LM5176
+                                                                                                                                    LM5176
+www.ti.com                                                                                         SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+Typical values correspond to TJ = 25°C. Minimum and maximum limits apply over the –40°C to 125°C junction temperature
+range unless otherwise stated. VIN = 24 V unless otherwise stated.(1)
+                         PARAMETER                                       TEST CONDITION                    MIN      TYP     MAX     UNIT
+ DITHER
+ IDITHER           Dither source/sink current                                                                         11             µA
+ VDITHER           Dither high threshold                                                                            1.27
+                                                                                                                                      V
+                   Dither low threshold                                                                             1.16
+ SYNC
+ VSYNC             Sync input high threshold                                                                2.1
+                                                                                                                                      V
+                   Sync input low threshold                                                                                   1.2
+ PWSYNC            Minimum sync input pulse width                                                            50                       ns
+ CURRENT LIMIT
+                   Buck current limit threshold (Valley,        VIN = VVISNS = 24 V, VVOSNS = 12 V,
+ VCS(BUCK)                                                                                                   66       80       94    mV
+                   HTSSOP-28)                                   VSLOPE = 0 V
+                   Buck current limit threshold (Valley,        VIN = VVISNS = 24 V, VVOSNS = 12 V,                                  mV
+                                                                                                             60       80       94
+                   QFN-28)                                      VSLOPE = 0 V
+                   Boost current limit threshold (Peak,         VIN = VVISNS = 12 V, VVOSNS = 18 V,
+ VCS(BOOST)                                                                                                 100      120      140    mV
+                   HTSSOP-28)                                   VSLOPE = 0 V
+                   Boost current limit threshold (Peak,         VIN = VVISNS = 12 V, VVOSNS = 18 V,                                  mV
+                                                                                                             96      120      140
+                   QFN-28)                                      VSLOPE = 0 V
+ IBIAS(CS/CSG)     CS/CSG pin bias current                      VCS = VCSG = 0 V                                     -80
+                                                                                                                                     µA
+ IOFFSET(CS/CSG) CSG pin bias current                           VCS = VCSG = 0 V                                               19
+ CONSTANT CURRENT LOOP
+                                                                VISNS(-) = 24 V, sweep ISNS(+), VSS =
+ VSNS              Average current loop regulation target                                                    43       50       57    mV
+                                                                0.8 V
+ ISNS              ISNS(+), ISNS(–) pin bias currents           VISNS(+) = VISNS(–) = VIN = 24 V                       3             µA
+                                                                VISNS(+)–VISNS(–) = 55 mV, VSS = 0.5
+ Gm                gm of soft-start pulldown amplifier                                                                 1             mS
+                                                                V
+ SLOPE
+                                                                VIN = VVISNS = 24 V, VVOSNS = 12 V,
+                   Buck adaptive slope current                                                               24       30       35    µA
+                                                                VSLOPE = 0 V
+ ISLOPE
+                                                                VIN = VVISNS = 12 V, VVOSNS = 18 V,
+                   Boost adaptive slope current                                                              13       17       21    µA
+                                                                VSLOPE = 0 V
+ gmSLOPE           Slope compensation amplifier gm                                                                     2             µS
+ MODE
+ IMODE             Source current out of MODE pin                                                            17       20       23    µA
+ VCCM_HIC          CCM with hiccup threshold                                                               1.18     1.28     1.38     V
+ VCCM              CCM no hiccup threshold                                                                 2.22      2.4      2.6     V
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                               Submit Document Feedback          7
+                                                            Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                               www.ti.com
+
+Typical values correspond to TJ = 25°C. Minimum and maximum limits apply over the –40°C to 125°C junction temperature
+range unless otherwise stated. VIN = 24 V unless otherwise stated.(1)
+                           PARAMETER                                       TEST CONDITION                    MIN       TYP       MAX       UNIT
+    PGOOD
+    VPGD             PGOOD trip threshold for falling FB         Measured with respect to VREF                         –9%
+                     PGOOD trip threshold for rising FB          Measured with respect to VREF                         10%
+                     Hysteresis                                                                                       2.5%
+    ILEAK(PGD)       PGOOD leakage current                                                                                         100      nA
+    ISINK(PGD)       PGOOD sink current                          VPGOOD = 0.4 V                                 2        4.2       6.5      mA
+    OUTPUT OVP
+    VOVP             Output overvoltage threshold at FB pin      Measured with respect to VREF                         10%
+                     Hysteresis                                                                                       2.5%
+    NMOS DRIVERS
+                     Driver peak source current                  VBOOT - VSW = 7 V                                       1.8                 A
+    IHDRV1,2
+                     Driver peak sink current                    VBOOT - VSW = 7 V                                       2.2                 A
+                     Driver peak source current                                                                          1.8                 A
+    ILDRV1,2
+                     Driver peak sink current                                                                            2.2                 A
+                     Driver pullup resistance                    VBOOT - VSW = 7 V                                       1.8                 Ω
+    RHDRV1,2
+                     Driver pulldown resistance                  VBOOT - VSW = 7 V                                       1.1                 Ω
+    VUV(BOOT1,2)     BOOT1,2 to SW1,2 UVLO threshold             HDRV1,2 shut off                                        3.4                 V
+                     BOOT1,2 to SW1,2 UVLO hysteresis            HDRV1,2 start switching                                150                 mV
+                     Driver pullup resistance                                                                            1.7                 Ω
+    RLDRV1,2
+                     Driver pulldown resistance                                                                          1.3                 Ω
+    tDT1             Dead time HDRV1,2 off to LDRV1,2 on                                                                 45                 ns
+    tDT2             Dead time LDRV1,2 off to HDRV1,2 on                                                                 45                 ns
+    THERMAL SHUTDOWN
+    TSD              Thermal shutdown temperature                                                                       165                 °C
+    TSD(HYS)         Thermal shutdown hysteresis                                                                         15                 °C
+
+(1)        All minimum and maximum limits are specified by correlating the electrical characteristics to process and temperature variations and
+           applying statistical process control.
+
+
+
+
+8          Submit Document Feedback                                                                     Copyright © 2021 Texas Instruments Incorporated
+
+                                                            Product Folder Links: LM5176
+                                                                                                                                                                             LM5176
+www.ti.com                                                                                                                             SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+6.6 Typical Characteristics
+At TA = 25°C, unless otherwise stated.
+
+                       99                                                                                       100
+
+
+                       98
+                                                                                                                 96
+
+
+
+
+                                                                                               EFFICIENCY (%)
+      EFFICIENCY (%)
+
+
+
+
+                       97
+                                                                                                                 92
+
+                       96
+                                                                                                                 88
+                       95
+
+                                                                                                                 84                                                 VIN = 9V
+                       94
+                                                                                                                                                                    VIN = 12V
+                                                                                                                                                                    VIN = 24V
+                       93                                                                                        80
+                             5    10        15   20   25     30   35   40        45   50                                0          1          2      3       4      5             6
+                                                       VIN (V)                                                                                LOAD CURRENT (A)                    D008
+                                                                                      D009
+
+                                 VOUT = 12 V           fsw = 300 kHz             L1 = 4.7 μH                                VOUT = 12 V            fsw = 300 kHz         L1 = 4.7 μH
+                                  IOUT = 5 A                                                                                Figure 6-2. Efficiency vs Load
+                                   Figure 6-1. Efficiency vs VIN
+                       600                                                                                      8
+
+
+                       500
+                                                                                                                6
+    FREQUENCY (kHz)
+
+
+
+
+                       400
+                                                                                                    VCC (V)
+
+
+
+
+                       300                                                                                      4
+
+
+                       200
+                                                                                                                2
+                       100
+
+
+                         0                                                                                      0
+                          10      20        30   40   50    60    70   80        90   100                           0          2          4          6       8     10         12
+                                                       RT (k:)                         D004                                                       VIN (V)                     D002
+                                 Figure 6-3. Oscillator Frequency                                                                  Figure 6-4. VCC vs VIN
+                       3.0                                                                                      3.0
+
+
+                                                                                                                2.5
+                       2.6
+
+                                                                                                                2.0
+                       2.2
+    IIN (mA)
+
+
+
+
+                                                                                               IIN (PA)
+
+
+
+
+                                                                                                                1.5
+                       1.8
+                                                                                                                1.0
+
+                       1.4                                                                                                                                               -40 qC
+                                                                                                                0.5
+                                                                        BIAS = 0V                                                                                         25 qC
+                                                                        BIAS = 12V                                                                                       125 qC
+                       1.0                                                                                      0.0
+                             0         10        20      30       40        50        60                              0        10         20         30      40     50        60
+                                                       VIN (V)                         D007
+                                                                                                                                                   VIN (V)                        D010
+
+                                 Figure 6-5. IIN Operating vs VIN                                                           Figure 6-6. IIN Shutdown vs VIN
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                                                                       Submit Document Feedback           9
+                                                                             Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                                                                          www.ti.com
+
+                                1.30                                                                                         110
+
+
+                                                                                                                             100
+
+
+
+
+                                                                                                   BUCK CURRENT LIMIT (mV)
+                                1.26
+
+                                                                                                                              90
+     VEN/UVLO (V)
+
+
+
+
+                                1.22
+
+                                                                                                                              80
+                                1.18
+                                                                                                                              70
+
+                                1.14
+                                                                                                                              60
+
+
+                                1.10                                                                                          50
+                                   -40    -20   0      20   40  60    80    100    120   140                                    -40    -20   0      20   40  60    80       100   120   140
+                                                        TEMPERATURE (qC)                  D013                                                       TEMPERATURE (qC)                     D014
+
+     Figure 6-7. ENABLE/UVLO Rising Threshold vs                                                         Figure 6-8. Buck Current Limit vs Temperature
+                     Temperature
+                                150
+     BOOST CURRENT LIMIT (mV)
+
+
+
+
+                                140
+                                                                                                                             SW1
+                                130
+                                                                                                                             SW2
+                                120
+
+
+                                110
+                                                                                                                              IL1
+                                100
+
+
+                                 90
+                                   -40    -20   0      20   40  60    80    100    120   140
+                                                        TEMPERATURE (qC)                  D015                                         VOUT = 12 V            VIN = 6 V
+     Figure 6-9. Boost Current Limit vs Temperature                                                                          Figure 6-10. Forced CCM Operation (Boost)
+
+
+                                SW1                                                                                          SW1
+
+
+                                SW2                                                                                          SW2
+
+
+
+
+                                 IL1                                                                                          IL1
+
+
+
+
+                                         VOUT = 12 V           VIN = 11 V                                                             VOUT = 12 V            VIN = 12 V
+
+     Figure 6-11. Forced CCM Operation (Buck-Boost)                                               Figure 6-12. Forced CCM Operation (Buck-Boost)
+
+
+
+
+10                              Submit Document Feedback                                                                                             Copyright © 2021 Texas Instruments Incorporated
+
+                                                                                  Product Folder Links: LM5176
+                                                                                                                                       LM5176
+www.ti.com                                                                                        SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+                                                                               SW1
+        SW1
+
+
+
+        SW2                                                                    SW2
+
+
+
+                                                                                IL1
+         IL1
+
+
+
+
+                    VOUT = 12 V         VIN = 13 V                                         VOUT = 12 V      VIN = 24 V
+
+   Figure 6-13. Forced CCM Operation (Buck-Boost)                              Figure 6-14. Forced CCM Operation (Buck)
+
+           VOUT                                                                   VOUT
+           500 mV/div                                                             500 mV/div
+
+
+
+
+               IOUT                                                                   IOUT
+               2 A/div                                                                2 A/div
+
+
+
+                                                      500 µs/div                                                          500 µs/div
+
+                   VOUT = 6 V            VIN = 11 V      Load 3 A to 6 A                 VOUT = 12 V         VIN = 12 V      Load 3 A to 6 A
+
+                   Figure 6-15. Load Step (Boost)                                     Figure 6-16. Load Step (Buck-Boost)
+
+           VOUT
+           500 mV/div                                                             VIN
+                                                                                  10 V/div
+
+
+               IOUT                                                               VOUT
+               2 A/div                                                            1 V/div
+
+                                                                                      IL
+                                                      500 µs/div                      5 A/div                             1 ms/div
+
+                  VOUT = 24 V            VIN = 12 V      Load 3 A to 6 A          VIN = 8 V to 24 V        VOUT = 12 V            IOUT = 3 A
+
+                   Figure 6-17. Load Step (Buck)                                            Figure 6-18. Line Transient
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                              Submit Document Feedback          11
+                                                           Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                                www.ti.com
+
+                                                                                     15
+                               Overload
+                               released
+         VOUT                                                                        12
+         5 V/div
+                                                                                     9
+
+
+
+
+                                                                          VOUT (V)
+                                                                                     6
+
+
+                                                                                     3
+
+          IL
+                                                                                     0
+          5 A/div                              20 ms/div                                  0        1       2       3       4      5      6
+                                                                                                                IOUT (A)
+               VIN = 24 V        VOUT = 12 V     Hiccup Enabled                                                                          D021
+
+                                                                                              VIN = 24 V       RSNS = 10 mΩ
+         Figure 6-19. Hiccup Mode Current Limit
+                                                                    Figure 6-20. Constant Current Constant Voltage
+                                                                                   (CCCV) Operation
+
+
+
+
+12    Submit Document Feedback                                                                             Copyright © 2021 Texas Instruments Incorporated
+
+                                                   Product Folder Links: LM5176
+                                                                                                                  LM5176
+www.ti.com                                                                       SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+7 Detailed Description
+7.1 Overview
+The LM5176 is a wide input voltage four-switch buck-boost controller IC with integrated drivers for N-channel
+MOSFETs. It operates in buck mode when VIN is greater than VOUT and in boost mode when VIN is less than
+VOUT. When V IN is close to VOUT, the device operates in a proprietary transition buck or boost mode. The control
+scheme provides smooth operation for any input/output combination within the specified operating range. The
+buck or boost transition control scheme provides a low ripple output voltage when VIN equals VOUT without
+compromising the efficiency.
+The LM5176 integrates four N-Channel MOSFET drivers including two low-side drivers and two high-side
+drivers, eliminating the need for external drivers or floating bias supplies. The internal VCC regulator supplies
+internal bias rails as well as the MOSFET gate drivers. The VCC regulator is powered either from the input
+voltage through the VIN pin or from the output or an external supply through the BIAS pin for improved efficiency.
+The PWM control scheme is based on valley current mode control for buck operation and peak current mode
+control for boost operation. The inductor current is sensed through a single sense resistor in series with the
+low-side MOSFETs. The sensed current is also monitored for cycle-by-cycle current limit. The behavior of the
+LM5176 during an overload condition is dependent on the MODE pin programming (see the Section 7.4.2
+section). If hiccup mode fault protection is selected, the controller turns off after a fixed number of switching
+cycles in cycle-by-cycle current limit and restarts after another fixed number of clock cycles. The hiccup mode
+reduces the heating in the power components in a sustained overload condition. If hiccup mode is disabled
+through the MODE pin, the controller remains in a cycle-by-cycle current limit condition until the overload is
+removed.
+In addition to the cycle-by-cycle current limiting, the LM5176 also provides an optional average current regulation
+loop that can be configured for either input or output current limiting. This is useful for battery charging or other
+applications where a constant current behavior may be required.
+The soft-start time of LM5176 is programmed by a capacitor connected to the SS pin to minimize the inrush
+current and overshoot during start-up.
+The precision EN/UVLO pin supports programmable input undervoltage lockout (UVLO) with hysteresis. The
+output overvoltage protection (OVP) feature turns off the high-side drivers when the voltage at the FB pin
+exceeds the output overvoltage threshold (VOVP). The PGOOD output indicates when the FB voltage is inside
+the PGOOD regulation window centered at VREF.
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                             Submit Document Feedback      13
+                                                  Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                                                            www.ti.com
+
+7.2 Functional Block Diagram
+                                                                VIN                                                          BIAS
+
+
+
+
+                         ¨,HYS(OP)
+
+              EN/UVLO                        +
+                                VEN(OP)      -                                                                                                              VCC
+                                                    OPERATING
+
+                                                                                         EN & BIAS
+                          IEN(STBY)                                                       LOGIC
+                                                                                                         THERMAL
+                                             +                                                          SHUTDOWN
+                            VEN(STBY)        -
+                                                    STANDBY
+                                                                                                                                           45 mV
+                                                                                                                1.2 V
+               PGOOD
+                                                                  -    1.1VREF                            ISS
+                                                                  +                                OV                            -
+                                                                                       VOVP    -
+                                                                               FB              +
+                                                                                                        SS                                         +        ISNS(+)
+
+                                                                  -
+                                                                                                                                 +
+                                                                                                                        1 mA/V                     -        ISNS(-)
+                                                                  +     0.91VREF
+                                                                                                                              CONSTANT
+                                                                                                                            CURRENT LOOP
+
+                                      3.3V                                                                                                                 BOOT1
+                                                 GM ERROR                              PWM
+                                                 AMPLIFIER      1.6V
+                         VREF     +                                                 COMPARATOR                                                             HDRV1
+                    SS            +
+                                                                                 +
+                                                                                 -                                                                         SW1
+                   FB             -
+                                                                                                                                                   VCC
+
+                                                                                                                                                           LDRV1
+                 COMP
+                                          CS AMPLIFIER                                   CLK            BUCK-BOOST CONTROLLER
+                                                                                                                LOGIC
+                                                                                                                                                           BOOT2
+                    CS                       +
+                                                 ACS=5                                                                                                     HDRV2
+                                                                                        ILIMIT
+                   CSG                       -                                       COMPARATOR
+                                                                                                                                                           SW2
+                                                                                 +                                                                 VCC
+                                                                                 -
+                                                                                                                                                           LDRV2
+                 VISNS
+                                                                             VILIM
+                                             SLOPE COMP
+                VOSNS
+
+                SLOPE
+                                                                                                                          HICCUP CURRENT                   MODE
+                                                                                                                               LIMIT
+               RT/SYNC
+                                                 OSC/SYNC              CLK
+                 DITH
+
+
+
+
+                                                                         AGND                           PGND
+
+7.3 Feature Description
+7.3.1 Fixed Frequency Valley/Peak Current Mode Control with Slope Compensation
+The LM5176 implements a fixed frequency current mode control of both the buck and boost switches. The
+output voltage, scaled down by the feedback resistor divider, appears at the FB pin and is compared to the
+internal reference (VREF) by an internal error amplifier. The error amplifier produces an error voltage by driving
+the COMP pin. An adaptive slope compensation signal based on VIN, VOUT, and the capacitor at the SLOPE
+pin is added to the current sense signal measured across the CS and CSG pins. The result is compared to the
+COMP error voltage by the PWM comparator.
+The LM5176 regulates the output using valley current mode control in buck mode and peak current mode control
+in boost mode. For valley current mode control, the high-side buck MOSFET controlled by HDRV1 is turned on
+by the PWM comparator at the valley of the inductor ripple current and turned off by the oscillator clock signal.
+Valley current mode control is advantageous for buck converters where the PWM controller must resolve very
+short on-times. For peak current mode control in the boost mode, the low-side boost MOSFET controlled by
+
+14    Submit Document Feedback                                                                                                        Copyright © 2021 Texas Instruments Incorporated
+
+                                                                       Product Folder Links: LM5176
+                                                                                                                             LM5176
+www.ti.com                                                                                  SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+LDRV2 is turned on by the clock signal in each switching cycle and turned off by the PWM comparator at the
+peak of the inductor ripple current.
+The low-side gate drive, LDRV1, complementary to the HDRV1 drive signal, controls the synchronous
+rectification MOSFET of the buck stage. The high-side gate drive, HDRV2, complementary to the low-side gate
+drive LDRV2, controls the high-side synchronous rectifier of the boost stage. For operation with VIN close to
+VOUT, the LM5176 uses a proprietary buck or boost transition scheme to achieve smooth, low ripple transition
+zone behavior.
+Peak and valley current mode controllers require slope compensation for stable current loop operation at duty
+cycle greater than 50% in peak current mode control and less than 50% in valley current mode control. The
+LM5176 provides a SLOPE pin to program optimum slope for any VIN and VOUT combination using an external
+capacitor.
+7.3.2 VCC Regulator and Optional BIAS Input
+The VCC regulator provides a regulated bias supply to the gate drivers. When EN/UVLO is above the standby
+threshold (VEN(STBY)), the VCC regulator is turned on. For VIN less than the VCC regulation target, the VCC
+voltage tracks V IN with a small voltage drop as shown in Figure 6-4. If the EN/UVLO input is above the operating
+threshold (VEN(OP)) and VCC exceeds the VCC UV threshold (VUV(VCC)), the controller is enabled and switching
+begins.
+The VCC regulator draws power from VIN when there is no supply voltage connected to the BIAS pin. If the BIAS
+pin is connected to an external voltage source that exceeds VCC by one diode drop, the VCC regulator draws
+power from the BIAS input instead of VIN. Connecting the BIAS pin to VOUT in applications with VOUT greater
+than 8.5 V improves the efficiency of the regulator in the buck mode.
+For low VIN operation, ensure that the VCC voltage is sufficient to fully enhance the MOSFETs. Use an external
+bias supply if VIN dips below the voltage required to sustain the VCC voltage. For these conditions, use a series
+blocking diode between the input supply and the VIN pin (Figure 7-1). This prevents VCC from back-feeding into
+VIN through the body diode of the VCC regulator.
+A ceramic capacitor of 16 V or higher voltage rating and a value between 1 µF and 4.7 µF is required to supply
+the VCC regulator load transients. The VCC bypass capacitor should be connected between VCC and PGND
+pins.
+                          Series Blocking Diode
+
+                       VIN                            VIN
+
+                                  CVIN                            LM5176
+                                                                                                       Optional
+                                                                                     BIAS
+                                                                                                  Bias Supply/ VOUT
+
+                                                                                                CBIAS
+                                                      VCC
+
+
+                                  CVCC
+
+
+
+
+                                            Figure 7-1. VCC Regulator and Optional BIAS
+
+7.3.3 Enable/UVLO
+The LM5176 has a dual function enable and undervoltage lockout (UVLO) circuit. The EN/UVLO pin has three
+distinct voltage ranges: shutdown, standby, and operating (see Section 7.4.1). When the EN/UVLO pin is below
+the standby threshold, VEN(STBY), the converter is held in a low power shutdown mode. When EN/UVLO voltage
+is greater than the standby threshold, VEN(STBY), but less than the operating threshold, VEN(OP), the internal
+bias rails and the VCC regulator are enabled but the soft-start (SS) pin is held low and the PWM controller is
+disabled. A pullup current IEN(STBY) is sourced out of the EN/UVLO pin in standby mode to provide hysteresis
+
+Copyright © 2021 Texas Instruments Incorporated                                                         Submit Document Feedback     15
+                                                      Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                         www.ti.com
+
+between the shutdown mode and the standby mode. When EN/UVLO is greater than the operating threshold,
+VEN(OP), and VCC is above the undervoltage threshold, VUV(VCC), the controller starts operation. A hysteresis
+current ΔIHYS(OP) is sourced out of the EN/UVLO pin when the EN/UVLO input exceeds the operating threshold
+to provide hysteresis that prevents on/off chattering in the presence of noise with a slowly changing input
+voltage.
+The VIN UVLO threshold is typically set by a resistor divider from VIN to AGND (Figure 7-2). The turnon threshold
+VIN(UV) is calculated using Equation 1 where RUV2 is the upper resistor and RUV1 is the lower resistor in the
+EN/UVLO resistor divider:
+
+                         § RUV2 ·
+     VIN(UV)   VEN(OP) u ¨ 1      ¸ RUV2 u IEN(STBY)
+                         ©   RUV1 ¹                                                                                    (1)
+
+The hysteresis between the UVLO turnon threshold and turnoff threshold is set by the upper resistor in the
+EN/UVLO resistor divider and is given by:
+
+     'VHYS(UV)     'IHYS(OP) u RUV2                                                                                    (2)
+                                         VIN
+
+
+
+                                                                           LM5176
+
+                                  RUV2
+
+                                                                EN/UVLO
+
+                                  RUV1
+
+
+
+
+                                         Figure 7-2. UVLO Threshold Programming
+
+7.3.4 Soft Start
+The LM5176 soft-start time is programmed using a soft-start capacitor from the SS pin to AGND. When the
+converter is enabled, an internal current source (ISS) charges the soft-start capacitor. When the SS pin voltage
+is below the feedback reference voltage, VREF, the soft-start pin controls the regulated FB voltage. Once SS
+exceeds VREF, the soft-start interval is complete and the error amplifier is referenced to VREF. The soft-start time
+is given by Equation 3:
+
+            CSS u VREF
+     t ss
+               ISS                                                                                                     (3)
+
+The soft-start capacitor is internally discharged when the converter is disabled because of EN/UVLO falling
+below the operating threshold or VCC falling below the VCC UV threshold. The soft-start pin is also discharged
+when the converter is in hiccup mode current limiting or in thermal shutdown. When average input or output
+current limiting is active, the soft-start capacitor is discharged by the constant current loop transconductance
+(gm) amplifier to limit either input or output current.
+7.3.5 Overcurrent Protection
+The LM5176 provides cycle-by-cycle current limit to protect against overcurrent and short circuit conditions. In
+buck operation, the sensed valley voltage across the CSG and CS pins is limited to VCS(BUCK). The high-side
+buck switch skips a cycle if the sensed voltage does not fall below this threshold during the buck switch off time.
+In boost operation, the maximum peak voltage across CS and CSG is limited to VCS(BOOST). If the peak current
+in the low-side boost switch causes the voltage across CS and CSG to exceed this threshold voltage, the boost
+switch is turned off for the remainder of the clock cycle.
+
+
+16    Submit Document Feedback                                                      Copyright © 2021 Texas Instruments Incorporated
+
+                                                 Product Folder Links: LM5176
+                                                                                                                  LM5176
+www.ti.com                                                                       SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+Applying the appropriate voltage to the MODE pin of the LM5176 enables hiccup mode fault protection (see
+Section 7.4.2). In hiccup mode, the controller shuts down after detecting cycle-by-cycle current limiting for 128
+consecutive cycles and the soft-start capacitor is discharged. The soft-start capacitor is automatically released
+after 4000 oscillator clock cycles and the controller restarts. If hiccup mode protection is not enabled through the
+MODE pin, the LM5176 will operate in cycle-by-cycle current limiting as long as the overload condition persists.
+7.3.6 Average Input/Output Current Limiting
+The LM5176 provides optional average current limiting capability to limit either the input or the output current of
+the DC/DC converter. The average current limiting circuit uses an additional current sense resistor connected in
+series with the input supply or output voltage of the converter. A current sense gm amplifier with inputs at the
+ISNS(+) and ISNS(-) pins monitors the voltage across the sense resistor and compares it with an internal 50-mV
+reference. If the drop across the sense resistor is greater than 50 mV, the gm amplifier gradually discharges
+the soft-start capacitor. When the soft-start capacitor discharges below the feedback reference voltage, VREF,
+the output voltage of the converter decreases to limit the input or output current. The average current limiting
+feature can be used in applications requiring a regulated current from the input supply or into the load. The target
+constant current is given by Equation 4:
+
+                    50 mV
+     ICL(AVG)
+                    RSNS                                                                                          (4)
+
+A filter network as shown in Figure 8-1 is often used across the ISNS(+) and ISNS(-) pins to filter the ripple in the
+average current sense signal.
+The average current loop can be disabled by shorting the ISNS(+) and ISNS(-) pins together to AGND.
+7.3.7 Operation Above 40-V Input
+For application where input voltage is higher than 40 V, a 2-kΩ resistor in series with the VISNS pin is required
+as shown in Figure 8-1.
+7.3.8 CCM Operation
+The LM5176 works in continuous conduction mode (CCM). In CCM operation, the inductor current can flow
+in either direction and the controller switches at a fixed frequency regardless of the load current. The CCM
+operation is useful for noise-sensitive applications where a fixed switching eases filter design.
+7.3.9 Frequency and Synchronization (RT/SYNC)
+The LM5176 switching frequency can be programmed between 100 kHz and 600 kHz using a resistor from the
+RT/SYNC pin to AGND. The RT resistor is related to the nominal switching frequency (Fsw) by Equation 5:
+
+             § 1 ·
+             ¨     ¸ 190 ns
+      RT     © Fsw ¹
+                 116 pF                                                                                           (5)
+
+Figure 6-3 in the Section 6.6 shows the relationship between the programmed switching frequency (Fsw) and the
+RT resistor.
+The RT/SYNC pin can also be used to synchronize the internal oscillator to an external clock signal. The
+external synchronization pulse is ac coupled using a capacitor to the RT/SYNC pin. The external synchronization
+pulse frequency range is 75% to 125% of the resistor programmed frequency. A 50% duty cycle is acceptable for
+external SYNC.
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                             Submit Document Feedback      17
+                                                  Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                    www.ti.com
+
+
+
+
+                                                                                             LM5176
+
+
+
+
+                      external SYNC                                             RT/SYNC
+
+                                                         CSYNC
+                                                                 RT
+
+
+
+
+                                             Figure 7-3. Using External SYNC
+
+7.3.10 Frequency Dithering
+The LM5176 provides an optional frequency dithering function that is enabled by connecting a capacitor from
+DITH to AGND. Figure 7-4 illustrates the dithering circuit. A triangular waveform centered at 1.22 V is generated
+across the CDITH capacitor. This triangular waveform modulates the oscillator frequency by 10% of the nominal
+frequency set by the RT resistor. The CDITH capacitance value sets the rate of the low frequency modulation. A
+lower CDITH capacitance will modulate the oscillator frequency at a faster rate than a higher capacitance. For
+the dithering circuit to effectively reduce peak EMI, the modulation rate must be much less than the oscillator
+frequency (Fsw). Equation 6 calculates the DITH pin capacitance required to set the modulation frequency, FMOD.
+Connecting the DITH pin directly to AGND disables frequency dithering, and the internal oscillator operates at a
+fixed frequency set by the RT resistor. Dither is disabled when external SYNC is used.
+
+                 10 PA
+     CDITH
+              FMOD u 0.24 V                                                                                                       (6)
+
+
+                                              1.22 V + 5%
+
+                                             1.22 V                                 LM5176
+
+                                              1.22 V - 5 %
+
+                                                                      DITH
+
+                                             CDITH
+
+
+
+
+                                               Figure 7-4. Dither Operation
+
+7.3.11 Output Overvoltage Protection (OVP)
+The LM5176 provides an output overvoltage protection (OVP) circuit that turns off the gate drives when the
+feedback voltage is above the output overvoltage threshold VOVP. Switching resumes once the feedback voltage
+falls below the OVP threshold. There is a small hysteresis to prevent chattering.
+7.3.12 Power Good (PGOOD)
+PGOOD is an open-drain output that is pulled low when the voltage at the FB pin is outside -9%/+10% of the
+nominal VREF. The PGOOD internal N-Channel MOSFET pulldown strength is typically 4.2 mA. This pin can be
+connected to a voltage supply of up to 8 V through a pullup resistor.
+7.3.13 Gm Error Amplifier
+The LM5176 has a gm error amplifier for loop compensation. The gm amplifier output (COMP) range is 0.3 V
+to 3 V. Connect an Rc1-Cc1 compensation network between COMP and ground for type II (PI) compensation
+(see Figure 8-1). Another pole is usually added using Cc2 to suppress higher frequency noise and switching
+frequency ripple.
+
+18    Submit Document Feedback                                                                 Copyright © 2021 Texas Instruments Incorporated
+
+                                                     Product Folder Links: LM5176
+                                                                                                                             LM5176
+www.ti.com                                                                                 SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+The COMP output voltage (VCOMP) range limits the possible VIN and IOUT ranges for a given design. In buck
+mode, the maximum VIN for which the converter can regulate the output at no load is when VCOMP reaches 0.3 V.
+Equation 7 gives VCOMP as a function of VIN at no load in CCM buck mode:
+
+                                                      VOUT                    2 PS ˜ VIN     VOUT     6 PA
+      VCOMP(BUCK)         1.6 V ACS ˜ RSENSE ˜                 ˜ 1 DBUCK                                     ˜ 1 DBUCK
+                                                   2 ˜ L1˜ Fsw                       CSLOPE ˜ Fsw                            (7)
+
+Where DBUCK in Equation 7 is the buck duty cycle given by:
+
+                  VOUT
+      DBUCK
+                   VIN                                                                                                       (8)
+
+A larger L1, lower slope ripple (higher CSLOPE), smaller sense resistor (RSENSE), and higher frequency can
+increase the maximum VIN range for buck operation.
+For boost mode, the minimum VIN for which the converter can regulate the output at full load is when VCOMP
+reaches 3 V. Equation 9 gives VCOMP as a function of VIN in boost mode:
+
+                                                    §       V            VIN             ·   2 PS ˜ VOUT      VIN   5 PA
+      VCOMP(BOOST)          1.6 V    ACS ˜ RSENSE ˜ ¨ IOUT ˜ OUT                ˜ DBOOST ¸                                 ˜ DBOOST
+                                                    ©        VIN    2 ˜ L1˜ Fsw          ¹          CSLOPE ˜ Fsw                        (9)
+
+Where DBOOST in Equation 9 is the boost duty cycle given by:
+
+                         VIN
+      DBOOST       1
+                        VOUT                                                                                                (10)
+
+A larger L1, lower slope ripple (higher CSLOPE), smaller sense resistor (RSENSE), and higher frequency can
+extend the minimum VIN range for boost operation.
+7.3.14 Integrated Gate Drivers
+The LM5176 provides four N-channel MOSFET gate drivers: two floating high-side gate drivers at the HDRV1
+and HDRV2 pins, and two ground referenced low-side drivers at the LDRV1 and LDRV2 pins. Each driver is
+capable of sourcing 1.8-A and sinking 2.2-A peak current. In buck operation, LDRV1 and HDRV1 are switched
+by the PWM controller while HDRV2 remains continuously on. In boost operation, LDRV2 and HDRV2 are
+switched while HDRV1 remains continuously on.
+The low-side gate drivers are powered from VCC and the high-side gate drivers HDRV1 and HDRV2 are
+powered from bootstrap capacitors CBOOT1 (between BOOT1 and SW1) and CBOOT2 (between BOOT2 and
+SW2), respectively. The CBOOT1 and CBOOT2 capacitors are charged through external Schottky diodes connected
+to the VCC pin as shown in Figure 8-1.
+In most applications, ceramic capacitors of 16-V or higher voltage rating and values between 0.1 µF and 0.22 µF
+are sufficient for CBOOT1 and CBOOT2.
+7.3.15 Thermal Shutdown
+The LM5176 is protected by a thermal shutdown circuit that shuts down the device when the internal junction
+temperature exceeds 165°C (typical). The soft-start capacitor is discharged when thermal shutdown is triggered
+and the gate drivers are disabled. The converter automatically restarts when the junction temperature drops by
+the thermal shutdown hysteresis of 15°C below the thermal shutdown threshold.
+7.4 Device Functional Modes
+Refer to Section 7.3.3 for the description of EN/UVLO pin function. Section 7.4.1 lists the shutdown, standby,
+and operating modes for LM5176 as a function of EN/UVLO and VCC voltages.
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                       Submit Document Feedback        19
+                                                      Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                  www.ti.com
+
+7.4.1 Shutdown, Standby, and Operating Modes
+                 EN/UVLO                       VCC                         DEVICE MODE
+                 EN/UVLO < VEN(STBY)           —                           Shutdown: VCC off, No switching
+                 VEN(STBY) < EN/UVLO < VEN(OP) —                           Standby: VCC on, No switching
+                 EN/UVLO > VEN(OP)             VCC < VUV(VCC)              Standby: VCC on, No switching
+                 EN/UVLO > VEN(OP)             VCC > VUV(VCC)              Operating: VCC on, Switching enabled
+
+
+7.4.2 MODE Pin Configuration
+The MODE pin is used to select hiccup mode current limit. The MODE selection is based on the voltages at the
+MODE pin. The MODE voltage is decided by the programming resistor, RMODE, between MODE and AGND, and
+the source current out of the MODE pin (IMODE). MODE is latched during start-up.
+                 MODE PIN CONNECTION                      HICCUP FAULT PROTECTION
+                 RMODE to AGND = 200 kΩ or connect
+                                                          No Hiccup
+                 MODE to VCC
+                 RMODE to AGND = 93.1 kΩ                  Hiccup Enabled
+
+
+
+
+20    Submit Document Feedback                                                               Copyright © 2021 Texas Instruments Incorporated
+
+                                                   Product Folder Links: LM5176
+                                                                                                                                                                                                         LM5176
+www.ti.com                                                                                                                                                       SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+8 Application and Implementation
+                                                                                                                    Note
+       Information in the following applications sections is not part of the TI component specification,
+       and TI does not warrant its accuracy or completeness. TI’s customers are responsible for
+       determining suitability of components for their purposes, as well as validating and testing their design
+       implementation to confirm system functionality.
+
+8.1 Application Information
+The LM5176 is a four-switch buck-boost controller. A quick-start tool on the LM5176 product webpage can
+be used to design a buck-boost converter using the LM5176. Alternatively, Webench® software can create a
+complete buck-boost design using the LM5176 and generate bill of materials, estimate efficiency, solution size,
+and cost of the complete solution. Section 8.2 describes a detailed step-by-step design procedure for a typical
+application circuit.
+8.2 Typical Application
+A typical application example is a buck-boost converter operating from a wide input voltage range of 6 V to 50 V
+and providing a stable 12 V output voltage with current capability of 6 A.
+                                                                                                                                                                                               RSNS
+          VIN                                                                                                                                                                                  0Ÿ     VOUT
+
+
+          CIN                                                                              0.1 µF
+                                                                                                                                                      CIN                                 COUT        COUT
+                           RUV2                              2 NŸ                          CVIN
+        68 µF                                                                 10 Ÿ                  100 Ÿ        1 µF      100 Ÿ                   4.7 µF                                  10 µF       180 µF
+                       249 NŸ                                                                                                                        x5                                      x5          x2
+
+
+                           RUV1                                                                                                                                       QH1          QH2
+                       59.0 NŸ
+                                                 EN/UVLO        VISNS                VIN               ISNS(-)      ISNS(+)
+
+                                                                                                                                HDRV1
+                                                                                                                                                                            L1
+                                  10 NŸ                                                                                         BOOT1                      VCC
+                 VCC                        PGOOD
+                                                                                                                                                                        4.7 µH
+                                                                                                                                                  CBOOT1
+                                                                                                                                                                      QL1          QL2
+                                  RMODE                                                                                                            0.1 µF
+                                            MODE                                                                                   SW1
+
+                                  93.1 NŸ                                                                                       LDRV1
+
+                                                                                                                                                     100 Ÿ
+                                            RT/SYNC                                                                                  CS
+         CSYNC                                                                                                                                                                   RSENSE
+         1 nF RT                                                                                                                          47 pF                                  8 PŸ
+                                                                                                                                   CSG
+               27.4 NŸ
+                                                                                     LM5176                                                          100 Ÿ
+                                            SS
+
+                  CSS
+                0.1 µF                                                                                                          LDRV2
+
+
+        VOUT                                BIAS                                                                                                           VCC
+                                                                                                                                BOOT2
+
+                   CBIAS                                                                                                                          CBOOT2
+                0.1 µF                                                                                                                            0.1 µF
+                                                                                                                                   SW2
+
+                                            AGND
+                                                                                                                                HDRV2
+                                            PGND
+
+                                                                                                                               VOSNS
+
+
+                                                   VCC        DITH              COMP               SLOPE                  FB
+
+
+
+                                                    CVCC                                    Cc1         CSLOPE
+                                                                                                                                   RRB2
+                                                      1 µF                                 33 nF        220 pF     RRB1         280 NŸ
+                                                                        Cc2
+                                                                                                                 20 NŸ
+                                                                     560 pF                 Rc1
+                                                                                           10 NŸ
+
+
+
+
+                                            Figure 8-1. LM5176 Four-Switch Buck Boost Application Schematic
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                                                                                                   Submit Document Feedback      21
+                                                                                              Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                     www.ti.com
+
+8.2.1 Design Requirements
+For this design example, the following are used as the input parameters.
+                             DESIGN PARAMETER                                       EXAMPLE VALUE
+                               Input voltage range                                    6 V to 50 V
+                                     Output                                              12 V
+                                  Load current                                           6A
+                              Switching frequency                                      300 kHz
+                                     Mode                                            CCM, Hiccup
+
+
+8.2.2 Detailed Design Procedure
+8.2.2.1 Custom Design with WEBENCH Tools
+Click here to create a custom design using the LM5176 device with the WEBENCH® Power Designer.
+1. Start by entering your VIN, VOUT and IOUT requirements.
+2. Optimize your design for key parameters like efficiency, footprint and cost using the optimizer dial and
+   compare this design with other possible solutions from Texas Instruments.
+3. WEBENCH Power Designer provides you with a customized schematic along with a list of materials with real
+   time pricing and component availability.
+4. In most cases, you will also be able to:
+   • Run electrical simulations to see important waveforms and circuit performance,
+   • Run thermal simulations to understand the thermal performance of your board,
+   • Export your customized schematic and layout into popular CAD formats,
+   • Print PDF reports for the design, and share your design with colleagues.
+5. Get more information about WEBENCH tools at www.ti.com/webench.
+8.2.2.2 Frequency
+The switching frequency of LM5176 is set by an RT resistor connected from the RT/SYNC pin to AGND. The
+RT resistor required to set the desired frequency is calculated using Equation 5 or Figure 6-3. A 1% standard
+resistor of 27.4 kΩ is selected for Fsw = 300 kHz.
+8.2.2.3 VOUT
+The output voltage is set using a resistor divider to the FB pin. The internal reference voltage is 0.8 V. Normally
+the bottom resistor in the resistor divider is selected to be in the 1 kΩ to 100 kΩ range.
+
+     RFB1    20 k:                                                                                                                (11)
+
+The top resistor in the feedback resistor divider is selected using Equation 12:
+
+             VOUT 0.8 V
+     RFB2               u RFB1         280 k:
+                0.8 V                                                                                                            (12)
+
+8.2.2.4 Inductor Selection
+The inductor selection is based on consideration of both buck and boost modes of operation. For buck mode,
+inductor selection is based on limiting the peak-to-peak current ripple ΔIL to approximately 40% of the maximum
+inductor current at the maximum input voltage. The target inductance for buck mode is:
+
+                 (VIN(MAX)    VOUT ) u VOUT
+     LBUCK                                           12.7 PH
+               0.4 u IOUT(MAX) u Fsw u VIN(MAX)                                                                                  (13)
+
+For boost mode, the inductor selection is based on limiting the peak-to-peak current ripple ΔIL to approximately
+30% of the maximum inductor current at the minimum input voltage. The target inductance for boost mode is:
+
+
+22    Submit Document Feedback                                                                  Copyright © 2021 Texas Instruments Incorporated
+
+                                                     Product Folder Links: LM5176
+                                                                                                                             LM5176
+www.ti.com                                                                                  SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+                      2
+                    VIN(MIN) u (VOUT        VIN(MIN) )
+      LBOOST                                2
+                                                         2.8 PH
+                   0.3 u IOUT(MAX) u Fsw u VOUT                                                                             (14)
+
+In this particular application, the buck inductance is larger. Choosing a larger inductance reduces the ripple
+current but also increases the size of the inductor. A larger inductor also reduces the achievable bandwidth of
+the converter by moving the right half plane zero to lower frequencies. Therefore, a judicious compromise should
+be made based on the application requirements. For this design a 4.7-µH inductor is selected. With this inductor
+selection, the inductor current ripple is 6.5 A, 4.3 A, and 2.1 A, at VIN of 50 V, 24 V, and 6 V, respectively.
+The maximum average inductor current occurs at the minimum input voltage and maximum load current:
+
+                  VOUT u IOUT(MAX)
+      IL(MAX)                              13.3 A
+                    0.9 u VIN(MIN)                                                                                          (15)
+
+where a 90% efficiency is assumed. The peak inductor current occurs at minimum input voltage and is given by:
+
+                                VIN(MIN) u (VOUT VIN(MIN) )
+     IL(PEAK)      IL(MAX)                                          14.4 A
+                                    2 u L1u Fsw u VOUT                                                                      (16)
+
+To ensure sufficient output current, the current limit threshold must be set to allow the maximum load current in
+boost operation. The inductor peak current during overload depends on the current limit resistor, RSENSE, (refer
+to the subsection on selecting RSENSE). The peak inductor current in current limit when in boost mode is given
+by:
+
+                                   120 mV
+     IL(PEAK, ILIMIT, BOOST)
+                                   RSENSE                                                                                   (17)
+
+The peak inductor current in current limit when in buck mode happens at high input voltage and is given by:
+
+                                  80 mV           VIN(MAX)     VOUT      § V        ·
+      IL(PEAK, ILIMIT, BUCK)                                           u ¨ OUT ¸
+                                  RSENSE              L1u Fsw            ¨ VIN(MAX) ¸
+                                                                         ©          ¹                                       (18)
+
+The peak inductor current in current limit is 15 A and 16.5 A in boost mode and buck mode, respectively. The
+inductor should be selected to handle this current.
+8.2.2.5 Output Capacitor
+In the boost mode, the output capacitor conducts high ripple current. The output capacitor RMS ripple current is
+given by Equation 19 where the minimum VIN corresponds to the maximum capacitor current.
+
+                                  VOUT
+     ICOUT(RMS)        IOUT u               1
+                                   VIN                                                                                      (19)
+
+In this example, the maximum output ripple RMS current is ICOUT(RMS) = 6 A. A 5-mΩ output capacitor ESR
+causes an output ripple voltage of 60 mV as given by:
+
+                             IOUT u VOUT
+      'VRIPPLE(ESR)                      u ESR
+                               VIN(MIN)                                                                                     (20)
+
+A 400-µF output capacitor causes a capacitive ripple voltage of 25 mV as given by:
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                        Submit Document Feedback      23
+                                                             Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                         www.ti.com
+
+
+                               §   VIN(MIN) ·
+                        IOUT u ¨ 1          ¸
+                               ©    VOUT ¹
+     'VRIPPLE(COUT)
+                            COUT u Fsw                                                                               (21)
+
+Typically, a combination of ceramic and bulk capacitors is needed to provide low ESR and high ripple current
+capacity. The complete schematic in Figure 8-1 shows a good starting point for COUT for typical applications.
+8.2.2.6 Input Capacitor
+In buck mode, the input capacitor supplies high ripple current. The RMS current in the input capacitor is given
+by:
+
+     ICIN(RMS)   IOUT D u (1 D)                                                                                      (22)
+
+The maximum RMS current occurs at D = 0.5, which gives ICIN(RMS) = IOUT / 2 = 3 A. A combination of ceramic
+and bulk capacitors should be used to provide a short path for high di/dt current and to reduce the output voltage
+ripple. The complete schematic in Figure 8-1 is a good starting point for CIN for typical applications.
+8.2.2.7 Sense Resistor (RSENSE)
+The current sense resistor between the CS and CSG pins should be selected to ensure that current limit is set
+high enough for both buck and boost modes of operation. For the buck operation, the current limit resistor is
+given by:
+
+                        80 mV
+     RSENSE(BUCK)                      13 m:
+                      IOUT(MAX)                                                                                      (23)
+
+For the boost mode of operation, the current limit resistor is given by:
+
+                        120 mV
+     RSENSE(BOOST)                     8.3 m:
+                        IL(PEAK)                                                                                     (24)
+
+The closest standard value of RSENSE = 8 mΩ is selected based on the boost mode operation.
+The maximum power dissipation in RSENSE happens at VIN(MIN):
+
+                                   2
+                      § 120mV ·             §   VIN(MIN) ·
+     PRSENSE(MAX)     ¨        ¸ ˜ RSENSE ˜ ¨ 1          ¸      0.9 W
+                      © RSENSE ¹            ©    VOUT ¹                                                              (25)
+
+Therefore, a sense resistor with 2-W power rating will be sufficient for this application.
+For some application circuits, it can be required to add a filter network to attenuate noise in the CS and CSG
+sense lines. See Figure 8-1 for typical values. The filter resistance should not exceed 100 Ω.
+8.2.2.8 Slope Compensation
+For stable current loop operation and to avoid subharmonic oscillations, the slope capacitor should be selected
+based on Equation 26:
+
+                                  L1                      4.7 PH
+     CSLOPE      gmSLOPE u                      2 PS u              235 pF
+                             RSENSE u ACS                8 m: u 5                                                    (26)
+
+This slope compensation results in “dead-beat” operation, in which the current loop disturbances die out in one
+switching cycle. Theoretically, a current mode loop is stable with half the “dead-beat” slope (twice the calculated
+slope capacitor value in Equation 26). A smaller slope capacitor results in larger slope signal which is better for
+noise immunity in the transition region (VIN~VOUT). A larger slope signal, however, restricts the achievable input
+
+24    Submit Document Feedback                                                      Copyright © 2021 Texas Instruments Incorporated
+
+                                                  Product Folder Links: LM5176
+                                                                                                                       LM5176
+www.ti.com                                                                            SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+voltage range for a given output voltage, switching frequency, and inductor. For this design, CSLOPE = 220 pF is
+selected for better transition region behavior while still providing the required VIN range. This selection of slope
+capacitor, inductor, switching frequency, and inductor satisfies the COMP range limitation explained in Section
+7.3.13.
+8.2.2.9 UVLO
+The UVLO resistor divider must be designed for turnon below 6 V. Selecting RUV2 = 249 kΩ gives a UVLO
+hysteresis of 0.8 V based on Equation 2. The lower UVLO resistor is the selected using Equation 27:
+
+                             RUV2 u VEN(OP)
+      RUV1
+                VIN UV      IEN(STBY) u RUV2      VEN(OP)
+                                                                                                                      (27)
+
+A standard value of 59.0 kΩ is selected for RUV1.
+When programming the UVLO threshold for lower input voltage operation, it is important to choose MOSFETs
+with gate (Miller) plateau voltage lower than the minimum VIN.
+8.2.2.10 Soft-Start Capacitor
+The soft-start time is programmed using the soft-start capacitor. The relationship between CSS and the soft-start
+time is given by:
+
+             CSS u VREF
+      t ss
+                ISS                                                                                                   (28)
+
+CSS = 0.1 µF gives a soft-start time of 16 ms.
+8.2.2.11 Dither Capacitor
+The dither capacitor sets the modulation frequency of the frequency dithering around the nominal switching
+frequency. A larger CDITH results in lower modulation frequency. For proper operation, the modulation frequency
+(FMOD) must be much lower than the switching frequency. Use Equation 29 to select CDITH for the target
+modulation frequency.
+
+                    10 PA
+      CDITH
+                 FMOD u 0.24 V                                                                                        (29)
+
+For the current design, dithering is not being implemented. Therefore, a 0-Ω resistor from the DITH pin to AGND
+disables this feature.
+8.2.2.12 MOSFETs QH1 and QL1
+The input side MOSFETs QH1 and QL1 need to withstand the maximum input voltage of 50 V. In addition, they
+must withstand the transient spikes at SW1 during switching. Therefore, QH1 and QL1 should be rated for 60 V
+or higher. The gate plateau voltages of the MOSFETs should be smaller than the minimum input voltage of the
+converter, otherwise the MOSFETs may not fully enhance during start-up or overload conditions.
+The power loss in QH1 in the boost mode of operation is approximated by:
+
+                                          2
+                       §        VOUT ·
+      PCOND(QH1)       ¨ IOUT ˜      ¸ ˜ RDSON(QH1)
+                       ©         VIN ¹                                                                                (30)
+
+The power loss in QH1 in buck mode of operation consists of both conduction and switching loss components
+given by Equation 31 and Equation 32, respectively:
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                  Submit Document Feedback      25
+                                                       Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                            www.ti.com
+
+
+                    § VOUT ·       2
+     PCOND(QH1)     ¨      ¸ ˜ IOUT ˜ RDSON(QH1)
+                       V
+                    © IN ¹                                                                                              (31)
+
+                  1
+     PSW(QH1)       ˜ VIN ˜ IOUT ˜ tr   t f ˜ Fsw
+                  2                                                                                                     (32)
+
+The rise (tr) and the fall (tf) times are based on the MOSFET data sheet information or measured in the lab.
+Typically, a MOSFET with smaller RDSON (smaller conduction loss) will have longer rise and fall times (larger
+switching loss).
+The power loss in QL1 in the buck mode of operation is shown in Equation 33:
+
+                    §  VOUT ·       2
+     PCOND(QL1)     ¨1      ¸ ˜ IOUT ˜ RDSON(QL1)
+                    ©   VIN ¹                                                                                           (33)
+
+8.2.2.13 MOSFETs QH2 and QL2
+The output side MOSFETs QH2 and QL2 see the output voltage of 12 V and additional transient spikes at SW2
+during switching. Therefore, QH2 and QL2 should be rated for 20 V or more. The gate plateau voltages of the
+MOSFETs should be smaller than the minimum input voltage of the converter, otherwise the MOSFETs may not
+fully enhance during start-up or overload conditions.
+The power loss in QH2 in buck mode of operation is approximated by:
+
+     PCOND(QH2)     IOUT 2 ˜ RDSON(QH2)                                                                                 (34)
+
+The power loss in QL2 in the boost mode of operation consists of both conduction and switching loss
+components given by Equation 35 and Equation 36, respectively:
+
+                                                    2
+                    §   VIN · §          VOUT ·
+     PCOND(QL2)     ¨1      ¸ ˜ ¨ IOUT ˜      ¸ ˜ RDSON(QL2)
+                    ©  VOUT ¹ ©           VIN ¹                                                                         (35)
+
+                  1          §       V    ·
+     PSW(QL2)       ˜ VOUT ˜ ¨ IOUT ˜ OUT ¸ ˜ tr        t f ˜ Fsw
+                  2          ©        VIN ¹                                                                             (36)
+
+The rise (tr) and the fall (tf) times can be based on the MOSFET data sheet information or measured in the lab.
+Typically, a MOSFET with smaller RDSON (lower conduction loss) has longer rise and fall times (larger switching
+loss).
+The power loss in QH2 in the boost mode of operation is shown in Equation 37:
+
+                                              2
+                      VIN §         V    ·
+     PCOND(QH2)           ˜ ¨ IOUT ˜ OUT ¸ ˜ RDSON(QH2)
+                     VOUT ©          VIN ¹                                                                              (37)
+
+8.2.2.14 Frequency Compensation
+This section presents the control loop compensation design procedure for the LM5176 buck-boost controller. The
+LM5176 operates mainly in buck or boost modes, separated by a transition region, and therefore, the control
+loop design is done for both buck and boost operating modes. Then, a final selection of compensation is made
+based on the mode that is more restrictive from a loop stability point of view. Typically, for a converter designed
+to go deep into both buck and boost operating regions, the boost compensation design is more restrictive due to
+the presence of a right half plane zero (RHPZ) in the boost mode.
+The boost power stage output pole location is given by:
+
+
+26    Submit Document Feedback                                                         Copyright © 2021 Texas Instruments Incorporated
+
+                                                        Product Folder Links: LM5176
+                                                                                                                             LM5176
+www.ti.com                                                                                  SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+                      1 §      2      ·
+      ¦p1(boost)        ¨             ¸                 +]
+                     2S © ROUT u COUT ¹                                                                                     (38)
+
+where ROUT = 2 Ω corresponds to the maximum load of 6 A.
+The boost power stage ESR zero location is given by:
+
+               1 §      1      ·
+      ¦ z1       ¨             ¸                  N+]
+              2S © RESR u COUT ¹                                                                                            (39)
+
+The boost power stage RHP zero location is given by:
+
+                 1 § ROUT u (1 DMAX )2 ·
+      ¦RHP          ¨                  ¸                     N+]
+                2S ¨©        L1        ¸
+                                       ¹                                                                                    (40)
+
+where DMAX is the maximum duty cycle at the minimum VIN.
+The buck power stage output pole location is given by:
+
+                     1 §      1      ·
+      ¦p1(buck)        ¨             ¸                  +]
+                    2S © ROUT u COUT ¹                                                                                      (41)
+
+The buck power stage ESR zero location is the same as the boost power stage ESR zero.
+It is clear from Equation 40 that RHP zero is the main factor limiting the achievable bandwidth. For a robust
+design, the crossover frequency should be less than 1/3 of the RHP zero frequency. Given the position of the
+RHP zero, a reasonable target bandwidth in boost operation is around 4 kHz:
+
+      ¦bw         N+]                                                                                                       (42)
+
+For some power stages, the boost RHP zero might not be as restrictive. This happens when the boost maximum
+duty cycle (DMAX) is small, or when a really small inductor is used. In those cases, compare the limits posed
+by the RHP zero (fRHP / 3) with 1/20 of the switching frequency and use the smaller of the two values as the
+achievable bandwidth.
+The compensation zero can be placed at 1.5 times the boost output pole frequency. Keep in mind that this
+locates the zero at three times the buck output pole frequency which results in approximately 30 degrees of
+phase loss before crossover of the buck loop and 15 degrees of phase loss at intermediate frequencies for the
+boost loop:
+
+      ¦ zc         +]                                                                                                       (43)
+
+If the crossover frequency is well below the RHP zero and the compensation zero is placed well below the
+crossover, the compensation gain resistor, Rc1, is calculated using the approximation:
+
+                S u ¦bw RFB1 RFB2 $ CS u 5SENSE u &OUT
+      Rc1              u         u                                           9.49 k:
+                gmEA       RFB1          1 DMAX                                                                             (44)
+
+where DMAX is the maximum duty cycle at the minimum VIN in boost mode and A CS is the current sense amplifier
+gain. The compensation capacitor Cc1 is then calculated from:
+
+                      1
+      Cc1                             27.9 nF
+                u S u ¦ zc u 5c1                                                                                            (45)
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                        Submit Document Feedback      27
+                                                             Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                     www.ti.com
+
+The standard values of compensation components are selected to be Rc1 = 10 kΩ and Cc1 = 33 nF.
+A high frequency pole (fpc2) is placed using a capacitor (Cc2) in parallel with Rc1 and Cc1. Set the frequency of
+this pole at seven to ten times of fbw to provide attenuation of switching ripple and noise on COMP while avoiding
+excessive phase loss at the crossover frequency. For a target fpc2 = 28 kHz, Cc2 is calculated using Equation 46:
+
+                     1
+     Cc2                         568 pF
+              u S u ¦pc2 u 5c1                                                                                   (46)
+
+Select a standard value of 560 pF for Cc2. These values provide a good starting point for the compensation
+design. Each design should be tuned in the lab to achieve the desired balance between stability margin across
+the operating range and transient response time.
+
+
+
+
+28    Submit Document Feedback                                                  Copyright © 2021 Texas Instruments Incorporated
+
+                                             Product Folder Links: LM5176
+                                                                                                                                                          LM5176
+www.ti.com                                                                                                              SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+8.2.3 Application Curves
+
+                     100                                                                             99
+
+
+                                                                                                     98
+                     96
+    EFFICIENCY (%)
+
+
+
+
+                                                                                    EFFICIENCY (%)
+                                                                                                     97
+                     92
+                                                                                                     96
+                     88
+                                                                                                     95
+
+                     84                                          VIN = 9V                            94
+                                                                 VIN = 12V
+                                                                 VIN = 24V
+                     80                                                                              93
+                           0       1      2      3       4    5              6                            5   10   15     20   25     30   35   40   45   50
+                                          LOAD CURRENT (A)                   D008
+                                                                                                                                VIN (V)                     D009
+
+                                Figure 8-2. Efficiency vs Load                                            Figure 8-3. Efficiency vs Input Voltage
+
+
+                     VIN = 24 V
+                                                                                           VIN
+                                                                                           10 V/div
+                     VIN = 12 V
+                                                                                           VOUT
+                                                                                           1 V/div
+                     VIN = 6 V
+
+                                                                                               IL
+                                                                                               5 A/div                                           1 ms/div
+                      200 mV/div                             5 µs/div
+                               Figure 8-4. Output Voltage Ripple                    Figure 8-5. Line Transient Response (8 V - 24 V,
+                                                                                                       IOUT = 2 A)
+
+
+9 Power Supply Recommendations
+The LM5176 is a power management device. The power supply for the device is any dc voltage source
+within the specified input range. The supply should also be capable of supplying sufficient current based on
+the maximum inductor current in boost mode operation. The input supply should be bypassed with additional
+electrolytic capacitor at the input of the application board to avoid ringing due to parasitic impedance of the
+connecting cables.
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                                                    Submit Document Feedback        29
+                                                                 Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                       www.ti.com
+
+
+10 Layout
+10.1 Layout Guidelines
+The basic PCB board layout requires separation of sensitive signal and power paths. This checklist must be
+followed to get good performance for a well designed board.
+•    Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1,
+     and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck
+     operation.
+•    Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2,
+     and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost
+     operation.
+•    Use a combination of bulk capacitors and smaller ceramic capacitors with low series impedance for the input
+     and output capacitors. Place the smaller capacitors closer to the IC to provide a low impedance path for high
+     di/dt switching currents.
+•    Minimize the SW1 and SW2 loop areas as these are high dv/dt nodes.
+•    Layout the gate drive traces and return paths as directly as possible. Layout the forward and return traces
+     close together, either running side by side or on top of each other on adjacent layers to minimize the
+     inductance of the gate drive path.
+•    Use Kelvin connections to RSENSE for the current sense signals CS and CSG and run lines in parallel from
+     the RSENSE terminals to the IC pins. Avoid crossing noisy areas such as SW1 and SW2 nodes or high-side
+     gate drive traces. Place the filter capacitor for the current sense signal as close to the IC pins as possible.
+•    Place the CIN, COUT, and RSENSE ground pins as close as possible with thick ground trace and/or planes on
+     multiple layers.
+•    Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins. A 1-µF ceramic
+     capacitor is typically used.
+•    Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-µF
+     ceramic capacitor is typically used.
+•    Place the BOOT1 bootstrap capacitor close to the IC and connect directly to the BOOT1 to SW1 pins.
+•    Place the BOOT2 bootstrap capacitor close to the IC and connect directly to the BOOT2 to SW2 pins.
+•    Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-µF
+     ceramic capacitor is typically used. When using external BIAS, use a diode between input rails and VIN pins
+     to prevent reverse conduction when VIN < VCC.
+•    Connect the feedback resistor divider between the COUT positive terminal and AGND pin of the IC. Place the
+     components close to the FB pin.
+•    Use care to separate the power and signal paths so that no power or switching current flows through the
+     AGND connections which can either corrupt the COMP, SLOPE, or SYNC signals, or cause dc offset in
+     the FB sense signal. The PGND and AGND traces can be connected near the PGND pin, near the VCC
+     capacitor PGND connection, or near the PGND connection of the CS, CSG pin current sense resistor.
+•    When using the average current loop, divide the overall capacitor (CIN or COUT) between the two sides of the
+     sense resistor to ensure small cycle-by-cycle ripple. Place the average current loop filter capacitor close to
+     the IC between the ISNS(+) and ISNS(–) pins.
+
+
+
+
+30    Submit Document Feedback                                                    Copyright © 2021 Texas Instruments Incorporated
+
+                                              Product Folder Links: LM5176
+                                                                                                                            LM5176
+www.ti.com                                                                                 SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+10.2 Layout Example
+
+
+
+                                                    SW1         L1            SW2
+
+
+                            VIN                                                                         VOUT
+
+
+
+                                                          QL1         QL2
+
+                                                  QH1                        QH2             RISNS
+
+
+
+                          CIN                 CIN            RSENSE                 COUT                  COUT
+
+
+
+
+                                             GND                LM5176                     GND
+
+
+
+
+                                                  Figure 10-1. LM5176 Power Stage Layout
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                       Submit Document Feedback      31
+                                                          Product Folder Links: LM5176
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                     www.ti.com
+
+
+11 Device and Documentation Support
+11.1 Device Support
+11.1.1 Third-Party Products Disclaimer
+TI'S PUBLICATION OF INFORMATION REGARDING THIRD-PARTY PRODUCTS OR SERVICES DOES NOT
+CONSTITUTE AN ENDORSEMENT REGARDING THE SUITABILITY OF SUCH PRODUCTS OR SERVICES
+OR A WARRANTY, REPRESENTATION OR ENDORSEMENT OF SUCH PRODUCTS OR SERVICES, EITHER
+ALONE OR IN COMBINATION WITH ANY TI PRODUCT OR SERVICE.
+11.1.2 Development Support
+11.1.2.1 Custom Design with WEBENCH Tools
+Click here to create a custom design using the LM5176 device with the WEBENCH® Power Designer.
+1. Start by entering your VIN, VOUT and IOUT requirements.
+2. Optimize your design for key parameters like efficiency, footprint and cost using the optimizer dial and
+   compare this design with other possible solutions from Texas Instruments.
+3. WEBENCH Power Designer provides you with a customized schematic along with a list of materials with real
+   time pricing and component availability.
+4. In most cases, you will also be able to:
+   • Run electrical simulations to see important waveforms and circuit performance,
+   • Run thermal simulations to understand the thermal performance of your board,
+   • Export your customized schematic and layout into popular CAD formats,
+   • Print PDF reports for the design, and share your design with colleagues.
+5. Get more information about WEBENCH tools at www.ti.com/webench.
+11.2 Documentation Support
+11.2.1 Related Documentation
+See TI homepage for latest technical document including application notes, user guides, and reference designs.
+Texas Instruments, Semiconductor and IC Package Thermal Metrics
+11.3 Receiving Notification of Documentation Updates
+To receive notification of documentation updates, navigate to the device product folder on ti.com. Click on
+Subscribe to updates to register and receive a weekly digest of any product information that has changed. For
+change details, review the revision history included in any revised document.
+11.4 Support Resources
+TI E2E™ support forums are an engineer's go-to source for fast, verified answers and design help — straight
+from the experts. Search existing answers or ask your own question to get the quick design help you need.
+Linked content is provided "AS IS" by the respective contributors. They do not constitute TI specifications and do
+not necessarily reflect TI's views; see TI's Terms of Use.
+11.5 Trademarks
+PowerPAD™ are trademarks of Texas Instruments.
+TI E2E™ is a trademark of Texas Instruments.
+Webench®, WEBENCH® and are registered trademarks of Texas Instruments.
+All trademarks are the property of their respective owners.
+11.6 Electrostatic Discharge Caution
+                 This integrated circuit can be damaged by ESD. Texas Instruments recommends that all integrated circuits be handled
+                 with appropriate precautions. Failure to observe proper handling and installation procedures can cause damage.
+                 ESD damage can range from subtle performance degradation to complete device failure. Precision integrated circuits may
+                 be more susceptible to damage because very small parametric changes could cause the device not to meet its published
+                 specifications.
+
+
+
+
+32    Submit Document Feedback                                                                  Copyright © 2021 Texas Instruments Incorporated
+
+                                                     Product Folder Links: LM5176
+                                                                                                                    LM5176
+www.ti.com                                                                         SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+11.7 Glossary
+ TI Glossary             This glossary lists and explains terms, acronyms, and definitions.
+
+12 Mechanical, Packaging, and Orderable Information
+The following pages include mechanical, packaging, and orderable information. This information is the most
+current data available for the designated devices. This data is subject to change without notice and revision of
+this document. For browser-based versions of this data sheet, refer to the left-hand navigation.
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                               Submit Document Feedback      33
+                                                   Product Folder Links: LM5176
+                                                                                                                                                                     PACKAGE OPTION ADDENDUM
+
+       www.ti.com                                                                                                                                                                                                    9-Nov-2025
+
+
+
+
+PACKAGING INFORMATION
+
+       Orderable part number          Status     Material type      Package | Pins      Package qty | Carrier       RoHS             Lead finish/               MSL rating/          Op temp (°C)               Part marking
+                                        (1)            (2)                                                            (3)            Ball material              Peak reflow                                           (6)
+                                                                                                                                          (4)                       (5)
+
+           LM5176PWPR                 Active      Production     HTSSOP (PWP) | 28       2000 | LARGE T&R            Yes               NIPDAU            Level-3-260C-168 HR           -40 to 125                  LM5176
+          LM5176PWPR.B                Active      Production     HTSSOP (PWP) | 28       2000 | LARGE T&R            Yes               NIPDAU            Level-3-260C-168 HR           -40 to 125                  LM5176
+            LM5176PWPT                Active      Production     HTSSOP (PWP) | 28        250 | SMALL T&R            Yes               NIPDAU            Level-3-260C-168 HR           -40 to 125                  LM5176
+           LM5176PWPT.B               Active      Production     HTSSOP (PWP) | 28        250 | SMALL T&R            Yes               NIPDAU            Level-3-260C-168 HR           -40 to 125                  LM5176
+          LM5176PWPTG4                Active      Production     HTSSOP (PWP) | 28        250 | SMALL T&R            Yes               NIPDAU            Level-3-260C-168 HR           -40 to 125                  LM5176
+         LM5176PWPTG4.B               Active      Production     HTSSOP (PWP) | 28        250 | SMALL T&R            Yes               NIPDAU            Level-3-260C-168 HR           -40 to 125                  LM5176
+            LM5176RHFR                Active      Production       VQFN (RHF) | 28       3000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                  LM5176
+           LM5176RHFR.B               Active      Production       VQFN (RHF) | 28       3000 | LARGE T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                  LM5176
+            LM5176RHFT                Active      Production       VQFN (RHF) | 28        250 | SMALL T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                  LM5176
+           LM5176RHFT.B               Active      Production       VQFN (RHF) | 28        250 | SMALL T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                  LM5176
+          LM5176RHFTG4                Active      Production       VQFN (RHF) | 28        250 | SMALL T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                  LM5176
+         LM5176RHFTG4.B               Active      Production       VQFN (RHF) | 28        250 | SMALL T&R            Yes               NIPDAU            Level-1-260C-UNLIM            -40 to 125                  LM5176
+
+(1)
+      Status: For more details on status, see our product life cycle.
+
+(2)
+   Material type: When designated, preproduction parts are prototypes/experimental devices, and are not yet approved or released for full production. Testing and final process, including without limitation quality assurance,
+reliability performance testing, and/or process qualification, may not yet be complete, and this item is subject to further changes or possible discontinuation. If available for ordering, purchases will be subject to an additional
+waiver at checkout, and are intended for early internal evaluation purposes only. These items are sold without warranties of any kind.
+
+(3)
+      RoHS values: Yes, No, RoHS Exempt. See the TI RoHS Statement for additional information and value definition.
+
+(4)
+   Lead finish/Ball material: Parts may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead finish/Ball material values may wrap to two lines if the finish value exceeds the maximum
+column width.
+
+(5)
+  MSL rating/Peak reflow: The moisture sensitivity level ratings and peak solder (reflow) temperatures. In the event that a part has multiple moisture sensitivity ratings, only the lowest level per JEDEC standards is shown.
+Refer to the shipping label for the actual reflow temperature that will be used to mount the part to the printed circuit board.
+
+(6)
+      Part marking: There may be an additional marking, which relates to the logo, the lot trace code information, or the environmental category of the part.
+
+Multiple part markings will be inside parentheses. Only one part marking contained in parentheses and separated by a "~" will appear on a part. If a line is indented then it is a continuation of the previous line and the two
+combined represent the entire part marking for that device.
+
+
+
+                                                                                                          Addendum-Page 1
+                                                                                                                                                                      PACKAGE OPTION ADDENDUM
+
+    www.ti.com                                                                                                                                                                                                    9-Nov-2025
+
+
+
+
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information provided by third parties, and
+makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and continues to take reasonable steps to provide representative
+and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals. TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers
+and other limited information may not be available for release.
+
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+
+OTHER QUALIFIED VERSIONS OF LM5176 :
+
+• Automotive : LM5176-Q1
+
+NOTE: Qualified Version Definitions:
+
+        • Automotive - Q100 devices qualified for high-reliability automotive applications targeting zero defects
+
+
+
+
+                                                                                                          Addendum-Page 2
+                                                                                PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                                                        18-Jun-2025
+
+
+
+TAPE AND REEL INFORMATION
+
+       REEL DIMENSIONS                                                                       TAPE DIMENSIONS
+                                                                                        K0       P1
+
+
+
+                                                                                                                       B0 W
+                                         Reel
+                                       Diameter
+                                                                                     Cavity           A0
+                                                                 A0   Dimension designed to accommodate the component width
+                                                                 B0   Dimension designed to accommodate the component length
+                                                                 K0   Dimension designed to accommodate the component thickness
+                                                                 W    Overall width of the carrier tape
+                                                                 P1   Pitch between successive cavity centers
+
+
+                                        Reel Width (W1)
+                              QUADRANT ASSIGNMENTS FOR PIN 1 ORIENTATION IN TAPE
+
+                                                                                                      Sprocket Holes
+
+
+                                                  Q1        Q2          Q1    Q2
+
+                                                  Q3        Q4          Q3    Q4                  User Direction of Feed
+
+
+
+                                                             Pocket Quadrants
+
+
+*All dimensions are nominal
+             Device           Package Package Pins               SPQ        Reel   Reel   A0                 B0         K0     P1     W     Pin1
+                               Type Drawing                               Diameter Width (mm)               (mm)       (mm)   (mm)   (mm) Quadrant
+                                                                            (mm) W1 (mm)
+      LM5176PWPR              HTSSOP     PWP           28        2000        330.0        16.4        6.9   10.2       1.8    12.0   16.0    Q1
+      LM5176RHFR               VQFN      RHF           28        3000        330.0        12.4        4.3    5.3       1.3    8.0    12.0    Q1
+      LM5176RHFT               VQFN      RHF           28         250        180.0        12.4        4.3    5.3       1.3    8.0    12.0    Q1
+     LM5176RHFTG4              VQFN      RHF           28         250        180.0        12.4        4.3    5.3       1.3    8.0    12.0    Q1
+
+
+
+
+                                                                        Pack Materials-Page 1
+                                                                PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                              18-Jun-2025
+
+
+
+ TAPE AND REEL BOX DIMENSIONS
+
+
+
+
+                                                               Width (mm)
+                                                                              H
+                      W
+
+
+
+
+                                                          L
+
+
+
+
+*All dimensions are nominal
+             Device           Package Type   Package Drawing   Pins         SPQ    Length (mm)   Width (mm)   Height (mm)
+      LM5176PWPR                HTSSOP            PWP           28          2000      350.0        350.0         43.0
+       LM5176RHFR                VQFN             RHF           28          3000      367.0        367.0         35.0
+       LM5176RHFT                VQFN             RHF           28          250       210.0        185.0         35.0
+     LM5176RHFTG4                VQFN             RHF           28          250       210.0        185.0         35.0
+
+
+
+
+                                                        Pack Materials-Page 2
+                                                                                                                   PACKAGE OUTLINE
+RHF0028A                                                         SCALE 3.000
+                                                                                                            VQFN - 1.0 mm max height
+                                                                                                                   PLASTIC QUAD FLATPACK - NO LEAD
+
+
+                                                          4.1                                  B
+                                A
+                                                          3.9
+
+
+
+
+             PIN 1 INDEX AREA
+
+                                                                                               5.1                                    0.5
+                                                                                               4.9                                    0.3
+
+
+
+
+                                                                                                               0.30
+                                                                                                               0.18
+
+                                                                                                                            DETAIL
+                                                                                                                     OPTIONAL TERMINAL
+                                                                                                                          TYPICAL
+
+
+
+                                                                                                       C
+                      1 MAX
+
+                                                                                                           SEATING PLANE
+                        0.05
+                        0.00                        2.55 0.1                                               0.08 C
+
+                                                     2X 2.5
+                                                                                                                                      (0.2) TYP
+                                         9                                          14         EXPOSED
+                                                                                               THERMAL PAD
+                    24X 0.5
+                                    8                                                    15
+
+
+
+                                                                                                   3.55 0.1
+
+                         2X                          29                                       SYMM
+                         3.5
+
+
+
+      SEE TERMINAL
+            DETAIL
+
+
+                                    1                                                    22                0.30
+                                                                                                     28X
+                                                                                                           0.18
+                       PIN 1 ID              28                                23                           0.1     C A B
+                    (OPTIONAL)                       SYMM                                                   0.05
+
+                                                                                                     0.5
+                                                                                              28X
+                                                                                                     0.3                             4220383/A 11/2016
+
+NOTES:
+
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+   per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. The package thermal pad must be soldered to the printed circuit board for thermal and mechanical performance.
+
+
+
+
+                                                                               www.ti.com
+                                                                                        EXAMPLE BOARD LAYOUT
+ RHF0028A                                                                                            VQFN - 1.0 mm max height
+                                                                                                        PLASTIC QUAD FLATPACK - NO LEAD
+
+
+
+                                                                        (2.55)
+
+                                                                        SYMM
+                                                 28                                           23
+
+                        28X (0.6)
+
+
+                                                                                                          22
+                                     1
+
+                    28X (0.24)
+
+
+                                                                                                           (1.525)       (3.55)
+                         24X (0.5)
+                                                                    29                                               SYMM
+                                                                                                                                  (4.8)
+
+
+
+                   ( 0.2) TYP
+                           VIA
+
+
+
+
+                                     8
+                                                                                                          15
+                        (R0.05)
+                           TYP
+
+
+                                                      9                                  14
+                                                              (1.025)
+
+                                                                        (3.8)
+
+                                                          LAND PATTERN EXAMPLE
+                                                                   SCALE:18X
+
+                             0.07 MAX                                                   0.07 MIN
+                         ALL AROUND                                                 ALL AROUND
+
+                                                                                                                 SOLDER MASK
+                                                          METAL                                                  OPENING
+
+
+                                                          SOLDER MASK                                                METAL UNDER
+                                                          OPENING                                                    SOLDER MASK
+
+                                  NON SOLDER MASK
+                                                                                                   SOLDER MASK
+                                      DEFINED
+                                                                                                     DEFINED
+                                    (PREFERRED)
+
+                                                             SOLDER MASK DETAILS
+                                                                                                                             4220383/A 11/2016
+
+NOTES: (continued)
+
+4. This package is designed to be soldered to a thermal pad on the board. For more information, see Texas Instruments literature
+   number SLUA271 (www.ti.com/lit/slua271).
+5. Vias are optional depending on application, refer to device data sheet. If any vias are implemented, refer to their locations shown
+   on this view. It is recommended that vias under paste be filled, plugged or tented.
+
+
+
+
+                                                                           www.ti.com
+                                                                                 EXAMPLE STENCIL DESIGN
+RHF0028A                                                                                       VQFN - 1.0 mm max height
+                                                                                                 PLASTIC QUAD FLATPACK - NO LEAD
+
+
+
+
+                                                     4X (1.13)
+                                                                                 (0.665) TYP
+                                          28                                         23
+
+                   28X (0.6)
+
+
+
+                               1                                                                    22
+
+               28X (0.24)
+
+
+
+
+                   24X (0.5)                                                                         (0.865)
+                                                                                                       TYP
+                                                                                                               SYMM
+                                                                         29
+
+                                                                                                                      (4.8)
+
+
+                                                                                                         4X (1.53)
+             (R0.05) TYP
+
+
+
+
+                               8                                                                    15
+
+
+
+                       METAL
+                       TYP
+                                               9                                    14
+                                                                 SYMM
+
+                                                                 (3.8)
+
+
+
+                                                    SOLDER PASTE EXAMPLE
+                                                   BASED ON 0.125 mm THICK STENCIL
+
+                                                     EXPOSED PAD 29
+                                   76% PRINTED SOLDER COVERAGE BY AREA UNDER PACKAGE
+                                                        SCALE:20X
+
+
+
+
+                                                                                                                     4220383/A 11/2016
+
+NOTES: (continued)
+
+6. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+  design recommendations.
+
+
+
+
+                                                                    www.ti.com
+                                                                                                                 PACKAGE OUTLINE
+PWP0028V                                                     SCALE 2.000
+                                                                                                     TM
+                                                                                      PowerPAD TSSOP - 1.2 mm max height
+                                                                                                                          SMALL OUTLINE PACKAGE
+
+
+                                            6.6                                                              C
+                                                TYP
+                     A                      6.2
+                                               PIN 1 INDEX                                            0.1 C
+                                               AREA                                                                         SEATING
+                                                                                 26X 0.65                                   PLANE
+                                                                           28
+                             1
+
+
+
+
+                                                                                 2X
+                   9.8
+                                                                                8.45
+                   9.6
+                  NOTE 3
+
+
+
+
+                            14
+                                                                           15
+                                                                                        0.30
+                                                                                  28X
+                                              4.5                                       0.17
+                         B
+                                              4.3                                      0.1   C A B
+
+       SEE DETAIL A
+                                                                                 (0.15) TYP
+
+
+
+                                 2X (0.6)
+                                 NOTE 5
+
+                            14                                             15
+                                                                                  2X (0.23)
+                                                                                  NOTE 5
+
+
+
+                                                                                              0.25
+                                                                                       GAGE PLANE                                            1.2 MAX
+                     5.62
+                     4.92
+                                                                                THERMAL
+                                                                                PAD
+                                                                                                                 0.75                          0.15
+                                                                                              0 -8               0.50                          0.05
+                                                                                                                           DETAIL A
+                                                                                                                               A 20
+
+
+
+
+                                                                                                                             TYPICAL
+                             1                                             28
+
+                                             2.94
+                                             2.24
+                                                                                                                                      4230409/A 01/2024
+                                                                                                          PowerPAD is a trademark of Texas Instruments.
+NOTES:
+
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+   per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. This dimension does not include mold flash, protrusions, or gate burrs. Mold flash, protrusions, or gate burrs shall not
+   exceed 0.15 mm per side.
+4. Reference JEDEC registration MO-153.
+5. Features may differ or may not be present.
+
+
+
+
+                                                                                 www.ti.com
+                                                                                        EXAMPLE BOARD LAYOUT
+PWP0028V                                                                                      TM
+                                                                            PowerPAD TSSOP - 1.2 mm max height
+                                                                                                                       SMALL OUTLINE PACKAGE
+
+
+
+                                                                         (3.4)
+                                                                        NOTE 9
+                                                                        (2.94)
+                                                                        SYMM                 METAL COVERED
+                                 28X (1.5)
+                                                                                             BY SOLDER MASK
+
+                                              1
+                                 28X (0.45)                                                        28
+                                                                                                            SEE DETAILS
+
+
+                          (R0.05) TYP
+
+
+                                                                                                                    (5.62)
+                               26X (0.65)
+
+                         SYMM                                                                                  (0.6)
+                                                                                                                              (9.7)
+                                                                                                                             NOTE 9
+
+                         SOLDER MASK                                                                    (1.2) TYP
+                          DEFINED PAD
+
+
+                            ( 0.2) TYP
+                                    VIA
+
+
+                                             14                                                    15
+
+
+                                                                                 (1.3) TYP
+
+                                                                         (5.8)
+
+
+                                                    LAND PATTERN EXAMPLE
+                                                        EXPOSED METAL SHOWN
+                                                             SCALE: 8X
+
+                 SOLDER MASK                                                      METAL UNDER                       SOLDER MASK
+                                                  METAL
+                     OPENING                                                      SOLDER MASK                       OPENING
+
+
+        EXPOSED METAL                                                                                                         EXPOSED METAL
+
+                                     0.05 MAX                                                            0.05 MIN
+                                     ALL AROUND                                                          ALL AROUND
+
+                             NON-SOLDER MASK                                                       SOLDER MASK
+                                 DEFINED                                                             DEFINED
+                               (PREFERRED)
+                                                       SOLDER MASK DETAILS
+                                                               15.000
+
+
+
+
+                                                                                                                                4230409/A 01/2024
+NOTES: (continued)
+
+ 6. Publication IPC-7351 may have alternate designs.
+ 7. Solder mask tolerances between and around signal pads can vary based on board fabrication site.
+ 8. This package is designed to be soldered to a thermal pad on the board. For more information, see Texas Instruments literature
+    numbers SLMA002 (www.ti.com/lit/slma002) and SLMA004 (www.ti.com/lit/slma004).
+ 9. Size of metal pad may vary due to creepage requirement.
+10. Vias are optional depending on application, refer to device data sheet. It is recommended that vias under paste be filled, plugged
+    or tented.
+
+
+
+
+                                                                         www.ti.com
+                                                                              EXAMPLE STENCIL DESIGN
+PWP0028V                                                                             TM
+                                                                    PowerPAD TSSOP - 1.2 mm max height
+                                                                                                         SMALL OUTLINE PACKAGE
+
+
+
+                                                                 (2.94)
+                                                               BASED ON
+                                 28X (1.5)                    0.125 THICK         METAL COVERED
+                                                                STENCIL           BY SOLDER MASK
+                                             1
+                                28X (0.45)                                                28
+
+
+
+                         (R0.05) TYP
+
+
+
+                                26X (0.65)
+                                                                                                   (5.62)
+                           SYMM                                                                  BASED ON
+                                                                                                0.125 THICK
+                                                                                                  STENCIL
+
+
+
+
+                                             14                                            15
+
+
+                                                                SYMM                       SEE TABLE FOR
+                                                                                           DIFFERENT OPENINGS
+                                                                                           FOR OTHER STENCIL
+                                                                 (5.8)                     THICKNESSES
+
+
+                                                   SOLDER PASTE EXAMPLE
+                                                  BASED ON 0.125 mm THICK STENCIL
+                                                             SCALE: 8X
+
+                                                   STENCIL         SOLDER STENCIL
+                                                  THICKNESS           OPENING
+                                                      0.1              3.29 X 6.28
+                                                    0.125         2.94 X 5.62 (SHOWN)
+                                                     0.15              2.68 X 5.13
+                                                    0.175              2.48 X 4.75
+
+
+
+
+                                                                                                                  4230409/A 01/2024
+NOTES: (continued)
+
+11. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+    design recommendations.
+12. Board assembly site may have different recommendations for stencil design.
+
+
+
+
+                                                                 www.ti.com
+                                         IMPORTANT NOTICE AND DISCLAIMER
+TI PROVIDES TECHNICAL AND RELIABILITY DATA (INCLUDING DATASHEETS), DESIGN RESOURCES (INCLUDING REFERENCE
+DESIGNS), APPLICATION OR OTHER DESIGN ADVICE, WEB TOOLS, SAFETY INFORMATION, AND OTHER RESOURCES “AS IS”
+AND WITH ALL FAULTS, AND DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION ANY
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD
+PARTY INTELLECTUAL PROPERTY RIGHTS.
+These resources are intended for skilled developers designing with TI products. You are solely responsible for (1) selecting the appropriate
+TI products for your application, (2) designing, validating and testing your application, and (3) ensuring your application meets applicable
+standards, and any other safety, security, regulatory or other requirements.
+These resources are subject to change without notice. TI grants you permission to use these resources only for development of an
+application that uses the TI products described in the resource. Other reproduction and display of these resources is prohibited. No license
+is granted to any other TI intellectual property right or to any third party intellectual property right. TI disclaims responsibility for, and you fully
+indemnify TI and its representatives against any claims, damages, costs, losses, and liabilities arising out of your use of these resources.
+TI’s products are provided subject to TI’s Terms of Sale, TI’s General Quality Guidelines, or other applicable terms available either on
+ti.com or provided in conjunction with such TI products. TI’s provision of these resources does not expand or otherwise alter TI’s applicable
+warranties or warranty disclaimers for TI products. Unless TI explicitly designates a product as custom or customer-specified, TI products
+are standard, catalog, general purpose devices.
+TI objects to and rejects any additional or different terms you may propose.
+IMPORTANT NOTICE
+
+                                                Copyright © 2025, Texas Instruments Incorporated
+                                                                Last updated 10/2025
+

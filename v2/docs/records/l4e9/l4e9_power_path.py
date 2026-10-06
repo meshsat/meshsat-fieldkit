@@ -182,6 +182,34 @@ PINS = {
     "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47"),
     "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "04025bca610844ddc0910c7cd96528cb2345a8d9d3cf2c979ac1d8c87214bc4d"),
 }
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 after the PDFs' own pins, which stay.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4e9
+PDFTEXT = {
+    "v2/vendor/battery/amass-xt60-spec-tme.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout", "-f", "1", "-l", "1"]],
+    "v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf": [[]],
+    "v2/vendor/d38999/amphenol-d38999-iii-federal.pdf": [["-layout"]],
+    "v2/vendor/infineon/infineon-bsc039n06ns-rev2.4-c534330.pdf": [["-layout", "-f", "1", "-l", "1"]],
+    "v2/vendor/keystone/M65p42.pdf": [["-raw"]],
+    "v2/vendor/keystone/littelfuse-297-ficcorp.pdf": [["-layout"]],
+    "v2/vendor/passives/yageo-cc-series.pdf": [["-layout"]],
+    "v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/power/littelfuse-smcj-series-tvs.pdf": [["-layout"], ["-raw"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/power/ti-csd19532q5b-n-fet.pdf": [["-f", "1", "-l", "1"], ["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "1", "-l", "2"], ["-layout", "-f", "3", "-l", "3"], ["-layout", "-f", "6", "-l", "6"]],
+    "v2/vendor/power/tps2596.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/ti/bq25731-datasheet.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"], ["-layout", "-f", "14", "-l", "14"], ["-layout", "-f", "8", "-l", "8"]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"], ["-layout", "-f", "5", "-l", "5"]],
+    "v2/vendor/ti/ti-ina226.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/ti/ti-lm5069.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/ti/ti-lm74700-q1.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"], ["-layout", "-f", "5", "-l", "5"]],
+}
+import importlib.util  # noqa: E402  (the helper's loader; W34)
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TOP, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
 # accepted, check 4 at 91e9a4b5), L4-E10's final record (fnd/l4e10, closing check 573c8b8f), L4-E11's (fnd/l4e11, accepted,
 # closing check a15ab384) and L4-E12's (fnd/l4e12, accepted, closing check db41c95d)
@@ -298,13 +326,10 @@ def load_inputs():
 
 def pdf_text(key, first=None, last=None):
     rel = PINS[key][0]
-    cmd = ["pdftotext", "-layout"]
+    cmd = ["-layout"]
     if first:
         cmd += ["-f", str(first), "-l", str(last or first)]
-    r = subprocess.run(cmd + [os.path.join(TOP, rel), "-"], capture_output=True)
-    if r.returncode != 0:
-        refuse(3, "pdftotext failed on %s" % rel)
-    return r.stdout.decode("utf-8", "replace")
+    return PT.pdf_text(TOP, rel, cmd, PDFTEXT, "v2/docs/records/l4e9")
 
 
 def need(text, pat, what, flags=re.M):
@@ -774,7 +799,7 @@ def compute():
     need(t, r"AWG #16 with the standard type header", "VH AWG 16 condition")
     F["vh_18"] = f(need(t, r"^\s+(\d+)A\s+AC/DC", "VH AWG 18 shrouded rating"))
     need(t, r"AWG #18 with the shrouded type header", "VH AWG 18 condition")
-    t = subprocess.run(["pdftotext", os.path.join(TOP, PINS["millmax"][0]), "-"], capture_output=True).stdout.decode()
+    t = PT.pdf_text(TOP, PINS["millmax"][0], [], PDFTEXT, "v2/docs/records/l4e9")
     F["millmax_a"] = f(need(t, r"carrying (\d+) amps continuous current", "Mill-Max continuous current"))
     t = pdf_text("xt60")
     F["xt60_a"] = f(need(t, r"额定电流\s+(\d+)A", "XT60 rated current"))
@@ -2492,7 +2517,7 @@ def derived(F):
 # ------------------------------------------------------------------------------------------- part A: Q1, F1 and U17
 def source_only(F, D):
     """B4: what the BQ25731 sheet and the charger state record establish about a source with no usable pack."""
-    t = subprocess.run(["pdftotext", "-layout", os.path.join(TOP, PINS["bq25731"][0]), "-"], capture_output=True).stdout.decode("utf-8", "replace")
+    t = PT.pdf_text(TOP, PINS["bq25731"][0], ["-layout"], PDFTEXT, "v2/docs/records/l4e9")
     out = {}
     out["conv"] = need(t, r"Corresponding the default value of ChargeVoltage register .*?\n\s*•\s+(Converter powers up)\.", "9.3.1 converter powers up", re.S).group(1)
     out["nobatt"] = need(t, r"(\d-cell without battery)", "the power-up figures without battery").group(1)
@@ -2536,7 +2561,7 @@ def soa_lines():
     idm = [pts for col, pts in paths if col == "rgb(0%,0%,0%)" and len(pts) == 3]
     if not idm or abs(10 ** li(idm[0][0][1]) - 400.0) > 4.0 or abs(10 ** lv(idm[0][1][0]) - 100.0) > 1.0:
         refuse(3, "Figure 10's IDM and 100 V boundary do not read 400 A and 100 V")
-    txt = subprocess.run(["pdftotext", "-f", "6", "-l", "6", "-layout", pdf, "-"], capture_output=True).stdout.decode("utf-8", "replace")
+    txt = PT.pdf_text(TOP, PINS["csd19532"][0], ["-f", "6", "-l", "6", "-layout"], PDFTEXT, "v2/docs/records/l4e9")
     rows = [re.findall(r"(10us|100us|1ms|10ms|DC)\b", ln) for ln in txt.splitlines() if re.search(r"\b(10us|100us)\b", ln)]
     if len(rows) != 2:
         refuse(3, "Figure 10's legend")
@@ -2568,7 +2593,7 @@ def partA(F, D, T):
     A = {}
     flat = lambda t: re.sub(r"\s+", " ", t)
     # ---- the makers' rows
-    c1 = flat(subprocess.run(["pdftotext", "-f", "1", "-l", "1", os.path.join(TOP, PINS["csd19532"][0]), "-"], capture_output=True).stdout.decode())
+    c1 = flat(PT.pdf_text(TOP, PINS["csd19532"][0], ["-f", "1", "-l", "1"], PDFTEXT, "v2/docs/records/l4e9"))
     m = need(c1, r"Gate-to-Source Voltage ±(\d+) V", "CSD19532Q5B VGS")
     A["vgs_max"] = f(m)
     m = need(c1, r"Continuous Drain Current (\d+) Pulsed Drain Current\(2\) (\d+) Power Dissipation\(1\) ([\d.]+)", "CSD19532Q5B ID, IDM, PD")
@@ -2631,7 +2656,7 @@ def partA(F, D, T):
             refuse(3, "0997 time-current row %d %%" % pct)
         tc[pct] = (float(mm.group(1).replace(" ", "")), None if mm.group(2) == "-" else float(mm.group(2)))
     A["f_tc"] = tc
-    ks = flat(subprocess.run(["pdftotext", "-raw", os.path.join(TOP, PINS["keystone"][0]), "-"], capture_output=True).stdout.decode())
+    ks = flat(PT.pdf_text(TOP, PINS["keystone"][0], ["-raw"], PDFTEXT, "v2/docs/records/l4e9"))
     need(ks, r"CAT\. NO\. 3568", "Keystone 3568")
     need(ks, r"For Littelfuse Mini 297 or 997 series/Bussmann ATM series or equivalent", "Keystone MINI holder text")
     ina = pdf_text("ina226")
@@ -2642,7 +2667,7 @@ def partA(F, D, T):
     need(ina, r"the bus voltage can be present with the supply\s+voltage off", "INA226 supply independence")
     need(ina, r"0\.00512", "INA226 Equation 1")
     A["ina_cal_k"] = 0.00512
-    tv = flat(subprocess.run(["pdftotext", "-raw", os.path.join(TOP, PINS["smcj"][0]), "-"], capture_output=True).stdout.decode())
+    tv = flat(PT.pdf_text(TOP, PINS["smcj"][0], ["-raw"], PDFTEXT, "v2/docs/records/l4e9"))
     m = need(tv, r"VBR @ TJ ?= VBR ?@25°C x \(1\+αT x \(TJ - 25\)\) \(αT:Temperature Coefficient, typical value is ([\d.]+)%\)", "SMCJ VBR temperature coefficient")
     A["tvs_alpha"] = f(m) / 100.0
     m = need(pdf_text("lm5176"), r"VCS\(BUCK\)\s+(\d+)\s+(\d+)\s+(\d+)\s+mV", "LM5176 VCS(BUCK)")
@@ -4606,6 +4631,8 @@ def main():
     for key, (rel, _) in PINS.items():
         w, h = where[key]
         p("   %-9s %s  %s%s" % (key, h[:16], rel, "" if w == "tree" else "  (" + w + (", fnd/l4e8 accepted)" if key in FROM_L4E8 else ", " + FROM_LABEL[key] + ")")))
+    for t, h, _held in PT.inputs(TOP, PDFTEXT):
+        p("   %-9s %s  %s" % ("pdftext", (h or "ABSENT")[:16], t))
     p("   pending: %s" % L4E7R)
     p("   L4-E13 (U-03, the panel) accepted by the coordinator's check 3 at fae419d1 and, after set 25, check 4 at 33b6b7be: section 13")
     p("   this record's own figures: copper %s ohm mm2/m at 20 C and %s /K, 18 AWG %s mm2 (ASSUMPTION, constants); the cold end %s C (REQ-024);"

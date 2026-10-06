@@ -1,0 +1,14 @@
+{
+ "command": "pdftotext v2/vendor/ti/ti-tps37-snvsbj1e.pdf -",
+ "held_back": false,
+ "options": [],
+ "pdf": "v2/vendor/ti/ti-tps37-snvsbj1e.pdf",
+ "pdf_sha256": "d6aed9d98fbf7f16f4dea2d6edf7c889e5fd3fa862f4072da656fb3fe7cef545",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tps37-snvsbj1e.plain.txt",
+ "text_bytes": 77946,
+ "text_sha256": "099c20fd6054dea0e435b8deb8468c13c2edd6ae0a0632abeccbdbe2d6b4c4a6"
+}

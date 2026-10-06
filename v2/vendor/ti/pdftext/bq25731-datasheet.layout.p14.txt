@@ -1,0 +1,79 @@
+BQ25731
+SLUSE66A – JUNE 2020 – REVISED JANUARY 2021                                                                                 www.ti.com
+
+8.5 Electrical Characteristics(BQ25731) (continued)
+VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)
+                  PARAMETER                                    TEST CONDITIONS                      MIN        TYP        MAX UNIT
+                      VBUS Time
+ tVBUS_OTG_OV                                                                                                    10                ms
+                      Overvoltage Deglitch
+ BATTERY LOW VOLTAGE COMPARATOR (Charge current 384mA clamp corresponding battery voltage threshold for 1S)
+                      BATLOWV falling
+ VBATLV_FALL                                                                                                     2.8                V
+                      threshold
+                      BATLOWV rising
+ VBATLV_RISE                                                                                                       3                V
+                      threshold
+ VBATLV_RHYST         BATLOWV hysteresis                                                                        200                mV
+ INPUT OVER-VOLTAGE COMPARATOR (ACOV)
+                      VBUS overvoltage
+ VVBUSOV_RISE                                 VBUS rising                                          26.0        26.8        27.7     V
+                      rising threshold
+                      VBUS overvoltage
+ VVBUSOV_FALL                                 VBUS falling                                         25.0        25.8        26.7     V
+                      falling threshold
+                      VBUS overvoltage
+ VVBUSOV_HYST                                                                                                    1.0                V
+                      hysteresis
+                      VBUS deglitch
+ tVBUSOV_RISE_DEG                             VBUS converter rising to stop converter                           100                us
+                      overvoltage rising
+                      VBUS deglitch
+ tVBUSOV_FALL_DEG                             VBUS converter falling to start converter                            1               ms
+                      overvoltage falling
+ INPUT OVER CURRENT COMPARATOR (ACOC)
+                      ACP to ACN
+                                               Voltage across input sense resistor rising,
+ VACOC                rising threshold, w.r.t.                                                    180%        200%       220%
+                                               Reg0x32[2]= 1
+                      ILIM2_VTH
+                      Measure between
+ VACOC_FLOOR                                  Set IIN_DPM to minimum                                 44          50          56    mV
+                      ACP and ACN
+                      Measure between
+ VACOC_CEILING                                Set IIN_DPM to maximum                                172         180         188    mV
+                      ACP and ACN
+ tACOC_DEG_RISE       Rising deglitch time    Deglitch time to trigger ACOC                                     250                us
+ tACOC_RELAX          Relax time              Relax time before converter starts again                          250                ms
+ SYSTEM OVER-VOLTAGE COMPARATOR (SYSOVP)
+                                              1s                                                     5.8           6        6.1     V
+                                              2s                                                    11.7         12        12.2     V
+                      System overvoltage
+ VSYSOVP_RISE         rising threshold to     3s                                                     19        19.5          20     V
+                      turnoff converter
+                                              4s                                                     19        19.5          20     V
+                                              5s                                                     24          25          26     V
+                                              1s                                                                 5.5                V
+                                              2s                                                               11.7                 V
+                      System overvoltage
+ VSYSOVP_FALL                                 3s                                                               19.3                 V
+                      falling threshold
+                                              4s                                                               19.3                 V
+                                              5s                                                               24.5                 V
+                      Discharge current
+                      when SYSOVP
+ ISYSOVP                                      on VSYS pin                                                        20                mA
+                      stop switching was
+                      triggered
+ BAT OVER-VOLTAGE COMPARATOR (BATOVP)
+                      Overvoltage rising      1s                                                102.3%        104%       106%
+                      threshold as
+ VBATOVP_RISE         percentage of
+                      VBAT_REG in             ≥2 s                                              102.3%        104%       105%
+                      REG0x05/04h()
+
+
+14    Submit Document Feedback                                                               Copyright © 2022 Texas Instruments Incorporated
+
+                                                     Product Folder Links: BQ25731
+

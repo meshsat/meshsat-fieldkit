@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 3 -l 3 v2/vendor/power/ti-csd19532q5b-n-fet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "3",
+  "-l",
+  "3"
+ ],
+ "pdf": "v2/vendor/power/ti-csd19532q5b-n-fet.pdf",
+ "pdf_sha256": "353ce937cff0b719e730010829720d25c2ece3637ed92fb7ad8cc370438559d1",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/ti-csd19532q5b-n-fet.layout.p3.txt",
+ "text_bytes": 5123,
+ "text_sha256": "34b322a2d73d1d743dbe48f0530d1e98c38588be0c9e5c47ca83ab1948dd2323"
+}

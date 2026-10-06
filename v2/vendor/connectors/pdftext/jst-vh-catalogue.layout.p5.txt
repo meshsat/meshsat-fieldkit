@@ -1,0 +1,71 @@
+                                                                                              VH CONNECTOR
+
+ Model number allocation
+Contact                                                          Housing/ N type, M type
+
+                                      S VH - 21 T - P 1.1                                                      VH R - 2 N -
+
+  Supply form: S…Strip form
+               B…Loose piece                                         Series name
+  Series name                                                        Type: For receptacle contact
+  Applicable wire range:                                             No. of circuits
+     21…AWG # 22 to AWG #18                                          Shape: N…Contact lance exposed
+     41…AWG # 20 to AWG #16                                                 M…Contact lance covered by resin
+  Surface ﬁnish: Tin-plated                                          Color: No indication…Natural (White), BK…Black, R…Red,
+  Material: Copper alloy                                                    BL…Blue, M…Green, D…Orange, Y…Yellow, PK…Pink,
+  Applicable post size                                                      H…Gray
+
+
+
+
+Housing/ Retainer compatible type                                Retainer
+
+                                         VH R R - 2 N -                                                             VH S - 2 V
+
+
+  Series name                                                        Series name
+  Type: For receptacle contact                                       Type: Retainer
+  Retainer compatible type                                           No. of circuits
+  No. of circuits                                                    Sub model number
+  Shape: Contact lance exposed
+  Color: No indication…Natural (White)
+
+
+
+
+Header (Standard type)                                           Header (Standard type)/ Top entry type with PBT
+
+                                              B 2P    - VH -                                                   B 2P - VH - B -
+
+
+  Assembly product                                                   Assembly product
+  No. of circuits                                                    No. of circuits
+  Header type: No indication…Top entry type                          Series name
+               Ｓ…Side entry type                                     Material: PBT (GF)
+  Series name                                                        Color: No indication…Natural (White), C…Black, R…Red,
+  Color: No indication…Natural (White), BK…Black, R…Red,                    E…Blue, M…Green, Y…Yellow
+         BL…Blue, M…Green, O…Orange, Y…Yellow, PK…Pink,
+         H…Gray, TR…Tomato red
+
+
+
+
+Header (Standard type)/ Side entry type with stopper             Header (Shrouded Header)
+
+                                                 S 2P - VH -                                           B 2P - VH - FB - B -
+
+
+  Header type: Side entry type with stopper                          Assembly product
+  No. of circuits                                                    No. of circuits
+  Series name                                                        Series name
+  Color: No indication…Natural (White), BK…Black,                    Sub model numbe
+         Red, BL…Blue, M…Green, Y…Yellow                             Material: PBT (GF)
+                                                                     Color: No indication…Natural (White), C…Black, R…Red,
+                                                                            E…Blue, M…Green, O…Orange, Y…Yellow,
+                                                                            PK…Pink, H…Gray,
+
+
+
+
+                                                               ‑5‑
+
