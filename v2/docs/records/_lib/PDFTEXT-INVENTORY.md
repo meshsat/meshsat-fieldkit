@@ -281,3 +281,94 @@ commands and the moved line citations (F-K4).
 - **F-C1** (computation, minor): stated in section 4; nothing changed.
 - **F-K1 to F-K3, F-K4, F-S1, F-S2**: the coordinator's (section 6 and the plan draft); W37 changed no output, pin, generator or
   `_bin/` file.
+
+## 8. W55's correction of a conversion gap (6 October 2026; W53's finding, the queue's Q-74)
+
+**The gap.** On this branch `l8p/l8p_c4.py` refused: "v2/vendor/diodes/diodes-bzt52c-ds18004.pdf with -layout is not declared in
+v2/docs/records/l8p's PDFTEXT table" (W53, 18:09 CEST). It read three sheets (2N7002, BZT52C, LM26LV) through `l8p_guard.pdftext()`,
+which W34 converted to check `l8p_guard.py`'s own table; that table never held the BZT52C sheet, because l8p_guard does not read it.
+The census by name (section 2) could not see the script: at the base it named no pdftotext, it reached the tool through another
+script's reader. W36 ran the 25 converted generators and l8p_c4 is not one of them, and no test ran it.
+
+**The correction (a SESSION decision under the owner's standing rule of 26 September 2026; reversal: delete the table and the
+reader at the end of `l8p_c4.py` and declare the BZT52C sheet in `l8p_guard.py`'s table instead).** A module's table holds its own
+reads (section 2), so `l8p_c4.py` declares its three reads in its own `PDFTEXT` table and reads them with its own `pdftext()`, which
+keeps l8p_guard's absence check and options and calls `_lib/pdftext.py` with that table; section 0 prints each text's sha256 after the
+pins. Declaring the sheet in l8p_guard's table instead was the other route; it was not taken because l8p_guard's output would then
+print an input it never reads. The table and the reader are placed last in the script so that no line above them moves (W53's edit
+on fnd/s32attr at `l8p_c4.py:1028` merges cleanly with this one; `git merge-tree` exit 0). No new text: all three extractions were
+already declared by `l8p_drafts.py` or `l8p_guard.py`, so `retake_pdf_text.py v2/docs/records/l8p` printed "15 extraction(s): 15
+unchanged, 0 written, 0 changed": `v2/vendor/diodes/pdftext/diodes-bzt52c-ds18004.layout.txt` (6cf7cbd81b4e2df0) and
+`v2/vendor/power/pdftext/jscj-2n7002-c8545.layout.txt` (8f457be6865e4d72) committed beside their PDFs, with their sidecars;
+`v2/vendor/ti/held/pdftext/ti-lm26lv-snis144g.layout.txt` (d02fa6e1f4d615fa) held back with its sheet (l8p's fetch script fetches it).
+
+**Every converted generator and reader run once (W55, the runner, one at a time, from the worktree root, stdout into the scratch
+pad; never a tree's `.out`).** A refusing `pdftotext` and `pdftocairo` first on PATH (each logs its arguments and exits 1), and a
+Python hook naming the records file and line that started each process; l4e9 and l4e11 with pdftocairo passed through to the real
+tool (their pinned sites); l4e13 and ripple_dense, which fail with pdftotext refused because they run the l4e7 KEY group's
+`l4e_replay` and `r11_dep` (section 5), run a second time with pdftotext passed through and logged. "Output" compares the scratch
+output with the committed `.out`: every added line is a text line or a moved source pin, every removed line a moved pin.
+
+| Generator (under `v2/docs/records/`) | Tools | Exit | pdftotext calls | pdftocairo calls | Seconds | Output against the committed `.out` |
+|---|---|---|---|---|---|---|
+| `efuse/efuse_check.py` | both refused | 0 | 0 | 0 | 12.7 | +17 text lines |
+| `l5r2/l5r2_interfaces.py` | both refused | 0 | 0 | 0 | 0.4 | +7 text lines |
+| `l8r2/l8r2_drafts.py` | both refused | 0 | 0 | 0 | 22.7 | +2 text lines |
+| `l8r2/l8r2_gndret.py` | both refused | 0 | 0 | 0 | 31.2 | +6 text lines, 1 moved pin |
+| `l8r2/l8r2_p0.py` | both refused | 0 | 0 | 0 | 1.4 | +8 text lines, 1 moved pin |
+| `l4e13/l4e13_panel.py` | both refused | 4 | 1 (1 by `l3plane/vbus20_range.py`) | 0 | 0.4 | none (stopped at the KEY group's first pdftotext call) |
+| `l4e13/l4e13_panel.py` | pdftotext real (logged), pdftocairo refused | 0 | 39 (32 by `l3plane/vbus20_range.py`, 7 by `l4e/l4e_replay.py`) | 0 | 79.7 | +14 text lines |
+| `l4e11/l4e11_power.py` | pdftotext refused, pdftocairo real | 0 | 0 | 5 (5 by `l4e11/l4e11_power.py`) | 5.3 | +68 text lines |
+| `l4e9/l4e9_power_path.py` | pdftotext refused, pdftocairo real | 0 | 0 | 1 (1 by `l4e9/l4e9_power_path.py`) | 0.9 | +34 text lines |
+| `l4e10/l4e10_cell_thermal.py` | both refused | 0 | 0 | 0 | 2.9 | +15 text lines |
+| `l4e12/l4e12_thermal.py` | both refused | 0 | 0 | 0 | 12.2 | +34 text lines, its pin count line 69 to 103 (F-C1) |
+| `l7pwr/l7pwr_fans_th1.py` | both refused | 0 | 0 | 0 | 0.1 | +5 text lines |
+| `l7r2/l7r2_items.py` | both refused | 0 | 0 | 0 | 1.3 | +3 text lines |
+| `l8p/l8p_drafts.py` | both refused | 0 | 0 | 0 | 13.4 | +12 text lines |
+| `l8p/l8p_guard.py` | both refused | 0 | 0 | 0 | 0.1 | +7 text lines, 1 moved pin |
+| `l9pwr/l9pwr_budget.py` | both refused | 0 | 0 | 0 | 0.4 | +7 text lines |
+| `l9stk/l9stk_copper.py` | both refused | 0 | 0 | 0 | 0.8 | +3 text lines |
+| `l9stk/l9stk_protection.py` | both refused | 0 | 0 | 0 | 0.8 | +13 text lines, 1 moved pin |
+| `l9t5/l9t5_a1.py` | both refused | 0 | 0 | 0 | 0.1 | +5 text lines |
+| `l9t5/l9t5_case.py` | both refused | 0 | 0 | 0 | 0.5 | +18 text lines, 2 moved pins |
+| `l9t5/l9t5_cm5.py` | both refused | 0 | 0 | 0 | 0.4 | +8 text lines, 1 moved pin |
+| `l9t5/l9t5_drafts.py` | both refused | 0 | 0 | 0 | 26.3 | +21 text lines, 1 moved pin |
+| `l9t5/l9t5_f01.py` | both refused | 0 | 0 | 0 | 1.0 | +22 text lines, 3 moved pins |
+| `l9t5/l9t5_paloop.py` | both refused | 0 | 0 | 0 | 0.0 | no output of its own |
+| `l9t5/l9t5_t10.py` | both refused | 0 | 0 | 0 | 14.8 | +31 text lines, 1 moved pin |
+| `l4e8/ripple_dense.py` | both refused | 4 | 1 (1 by `r11dep/r11_dep.py`) | 0 | 0.3 | none (stopped at the KEY group's first pdftotext call) |
+| `l4e8/ripple_dense.py` | pdftotext real (logged), pdftocairo refused | 0 | 60 (60 by `r11dep/r11_dep.py`) | 0 | 465.2 | +19 text lines |
+| `l8p/l8p_c4.py` | both refused | 0 | 0 | 0 | 3.7 | +3 text lines, 2 moved pins |
+| `l5r2/l5r3_panel.py` | both refused | 0 | 0 | 0 | 0.1 | unchanged |
+| `l8r2/l8r2_dist.py` | both refused | 0 | 0 | 0 | 15.9 | +0 text lines, 2 moved pins |
+| `l9t5/l9t5_connected.py` | both refused | 0 | 0 | 0 | 14.5 | +0 text lines, 8 moved pins |
+| `l9t5/l9t5_f01_drafts.py` | both refused | 0 | 0 | 0 | 7.3 | +0 text lines, 2 moved pins |
+
+The tree's `git status` was the same before and after each run (efuse's first run overlapped one of W55's own commits; it was run
+again alone and the row is that run). Every run finished inside 10 minutes; the longest, ripple_dense with r11_dep's 60
+extractions, took 465 s. `check_f01_netlist.py` has no output of its own: it ran inside
+`l9t5_f01_drafts.py`. `l5r3_panel.py` (section 4 named it an indirect reader) reaches no converted reader: its output is unchanged.
+
+**The static check (`test_pdftext_input`, predicates (j) to (m)).** The run above covers what each generator reaches on its committed
+inputs; the check covers every call it could make. It reads with ast, never imports or runs: every helper call that the 25 converted
+generators and the READERS reach, its PDF and options resolved through the wrappers and every call reaching them (also from another
+script, as l8p_c4 called l8p_guard's; a For loop per element, an If by its test where the test reads), must be declared in the
+`PDFTEXT` table the call names. On this tree: 37 sites, each resolved, each candidate declared; every helper call of these scripts
+reached; no records script outside the two lists calls one of their reader functions (the scan found the four READERS besides
+l8p_c4: `l8r2/l8r2_dist.py`, `l9t5/check_f01_netlist.py`, `l9t5/l9t5_connected.py`, `l9t5/l9t5_f01_drafts.py`). The mutation: with
+`l8p_c4.py` as it was at 5b3153aa, the check names `l8p/l8p_guard.py:102` with the BZT52C sheet, and nothing else. What it cannot see:
+a module reached by a name it does not resolve (an `__import__`, a `getattr`, a loader of another shape) and a name bound to two
+modules in two functions (read as the first); a candidate that is not a `.pdf` is a branch it could not prune and is not judged.
+Also added: every extraction ANY table under `v2/docs/records` declares has its text and sidecar (committed exactly when its sheet
+is), and l8p_c4 run with both tools refused.
+
+**For the coordinator at set 32 (nothing here changes an output; the cascade of section 6 applies).**
+- `l8p_c4.out` gains three text lines at the end of section 0 and two moved source pins (`l8p_guard.py`, `l8p_c4.py`); every line from
+  22 on moves down by 3. Citations into it: live `v2/docs/records/l4close/REMAINING-ENGINEERING.md:361-362` (`:278-282` becomes
+  `:281-285`), the P0 list drafts `l4close/P0-POWER-LIST.rev3.draft2.md:87, :93` and `rev3.draft3.md:99, :105` (`:273-275` becomes
+  `:276-278`, `:200` becomes `:203`); bound to their commits and left: `int30/RESULT.draft2.md:77` and the three in
+  `l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md`.
+- W53's ordering finding stands: `l4e11_power.py:62` pins the full sha256 of `l8p_c4.out`, which `freeze_l4_chain.sh` does not
+  re-pin, so `l8p_c4` is regenerated and that pin moved BEFORE the L4 pin chain (with W53's fnd/s32attr merged first, since its text
+  edit moves the same output).
+- `test_l8p`'s comparison of `l8p_c4.out` with a fresh run fails on this branch until that regeneration (the adoption boundary).
