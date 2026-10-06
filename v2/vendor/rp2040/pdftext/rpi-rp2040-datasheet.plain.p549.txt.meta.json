@@ -1,0 +1,19 @@
+{
+ "command": "pdftotext -f 549 -l 549 v2/vendor/rp2040/rpi-rp2040-datasheet.pdf -",
+ "held_back": false,
+ "options": [
+  "-f",
+  "549",
+  "-l",
+  "549"
+ ],
+ "pdf": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+ "pdf_sha256": "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/rp2040/pdftext/rpi-rp2040-datasheet.plain.p549.txt",
+ "text_bytes": 1512,
+ "text_sha256": "ac446711149ec8ea747f9b75e3990847cc98682a7f6f42c65a1d3b31cf324fa2"
+}

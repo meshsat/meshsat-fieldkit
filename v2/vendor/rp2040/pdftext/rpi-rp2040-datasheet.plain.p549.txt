@@ -1,0 +1,161 @@
+RP2040 Datasheet
+
+Table 547. LOAD
+Register
+
+Bits
+
+Description
+
+Type
+
+Reset
+
+31:24
+
+Reserved.
+
+-
+
+-
+
+23:0
+
+Load the watchdog timer. The maximum setting is 0xffffff which corresponds
+
+WF
+
+0x000000
+
+to 0xffffff / 2 ticks before triggering a watchdog reset (see errata RP2040-E1).
+
+WATCHDOG: REASON Register
+Offset: 0x08
+Description
+Logs the reason for the last reset. Both bits are zero for the case of a hardware reset.
+Table 548. REASON
+Register
+
+Bits
+
+Description
+
+Type
+
+Reset
+
+31:2
+
+Reserved.
+
+-
+
+-
+
+1
+
+FORCE
+
+RO
+
+0x0
+
+0
+
+TIMER
+
+RO
+
+0x0
+
+WATCHDOG: SCRATCH0, SCRATCH1, …, SCRATCH6, SCRATCH7 Registers
+Offsets: 0x0c, 0x10, …, 0x24, 0x28
+Table 549. SCRATCH0,
+SCRATCH1, …,
+SCRATCH6,
+SCRATCH7 Registers
+
+Bits
+
+Description
+
+Type
+
+Reset
+
+31:0
+
+Scratch register. Information persists through soft reset of the chip.
+
+RW
+
+0x00000000
+
+WATCHDOG: TICK Register
+Offset: 0x2c
+Description
+Controls the tick generator
+Table 550. TICK
+Register
+
+Bits
+
+Description
+
+Type
+
+Reset
+
+31:20
+
+Reserved.
+
+-
+
+-
+
+19:11
+
+COUNT: Count down timer: the remaining number clk_tick cycles before the
+
+RO
+
+-
+
+next tick is generated.
+10
+
+RUNNING: Is the tick generator running?
+
+RO
+
+-
+
+9
+
+ENABLE: start / stop tick generation
+
+RW
+
+0x1
+
+8:0
+
+CYCLES: Total number of clk_tick cycles before the next tick.
+
+RW
+
+0x000
+
+4.8. RTC
+﻿The Real-time Clock (RTC) provides time in human-readable format and can be used to generate interrupts at specific
+times.
+
+4.8.1. Storage Format
+Time is stored in binary, separated in seven fields:
+
+4.8. RTC
+
+548
+
+

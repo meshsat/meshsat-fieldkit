@@ -1,0 +1,65 @@
+RP2040 Datasheet
+
+2.12.7. Source of Last Reset
+The source of the most recent chip-level reset can be determined by reading the state of the HAD_POR, HAD_RUN and
+HAD_PSM_RESTART fields in the CHIP_RESET register. A one in the HAD_POR field indicates a power supply related reset, i.e.
+
+either a power-on or brown-out initiated reset, a one in the HAD_RUN field indicates the chip was last reset by the RUN pin,
+and a one in the HAD_PSM_RESTART field indicates the chip has been reset via Rescue Debug Port. There should never be
+more than one field set to one.
+
+2.12.8. List of Registers
+The chip-level reset subsystem shares a register address space with the on-chip voltage regulator. The registers for
+both subsystems are listed in Section 2.10.6. The shared address space is referred to as vreg_and_chip_reset elsewhere
+in this document.
+
+2.13. Power-On State Machine
+2.13.1. Overview
+The power-on state machine removes the reset from various hardware blocks in a specific order. Each peripheral in the
+power-on state machine is controlled by an internal rst_n active-low reset signal and generates an internal rst_done
+active-high reset done signal. The power-on state machine deasserts the reset to each peripheral, waits for that
+peripheral to assert its rst_done and then deasserts the reset to the next peripheral. An important use of this is to wait
+for a clock source to be running cleanly in the chip before the reset to the clock generators is deasserted. This avoids
+potentially glitchy clocks being distributed to the chip.
+The power-on state machine is itself taken out of reset when the Chip-Level Reset subsystem confirms that the digital
+core supply (DVDD) is powered and stable, and the RUN pin is high. The power-on state machine takes a number of other
+blocks out of reset at this point via its rst_n_run output. This is used to reset things that need to be reset at start-up but
+must not be reset if the power-on state machine is restarted. This list includes:
+
+• Power on logic in the ring oscillator and crystal oscillator
+• Clock dividers which must keep on running during a power-on state machine restart (clk_ref and clk_sys)
+• Watchdog (contains scratch registers which need to persist through a soft-restart of the power-on state machine)
+2.13.2. Power On Sequence
+Figure 27. Power-On
+State Machine
+Sequence.
+
+Chip Level Reset
+Released
+
+Ring Oscillator
+
+Crystal Oscillator
+
+Clock Generators
+
+Reset Controller
+
+Chip Level Reset
+and Voltage
+Regulator Registers
+
+XIP
+(Execute-In-Place)
+
+ROM / SRAM
+
+Bus Fabric
+
+Processor Complex
+
+2.13. Power-On State Machine
+
+168
+
+

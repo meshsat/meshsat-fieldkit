@@ -1,0 +1,120 @@
+RP2040 Datasheet
+
+Bits
+
+Description
+
+Type
+
+Reset
+
+2
+
+ALARM_2
+
+RW
+
+0x0
+
+1
+
+ALARM_1
+
+RW
+
+0x0
+
+0
+
+ALARM_0
+
+RW
+
+0x0
+
+TIMER: INTS Register
+Offset: 0x40
+Description
+Interrupt status after masking & forcing
+Table 544. INTS
+Register
+
+Bits
+
+Description
+
+Type
+
+Reset
+
+31:4
+
+Reserved.
+
+-
+
+-
+
+3
+
+ALARM_3
+
+RO
+
+0x0
+
+2
+
+ALARM_2
+
+RO
+
+0x0
+
+1
+
+ALARM_1
+
+RO
+
+0x0
+
+0
+
+ALARM_0
+
+RO
+
+0x0
+
+4.7. Watchdog
+4.7.1. Overview
+The watchdog is a countdown timer that can restart parts of the chip if it reaches zero. This can be used to restart the
+processor if software gets stuck in an infinite loop. The programmer must periodically write a value to the watchdog to
+stop it from reaching zero.
+The watchdog is reset by rst_n_run, which is deasserted as soon as the digital core supply (DVDD) is powered and
+stable, and the RUN pin is high. This allows the watchdog reset to feed into the power-on state machine (see Section
+2.13) and reset controller (see Section 2.14), resetting their dependants if they are selected in the WDSEL register. The
+WDSEL register exists in both the power-on state machine and reset controller.
+
+4.7.2. Tick generation
+The watchdog reference clock, clk_tick, is driven from clk_ref. Ideally clk_ref will be configured to use the Crystal
+Oscillator (Section 2.16) so that it provides an accurate reference clock. The reference clock is divided internally to
+generate a tick (nominally 1μs) to use as the watchdog tick. The tick is configured using the TICK register.
+
+ NOTE
+To avoid duplicating logic, this tick is also distributed to the timer (see Section 4.6) and used as the timer reference.
+
+The SDK starts the watchdog tick in clocks_init:
+SDK: https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/hardware_watchdog/watchdog.c Lines 16 - 18
+
+16 void watchdog_start_tick(uint cycles) {
+17
+
+4.7. Watchdog
+
+tick_start(TICK_WATCHDOG, cycles);
+
+544
+
+

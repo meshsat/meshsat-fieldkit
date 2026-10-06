@@ -773,8 +773,14 @@ def rvpwr():
 # verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its PDF; _lib/pdftext.py returns it byte
 # for byte and refuses when it is absent, so this script never runs pdftotext (section 1 prints each text's sha256 after the held sheets).
 # Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8r2
+# W81 (6 October 2026): the four held San Ace catalogue pages (HELD) added. V["fan_rows"] and the cooler's words are typed from them
+# and test_l8r2 read them against the pages with its own pdftotext; it reads these texts through pdf_text() now. Held back, under held/.
 PDFTEXT = {
     "v2/vendor/cm5/cm5-datasheet.pdf": [["-layout"]],
+    "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0362.pdf": [["-layout"]],
+    "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0616.pdf": [["-layout"]],
+    "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pdf": [["-layout"]],
+    "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0633.pdf": [["-layout"]],
     "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf": [["-layout"]],
 }
 _PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
