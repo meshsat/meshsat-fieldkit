@@ -13,7 +13,9 @@ D-10 "as P0-7 states it (E-1, F1 to F4, the lower-source back-feed)" (`v2/docs/r
 remaining-engineering ledger's HO-F (`v2/docs/records/l4close/REMAINING-ENGINEERING.md` on `fnd/ledgerfix` `99bbc0c6`, cited as text
 only; its section 6, item E) places the lower-source back-feed as REMAINING ENGINEERING inside E-1, S1's row (b) its later
 validation, on the owner's part 23 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`). Section 7 now says the same for the
-back-feed and for the parallel source (both cases E-1 carries, not validation-only items). Nothing else on this page moved: B2 stays
+back-feed and for the parallel source (both cases E-1 carries, not validation-only items; the parallel source's placement is this
+branch's reading, SESSION: it is E-1's guard-on step itself and the ledger's HO-F lists S1's row (a) under E-1's task; reversed by the
+coordinator's revision of the placement). Nothing else on this page moved: B2 stays
 UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline, with no protection credit and no owner item.
 
 **Standing:** D-10 is an UNRESOLVED PROTECTION DEFECT in the present model, carried as the receiving company's remaining engineering
