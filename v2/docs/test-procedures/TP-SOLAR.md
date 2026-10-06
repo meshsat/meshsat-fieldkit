@@ -71,12 +71,17 @@ and of the sense in operation:
 The corrected design's acceptance, as the supplier task list states it (the same lines this procedure measures):
 
 <!-- q src="v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md" row="P1-1" col="Acceptance" -->
-> a stiff 36 V source arriving with the guard on over the declared 0.30 to 10.20 uH, at both fault positions (the connector with
-> no lead resistance credited, the lead's far end): U5's CSPIN to CSNIN inside its +-0.3 V absolute maximum and the +-0.240 V
-> design target, INP inside its 18 V margin line, PV_F under the TPS4811-Q1's recommended 80 V row, the cold connection's slew and
-> INP inside their margin lines (R-176 rows 2 and 3); in operation at the 25 V corner the sense pins within +-100 mV or the
-> regulated input current within check (a)'s error budget (R-189); the 100 W backstop bound kept (R-21, R-98)
+> a stiff 36 V source over the declared 0.30 to 10.20 uH at both fault positions (the connector with no lead resistance credited,
+> the lead's far end), the guard on and the source arriving (F1 to F4) and the lower-source back-feed: every part inside its
+> absolute maximum ratings and the controller inside its recommended conditions while it must act, the SESSION 10 % lines (E-1's
+> (b)); then S1 and S2 on the corrected port; the 100 W backstop bound kept (R-21, R-98)
 <!-- /q -->
+
+**Re-quoted 6 October 2026 (quotes only):** the cell read on set 30 (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` line 1422; set 31
+narrowed P1-1 to E-1, `v2/docs/records/l4e9/SET31-CHANGES.md` row 8); the lines of section 8 that cite P1-1 are from the earlier cell
+(quoted here on 4 October 2026, commit b367a77d: U5's CSPIN to CSNIN inside +-0.3 V and the +-0.240 V design target, INP inside its
+18 V margin line, PV_F under the 80 V row, R-176 rows 2 and 3, the sense pins within +-100 mV at the 25 V corner), and the next set's
+procedures refresh (Q-07) owns them.
 
 ## 2. The specimen and what transfers
 
@@ -254,14 +259,23 @@ The register's acceptances, quoted:
 <!-- /q -->
 
 <!-- q src="v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md" row="R-189" col="Acceptance" -->
-> The pins within +-100 mV at every operating point, or the regulated input current measured within check (a)'s error budget at
-> the 25 V corner; else Analog Devices' statement of what the amplifier reads above 100 mV (item 7), enough low-derating
-> capacitance behind RSENSE1 (which worsens the guard-on transient, B6, and is re-run against R-176 row 3), or the engineer's
-> rearrangement (then R-187's draft); a failure costs the input limit regulating off its setting at high input and a low bus (this
-> model, rectified in round 5: below it, the error +7.9 % at the regulation's highest current and -10.2 % at the trip's, MODELED
-> on an amplifier model the sheet does not print) and a possible stress on the sense pins at the switching edges (-0.4329 V at 10
-> ns edges, beyond the -0.3 V absolute maximum); round 3's 'no damage' and '5.7 % low' withdrawn (L4-E7's round 5)
+> S4: the regulated input current inside 2.18 to 2.92 A at every point, the backstop not tripping and IMON_IN under 1.55 V (a PV
+> emulator at the panel's curve with 25 V open circuit, into a 12.0 V and a 15.1 V bus, cold-soaked at -20 C and in 62.1 C air); S3:
+> from -0.5 uA (sinking) to +1.0 uA (sourcing) out of IMON_IN at every point (five LT8705AIUHF#PBF, CSPIN = CSNIN = VIN at 16 V and
+> 25 V, at -20 C, +25 C and +62 C case); set 29's acceptance, for the drafted RSENSE1 arrangement only if it is ever restored: The
+> pins within +-100 mV at every operating point, or the regulated input current measured within check (a)'s error budget at the 25 V
+> corner; else Analog Devices' statement of what the amplifier reads above 100 mV (item 7), enough low-derating capacitance behind
+> RSENSE1 (which worsens the guard-on transient, B6, and is re-run against R-176 row 3), or the engineer's rearrangement (then
+> R-187's draft); a failure costs the input limit regulating off its setting at high input and a low bus (this model, rectified in
+> round 5: below it, the error +7.9 % at the regulation's highest current and -10.2 % at the trip's, MODELED on an amplifier model
+> the sheet does not print) and a possible stress on the sense pins at the switching edges (-0.4329 V at 10 ns edges, beyond the
+> -0.3 V absolute maximum); round 3's 'no damage' and '5.7 % low' withdrawn (L4-E7's round 5)
 <!-- /q -->
+
+**Re-quoted 6 October 2026 (quotes only):** the cell read on set 30 (`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md` line 285; set 31
+restated R-189 as S4 and S3, `v2/docs/records/l4e9/SET31-CHANGES.md` row 10); the R-189 line below and Part B's steps are from the
+earlier cell (quoted here on 4 October 2026, commit b367a77d), which the cell now keeps as set 29's acceptance for the drafted RSENSE1
+arrangement only if it is ever restored; this procedure carries no S3 or S4 step, and the next set's procedures refresh (Q-07) owns them.
 
 <!-- q src="v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md" row="R-174" col="Acceptance" -->
 > D4's clamp at each disturbance's recorded current at or under the lowest limit on PV_P (REQ-016's criterion: 50 V on the drafted
