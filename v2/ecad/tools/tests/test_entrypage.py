@@ -43,7 +43,7 @@ PLACEHOLDER = "__INTEGRATED__"
 AT_ADOPTION = ("v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md", "v2/docs/records/int30/RESULT.md")
 GITIGNORED = ("v2/ecad/out/",)                            # START-HERE names it as the gitignored readings folder
 DASHES = (chr(0x2013), chr(0x2014))                        # the en dash and the em dash, by code point
-STATES = (("Documents and editable artifacts", "on main as a DESK candidate (`%s`)"),
+STATES = (("Documents and editable artifacts", "on main as a DESK candidate (`%s`, set 31)"),
           ("Design reviewed and accepted", "NO"), ("Implemented", "NONE"), ("Physical qualification", "NONE"),
           ("Fabrication release", "BLOCKED"), ("Power-design closure", "BLOCKED"))
 NEW_CONTENTS = ("v2/docs/records/l4close/REMAINING-ENGINEERING.md", "v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md",
@@ -73,6 +73,12 @@ TESTED = "dd1aed00d0a0a521063b5792550bc510c4707c59"       # the promoted revisio
 ADOPTED = "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec"      # the adoption commit (main after the adoption, 6 October 2026)
 PACKAGED_CELL = "the commit the supplier delta's README names in its header"
 PACKAGED_WHAT = "cut after the adoption; the README states its difference from the tested revision and which checks cover it"
+# Restated by W65 (6 October 2026, fnd/adopt31; basis: W39's rows of v2/docs/records/int31/ENTRY-PAGES.patch.md with the
+# coordinator's token ruling, applied as test_adopt31 holds them): set 31's rows put set 31's candidate in the Tested and
+# documents rows (__CANDIDATE__) and its adoption commit in the Adopted row (__ADOPTION__), set 30's commits kept there as dated
+# history (rows S-05, S-06, S-09, U-04, U-05, U-08); U-02 renames the supplier page's section 0 heading. Those two tokens are the
+# only others a page may carry; the predicates below name each change where they make it.
+SET31 = ("__CANDIDATE__", "__ADOPTION__")
 OWN_BOUND = {844: 845, 470: 471, 480: 481, 483: 484, 485: 486, 786: 787}   # a line at WRITTEN_AT -> the same words at TESTED
 BOUND_TOK = re.compile(r"`([0-9a-f]{8,40}):(v2/[^`\s:]+):(\d+)(?:-(\d+))?`")
 
@@ -149,7 +155,7 @@ QUOTES = (
 
 # (file, a heading it must carry, written at adoption)
 ANCHORS = (
-    (SUPPLIER, "## 0. This revision: set 30", False), (SUPPLIER, "### 0a. The revisions", False),
+    (SUPPLIER, "## 0. This revision: set 31 over set 30", False), (SUPPLIER, "### 0a. The revisions", False),
     (SUPPLIER, "### 0b. The states, each apart", False), (SUPPLIER, "### 0c. What set 30 adds to the package", False),
     (SUPPLIER, "### 0d. What we ask of you, and what we do not", False), (SUPPLIER, "### 0e. How to reproduce", False),
     (SUPPLIER, "## 2. Requirements, operating modes and fixed constraints", False), (SUPPLIER, "## 4. Layer by layer", False),
@@ -275,7 +281,7 @@ def _placeholder_errors(texts):
     """The placeholder is literal and alone; filled, it is filled everywhere with one commit."""
     errs = []
     for name, t in texts.items():
-        for tok in set(UNDERS.findall(t)) - {PLACEHOLDER}:
+        for tok in set(UNDERS.findall(t)) - {PLACEHOLDER} - set(SET31):   # W65: set 31's tokens, held by test_adopt31
             errs.append("%s carries an unknown placeholder %s" % (name, tok))
         for m in HALF.finditer(t):
             if t[m.start():m.start() + len(PLACEHOLDER)] != PLACEHOLDER:
@@ -300,7 +306,7 @@ def _section0(p):
 
 
 def _commit_cell(cell):
-    m = re.fullmatch(r"`([0-9a-f]{8,40}|%s)`(?: \(`([0-9a-f]{40})`\))?" % PLACEHOLDER, cell.strip())
+    m = re.fullmatch(r"`([0-9a-f]{8,40}|%s|%s)`(?: \(`([0-9a-f]{40})`\))?" % (PLACEHOLDER, SET31[0]), cell.strip())
     return m and m.group(1)
 
 
@@ -383,13 +389,25 @@ def t_a_filled_placeholder_names_one_promoted_commit_and_the_adopted_files():
         assert not errs, "%s: %s" % (p, errs)
     assert len(got) == 1, "the pages name more than one integrated commit: %s" % sorted(got)
     c = got.pop()
-    assert c == TESTED, "the Tested row names %s, not the promoted commit" % c
-    assert _git("cat-file", "-e", c + "^{commit}").returncode == 0, "%s is not a commit of this repository" % c
-    for anc in (REVIEWED, WRITTEN_AT):
-        assert _git("merge-base", "--is-ancestor", anc, c).returncode == 0, "%s does not descend from %s" % (c, anc[:8])
-    assert adopted == {"`%s` (`%s`)" % (ADOPTED[:8], ADOPTED)}, "the Adopted rows read %s" % sorted(str(a) for a in adopted)
-    assert _git("cat-file", "-e", ADOPTED + "^{commit}").returncode == 0, "the adoption commit is not in this repository"
-    assert _git("merge-base", "--is-ancestor", c, ADOPTED).returncode == 0, "the adoption commit does not descend from the tested one"
+    # W65 (set 31; basis above SET31): the Tested row names set 31's candidate, __CANDIDATE__ until set 31's adoption fills it with a
+    # commit that descends from set 30's promoted one; the Adopted row names __ADOPTION__ or a commit that descends from the tested
+    # one; set 30's tested and adoption commits stand in those rows as dated history and keep their order
+    for p in PAGES:
+        s0 = _section0(p)
+        assert ("set 30's was `%s`, kept as dated history" % TESTED) in s0, "%s: set 30's tested commit is not kept in the Tested row" % p
+        assert ("set 30's was `%s`, 6 October 2026, 11:25 CEST, kept as dated history" % ADOPTED) in s0, "%s: set 30's adoption" % p
+    assert _git("merge-base", "--is-ancestor", TESTED, ADOPTED).returncode == 0, "set 30's adoption does not follow its tested commit"
+    if c != SET31[0]:
+        assert _git("cat-file", "-e", c + "^{commit}").returncode == 0, "%s is not a commit of this repository" % c
+        for anc in (REVIEWED, WRITTEN_AT, TESTED):
+            assert _git("merge-base", "--is-ancestor", anc, c).returncode == 0, "%s does not descend from %s" % (c, anc[:8])
+    assert len(adopted) == 1, "the Adopted rows differ: %s" % sorted(str(a) for a in adopted)
+    cell = adopted.pop()
+    if cell != "`%s`" % SET31[1]:
+        a = _commit_cell(cell)
+        assert a and a != SET31[0] and _git("cat-file", "-e", a + "^{commit}").returncode == 0, "the Adopted row reads %s" % cell
+        if c != SET31[0]:
+            assert _git("merge-base", "--is-ancestor", c, a).returncode == 0, "the adoption commit does not descend from the tested one"
     for f in AT_ADOPTION:   # W30: adopted in the tree, or landing with its adoption branch
         assert landing_error(f) is None, "filled, but %s is not adopted: %s" % (f, landing_error(f))
     assert "**After set 30" in open(os.path.join(ROOT, LS), encoding="utf-8").read(), "filled, but LAYER-STATUS has no After set 30"
@@ -454,7 +472,7 @@ def t_the_six_states_stand_apart_in_each_page():
         assert [r[0] for r in rows] == [w for w, _ in STATES], "%s: the states table's rows are %s" % (p, [r[0] for r in rows])
         for (what, word), (_, got) in zip(STATES, rows):
             if "%s" in word:
-                ok = re.fullmatch(re.escape(word).replace(re.escape("%s"), r"([0-9a-f]{8,40}|%s)" % PLACEHOLDER), got)
+                ok = re.fullmatch(re.escape(word).replace(re.escape("%s"), r"([0-9a-f]{8,40}|%s|%s)" % (PLACEHOLDER, SET31[0])), got)
             else:
                 ok = got == word
             assert ok, "%s: %s reads %r, not %r" % (p, what, got, word)

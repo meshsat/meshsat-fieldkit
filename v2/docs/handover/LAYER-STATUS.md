@@ -35,6 +35,8 @@ order, fnd/w4l4e7 `786aed2f`, fnd/w5l8p `cd19df59`, fnd/w14l5 `910f08ef` (it con
 contains fnd/w9l9t5 `02b0d30d`), fnd/w13l4e9 `56ab0d01` (it contains fnd/w7rem `3e566c55`), fnd/w15class `57bcdbfc`, fnd/dgate2
 `150e908b`, fnd/w3annex `686de0a2`.
 
+**After set 31 (6 October 2026, an adoption of record text over set 30, MESHSAT-1357).** Layers 4, 5, 8, 9 and 12 open with a block headed After set 31, directly under the layer's heading and above its set 30 block (Layer 5, which has none, above its set 29 block): the items set 31's records move, each naming its record; every row and note not named there keeps its set 30, set 29 or H2 text. Set 31 adopts, on set 30's promoted revision `dd1aed00`, the record text its authors wrote during set 30's integration, with the filed patch rows applied and the citations re-taken, regenerated to convergence on the lineage `31928583` (`31928583c612ea43df17df5d7e0cbb2f66090f8e`), and record l4e7's results cache re-keyed on it in `aa332280`; in its integration record's words, `5f910eb5:v2/docs/records/int31/RESULT.md:409` `Set 31 closes NO power item.`, and `5f910eb5:v2/docs/records/int31/RESULT.md:410` `It changes no baseline circuit draft, no board generator and no netlist`. No item is raised to MET by set 31 and no layer from 4 on is COMPLETE; nothing has been built, bought or measured. **Citations in the After set 31 blocks** read commit, path and line at the commit they name, a code span right after one being the words quoted from that line: the lineage's files at `31928583`, set 31's integration record at fnd/res31's `5f910eb5` (both in this page's history); `v2/ecad/tools/tests/test_adopt31.py` holds them.
+
 **How to read this page after H2.** Three strata, newest first. (1) The section "Status at handover H2" is the current
 status (**H3:** with the H3 section above it): one row per layer with the evidence for its status and what remains, and the per-board layout-entry reasons.
 (2) Each layer's own section (Layer 1 to Layer 9) opens with its status and **a short acceptance table at H2**, item
@@ -349,6 +351,39 @@ FAIL with six; r8b: second check with no blocking finding).
 
 ## Layer 4. System architecture
 
+**After set 31 (6 October 2026): IN_PROGRESS.** Set 31 moves no state of this layer: `5f910eb5:v2/docs/records/int31/RESULT.md:23` `It closes NO power item, is
+not power-design closure and releases nothing; Layer 4's DESK gate stays NOT PASSED as the coordinator`. The set 30 block below
+stands; the notes here name what set 31's records restate.
+
+- The chain. REVIEWED: `4d0ff8a2`, unchanged: no independent check read a later revision, and cx46's verdict stands as filed,
+  `31928583:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.`. The base:
+  set 30's promoted revision `dd1aed00`. The lineage: `31928583`, 103 commits over the base, `5f910eb5:v2/docs/records/int31/RESULT.md:72` `(78 commits and 25
+  merges)`, with record l4e7's results cache re-keyed on it in `aa332280`. CANDIDATE: `__CANDIDATE__`, the commit the gated release
+  suite and the promotion gate run on, to which main is fast-forwarded. The gate: `__GATE__`.
+- Unreviewed changes after cx46. Set 31's classification (`v2/docs/records/int31/CLASSIFICATION.md`, section 2) classes the 103
+  commits of `dd1aed00..31928583` under set 30's rule as the coordinator ruled it (reading A): `5f910eb5:v2/docs/records/int31/RESULT.md:78` `None of the 24
+  REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,`, and `5f910eb5:v2/docs/records/int31/RESULT.md:79`
+  `never credited, and owes its own targeted verification before any credit.`. They come beside set 30's 14 over
+  `4d0ff8a2..dd1aed00` (the set 30 block below).
+- What set 31's records restate for this layer (among the 24, or carried by them): record l4e7's P0 pages (W4, the classification's
+  rows 1.1 and 1.2), `31928583:v2/docs/records/l4e7/L4E7-P0SOL.md:1` `since set 31 ADDRESSED IN DRAFTS and PROVISIONAL on S3 and
+  S4, not independently accepted as closing D-16`; L4-E9's register row R-159 restated from E11-29's row (W7's rows, applied by W24,
+  rows 11 to 17), `31928583:v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:255` `each FET's (Zself + 2 Zmut) at most 40.78 K/W
+  without m`; the supplier validation annex's amendment (W3, rows 10.1 and 10.2),
+  `31928583:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:123` `## 6. Amendment of 6 October 2026: the set 30
+  note and four reconciliations (record text for the NEXT set)`, and its section on E11-37,
+  `31928583:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:237` `## 7. E11-37, the charger's gate drive into the
+  three battery FETs (REMAINING ENGINEERING; the P0 list's row P0-8; added 6 October 2026)`.
+- The contradictions between records (the assessment's K-01 to K-28). The eight branches the set 30 notes below name as prepared
+  for the next set (fnd/w4l4e7 `786aed2f` to fnd/w3annex `686de0a2`) are merged into the lineage, each tip an ancestor of
+  `31928583`; no K row is re-read in set 31, so the K table's counts stand as W12 gave them on `6bc4424e` (the set 30 block below).
+- The DESK gate and the three completion claims, unchanged, in the assessment's words (set 31 changes no line of it):
+  `31928583:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md:492` `### Layer 4's DESK gate: NOT PASSED`;
+  `31928583:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md:496` `### Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS`, with its limit
+  `31928583:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md:498` `"Ready" here means complete and internally consistent as a package of open items, not that any item is resolved.`;
+  `31928583:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md:500` `### Power-design closure: BLOCKED. Fabrication release: BLOCKED.`. No claim is blended with another and none is given
+  as a percentage; a promoted integration set is none of the three by itself.
+
 **After set 30 (6 October 2026): IN_PROGRESS.** Set 30 carries the connected P0 power candidate: boards A, B, D and E composed with
 every pending draft in L4-E9's change-list order (`records/l9t5/l9t5_connected.out:64-73`), the change list's rows R-220 to R-245
 each "DRAFTED (not applied)" with no R-241, route B2 being out of the baseline (`records/l4e9/L4-POWER-ARCHITECTURE.md:422,451-516`;
@@ -567,6 +602,16 @@ above stays as Slot I wrote it at `7070f106`):**
 
 ## Layer 5. Partitioning and interfaces
 
+**After set 31 (6 October 2026): IN_PROGRESS.** Set 31 adopts W8's restatement of the Layer 5 contract files to L4-E9's D-10
+(finding L5-F14 of record l5pwr; W14's merge, the classification's rows 3.1 to 3.5), with record l5pwr's two contract-script tests
+restated to them; no state of this layer moves, and the rows below keep their set 29 text.
+
+- 5.13 (PARTLY, as its set 29 row): `pcb_interfaces.yaml`'s IF-EXT-DC carries D-10 as set 31 leaves it,
+  `31928583:v2/ecad/tools/pcb_interfaces.yaml:1255` `restated for the next set from L4-E9's D-10 as set 31 left it, finding L5-F14 of
+  record l5pwr`, and D-10 stays OPEN there, `31928583:v2/ecad/tools/pcb_interfaces.yaml:1256` `is OPEN, in L4-E9's words 'an
+  UNRESOLVED PROTECTION DEFECT in the present model`.
+- 5.11 (PARTLY, as its set 29 row): the firmware contract's matching rows are Layer 12's note below.
+
 **After set 29 (4 October 2026): IN_PROGRESS.** Layer 5's power pass (`records/l5pwr`), its rounds 2 and 3 (`records/l5r2`) and round 4 (`records/l5r4`) wrote Layer 4's power results, the pass-2 fields of every contract and the one slot-fault rule; no release check has judged this layer. The rows below are the items sets 28 and 29 moved; every other item (5.1, 5.3 MET with the same reading, 5.8, 5.14, 5.15) keeps its H2 row below.
 
 | Item | Acceptance item (short) | After set 29 | Evidence, or what remains |
@@ -673,6 +718,16 @@ above stays as Slot I wrote it at `7070f106`):**
 
 ## Layer 8. Schematics
 
+**After set 31 (6 October 2026): IN_PROGRESS on every board.** Set 31 adopts two records' restatements of their drafts' text; no
+board is regenerated, `5f910eb5:v2/docs/records/int31/RESULT.md:410` `It changes no baseline circuit draft, no board generator and no netlist`.
+
+- 8.10 (**OPEN**, as the set 30 row below): record l8p's release page (W5, the classification's rows 2.1 to 2.3),
+  `31928583:v2/docs/records/l8p/L8P-BREAKER.md:266` `One release for the six drafts that read this folder's one`, with U101 the
+  latch-off part, `31928583:v2/docs/records/l8p/L8P-BREAKER.md:153` `LM5069MM-1, the latch-off variant`; record l8r2's drafts kept
+  as drafts (W11's merge, rows 4.1 to 4.5), `31928583:v2/docs/records/l8r2/L8R2-KNOWN-DEFECTS.md:11` `in DRAFT: nothing is applied
+  and no independent check has accepted these drafts`. The set 30 note below that names fnd/w5l8p `cd19df59` as prepared for the
+  next set is set 31's, merged at `7992b2b0`.
+
 **After set 30 (6 October 2026): IN_PROGRESS on every board.** The P0 candidate's drafts were added as release-guarded apply scripts
 and given rows in L4-E9's change list; "None is APPLIED" (`records/l4e9/L4-POWER-ARCHITECTURE.md:401`); no generator file differs
 between set 29's `aa76c894` and `7070f106`, so no board is regenerated in the tree; the compositions are the records' own
@@ -730,6 +785,18 @@ as Slot I wrote it at `7070f106`):**
 ---
 
 ## Layer 9. Pre-layout design analysis
+
+**After set 31 (6 October 2026): IN_PROGRESS.** Set 31 adopts record l9t5's and record l8r2's restatements (W9 and W11, merged at
+`0ed29a78`, the classification's rows 4.1 to 4.5) and regenerates the cascade on them; every figure stays a MODEL reading on the
+composed candidate, and nothing was routed, built or measured.
+
+- 9.1 (PARTLY, as the set 30 row below): record l9t5 reads L4-E9's change list as applied,
+  `31928583:v2/docs/records/l9t5/README.md:76` `W11: APPLIED since, by the integrator, at set 30's integration commit 7070f106`;
+  C-ALLTX rev 3, `31928583:v2/docs/records/l9t5/README.md:82` `C-ALLTX rev 3 at the cap 15.1308 V (MODEL, PROVISIONAL`; the
+  finding renamed, `31928583:v2/docs/records/l9t5/T10-ROUND5.md:227` `L9T5-F28 (Slot A; renamed from L9T5-F26`.
+- 9.20 (NOT MOVED, as the set 30 row below): set 31's third chain ran record l9t5's cascade twice on W41's items,
+  `5f910eb5:v2/docs/records/int31/RESULT.md:327` `cascade pass 2 exit 0 at 16:45:05`, and its stability checks converged, `5f910eb5:v2/docs/records/int31/RESULT.md:339`
+  `== converged at pass 1`; the coordinator's run on the integration, not a recipient's re-run.
 
 **After set 30 (6 October 2026): IN_PROGRESS.** T5 (the all-transmit case), T10 (the supervisors' regulators), the return between
 boards A and B and the battery FETs' guard were analysed on the drafted, composed circuit; every figure is a MODEL reading on the
@@ -797,6 +864,18 @@ above stays as Slot I wrote it at `7070f106`):**
 ---
 
 ## Layer 12. Firmware, bring-up, test plans and build documentation
+
+**After set 31 (6 October 2026): IN_PROGRESS.** Set 31 adopts W8's rows of the firmware contract and W3's TP-E11-29; nothing
+has run on hardware.
+
+- 12.1 (PARTLY, as the set 30 row below): `v2/docs/HW-FW-CONTRACT.md` gains W8's dated row,
+  `31928583:v2/docs/HW-FW-CONTRACT.md:509` `By W8 for the next set`, with its R-173 row and V-E16 restated to L4-E9's D-10, and a
+  row for R-240, `31928583:v2/docs/HW-FW-CONTRACT.md:262` `R-240 board E's solar input sense moved off U5 onto the backstop's bank`;
+  it still carries none of FW-B20 to FW-B22.
+- 12.3 (PARTLY, as the set 30 row below): TP-E11-29 as W3 rewrote it, still
+  `31928583:v2/docs/test-procedures/TP-E11-29.md:19` `**NOT EXECUTABLE.** Two things must happen first`, its limits quoting R-159's
+  cell, `31928583:v2/docs/test-procedures/TP-E11-29.md:20` `row R-159 restated from it (L4-E9's), a restatement set 31 made word for
+  word on the set 30 candidate`.
 
 **After set 30 (6 October 2026): IN_PROGRESS.** The P0 records add firmware obligations and verification rows as drafts for their
 owners and rewrite one procedure; nothing is applied to `v2/docs/HW-FW-CONTRACT.md` and nothing has run on hardware. The rows below

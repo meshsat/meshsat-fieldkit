@@ -244,8 +244,11 @@ def t_the_placeholders_stand():
     # and the DESK-gate cell carries the coordinator's three claims, citing the assessment, in place of its placeholder.
     t = _page()
     l4 = _block(t, "4")
+    # restated by W65 (6 October 2026, fnd/adopt31; basis: set 31's blocks carry set 31's declared __CANDIDATE__ until set 31's
+    # adoption fills it, held by test_adopt31): set 30's two placeholders are filled everywhere outside set 31's blocks
+    t30 = re.sub(r"\*\*After set 31 \(6 October 2026\): IN_PROGRESS.*?(?=\n\*\*After set (?:30|29) )", "", t, flags=re.S)
     for p in ("__CANDIDATE__", "__PROMOTED__"):
-        assert p not in t, "%s still stands on the page" % p
+        assert p not in t30, "%s still stands on the page" % p
     assert ("INTEGRATED: `%s`" % PROM) in _norm(l4) and ("PROMOTED: `%s`" % PROM) in _norm(l4), "the chain's two shas"
     assert DESK not in t, "the DESK-gate placeholder still stands"
     assert sum(1 for x in l4.splitlines() if x.startswith(DESK_CELL)) == 1, "the DESK-gate cell is not the coordinator's claims"

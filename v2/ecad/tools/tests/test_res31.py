@@ -45,7 +45,11 @@ CX45 = "06077cee"                                           # the delta cx46 rea
 L4E9_EXTRA = ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "v2/docs/records/l4e9/l4e9_power_path.out")
 FIXED = ("REVIEWED-INPUT CHANGED", "RECORD TEXT", "GENERATOR DATA (text)", "TEST", "DIGEST RE-PIN", "MERGE", "TOOLING")
 DECLARED = ("__CANDIDATE__", "__REKEY__", "__PROMOTED__", "__GATE__", "__ADOPTION__")     # W41's round filled: rows 32 and 33
-PATCH_TOKENS = ("__PROMOTED__", "__ADOPTION__")
+# Restated by W65 (6 October 2026, fnd/adopt31; basis: the coordinator's ruling in its brief to W65, authority SESSION): the entry
+# pages name the tested revision with __CANDIDATE__, the name W63's fill_res31.py fills (W39 wrote __PROMOTED__; under a fast-forward
+# it is the same commit), so the patch's rows carry __CANDIDATE__ and __ADOPTION__ (its dated note says so); test_adopt31 holds the
+# pages to the rows.
+PATCH_TOKENS = ("__CANDIDATE__", "__ADOPTION__")
 # main's commits named by the record, not in this branch's history until main is merged into set 31's lineage
 OUTSIDE = {"eff28be3b80f882db545a849b0da1def0217f63d": "main's follow-up after set 30's adoption, the copies' source",
            "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec": "set 30's adoption commit on main",
