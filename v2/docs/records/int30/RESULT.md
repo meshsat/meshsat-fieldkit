@@ -1,38 +1,38 @@
-**DONE:** sections 1 to 8 written on commit 2b `d83d9f2d` (the candidate and the integration's commits, W15's classification bound with its 13 unreviewed changes, W16's review of 2b quoted, the integration as measured, the freeze and gate lines as placeholders with their log paths, the compute record, what set 30 closes and the three claims apart, the records bound); **NOT DONE:** every value that does not exist yet (the candidate commit, the two pending corrections after W16's review, the gates, the re-key's KEY, the promotion, the mirror); **NEXT:** the coordinator fills the placeholders from the named logs, and adopts, corrects or discards this text as `records/int30/RESULT.md`.
+# Set 30: the result of the integration (MESHSAT-1357)
 
-# Set 30: the result of the integration (DRAFT 3 of `RESULT.md`, for the coordinator's adoption at promotion; MESHSAT-1357)
-
-**Status: DRAFT for the coordinator**, the one writer of `records/int30/RESULT.md`. Written by worker W18 on branch `fnd/w18result`
-(base fnd/w15class `57bcdbfc`, which carries Slot K's `RESULT.draft2.md` and W15's `CLASSIFICATION.draft.md`) on 6 October 2026 from
-04:51 CEST, on the integration's commit 2b `d83d9f2d`. Started from a copy of draft 2 (`v2/docs/records/int30/RESULT.draft2.md`,
+**Status: the record**, adopted on the promoted revision `dd1aed00d0a0a521063b5792550bc510c4707c59` at the coordinator's adoption (queue item Q-04a). Written by
+worker W18 as draft 3 (`v2/docs/records/int30/RESULT.draft3.md`) on branch `fnd/w18result` (base fnd/w15class `57bcdbfc`, which
+carries Slot K's `RESULT.draft2.md` and W15's `CLASSIFICATION.draft.md`) on 6 October 2026 from 04:51 CEST, on the integration's commit
+2b `d83d9f2d`; renamed to this path and filled by worker W26 on branch fnd/adopt30a from 10:49 CEST with the values the coordinator
+saved for the adoption (`<worktrees>/_runs/int30/ADOPTION-VALUES.md`, copied, never typed) and the coordinator's Q-05 words
+(`<worktrees>/_runs/int30/Q05-verdict.final.md`). Draft 3 started from a copy of draft 2 (`v2/docs/records/int30/RESULT.draft2.md`,
 kept unchanged beside this file): its sections 2 to 5 (the eighteen commits to `bbba3e53`, the equivalence at `bbba3e53`, the
-pre-existing refusals, nine contradictions) stay there and are cited, not repeated; this draft replaces its header, its revision
-table, its gate table and its claims table, and adds what happened after its base. It is record text: it runs no generator, suite,
-gate or box job, accepts nothing, closes nothing, promotes nothing and changes no verdict. Prototype framing: nothing in the kit has
-been built, bought, powered or measured; every figure below is a time, a count or a digest copied from a log or a commit, and no
-figure is an engineering result.
+pre-existing refusals, nine contradictions) stay there and are cited, not repeated; draft 3 replaced its header, its revision
+table, its gate table and its claims table, and added what happened after its base. It is record text: its authors ran no generator,
+suite, gate or box job; it accepts nothing, closes nothing, promotes nothing and changes no verdict. Prototype framing: nothing in the kit has
+been built, bought, powered or measured; every figure below is a time, a count or a digest copied from a log or a commit (three
+elapsed times in section 4 are computed from logged stamps and say so), and no figure is an engineering result.
 
 **What governs it.** The owner's part 25 (`d83d9f2d:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:845` `Use the existing integration gate to record the reviewed and integrated revisions and the intervening changes.`)
 and the constitution's section 2 (`d83d9f2d:v2/docs/EXECUTION-CONSTITUTION.md:23` `Report engineering-handover readiness, power-design closure and fabrication release separately. A promoted integration set is none of those by itself.`).
 No blended percentage is given anywhere in this file.
 
-**Citations and placeholders.** `<sha>:path:N` followed by a code span quotes line N of that file at that revision; a path under
+**Citations.** `<sha>:path:N` followed by a code span quotes line N of that file at that revision; a path under
 `<worktrees>/_runs/` is a coordinator's log outside the tree, quoted with its line (`:N`) or, for the growing queue file
-`<worktrees>/_runs/int30/QUEUE.md`, by its dated entry. `test_w18result.py` reads every quote, every commit named and every count.
-The literal placeholders are the fixed set `__CANDIDATE__`, `__PROMOTED__`, `__MIRROR__`, `__KEY__`, `__GATE_BOX_PY312__`,
-`__GATE_BOX_PY311__`, `__GATE_RUNNER__` and `__G7__`, with the two pending corrections the coordinator named after W16's review,
-`__L6R2_FIX__` and `__W19__`; this draft fills none of them.
+`<worktrees>/_runs/int30/QUEUE.md`, by its dated entry. `test_w18result.py` reads every quote, every commit named and every count,
+and checks every value filled at the adoption against the values file. Draft 3's ten placeholders (the candidate, the promotion, the
+mirror, the KEY, the three gate lines and suite_gate's verdict, the l6r2 correction and W19's merge) are filled; none is left.
 
 ## 1. The candidate
 
 | Role | Revision | State as given | Source |
 |---|---|---|---|
 | REVIEWED: the one targeted recheck, cx46 | `4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e` | CORRECTIONS NOT CLOSED; the second negative on this candidate, so the review method ended | `d83d9f2d:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.` (its base_commit at line 8; the filed check's path is this one) |
-| Commit 2b: the integration's regenerated outputs, the last committed revision when this was written | `d83d9f2d720878ca5267dbf59bdc571c6890fd92` | no independent check of its engineering; W16's AI review of its diff is section 3f | section 3 |
-| INTEGRATED: the candidate commit (the re-keyed record l4e7 cache installed) | `__CANDIDATE__` | none | section 4 |
-| PROMOTED: main after the fast-forward | `__PROMOTED__` (mirror `__MIRROR__`) | a DESK candidate, not an accepted power design (section 6) | section 4 |
+| Commit 2b: the integration's regenerated outputs, the last committed revision when draft 3 was written | `d83d9f2d720878ca5267dbf59bdc571c6890fd92` | no independent check of its engineering; W16's AI review of its diff is section 3f | section 3 |
+| INTEGRATED = CANDIDATE: the candidate commit (the re-keyed record l4e7 cache, its dependents and the pack rule installed) | `dd1aed00d0a0a521063b5792550bc510c4707c59` | no independent check of its engineering (section 2) | `<worktrees>/_runs/int30/ADOPTION-VALUES.md:4` `INTEGRATED = CANDIDATE = PROMOTED = MIRROR (GitHub main): dd1aed00d0a0a521063b5792550bc510c4707c59`; section 4 |
+| PROMOTED: main after the fast-forward | `dd1aed00d0a0a521063b5792550bc510c4707c59` (mirror `dd1aed00d0a0a521063b5792550bc510c4707c59`) | a DESK candidate, not an accepted power design (section 6) | `<worktrees>/_runs/int30/promote-1036.log:2` `main fast-forwarded to dd1aed00d0a0a521063b5792550bc510c4707c59`; `<worktrees>/_runs/int30/promote-1036.log:8` `GitHub main at dd1aed00d0a0a521063b5792550bc510c4707c59`; section 4 |
 
-**The integration's commits, in first-parent order** (`git log --first-parent 3d2746c9^..d83d9f2d`; times are the committer dates in
+**The integration's commits, in first-parent order** (`git log --first-parent 3d2746c9^..dd1aed00`; times are the committer dates in
 Europe/Amsterdam). The disposition round between `4d0ff8a2` and `d5abed7c` is in W15's table (section 2), not repeated here.
 
 | # | Commit | Time | What it did (from its subject and diff) |
@@ -48,18 +48,23 @@ Europe/Amsterdam). The disposition round between `4d0ff8a2` and `d5abed7c` is in
 | I9 | `2ccf0f20` | 2026-10-06 03:54:08 | pre-freeze merge 4 of 4: fnd/w6tp `9802dfde` (the test procedures' quotes re-taken on set 31's cells) |
 | I10 | `6bc4424e` | 2026-10-06 03:58:43 | merge of origin/main `24708af3` (MESHSAT-1500's compact folder and README; the owner's part 26 filing `b0a67a45`) |
 | I11 | `d83d9f2d` | 2026-10-06 04:42:16 | integration 2b: the regenerated outputs, the four cascade generators' pins, the applier's reader deciding on every added row, the ledger's owner-file citations moved by one, three test modules changed (`test_applier_state.py`, `test_l9t5.py`, `test_remeng.py`; its subject names two restated to set 31) (34 files, 178 insertions, 139 deletions: `git show --stat`) |
-| I12 | `__L6R2_FIX__` | pending | the coordinator's correction of record l6r2's generator and its regenerated output (W16's finding 1, section 3f) |
-| I13 | `__W19__` | pending | the merge of fnd/w19applier: the applier's D1 regression test (W16's finding 3, section 3f) |
-| I14 | `__CANDIDATE__` | pending | the candidate commit: record l4e7's results cache re-keyed on the integrated tree (section 3e) |
+| I12 | `33efca07` | 2026-10-06 05:02:22 | the coordinator's correction of record l6r2's generator (W16's finding 1, section 3f): the together composition names each draft once, so board D's ptt draft is no longer applied twice and read refused for a draft that commutes at `4d0ff8a2`; its output regenerated (one line), a regression test in `test_l6r2.py` |
+| I13 | `c4492dd3` | 2026-10-06 05:02:46 | the merge of fnd/w19applier `2d4f6df5`: the applier's D1 regression test (W16's finding 3, section 3f) |
+| I14 | `c2a532a9` | 2026-10-06 05:54:40 | record l4e7's results cache re-keyed on the integrated tree, computed on the debian:12 box rekey6 (section 3e): its key and parts moved, its results equal |
+| I15 | `c4438d6a` | 2026-10-06 07:35:55 | the re-key's dependents: record l4e7's P0 output, whose guard (a rule about history) is corrected, its figures unchanged; L4-E9 re-pinned to it; l5pwr, l6r2 and l9t5's connected output re-pinned; l5r2 re-pinned to the l4e11 entry page. The first candidate commit, superseded by I16 (section 4) |
+| I16 | `dd1aed00` | 2026-10-06 08:44:41 | the pack rule: `compact/**` excluded by kind in `v2/docs/handover/pack.yaml`, so MESHSAT-1500's folder is classifiable. THE CANDIDATE: gated and promoted (section 4) |
 
 ## 2. What changed after the review (the owner's part 25)
 
-**W15's classification is bound by its path and revision:** `v2/docs/records/int30/CLASSIFICATION.draft.md` at fnd/w15class
-`57bcdbfc` (in this branch's history). It classes every commit of `git rev-list 4d0ff8a2..6bc4424e`
+**The classification is bound by its final path:** `v2/docs/records/int30/CLASSIFICATION.md`, adopted with this file. It is W15's
+draft `v2/docs/records/int30/CLASSIFICATION.draft.md` at fnd/w15class `57bcdbfc` (in this branch's history), renamed, its two
+placeholder rows replaced by rows 39 to 45 (the seven commits after `6bc4424e`, read below) and its summary recomputed at the adoption.
+W15's rows 1 to 38 class every commit of `git rev-list 4d0ff8a2..6bc4424e`
 (`57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:7` `prints 38: 28 commits and 10 merges`) from its diff into a fixed set.
 Its summary counts, first class per row (its lines 74 to 81): REVIEWED-INPUT CHANGED 13; RECORD TEXT (restatement) 7; GENERATOR DATA
-(text) 1; TEST / FIXTURE 1; DIGEST RE-PIN / REGENERATED OUTPUT 2; MERGE 10; OUTSIDE P0 4; total 38. Its two placeholder rows (2b and
-the candidate) are not determined there; 2b is read below, the candidate commit is the coordinator's.
+(text) 1; TEST / FIXTURE 1; DIGEST RE-PIN / REGENERATED OUTPUT 2; MERGE 10; OUTSIDE P0 4; total 38. Over the 45 commits of
+`git rev-list 4d0ff8a2..dd1aed00` the adopted record counts REVIEWED-INPUT CHANGED 14; RECORD TEXT (restatement) 8; GENERATOR DATA (text) 1;
+TEST / FIXTURE 2; DIGEST RE-PIN / REGENERATED OUTPUT 5; MERGE 11; OUTSIDE P0 4; total 45 (`CLASSIFICATION.md`, section 2).
 
 **The 13 REVIEWED-INPUT CHANGED commits, as UNREVIEWED CHANGES after cx46** (W15's reasons, shortened to one line each; the six
 marked NOT ONLY NARROWING are W15's "They do not only narrow (6)" list, `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:88` `They do not only narrow (6):`;
@@ -91,7 +96,26 @@ further Astra run on this candidate is authorised by the owner's ruling. The pro
 `d83d9f2d:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:845` `Use the existing integration gate to record the reviewed and integrated revisions and the intervening changes.`).
 Passing the suite transfers no engineering verdict to them.
 
-**Commit 2b, read here from its diff (W15's placeholder row; this worker's read, not a classification the coordinator has made).**
+**The seven commits after `6bc4424e`** (the rows W15's two placeholder rows stood for; `CLASSIFICATION.md` rows 39 to 45, each read
+from `git show --stat` and its diff, the full reasons and quotes there):
+
+| Row | Commit | Class (the first the most material) | Reason in one line |
+|---|---|---|---|
+| 39 | `d83d9f2d` | REVIEWED-INPUT CHANGED + DIGEST RE-PIN / REGENERATED OUTPUT + RECORD TEXT (restatement) + TEST / FIXTURE | commit 2b: its regenerated outputs carry row 20's R-246 (the connected output's count, 117 to 118 changes) and row 23's composition (record l8r2's board E round, 13 to 14 drafts) into files of the reviewed tree, and record l8r2's gndret order check reads NOT THE ORDER THIS RECORD COMPOSES (W16's finding 2): NOT ONLY NARROWING; the rest digest lines, the applier's reader, the ledger's owner-file citations and three test modules |
+| 40 | `33efca07` | DIGEST RE-PIN / REGENERATED OUTPUT + TEST / FIXTURE | the l6r2 correction: the generator applied board D's ptt draft twice and read refused for a draft that commutes at `4d0ff8a2`; the correction restores the reviewed reading (commutes, with R-239's paloop draft in the chain), one output line, a regression test |
+| 41 | `2d4f6df5` | TEST / FIXTURE | W19's D1 regression of the change-list applier (W16's finding 3), one test module |
+| 42 | `c4492dd3` | MERGE | brings row 41 |
+| 43 | `c2a532a9` | DIGEST RE-PIN / REGENERATED OUTPUT | the re-keyed l4e7 cache: its key and parts moved, its results object equal |
+| 44 | `c4438d6a` | DIGEST RE-PIN / REGENERATED OUTPUT + GENERATOR DATA (text) | the re-key's dependents: the P0 output's guard, a rule about history, corrected and its paragraph reprinted with the figures unchanged; the rest digest re-pins |
+| 45 | `dd1aed00` | RECORD TEXT (restatement) | the pack rule: OUTSIDE P0 made classifiable (`compact/**` excluded by kind in the handover pack specification); no record, figure, verdict, script, output or test |
+
+**So the promoted revision carries 14 UNREVIEWED CHANGES, not 13:** W15's 13 above and commit 2b (row 39), classed under W15's own
+rule for a change carried into a file of the reviewed tree, as W15 classed row 18. Seven do not only narrow (W15's six and 2b). Commit
+2b was not checked by an independent checker either: W16's review of 2b (section 3f) is an AI review of its diff, and the two of its
+findings answered before the freeze (rows 40 to 42) correct a generator and add a test, they credit nothing. Rows 40 to 45 change no
+figure, verdict, circuit draft, case row, requirement or limit that cx46 read; row 40 restores the reading cx46 read.
+
+**Commit 2b, read here from its diff (W18's read on draft 3, kept as written; its class is `CLASSIFICATION.md` row 39, above).**
 `git diff 6bc4424e d83d9f2d` over the 25 changed `.out` files: 210 changed lines, 154 of them carrying a hexadecimal digest of 12 or
 more characters. The other 56 are in four outputs: `l6r2/l6r2_passives.out` (14: the board A, B, D and P chains now name the applied
 P0 drafts, for example `d83d9f2d:v2/docs/records/l6r2/l6r2_passives.out:2418` `chain apply_gen_sch_p_breaker.py, apply_gen_sch_p_idealdiode.py`),
@@ -112,7 +136,8 @@ board B's change-list composition is shown in `l9t5_connected.out` line 67, as W
 the committed file, W16's section 2); the change-list applier's reader (`apply_l4e9_changelist_p0.py`, 23 lines: D1 and D2, section
 3c); the ledger's owner-file citations moved by one (`REMAINING-ENGINEERING.md`, 20 lines); `test_applier_state.py`, `test_l9t5.py` and
 `test_remeng.py`. Under W15's own rule (a file that carries another row's change is classed so too, its line 13), the l6r2, l8r2 and
-connected lines carry rows 20 and 23 into outputs; their class is the coordinator's, and the gndret line cannot be classed a re-pin.
+connected lines carry rows 20 and 23 into outputs, and the gndret line cannot be classed a re-pin: classed at the adoption as
+`CLASSIFICATION.md` row 39, REVIEWED-INPUT CHANGED first (the table above).
 
 **W15's findings that touch this result** (its section 3): (1) `l4e9_power_path.out:975` "criterion 2 CONDITIONAL" against line
 1017's FAIL: the coordinator read line 975 as an earlier round's block, history, to be confirmed by the block's heading in the next
@@ -197,7 +222,9 @@ test_remeng added after 04:29.
 On 2b the KEY is a MISMATCH, expected until the re-key: `<worktrees>/_runs/int30/targeted8-0401.log:55` `l4e7 KEY MISMATCH committed 1718dfe54e5373e0 now df9030eaf2c8e7bf; parts moved: files`,
 the one moved part `<worktrees>/_runs/int30/targeted8-0401.log:56` `file v2/docs/records/l4e11/l4e11_power.out: 3a46198439d5 -> a2089b3f6682`
 (integrate7 read the same at `<worktrees>/_runs/int30/integrate7b-0221.log:134` `l4e7 KEY MISMATCH committed 1718dfe54e5373e0 now df9030eaf2c8e7bf; parts moved: files`).
-The re-key runs on the suite5 box since 04:45:57 (section 5). After it: `__KEY__`, installed in `__CANDIDATE__`.
+The re-key started on the suite5 box at 04:45:57 (section 5); the cache committed in `c2a532a9` was computed on the debian:12 box
+rekey6 (`<worktrees>/_runs/int30/ADOPTION-VALUES.md:5` `the re-keyed l4e7 cache c2a532a9a103b9f32139ea10fc99bcb2a6a57f1d (05:54, from the debian:12 box rekey6)`). On the candidate: `<worktrees>/_runs/int30/ADOPTION-VALUES.md:6` `l4e7 KEY: MATCH df9030eaf2c8e7bf` (first read on the dependency pass,
+`<worktrees>/_runs/int30/targeted9-0556.log:8` `l4e7 KEY MATCH df9030eaf2c8e7bf`), installed in `dd1aed00d0a0a521063b5792550bc510c4707c59`.
 
 ### 3f. The review of 2b (W16)
 
@@ -231,38 +258,55 @@ of the 13 unreviewed changes of section 2. Its FINDINGS list, verbatim (its line
 > Nothing here blocks the freeze on what was read: no figure with a unit moved, no pin mismatches, h3 unchanged, nothing outside the two folders.
 
 **What follows from it for this set (the coordinator's message, received by this worker at about 04:58 CEST, recorded here as given):** none of the seven blocks
-the freeze; two are fixed before the candidate commit, both as PENDING CORRECTIONS:
+the freeze; two are fixed before the candidate commit, both since committed:
 
 - Finding 1: the coordinator corrects record l6r2's generator (board D's ptt draft no longer applied twice in the commutation reading)
-  and regenerates `l6r2_passives.out` before the candidate commit: `__L6R2_FIX__`.
+  and regenerates `l6r2_passives.out` before the candidate commit: `33efca07` (I12; `CLASSIFICATION.md` row 40).
 - Finding 3: W19 writes the applier's D1 regression test (a predicate that fails on the parent's reader, with its mutation) on branch
-  fnd/w19applier from 2b, merged before the freeze: `__W19__`.
+  fnd/w19applier from 2b, merged before the freeze: `2d4f6df5`, merged at `c4492dd3` (I13; rows 41 and 42).
 - Findings 2, 4, 5, 6 and 7: notes for the next set. Finding 2 is also carried into section 2 (record l8r2's gndret output is not a
   binding-only change in 2b).
 
-## 4. The freeze and the gates (the coordinator's; every value a placeholder)
+## 4. The freeze and the gates (the coordinator's; every value copied from the values file and the logs)
+
+The values the coordinator saved for the adoption are `<worktrees>/_runs/int30/ADOPTION-VALUES.md` (its heading: `<worktrees>/_runs/int30/ADOPTION-VALUES.md:1` `Set 30's values for the records' adoption (the coordinator, 2026-10-06 10:40:38 CEST): copy, never type`); every line
+below is quoted from that file or from the log it names, never typed.
 
 | Step | Where the coordinator reads it | Result |
 |---|---|---|
-| W16's finding 1: record l6r2's generator corrected, its output regenerated | the coordinator's commit on fnd/p0pwr | `__L6R2_FIX__` |
-| W16's finding 3: the applier's D1 regression test merged | fnd/w19applier, merged before the freeze | `__W19__` |
-| The re-key on suite5, its KEY | the box's re-key log; `v2/docs/records/l4e7/l4e7_stage_settings.results.json` in the candidate commit | `__KEY__` |
-| The candidate commit | `git log` on fnd/p0pwr | `__CANDIDATE__` |
-| The manifest (candidate_guard record) and the evidence tar | `<worktrees>/_runs/candidates/` and the runbook `<worktrees>/_runs/int30/PLAN.md`, sections 4 to 6 | not yet produced: the coordinator records the manifest's path and the tar's sha256 here |
-| candidate_guard check on the runner | the runbook's freeze steps | not yet run |
-| Box pass, Python 3.12 (every module but the Python 3.11 and runner ones) | `<worktrees>/_runs/int30s1/suite-box.log` | `__GATE_BOX_PY312__` |
-| Box pass, Python 3.11 (`test_l4e10`, `test_l4e12`) | `<worktrees>/_runs/int30s1/suite-box-py311.log` | `__GATE_BOX_PY311__` |
-| Runner pass (`test_l4e7`) | `<worktrees>/_runs/int30s1/runner/suite-runner.log` | `__GATE_RUNNER__` |
-| suite_gate with G7 (identity, module coverage, 0 failed, 0 load errors, every skip explained, totals consistent) over the three logs | `<worktrees>/_bin/suite_gate.py` | `__G7__` |
-| Promotion: fast-forward of main, push, the mirror, candidate_guard check on main | the runbook's section 5 | `__PROMOTED__`, mirror `__MIRROR__` |
-| Targeted verification of the 13 unreviewed changes of section 2 | the coordinator's choice of verifier; not the ended review method | owed; none performed |
+| W16's finding 1: record l6r2's generator corrected, its output regenerated | the coordinator's commit on fnd/p0pwr | `33efca07` (I12) |
+| W16's finding 3: the applier's D1 regression test merged | fnd/w19applier, merged before the freeze | `2d4f6df5`, merged at `c4492dd3` (I13) |
+| The re-key, its KEY | the re-key's commit `c2a532a9` (`v2/docs/records/l4e7/l4e7_stage_settings.results.json`); the KEY check on the candidate | `<worktrees>/_runs/int30/ADOPTION-VALUES.md:6` `l4e7 KEY: MATCH df9030eaf2c8e7bf (_runs/int30/l4e7_key_check.py on the candidate; the cache keyed on Python 3.11 and pdftotext 22.12.0)` |
+| The candidate commit | `git log` on fnd/p0pwr | `dd1aed00d0a0a521063b5792550bc510c4707c59` (`<worktrees>/_runs/int30/ADOPTION-VALUES.md:4` `INTEGRATED = CANDIDATE = PROMOTED = MIRROR (GitHub main): dd1aed00d0a0a521063b5792550bc510c4707c59`); the first candidate commit `c4438d6a` is superseded (below) |
+| The manifest (candidate_guard record) and the evidence tar | `<worktrees>/_runs/candidates/` | `<worktrees>/_runs/int30/ADOPTION-VALUES.md:7` `the manifest: _runs/candidates/dd1aed00d0a0a521063b5792550bc510c4707c59.json (997 evidence files; the superseded 984-file manifest beside it as .superseded-984-evidence.json)`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:7` `the evidence tar _runs/int30/int30-evidence.tar: sha256 7fcd8bef9c703fbb8198a9f67c592dbbbd8db6b6a7d91b37fef163c48ea3d8af, 191866880 bytes`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:7` `the bundle int30-dd1aed00d0a0a521063b5792550bc510c4707c59.bundle 2638119 bytes (basis 24708af3)` |
+| candidate_guard check, every host | the guard's log beside each pass, and the promotion's | the Ubuntu box `<worktrees>/_runs/int30s1/guard.log:2` `candidate_guard: PASS candidate dd1aed00d0a0a521063b5792550bc510c4707c59: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen`; the records box `<worktrees>/_runs/int30s1/rec-guard.log:1` `candidate_guard: PASS candidate dd1aed00d0a0a521063b5792550bc510c4707c59: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen`; the runner `<worktrees>/_runs/int30s1/runner/guard.log:1` `candidate_guard: PASS candidate dd1aed00d0a0a521063b5792550bc510c4707c59: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen`; main after the promotion `<worktrees>/_runs/int30/promote-1036.log:12` `candidate_guard: PASS candidate dd1aed00d0a0a521063b5792550bc510c4707c59: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen` |
+| Box pass A, Python 3.12 (suite5, Ubuntu 24.04, Python 3.12.3, every module but test_l4e7 and the six record modules) | `<worktrees>/_runs/int30s1/suite-box.log` | `<worktrees>/_runs/int30s1/suite-box.log:3840` `tests: 2770 passed, 0 failed, 2 skipped`, `<worktrees>/_runs/int30s1/suite-box.log:3841` `EXIT 0` |
+| Box pass B, Python 3.11 (same box, Python 3.11.17, `test_l4e10`, `test_l4e12`) | `<worktrees>/_runs/int30s1/suite-box-py311.log` | `<worktrees>/_runs/int30s1/suite-box-py311.log:49` `tests: 48 passed, 0 failed, 0 skipped`, `<worktrees>/_runs/int30s1/suite-box-py311.log:50` `EXIT 0` |
+| Records box pass, the fourth log (debian:12, Python 3.11.2, pdftotext 22.12.0, poppler-data; the six record modules) | `<worktrees>/_runs/int30s1/rec-records-box.log` | `<worktrees>/_runs/int30s1/rec-records-box.log:240` `tests: 234 passed, 0 failed, 0 skipped`, `<worktrees>/_runs/int30s1/rec-records-box.log:241` `EXIT 0` |
+| Runner pass (Debian 12, Python 3.11.2, `test_l4e7`) | `<worktrees>/_runs/int30s1/runner/suite-runner.log` | `<worktrees>/_runs/int30s1/runner/suite-runner.log:66` `tests: 64 passed, 0 failed, 1 skipped`, `<worktrees>/_runs/int30s1/runner/suite-runner.log:67` `EXIT 0` |
+| suite_gate with G7 (identity, module coverage, 0 failed, 0 load errors, every skip explained, totals consistent) over the four logs | `<worktrees>/_bin/suite_gate.py`; `<worktrees>/_runs/int30s1/suite_gate.txt` | `<worktrees>/_runs/int30s1/suite_gate.txt:2` `suite_gate: PASS`, after `<worktrees>/_runs/int30s1/suite_gate.txt:1` `suite_gate: candidate dd1aed00d0a0; totals tests: 2770 passed, 0 failed, 2 skipped + tests: 48 passed, 0 failed, 0 skipped + tests: 64 passed, 0 failed, 1 skipped + tests: 234 passed, 0 failed, 0 skipped; result lines 3119 (3116 PASS, 3 SKIP, 0 FAIL); modules 236 of 236 ran` |
+| Promotion: fast-forward of main, push, the mirror, candidate_guard check on main | `<worktrees>/_runs/int30/promote-1036.log` | `dd1aed00d0a0a521063b5792550bc510c4707c59` (`<worktrees>/_runs/int30/promote-1036.log:2` `main fast-forwarded to dd1aed00d0a0a521063b5792550bc510c4707c59`, `<worktrees>/_runs/int30/promote-1036.log:5` `pushed origin main at 10:36:57`); mirror `dd1aed00d0a0a521063b5792550bc510c4707c59` (`<worktrees>/_runs/int30/promote-1036.log:7` `mirror: 2026-10-06T08:37:03.137Z finished`, `<worktrees>/_runs/int30/promote-1036.log:8` `GitHub main at dd1aed00d0a0a521063b5792550bc510c4707c59`); the evidence on main `<worktrees>/_runs/int30/promote-1036.log:10` `evidence tar extracted: 997 files`; the guard on main `<worktrees>/_runs/int30/promote-1036.log:11` `-- candidate_guard check on main`, line 12 as quoted in the guard's row |
+| Targeted verification of the 14 unreviewed changes of section 2 | the coordinator's choice of verifier; not the ended review method | owed; none performed |
+
+**Why a fourth log, the records box.** `<worktrees>/_runs/int30/ADOPTION-VALUES.md:13` `the records' environment: the records' generators extract makers' PDFs at run time; a box needs poppler-data (now in every onstart); set 31 pins the extracted text (Q-41)`; that box is `<worktrees>/_runs/int30/ADOPTION-VALUES.md:9` `the records box (54444804, debian:12, Python 3.11.2, pdftotext 22.12.0, poppler-data; test_l4e9 test_l4e11 test_l4e13 test_l5r2 test_l8r2 test_efuse)`. It exists because of the first box pass's failure below: `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `149 failures were the boxes' missing poppler-data (the JST VH catalogue's CID Type 0C fonts, Identity-H: 184 bytes extracted against the runner's 39318)`.
+
+**The three explained skips** (suite_gate's G7 accepts a skip only with its reason): `<worktrees>/_runs/int30/ADOPTION-VALUES.md:11` `test_l4e7 t_recompute_reproduces_the_committed_output (the gated recompute, L4E7_RECOMPUTE=1)`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:11` `the two on the Ubuntu box: test_pairsearch.t_the_three_implementations_agree: no numba on this host`.
+
+**Measured history of the freeze, not a reflection on the candidate's figures.** `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `the first box pass on c4438d6a (superseded; _runs/int30s1/superseded-984/ holds the 984-manifest passes' logs`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `1363 passed, 151 failed, 3 skipped, aborted after 110 of 236 modules`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `149 failures were the boxes' missing poppler-data`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `one was the pack specification's unclassified compact/ files (the candidate's defect, fixed in dd1aed00d0a0a521063b5792550bc510c4707c59)`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `three skips were the board gates' outputs absent from the worktree's evidence (set 29's archived evidence restored under v2/ecad/)`. The one candidate defect that pass
+found is corrected by the pack rule of I16; the 149 environment failures and the three skips were fixed on the boxes and in the evidence, not in
+the tree. `<worktrees>/_runs/int30/ADOPTION-VALUES.md:12` `the second gate attempt refused one missing-input skip (13 IBIS models, installed; manifest 984 to 997)`. The candidate's sha did not change after that refusal: the manifest was re-recorded with 997 evidence files and the four
+passes above ran again on it (`<worktrees>/_runs/int30/ADOPTION-VALUES.md:9` `the passes (one manifest, every module once)`).
+
+**Set 30's durations, from the logged stamps** (computed here from the times the values file copies; each an elapsed time, not a
+cost): pass A from 07:38:48Z to 08:21:45Z, 42 min 57 s; the records box from 07:48:58Z to 07:56:54Z, 7 min 56 s; the runner from
+09:57:23 to 10:01:59 CEST, 4 min 36 s (`<worktrees>/_runs/int30/ADOPTION-VALUES.md:9` `start 2026-10-06T07:38:48Z, done 2026-10-06T08:21:45Z`, the stamps quoted in full in that line).
 
 **Durations for comparison (measured on earlier sets; none of them is set 30's).** Set 29's passes A and B together
 (`d83d9f2d:v2/docs/records/int29/RESULT.md:38` `17:26:09 to 18:00:17, 34 min 8 s`), its pass C
 (`d83d9f2d:v2/docs/records/int29/RESULT.md:40` `Pass C took about one minute. Set 28's same run took at most 34 minutes.`), and set 29's
 counts as the size of the run (`d83d9f2d:v2/docs/records/int29/RESULT.md:27` `2838 passed, 0 failed, 14 skipped`). Record l4e7's
 re-key measured once on suite4 (`<worktrees>/_runs/int30/PLAN.md:9` `MEASURED 29 min on the suite4 box, 21:02 to 21:31`). The
-queue's estimate for the present re-key's end, an ESTIMATE: `<worktrees>/_runs/int30/QUEUE.md`, entry "04:50 CEST", `the box runs the re-key (expected end about 05:15)`.
+queue's estimate, when draft 3 was written, for the end of the re-key on suite5, an ESTIMATE: `<worktrees>/_runs/int30/QUEUE.md`, entry "04:50 CEST", `the box runs the re-key (expected end about 05:15)`.
 
 ## 5. Compute
 
@@ -277,8 +321,10 @@ queue's estimate for the present re-key's end, an ESTIMATE: `<worktrees>/_runs/i
   the running instance, `<worktrees>/_runs/vast/watchdog.log:1958` `54417830 meshsat-1357-suite5 running dph 0.1663`; the difference is
   not explained in the logs read here (both are copied, neither is a measured cost).
 - **SETUP-DONE at 04:31:34** (`<worktrees>/_runs/vast/LOG-20261006.md:3` `SETUP-DONE at 04:31:34 (3 min)`, measured: 3 min after the rental).
-- **The re-key started at 04:45:57** (`<worktrees>/_runs/resume-20261005-morning.md:382` `re-key running on suite5 since 04:45:57`); its
-  end and duration are not measured yet (the estimate is section 4's).
+- **The re-key started at 04:45:57** (`<worktrees>/_runs/resume-20261005-morning.md:382` `re-key running on suite5 since 04:45:57`); the
+  cache committed in `c2a532a9` came from the debian:12 box rekey6 (section 3e).
+- **Set 30's instances, as the coordinator totals them:** `<worktrees>/_runs/int30/ADOPTION-VALUES.md:14` `suite5 54417830 about 6.2 h at 0.1663 USD/h total (0.12 compute + the 100 GB disk)`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:14` `rekey6 54423482 about 0.5 h and rekey7 54433045 about 0.25 h (unused) at 0.068`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:14` `the records box 54444804 about 2 h at 0.068`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:14` `suite4 54347953 stopped by the watchdog at 01:30 and never restarted (resources_unavailable)`; `<worktrees>/_runs/int30/ADOPTION-VALUES.md:14` `every instance stopped, disks kept, none destroyed`. The watchdog's 0.1663 USD/h for suite5 is the total
+  with its disk (the same line), which answers the two hourly figures above.
 - **Storage of the stopped instances kept, nothing destroyed**: the watchdog's 04:40 lines list six instances with their retained
   storage, among them `<worktrees>/_runs/vast/watchdog.log:1964` `54347953 meshsat-1357-suite4 exited stopped_age_h 3.0 retained storage 0.0370 USD/h`
   (lines 1959 to 1964, each "kept; never destroyed without the owner's explicit instruction"). Compute and storage cost are kept
@@ -288,7 +334,8 @@ queue's estimate for the present re-key's end, an ESTIMATE: `<worktrees>/_runs/i
 
 **Set 30 closes NO power item.** It is an integration of records: the disposition after cx46, the applied change-list rows, set 31's
 restatement of L4-E9, the ledger, the procedures' quotes and the regenerated outputs. It changes no baseline circuit draft and no board
-generator (W15's summary, line 90; 2b's diff, section 2). As the candidate's records state it:
+generator (W15's summary, line 90; 2b's diff, section 2; rows 39 to 45 of `CLASSIFICATION.md`, their `git show --stat`). As the
+candidate's records state it:
 
 - cx46's twelve NOT CLOSED findings stay REMAINING ENGINEERING (`d83d9f2d:v2/docs/records/l4close/REMAINING-ENGINEERING.md:100` `The twelve cx46 findings NOT CLOSED, each a REMAINING ENGINEERING item`);
   the ledger's counts (`d83d9f2d:v2/docs/records/l4close/REMAINING-ENGINEERING.md:669` `Counts: remaining engineering 20; qualification 1; external architecture fact 3; closed 4; conditional 2.`).
@@ -299,17 +346,24 @@ generator (W15's summary, line 90; 2b's diff, section 2). As the candidate's rec
   ADDRESSED IN DRAFTS (PROVISIONAL on S3 by draft 2's row 17), applied by `7070f106` and carried by `bbba3e53` and `17ce29d5`; it is one
   of the unreviewed changes of section 2, not a closure. Criterion 2's move from CONDITIONAL to FAIL (`17ce29d5`) narrows.
 
-**The three completion claims, each with its own state** (the constitution's section 2, cited above; never blended):
+**Layer 4's DESK gate, on the promoted revision: NOT PASSED.** The coordinator's judgement (queue item Q-05; the gate, not one of the
+three claims): `<worktrees>/_runs/int30/Q05-verdict.final.md:5` `## Layer 4's DESK gate: NOT PASSED`, because `<worktrees>/_runs/int30/Q05-verdict.final.md:7` `The gate's own premise is not met.` (its section on the gate, `<worktrees>/_runs/int30/Q05-verdict.final.md:7` `the desk-fixable defects are not closed and checked`). Recorded in Layer 4's DESK-gate assessment,
+`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, which the other adoption author (W27, fnd/adopt30b) writes from W12's draft 2
+(fnd/dgate2 `150e908b`) with the coordinator's text inserted verbatim. This record quotes the words; it adds no reading of its own.
+
+**The three completion claims, each with its own state** (the constitution's section 2, cited above; never blended; each state the
+coordinator's word in the Q-05 file and in the assessment):
 
 | Claim | State | Basis |
 |---|---|---|
-| Engineering-handover readiness | NOT YET ASSESSED | the coordinator's Layer 4 DESK-gate assessment (queue item Q-05) on the promoted revision decides it; W12's draft 2 (fnd/dgate2 `150e908b`) keeps the literal placeholder "[COORDINATOR: DESK-gate verdict]" and names what would support or deny it (its section 6, Y1 to Y7 and N1 to N5); the ledger hands over 20 remaining-engineering items, 1 qualification and 3 external architecture facts (line 669 above). This draft chooses no verdict word |
-| Power-design closure | BLOCKED | `d83d9f2d:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005` `on the set 30 candidate **the power-design closure gate is BLOCKED**`; `d83d9f2d:v2/docs/records/l4e9/l4e9_power_path.out:569` `the power-design closure gate: BLOCKED`; `d83d9f2d:v2/docs/records/l9t5/l9t5_connected.out:4` `No completion claim: power-design closure and fabrication release stay BLOCKED.` |
-| Fabrication release | BLOCKED | `d83d9f2d:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:885` `**Fabrication release: BLOCKED.**` (no circuit change applied, no board laid out); the connected output's line 4 above |
+| Engineering-handover readiness | READY AS A DESK PACKAGE OF OPEN ITEMS | the coordinator's judgement, `<worktrees>/_runs/int30/Q05-verdict.final.md:9` `## Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS`, with its own limit `<worktrees>/_runs/int30/Q05-verdict.final.md:11` `"Ready" here means complete and internally consistent as a package of open items, not that any item is resolved.`; recorded in `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`; the ledger hands over 20 remaining-engineering items, 1 qualification and 3 external architecture facts (line 669 above) |
+| Power-design closure | BLOCKED | the coordinator's judgement, `<worktrees>/_runs/int30/Q05-verdict.final.md:13` `## Power-design closure: BLOCKED. Fabrication release: BLOCKED.`, recorded in `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`; `d83d9f2d:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005` `on the set 30 candidate **the power-design closure gate is BLOCKED**`; `d83d9f2d:v2/docs/records/l4e9/l4e9_power_path.out:569` `the power-design closure gate: BLOCKED`; `d83d9f2d:v2/docs/records/l9t5/l9t5_connected.out:4` `No completion claim: power-design closure and fabrication release stay BLOCKED.` |
+| Fabrication release | BLOCKED | the coordinator's judgement, the same line of the Q-05 file, recorded in `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`; `d83d9f2d:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:885` `**Fabrication release: BLOCKED.**` (no circuit change applied, no board laid out); the connected output's line 4 above |
 
-Kept apart from all three: documents and editable artifacts (on main as a DESK candidate after the promotion, `__PROMOTED__`); design
-reviewed and accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, and the 13 unreviewed changes of section 2); circuit
-changes implemented (NONE); physical qualification (NONE). A promoted integration set is none of the three claims by itself.
+Kept apart from all three: documents and editable artifacts (on main as a DESK candidate after the promotion, `dd1aed00d0a0a521063b5792550bc510c4707c59`); design
+reviewed and accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, and the 14 unreviewed changes of section 2); circuit
+changes implemented (NONE); physical qualification (NONE). A promoted integration set is none of the three claims by itself, and the
+readiness word above is the coordinator's judgement of a package of open items, not a closure.
 
 **The next set's inputs** (W10's `<worktrees>/_runs/int31/PLAN.draft.md`, re-read on 2b from 04:43 to 04:49; summarised in
 `<worktrees>/_runs/int30/QUEUE.md`, entry "04:49 CEST", `still ONE conflict (TP-E11-29.md, W3's file whole)`, `moved pins 28` and
@@ -333,19 +387,25 @@ and the coordinator items the queue lists as Q-27.
 
 | Record | Revision bound | State |
 |---|---|---|
-| The P0 power list, revision 3 | W17's draft 3, `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft3.md`, at its checkpoint fnd/w17p0list `ec5d818d` (read at 05:02 CEST; a checkpoint commit, W17 still working; the coordinator binds W17's final tip). Its inputs: Slot K's draft 2, `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md` (in this branch's history), with W7's nine patch rows R-01 to R-09 in `v2/docs/records/l4close/P0-POWER-LIST.rev3.patch.md` on fnd/w7rem `3e566c55` | a draft; the coordinator adopts revision 3 at Q-04a |
-| LAYER-STATUS, the set 30 fold | fnd/lstat31 `87c5fb08` (`v2/docs/handover/LAYER-STATUS.md`, +90 lines, and `test_lstat31.py`) | a draft fold with the verdict placeholder; adopted after the promotion |
-| Layer 4's DESK-gate assessment | fnd/dgate2 `150e908b` (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft2.md`) | draft 2; the verdict word is the coordinator's (Q-05) |
-| The part 25 classification | fnd/w15class `57bcdbfc` (`v2/docs/records/int30/CLASSIFICATION.draft.md`) | 38 commits classified; 2b read in section 2 here; the candidate commit's row owed |
+| The P0 power list, revision 3 | `v2/docs/records/l4close/P0-POWER-LIST.md` (the adoption checklist's path), adopted by the other adoption author (W27, fnd/adopt30b) from W17's draft 3, `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft3.md` at fnd/w17p0list `c0f2183b` (merged into this branch's base; draft 3 read earlier at its checkpoint fnd/w17p0list `ec5d818d`), revision 2 kept dated. Its inputs: Slot K's draft 2, `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md`, with W7's nine patch rows R-01 to R-09 in `v2/docs/records/l4close/P0-POWER-LIST.rev3.patch.md` on fnd/w7rem `3e566c55` | revision 3, adopted at Q-04a beside this record |
+| LAYER-STATUS, the set 30 fold | `v2/docs/handover/LAYER-STATUS.md`: Slot I's fold fnd/lstat31 `87c5fb08` and its After set 30 blocks fnd/lstat32 `ea795ebb` (both in this branch's base), the verdict cell the other adoption author's | adopted at Q-04a and Q-04b beside this record |
+| Layer 4's DESK-gate assessment | `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, from W12's draft 2 fnd/dgate2 `150e908b` (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft2.md`) with the coordinator's Q-05 text | the gate NOT PASSED; the three claims as section 6 gives them |
+| The part 25 classification | `v2/docs/records/int30/CLASSIFICATION.md`, adopted with this file: W15's draft at fnd/w15class `57bcdbfc` renamed, rows 39 to 45 added | 45 commits classified; 14 REVIEWED-INPUT CHANGED (section 2) |
 
 ## 8. Left out, and why
 
-- Every placeholder value: the candidate commit, the KEY, the gate lines, the promotion and the mirror do not exist yet.
-- W16's findings 2 and 4 to 7 are carried as notes for the next set, not resolved here; the two corrections it asks before the
-  candidate commit are placeholders (`__L6R2_FIX__`, `__W19__`).
+- W16's findings 2 and 4 to 7 are carried as notes for the next set, not resolved here; the two corrections it asked before the
+  candidate commit are committed (`33efca07`; `2d4f6df5` merged at `c4492dd3`).
+- The count of unreviewed changes: W15's range to `6bc4424e` holds 13; on the promoted revision the record counts 14 (commit 2b,
+  section 2). The coordinator's Q-05 text counts thirteen on W15's classification; this record does not restate the Q-05 text.
+- `v2/docs/records/int30/RESULT.draft2.md` stays in the tree, unchanged: `test_recpack.py` reads it there and the P0 list's drafts
+  cite it by path (draft 3 was renamed to this file; W15's draft to `CLASSIFICATION.md`). A SESSION choice of the adoption's author,
+  reversed by removing the file once those readers are restated.
 - Draft 2's per-commit equivalence at `bbba3e53`, its pin read and its nine contradictions: cited by path, not re-read on 2b, except
   where section 2 reads 2b's own diff.
-- The figure-by-figure comparison of the 13 unreviewed changes: W15's reasons are copied, not re-derived.
-- The suite5 hourly figure's two values (0.1223 against 0.1663 USD/h): both copied; the logs read here do not reconcile them.
-- No generator, suite, gate, candidate_guard, regen_out or box job was run; the diff counts of section 2 came from a read-only script
-  over `git diff`, not committed.
+- The figure-by-figure comparison of the 14 unreviewed changes: W15's reasons are copied, not re-derived; row 39's are read from 2b's
+  diff (section 2 and `CLASSIFICATION.md`).
+- The suite5 hourly figure's two values (0.1223 against 0.1663 USD/h): both copied; the values file gives 0.1663 as the total with the
+  disk (section 5).
+- No generator, suite, gate, candidate_guard, regen_out or box job was run by this record's authors; the diff counts of section 2 came
+  from a read-only script over `git diff`, not committed. Every gate line is the coordinator's, copied.
