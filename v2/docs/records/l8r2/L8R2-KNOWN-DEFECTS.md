@@ -8,7 +8,7 @@ here is applied to the tree**. Every correction is a DRAFT apply script that ref
 The owner's rule of 3 October 2026: "A known engineering defect: fix it, or assign a specific design-correction task to the
 supplier." L4-E9 round 5 classed the open items (its section 8f) and listed the supplier's phase 1 (8g: P1-1 the solar guard and
 sense, P1-2 board B's coolers' feed, P1-3 VBUS20's single faults). This record corrects P1-2, P1-3 and Layer 5's round 2 circuit
-findings L5R2-F03, F04 and F05 at the desk. **P1-1 (D-10's guard-on case, D-16, R-173, R-180, R-186, R-187) is not attempted**, as
+findings L5R2-F03, F04 and F05 at the desk (in DRAFT: nothing is applied and no independent check has accepted these drafts; since set 31 L4-E9's register reads R-48 and R-190 as "FIX: CHECK and APPLY record l8r2's" drafts, "drafted at the desk, not applied, not independently checked", tasks P1-3 and P1-2 of the receiving company standing only if that check refuses them, `records/l4e9/DOWNSTREAM-REGISTER.md` lines 154 and 286 at 53a68c7c; W9, 6 October 2026, the DESK-gate draft's K-07). **P1-1 (D-10's guard-on case, D-16, R-173, R-180, R-186, R-187) is not attempted**, as
 the coordinator assigned it to the supplier's phase 1.
 
 **Round 3 (3 October 2026, branch `fnd/l8r3` from set 28's `37bc2f1d`).** Two Layer 9 records answered this one. Record l9pwr's
@@ -1059,7 +1059,7 @@ CONDITIONAL on the model's figures, now with its conditions named and bounded. N
 
 | V6 item | Failure case | Disposition | Evidence (l8r2_p0.out) |
 |---|---|---|---|
-| V6-B1, the plane copper in series with the return bundle | a ribbon conductor over its printed 1 A once the boards' planes add resistance in series with the six return conductors | PROVISIONAL for the service cases: the named layout condition **L8R2-F33a**, each return socket's land within 17 mm (the largest steady state; 30 mm on C-DEV rev 1, 36 mm on C-DEV rev 2) of the 5 V entries on both boards at 0.5 oz, every ground plane joined solidly; the Layer 10 task, the routed boards' extraction against each case's bound. **STILL OPEN:** the declared upper bound's printed row (0.3543 mOhm, 5.9 mm at 0.5 oz, not realisable; a fourth lead 9.1 mm, not a correction; 1 oz inner 23 to 47 mm, the owner's open copper decision) and every least-rating row at the inside air | section 2: V6's 0.3543 / 0.7747 / 0.1436 / 0.4386 mOhm reproduced |
+| V6-B1, the plane copper in series with the return bundle | a ribbon conductor over its printed 1 A once the boards' planes add resistance in series with the six return conductors | PROVISIONAL for the service cases: the named layout condition **L8R2-F33a**, each return socket's land within 17 mm (the largest steady state; 30 mm on C-DEV rev 1, 36 mm on C-DEV rev 2) of the 5 V entries on both boards at 0.5 oz, every ground plane joined solidly; the Layer 10 task, the routed boards' extraction against each case's bound. **STILL OPEN:** the declared upper bound's printed row (the one-node model's declared upper bound (i), which `l8r2_p0.out` section 1 prints as 27.9108 among its totals in A, J_5V_IOC at U601's declared peak; the distributed study below prints its own as 27.8159 A; 0.3543 mOhm, 5.9 mm at 0.5 oz, not realisable; a fourth lead 9.1 mm, not a correction; 1 oz inner 23 to 47 mm, the owner's open copper decision) and every least-rating row at the inside air | section 2: V6's 0.3543 / 0.7747 / 0.1436 / 0.4386 mOhm reproduced |
 | V6-B2, the indirect ground paths | the census counted only the leads, the ribbons and the return | the census completed for the paths V6 named, each bounded at its own worst vertex with the monitor's 1.00 A and the QMX's 2.00 A added to the totals; the counted rows hold with the shares on the printed ratings; the RF pigtails' U.FL outer contacts carry up to 2.1053 A with no printed rating and the HDMI receptacle's sheet is not held: PROVISIONAL, vendor tasks UNSENT (Hirose, Molex) and Layer 7's cable rows; the design change if the U.FL answer is lower: break the DC path at board A's RF jacks | section 3 |
 | V6-m12, F-4b | every source at its bound puts a ribbon at 1.00418 A against 1 A | SESSION decision (authority: SESSION; ruled_by Slot A; ruled_on 5 October 2026): the design need not serve the five-overload coincidence inside the ribbons' printed rating; reverse by carrying the fourth lead (0.7884 A there) | section 4 |
 | V6-m8, the XT60 rows | no XT60 sheet rates a board-soldered end | the rows' 11.0311 A is judged against the printed 30 A as the wire-to-wire rating, a 63 % margin; the board end's rating MISSING, a vendor task to Amass UNSENT; PROVISIONAL with that margin | section 5 |
@@ -1078,7 +1078,7 @@ conductor of the composed netlists between the boards with its wire and both con
 injected at its rail's loads' ground pads on board B (one hop through a series element such as a supervisor's sense
 resistor to the load behind it) and taken out at its land on board A, at -20 C and 76.25 C, and every contact
 vertex a local search reaches (no single contact's move raises a conductor's current there). Result (MODEL): every printed row holds,
-the declared upper bound's included (the ribbon's largest 0.7729 A against 1 A, STILL OPEN on the one-node model); the service cases
+the declared upper bound's included (the ribbon's largest 0.7729 A against 1 A, STILL OPEN on the one-node model; this study's declared upper bound is 27.8159 A, every lead at its declared peak in the composed intent with J_5V_IOC at 1.3800 A, `l8r2_dist.out` line 86 at 53a68c7c, and every 'declared upper bound' of this paragraph is that figure; the one-node model's is 27.9108 with J_5V_IOC at U601's declared peak 1.4749 A, `l8r2_p0.out` section 1, a case this study does not solve; W9, 6 October 2026, the remaining-engineering ledger's item B); the service cases
 (C-DEV rev 2, the active row, and the largest steady state) hold on the least ratings too; over the least rating only the declared
 upper bound at 76.25 C (the ribbon 0.6299 A against 0.5995 A, and a VH pin 2 6.4485 A against 5.9948 A, both INFERRED deratings: the
 VH row is the same as its pin 1's, L8R2-F43; the ribbon row is L8R2-F44, Wurth's WR-CAB derating, UNSENT, with a fourth lead beside
@@ -1258,3 +1258,11 @@ every raw vertex of a small network agrees with the enumeration); the two return
 boards; the return removed, landed on the wrong net or with one termination dropped is refused; every branch with a printed
 rating is inside it at every vertex with the return and outside it without; the committed `l8r2_gndret.out` is what
 `l8r2_gndret.py` prints and its predicates hold; the page and the README carry the rounds with L8R2-F31 as OPEN.
+
+## 8. W9 (6 October 2026): two restatements, record text only
+
+Line 11 binds "This record corrects ... at the desk" to its DRAFT state with L4-E9's register rows R-48 and R-190 (the DESK-gate
+draft's K-07), and section 3h (lines 1062 and 1081) names the two declared upper bounds the outputs print, 27.9108 in the one-node
+model's totals (`l8r2_p0.out` section 1) and 27.8159 A in the distributed study (`l8r2_dist.out` line 86 at 53a68c7c), and which one
+each statement uses (the remaining-engineering ledger's item B). No figure, verdict or state changes; nothing is applied. The table
+of W9's items is record l9t5's `README.md`, section W9; adopted in the NEXT set.

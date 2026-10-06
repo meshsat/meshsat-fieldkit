@@ -1,4 +1,4 @@
-CANDIDATE READY 3: ac8efbca (the claim-and-handover disposition after cx46, P0 RECHECK: CORRECTIONS NOT CLOSED, kept as given: the second negative, which ends the method; text and predicates only, no new design attempt; this README-only commit follows the candidate). DONE (cx46, Slot A's items): 1, main 0d5f855e merged (parts 23 to 25 and the four checks filed; the P0 list's states are the coordinator's); 2, Q551's held load (up to 4.479 mA) and its release carried to V-PA-REF and B-PA2, R553's top corner in the IB and leakage terms, the PRINTED-rows band without the ASSUMPTION residual (6.3888 to 6.8945 A, not a bound on the cap), B-PA1's limit rounded down to 6.351 A, F01 and its dependants PROVISIONAL with the reference's loading and the acceptance limits REMAINING ENGINEERING; 4, the return labelled a STUDY (an XT60-M land standing in for the selected XT60-F, assumed sites and fill, a local search, an averaged LDO probe) and V6-B1 OPEN, REMAINING ENGINEERING; 13 and 17, the connected verdict REMAINING ENGINEERING on seven open fault rows read from the filed cx46 record (the latent rail trip, the sustained peaks at 127.54 C under cx46's countermodel, L8P-R9-F1, L9T5-F21, VOS0 under the trip, V6-B1, F01's reference loading), the worst-case margin row PROVISIONAL/OPEN, no positive electrical acceptance among the predicates; 14, the stability runs kept in `stability/` (the cascade, both passes' logs and the outputs' digests for 4d0ff8a2 and for this candidate). Merged after cx46: the solar author's 4d1d02de (B2 UNSELECTED and WITHDRAWN AS DRAFTED) and Slot C's 6b768b1e (T10's Q3 and the guard's Q5 as REMAINING ENGINEERING; L9T5-D9 renamed L9T5-D10 there, L9T5-F27 answered). Carried: F01 / D-17 PROVISIONAL (B-PA1, B-PA2, V-PA-REF); 1c DRAFTED (11 of 11 mutations fail). NOT DONE: every OPEN row above, handed to the receiving company as remaining engineering, never as a qualification-only item; L4-E9's change-list rows a draft for the integrator; D-10 (E-1). NEXT: the coordinator's integration and handover. Power-design closure and fabrication release stay BLOCKED. Earlier: CANDIDATE READY 2: 4d0ff8a2 (the correction set after cx45, whose P0 CANDIDATE: NOT CONFIRMED stays as given; cx46's recheck of it NOT CLOSED). Carried from round 4 (T10 is Slot C's): T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN, a DRAFTED CANDIDATE, unchecked, its containment and thermal bound REMAINING ENGINEERING after cx46 (Slot C's 6b768b1e); L9T5-F13, F16 and F17 OPEN; no case row is changed.
+W11 (6 October 2026, `fnd/w11l9t5` from W9's tip 02b0d30d, adopted in the NEXT set with the cascade): DONE: this record's statements that still described L4-E9's change list as unapplied, or L4-E9's output as refusing at its L4-E11 pin, restated in place with the old words kept as quoted history (this line, lines 76 and 158) and in the connected generator's two rows (T10, K-26; the change list, K-28; `l9t5_connected.py` lines 1002 to 1004 and 1013 to 1014); section W11 at the end; no figure, verdict or state changed, nothing accepted, closed or released. NOT DONE: `l9t5_connected.out` left as committed (regen_out REFUSED in this worktree: the held makers' sheets are not installed; the cascade regenerates it); the same staleness in lines outside this branch's files (listed in section W11). NEXT: the coordinator's adoption. W9 (6 October 2026, `fnd/w9l9t5` from 53a68c7c, adopted in the NEXT set with the cascade): DONE: twelve record-text restatements of filed contradictions on this README, `T10-ROUND5.md` and record l8r2's page (section W9 at the end; no figure, verdict or state changed). NOT DONE: the K items whose files are not these pages (listed there). NEXT: the coordinator's adoption. CANDIDATE READY 3: ac8efbca (the claim-and-handover disposition after cx46, P0 RECHECK: CORRECTIONS NOT CLOSED, kept as given: the second negative, which ends the method; text and predicates only, no new design attempt; this README-only commit follows the candidate). DONE (cx46, Slot A's items): 1, main 0d5f855e merged (parts 23 to 25 and the four checks filed; the P0 list's states are the coordinator's); 2, Q551's held load (up to 4.479 mA) and its release carried to V-PA-REF and B-PA2, R553's top corner in the IB and leakage terms, the PRINTED-rows band without the ASSUMPTION residual (6.3888 to 6.8945 A, not a bound on the cap), B-PA1's limit rounded down to 6.351 A, F01 and its dependants PROVISIONAL with the reference's loading and the acceptance limits REMAINING ENGINEERING; 4, the return labelled a STUDY (an XT60-M land standing in for the selected XT60-F, assumed sites and fill, a local search, an averaged LDO probe) and V6-B1 OPEN, REMAINING ENGINEERING; 13 and 17, the connected verdict REMAINING ENGINEERING on seven open fault rows read from the filed cx46 record (the latent rail trip, the sustained peaks at 127.54 C under cx46's countermodel, L8P-R9-F1, L9T5-F21, VOS0 under the trip, V6-B1, F01's reference loading), the worst-case margin row PROVISIONAL/OPEN, no positive electrical acceptance among the predicates; 14, the stability runs kept in `stability/` (the cascade, both passes' logs and the outputs' digests for 4d0ff8a2 and for this candidate). Merged after cx46: the solar author's 4d1d02de (B2 UNSELECTED and WITHDRAWN AS DRAFTED) and Slot C's 6b768b1e (T10's Q3 and the guard's Q5 as REMAINING ENGINEERING; L9T5-D9 renamed L9T5-D10 there, L9T5-F27 answered). Carried: F01 / D-17 PROVISIONAL (B-PA1, B-PA2, V-PA-REF); 1c DRAFTED (11 of 11 mutations fail). NOT DONE: every OPEN row above, handed to the receiving company as remaining engineering, never as a qualification-only item; L4-E9's change-list rows a draft for the integrator (as written at CANDIDATE READY 3, before set 30's integration; W11: APPLIED since, by the integrator, at set 30's integration commit 7070f106); D-10 (record l4e7's E-1). NEXT: the coordinator's integration and handover. Power-design closure and fabrication release stay BLOCKED. Earlier: CANDIDATE READY 2: 4d0ff8a2 (the correction set after cx45, whose P0 CANDIDATE: NOT CONFIRMED stays as given; cx46's recheck of it NOT CLOSED). Carried from round 4 (T10 is Slot C's): T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN, a DRAFTED CANDIDATE, unchecked, its containment and thermal bound REMAINING ENGINEERING after cx46 (Slot C's 6b768b1e); L9T5-F13, F16 and F17 OPEN; no case row is changed.
 
 (Round 4's status line, kept:) **ROUND 4 DONE, PARTS 0 TO 3 (4 October 2026 night):** the collaborator's targeted recheck V3 (an AI review) read round 3 and returned NOT CONFIRMED. **I-03 stays OPEN and is credited only with U7's load relief and the compositions.** Record l8r2's round 8 is merged (`927cdd1e`) and its dedicated-return drafts are composed on both boards. The connected path (the lead's pin 2 and the return between the boards) reads NOT MET as drawn (10.6376 A at 76.25 C, 12.0918 A at -20 C against the VH's printed 10 A) and CONDITIONAL with that return (at most 4.9277 A), on a draft no independent check has read; L8R2-F31 stays OPEN. Round 3's claim that the acceptance does not depend on L8R2-F31 is withdrawn, with its sequencing sentence; the AP2112K's requirement is 3.7674 V; the gauge's bound is 16.0718 V with the offset drift; the case file pinned is rev 3. **T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN.** Its conditions are verified from the sources (the supervisors' state is bounded by no document; the deficit is thermal, the AP2112K's junction passing its 150 C absolute maximum at 0.2187 A from the 5 V rail), three corrections are compared, one is selected as a DRAFTED CANDIDATE, unchecked (SESSION: U601 as a 4.18 V pre-regulator, with Layer 5's row bounding the state as its condition) with the acceptance criterion T10-A1 to A5, and its circuit half is drafted, composed and read on the netlists; no independent check has read it and Layer 5 has not accepted its row. The held-dominant and CAN-fabric-fault rows are judged on their own limits (125 C in a served state, 150 C in any; the typical 160 C shutdown never an acceptance; MODEL junctions) and all FAIL: L9T5-F13, F16 and F17 OPEN, F16 and F17 covered by no requirement (finished on 5 October 2026 in the morning by a fresh author, after the owner's instructions of that morning). **SDR3-F02 (the CM5's 2.5 A): confirmed as a finding;** a supply design figure, assessed as labelled scenarios and a bound on the slot stages (L9T5-F15); no case row is changed. F01 / D-17 stays OPEN; A1 is not drafted. Open `L9T5-CASES.md` sections 0d, 0c and 0b, then the claim table below (C36 onward is new for the next check).
 
@@ -43,7 +43,7 @@ requirement: routes R1 (U13's limit and the cap raised, the bounded case allows 
 **1c (5 October 2026, 16:20 CEST).** `apply_gen_sch_a_paloop.py` and `apply_gen_sch_d_paloop.py` (one release, refused by the tree's
 generators until `RELEASE-F01.md` names an accepted check) compose with every pending draft of boards A and D in L4-E9's change-list
 order with each author's placement (`l9t5_f01_drafts.py`, its output section 3); `check_f01_netlist.py` reads both boards DRAWN and the
-harness pair holds; 11 of 11 mutations fail (section 4); the electrical acceptance on C-ALLTX rev 3 (section 5): 15.1307 V on the MODEL (15.1308 V after cx45's corners)
+harness pair holds; 11 of 11 mutations fail (section 4); the electrical acceptance on C-ALLTX rev 3 (section 5): 15.1308 V on the MODEL as `l9t5_f01_drafts.out` section 5 and `l9t5_f01.out` line 145 print it at 53a68c7c (after cx45's corners; 15.1307 V was 1c's figure at 88ffe53b, before them, and the P0 list's row P0-1 still prints it, the coordinator's to restate)
 with the printed bounds, every rail as the budget holds it, U13 under its own loop at the cap, board D's VGG 4.202 to 4.743 V at rest
 and its authority 1.483 V. L4-E9's change-list rows for these drafts are R-227 (board A, after record efuse's u23ilm and before
 mainpb) and R-238 (board D, after d8dec31's ptt) in this record's change-list draft (4c).
@@ -56,7 +56,7 @@ fault (the lost PA_ILIM conductor's single failure), with no automatic action; t
 6.3518 to 6.9259 A at 25 C into 50 Ohm (confirms the build; B-PA1 and B-PA2 stay the supplier's feasibility and dynamic tasks).
 
 **Part 2 (P0-2, record l8r2's `l8r2_p0.py` / `.out`, commit 243dc9ab).** The return between boards A and B on C-DEV rev 2 (20.4746 A,
-CONDITIONAL on FW-B20 and FW-B21) beside rev 1 (20.9888 A), the largest steady state (22.8711 A) and the declared upper bound (27.9108 A):
+CONDITIONAL on FW-B20 and FW-B21) beside rev 1 (20.9888 A), the largest steady state (22.8711 A) and the declared upper bound (27.9108 A in this one-node model, `l8r2_p0.out` section 1, its J_5V_IOC term U601's declared peak 1.4749 A, `l9t5_connected.out` line 151 at 53a68c7c; the distributed STUDY after cx45 prints its declared upper bound as 27.8159 A with J_5V_IOC at 1.3800 A, `l8r2_dist.out` line 86 at 53a68c7c, and its rows in the Q2 item below use that figure; this README reconciles neither figure to the other, W9 from the ledger's item B):
 V6-B1 (the boards' own plane resistance in series with the return) PROVISIONAL on a layout condition, L8R2-F33a (the return sockets'
 lands within 17 mm of the other conductors' lands at 0.5 oz on the largest steady state; Layer 10's extraction); the declared upper
 bound's printed row and the least rows STILL OPEN; V6-B2's indirect ground paths counted and bounded, the RF pigtails' U.FL and the
@@ -73,7 +73,7 @@ re-taken on L4-E11's new digest (digest lines only).
 drafts, 254 parts) and E (16 drafts with P0-7's sense; route B2 out of the baseline, 278 parts) composed with every pending draft in L4-E9's change-list order and regenerated without KiCad: every draft applies,
 none unplaced, every designator unique; record efuse's own order is the same (V6-m3). The change list carries the drafts through this
 record's text draft `apply_l4e9_changelist_p0.py` (V6-m11: rows R-220 to R-239 and R-242 to R-244 (R-240, P0-7's, applied in the tree; no R-241, route B2 out of the baseline), FAN_OK's R-210 to R-212 WITHDRAWN, D-10's and D-16's rows as record l4e7 states them), applied in memory
-and checked by L4-E9's own `cons_changes`; it is the integrator's to apply, because records L4-E11 and L4-E10 pin the page by sha256 and
+and checked by L4-E9's own `cons_changes`; it is the integrator's to apply (as written in round 4c, before set 30's integration; W11: APPLIED since, by the integrator, at set 30's integration commit 7070f106, to L4-E9's register, script and page: rows R-220 to R-245 with no R-241 at `records/l4e9/DOWNSTREAM-REGISTER.md` lines 316 to 340 and the page's P0 note at `records/l4e9/L4-POWER-ARCHITECTURE.md` line 422, which the draft's `applied_state()` reads, its lines 107 to 127, its `--check` printing APPLIED BEFORE; applying the rows accepts no draft: the claims they carry read OPEN or PROVISIONAL as `records/l4close/REMAINING-ENGINEERING.md` section 4 classes them, its lines 566 to 581, after cx46's CORRECTIONS NOT CLOSED), because records L4-E11 and L4-E10 pin the page by sha256 and
 Layer 6's `l6r2_passives.py` composes from the list (each a re-take the draft names). Every record netlist check reads DRAWN on the
 composed boards (16, among them L4-E11's DD-7 check with the guard, record l9t5's check in its automatic mode, V6's two breaking
 checks, record l4e7's C2 check on board E, and record l8p's check_l8p_fs.py for the guard with its two paths, L8P-R9-F3:
@@ -144,7 +144,7 @@ receiving company as REMAINING ENGINEERING with its failed cases, the attempted 
   (courtyards 0.25 mm clear of every placed courtyard, 0.5 mm inside the outline; SESSION L8R2-D10) and SOLVES the return as a
   distributed network (each board's declared planes as a 1.5 mm grid, copper thin at one corner, fills of 100 % and 50 %, every ground
   conductor of the composed netlists with its contacts, the loads' ground pads as sources, a contact-vertex search): every printed row
-  holds, the declared upper bound's included; the service cases hold on the least ratings too; only the declared upper bound at 76.25 C
+  holds, the declared upper bound's included (the study's own declared upper bound, 27.8159 A with J_5V_IOC at 1.3800 A, `l8r2_dist.out` line 86 at 53a68c7c; the one-node model's 27.9108 A of Part 2 above is not a case the study solves, W9 from the ledger's item B); the service cases hold on the least ratings too; only the declared upper bound at 76.25 C
   is over an INFERRED least rating (VH pin 2 with its pin 1, L8R2-F43; the ribbon, L8R2-F44, a placed fourth lead its route, NOT drafted,
   SESSION L8R2-D11). The ground shift at the supervisors' LDOs is at most 0.0205 V on the service cases (the one-node 0.0114 V replaced in
   T10-A3's chain: 14.0 k keeps +0.0827 V at 0.4512 A with the return). V6-B1: CORRECTED IN DRAFT on the desk model, PROVISIONAL on the plane
@@ -155,7 +155,7 @@ receiving company as REMAINING ENGINEERING with its failed cases, the attempted 
   no single failure removes the trip); the service covers the CAN mechanism
   (PROVISIONAL under FW-B21's bound on an assumed message set, NOT ESTABLISHED under a babbling supervisor, Slot C's Q3); the U7 predicate
   reads C-DEV rev 2, the active row; the outputs are regenerated on one tree twice, the second pass byte-identical. L4-E9's own output and
-  record l4e7's cache stay the integrator's and the box's (L4-E9 refuses at its L4-E11 pin; the cache re-key is the box's).
+  record l4e7's cache stay the integrator's and the box's (L4-E9 refuses at its L4-E11 pin [as written in the cx45 correction set, before set 30's integration; W11: the change list APPLIED since at 7070f106; L4-E9's generator re-pinned at set 30's integration commit 2a, bbba3e53, and its output regenerated in set 31 through `_bin/regen_out.py` with its four cascade pins (l4e10, l4e11, l4e12 and L4-E7's P0 output, `records/l4e9/l4e9_power_path.out` lines 55, 64, 67 and 106) at the digests of the coordinator's commit 2b; on a tree without 2b's outputs it refuses at those four pins, L4-E11's output among them: `records/l4e9/SET31-CHANGES.md` lines 20 to 25]; the cache re-key is the box's).
 - **Q3's merge (Slot C's 8d7be89c, the containment composed on board B, change-list row R-245):** L9T5-F25 restated
   (`check_l9t5_netlist.py`'s guard mode: each LDO behind one sense resistor, the containment's parts admitted on +5V_IOC). L9T5-F22's
   chain re-solved on the composed circuit (`l9t5_connected.out` section 10): every row now carries its LDO's own sense resistor (R600,
@@ -178,8 +178,8 @@ receiving company as REMAINING ENGINEERING with its failed cases, the attempted 
 
 **P0-7 merged (5cc9cb9d, INBOX 10 to 20).** Record l4e7's board E solar sense on the backstop's bank (D-16 corrected in draft; D-10 an
 UNRESOLVED PROTECTION DEFECT in the model, PV_F 321.9 V at 0.30 uH on the 2 V bank parts and 83.48 V at the reference loop over the 80 V
-recommended row, the receiving company's remaining engineering item E-1; route B2 OUT of the baseline after cx45 Q6 and the owner's
-part 24: an unapproved PARTIAL interface proposal, the owner's item, with no protection credit, which does not close D-10). Its
+recommended row, the receiving company's remaining engineering item E-1 of record l4e7 (record l9stk's E-1, a junction limit, is another item; L4-E9's register names them "l9stk's E-1" and "l4e7's E-1", `records/l4e9/DOWNSTREAM-REGISTER.md` lines 255 and 336 at 53a68c7c); route B2 OUT of the baseline after cx45 Q6 and the owner's
+part 24: an unapproved PARTIAL interface proposal, the owner's item (as written before cx46: since cx46's item 18 and the owner's part 25, `handover/OWNER-INSTRUCTION-2026-10-05.md` line 834, route B2 is UNSELECTED and WITHDRAWN AS DRAFTED with no owner item, `records/l4e7/B2-PRESENCE.md` lines 1 to 4), with no protection credit, which does not close D-10). Its
 change-list row is in the tree: R-240 (the sense, after the solar guard R-173, before L4-E11's aux R-177), its draft in L4-E9's
 CHANGE_SCRIPTS with two order constraints, and B2's draft in OUT_OF_BASELINE, which the change list does not read (R-241 and its
 constraint removed, INBOX 20), because L4-E9's change list refused the tree without them since the merge (record l6r2, which composes from the list,
@@ -188,12 +188,12 @@ record l4e7's output re-pinned on L4-E11's round 17 digest, and test_l4e7's boar
 predate P0-7. The page was not touched for it (L4-E11 and L4-E10 pin it): the draft `apply_l4e9_changelist_p0.py` regenerates its
 section 3 with it and notes R-20's, R-173's and R-187's items (R-180 unchanged in the baseline). L4E7-P0SOL.md
 section 5's D-10 and D-16 rows (D-10 OPEN, an unresolved protection defect in the present model, the receiving company's engineering
-item E-1; D-16 corrected in draft) are in the same draft; its IF-01, IF-02, R-176, R-186, R-189 and P1-1 texts are L4-E9's generated
+item E-1 of record l4e7; D-16 corrected in draft) are in the same draft; its IF-01, IF-02, R-176, R-186, R-189 and P1-1 texts are L4-E9's generated
 sections, applied with L4-E9's own regeneration.
 
 **Finding L9T5-F26 (Layer 7, the harness; Layer 6):** J_PA (JST VH, 16 AWG) carries up to 6.9259 A at the cap's top, over the VH's
 least rating at 76.25 C inside air as record l8r2 infers it (5.9948 A); JST's derating curve is the vendor task of L8R2-F43; if it is
-lower than the cap's top at the PA lead's local air, J_PA becomes a 1x4 VH with two contacts a pole (a harness row and a board A land).
+lower than the cap's top at the PA lead's local air, J_PA becomes a 1x4 VH with two contacts a pole (a harness row and a board A land). The identifier is this finding's alone (W9, 6 October 2026, the remaining-engineering ledger's item A): Slot C's `T10-ROUND5.md` section 12 had also written "L9T5-F26" for the connected verdicts that inherit its OPEN and PROVISIONAL claims, and names that finding L9T5-F28 now (`T10-ROUND5.md` line 227); this finding is printed at `l9t5_connected.out` lines 192, 347 and 356 to 358 at 53a68c7c.
 
 # l9t5: task T5, C-ALLTX rev 3 and C-DEV rev 1 (Layer 9's power author, MESHSAT-1357)
 
@@ -372,3 +372,110 @@ figures named; **assumed** a figure no held document gives. "case" is `l9t5_case
   The budget's owner and rv-pwr's (L9T5-F12): the supervisors' HIGH.
 - Round 4, SDR3-F02 (L9T5-F15). Record l8r2: L9P-F02's conditions on the coolers' start are stated with the module at 8.0 W.
   Board B's generator owner: the module's declared 1.6 A and the comment "no maximum given" against the sheet's appendix B.3.
+
+## W9 (6 October 2026): the recorded contradictions restated in this record's hand pages and record l8r2's page
+
+Branch `fnd/w9l9t5` from the set 30 integration commit 2c, `53a68c7c`. **Adopted in the NEXT set, with the cascade:** `l9t5_connected.py`
+reads `T10-ROUND5.md`, and the outputs, the generators and `stability/` are not touched here, so nothing below is regenerated. Record
+text only: nothing designed, no figure computed or changed, no verdict or state changed, nothing accepted, closed or released; every
+figure is quoted as the committed output at `53a68c7c` prints it, with its label. Prototype framing: nothing in the kit has been built,
+bought, powered or measured. Sources, read with `git show` and cited as text only: the DESK-gate draft (`fnd/dgate` 249e9e47,
+`records/l4close/L4-DESK-GATE-ASSESSMENT.draft.md` section 5, K-01 to K-28); the remaining-engineering ledger on this base
+(`records/l4close/REMAINING-ENGINEERING.md` section 6, items A and B, lines 621 to 625); Slot K's result draft 2 (`fnd/recpack` 35dca639,
+`records/int30/RESULT.draft2.md` section 5); Slot H's set 31 (`fnd/l4e9s31` 17ce29d5, `records/l4e9/SET31-CHANGES.md` section C, lines
+109 to 112). Classes as set 31 defines them: PRESENTATION OR BINDING (the text says what its cited record already says) and CLAIM
+CHANGE (each here narrows a claim). Lines are this branch's.
+
+| Item | Page and line | Old text | New text | Source | Class |
+|---|---|---|---|---|---|
+| W9-01 | `T10-ROUND5.md` 227 | "L9T5-F26 (Slot A, its `l9t5_connected.out` 193-199, 282-301, 350-352): its connected verdicts inherit" | L9T5-F28, renamed from L9T5-F26 the way L9T5-F27 settled D9 and D10; the first text kept as quoted history; the three places named at `53a68c7c` (lines 194 to 203, 293 to 317, 387, 388 and 390) | ledger item A; K-20 | PRESENTATION OR BINDING (an identifier) |
+| W9-02 | `README.md` 196 | the finding L9T5-F26 with no note | the identifier is J_PA's finding alone, L9T5-F28 named in `T10-ROUND5.md` line 227, the output's lines 192, 347 and 356 to 358 | ledger item A; K-20 | PRESENTATION OR BINDING |
+| W9-03 | `README.md` 59 | "the declared upper bound (27.9108 A):" | 27.9108 A in the one-node model (`l8r2_p0.out` section 1, J_5V_IOC at U601's declared peak 1.4749 A, `l9t5_connected.out` line 151) beside the STUDY's 27.8159 A with J_5V_IOC at 1.3800 A (`l8r2_dist.out` line 86), which the Q2 item uses | ledger item B; K-21 | PRESENTATION OR BINDING |
+| W9-04 | `README.md` 147 | "holds, the declared upper bound's included;" | the study's own 27.8159 A; the one-node 27.9108 A is not a case the study solves | ledger item B; K-21; `l8r2_dist.out` lines 59, 68, 77 and 86 (its four cases) | CLAIM CHANGE (narrowing: "included" bound to 27.8159 A) |
+| W9-05 | `L8R2-KNOWN-DEFECTS.md` 1062 | "**STILL OPEN:** the declared upper bound's printed row (0.3543 mOhm," | the row named the one-node model's (27.9108 among `l8r2_p0.out` section 1's totals in A), the study's 27.8159 A beside it | ledger item B; K-21 | PRESENTATION OR BINDING |
+| W9-06 | `L8R2-KNOWN-DEFECTS.md` 1081 | "the declared upper bound's included (the ribbon's largest 0.7729 A against 1 A, STILL OPEN on the one-node model);" | every "declared upper bound" of the paragraph bound to the study's 27.8159 A; the one-node 27.9108 not solved by the study | ledger item B; K-21 | CLAIM CHANGE (narrowing) |
+| W9-07 | `README.md` 46 | "15.1307 V on the MODEL (15.1308 V after cx45's corners)" | 15.1308 V as `l9t5_f01_drafts.out` section 5 (line 56) and `l9t5_f01.out` line 145 print it; 15.1307 V named as 1c's figure at 88ffe53b and the P0 list's (the coordinator's) | Slot H section C; K-04 | PRESENTATION OR BINDING |
+| W9-08 | `README.md` 1 | "D-10 (E-1)" | "D-10 (record l4e7's E-1)" | Slot H section C; K-08; `records/l4e9/DOWNSTREAM-REGISTER.md` lines 255 and 336 | PRESENTATION OR BINDING |
+| W9-09 | `README.md` 181 | "the receiving company's remaining engineering item E-1;" | item E-1 of record l4e7, record l9stk's E-1 (a junction limit) named as another item | as W9-08 | PRESENTATION OR BINDING |
+| W9-10 | `README.md` 191 | "item E-1;" | "item E-1 of record l4e7;" | as W9-08 | PRESENTATION OR BINDING |
+| W9-11 | `README.md` 182 | "an unapproved PARTIAL interface proposal, the owner's item, with no protection credit" | the words kept as written before cx46; route B2 UNSELECTED and WITHDRAWN AS DRAFTED with no owner item since cx46's item 18 and the owner's part 25 | K-24 (its citations do not name this page; the same words stood here); `records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` line 203; `handover/OWNER-INSTRUCTION-2026-10-05.md` line 834; `records/l4e7/B2-PRESENCE.md` lines 1 to 4 | CLAIM CHANGE (narrowing: no owner item) |
+| W9-12 | `L8R2-KNOWN-DEFECTS.md` 11 | "findings L5R2-F03, F04 and F05 at the desk." | the sentence kept; added: in DRAFT, not applied, not independently checked, with the register's R-48 and R-190 quoted | K-07; `records/l4e9/DOWNSTREAM-REGISTER.md` lines 154 and 286; this page's own lines 4 and 5 | PRESENTATION OR BINDING |
+
+**Nothing to apply on these pages:** K-09 (D-06's two meanings: none of the four pages uses D-06); `L9T5-CASES.md` carries no K item
+(15.1308 V at line 43 is the output's figure; line 365's 27.9108 A and section 0b's upper-bound rows are rounds 3 and 4 on record
+l8r2's one-node model, left as history).
+
+**For other writers (not these pages):** K-20 and K-21 on the ledger's side (`REMAINING-ENGINEERING.md` section 6, items A and B, now
+answered on the hand pages; its quotation of the first text stays found in `T10-ROUND5.md`); K-04's P0 list row (15.1307 V); K-26
+and K-28 are generated lines of `l9t5_connected.out` (350 to 351, "rev X on V-B20" against revision X HELD; 361 to 362, "L4-E9's own
+output refuses on this tree at its L4-E11 pin"), the coordinator's at the regeneration; this README's line 76 ("it is the
+integrator's to apply") and line 158 (L4-E9 refuses at its L4-E11 pin, in the cx45 correction set kept as history) were not restated
+here: the change list was applied at integration commit 7070f106.
+
+**Tests (W9, run one process at a time on this branch):** `python3 -u v2/ecad/tools/tests/run.py test_w9l9t5.` printed "tests: 11
+passed, 0 failed, 0 skipped"; `test_public_hygiene.` "tests: 4 passed, 0 failed, 0 skipped"; the hand-page tests that read these pages
+(test_l9t5: `t_the_page_carries_the_outputs_figures`, `t_round3_l8r2_f35_is_answered_in_the_drafts_and_the_readme`,
+`t_round4_the_page_and_the_readme_carry_t10_and_the_cm5_assessment`, `t_round5_the_page_carries_the_outputs_figures`,
+`t_round6_t10_cx45_q3_the_containment_and_the_envelope_are_re_solved`, `t_p0_f01_the_ten_findings_are_disposed_of_and_f01_reads_provisional`,
+`t_record_hygiene`; test_l8r2: `t_the_page_and_the_record_carry_no_dash_and_no_claim_word`, `t_closing_check_c4_3_names_the_measured_steady_current`,
+`t_round8_the_page_and_the_readme_carry_the_rounds`, `t_p0_v6_b1_reproduces_v6_and_the_disposition_is_provisional_and_open_where_no_layout_realises_it`,
+`t_p0_the_group_centre_reading_is_withdrawn_as_realisability`) "tests: 12 passed, 0 failed, 0 skipped". Not run here: test_l9t5's and
+test_l8r2's composing tests (they regenerate the records for many minutes; `t_round4_the_connected_path_consumes_l8r2s_worst_vertex_and_is_never_a_pass`
+reads only the claim table's span of this README, which W9 leaves unchanged) and `test_remeng` (its quotation rule over these pages is
+held by `t_the_ledgers_quotations_in_these_pages_stay_found`).
+
+## W11 (6 October 2026): the statements that still described L4-E9's change list as unapplied, restated for the next set
+
+Branch `fnd/w11l9t5` from W9's tip `02b0d30d` (on set 30's integration commit 2c, `53a68c7c`). **Adopted in the NEXT set, with the
+cascade.** Record text only: nothing designed, no figure computed or changed, no predicate, verdict or state changed, nothing accepted,
+closed or released. The old words stay in place as quoted history, labelled with the round that wrote them (W9's convention on these
+pages); line numbers are this branch's. Prototype framing: nothing in the kit has been built, bought, powered or measured. Sources,
+read in this tree unless a commit is named: set 30's integration commit `7070f106`, whose subject reads "the L4-E9 change-list rows
+R-220 to R-245 applied by records/l9t5/apply_l4e9_changelist_p0.py (117 changes; no R-241: B2 out of the baseline)" and which wrote
+only `records/l4e9/DOWNSTREAM-REGISTER.md`, `L4-POWER-ARCHITECTURE.md` and `l4e9_power_path.py`; the register's rows R-220 to R-245
+(lines 316 to 340) and the page's P0 note (line 422); the draft `apply_l4e9_changelist_p0.py` (lines 2 to 5, "NOT APPLIED to the tree
+by this record", and `applied_state()`, lines 107 to 127), whose `--check` on this tree printed "APPLIED BEFORE (the tree carries every
+row this draft adds and the page's P0 note; the change list is read from the tree), nothing to write" (exit 0, nothing written); set
+31's run, `records/l4e9/SET31-CHANGES.md` lines 20 to 25, and L4-E9's four cascade pins, `records/l4e9/l4e9_power_path.out` lines 55,
+64, 67 and 106; the recheck cx46, `records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` line 10 ("P0 RECHECK: CORRECTIONS NOT
+CLOSED."); the remaining-engineering ledger, `records/l4close/REMAINING-ENGINEERING.md` line 85 (the twelve cx46 findings NOT CLOSED)
+and section 4, lines 566 to 581 (the state each weakened claim reads); `l9t5_t10.out` lines 646 to 647 and 662; the DESK-gate draft's
+K-26 and K-28 (`fnd/dgate` 249e9e47, `records/l4close/L4-DESK-GATE-ASSESSMENT.draft.md` lines 336 and 338, cited as text only). Classes
+as set 31 defines them: PRESENTATION OR BINDING and CLAIM CHANGE (each here narrows a claim).
+
+| Item | File and line | Old text (kept as quoted history on this page) | New text | Source | Class |
+|---|---|---|---|---|---|
+| W11-01 | `README.md` 76 | "it is the integrator's to apply" | the words labelled as round 4c's; added: APPLIED since, by the integrator, at 7070f106, to L4-E9's register, script and page (the rows, the page's note, the draft's applied state and its `--check`); applying the rows accepts no draft, the claims read OPEN or PROVISIONAL as the ledger's section 4 classes them | 7070f106; the register 316 to 340; the page 422; the draft 107 to 127; the ledger 566 to 581; cx46 line 10 | PRESENTATION OR BINDING |
+| W11-02 | `README.md` 158 | "(L4-E9 refuses at its L4-E11 pin;" | the words labelled as the cx45 correction set's; added: the change list applied at 7070f106; L4-E9's generator re-pinned at bbba3e53 and its output regenerated in set 31 with its four cascade pins at commit 2b's digests; on a tree without 2b's outputs it refuses at those four pins, L4-E11's output among them | `SET31-CHANGES.md` 20 to 25; `l4e9_power_path.out` 55, 64, 67 and 106; K-28 | PRESENTATION OR BINDING |
+| W11-03 | `README.md` 1 | "L4-E9's change-list rows a draft for the integrator;" | the words labelled as CANDIDATE READY 3's; added: APPLIED since, by the integrator, at 7070f106 | 7070f106 | PRESENTATION OR BINDING |
+| W11-04 | `l9t5_connected.py` 1002 to 1004 (the output's lines 350 to 352) | "rev X on V-B20" and "CORRECTED IN DRAFT, UNCHECKED" | "revision X HELD with no admission route (round 5's V-B20 route SUPERSEDED, 10j (f))"; the containment "drafted, composed, read by pin and mutated, cx45's Q3 NOT CLOSED (10j, after cx46)" | `l9t5_t10.out` 646 to 647 and 662; K-26 | CLAIM CHANGE (narrowing: no admission route; NOT CLOSED in place of corrected in draft) |
+| W11-05 | `l9t5_connected.py` 1013 to 1014 (the output's lines 361 and 362) | "applied by the integrator with the re-takes it names" and "L4-E9's own output refuses on this tree at its L4-E11 pin" | APPLIED by the integrator at 7070f106 to L4-E9's register, script and page; applying them accepts no draft (cx46: CORRECTIONS NOT CLOSED; the claims OPEN or PROVISIONAL as section 11 prints them); L4-E9's generator re-pinned at 2a and its output regenerated in set 31 with its four cascade pins at commit 2b's digests, refusing at those pins on a tree without them | as W11-01 and W11-02; K-28 | PRESENTATION OR BINDING |
+
+**The connected output is left as committed.** `_bin/regen_out.py` on this branch printed "regen_out: REFUSED, R1 run 1 exited 1:
+l9t5_paloop: v2/vendor/ti/held/ti-ina250-sbos511c.pdf is not in the tree (held back: v2/docs/records/l4e7/fetch_held_back.py)", the same
+for run 2, then "regen_out: v2/docs/records/l9t5/l9t5_connected.out left unchanged": the held makers' sheets (gitignored, never
+committed) are not installed in this worktree, so the generator stops before its first section; the refusal is not a stale pin. The
+output's lines 350 to 352 and 361 to 362 carry the old words until the coordinator's cascade regenerates it from the generator as
+changed here; `test_w11l9t5` admits either the committed lines or the generator's new lines there, and nothing else.
+
+**Left out (not this branch's files, or outside the generator lines the brief names):** `l9t5_connected.py` line 518 (the output's
+line 62, "the tree's files unchanged until the integrator applies it with the re-takes the draft names", the same staleness in section
+2's head); `l9t5_connected.py` line 843 (the output's line 216, "rev X stays on V-B20", the words K-26 names, in the rev Y row); the draft's
+docstring, `apply_l4e9_changelist_p0.py` lines 2 to 5 ("NOT APPLIED to the tree by this record", true of the record; the rows went in
+at integration) and lines 28 to 29 ("L4-E9's own output once its L4-E11 pin is re-taken (it refuses on this tree since the P0 base)");
+this page's line 220 (the file table: "a text draft for the integrator", what the file is); W9's note at lines 411 to 412 (W9's
+record of its own work, answered here). The P0 list's rows are the coordinator's.
+
+**Tests (W11, run one process at a time on this branch):** `python3 -u v2/ecad/tools/tests/run.py test_w11l9t5.` printed "tests: 8
+passed, 0 failed, 0 skipped"; `test_w9l9t5.` "tests: 11 passed, 0 failed, 0 skipped"; `test_public_hygiene.` "tests: 4 passed, 0
+failed, 0 skipped"; the tests of test_l9t5 that read this README or the connected output's text (`t_the_page_carries_the_outputs_figures`,
+`t_round3_l8r2_f35_is_answered_in_the_drafts_and_the_readme`, `t_round4_the_page_and_the_readme_carry_t10_and_the_cm5_assessment`,
+`t_round5_the_page_carries_the_outputs_figures`, `t_round6_t10_cx45_q3_the_containment_and_the_envelope_are_re_solved`,
+`t_p0_f01_the_ten_findings_are_disposed_of_and_f01_reads_provisional`, `t_record_hygiene`,
+`t_p0_connected_every_check_reads_drawn_and_every_mutation_fails`, `t_p0_connected_the_re_trace_reads_its_sources`,
+`t_p0_connected_the_verdict_depends_on_the_open_fault_rows`) "tests: 9 passed, 0 failed, 1 skipped", the skip
+`t_the_page_carries_the_outputs_figures` for the held sheet `v2/vendor/ti/held/ti-ina250-sbos511c.pdf`, not installed here. The three
+output-text tests also passed on a scratch copy of the output with the generator's new rows in place of the old (not committed). Not
+run here: test_l9t5's composing and reproducing tests (`t_p0_connected_output_reproduced_pinned_and_every_predicate_holds` runs the
+generator, which stops on the same missing sheet) and `test_remeng` (its quotation rule over the connected output's rows is held by
+`t_the_ledgers_quotations_in_the_output_stay_found`).

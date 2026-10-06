@@ -224,8 +224,8 @@ design). Every claim is OPEN or PROVISIONAL; what stays is drafted and reproduci
 | (f) rows | revision V only, R602 14.0 k, 125 C for every sustained state in the contract draft, the 10i rows, this page and the output | revision X HELD with no admission route; round 5's V-B20 route at 0.2318 A and L9T5-F22's "admits any revision" SUPERSEDED (sections 3 (1) and 10) | a rev X part's qualification, resting on (e) |
 
 SESSION decision **L9T5-D10** (renamed from D9 under L9T5-F27; Slot A's D9 is the set point) stays as a drafted direction, not a closure.
-Findings: L9T5-F25 (Slot A): `check_l9t5_netlist.py`'s I-03 entry for the LDOs behind their sense resistors. L9T5-F26 (Slot A, its
-`l9t5_connected.out` 193-199, 282-301, 350-352): its connected verdicts inherit this section's OPEN and PROVISIONAL claims (the latent
+Findings: L9T5-F25 (Slot A): `check_l9t5_netlist.py`'s I-03 entry for the LDOs behind their sense resistors. L9T5-F28 (Slot A; renamed from L9T5-F26 under the remaining-engineering ledger's item A, `records/l4close/REMAINING-ENGINEERING.md` section 6, the way L9T5-F27 settled D9 and D10: this page first wrote "L9T5-F26 (Slot A, its
+`l9t5_connected.out` 193-199, 282-301, 350-352)", lines of that output at 4d0ff8a2, and L9T5-F26 is Slot A's finding on J_PA's VH derating, `README.md` lines 194 to 196 and `l9t5_connected.out` lines 356 to 358 at 53a68c7c; the same three places in that output at 53a68c7c are lines 194 to 203, the guard row, 293 to 317, the final figures, and 387, 388 and 390, the T10 predicates): its connected verdicts inherit this section's OPEN and PROVISIONAL claims (the latent
 rail trip, the sustained peak, the guard's L8P-R9-F1). For the coordinator (C-DEV): the limiters' two pull-up currents raise each
 supervisor's bounded state to 0.1739 A on revision V (against C-DEV rev 2's 0.1732 A, inside its conservative 0.2558 A); no row is
 changed by this record.
@@ -234,3 +234,9 @@ changed by this record.
 
 From the repository root: `python3 v2/docs/records/l9t5/l9t5_t10.py` (about 20 s; it composes both boards and board B again with the
 SHDN draft, in temporary directories). Tests: `env -C v2/ecad/tools python3 tests/run.py test_l9t5.`
+
+## W9 (6 October 2026): one identifier restated
+
+Line 227: the second finding of section 12 is L9T5-F28, renamed from L9T5-F26 (the remaining-engineering ledger's item A); L9T5-F26
+stays Slot A's finding on J_PA's VH derating. No figure, verdict or state changes. The table of W9's items is the README's section W9;
+adopted in the NEXT set with the cascade (`l9t5_connected.py` reads this page).
