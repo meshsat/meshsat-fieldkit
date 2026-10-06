@@ -1,7 +1,7 @@
 # MeshSat field kit V2: start here
 
 **Current revision: set 30 (6 October 2026), the revision `__INTEGRATED__`. Read section 0 first.** The paragraphs from here to
-section 0 are this page's edition history, oldest first (H1 to H3 of 27 September 2026, the supplier packages of 3 and 4 October
+section 0 are edition H3's opening and this page's edition history, oldest first (H1 to H3 of 27 September 2026, the supplier packages of 3 and 4 October
 2026, set 30); sections 1 to 9 are edition H3's text of 27 September 2026 with its later edits, kept as history where section 0
 differs.
 
@@ -151,8 +151,8 @@ desk check, an AI review or a passing suite as sign-off or qualification; to run
 engineering as qualification-only; to change a requirement or adopt the Saft MP 176065 xtd PROPOSAL without the owner's ruling.
 
 **How to reproduce** (the entry page's section 0e; section 6 below and `v2/docs/handover/REGENERATE.md` for the September formats).
-From a full git checkout at `__INTEGRATED__`: each record's `fetch_held_back.py` fetches and checks the makers' sheets held back by their
-terms; `python3 v2/docs/records/<record>/<script>.py` prints a record's output, compared byte for byte with its committed `.out`, in the
+From a full git checkout at `__INTEGRATED__`: a record's fetch script (`fetch_held_back.py`) fetches and checks the makers' sheets held
+back by their terms; `python3 v2/docs/records/<record>/<script>.py` prints a record's output, compared byte for byte with its committed `.out`, in the
 order of `v2/docs/records/l9t5/stability/regen_cascade.sh` for the P0 cascade; `python3 v2/docs/records/l8p/gen_netlist.py GENERATOR
 OUT.net` writes a generator's netlist without KiCad ("It is not KiCad's netlist", `v2/docs/records/l8p/gen_netlist.py:15`); and
 `python3 v2/ecad/tools/tests/run.py <name substring>` runs the tests.

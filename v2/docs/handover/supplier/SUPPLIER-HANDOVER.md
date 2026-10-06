@@ -55,7 +55,7 @@ revision its checker read.
 | Fabrication release | BLOCKED |
 | Power-design closure | BLOCKED |
 
-The Layer 4 record states the same five apart: "power-design closure BLOCKED, fabrication release BLOCKED, design accepted NO,
+The Layer 4 record states five of the six apart: "power-design closure BLOCKED, fabrication release BLOCKED, design accepted NO,
 implemented NONE, physical qualification NONE" (`records/l4e9/L4-POWER-ARCHITECTURE.md:965`); every circuit change is a release-guarded
 draft: "None is APPLIED" (`:401`). The constitution keeps them apart: "A promoted integration set is none of those by itself."
 (`v2/docs/EXECUTION-CONSTITUTION.md:23`). **Two gates, not one.** Layer 4's DESK gate (the owner's part 19: sequential desk acceptance
@@ -78,7 +78,7 @@ closure, a qualification or a release." (`:1003`).
 | `v2/docs/handover/LAYER-STATUS.md`, the blocks headed "After set 30" (at adoption) | per layer, the items set 30's records move; a row not listed there keeps its earlier text |
 | `v2/docs/records/int30/RESULT.md` (at adoption) | the integration record: the reviewed and the integrated revisions bound, every intervening commit classified, the gate lines |
 | `v2/docs/records/l4close/CHECK-V6-POWER-DRAFTS-7a82e82a-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX44-F01-SELECTION-8c7c335f-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` | the four independent checks of 5 October 2026, each an AI review filed as received, every negative verdict kept |
-| `v2/docs/records/l9t5/`, `v2/docs/records/l8r2/`, `v2/docs/records/l8p/`, `v2/docs/records/efuse/`, `v2/docs/records/l4e11/`, `v2/docs/records/l4e7/` | the P0 round's records with their scripts, committed outputs and tests; `v2/docs/records/l9t5/stability/` keeps the cascade's two passes and their digests |
+| `v2/docs/records/l9t5/`, `v2/docs/records/l8r2/`, `v2/docs/records/l8p/`, `v2/docs/records/efuse/`, `v2/docs/records/l4e11/`, `v2/docs/records/l4e7/` | the records the P0 round changed (each with its `README.md`), with their scripts, committed outputs and tests; `v2/docs/records/l9t5/stability/` keeps the cascade's two passes and their digests |
 | `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md` | the owner's instructions of 5 October 2026 as received, from part 12 (part 19: the deliverable is the desk package; part 24: an unsupported correction is handed over as remaining engineering; part 25: the binding rule of section 0a) |
 
 The findings ledger of section 3 (`records/l4close/FINDINGS-LEDGER.md`) covers "every rejected collaborator finding of L4-E7 to L4-E13"
@@ -119,11 +119,11 @@ We do NOT ask you:
 
 From a full git checkout at `__INTEGRATED__` (section 7, item 2 says why the ZIP alone does not suffice):
 
-1. **The makers' sheets held back by their terms.** Each record that reads one has a `fetch_held_back.py`, run from the repository
-   root, for example `python3 v2/docs/records/l9t5/fetch_held_back.py` ("exit 0: present and checked; 3: a mismatch",
+1. **The makers' sheets held back by their terms.** A record that reads one fetches it with its own script (`fetch_held_back.py`, or
+   a `fetch_*.py`, section 7 item 2), run from the repository root, for example `python3 v2/docs/records/l9t5/fetch_held_back.py` ("exit 0: present and checked; 3: a mismatch",
    `records/l9t5/fetch_held_back.py:11`); the sheets land in gitignored `held/` folders, are checked by sha256 and are never committed.
 2. **A record's figures.** `python3 v2/docs/records/<record>/<script>.py` prints the output; compare it byte for byte with the committed
-   `.out` beside the script. Each record's `README.md` states its own commands, and the ledger's section 7, "Reproducing the records",
+   `.out` beside the script. A record's `README.md` states its own commands, and the ledger's section 7, "Reproducing the records",
    gathers the common ones. The P0 cascade's dependency order is the list in `v2/docs/records/l9t5/stability/regen_cascade.sh`
    (`records/l9t5/stability/regen_cascade.sh:9-11`); that script drives the coordinator's `regen_out.py`, "outside the tree" (`:7`), so
    a recipient runs the same scripts in that order directly. The project's two passes and their digests are filed beside it
@@ -377,5 +377,5 @@ minimum (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:44`).
   `v2/docs/EXECUTION-PLAN.md`, "Register additions, 4 October 2026 21:05 CEST".
 - **6 October 2026: set 30, the revision `__INTEGRATED__`** (section 0). The P0 power candidate after cx46: the findings cx46 left NOT
   CLOSED and the cases the authors handed over carried as remaining engineering (`v2/docs/records/l4close/REMAINING-ENGINEERING.md`),
-  U-01, U-02, U-04 and E11-29 in the supplier validation annex, the P0 list, the DESIGN gate's reading ("closes: NO") and the DESK-gate
-  assessment kept apart from it. No circuit change is applied, and nothing in it accepts, closes or promotes a design claim.
+  U-01, U-02, U-04 and E11-29 in the supplier validation annex, the P0 list, the DESIGN gate's reading ("closes: NO",
+  `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005`) and the DESK-gate assessment kept apart from it. No circuit change is applied, and nothing in it accepts, closes or promotes a design claim.
