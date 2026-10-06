@@ -60,7 +60,12 @@ def main(a):
     files = sorted(glob.glob(os.path.join(HERE, "test_*.py")))
     ok = fail = skip = 0; bad = []
     for f in files:
+        # A SystemExit (a record's generator refusing with sys.exit(2), imported or called by a test) is that module's or that
+        # test's failure, never the end of the run: on 6 October 2026 set 30's first box pass died at record l8r2's refusal with
+        # 126 of 236 modules unrun and no totals line for the gate to judge. KeyboardInterrupt still interrupts.
         try: mod = load(f)
+        except SystemExit as e:
+            print("tests: %-40s LOAD FAILED SystemExit(%r)" % (os.path.basename(f), e.code)); fail += 1; bad.append(os.path.basename(f)); continue
         except Exception as e:
             print("tests: %-40s LOAD FAILED %s" % (os.path.basename(f), e)); fail += 1; bad.append(os.path.basename(f)); continue
         for nm in sorted(dir(mod)):
@@ -71,6 +76,9 @@ def main(a):
                 (getattr(mod, nm))(); ok += 1; print("tests: %-56s PASS" % label)
             except Skip as e:
                 skip += 1; print("tests: %-56s SKIP %s" % (label, e))
+            except SystemExit as e:
+                fail += 1; bad.append(label); print("tests: %-56s FAIL SystemExit(%r)" % (label, e.code))
+                traceback.print_exc(limit=3)
             except Exception as e:
                 fail += 1; bad.append(label); print("tests: %-56s FAIL %s" % (label, e))
                 traceback.print_exc(limit=3)
