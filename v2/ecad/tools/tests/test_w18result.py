@@ -1,18 +1,29 @@
 #!/usr/bin/env python3
-"""Set 30's RESULT draft 3 (MESHSAT-1357, 6 October 2026): the draft names only commits that exist where it says, quotes only what
-its sources print, keeps the three completion claims apart and lists exactly W15's unreviewed changes.
+"""Set 30's RESULT (MESHSAT-1357, 6 October 2026): the record names only commits that exist where it says, quotes only what its
+sources print, carries the values the coordinator saved, keeps the three completion claims apart in the coordinator's words and lists
+exactly the classification's unreviewed changes.
 
-The draft is `v2/docs/records/int30/RESULT.draft3.md`, written on the integration's commit 2b `d83d9f2d` for the coordinator's
-adoption as `records/int30/RESULT.md`. A citation `<sha>:path:N` followed by a code span quotes line N of that file at that revision;
+The record is `v2/docs/records/int30/RESULT.md`: W18's draft 3 (`RESULT.draft3.md`, written on the integration's commit 2b
+`d83d9f2d`) renamed at the adoption and filled by W26 on fnd/adopt30a from `<worktrees>/_runs/int30/ADOPTION-VALUES.md` and the
+coordinator's Q-05 judgement `<worktrees>/_runs/int30/Q05-verdict.final.md`. A citation `<sha>:path:N` followed by a code span quotes line N of that file at that revision;
 `<worktrees>/_runs/<path>:N` followed by a code span quotes line N of a coordinator's log outside the tree, and the growing queue file
 is quoted by its dated entry (`<worktrees>/_runs/int30/QUEUE.md`, entry "...", followed by the quote, found anywhere in the file).
 
-What fails here: an em or en dash; a placeholder outside the fixed set, or one of the set missing; a commit sha in a code span that is
-neither in fnd/p0pwr's history at 2b nor in the history of the `fnd/<branch>` written just before it; a quote not on its cited line
+What fails here: an em or en dash; a draft's state line or any `__NAME__` placeholder left in the record; a filled value (the
+candidate, the promotion, the mirror, the KEY, the four passes' lines, suite_gate's two lines, the l6r2 correction, W19's regression
+and its merge) that is not the values file's; a commit sha in a code span that is neither in fnd/p0pwr's history at the promoted
+revision nor in the history of the `fnd/<branch>` written just before it; a quote not on its cited line
 at its revision or not in its log; a test count ("N passed, M failed") or a time HH:MM:SS that is not in a verified quote, a cited log
-or a commit date of the integration; a completion claim missing, doubled, blended with a percentage or carrying another state word;
-an unreviewed-change list that differs from W15's REVIEWED-INPUT CHANGED rows, or a NOT ONLY NARROWING mark that differs from W15's
-list of six; W16's FINDINGS not verbatim. Each predicate is also run on a mutant of the draft that it must refuse.
+or a commit date of the integration; a completion claim missing, doubled, blended with a percentage or carrying a state word other
+than the coordinator's Q-05 word, or not citing the assessment; the DESK gate's NOT PASSED missing; an unreviewed-change list that
+differs from W15's REVIEWED-INPUT CHANGED rows, a NOT ONLY NARROWING mark that differs from W15's list of six, or a table of the
+commits after 6bc4424e whose first classes differ from CLASSIFICATION.md's rows 39 to 45; W16's FINDINGS not verbatim. Each
+predicate is also run on a mutant of the record that it must refuse.
+
+Restated at the adoption (W26): the draft-stage predicates "the first line is the DONE / NOT DONE / NEXT line", "every placeholder of
+the fixed set is kept" and "handover readiness NOT YET ASSESSED" became "no draft line and no placeholder remains", "each filled value
+is the values file's" and "each claim carries the coordinator's word"; the integration's tip for the sha and time checks moved from 2b
+to the promoted revision; no figure, sha or citation check was dropped.
 
 Read-only: git is read with `git show`, `git log`, `git cat-file` and `git merge-base`; the logs under `<worktrees>/_runs` are read
 when present (a checkout without them raises Skip for the predicates that need them). Nothing is written. No pytest is needed
@@ -26,15 +37,23 @@ from harness import Skip
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 RUNS = os.path.join(os.path.dirname(os.path.dirname(REPO)), "meshsat-fieldkit", "_runs")
-DRAFT = "v2/docs/records/int30/RESULT.draft3.md"
-INTEG = "d83d9f2d720878ca5267dbf59bdc571c6890fd92"        # commit 2b, the integration's committed tip when the draft was written
+DRAFT = "v2/docs/records/int30/RESULT.md"
+VALUES_REL = "int30/ADOPTION-VALUES.md"
+Q05_REL = "int30/Q05-verdict.final.md"
+CLASS_FILE = "v2/docs/records/int30/CLASSIFICATION.md"
+ASSESSMENT = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
+INTEG = "dd1aed00d0a0a521063b5792550bc510c4707c59"        # the promoted revision (INTEGRATED = CANDIDATE = PROMOTED)
+B2 = "d83d9f2d720878ca5267dbf59bdc571c6890fd92"           # commit 2b, the integration's committed tip when draft 3 was written
 W15 = "57bcdbfce095c461b4c3b6804ea8cc3508762577"          # W15's classification
 W15_FILE = "v2/docs/records/int30/CLASSIFICATION.draft.md"
 FIRST_INTEGRATION = "3d2746c9bdd9a17ad81e19889892e5691973eb63"
-FIXED = ("__CANDIDATE__", "__PROMOTED__", "__MIRROR__", "__KEY__", "__GATE_BOX_PY312__", "__GATE_BOX_PY311__",
-         "__GATE_RUNNER__", "__G7__", "__L6R2_FIX__", "__W19__")
-CLAIMS = {"Engineering-handover readiness": "NOT YET ASSESSED", "Power-design closure": "BLOCKED",
+FILLED = ("__CANDIDATE__", "__PROMOTED__", "__MIRROR__", "__KEY__", "__GATE_BOX_PY312__", "__GATE_BOX_PY311__",
+          "__GATE_RUNNER__", "__G7__", "__L6R2_FIX__", "__W19__")     # draft 3's placeholders, all filled at the adoption
+CLAIMS = {"Engineering-handover readiness": "READY AS A DESK PACKAGE OF OPEN ITEMS", "Power-design closure": "BLOCKED",
           "Fabrication release": "BLOCKED"}
+Q05_HEADS = {"Engineering-handover readiness": "## Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS",
+             "Power-design closure": "## Power-design closure: BLOCKED.", "Fabrication release": "Fabrication release: BLOCKED.",
+             "DESK gate": "## Layer 4's DESK gate: NOT PASSED"}
 
 GIT_ANCHOR = re.compile(r"`([0-9a-f]{8,40}):([^`:\s]+):(\d+)` `((?:[^`\\]|\\.)+)`")
 RUN_ANCHOR = re.compile(r"`<worktrees>/_runs/([^`:\s]+)(?::(\d+))?`(?:, entry \"([^\"]+)\",)? `([^`]+)`")
@@ -56,7 +75,7 @@ def _git(*args):
 
 
 def _need_git():
-    for sha in (INTEG, W15):
+    for sha in (INTEG, B2, W15):
         if _git("cat-file", "-e", sha + "^{commit}").returncode != 0:
             raise Skip("commit %s not in this checkout" % sha[:8])
 
@@ -96,18 +115,78 @@ def p_hygiene(text):
     bad = []
     if "\u2014" in text or "\u2013" in text:
         bad.append("an em or en dash")
-    if not text.startswith("**DONE:**"):
-        bad.append("the first line is not the DONE / NOT DONE / NEXT line")
-    for w in ("**NOT DONE:**", "**NEXT:**"):
-        if w not in text.splitlines()[0]:
-            bad.append("the first line lacks %s" % w)
+    if not text.startswith("# Set 30: the result of the integration (MESHSAT-1357)\n"):
+        bad.append("the record does not open with its title")
+    for w in ("**DONE:**", "**NOT DONE:**", "**NEXT:**", "**Status: DRAFT"):
+        if w in text:
+            bad.append("a draft's line is left in the record: %s" % w)
     return bad
 
 
 def p_placeholders(text):
-    found = set(re.findall(r"__[A-Z0-9_]+__", text))
-    bad = ["placeholder outside the fixed set: %s" % p for p in sorted(found - set(FIXED))]
-    bad += ["placeholder of the fixed set missing: %s" % p for p in FIXED if p not in found]
+    found = sorted(set(re.findall(r"__[A-Z0-9_]+__", text)))
+    return ["a placeholder is left in the record: %s" % p for p in found]
+
+
+def _values():
+    """The coordinator's saved values, each read from ADOPTION-VALUES.md by its pattern (Skip when the file is not on this host)."""
+    body = _run_text(VALUES_REL)
+    if body is None:
+        raise Skip("the coordinator's values file is not on this host")
+
+    def one(pat):
+        m = re.search(pat, body)
+        assert m, "the values file carries no %r" % pat
+        return m.group(1)
+    return {
+        "CANDIDATE": one(r"INTEGRATED = CANDIDATE = PROMOTED = MIRROR \(GitHub main\): ([0-9a-f]{40})"),
+        "KEY": one(r"l4e7 KEY: (MATCH [0-9a-f]{16})"),
+        "GATE_A": one(r'box pass A \([^)]*\): "([^"]+)"'), "GATE_B": one(r'box pass B \([^)]*\): "([^"]+)"'),
+        "GATE_REC": one(r'the records box \([^)]*\): "([^"]+)"'), "GATE_RUNNER": one(r'the runner \([^)]*\): "([^"]+)"'),
+        "G7": one(r"modules \d+ of \d+ ran / (suite_gate: PASS)"), "G7_TOTALS": one(r"\(_runs/int30s1/suite_gate.txt\): (suite_gate: [^/]+ran)"),
+        "GUARD": one(r'candidate_guard, every host: "([^"]+)"'),
+        "L6R2": one(r"the l6r2 correction ([0-9a-f]{8})"), "W19": one(r"W19's regression ([0-9a-f]{8}) merged at"),
+        "W19M": one(r"merged at ([0-9a-f]{8})"), "REKEY": one(r"the re-keyed l4e7 cache ([0-9a-f]{40})"),
+    }
+
+
+def _row(text, section_head, label):
+    sec = text[text.index(section_head):]
+    rows = [ln for ln in sec.splitlines() if ln.startswith("| %s" % label)]
+    return rows[0] if len(rows) == 1 else None
+
+
+def p_filled(text, vals):
+    """Each filled value stands where draft 3 kept its placeholder and is the values file's."""
+    bad = []
+    s1, s4 = "## 1. The candidate", "## 4. The freeze and the gates"
+    want = [
+        (s1, "INTEGRATED = CANDIDATE:", ["`%s`" % vals["CANDIDATE"]]),
+        (s1, "PROMOTED:", ["`%s` (mirror `%s`)" % (vals["CANDIDATE"], vals["CANDIDATE"])]),
+        (s1, "I12 |", ["`%s`" % vals["L6R2"]]), (s1, "I13 |", ["`%s`" % vals["W19M"], "`%s`" % vals["W19"]]),
+        (s1, "I14 |", ["`%s`" % vals["REKEY"][:8]]), (s1, "I16 |", ["`%s`" % vals["CANDIDATE"][:8]]),
+        (s4, "W16's finding 1:", ["`%s`" % vals["L6R2"]]), (s4, "W16's finding 3:", ["`%s`, merged at `%s`" % (vals["W19"], vals["W19M"])]),
+        (s4, "The re-key, its KEY", ["`l4e7 KEY: %s" % vals["KEY"]]), (s4, "The candidate commit", ["`%s`" % vals["CANDIDATE"]]),
+        (s4, "candidate_guard check, every host", ["`%s`" % vals["GUARD"]]),
+        (s4, "Box pass A, Python 3.12", ["`%s`" % vals["GATE_A"]]), (s4, "Box pass B, Python 3.11", ["`%s`" % vals["GATE_B"]]),
+        (s4, "Records box pass", ["`%s`" % vals["GATE_REC"]]), (s4, "Runner pass", ["`%s`" % vals["GATE_RUNNER"]]),
+        (s4, "suite_gate with G7", ["`%s`" % vals["G7"], "`%s`" % vals["G7_TOTALS"].strip()]),
+        (s4, "Promotion:", ["`%s`" % vals["CANDIDATE"]]),
+    ]
+    for head, label, needles in want:
+        try:
+            row = _row(text, head, label)
+        except ValueError:
+            bad.append("section %r is missing" % head)
+            continue
+        if row is None:
+            bad.append("no single row %r in %r" % (label, head))
+            continue
+        for n in needles:
+            if n not in row:
+                bad.append("row %r does not carry the values file's %r" % (label, n[:60]))
+    if text.count("`%s`" % vals["GUARD"]) < 4:
+        bad.append("the guard's line is not quoted for the four hosts")
     return bad
 
 
@@ -203,7 +282,9 @@ def _section(text, head, nxt):
     return text[a:b]
 
 
-def p_claims(text):
+def p_claims(text, q05=None):
+    """The three claims apart, each with the coordinator's word and citing the assessment; the DESK gate NOT PASSED, apart from them;
+    with the Q-05 file at hand, each word is also on that file's heading."""
     bad = []
     try:
         sec = _section(text, "## 6. What set 30 closes", "## 7. The records")
@@ -219,6 +300,25 @@ def p_claims(text):
         cells = [c.strip() for c in rows[0].strip("|").split("|")]
         if len(cells) < 3 or cells[1] != state:
             bad.append("%s: state %r, expected %r" % (claim, cells[1] if len(cells) > 1 else None, state))
+        elif ASSESSMENT not in cells[2]:
+            bad.append("%s: the basis does not cite %s" % (claim, ASSESSMENT))
+        if q05 is not None and Q05_HEADS[claim] not in q05:
+            bad.append("%s: the Q-05 file carries no %r" % (claim, Q05_HEADS[claim]))
+        if q05 is not None and state not in Q05_HEADS[claim]:
+            bad.append("%s: %r is not the Q-05 heading's word" % (claim, state))
+    gate = [ln for ln in sec.splitlines() if ln.startswith("**Layer 4's DESK gate, on the promoted revision: NOT PASSED.**")]
+    if len(gate) != 1:
+        bad.append("the DESK gate's NOT PASSED line is missing or doubled")
+    if "`<worktrees>/_runs/int30/Q05-verdict.final.md:5` `## Layer 4's DESK gate: NOT PASSED`" not in sec:
+        bad.append("the DESK gate's word is not quoted from the Q-05 file")
+    if q05 is not None and Q05_HEADS["DESK gate"] not in q05:
+        bad.append("the Q-05 file carries no DESK gate heading")
+    path = os.path.join(REPO, ASSESSMENT)
+    if os.path.isfile(path):          # once the other adoption author's file is in the tree, it carries the same words
+        body = open(path, encoding="utf-8").read()
+        for w in ("NOT PASSED", "READY AS A DESK PACKAGE OF OPEN ITEMS", "BLOCKED"):
+            if w not in body:
+                bad.append("%s does not carry %r" % (ASSESSMENT, w))
     return bad
 
 
@@ -260,6 +360,47 @@ def p_unreviewed(text):
         bad.append("NOT ONLY NARROWING marks %s differ from W15's six %s" % (sorted(marked), sorted(six or ())))
     if "UNREVIEWED CHANGES" not in text or "None of these 13 was checked by an independent checker after cx46" not in text:
         bad.append("the unreviewed-changes statement is missing")
+    bad += _after_6bc4424e(text)
+    return bad
+
+
+def _class_rows_after():
+    """CLASSIFICATION.md's rows 39 to 45 in this tree: {short sha: (row, first class, NOT ONLY NARROWING listed)}"""
+    with open(os.path.join(REPO, CLASS_FILE), encoding="utf-8") as f:
+        body = f.read()
+    rows = {}
+    for ln in body.splitlines():
+        m = re.match(r"\| (\d+) \| `([0-9a-f]{8})` / `[0-9a-f]{40}` \|", ln)
+        if m and int(m.group(1)) >= 39:
+            cells = [c.strip() for c in re.split(r"(?<!\\)\|", ln.strip())[1:-1]]
+            rows[m.group(2)] = (int(m.group(1)), cells[6])
+    six = re.search(r"\*\*They do not only narrow \([^)]*\):\*\* ([^(]+)\(", body)
+    return rows, set(re.findall(r"`([0-9a-f]{8})`", six.group(1))) if six else set()
+
+
+def _after_6bc4424e(text):
+    bad = []
+    try:
+        sec = _section(text, "**The seven commits after `6bc4424e`**", "**So the promoted revision carries")
+    except ValueError:
+        return ["the table of the commits after 6bc4424e is missing"]
+    want, nonnarrow = _class_rows_after()
+    got = {}
+    for ln in sec.splitlines():
+        m = re.match(r"\| (\d+) \| `([0-9a-f]{8})` \| ([^|]+) \|", ln)
+        if m:
+            got[m.group(2)] = (int(m.group(1)), m.group(3).strip())
+    if sorted(got) != sorted(want):
+        bad.append("the commits after 6bc4424e %s are not CLASSIFICATION.md's rows 39 to 45 %s" % (sorted(got), sorted(want)))
+    for sha, (n, cls) in got.items():
+        if sha in want and (want[sha][0] != n or want[sha][1] != cls):
+            bad.append("%s: row %d %r, CLASSIFICATION.md row %d %r" % (sha, n, cls[:40], want[sha][0], want[sha][1][:40]))
+    ric = [s for s, (n, c) in want.items() if c.startswith("REVIEWED-INPUT CHANGED")]
+    total = 13 + len(ric)
+    if "**So the promoted revision carries %d UNREVIEWED CHANGES, not 13:**" % total not in text:
+        bad.append("the count of unreviewed changes on the promoted revision is not 13 + %d" % len(ric))
+    if not set(ric) <= nonnarrow:
+        bad.append("a REVIEWED-INPUT CHANGED row after 6bc4424e is not in CLASSIFICATION.md's NOT ONLY NARROWING list")
     return bad
 
 
@@ -283,17 +424,26 @@ def _mutant_fails(pred, text, old, new, count=1):
     assert pred(text.replace(old, new, count)), "%s accepted a mutant (%r -> %r)" % (pred.__name__, old[:40], new[:40])
 
 
-def t_the_draft_has_no_dash_and_opens_with_its_state_line():
+def t_the_record_has_no_dash_and_no_draft_line():
     text = _draft()
     assert not p_hygiene(text), p_hygiene(text)
     _mutant_fails(p_hygiene, text, "## 1. The candidate", "## 1. The candidate \u2014 bound")
+    assert p_hygiene("**DONE:** x; **NOT DONE:** y; **NEXT:** z\n\n" + text), "a draft state line passed"
 
 
-def t_every_placeholder_is_of_the_fixed_set_and_every_one_is_kept():
+def t_no_placeholder_is_left_and_every_filled_value_is_the_values_files():
     text = _draft()
     assert not p_placeholders(text), p_placeholders(text)
-    _mutant_fails(p_placeholders, text, "`__G7__`", "`G7 PASS`", -1)        # a gate line filled everywhere
-    _mutant_fails(p_placeholders, text, "`__KEY__`", "`__REKEY__`")         # a placeholder outside the fixed set
+    for ph in FILLED:
+        assert p_placeholders(text + "\n" + ph + "\n"), "a placeholder %s left in passed" % ph
+    _need_runs()
+    vals = _values()
+    assert not p_filled(text, vals), p_filled(text, vals)
+    _mutant_fails(lambda t: p_filled(t, vals), text, "`tests: 2770 passed, 0 failed, 2 skipped`", "`tests: 2771 passed, 0 failed, 2 skipped`")
+    _mutant_fails(lambda t: p_filled(t, vals), text, "`suite_gate: PASS`", "`suite_gate: FAIL`")
+    _mutant_fails(lambda t: p_filled(t, vals), text, "| INTEGRATED = CANDIDATE: the candidate commit (the re-keyed record l4e7 cache, its dependents and the pack rule installed) | `%s`" % vals["CANDIDATE"],
+                  "| INTEGRATED = CANDIDATE: the candidate commit (the re-keyed record l4e7 cache, its dependents and the pack rule installed) | `%s`" % vals["REKEY"])
+    _mutant_fails(lambda t: p_filled(t, vals), text, "`l4e7 KEY: %s" % vals["KEY"], "`l4e7 KEY: MISMATCH", -1)
 
 
 def t_every_sha_named_is_in_the_integration_or_in_the_branch_named_before_it():
@@ -301,6 +451,7 @@ def t_every_sha_named_is_in_the_integration_or_in_the_branch_named_before_it():
     text = _draft()
     assert not p_shas(text), p_shas(text)
     _mutant_fails(p_shas, text, "| I1 | `3d2746c9` |", "| I1 | `57bcdbfc` |")
+    _mutant_fails(p_shas, text, "| I1 | `3d2746c9` |", "| I1 | `e91a77e1` |")      # the adoption's own merge: not the integration's
     _mutant_fails(p_shas, text, "| I1 | `3d2746c9` |", "| I1 | `deadbeef` |")
 
 
@@ -321,13 +472,23 @@ def t_every_test_count_and_time_is_in_a_cited_source():
     _mutant_fails(p_counts_and_times, text, "## 5. Compute", "## 5. Compute\n\nThe passes read 2900 passed, 0 failed at 05:59:59.\n")
 
 
-def t_the_three_claims_each_carry_their_own_state_and_no_percentage():
+def t_the_three_claims_carry_the_coordinators_words_apart_and_the_desk_gate_is_not_passed():
     text = _draft()
-    assert not p_claims(text), p_claims(text)
+    q05 = _run_text(Q05_REL)
+    assert not p_claims(text, q05), p_claims(text, q05)
     _mutant_fails(p_claims, text, "| Fabrication release | BLOCKED |", "| Fabrication release | RELEASED |")
-    _mutant_fails(p_claims, text, "| Engineering-handover readiness | NOT YET ASSESSED |",
+    _mutant_fails(p_claims, text, "| Engineering-handover readiness | READY AS A DESK PACKAGE OF OPEN ITEMS |",
                   "| Engineering-handover readiness | 80% READY |")
+    _mutant_fails(p_claims, text, "| Engineering-handover readiness | READY AS A DESK PACKAGE OF OPEN ITEMS |",
+                  "| Engineering-handover readiness | READY |")
     _mutant_fails(p_claims, text, "| Power-design closure | BLOCKED |", "| Power design | BLOCKED |")
+    _mutant_fails(p_claims, text, "**Layer 4's DESK gate, on the promoted revision: NOT PASSED.**",
+                  "**Layer 4's DESK gate, on the promoted revision: PASSED.**")
+    _mutant_fails(p_claims, text, "| Power-design closure | BLOCKED | the coordinator's judgement, "
+                  "`<worktrees>/_runs/int30/Q05-verdict.final.md:13` `## Power-design closure: BLOCKED. Fabrication release: BLOCKED.`, "
+                  "recorded in `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`; ", "| Power-design closure | BLOCKED | ")
+    if q05 is not None:
+        assert p_claims(text, q05.replace("READY AS A DESK PACKAGE OF OPEN ITEMS", "READY")), "a word off the Q-05 heading passed"
 
 
 def t_the_unreviewed_changes_are_w15s_reviewed_input_changed_rows():
@@ -336,6 +497,9 @@ def t_the_unreviewed_changes_are_w15s_reviewed_input_changed_rows():
     assert not p_unreviewed(text), p_unreviewed(text)
     _mutant_fails(p_unreviewed, text, "| 31 | `2f74beb5` | narrows |", "| 31 | `9802dfde` | narrows |")
     _mutant_fails(p_unreviewed, text, "| 23 | `53a68c7c` | NOT ONLY NARROWING |", "| 23 | `53a68c7c` | narrows |")
+    _mutant_fails(p_unreviewed, text, "| 39 | `d83d9f2d` | REVIEWED-INPUT CHANGED +", "| 39 | `d83d9f2d` | DIGEST RE-PIN / REGENERATED OUTPUT +")
+    _mutant_fails(p_unreviewed, text, "**So the promoted revision carries 14 UNREVIEWED CHANGES, not 13:**",
+                  "**So the promoted revision carries 13 UNREVIEWED CHANGES, not 13:**")
 
 
 def t_w16s_findings_are_quoted_verbatim():
