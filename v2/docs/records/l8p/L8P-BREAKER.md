@@ -1616,7 +1616,7 @@ LM5069MM-1, the latch-off variant") and line 162 (its call `ic("U101", 10, "LM50
 table and in round 2's item 1 (line 13). Elsewhere in this folder the -2 appears only as the variant rejected (line 13; the breaker
 draft's lines 11 and 114), as board E's U6 part and its code C111822 (section 2's U101 row, section 7's Layer 6 row, the breaker
 draft's line 121), and in the input copies of records l9stk and l4e11, byte for byte
-under `inputs/SOURCES.txt`, which state its rejection (`inputs/l9stk-section15-0d72880b.md` lines 20 to 23,
+under `inputs/SOURCES.txt`, which state its rejection (`inputs/l9stk-section15-0d72880b.md` lines 21 to 24,
 `inputs/l4e11-section19h-ecb598c5.md` lines 7 to 9) or draw board E's U6 (`inputs/l4e11r17-apply_gen_sch_e_entry-ecb598c5.py`
 line 46). **The copies that name the -2 for U101 are L4-E9's, not this folder's:** `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt`
 (round 1's bytes: U101 as the -2 at its lines 10, 61, 65, 90, 113 and 175) and `.../l8p-apply_gen_sch_a_ptc-515f6cf2.txt` (line
@@ -1626,7 +1626,7 @@ them superseded (the register's line 302) and their re-take is the coordinator's
 ruling the -1 rests on: the owner's instruction of 4 October 2026 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-04.md` line 140:
 "The protection candidate now selects latch-off LM5069-1."); this record's round 2 item 1 (line 13: "**The breaker is the latch-off
 LM5069-1**, not the -2: the -2's retry overheats its own FET under a persistent fault (15.4b)."); record l9stk 15.4b as copied
-(`inputs/l9stk-section15-0d72880b.md` line 23: "**The -2 does not meet the criterion.**").
+(`inputs/l9stk-section15-0d72880b.md` line 24: "**The -2 does not meet the criterion.**").
 
 **SESSION decision W5-D1** (authority: SESSION, under the owner's standing rule of 26 September 2026): **the release sentences in
 the drafts' own docstrings are left byte for byte; section 6 item 1 governs over each.** `apply_gen_sch_p_breaker.py` lines 55 to
@@ -1643,15 +1643,15 @@ two lines by "Order (L8P-BREAKER.md section 6 item 1): released with the five ot
 apply_gen_sch_a_thgfs.py), never alone, with l6r2's two board P drafts in either order." and regenerate those outputs in dependency
 order.
 
-**Findings for other owners (not applied here; each names fewer companions than section 6 item 1, none names a wrong one).**
+**Findings for other owners (not applied here; each names fewer companions than section 6 item 1, none a wrong companion).**
 - **W5-F1, L4-E9's change list and register (the coordinator's):** `l4e9_power_path.py`'s CHANGE_ORDER at `53a68c7c` gives R-208
-  (line 6468) "in one release with R-206 and R-207" and cites "(l8p section 5)" for an order this record gives in section 6 item 4,
+  (line 6468) "in one release with R-206 and R-207" and cites "(l8p section 5)", round 1's number of what is now section 6 item 4,
   R-207 (line 6504) "in one release with R-206 and R-208", R-206 (line 6531) "in one release with R-207 and R-208", R-246 (line
   6532) "in one release with R-206, R-207 and R-208", and R-222 and R-244 (lines 6470 and 6471) no companion; the page's section 3
   renders them (L4-POWER-ARCHITECTURE.md lines 457, 459, 460, 491, 517 and 518). In the register, R-206 to R-208's Acceptance names
   all six (lines 302 to 304); R-246's reads "released with R-206, R-207 and R-208 and record l8p's guard (L8P-BREAKER.md section 6
-  item 1)" (line 341), and R-222's and R-244's name no release (lines 318 and 339). The narrower reading for each: "in one release
-  with the other five rows of record l8p's drafts (R-206, R-207, R-208, R-222, R-244 and R-246; L8P-BREAKER.md section 6 item 1)".
+  item 1)" (line 341), and R-222's and R-244's name no release (lines 318 and 339). The reading that agrees with section 6 item 1, for each: "in one
+  release with the other five rows of record l8p's drafts (R-206, R-207, R-208, R-222, R-244 and R-246; L8P-BREAKER.md section 6 item 1)".
 - **W5-F2, the A and E drafts' docstrings (record l8p's next round with a change of bytes):** `apply_gen_sch_e_enable.py` line 23
   and `apply_gen_sch_a_ptc.py` line 29 name round 1's two companions; `apply_gen_sch_a_thguard.py` line 39 reads "Released with the
   board P and board E drafts of record l8p, never alone." (without the delta). Left for W5-D1's reason.
