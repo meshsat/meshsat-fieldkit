@@ -227,7 +227,9 @@ re-key and the dependents: `__REKEY__`.
   stop "rekey8" with the instance number 54487140, quoted as written: `<worktrees>/_runs/vast/LOG-20261006.md:19` `54487140 rekey8: STOPPED after the fetch (disk kept)`).
 - **Set 31's own next re-key** (on W41's commit) is set 31's record's (`records/int31/RESULT.md` section 5 on fnd/res31), not this set's.
 - **When this record was written no instance ran:** `<worktrees>/_runs/vast/CREDIT-READINGS.tsv:1` `no instance running (all eleven stopped)`;
-  none of the eleven stopped disks is destroyed, and their inventory is a separate queue item (Q-63).
+  none of the eleven stopped disks is destroyed, and their artifact inventory is W46's (queue item Q-63,
+  `<worktrees>/_runs/vast/INVENTORY-2026-10-06.md:1` `# Artifact inventory of the eleven stopped vast.ai instances`; its sections
+  3.10 and 3.11 are the two boxes above).
 
 **Set 32's own** (none rented when this record was written):
 

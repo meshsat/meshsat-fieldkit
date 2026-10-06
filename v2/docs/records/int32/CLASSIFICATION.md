@@ -37,10 +37,13 @@ check), and none is credited.
 
 **The REVIEWED-INPUT CHANGED rule, applied (a SESSION decision under the owner's standing rule of 26 September 2026, W44).** The class
 asks that "a figure, a state or verdict word, a composition or release grouping, a case or its placement, an acceptance row, a requirement
-or a limit in a reviewed file reads differently after the commit" (W39's words; W15's are the same in substance). The seven reviewed
+or a limit in a reviewed file reads differently after the commit" (W39's words, which begin
+`4196e9df:v2/docs/records/int31/CLASSIFICATION.md:40` `a figure, a state or verdict word, a composition or release grouping, a case or its placement, an`;
+W15's are the same in substance). The seven reviewed
 generators on fnd/w34pdftext change HOW they obtain a maker's PDF text (the extraction call becomes the helper's call on the same PDF with
 the same options, the input list gains the text), never a figure, state word, composition, case, requirement or limit in their diff, and
-the annex's change is five line numbers in citations whose cited words are unchanged; so no row of the two branches is classed
+the annex's change is five line numbers in citations whose cited words are unchanged and one sentence inside its citation-form
+paragraph's line; so no row of the two branches is classed
 REVIEWED-INPUT CHANGED, and the four rows that touch a reviewed file carry **UNREVIEWED since cx46** with their other classes. Read with
 the wider rule (a touched reviewed file alone), rows 2, 3, 4 and 9 would be REVIEWED-INPUT CHANGED (4 rows); reversed by re-classing
 those four and recounting section 2. The reviewed OUTPUTS these generators write (for example `l4e11_power.out`, `l4e9_power_path.out`,
