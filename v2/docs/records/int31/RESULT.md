@@ -63,9 +63,11 @@ merge's branch commits listed under it there):
 
 **The classification is bound by its path:** `v2/docs/records/int31/CLASSIFICATION.md`, adopted with this file. It classes each of the
 101 commits of `git rev-list dd1aed00..d5d9c252` (76 commits and 25 merges) from its diff into the brief's fixed set, and counts, first
-class per row: REVIEWED-INPUT CHANGED 15; RECORD TEXT 42; GENERATOR DATA (text) 1; TEST 14; DIGEST RE-PIN 2; MERGE 25; TOOLING 2;
-total 101 (its section 2; over the 73 commits to `f0748b49` alone, REVIEWED-INPUT CHANGED 14). A reviewed input there is a file cx46 read: the 60 files of the delta cx46 read plus the L4-E9 page and
-output. **None of the 15 REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,
+class per row: REVIEWED-INPUT CHANGED 21; RECORD TEXT 37; GENERATOR DATA (text) 0; TEST 14; DIGEST RE-PIN 2; MERGE 25; TOOLING 2;
+total 101 (its section 2; over the 73 commits to `f0748b49` alone, REVIEWED-INPUT CHANGED 17). The class is set 30's rule (line 11 of
+`records/int30/CLASSIFICATION.md` at main `eff28be3`), its second sentence read literally as the coordinator ruled on 6 October 2026
+(reading A): a change of what cx46 read, or another row's change carried into a file of the reviewed tree, each reason saying whether
+the file was in the delta cx46 read (its 60 files plus the L4-E9 page and output). **None of the 21 REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,
 never credited, and owes its own targeted verification before any credit.** The method ended with cx46's second negative, and no
 further Astra run on this candidate is authorised; passing the suite transfers no engineering verdict to them. W38, a reviewer running
 beside this record, read the lineage to `f0748b49` independently (queue item Q-57) and found it not yet fit for the freeze, in its
@@ -73,8 +75,8 @@ words as the queue records them: `<worktrees>/_runs/int30/QUEUE.md`, entry "nati
 its other findings: F2 eleven placeholders unfilled (W10's plan step R0), F3 the KEY mismatch (known), F4 to F8 and F10 stale or
 contradicting text and tests not run, F9 not an upgrade. The coordinator acted on F1 by merging main (`d5d9c252`, row 31,
 `<worktrees>/_runs/int30/QUEUE.md`, entry "15:48 (clock) the merge of main into fnd/int31regen COMMITTED", `d5d9c252`), and W41 corrects
-F2, F4 to F8 and F10 and re-runs the chain (queue item Q-60, `__ROUND2__`). The coordinator compares W38's table with this one at the
-adoption (CLASSIFICATION.md, section 2, "Not determined here").
+F2, F4 to F8 and F10 and re-runs the chain (queue item Q-60, `__ROUND2__`). W49 compared W38's table with this one row by row, and W50
+applied W49's section 4 under reading A (CLASSIFICATION.md, the paragraph after "What this is", and section 2, "Not determined here").
 
 **The adopted branches, in W22's merge order** (`<worktrees>/_runs/int31/MERGE-LOG.md`, section 1; each with the finding it answers and
 what it restated):
@@ -83,14 +85,14 @@ what it restated):
 |---|---|---|---|---|
 | `ec85131c` | fnd/w4l4e7 (W4, Q-15) | record l4e7's P0 text read "completed" for D-16 against R-240 PROVISIONAL, and the back-feed sentence against the ledger's HO-F | the three P0 pages: D-16 ADDRESSED IN DRAFTS and PROVISIONAL, route B2 in one wording, the back-feed inside E-1 | 1.1, 1.2 (REVIEWED-INPUT CHANGED) |
 | `7992b2b0` | fnd/w5l8p (W5, Q-14) | record l8p's "one release for five drafts" against the register's six rows | one RELEASE.md for six drafts by register row; U101 the LM5069MM-1 in every file of the record; findings W5-F1 to W5-F3 for their owners | 2.1 (REVIEWED-INPUT CHANGED) to 2.3 |
-| `16afba29` | fnd/w14l5 (W14, Q-30; with fnd/w8l5, W8, Q-18) | W1's finding L5-F14: the Layer 5 contract files carried set 28's D-10 reading | `pcb_interfaces.yaml` and `HW-FW-CONTRACT.md` restated to D-10 as set 31 left it; W1's two test_l5pwr tests restated to that tree | 3.1 to 3.5 |
+| `16afba29` | fnd/w14l5 (W14, Q-30; with fnd/w8l5, W8, Q-18) | W1's finding L5-F14: the Layer 5 contract files carried set 28's D-10 reading | `pcb_interfaces.yaml` and `HW-FW-CONTRACT.md` restated to D-10 as set 31 left it; W1's two test_l5pwr tests restated to that tree | 3.1 (REVIEWED-INPUT CHANGED) to 3.5 |
 | `0ed29a78` | fnd/w11l9t5 (W11, Q-26; with fnd/w9l9t5, W9, Q-24) | Slot L's K items on records l9t5's and l8r2's hand pages; K-26 and K-28 in the connected generator | twelve restatements (L9T5-F28, the two declared upper bounds, 15.1308 V, E-1 named, B2 with no owner item, l8r2's drafts as DRAFT); the generator's T10 and change-list rows | 4.1 and 4.4 (REVIEWED-INPUT CHANGED), 4.2, 4.3, 4.5 |
 | `b7fa4bd9` | fnd/w13l4e9 (W13, Q-29; with fnd/w7rem, W7, Q-16) | the 45.88 K/W remnants; W5's findings on L4-E9's side | patch files only (P-01 to P-12, R-01 to R-09, WP-01 to WP-27), applied later by W24 | 5.1 to 5.5 |
 | `99bd0af9` | fnd/w17p0list (W17, Q-32; with fnd/recpack, Slot K) | the P0 list revision 3 for set 30's adoption | drafts (RESULT draft 2, the P0 list drafts 2 and 3) as files | 6.1 to 6.6 |
 | `6dbbddac` | fnd/w18result (W18, Q-33; with fnd/w15class, W15, Q-31) | set 30's RESULT and part 25's classification | drafts (RESULT draft 3, CLASSIFICATION draft) as files | 7.1 to 7.4 |
 | `c378d0a8` | fnd/w20oneliners (W20, Q-34) | the next set's small items | one patch file, 24 rows and three items for the coordinator | 8.1, 8.2 |
 | `8206d05b` | fnd/dgate2 (W12, Q-28; with fnd/dgate, Slot L) | Layer 4's DESK-gate assessment drafts | drafts 1 and 2 as files, the verdict placeholder kept | 9.1 to 9.5 |
-| `a6e3a066` | fnd/w3annex (W3, Q-13) | the handover inconsistencies in the annex and TP-E11-29 | the annex's sections 6 to 8 (E11-37's section, R17's two prints, R-159, the back-feed as HO-F, D-06); TP-E11-29 re-quoted and kept NOT EXECUTABLE; the one conflict resolved to W3's file whole (`<worktrees>/_runs/int31/MERGE-LOG.md:44` `first note, per W10's plan section 3)`) | 10.2 (REVIEWED-INPUT CHANGED), 10.1, 10.3 |
+| `a6e3a066` | fnd/w3annex (W3, Q-13) | the handover inconsistencies in the annex and TP-E11-29 | the annex's sections 6 to 8 (E11-37's section, R17's two prints, R-159, the back-feed as HO-F, D-06); TP-E11-29 re-quoted and kept NOT EXECUTABLE; the one conflict resolved to W3's file whole (`<worktrees>/_runs/int31/MERGE-LOG.md:44` `first note, per W10's plan section 3)`) | 10.1 and 10.2 (REVIEWED-INPUT CHANGED), 10.3 |
 
 After the ten merges, on the first-parent line: W24 applied the filed patch rows (rows 11 to 17: W7's P-01 to P-12, W13's WP-01 to
 WP-22, W20's rows for six files, W14's PATCH_L5F11_ORDER, the four typed-in pins; `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W24 at about 05:45 CEST", `Q-38 DONE`);
@@ -246,8 +248,8 @@ candidate).
 ## 6. What set 31 closes and what it does not
 
 **Set 31 closes NO power item.** It adopts record text prepared during set 30's integration, with the regenerated outputs and pins that
-text moves. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, section 2). Its 15
-REVIEWED-INPUT CHANGED commits narrow, tighten, restate, re-take, re-adopt or annotate; none is a checked correction, and none is
+text moves. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, section 2). Its 21
+REVIEWED-INPUT CHANGED commits narrow, tighten, restate, carry, re-take, re-adopt or annotate; none is a checked correction, and none is
 credited.
 
 **Layer 4's DESK gate stays NOT PASSED** as the coordinator judged it on set 30, in the assessment's words (quoted from the verbatim
@@ -272,7 +274,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 
 | Record | Path | State |
 |---|---|---|
-| The classification of set 31 | `v2/docs/records/int31/CLASSIFICATION.md` | 101 commits classified over `dd1aed00..d5d9c252`; 15 REVIEWED-INPUT CHANGED, UNREVIEWED since cx46; three placeholder rows |
+| The classification of set 31 | `v2/docs/records/int31/CLASSIFICATION.md` | 101 commits classified over `dd1aed00..d5d9c252`; 21 REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46; three placeholder rows |
 | The entry pages' set 31 rows | `v2/docs/records/int31/ENTRY-PAGES.patch.md` | patch rows for `START-HERE.md` and `SUPPLIER-HANDOVER.md`, applied by the coordinator at the adoption |
 | Set 30's adopted records | `v2/docs/records/int30/RESULT.md`, `CLASSIFICATION.md`, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` at main | on main since the adoption `836f711b` and the follow-up `eff28be3`, in the lineage since `d5d9c252`; not in this record's branch history, so the assessment and the two entry pages are copied verbatim under `inputs/` |
 | The drafts set 31 adopts as files | `v2/docs/records/int30/RESULT.draft2.md`, `RESULT.draft3.md`, `CLASSIFICATION.draft.md`, `NEXT-SET-SMALL-ITEMS.patch.md`; `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md`, `.draft3.md`, `.patch.md`, `L4-DESK-GATE-ASSESSMENT.draft.md`, `.draft2.md`; `v2/docs/records/l4e9/L4E9-4588-PATCH.md`, `L4E9-W5-PATCH.md` | history and patch files; where main holds the adopted record, the adopted record governs |
@@ -295,6 +297,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   no such skip today (`_bin/suite_gate_skips.tsv`). The recommendation, taken as this record's under the owner's standing rule of 26
   September 2026 and the coordinator's to apply or reverse: run those two modules in the runner pass, where `_runs` exists.
 - **Not read line by line:** the regenerated outputs of `aed4bd23` and `562edf6a` (counts and quoted phrases, `CLASSIFICATION.md`
-  section 2); W38's independent table (running beside this record).
+  section 2); W38's independent table (running beside this record; compared row by row by W49 since); five record text rows of main's
+  adoption for a carried change under reading A (`CLASSIFICATION.md`, section 2).
 - No generator, suite, gate, candidate_guard, regen_out or box job was run by this record's author; every chain, test and compute line
   is copied from the logs named.

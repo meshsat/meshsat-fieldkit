@@ -4,9 +4,13 @@
 
 What fails here: a commit of `dd1aed00..TIP` missing, doubled or out of the first-parent order with each merge's branch commits under
 it; a short sha that is not its full sha's prefix; a date, subject or file count that is not git's; a class outside the brief's fixed
-set, a merge not classed MERGE or a MERGE that is not a merge; a row that touches a file cx46 read without the words "UNREVIEWED since
-cx46", or a REVIEWED-INPUT CHANGED row that touches none; summary counts or the bound statement's numbers that are not the table's; a
-count typed in the records that is not git's; a commit named that this repository does not hold (outside the declared list of main's
+set, a merge not classed MERGE or a MERGE that is not a merge; a row that touches a file cx46 read, or a REVIEWED-INPUT CHANGED row,
+without the words "UNREVIEWED since cx46"; a REVIEWED-INPUT CHANGED row that touches no file of the reviewed tree (present at
+4d0ff8a2), or one that touches none of cx46's delta without naming its source row and the delta membership (set 30's rule's second
+sentence, `eff28be3:v2/docs/records/int30/CLASSIFICATION.md:11`, reading A by the coordinator's ruling of 6 October 2026); a rule
+paragraph that is not set 30's line 11 verbatim; summary counts, the 73 and 28 split, the category and merge lists or the bound
+statement's numbers that are not the table's (the merges recomputed from git), and counts in RESULT.md or the entry pages' patch
+that are not the table's: every count is recomputed, none typed in the test; a count typed in the records that is not git's; a commit named that this repository does not hold (outside the declared list of main's
 commits); a quote that is not on its cited line at its revision or in its verbatim copy; the three claims not quoted verbatim from the
 assessment; a placeholder outside the declared tokens; a patch row whose old text is not on its line of the copied page; an em or en
 dash. Each predicate is also run on a mutant it must refuse.
@@ -42,7 +46,11 @@ DECLARED = ("__ROUND2__", "__CANDIDATE__", "__REKEY__", "__PROMOTED__", "__GATE_
 PATCH_TOKENS = ("__PROMOTED__", "__ADOPTION__")
 # main's commits named by the record, not in this branch's history until main is merged into set 31's lineage
 OUTSIDE = {"eff28be3b80f882db545a849b0da1def0217f63d": "main's follow-up after set 30's adoption, the copies' source",
-           "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec": "set 30's adoption commit on main"}
+           "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec": "set 30's adoption commit on main",
+           "4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31 at W39's last commit, the counts before W50's reconciliation"}
+S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
+S30C = "v2/docs/records/int30/CLASSIFICATION.md"
+RIC = "REVIEWED-INPUT CHANGED"
 ASSESS_COPY = REC + "/inputs/L4-DESK-GATE-ASSESSMENT-eff28be3.md"
 ASSESS_TREE = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
 CLAIMS = {492: "### Layer 4's DESK gate: NOT PASSED",
@@ -130,6 +138,13 @@ def _reviewed():
     if "rev" not in _C:
         _C["rev"] = set(_git("diff", "--name-only", CX45, REVIEWED).split()) | set(L4E9_EXTRA)
     return _C["rev"]
+
+
+def _tree():
+    """The files present at cx46's candidate: "a file of the reviewed tree" in set 30's rule."""
+    if "tree" not in _C:
+        _C["tree"] = set(_git("ls-tree", "-r", "--name-only", REVIEWED).split("\n")) - {""}
+    return _C["tree"]
 
 
 def _rows(text):
@@ -240,10 +255,17 @@ def p_columns(text, order):
         if (cls[0] == "MERGE") != (len(ps) > 1) or ("MERGE" in cls and cls != ["MERGE"]):
             bad.append("%s: MERGE and the commit's parents disagree" % sha[:8])
         rv = [n for n in names if n in _reviewed()]
-        if rv and "UNREVIEWED since cx46" not in c[7]:
-            bad.append("%s touches %d reviewed file(s) and does not say UNREVIEWED since cx46" % (sha[:8], len(rv)))
-        if cls[0] == "REVIEWED-INPUT CHANGED" and not rv:
-            bad.append("%s is REVIEWED-INPUT CHANGED but touches no file cx46 read" % sha[:8])
+        if (rv or cls[0] == RIC) and "UNREVIEWED since cx46" not in c[7]:
+            bad.append("%s touches %d reviewed file(s) or is %s and does not say UNREVIEWED since cx46" % (sha[:8], len(rv), RIC))
+        if cls[0] != RIC:
+            continue
+        if not [n for n in names if n in _tree()]:
+            bad.append("%s is %s but touches no file of the reviewed tree" % (sha[:8], RIC))
+        carried = "second sentence" in c[7]
+        if not rv and not carried:
+            bad.append("%s is %s, touches none of cx46's delta and does not class a carried change" % (sha[:8], RIC))
+        if carried and (not re.search(r"set 30's rows? \d+|\brows? \d+(?:\.\d+)?\b", c[7]) or "in the delta cx46 read" not in c[7]):
+            bad.append("%s: a carried change without its source row or the delta membership" % sha[:8])
     return bad
 
 
@@ -261,7 +283,7 @@ def p_summary(text):
     m = re.search(r"^\| total \| (\d+) \|", sec, re.M)
     if not m or int(m.group(1)) != len(rows):
         bad.append("the summary's total is not the table's %d" % len(rows))
-    ri = [c for c in rows if _classes(c)[0] == "REVIEWED-INPUT CHANGED"]
+    ri = [c for c in rows if _classes(c)[0] == RIC]
     m = re.search(r"\*\*The `REVIEWED-INPUT CHANGED` rows: (\d+), all UNREVIEWED since cx46\.\*\* In table order: (.*?)\. By what", sec, re.S)
     if not m or int(m.group(1)) != len(ri):
         bad.append("the REVIEWED-INPUT CHANGED count line is not the table's %d" % len(ri))
@@ -269,13 +291,109 @@ def p_summary(text):
         named = re.findall(r"`([0-9a-f]{8})`\s\(([\d.]+)\)", m.group(2))
         if named != [(_sha_cell(c)[0], c[0]) for c in ri]:
             bad.append("the REVIEWED-INPUT CHANGED list is not the table's rows in order")
+    # the 73 commits to f0748b49 (rows 1 to 30 and their branch rows) and row 31's 28, each split by first class
+    for label, part in (("Over the %d commits to `f0748b49` (rows 1 to 30 and their branch rows), before main's merge: ",
+                         [c for c in rows if int(c[0].split(".")[0]) <= 30]),):
+        f = Counter(_classes(c)[0] for c in part)
+        want = label % len(part) + "; ".join("%s %d" % (k, f[k]) for k in FIXED) + "."
+        if want not in flat:
+            bad.append("the split line does not read %r" % want)
+    r31 = [c for c in rows if int(c[0].split(".")[0]) == 31]
+    f31 = Counter(_classes(c)[0] for c in r31)
+    ric31 = [c[0] for c in r31 if _classes(c)[0] == RIC]
+    want31 = "Row 31 and its %d branch rows" % (len(r31) - 1)
+    if want31 not in flat or ("add: REVIEWED-INPUT CHANGED %d (rows %s)" % (len(ric31), _and(ric31))) not in flat or \
+            ("RECORD TEXT %d, TEST %d, DIGEST RE-PIN %d" % (f31["RECORD TEXT"], f31["TEST"], f31["DIGEST RE-PIN"])) not in flat or \
+            ("MERGE %d." % f31["MERGE"]) not in flat:
+        bad.append("row 31's split is not the table's")
+    # the three kinds: each REVIEWED-INPUT CHANGED row in exactly one, each count the number of rows named in it
+    kinds = (("narrow", r"- \*\*They narrow, tighten or restate a state to a weaker claim \((\d+)\):\*\*(.*?)(?=\n- \*\*)"),
+             ("not only", r"- \*\*They do not only narrow \((\d+)\):\*\*(.*?)(?=\n- \*\*)"),
+             ("re-adopt", r"- \*\*It re-adopts a governing list cx46 read \((\d+)\):\*\*(.*?)(?=\n- \*\*)"))
+    rs = {_sha_cell(c)[0] for c in ri}
+    seen, counts = [], {}
+    for k, rx in kinds:
+        b = re.search(rx, sec, re.S)
+        if not b:
+            bad.append("the kind %r is missing" % k)
+            continue
+        got = sorted(set(re.findall(r"`([0-9a-f]{8})`", b.group(2))) & rs)
+        counts[k] = int(b.group(1))
+        if counts[k] != len(got):
+            bad.append("the kind %r counts %s but names %d rows" % (k, b.group(1), len(got)))
+        seen += got
+    if sorted(seen) != sorted(rs):
+        bad.append("the kinds do not name each REVIEWED-INPUT CHANGED row exactly once")
+    mb = re.search(r"- \*\*Merges that bring `REVIEWED-INPUT CHANGED` rows \((\d+)\):\*\*(.*?)(?=\n- \*\*)", sec, re.S)
+    nm = re.findall(r"`([0-9a-f]{8})` \(", mb.group(2)) if mb else []
+    if not mb or int(mb.group(1)) != len(nm):
+        bad.append("the merge list's count is not the number of merges it names")
+    fp = [c[0] for c in ri if "." not in c[0]]
+    if not mb or ("the %d first-parent rows among them (%s) are brought by no merge" % (len(fp), _and(fp))) not in " ".join(mb.group(2).split()):
+        bad.append("the first-parent rows brought by no merge are not the table's %s" % fp)
     merges = [c for c in rows if _classes(c)[0] == "MERGE"]
-    stmt = re.search(r"the (\d+) commits of `git rev-list dd1aed00\.\.%s` \((\d+)\n?> ?commits, (\d+) merges\) change a file cx46 read in (\d+) commits" % TIP[:8], sec)
-    if not stmt or [int(x) for x in stmt.groups()] != [len(rows), len(rows) - len(merges), len(merges), len(ri)]:
+    lead = ("the %d commits of `git rev-list dd1aed00..%s` (%d commits, %d merges) change what cx46 read, or carry another row's change "
+            "into a file of the reviewed tree, in %d commits classed REVIEWED-INPUT CHANGED" % (len(rows), TIP[:8], len(rows) - len(merges),
+                                                                                              len(merges), len(ri)))
+    if lead not in flat:
         bad.append("the bound statement's commit counts are not the table's")
-    other = re.search(r"The other (\d+) rows change no", flat)
-    if not other or int(other.group(1)) != len(rows) - len(ri):
-        bad.append("the bound statement's other rows are not %d" % (len(rows) - len(ri)))
+    kinds_line = ("%d narrow, tighten or restate a state to a weaker claim, %d do not only narrow, and %d re-adopts the P0 list; %d merges "
+                  "bring them. None of the %d was read" % (counts.get("narrow", -1), counts.get("not only", -1), counts.get("re-adopt", -1),
+                                                           len(nm), len(ri)))
+    if kinds_line not in flat:
+        bad.append("the bound statement's kinds are not the lists' %r" % kinds_line)
+    first = Counter(_classes(c)[0] for c in rows)
+    parts = ["%d merges (the %d above among them)" % (first["MERGE"], len(nm)), "%d record text" % first["RECORD TEXT"],
+             "%d tests" % first["TEST"]] + (["%d generator text" % first["GENERATOR DATA (text)"]] if first["GENERATOR DATA (text)"] else []) + \
+        ["%d digest re-pins" % first["DIGEST RE-PIN"], "%d tooling" % first["TOOLING"]]
+    other = "The other %d rows are classed as" % (len(rows) - len(ri))
+    if other not in flat or (": " + ", ".join(parts[:-1]) + " and " + parts[-1] + ";") not in flat:
+        bad.append("the bound statement's other rows are not the table's %d (%s)" % (len(rows) - len(ri), parts))
+    if "transfers no engineering verdict to the %d changed rows" % len(ri) not in flat:
+        bad.append("the bound statement's last count is not %d" % len(ri))
+    return bad
+
+
+def _and(items):
+    items = list(items)
+    return items[0] if len(items) == 1 else ", ".join(items[:-1]) + " and " + items[-1]
+
+
+def p_merge_list(text, order):
+    """The merges that bring REVIEWED-INPUT CHANGED rows, recomputed from git: a merge brings the rows of
+    `git rev-list <first parent>..<second parent> ^dd1aed00`."""
+    bad = []
+    rows = [c for c in _rows(text) if not _placeholder_row(c)]
+    ri = {_sha_cell(c)[1]: c[0] for c in rows if _classes(c)[0] == RIC}
+    want = []
+    for num, sha, ps, _d, _s, _n in order:
+        if len(ps) > 1:
+            br = set(_git("rev-list", "%s..%s" % (ps[0], ps[1]), "^" + BASE).split())
+            hit = sorted((ri[s] for s in br if s in ri), key=lambda x: [int(y) for y in x.split(".")])
+            if hit:
+                want.append((sha[:8], hit))
+    sec = text.split("\n## 2. ", 1)[1]
+    mb = re.search(r"- \*\*Merges that bring `REVIEWED-INPUT CHANGED` rows \((\d+)\):\*\*(.*?)(?=\n- \*\*)", sec, re.S)
+    if not mb:
+        return ["the merge list is missing"]
+    got = [(s, re.findall(r"\d+(?:\.\d+)?", rr)) for s, rr in re.findall(r"`([0-9a-f]{8})` \(((?:rows )?[\d., and]+)\)", " ".join(mb.group(2).split()))]
+    if got != want:
+        bad.append("the merge list is not git's: %s" % want)
+    return bad
+
+
+def p_rule(text, s30_lines):
+    """The class is set 30's line 11 quoted verbatim, read as ruled; W39's earlier rule sentence is not the rule."""
+    bad = []
+    if len(s30_lines) < 11 or not s30_lines[10].startswith("- `REVIEWED-INPUT CHANGED`:"):
+        return ["set 30's record has no REVIEWED-INPUT CHANGED rule at its line 11"]
+    want = "(`eff28be3:v2/docs/records/int30/CLASSIFICATION.md:11`):\n\n> " + s30_lines[10] + "\n"
+    if want not in text:
+        bad.append("the rule paragraph does not quote set 30's line 11 verbatim")
+    if "reading A" not in text.split("## 1. ", 1)[0] or "set 30's row 26" not in text.split("## 1. ", 1)[0]:
+        bad.append("the rule paragraph does not state reading A and its consequence for set 30's row 26")
+    if "a reviewed input is a file cx46 read. This table" in text:
+        bad.append("W39's earlier rule sentence is still given as the rule")
     return bad
 
 
@@ -305,6 +423,18 @@ def p_counts(texts, order):
           % tuple([first[k] for k in FIXED] + [len(rows)]))
     if cl not in r:
         bad.append("RESULT.md section 2's class counts are not the table's: %r" % cl)
+    ri = first[RIC]
+    r73 = sum(1 for c in rows if int(c[0].split(".")[0]) <= 30 and _classes(c)[0] == RIC)
+    for w in ("over the %d commits to `f0748b49` alone, REVIEWED-INPUT CHANGED %d)" % (sum(1 for c in rows if int(c[0].split(".")[0]) <= 30), r73),
+              "**None of the %d REVIEWED-INPUT CHANGED commits" % ri, "Its %d REVIEWED-INPUT CHANGED commits" % ri,
+              "; %d REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46;" % ri):
+        if w not in r:
+            bad.append("RESULT.md does not read %r (the table's count)" % w)
+    pt = " ".join(texts[PATCH].split())
+    for w, k in (("counts %d commits that change what cx46 read or carry another row's change" % ri, 2),
+                 ("Set 31 adds its own: %d commits that change what cx46 read or carry another row's change" % ri, 2)):
+        if pt.count(w) != k:
+            bad.append("ENTRY-PAGES.patch.md does not read %r %d times (the table's count)" % (w, k))
     for sha, label in (("aed4bd23", "The commit** `aed4bd23` (%d files"), ("562edf6a", "The commit** `562edf6a` (%d files")):
         k = len(_git("show", "--name-only", "--format=", sha).split())
         if label % k not in r:
@@ -491,14 +621,48 @@ def t_the_table_is_the_range_in_first_parent_order_with_gits_columns_and_classes
     r = [l for l in t.split("\n") if l.startswith("| 11 |")][0]
     assert p_columns(t.replace(r, r.replace("UNREVIEWED since cx46", "unreviewed"), 1), order), \
         "a reviewed row without UNREVIEWED since cx46 passed"
+    r = [l for l in t.split("\n") if l.startswith("| 2.2 |")][0]
+    m = r.replace("| TEST |", "| REVIEWED-INPUT CHANGED + TEST |", 1)[:-2] + "; second sentence: row 2.1, not in the delta cx46 read; UNREVIEWED since cx46 |"
+    assert any("touches no file of the reviewed tree" in b for b in p_columns(t.replace(r, m, 1), order)), \
+        "a REVIEWED-INPUT CHANGED row touching no file of the reviewed tree passed"
+    r = [l for l in t.split("\n") if l.startswith("| 31.3 |")][0]
+    assert p_columns(t.replace(r, r.replace("the file was not in the delta cx46 read (the 62 files); ", ""), 1), order), \
+        "a carried change without its delta membership passed"
 
 
 def t_the_summary_and_the_bound_statement_are_the_tables():
     t = _read(CLASS)
     assert not p_summary(t), p_summary(t)
-    assert p_summary(t.replace("| `TOOLING` | 2 | 3 |", "| `TOOLING` | 3 | 3 |", 1)), "a wrong summary count passed"
-    assert "other 86 rows change no" in t, "the mutation's anchor is not in the table's statement"
-    assert p_summary(t.replace("other 86 rows change no", "other 85 rows change no", 1)), "a wrong statement count passed"
+    rows = [c for c in _rows(t) if not _placeholder_row(c)]
+    first = Counter(_classes(c)[0] for c in rows)
+    carry = Counter(k for c in rows for k in set(_classes(c)))
+    ri = first[RIC]
+    a = "| `TOOLING` | %d | %d |" % (first["TOOLING"], carry["TOOLING"])
+    assert a in t, "the mutation's anchor %r is not in the summary" % a
+    assert p_summary(t.replace(a, "| `TOOLING` | %d | %d |" % (first["TOOLING"] + 1, carry["TOOLING"]), 1)), "a wrong summary count passed"
+    o = "The other %d rows are classed" % (len(rows) - ri)
+    assert o in t, "the mutation's anchor %r is not in the table's statement" % o
+    assert p_summary(t.replace(o, "The other %d rows are classed" % (len(rows) - ri - 1), 1)), "a wrong statement count passed"
+    r = [l for l in t.split("\n") if l.startswith("| 31.3 |")][0]
+    assert p_summary(t.replace(r, r.replace("| REVIEWED-INPUT CHANGED + RECORD TEXT |", "| RECORD TEXT |"), 1)), \
+        "a re-classed row with the old counts passed"
+    assert p_summary(t.replace("(8):** `bf44eb8c`", "(7):** `bf44eb8c`", 1)), "a wrong kind count passed"
+
+
+def t_the_merge_list_is_gits():
+    order = _order()
+    t = _read(CLASS)
+    assert not p_merge_list(t, order), p_merge_list(t, order)
+    assert p_merge_list(t.replace("`16afba29` (3.1),\n  `0ed29a78`", "`0ed29a78`", 1), order), "a merge list missing 16afba29 passed"
+
+
+def t_the_rule_is_set_30s_line_11_verbatim_read_as_ruled():
+    _need_git()
+    t = _read(CLASS)
+    s30 = _show(S30, S30C)
+    assert not p_rule(t, s30), p_rule(t, s30)
+    assert p_rule(t.replace("is different now; the reason quotes", "is different now: the reason quotes", 1), s30), "a changed quote passed"
+    assert p_rule(t.replace("set 30's row 26", "set 30's row 62"), s30), "a rule without row 26's consequence passed"
 
 
 def t_every_count_typed_is_gits():
@@ -507,6 +671,10 @@ def t_every_count_typed_is_gits():
     assert not p_counts(texts, order), p_counts(texts, order)
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "prints 101: 76 commits", "prints 101: 75 commits", order)
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "1 h 31 min 11 s", "1 h 31 min 12 s", order)
+    ri = Counter(_classes(c)[0] for c in _rows(texts[CLASS]) if not _placeholder_row(c))[RIC]
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "**None of the %d REVIEWED-INPUT" % ri,
+                    "**None of the %d REVIEWED-INPUT" % (ri - 6), order)
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, PATCH, "Set 31 adds its own: %d commits" % ri, "Set 31 adds its own: 15 commits", order)
 
 
 def t_every_commit_named_is_in_the_history_or_declared_outside_it():
@@ -572,6 +740,8 @@ test_every_placeholder_is_a_declared_token = _pytest(t_every_placeholder_is_a_de
 test_the_table_is_the_range_in_first_parent_order_with_gits_columns_and_classes = _pytest(
     t_the_table_is_the_range_in_first_parent_order_with_gits_columns_and_classes)
 test_the_summary_and_the_bound_statement_are_the_tables = _pytest(t_the_summary_and_the_bound_statement_are_the_tables)
+test_the_merge_list_is_gits = _pytest(t_the_merge_list_is_gits)
+test_the_rule_is_set_30s_line_11_verbatim_read_as_ruled = _pytest(t_the_rule_is_set_30s_line_11_verbatim_read_as_ruled)
 test_every_count_typed_is_gits = _pytest(t_every_count_typed_is_gits)
 test_every_commit_named_is_in_the_history_or_declared_outside_it = _pytest(t_every_commit_named_is_in_the_history_or_declared_outside_it)
 test_every_quote_is_on_its_cited_line = _pytest(t_every_quote_is_on_its_cited_line)
