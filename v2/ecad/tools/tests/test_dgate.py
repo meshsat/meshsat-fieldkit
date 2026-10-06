@@ -15,10 +15,11 @@ revision; every citation uses an alias of the table and lies inside its file; ev
 found verbatim (emphasis marks and whitespace aside) within two lines of the range of the first citation after it; each of the
 four parts states its counts of evidence for and against and carries exactly that many items, numbered in order; the
 contradictions K-01 to K-NN are numbered in order, their stated count and their count of YES agree with the table, and every row
-reads YES or NO; Slot G's sixteen items each have one row; the verdict placeholder appears once and the completion claims read as
+reads YES or NO; Slot G's sixteen items each have one row; the nineteen remaining-engineering items and the annex's four
+each have one acceptance row; the verdict placeholder appears once and the completion claims read as
 briefed; the design gate's verdict words appear in its own section only; nothing outside a quotation reads as an acceptance; and
 the facts the draft read with git at the base hold there (the eighteen stability digests equal their files, L4-E9's output pins
-four cascade outputs at other bytes, record l4e7's cache was last committed at set 29's freeze and its output before it, seventeen fetch_held_back.py
+four cascade outputs at other bytes, record l4e7's cache was last committed at set 29's freeze and its output before it, L4-E11's output at the bytes record l4e7 read, seventeen fetch_held_back.py
 scripts, E11-37 named once in the annex and not in the ledger, twelve RE and seven HO remaining-engineering rows in the ledger's
 summary). No em or en dash. These are software predicates on record text: they establish no electrical or thermal property and
 close nothing.
@@ -263,6 +264,17 @@ def t_slot_g_items_each_have_one_row():
         assert len(re.findall(r"^\| PC-%02d " % i, s, re.M)) == 1, "PC-%02d's row" % i
 
 
+HANDED = ["RE-%d" % i for i in (1, 2, 4, 5, 6, 7, 8, 9, 10, 13, 17, 18)] + ["HO-%s" % c for c in "ABCDEFG"] + [
+    "U-01", "U-02", "U-04", "E11-29"]
+
+
+def t_every_handed_over_item_has_one_acceptance_row():
+    s = _section(4)
+    for it in HANDED:
+        assert len(re.findall(r"^\| %s \| (remaining engineering|external architecture fact|qualification) \|" % re.escape(it), s, re.M)) == 1, it
+    assert len(re.findall(r"^\| (?:RE|HO|U|E11)-[0-9A-Z]+ \| ", s, re.M)) == len(HANDED), "rows beyond the ledger's and the annex's items"
+
+
 def t_the_placeholder_and_the_completion_claims():
     d = _draft()
     assert d.count(PLACEHOLDER) == 2, "the placeholder: once in the header (as code) and once as the verdict"
@@ -274,10 +286,10 @@ def t_the_placeholder_and_the_completion_claims():
 
 
 def t_the_design_gate_words_are_in_their_own_section():
-    s7 = _section(7)
+    s7 = " ".join(_section(7).split())
     for w in DESIGN_WORDS:
         assert w in s7, "section 7 lacks %r" % w
-    rest = _before_section(7) + _draft()[_draft().find("\n## 8. "):]
+    rest = " ".join((_before_section(7) + _draft()[_draft().find("\n## 8. "):]).split())
     for w in DESIGN_WORDS:
         assert w not in rest, "%r outside section 7" % w
     assert not re.search(r"criterion \d (PASS|FAIL|CONDITIONAL)", rest), "a criterion verdict outside section 7"
@@ -321,6 +333,15 @@ def t_the_l4e7_cache_was_last_committed_before_the_p0_round():
         h = _git("log", "-1", "--format=%H", BASE, "--", p).strip()
         assert h.startswith(want), "%s last committed at %s" % (p, h[:8])
         assert "`%s`" % want in _draft(), "the draft does not name %s" % want
+
+
+def t_l4e11_output_has_the_bytes_l4e7_read_at_the_base():
+    _base_ok()
+    r = subprocess.run(["git", "-C", ROOT, "show", "%s:v2/docs/records/l4e11/l4e11_power.out" % BASE], capture_output=True)
+    assert r.returncode == 0
+    assert hashlib.sha256(r.stdout).hexdigest()[:16] == "40ca9c0311440ca0", "l4e11_power.out moved at the base"
+    assert "40ca9c0311440ca0" in _show(BASE, "v2/docs/records/l4e7/l4e7_p0sol.out").splitlines()[31]
+    assert "`40ca9c0311440ca0`" in _draft()
 
 
 def t_seventeen_fetch_held_back_scripts_at_the_base():
