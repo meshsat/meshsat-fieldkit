@@ -18,7 +18,7 @@ inserts the lines after it. `test_res31.py` reads each row against the copies.
 
 **The revision rows, as set 30's pages define them.** Tested: the promoted revision, the commit the gated release suite and the
 promotion gate ran on (set 31's `5f25daf3`, the candidate commit, which main is fast-forwarded to, as on set 30). Adopted: the adoption
-commit to which main is fast-forwarded after the promotion (`__ADOPTION__`). Packaged: the commit the next supplier delta's README names
+commit to which main is fast-forwarded after the promotion (`73941afc`). Packaged: the commit the next supplier delta's README names
 in its header, unchanged as a definition, so no row changes it. Reviewed: the candidate the last independent check read, `4d0ff8a2`
 (cx46), unchanged because no independent check of the engineering read a later revision. The two placeholders are the only ones; the coordinator fills
 them from the promotion's log and the adoption commit.
@@ -117,7 +117,7 @@ Old text:
 ```
 New text:
 ```text
-| Adopted | `__ADOPTION__` | set 31's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 31 records as adopted (set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
+| Adopted | `73941afc` | set 31's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 31 records as adopted (set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
 ```
 Basis: the Adopted row's definition on this page.
 
@@ -247,7 +247,7 @@ Old text:
 ```
 New text:
 ```text
-| Adopted | `__ADOPTION__` | set 31's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 31 records as adopted (set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
+| Adopted | `73941afc` | set 31's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 31 records as adopted (set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
 ```
 Basis: as S-06.
 
