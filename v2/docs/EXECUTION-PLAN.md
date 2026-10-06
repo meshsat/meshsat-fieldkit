@@ -1760,7 +1760,7 @@ pages' rows, applied); `handover/START-HERE.md` and `handover/supplier/SUPPLIER-
 
 **Promoted:** main `__CANDIDATE__`, the candidate on set 32's integration branch, by fast-forward, the promotion log's line: `__GATE__`.
 INTEGRATED = CANDIDATE = PROMOTED. REVIEWED: `4d0ff8a2` (cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."), unchanged: no independent
-check of the engineering read a later revision. The base: set 31's promoted `5f25daf3`; five branches, 34 commits over their bases
+check of the engineering read a later revision. The base: set 31's promoted `5f25daf3` (the record's BASE row; the lineage starts at main's tip `be07863b`, the chain's base, which descends from it); five branches, 34 commits over their bases
 (`records/int32/RESULT.md`, section 1), merged and regenerated to convergence, with record l4e7's results cache re-keyed ONCE (section
 3c). Gated by suite_gate with G7 (`_bin/suite_gate.py`), its verdict line over the four pass logs: `__GATE__`.
 The candidate_guard check, every host, its PASS line on each host in one value: `__GATE__`.
