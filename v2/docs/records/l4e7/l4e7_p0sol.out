@@ -13,7 +13,7 @@ INPUTS (sha256, the first 16 hex digits)
   f617613b3fb9e54d v2/docs/records/l4e7/apply_gen_sch_e_p0sol_b2.py
   f846e138cb53a8c6 v2/ecad/tools/gen_sch_e.py
   2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
-  4496ea7a4aa9b610 v2/docs/records/l4e11/l4e11_power.out
+  36141414a1b60011 v2/docs/records/l4e11/l4e11_power.out
   8f552a0b57677bfa v2/vendor/power/lt8705a.pdf
   dbb74b6cdc543135 v2/vendor/ti/held/ti-ina169-sbos181f.pdf
   27c94a6c3a243bf5 v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf
@@ -30,7 +30,7 @@ INPUTS (sha256, the first 16 hex digits)
 0. REPRODUCTION ON THE BASE (fnd/p0base e132db0e), before any change
   0a The record's results cache (l4e7_stage_settings.results.json): its KEY does NOT hold on this tree. The only part that differs
      is the file v2/docs/records/l4e11/l4e11_power.out (a2089b3f6682d7fd at c2a532a9, set 30's re-key of this cache, against
-     4496ea7a4aa9b610 here). The figures compute() reads from it, with its own patterns, in both versions: UVLO rising
+     36141414a1b60011 here). The figures compute() reads from it, with its own patterns, in both versions: UVLO rising
      7.87/8.14/8.44; UVLO falling 7.46/7.66/7.95; the start's slew 17.28/20.71/24.65; INP high 7.23; the short-circuit threshold
      10.36/12.04/13.87; the overcurrent threshold 6.364/6.8/7.136. EQUAL in both, so the cached results are this base's results;
      the cache is not re-keyed here (the record's own recompute, 30 to 50 core-minutes, is the integrator's on a rented box, and

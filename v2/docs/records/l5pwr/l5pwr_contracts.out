@@ -8,12 +8,12 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
    yaml       22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  1e18a1ca@v2/ecad/tools/pcb_interfaces.yaml
    hwfw       7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  1e18a1ca@v2/docs/HW-FW-CONTRACT.md
    panel      3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6  1e18a1ca@v2/docs/PANEL.md
-   l4e9md     10b4c94c762360b8418d0d729bc88cf6c1e16b5ff7ccd13e5c12da9acf7dc6af  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   l4e9out    7fa710084fafe5c5eba7d39f6e497fd8bd77151c1aa270cf9fde1573fe8d427a  v2/docs/records/l4e9/l4e9_power_path.out
+   l4e9md     d8882cd01e9df691591e94c5d5b979f7d16615d3d0f6d7fcfc0841d2fabaedd0  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   l4e9out    533c1e5e1175ff5a384c235952ae48f841488b2040df2d0210b5e46f91d1d3a7  v2/docs/records/l4e9/l4e9_power_path.out
    reg        a2e63ac72de835867aa27160dd9dff0bb634da11599745218e91ba99e8376e89  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    hand       2b9e8064e7c8e048d03ac000fb6adbb9fa3d95e0f18b3c05392cc6aa2c2cfe6f  v2/docs/records/l4e9/LAYER5-HANDOVER.md
    l4e11md    101b9896de5195619dda7fb97eafd24fd349abaeb879bb79edc4456ced6bf4b3  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
-   l4e11out   4496ea7a4aa9b610bd943d02bd62b787729a96620cb95fd98d6efec71a5276f0  v2/docs/records/l4e11/l4e11_power.out
+   l4e11out   36141414a1b60011353db8749fef37201f12804bf2f38f408360753645d44a10  v2/docs/records/l4e11/l4e11_power.out
    l4e11entry a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
    l4e12md    b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    l4e13md    1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191  v2/docs/records/l4e13/L4E13-PANEL.md

@@ -13,7 +13,7 @@ sources: v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md; v2/docs/records/l4e9/L4-PO
     - owed by R-168: the charge current and the CV termination current of the CC/CV 4.2 V charge before each capacity check (Saft's
     - owed by R-168: whether S3 applies Method 507.6's humidity to the bare cell or only its temperature profile
   PROPOSED mark: present
-550fc6dbaec56eb8 v2/docs/test-procedures/TP-E11-29.md
+f9011e218699d832 v2/docs/test-procedures/TP-E11-29.md
   id TP-E11-29: The three battery FETs' installed thermal path and junction limit (Q39, Q40 and Q42)
   register R-159: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-29: exists

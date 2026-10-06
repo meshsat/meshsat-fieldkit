@@ -11,14 +11,14 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
    3ef9b8c49a01b728 v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
    6e46bc5651e17d8d v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
-   10b4c94c762360b8 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   d8882cd01e9df691 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    b57b1ec493540f6e v2/docs/records/l8r2/inputs/l9pwr_budget-841e6c7e.txt
    a17be97cb9f813f4 v2/docs/records/l8r2/inputs/l9t5_drafts-841e6c7e.txt
    69e6ac4fc0417d3c v2/docs/records/l8r2/inputs/l9t5-apply_gen_sch_a_iocbuck-841e6c7e.py
    b30615af5e6b4507 v2/docs/records/l8r2/checks/astra-check-t5-recheck-cx41.md
    0be579949c22eab1 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-04-rev3.md
    9fc459cada3dbad2 v2/docs/records/l8r2/inputs/SOURCES.txt
-   7fca5dd8d7938e84 v2/docs/records/l4e12/l4e12_thermal.out
+   68d3df24f9e105cd v2/docs/records/l4e12/l4e12_thermal.out
    3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
    b0ea9ce43308e789 v2/ecad/tools/pcb_interfaces.yaml
