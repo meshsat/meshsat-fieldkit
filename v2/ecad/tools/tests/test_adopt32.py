@@ -265,11 +265,34 @@ def t_the_text_set_32_adds_carries_no_dash_no_acceptance_word_and_no_percentage(
 
 
 # ----------------------------------------------------------------------------- the checkers refuse what they are for
+def _template_rows():
+    """The rows as the newest committed patch file still holding the CANDIDATE token gives them (test_patch32's template): the
+    fixtures below need the tokens, which the fill takes out of the tree's patch file."""
+    if "tmpl" not in _C:
+        _C["tmpl"] = None
+        here = _at(P32.PATCH)
+        if T("CANDIDATE") in here:
+            _C["tmpl"] = here
+        else:
+            r = _git("log", "--format=%H", judged() or "HEAD", "--", P32.PATCH)
+            for c in r.stdout.decode().split() if r.returncode == 0 else ():
+                t = _show(c, P32.PATCH)
+                if t is not None and "`%s`" % T("CANDIDATE") in t:
+                    _C["tmpl"] = t
+                    break
+    t = _C["tmpl"]
+    assert t is not None, "no revision of the patch file holds the tokens"
+    rows = P32._rows(t)
+    assert rows and not isinstance(rows[0], str), rows
+    return rows
+
+
 def t_the_checkers_refuse_their_defects():
     rows = _rows()
     got = _got()
+    assert not page_errors(apply_rows(base_pages(got["U"]), rows), got)
+    rows = _template_rows()
     want = apply_rows(base_pages(got["U"]), rows)
-    assert not page_errors(want, got)
     filled = {k: v.replace(T("CANDIDATE"), "0123abcd").replace(T("ADOPTION"), "4567abcd").replace(T("GATE"), "a gate line")
               for k, v in want.items()}
     assert not page_errors(want, filled), page_errors(want, filled)[:3]
