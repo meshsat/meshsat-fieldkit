@@ -5,13 +5,13 @@ from whom (five branches, thirty commits, among them WP-B's six on record l4e7's
 verdicts as given (W36, W52, W64, W70: AI reviews, not qualified ones), the coordinator's decisions it applies (Q-53, Q-55), the ONE
 re-key set 32 is planned to carry and why one, the dry runs as logged, the compute already spent that set 32 does not reuse, the three
 claims as the assessment gives them, the classification bound; W75's independent read of it answered by W78 (row 15 `REVIEWED-INPUT
-CHANGED` by the coordinator's ruling on W75's F2). **NOT DONE:** everything the integration will give: set 31's promoted
+CHANGED` by the coordinator's ruling on W75's F2); W79's recheck answered by W80 (`test_res32.py` holds through the fill). **NOT DONE:** everything the integration will give: set 31's promoted
 revision (set 32's base), the chain's counts and the freeze's and the gate's lines, the re-key's cache commit, the candidate, the
 promotion and the adoption commit, each a placeholder that the coordinator's fill tool fills (the paragraph "Placeholders" below).
-**NEXT:** at the adoption, in this order: the coordinator writes the classification's row 31 in full by hand (it carries no token), runs
-the fill tool on both files (`<worktrees>/_bin/fill_res.py --set 32`: template, values, apply; ADOPTION in its second run), writes
-the classification's rows 32 and 33's other cells from git by hand, restates the anchors of `test_res32.py` that the fill removes, and
-adopts this file with `CLASSIFICATION.md`.
+**NEXT:** at the adoption, in this order: the coordinator runs the fill tool on both files (`<worktrees>/_bin/fill_res.py --set 32`:
+template, values, apply; ADOPTION in its second run; `test_res32.py` holds this file before the fill and after each run, W80), writes
+the classification's row 31 in full (it carries no token) and its rows 32 and 33's other cells from git by hand, recomputes its section
+2, extends the ranges of `test_res32.py` over the integration's commits, and adopts this file with `CLASSIFICATION.md`.
 
 **Status: a draft for adoption** at set 32's promotion (queue item Q-64), written by worker W44 on branch fnd/res32 (base
 `3057ae43f4fb7fc5e3d6282ce52d448c8ee27929`, set 31's lineage as the coordinator gave it, `<worktrees>/_runs/claude/w44res32/INBOX.md:3` `(W41's checkpoint commit on set 31's lineage; a committed sha, read-only to you)`)
@@ -20,6 +20,7 @@ record (`records/int30/RESULT.md`). The coordinator lifted the brief's wait for 
 Worker W50 restated its classification rule under the coordinator's ruling of 17:13 (reading A). Worker W73 brought it to every branch
 the chain pins from 20:23 CEST (`<worktrees>/_runs/int30/QUEUE.md`, entry "20:23:00 (clock) W73 LAUNCHED", `set 32's record skeleton on fnd/res32 brought up to every branch chain.sh pins`).
 Worker W78 answered W75's independent read of it from 21:03 CEST (`<worktrees>/_runs/int30/QUEUE.md`, entry "21:03:40 (clock) W78 LAUNCHED", `W75's F1 to F10 corrected on fnd/res32 with the F2 ruling`).
+Worker W80 held it through the fill tool's runs from 21:30 CEST (`<worktrees>/_runs/int30/QUEUE.md`, entry "21:30:20 (clock) W80 LAUNCHED", `test_res32 restated to hold before the fill, after the fill and after the second run`; W79's N4, `<worktrees>/_runs/claude/w79rechk32/REPORT-AS-RECEIVED.md` `I applied the fill with the stand-ins on my clone only, then ran test_res32:`).
 It is record text: its authors ran no generator, suite, gate, chain or box job; it accepts nothing, closes nothing, promotes nothing and
 changes no verdict. Prototype framing: nothing in the kit has been built, bought, powered or measured; every figure below is a time, a
 count, a size or a digest copied from a log or a commit (elapsed times computed from logged stamps say so), and no figure is an
@@ -451,9 +452,11 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   regeneration and, for `[SOLO:n]`, after the re-key's dependents (W43's step h, item 2; W70's R-1); they cannot be read before the
   outputs exist.
 - **The independent read of set 32's lineage** is a later queue item, after the chain; this record names no finding of it.
-- **After the fill**, `test_res32`'s placeholder predicates and the mutations anchored on a token (the placeholder rows' "not
-  determined" cells, the GATE token in this file) no longer find their anchors, as W68's F1 found for `test_res31`; the coordinator
-  restates them with the rows written in full (W69's method for set 31: anchors that survive the fill, the tip moved to the candidate).
+- **Through the fill** (W79's N4, as W68's F1 found for `test_res31`): `test_res32` reads the stage from section 1's role rows and
+  holds before the fill and after each of the tool's two runs (W80, W69's method for set 31: rows 32 and 33 unclassified in either
+  form, the commits the fill writes placed on the lineage by their roles, anchors that survive the fill, the template statement read
+  from the newest committed revision of this file that still holds the tokens). Once the classification's rows 31 to 33 are written in
+  full, its ranges are extended over the integration's commits, as `test_res31`'s TIP moves with set 31's candidate row.
 - **A note for the freeze:** `test_res32`'s predicates that read the coordinator's files (the cited logs, the fill tool, the chain's
   pins) raise Skip where `_runs` is absent, which is every rented box; run them in the runner pass, as W39 recommended for `test_res31`
   (taken as this record's recommendation under the owner's standing rule of 26 September 2026; the coordinator applies or reverses it).
