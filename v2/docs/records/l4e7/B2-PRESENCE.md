@@ -12,7 +12,7 @@ candidate merged set 31 (`6fe398e9`), whose L4-E9 data now reads route B2 UNSELE
 D-10 "as P0-7 states it (E-1, F1 to F4, the lower-source back-feed)" (`v2/docs/records/l4e9/SET31-CHANGES.md:54`); and the
 remaining-engineering ledger's HO-F (`v2/docs/records/l4close/REMAINING-ENGINEERING.md` on `fnd/ledgerfix` `99bbc0c6`, cited as text
 only; its section 6, item E) places the lower-source back-feed as REMAINING ENGINEERING inside E-1, S1's row (b) its later
-validation, on the owner's part 23 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`). Section 7 now says the same for the
+validation, on the owner's part 23 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:681`). Section 7 now says the same for the
 back-feed and for the parallel source (both cases E-1 carries, not validation-only items; the parallel source's placement is this
 branch's reading, SESSION: it is E-1's guard-on step itself and the ledger's HO-F lists S1's row (a) under E-1's task; reversed by the
 coordinator's revision of the placement). Nothing else on this page moved: B2 stays
@@ -186,7 +186,7 @@ guard-on case stays with E-1.
   a substitute for it (set 30 note, 6 October 2026, in place of "validation P1-1's S1 (row added)": the remaining-engineering
   ledger's HO-F and its section 6, item E, `fnd/ledgerfix` `99bbc0c6`; the owner's part 23, "Supplier item S1 must carry that
   engineering problem, rather than presenting it solely as an unperformed validation test.",
-  `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`; cx46, "D-10's E-1 retains F1-F4 and the lower-source back-feed case.",
+  `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:681`; cx46, "D-10's E-1 retains F1-F4 and the lower-source back-feed case.",
   `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:95`).
 - **The presence loop under CS114** (bulk cable injection on the lead would cover the pair): C80 is a means, not evidence; no S2
   row rests on it while B2 is withdrawn.

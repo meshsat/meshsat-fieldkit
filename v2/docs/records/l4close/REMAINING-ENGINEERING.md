@@ -47,7 +47,7 @@ a path in backticks is a repository path from the root. Line numbers are those o
 amendment of 6 October 2026 added (HO-L, its rows in sections 4 and 5, HO-F's back-feed reading, section 6's items E and G) are at
 `6fe398e9`: under the aliases CX46, P0L, ANX, OWN, E11, E11P, TIQ, P11, B2 and SOLO the files are byte-identical at `1c6d56f5` and
 `6fe398e9`, so either revision reads the same lines; under L4E9 and REG (both changed by set 31 between the two) the line numbers
-are those of `6fe398e9` only. On set 31 (6 October 2026) the citations under BRK, B2, P11 and P0SOL are re-cited to their lines at `a6e3a066`, where set 31's merges of records l8p and l4e7 moved them, apart from [P11:89-92], which still names the lines of `1c6d56f5` (the passage it cited is rewritten at `a6e3a066`). The module
+are those of `6fe398e9` only. On set 31 (6 October 2026) the citations under BRK, B2, P11 and P0SOL are re-cited to their lines at `a6e3a066`, where set 31's merges of records l8p and l4e7 moved them, apart from [P11:89-92], which still names the lines of `1c6d56f5` (the passage it cited is rewritten at `a6e3a066`; on set 31's Q-40, 6 October 2026, HO-F's line is restated to W4's passage, [P11:119-126], and keeps the old citation only to mark the pre-W4 reading). The module
 `v2/ecad/tools/tests/test_remeng.py` holds every citation to an existing file and range and every quoted verdict to its filed text.
 
 | Alias | File |
@@ -293,7 +293,7 @@ as filed.
 - **Affected provisional outputs.** "the universal sustained bound and its positive margin are WITHDRAWN" ([T10:620]); the worst-case
   margin row "PROVISIONAL/OPEN" ([CON:314-317]); every final T10 figure a MODEL reading, PROVISIONAL/OPEN ([CON:293-312]); T10-A3 at a
   peak PROVISIONAL ([T10:611-613]); L9T5-F13 and the babbling row PROVISIONAL ([T10:678-690]); T10-A5's limits "measurements, NOT an
-  acceptance" ([T10:638]); a rev X part's admission resting on it ([T10R:224]); Layer 5's contract row V-B20, whose readings are "measurements, NOT an
+  acceptance" ([T10R:153]); a rev X part's admission resting on it ([T10R:224]); Layer 5's contract row V-B20, whose readings are "measurements, NOT an
   acceptance of a sustained bound" ([HWFW:64-70]).
 - **Receiving company's task.** As [T10:620-621]; acceptance on the unchanged criterion: "125 C for every sustained state, 150 C only for a
   transient hardware ends" ([T10R:3]), "over tolerances and repeated faults, including
@@ -313,7 +313,7 @@ as filed.
   actionable passages and point all current procurement, contract and inspection instructions to revision V, the final set point and
   the actual held qualification limits. The dependent unsupported acceptance remains REMAINING ENGINEERING."
 - **Failed case.** Rev Y's rows, the cover for a rev X part, miss 125 C at the drop's worst corner (125.2 C bounded) ([T10R:44-46]);
-  round 5's admission route at 0.2318 A and L9T5-F22's "admits any revision" shortcut would have admitted it ([T10R:51-54]).
+  round 5's admission route at 0.2318 A and L9T5-F22's "admits any revision" shortcut ([T10R:224]) would have admitted it ([T10R:51-54]).
 - **Attempted correction and the disposition.** Slot C's `6b768b1e`: the old route "SUPERSEDED (round 6, and the recheck cx46's item
   8), kept as written only as history, not an instruction" with the current instruction "revision V only; revision X HELD with no
   admission route; R602 14.0 k is the final set point" ([T10R:51-56]); L9T5-F23's consequence "SUPERSEDED in its admission clauses"
@@ -514,7 +514,7 @@ as filed.
   investigation ([P11:79-109]).
 - **Affected outputs.** PROVISIONAL until E-1's correction and S1: IF-01's D-10 claim, R-173 as a protection, R-176 rows 2 and 3, R-180,
   the port's parts and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows ([P11:114-119]);
-  completed independently: D-16's correction and its rows ([P11:89-92]).
+  independent of E-1 and "ADDRESSED IN DRAFTS, PROVISIONAL, not completed": D-16's correction and its rows ([P11:119-126]; set 31, 6 October 2026: restated to W4's passage at `786aed2f`; the pre-W4 reading, "Completed independently of E-1", stood at [P11:89-92] on `1c6d56f5`).
 - **Task and acceptance.** The correction or a model revision on measured loops only, then S1 on the corrected circuit: PV_F under
   80 V and under 90 V always, INP under 18 V, slew under 54 V/us, Q12 inside its derated SOA, TRK_VS under 31.8 V, the bank under
   1.8 V ([P11:79-85], [P11:144-154]); S1's added rows (a) a source in parallel with a connected panel and (b) the back-feed

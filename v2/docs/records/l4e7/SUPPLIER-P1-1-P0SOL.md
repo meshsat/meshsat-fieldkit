@@ -12,7 +12,7 @@ whose page reads D-16 "PROVISIONAL in A7's zero-differential output (S3) and in 
 (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:841`); and the remaining-engineering ledger's HO-F
 (`v2/docs/records/l4close/REMAINING-ENGINEERING.md` on `fnd/ledgerfix` `99bbc0c6`, cited as text only; its section 6, item E) places
 the lower-source back-feed as REMAINING ENGINEERING inside E-1 with S1's row (b) its later validation, on the owner's part 23
-(`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`). This draft now says the same: D-16's correction is ADDRESSED IN DRAFTS and
+(`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:681`). This draft now says the same: D-16's correction is ADDRESSED IN DRAFTS and
 PROVISIONAL, not completed (E-1 (d)); the back-feed is an open case inside E-1 (E-1 (a)), S1's row (b) its later validation; E-1 is
 named apart from record l9stk's E-1; S1's row (a), the source in parallel with a connected panel, is read as the later validation of
 E-1's guard-on step (SESSION: it is that step, cases F1 to F3; reversed by the coordinator's revision). No figure, limit, specimen
@@ -62,7 +62,7 @@ it on E-1's corrected circuit as part of E-1's correction, against (b)'s require
 absolute maximum ratings during the fault, with S1's own criterion for the case (Q12's body-diode current inside its pulsed rating);
 S1's added row (b) is the later validation of that computation, not a substitute for it. Sources: the remaining-engineering ledger's
 HO-F (`fnd/ledgerfix` `99bbc0c6`); the owner's part 23, "Supplier item S1 must carry that engineering problem, rather than presenting
-it solely as an unperformed validation test." (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`); cx46, "D-10's E-1 retains
+it solely as an unperformed validation test." (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:681`); cx46, "D-10's E-1 retains
 F1-F4 and the lower-source back-feed case." (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:95`).
 
 **(b) The applicable requirements, unchanged, with no new exclusion:** D-10 is L4-E9's single fault "a stiff 36 V source on the
@@ -112,7 +112,7 @@ The qualification evidence follows the correction, not before it: S1 below on th
 (CS114) re-run wherever the correction changes the port.
 
 **(d) What stays PROVISIONAL, and what can be completed independently** (the owner's part 23 asks which stable outputs "can be
-completed independently", `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:708`; none of them is completed yet). PROVISIONAL until
+completed independently", `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:709`; none of them is completed yet). PROVISIONAL until
 E-1's correction and S1: IF-01's protection claim for D-10; R-173's solar guard as a protection (its cut-off band and the cold
 connection's absolute ratings stand as computed); R-176 rows 2 and 3; R-180 (a loop bound); the port's parts (D11, the port bank, Q12,
 C126, R96 and R97 as protection) and their Layer 6 rows; board E's port layout and its Layer 8 fault table; the guard's Layer 9
