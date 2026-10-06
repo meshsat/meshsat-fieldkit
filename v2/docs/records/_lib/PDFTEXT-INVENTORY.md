@@ -1,8 +1,9 @@
 # PDFTEXT-INVENTORY: every records script that mentions pdftotext, and what W34 did with it (MESHSAT-1357, Q-41 item 1)
 
 DONE: the enumeration (section 2), the location decision (section 3), the helper, the re-take script and the regression, 25 generators
-converted (section 4: the brief's six records, then every remaining run-time caller outside section 5). NOT DONE: section 5's 15
-scripts, each for its stated reason. NEXT: the coordinator's adoption in set 32 (section 6).
+converted (section 4: the brief's six records, then every remaining run-time caller outside section 5); W36's findings applied by W37
+(section 7: F-P1, F-P2, F-R1, F-R2, F-K5 corrected; F-C1 stated; the integration order of F-K1 to F-K3 in section 6). NOT DONE: section
+5's 15 scripts, each for its stated reason. NEXT: the coordinator's adoption in set 32 (section 6).
 
 Author W34 (tooling, inside the records), 6 October 2026 (Europe/Amsterdam), branch `fnd/w34pdftext` from `aed4bd23` (set 31's
 regenerated lineage). This branch changes HOW a generator obtains a maker's PDF text, never WHAT it computes from it: no verdict, figure,
@@ -129,6 +130,17 @@ redistribute (a1solar, int16, l3batt, l4e7, l4e9, l4e10, l4e11, l4e12, l4e13, l6
 full text of a sheet is a copy of it, so no held-back sheet's text is committed: it is written beside the PDF under `held/`, ignored, and
 the helper refuses when it is absent exactly as the generators refuse an absent PDF, naming the fetch and the re-take.
 
+The fetch a refusal names (W37, 6 October 2026, W36's finding F-P2). The refusal named "the record's fetch_held_back.py" for every
+held sheet, which for 12 reads is the wrong script: efuse and l4e8 have no fetch script of their own, and l4e12, l4e13, l9t5 and l9t5_t10
+read sheets another record fetches. `pdftext.FETCH` now maps each of the 43 held-back sheets the PDFTEXT tables declare to the records
+whose `fetch_held_back.py` lists it (read from each script's own document list, parsed, never run); the refusal names the reading
+record's own script when it is listed, else the first. Read against W36's evidence: every one of the 43 has a fetch route, so no sheet
+is without one; the two records W36 named as having none are records without a fetch script of their own, not sheets without a route:
+efuse's TPS1663 and TPS4811 are fetched by l4e11's (and l6pwr's) script, l4e8's Uniroyal sheet by w5identc's. The other ten: l4e12's
+CSD17577 and CSD17578 by s117's, l4e13's two SunPower sheets by a1solar's, l9t5's INA250 (case, f01, paloop) by l4e7's, l9t5_t10's
+INA169 and TPS3701 by l4e7's (and l6pwr's). A sheet no script fetched would be refused with "no record's fetch_held_back.py fetches the
+held-back sheet" (a finding, never a silent gap); `test_pdftext_input` re-derives the map from the fetch scripts and refuses a difference.
+
 ## 4. The converted generators (each record's `PDFTEXT` table is in its script; the texts are beside their PDFs)
 
 | Generator (under `v2/docs/records/`) | pdftotext call sites replaced | Extractions declared | The check on the runner |
@@ -165,7 +177,8 @@ generator's own pin and presence checks of the PDF, its decoding (`utf-8`, error
 call used `text=True` or `os.popen`) and its page splitting; nothing it computes from the text changed. The check, per generator: a run
 with a refusing `pdftotext` first on PATH (it logged its arguments and exited 1) gave exit 0, zero calls, and a stdout equal to the
 committed `.out` but for the added text lines and the source-pin lines of the scripts W34 edited (and l4e12's count of its pins, 69 to
-103). The indirect readers ran the same way with no call: l5r2's `l5r3_panel.py`, l8r2's `l8r2_dist.py`, l9t5's `l9t5_connected.py`
+103: the count line moves because `base()` widens the pins dict with the 34 text pins, `R = {"pins": dict(PINS, **{...PDFT.inputs...})}`,
+and line 0e prints its length; no figure moves; W34's disclosure stands, W36's finding F-C1, stated by W37). The indirect readers ran the same way with no call: l5r2's `l5r3_panel.py`, l8r2's `l8r2_dist.py`, l9t5's `l9t5_connected.py`
 and `l9t5_f01_drafts.py`. Two keep a reader W34 did not convert, so their check was the logged run: `l4e13_panel.py` (its own 14 page
 reads gone; `l4e_replay.main()`, run in-process, still makes 39 extractions of lm5176, lt8705a, bq25731, yageo, uniroyal and the two
 SunPower sheets) and `ripple_dense.py` (its 19 page reads gone; L4-E4's `compute()` still reaches `r11_dep.py`).
@@ -208,23 +221,58 @@ CID sheets); `l4e13` through `l4e_replay` (`test_l4e13`); the accepted Layer 3 a
 four tests outside the records. It needs `pdftocairo` for `l4e9` and `l4e11` and the tests that run them. W36's census is static (no
 box was rented for it); the converted generators' own reads are the only ones W34 made host-independent.
 
-## 6. What the coordinator does at set 32's integration
+## 6. What the coordinator does at set 32's integration (restated by W37, 6 October 2026, on W36's findings F-K1 to F-K3)
 
-1. Merge `fnd/w34pdftext` (no `.out` in it). Install the 52 held-back texts with the held sheets: they are ignored files under
-   `v2/vendor/*/held/pdftext/`, so a staging that copies `*/held/*` from a sibling worktree (as `freeze_l4_chain.sh` does) carries
-   them, or re-take them on the runner: `python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/<record>` for efuse,
-   l4e8, l4e10, l4e11, l4e12, l4e13, l4e9, l8p, l9stk and l9t5 (each prints UNCHANGED for a committed text). A box needs them too.
-2. Regenerate through `_bin/regen_out.py`, in dependency order: `l9pwr_budget`; the l9t5 cascade twice (`l9t5_case`, `l9t5_cm5`,
-   `l9t5_a1`, `l9t5_f01`, `l9t5_drafts`, `l9t5_t10`, `l9t5_connected`, `l9t5_f01_drafts`); l8r2 (`l8r2_gndret`, then `l8r2_p0`,
-   `l8r2_drafts`, `l8r2_dist`); `l8p_drafts`, `l8p_guard`; `l9stk_copper`, `l9stk_protection`; `l7pwr_fans_th1`, `l7r2_items`;
-   `l5r2_interfaces`; the L4 pin chain (`freeze_l4_chain.sh`: l4e10, l4e11, l4e13, then l4e12, then l4e9) with `ripple_dense` (l4e8);
-   `efuse_check` after l4e12 and l9pwr; then `regen_targeted` for every output that pins one of these. Each `.out` gains only its text
-   lines and moved source pins (section 4); a figure that moves is a defect of this branch.
+The order W34 wrote here ran backwards (W36's F-K1: the L4 outputs are pinned by l9pwr, l9stk, l7pwr, l8r2, l9t5_t10 and efuse, so the
+L4 chain is upstream of all of them). The runner-local draft `_runs/int32/PLAN.draft.md` carries the same steps with the staging
+commands and the moved line citations (F-K4).
+
+1. Merge `fnd/w34pdftext` (no `.out` in it). Install the 52 held-back texts with the held sheets on every host that runs a converted
+   record: they are ignored files under `v2/vendor/*/held/pdftext/`, so `freeze_l4_chain.sh`'s staging of every sibling worktree's
+   `*/held/*` carries them while the pdftext worktree exists, and a box's held tar must be cut from a worktree that holds them (the
+   re-key's `rekey_box_fresh.sh` tars p0pwr's, which has none); or re-take them on the host: `python3
+   v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/<record>` for efuse, l4e8, l4e10, l4e11, l4e12, l4e13, l4e9, l8p, l9stk and
+   l9t5 (each prints UNCHANGED for a committed text; a held sheet that is absent is refused with the script that fetches it).
+2. Regenerate through `_bin/regen_out.py`, upstream first: `ripple_dense` (l4e8); then re-pin `L4E8_OUT` in `l4e12_thermal.py`'s PINS
+   (`"c6181037..."`, W36's F-K2: `l4e12_thermal.py` refuses a ripple_dense.out that is not the pinned file, and `freeze_l4_chain.sh`
+   re-pins only L4E10_OUT) to the new digest by hand; then the L4 pin chain (`freeze_l4_chain.sh`: l4e10, l4e11, l4e13, then l4e12,
+   then l4e9, then its stability pass); then `l7pwr_fans_th1`; `l9stk_copper`, `l9stk_protection`; `l9pwr_budget`; the l9t5 cascade
+   twice (`l9t5_case`, `l9t5_cm5`, `l9t5_a1`, `l9t5_f01`, `l9t5_drafts`, `l9t5_t10`, `l9t5_connected`, `l9t5_f01_drafts`, the second
+   pass identical); l8r2 (`l8r2_gndret`, then `l8r2_p0`, `l8r2_drafts`, `l8r2_dist`); `l8p_drafts`, `l8p_guard`; `efuse_check`;
+   `l5r2_interfaces`; `l7r2_items`; then `regen_targeted` with its base set to set 31's promoted commit (never HEAD) for every output
+   that pins one of these. Each `.out` gains only its text lines and moved source pins (section 4); a figure that moves is a defect of
+   this branch.
 3. **The l4e7 KEY:** `v2/docs/records/l4e11/l4e11_power.out` is in the KEY's files part and gains 68 text lines, so the KEY reads
-   MISMATCH after step 2 and is re-keyed on a debian:12 box as in set 31. No other file the KEY covers is touched by W34 (l4e7's own
-   scripts, `l4e_replay`, `l4e4`, `l4e5` and the rest are unchanged).
-4. The record test modules compare their committed `.out` with a fresh run and some pin the edited sources' digests, so they fail on
-   this branch until step 2 (the adoption boundary; W34 ran only `test_pdftext_input` and `test_public_hygiene`). Their
+   MISMATCH after step 2 and is re-keyed on a debian:12 box as in set 31 (its parts move on "files" only). No other file the KEY covers
+   is touched by W34 or W37 (l4e7's own scripts, `l4e_replay`, `l4e4`, `l4e5` and the rest are unchanged).
+4. **After the re-key (W36's F-K3):** `l4e7_p0sol` (it pins l4e11_power.out); L4-E9's `l4e7p0` pin in `l4e9_power_path.py` (the
+   digest of l4e7_p0sol.out) and `l4e9_power_path`; then `l5pwr_contracts` (pins l4e9's out), `l9t5_connected` and `l6r2_passives` (pin
+   l4e9's source), `l8p_c4` (pins l8p_guard.py); then one more `regen_targeted` pass to convergence.
+5. The record test modules compare their committed `.out` with a fresh run and some pin the edited sources' digests, so they fail on
+   this branch until steps 2 to 4 (the adoption boundary; W34 and W37 ran only `test_pdftext_input` and `test_public_hygiene`). Their
    `shutil.which("pdftotext")` skips are now stale for the converted generators (harmless; left for their owners).
-5. Size: the committed texts add about 14.4 MB to the public tree and fall under `pack.yaml`'s L6 include (`v2/vendor/**/*.txt` and
-   `**/*.json`); check the handover ZIP's margin under `max_zip_bytes` when it is next built.
+6. Size (W36's F-S1, the coordinator's item Q-53): the committed texts add about 14.4 MB raw to the public tree under `pack.yaml`'s L6
+   include (`v2/vendor/**/*.txt` and `**/*.json`); W36's estimator read the handover ZIP over its cap already at W34's base (margin
+   -17,812,603 bytes at `aed4bd23`, -20,227,393 at `6dc69ad2`), so a `pack.yaml` decision precedes any handover build. The supplier
+   package (`_bin/pack_supplier.py`, runner-local) bundles records whose generators load `_lib/pdftext.py` but carries no `_lib` file
+   (W36's F-S2); the rule to add is named in the plan draft.
+
+## 7. W37's changes on W36's findings (6 October 2026; the review as received: `_runs/claude/w36rev/REPORT-AS-RECEIVED.md`)
+
+- **F-P1** (provenance): section 5's closing sentence was false; restated there as what still reads the host's poppler (pdftocairo at
+  four call sites in l4e9 and l4e11; pdftotext through `l4e_replay` and `r11_dep`) and which tests and boxes still need it.
+- **F-P2** (provenance): `pdftext.FETCH` and `fetch_route()`; `read_pdf_text()` and `retake_pdf_text.py` name the script that fetches
+  the sheet (section 3). The re-take now checks `.gitignore` BEFORE writing: a held-back sheet's text it would not exclude, or a
+  committed sheet's text it would, is refused with nothing written (before W37 the text was written and then refused).
+- **F-R1, F-R2** (regression): `test_pdftext_input` runs efuse, l5r2 and l9t5_case with a refusing pdftotext and a refusing pdftocairo
+  first on PATH (exit 0, no call, every text's input line printed, the record folder unchanged; the output to a temporary file), and
+  l4e9 and l4e11 with pdftotext refusing and pdftocairo logged (no pdftotext call; pdftocairo exactly at the pinned sites, 1 and 5
+  calls); predicate (d) reads a pdftotext token in any string the code holds (shell=True, a variable, `/usr/bin/pdftotext`, f-string
+  parts), allows pdftocairo only at its four sites, and lists the reached `l4e_replay`, `energy_basis`, `vbus20_range`, `r11_dep` and
+  `l4e5_source_control` as KNOWN callers with their reason; with `aed4bd23` present it catches all 25 old sources. Added: the re-take's
+  CHANGED path and its refusals on fixtures, an orphan text detected on a fixture and none in this tree, and the fetch map re-derived.
+  As a mutation, the generator run against `aed4bd23`'s `efuse_check.py` FAILS (exit 2 with both tools refused); restored, it passes.
+- **F-K5** (consequence): `v2/docs/handover/supplier/SUPPLIER-HANDOVER.md`, section 7 item 2, gains the re-take step.
+- **F-C1** (computation, minor): stated in section 4; nothing changed.
+- **F-K1 to F-K3, F-K4, F-S1, F-S2**: the coordinator's (section 6 and the plan draft); W37 changed no output, pin, generator or
+  `_bin/` file.
