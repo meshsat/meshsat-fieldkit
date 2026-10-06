@@ -465,3 +465,17 @@ docstring, `apply_l4e9_changelist_p0.py` lines 2 to 5 ("NOT APPLIED to the tree 
 at integration) and lines 28 to 29 ("L4-E9's own output once its L4-E11 pin is re-taken (it refuses on this tree since the P0 base)");
 this page's line 220 (the file table: "a text draft for the integrator", what the file is); W9's note at lines 411 to 412 (W9's
 record of its own work, answered here). The P0 list's rows are the coordinator's.
+
+**Tests (W11, run one process at a time on this branch):** `python3 -u v2/ecad/tools/tests/run.py test_w11l9t5.` printed "tests: 8
+passed, 0 failed, 0 skipped"; `test_w9l9t5.` "tests: 11 passed, 0 failed, 0 skipped"; `test_public_hygiene.` "tests: 4 passed, 0
+failed, 0 skipped"; the tests of test_l9t5 that read this README or the connected output's text (`t_the_page_carries_the_outputs_figures`,
+`t_round3_l8r2_f35_is_answered_in_the_drafts_and_the_readme`, `t_round4_the_page_and_the_readme_carry_t10_and_the_cm5_assessment`,
+`t_round5_the_page_carries_the_outputs_figures`, `t_round6_t10_cx45_q3_the_containment_and_the_envelope_are_re_solved`,
+`t_p0_f01_the_ten_findings_are_disposed_of_and_f01_reads_provisional`, `t_record_hygiene`,
+`t_p0_connected_every_check_reads_drawn_and_every_mutation_fails`, `t_p0_connected_the_re_trace_reads_its_sources`,
+`t_p0_connected_the_verdict_depends_on_the_open_fault_rows`) "tests: 9 passed, 0 failed, 1 skipped", the skip
+`t_the_page_carries_the_outputs_figures` for the held sheet `v2/vendor/ti/held/ti-ina250-sbos511c.pdf`, not installed here. The three
+output-text tests also passed on a scratch copy of the output with the generator's new rows in place of the old (not committed). Not
+run here: test_l9t5's composing and reproducing tests (`t_p0_connected_output_reproduced_pinned_and_every_predicate_holds` runs the
+generator, which stops on the same missing sheet) and `test_remeng` (its quotation rule over the connected output's rows is held by
+`t_the_ledgers_quotations_in_the_output_stay_found`).
