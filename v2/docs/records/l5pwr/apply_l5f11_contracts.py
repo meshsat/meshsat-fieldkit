@@ -22,9 +22,11 @@ afresh (18b) and restated the stagger (18c); Layer 7's D-18 named the fans; L4-E
   F11-13  HW-FW-CONTRACT.md HF-F05 (section 7): the finding kept as raised, its answer since appended
   F11-14  HW-FW-CONTRACT.md change record: a row for these edits and apply_l5pwr2_contracts.py's (after the L5-R3 row)
 
-Every figure written is parsed from the Layer 4 files in the tree (l4e11_power.out sections 18, 18a, 18b and E11-39;
-DOWNSTREAM-REGISTER.md R-177, R-179, R-188; L4-POWER-ARCHITECTURE.md 8a): each source pattern carries no typed number and must match
-exactly once. The old texts are patterns with their figures as placeholders, each matched exactly once before it is replaced.
+Every figure written is parsed from the Layer 4 files (l4e11_power.out sections 18, 18a, 18b and E11-39; DOWNSTREAM-REGISTER.md
+R-177, R-179, R-188; L4-POWER-ARCHITECTURE.md 8a), read through apply_l5pwr2_contracts.py's src() as they stood when this script was
+applied (its L4_AT, a49a2b13, since record l5pwr's correction W1 of 6 October 2026: set 31 restated L4-E9's D-10, so the D-10
+sentence quoted below is no longer in the tree; finding L5-F14): each source pattern carries no typed number and must match exactly
+once. The old texts are patterns with their figures as placeholders, each matched exactly once before it is replaced.
 
 Usage:  apply_l5f11_contracts.py [--check | --write] [--yaml PATH] [--hwfw PATH]     (default --check; default targets: the tree's)
 IDEMPOTENT as apply_l5pwr2_contracts.py: all old texts once and no new text: CHECK OK or applied; all old texts gone and all new

@@ -14,8 +14,10 @@ row of the table, its withdrawn figures are figures it cites, every replacing te
 parsed from the match, no figure is typed in the restatement's prose or patterns, S27-02b's replacing text is L4-E11's PWM-duty
 ramp, a withdrawn text still in a target names its finding, and the page's section 4a equals the script's. L5-F09 and L5-F10
 (apply_l5pwr2_contracts.py) and L5-F11 (apply_l5f11_contracts.py, after it): no withdrawn text of theirs is in the tree's contract
-files, nor any wording of set 28's sweep, the tree carries both restatements as the Layer 4 files print them now ("already
-applied"), each script applies once to the files it was written against and is idempotent, and the second refuses before the first.
+files, nor any wording of set 28's sweep, the tree carries both restatements as the Layer 4 files printed them when the scripts
+were applied ("already applied"; their Layer 4 reads pinned at a49a2b13 since W1), each script applies once to the files it was
+written against and is idempotent, and the second refuses before the first. W1 (6 October 2026): S27-B6 reads L4-E9's D-10 as set 31
+left it, refusing set 28's sentence on the page and set 31's on a copy that carries set 28's.
 Software predicates on text: they establish no electrical property and accept nothing.
 """
 import importlib.util
@@ -317,7 +319,14 @@ def t_the_apply_script_refuses_a_second_run_on_the_tree_and_applies_once_to_the_
 
 def t_the_contract_restatement_of_l5f09_and_l5f10_is_in_the_tree_and_idempotent():
     """No withdrawn text of L5-F09 or L5-F10 in the tree's contract files; the tree carries the restatement as the Layer 4 files
-    print it now; the script applies once to the files at BASE2 and a second run writes nothing."""
+    printed it when the script was applied; the script applies once to the files at BASE2 and a second run writes nothing.
+
+    Evidence basis of the narrowed reading (W1, 6 October 2026): until set 31 the script read the tree's Layer 4 files and this test
+    read "the restatement as the Layer 4 files print it now". Set 31 (v2/docs/records/l4e9/SET31-CHANGES.md items 2 and 23) restated
+    L4-E9's D-10, so the D-10 sentence the script quotes is matched 0 times on the tree and the script refused, although the contracts
+    carry what it wrote (the integration's log of 6 October 2026). The script now reads the Layer 4 files at its L4_AT (a49a2b13,
+    where both contract scripts had been applied); the assertions below are unchanged, and that the contracts lag the page is finding
+    L5-F14 of L5-POWER-CONTRACTS.md, which t_s27b6_reads_d10_as_set31_left_it holds on the page."""
     import collections
     need(APPLY2, "the contract script")
     sp = importlib.util.spec_from_file_location("apply_l5pwr2_under_test", APPLY2)
@@ -444,3 +453,62 @@ def t_no_dashes_in_the_record_or_the_texts_written():
     for p in (YAML, HWFW, PANEL):
         t = open(p, encoding="utf-8").read()
         assert chr(0x2014) not in t and chr(0x2013) not in t, os.path.relpath(p, ROOT)
+
+
+# W1 (record l5pwr's correction, 6 October 2026): the evidence basis of the regression test below. Set 31 (fnd/l4e9s31 17ce29d5,
+# merged into the candidate at 6fe398e9; v2/docs/records/l4e9/SET31-CHANGES.md items 2 and 23, PC-15, the owner's part 23) restated
+# L4-E9's D-10. Until bbba3e53 the page's section 6 D-10 row read (line 838 there): "OPEN for the guard-on case: an absolute-rating
+# violation at a connector fault (round 2's 3.30 uH WITHDRAWN as a passing floor; there U5's pins -0.3021 to +0.2591 V, past the
+# -0.3 V absolute maximum; no loop claimed to pass; ..."; since set 31 it reads (line 839): "OPEN: an UNRESOLVED PROTECTION DEFECT in
+# the present model, the receiving company's remaining engineering item E-1: the guard's port-level transient (F1 and F2
+# absolute-rating violations below about 2.4 uH, ...". SET28_D10 is the pattern l5pwr_contracts.py held for the first (at 53a68c7c),
+# which the set 30 integration's regen_out refused ("S27-B6: the replacing text is matched 0 times (not once)"); SET28_D10_TEXT is the
+# opening of that sentence as bbba3e53's page printed it, used only to build a scratch copy of the page.
+L4E9_PAGE = os.path.join(ROOT, "v2", "docs", "records", "l4e9", "L4-POWER-ARCHITECTURE.md")
+L4E7_REC = os.path.join(ROOT, "v2", "docs", "records", "l4e7")
+SET28_D10 = r"OPEN for the guard-on case: an absolute-rating violation at a connector fault \(round 2's \d+\.\d+ uH WITHDRAWN as a passing floor"
+SET28_D10_TEXT = ("OPEN for the guard-on case: an absolute-rating violation at a connector fault (round 2's 3.30 uH WITHDRAWN as a passing "
+                  "floor; there U5's pins -0.3021 to +0.2591 V, past the -0.3 V absolute maximum; no loop claimed to pass")
+
+
+def t_s27b6_reads_d10_as_set31_left_it():
+    """S27-B6's replacing texts are the page's as set 31 left them: each matched once (the script's rule, applied here without
+    compute(), so the test names the failing pattern), one of them set 31's D-10 sentence with E-1, F1 to F4 and R-240, its parsed
+    figures printed by record l4e7; set 28's pattern matches nothing on the page, and on a scratch copy carrying set 28's sentence in
+    place of set 31's the old pattern matches once and the new one not at all. The row's meaning is kept (OPEN, NOT CLOSED, no loop
+    claimed to pass, PROVISIONAL) and the withdrawn R-186 is named withdrawn in S27-B6's and S27-03's triggers."""
+    need(SCRIPT, "the l5pwr record")
+    need(L4E9_PAGE, "L4-E9's page")
+    sp = importlib.util.spec_from_file_location("l5pwr_contracts_w1", SCRIPT)
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    page = open(L4E9_PAGE, encoding="utf-8").read()
+    rs = m.RESTATED["S27-B6"]
+    assert all(k == "l4e9md" for k, _p in rs["now"]), "S27-B6's replacing texts are all L4-E9's page's"
+    for _k, pat in rs["now"]:
+        n = len(list(m.rx(pat).finditer(page)))
+        assert n == 1, "S27-B6: the replacing text is matched %d times (not once) in the page: %r" % (n, pat[:70])
+    d10 = [pat for _k, pat in rs["now"] if pat.startswith("OPEN: an UNRESOLVED PROTECTION DEFECT in the present model")]
+    assert len(d10) == 1, "S27-B6 does not quote set 31's D-10 sentence"
+    mo = next(m.rx(d10[0]).finditer(page))
+    txt = m.flat(mo.group(0))
+    for s in ("the receiving company's remaining engineering item E-1", "F1 and F2 absolute-rating violations", "F3", "F4",
+              "corrected in draft by P0-7 (R-240)"):
+        assert s in txt, s
+    figs = m.figures_in(txt)
+    l4e7 = " ".join(m.flat(open(os.path.join(L4E7_REC, f), encoding="utf-8").read()) for f in ("l4e7_p0sol.out", "L4E7-P0SOL.md"))
+    assert len(figs) >= 6 and all(f in l4e7 for f in figs), "figures record l4e7 does not print: %s" % [f for f in figs if f not in l4e7]
+    # set 28's pattern on the page as set 31 left it: no match (the refusal this corrects)
+    assert not list(m.rx(SET28_D10).finditer(page)), "set 28's D-10 sentence is printed again; S27-B6 would quote the wrong one"
+    # a scratch copy of the page with set 28's sentence where set 31's stands: the old pattern once, the new one never
+    old_page = page[:mo.start()] + SET28_D10_TEXT + page[mo.end():]
+    assert len(list(m.rx(SET28_D10).finditer(old_page))) == 1
+    assert not list(m.rx(d10[0]).finditer(old_page)), "the D-10 pattern also matches set 28's sentence: it does not read set 31's"
+    # the row's meaning, kept and not widened
+    assert "OPEN" in rs["mark"] and "PROVISIONAL" in rs["mark"] and "NOT CLOSED" in rs["value"]
+    assert "no loop is claimed to pass" in rs["value"] and "before any passing claim" in rs["trigger"]
+    for i in ("S27-B6", "S27-03"):
+        tr = m.RESTATED[i]["trigger"]
+        assert "R-186 WITHDRAWN under R-240" in tr and "R-186 Analog Devices" not in tr, i
+    page5 = open(PAGE, encoding="utf-8").read()
+    assert "| L5-F14 |" in page5, "the contracts' lag behind set 31's D-10 needs its finding"
