@@ -13,6 +13,25 @@ what H3 changes and leaves the H2 section's rows for layers 4 to 9 and its layou
 
 **After set 29 (4 October 2026, integration sets 28 and 29, MESHSAT-1357).** Layers 4 to 9 each open with a table headed "After set 29": the items the records merged since H2 moved, each row naming its record (`v2/docs/records/<name>/`); a row not listed there keeps its H2 text in the table below it. A section "Layer 12" after Layer 9 holds the firmware, bring-up procedures, test plans and build documentation (the owner's instruction of 2 October 2026, `v2/docs/handover/OWNER-INSTRUCTION-2026-10-02.md`). No item is raised to MET by sets 28 and 29 and no layer from 4 on is COMPLETE: every circuit change named is a release-guarded DRAFT, not applied to any generator, and nothing has been built, bought or measured. The rows of sets 28 and 29 are composed from the merged records' own proposed rows (`v2/docs/records/int28b/RESULT.md` section 7, `v2/docs/records/l9pwr/README.md`, `v2/docs/records/l9stk/README.md`) and from the records named in each row (`v2/docs/records/int29/`).
 
+**After set 30 (6 October 2026, the P0 power candidate's integration, MESHSAT-1357).** Layers 4, 8, 9 and 12 open with a block headed After set 30 above their "After set 29" block: the items set 30's records move, each row naming its record; a row not listed there keeps its "After set 29" text (or, where the page has none, its H2 text). Set 30 integrates the P0 power candidate of the owner's instruction of 5 October 2026 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:81,141-154`): records l9t5, l8r2, l8p, efuse, l4e11 and l4e7 with "the claim-and-handover disposition after cx46" (`records/l9t5/README.md:1`); the remaining-engineering ledger for the receiving company (`records/l4close/REMAINING-ENGINEERING.md`), which "is not an acceptance, a closure, a verdict, a check, a qualification or a release of anything" (`records/l4close/REMAINING-ENGINEERING.md:11`); and L4-E9's change-list rows R-220 to R-245, applied to its change list by integration 1 at `7070f106` (`records/l4e9/L4-POWER-ARCHITECTURE.md:422`), each circuit change in them "DRAFTED (not applied)" to its generator (`records/l4e9/L4-POWER-ARCHITECTURE.md:451-516`). With them: the four checks of 5 October 2026, V6, cx44, cx45 and cx46, each an AI review filed as received (`records/l4close/`), and the supplier validation annex (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`). No item is raised to MET by set 30 and no layer from 4 on is COMPLETE ("None is APPLIED", `records/l4e9/L4-POWER-ARCHITECTURE.md:401`); nothing has been built, bought or measured. Set 30's promotion, when the coordinator makes it, is a DESK candidate, not design acceptance: "A promoted integration set is none of those by itself" (`v2/docs/EXECUTION-CONSTITUTION.md:23`), the Layer 4 desk-handover gate "must not claim technical closure of open defects" (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:788`), and no independent check accepts the candidate (cx45 and cx46, Layer 4 below). Layers 5, 6 and 7 keep their "After set 29" blocks: Layer 4 is the active layer and Layers 5 to 12 are paused except the named prerequisites (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:169`). **Citations in the After set 30 blocks:** `path:N`, `path:N-M` and `path:N-M,K` are lines N, N to M, and K of the file at the candidate branch's commit `7070f106` (`7070f1060a69735632338d39d744d3340ce75568`), this page's own lines as they stood there, before this fold; a path beginning `records/` is under `v2/docs/records/`. `v2/ecad/tools/tests/test_lstat31.py` holds every citation, quotation and anchor of these blocks at that commit.
+
+**After set 30, at the integration's tip (dated 6 October 2026, folded by W21 on branch fnd/lstat32 from Slot I's `87c5fb08`,
+MESHSAT-1357).** The blocks below keep Slot I's text as written at `7070f106`, dated history where the present differs; beside it each
+block carries dated notes read at the integration's committed tip `c4492dd3` on fnd/p0pwr (`c4492dd370c592e9899a8e526113958f4dc20554`:
+commit 2b `d83d9f2d`, record l6r2's correction `33efca07` and the merge `c4492dd3` of W19's regression test `2d4f6df5`). Their
+citations read `<commit>:<path>:<line>` at the commit they name, and a code span right after one is the words quoted from that line;
+`v2/ecad/tools/tests/test_lstat32.py` holds them. The candidate commit and the promoted revision do not exist yet (Layer 4's chain
+below); nothing here is read at them. Since `7070f106` the integration also carries record l5pwr's S27-B6 restatement (`6ab17e21`,
+merged at `3c118b43`) and record l6r2's composition correction (`33efca07`); this fold adds no block for Layers 5 and 6. A note marked
+prepared for the next set, not in the candidate, names a branch and its tip that neither the integration nor the candidate carries.
+**The next set's inputs** (W10's plan, `<worktrees>/_runs/int31/PLAN.draft.md:67,75-76,101,136,244-245`, re-read on 2b; summarised in
+W18's draft 3, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:315` `still ONE conflict (TP-E11-29.md, W3's file whole)`,
+`b8912eef:v2/docs/records/int30/RESULT.draft3.md:316` `145 tests expected to fail before regeneration`): one conflict, TP-E11-29.md,
+resolved to W3's whole file; 28 first-order moved pins; 145 tests expected to fail before regeneration; eight merges in the plan's
+order, fnd/w4l4e7 `786aed2f`, fnd/w5l8p `cd19df59`, fnd/w14l5 `910f08ef` (it contains fnd/w8l5 `1ab30f35`), fnd/w11l9t5 `85b6f258` (it
+contains fnd/w9l9t5 `02b0d30d`), fnd/w13l4e9 `56ab0d01` (it contains fnd/w7rem `3e566c55`), fnd/w15class `57bcdbfc`, fnd/dgate2
+`150e908b`, fnd/w3annex `686de0a2`.
+
 **How to read this page after H2.** Three strata, newest first. (1) The section "Status at handover H2" is the current
 status (**H3:** with the H3 section above it): one row per layer with the evidence for its status and what remains, and the per-board layout-entry reasons.
 (2) Each layer's own section (Layer 1 to Layer 9) opens with its status and **a short acceptance table at H2**, item
@@ -327,6 +346,181 @@ FAIL with six; r8b: second check with no blocking finding).
 
 ## Layer 4. System architecture
 
+**After set 30 (6 October 2026): IN_PROGRESS.** Set 30 carries the connected P0 power candidate: boards A, B, D and E composed with
+every pending draft in L4-E9's change-list order (`records/l9t5/l9t5_connected.out:64-73`), the change list's rows R-220 to R-245
+each "DRAFTED (not applied)" with no R-241, route B2 being out of the baseline (`records/l4e9/L4-POWER-ARCHITECTURE.md:422,451-516`;
+`records/l9t5/l9t5_connected.out:365`). The checks, as filed (AI reviews, labelled so in their files): V6 "CONFIRMED AS CONDITIONAL" on each of its items A to F, item C
+"but NOT on T10-A1 alone; the deficit is NOT corrected on the candidate"
+(`records/l4close/CHECK-V6-POWER-DRAFTS-7a82e82a-AS-RECEIVED.md:20-25`), its blockers B1, B2 and B3
+(`records/l4close/P0-POWER-LIST.md:31`); cx44 "F01 SELECTION: NOT SUPPORTED"
+(`records/l4close/CHECK-CX44-F01-SELECTION-8c7c335f-AS-RECEIVED.md:10`); cx45 "P0 CANDIDATE: NOT CONFIRMED"
+(`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:10`); cx46 "P0 RECHECK: CORRECTIONS NOT CLOSED"
+(`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10`), "the second negative on the method, which ends it"
+(`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:3`), its eighteen items read twelve NOT CLOSED, four CLOSED BY THE
+CORRECTION (3, 11, 12, 15) and two CLOSED AS CONDITIONAL (14, 16) (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:116-203`).
+The twelve, and the cases the authors handed over, are the receiving company's remaining engineering in
+`records/l4close/REMAINING-ENGINEERING.md`, whose summary counts "remaining engineering 19; qualification 1; external architecture
+fact 3; closed 4; conditional 2" (`records/l4close/REMAINING-ENGINEERING.md:585`) and which "is not an acceptance, a closure, a
+verdict, a check, a qualification or a release of anything" (`records/l4close/REMAINING-ENGINEERING.md:11`). The connected verdict
+reads "REMAINING ENGINEERING. No row of sections 5 to 10 is a positive electrical acceptance" (`records/l9t5/l9t5_connected.out:336`).
+L4-E9's own power-closure reading is unchanged: "**Layer 4's power architecture closes: NO**"
+(`records/l4e9/L4-POWER-ARCHITECTURE.md:972-974`). The rows below are the items set 30's records move or name; every other item keeps
+its "After set 29" or H2 row, and where a row differs from a record it cites, the record governs.
+
+**At the integration's tip `c4492dd3` (dated 6 October 2026, W21; citations as the page's head states for these notes):**
+
+- The candidate's chain. REVIEWED: `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`), read by cx46,
+  `c4492dd3:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.`, the
+  second negative, which ended the review method. Then the integration's commits I1 `3d2746c9` to I11 `d83d9f2d` (commit 2b) as W18's
+  draft 3 lists them (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:40-50`); the two corrections that draft leaves pending after
+  W16's review of 2b (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:51-52`), since committed: `33efca07` (record l6r2's composition
+  names board D's ptt draft once, W16's finding 1) and `2d4f6df5` (the change-list applier's D1 regression test, W16's finding 3,
+  merged at `c4492dd3`, the tip). INTEGRATED: `__CANDIDATE__`, the candidate commit with record l4e7's re-keyed results cache, not yet
+  made. PROMOTED: `__PROMOTED__`, main after the promotion, not yet made.
+- Unreviewed changes after cx46. W15 classes the commits between REVIEWED and `6bc4424e`,
+  `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:7` `prints 38: 28 commits and 10 merges`: REVIEWED-INPUT CHANGED in 13,
+  `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:85` `rows: 13, not empty.`, seven of them narrowing, withdrawing, tightening
+  or restating an OPEN state and six that do not only narrow, `57bcdbfc:v2/docs/records/int30/CLASSIFICATION.draft.md:88` `They do not
+  only narrow (6):`, each here in one line as W18's draft 3 shortens W15's reason
+  (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:75-81`):
+  - `7070f106`: D-16 from OPEN to ADDRESSED IN DRAFTS in L4-E9's generator data (the reviewed draft's own text, applied); no cx46 item
+    names D-16;
+  - `bbba3e53`: the regenerated output carries row 17's state: 17, 3 open; 4 addressed in drafts becomes 17, 2 open; 5 addressed in
+    drafts;
+  - `14082416`: R-246 (board P's ideal diode) added to the register and the change order; R-159's acceptance 45.88 K/W to 40.78 K/W;
+    R-189's acceptance replaced by S3 and S4;
+  - `17ce29d5`: criterion 2 CONDITIONAL to FAIL; D-16's ADDRESSED IN DRAFTS carried to the page's decision row;
+  - `53a68c7c`: P0-7's draft added to record l8r2's board E composition, where L4-E9's table puts it (R-240);
+  - `3088ee79`: TP-SOLAR's acceptance quotes carry P1-1's narrowing to E-1 and R-189's replacement by S3 and S4.
+
+  The promoted DESK candidate carries the 13 as UNREVIEWED CHANGES: `b8912eef:v2/docs/records/int30/RESULT.draft3.md:87` `None of
+  these 13 was checked by an independent checker after cx46.`, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:90` `never as checked,
+  never credited, each owing its own targeted verification before any credit`. W15's range ends at `6bc4424e`; W18 reads commit 2b
+  from its diff and names record l8r2's gndret output in it as not a binding-only change (W16's finding 2, Layer 9 below); the commits
+  after 2b are in no classification draft yet.
+- Remaining engineering. The ledger at the tip carries cx46's twelve, `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:100`
+  `The twelve cx46 findings NOT CLOSED, each a REMAINING ENGINEERING item`; D-10 as E-1,
+  `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:499` `HO-F: D-10 / E-1, the solar guard-on failing cases F1 to F4 and the
+  lower-source back-feed (REMAINING ENGINEERING)`, and D-17 as RE-2, `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:125`
+  `RE-2 (cx46 item 2): F01's reference loading, the resistor corners and the acceptance limits`; L4-E9 names both so,
+  `c4492dd3:v2/docs/records/l4e9/l4e9_power_path.out:560` `two material defects are open: D-10 (E-1) and D-17 (RE-2)`,
+  `c4492dd3:v2/docs/records/l4e9/l4e9_power_path.out:1017` `criterion 2 FAIL with 2 defects open`. The ledger's summary now reads
+  `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:669` `Counts: remaining engineering 20; qualification 1; external
+  architecture fact 3; closed 4; conditional 2.`; the count of 19 quoted above is the ledger at `7070f106`, dated history: its
+  amendment of 6 October 2026 (`99bbc0c6`, merged at `5c414310`) added E11-37 as HO-L,
+  `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:584` `HO-L: E11-37, the charger's gate drive into three battery FETs
+  (REMAINING ENGINEERING; the P0 list's row P0-8)`.
+- The contradictions between records (W12's K table in its DESK-gate draft 2, read on `6bc4424e`):
+  `150e908b:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft2.md:383-385` `19 entries stand on the candidate and 9 do not; of the
+  19, 13 have a restatement on a next-set branch and 6 have none in a committed file`. So 19 stand on the candidate, 13 of them
+  restated only on next-set branches and 6 unrestated, and 9 are carried by the candidate's own text; a next-set restatement does not
+  change what the promoted revision says.
+- W16's review of 2b (an AI review, `<worktrees>/_runs/int30/REVIEW-2B.md`; its findings as W18's draft 3 quotes them verbatim,
+  `b8912eef:v2/docs/records/int30/RESULT.draft3.md:208-231`): seven findings; 1 and 3 answered before the candidate commit by
+  `33efca07` and `2d4f6df5` above; 2 and 4 to 7 notes for the next set; `b8912eef:v2/docs/records/int30/RESULT.draft3.md:231` `Nothing
+  here blocks the freeze on what was read`. It is a reviewer's reading of commit 2b, not a verdict on the power design.
+
+**The Layer 4 DESK gate:** [COORDINATOR: the DESK-gate assessment]
+
+**The completion claims, each reported apart** (the five of the owner's instruction of 2 October 2026,
+`v2/docs/handover/OWNER-INSTRUCTION-2026-10-02.md:45-51`, with power-design closure reported separately,
+`v2/docs/EXECUTION-CONSTITUTION.md:23`):
+
+- documents and editable artifacts: on main as a DESK candidate (the coordinator's promotion; at this draft's base `7070f106` the
+  candidate is on its own branch);
+- design reviewed and accepted: NO (cx45 and cx46 above; no independent check accepts the candidate);
+- implemented: NONE (`records/l4e9/L4-POWER-ARCHITECTURE.md:401`, every row of `records/l4e9/L4-POWER-ARCHITECTURE.md:451-516`);
+- qualified: NONE (`records/l4close/REMAINING-ENGINEERING.md:15`);
+- fabrication release: BLOCKED (`records/l4e9/L4-POWER-ARCHITECTURE.md:972-974`; `records/l9t5/README.md:1`);
+- power-design closure: BLOCKED (`records/l4e9/L4-POWER-ARCHITECTURE.md:972-974`; `records/l4close/REMAINING-ENGINEERING.md:14`).
+
+**The three completion claims at the integration's tip, each with its own state** (dated 6 October 2026, W21; the constitution's
+three, `c4492dd3:v2/docs/EXECUTION-CONSTITUTION.md:23` `Report engineering-handover readiness, power-design closure and fabrication
+release separately.`; the words W18's draft 3 gives them, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:306-308`):
+
+- engineering-handover readiness: NOT YET ASSESSED, pending the coordinator's Layer 4 DESK-gate assessment, queue item Q-05, on the
+  promoted revision (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:306` `the coordinator's Layer 4 DESK-gate assessment (queue item
+  Q-05) on the promoted revision decides it`); the DESK gate's cell above keeps its placeholder;
+- power-design closure at the integration's tip: BLOCKED (`c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005` `the
+  power-design closure gate is BLOCKED`; `c4492dd3:v2/docs/records/l9t5/l9t5_connected.out:4` `No completion claim: power-design
+  closure and fabrication release stay BLOCKED.`);
+- fabrication release at the integration's tip: BLOCKED (`c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:885` `Fabrication
+  release: BLOCKED.`).
+
+No claim is blended with another and none is given as a percentage; a promoted integration set is none of the three by itself.
+
+**Layout entry after set 30:** unchanged, 0 of 7 boards ready for layout, 40 reasons (`v2/docs/handover/LAYER-STATUS.md:96-97,530`);
+set 30 does not change `v2/docs/CURRENT-EVIDENCE.md` (no difference between set 29's `aa76c894` and `7070f106`).
+Dated 6 October 2026 (W21): at the integration's tip `c4492dd3` too, no board generator file and not CURRENT-EVIDENCE.md differ from
+set 29's `aa76c894` (git diff --name-only, held by test_lstat32).
+
+| Item | Acceptance item (short) | After set 30 | Evidence, or what remains |
+|---|---|---|---|
+| 4.7 | energy and runtime budget with margin | **OPEN** | no P0 record moves the energy figures; U-01, the cell, is EXTERNAL (class 3 ARCH, the receiving company's, `records/l4close/P0-POWER-LIST.md:26`): "The ruled 35E is unsuitable on its own published rows (LO-01d to LO-01g)" and the Saft MP 176065 xtd's 11 A and 22 A are "Recommended, not guaranteed at temperature" (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:83-87`); its routes (a) Saft's statement, UNSENT, (b) the one-cell screen, (c) the fit, (d) the HL18650V (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:89-94`); the pack baseline stands and "the handover carries the Saft option as a PROPOSAL with its evidence state" (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:96`); the cell-limit rows LO-01d to g and their dependents PROVISIONAL (`records/l4close/P0-POWER-LIST.md:26`; `records/l4close/REMAINING-ENGINEERING.md:529-536`). As at H2 otherwise: PROVISIONAL runtime, REQ-072 FAIL at desk |
+| 4.8 | thermal budget with margin | **OPEN** | U-02, the sealed case's heat rejection, is EXTERNAL (class 3 ARCH, `records/l4close/P0-POWER-LIST.md:27`): each mode's need against the coefficient ends 1.22 to 2.85 W/K, "a MODEL range, not a physical bound" (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:28`); M3 and M4 lid closed a "MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT" and M6, M7 on the e-paper's row a "MISSING STORAGE QUALIFICATION" (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:32-35`); "T-H1 is a receiving-company validation task" (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:45`), and a measured failure "demonstrates that THAT arrangement fails under those conditions, nothing more" (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:43`); PROVISIONAL until it runs: L4-E12's selection (c) and the hold's trigger window, the fan duty rows, the hot-stop lines and REQ-024's and REQ-052's acceptance rows (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:60`). The supervisors' regulators' thermal rows are in 4.13 to 4.18 (b). As at H2 otherwise (FEA-004, EQ-05) |
+| 4.9 | lane budgets with margin | NOT MOVED | set 30's records are the P0 power candidate's (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:81`); the H2 row stands (FEA-003, EQ-01, EQ-12) |
+| 4.10 | rail and interconnect margins | PARTLY | set 30, each a MODEL reading on the composed candidate (`records/l9t5/l9t5_connected.out:336-337`): I-03 (L9P-F03), "U7 with I-03 carries C-DEV rev 2 (the active row) under its loop" (`records/l9t5/l9t5_connected.out:380`), V3's credit kept for U7's relief, 6.0359 A against 7.0957 A (`records/l9t5/README.md:240-241`); U601 under its 3 A on both revisions (`records/l9t5/l9t5_connected.out:381`); the three eFuse settings each read against its demand and its downstream printed rating (`records/l9t5/l9t5_connected.out:179-186`), EF-F01 to EF-F03 each a "DESIGN DEFECT, OPEN" corrected by a DRAFTED change (`records/efuse/efuse_check.out:615-617`), P0-4 "CONFIRMED AS CONDITIONAL" (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:10`; `records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:191-193`) with the contacts at the inside air PROVISIONAL and the RockBLOCK pads OPEN as a build condition (`records/efuse/EFUSE-SETTINGS.md:148-165`); the return between boards A and B a STUDY, "V6-B1: OPEN, REMAINING ENGINEERING for the receiving company" (`records/l9t5/l9t5_connected.out:163-175`; cx46 item 4, `records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:131-133`), the declared upper bound over the INFERRED least ratings (L8R2-F43, L8R2-F44) and V6-B2's indirect paths PROVISIONAL on vendor tasks, UNSENT (`records/l9t5/l9t5_connected.out:169-175,343-345`); J_PA at the cap's top over the VH's INFERRED least rating, PROVISIONAL (L9T5-F26, `records/l9t5/l9t5_connected.out:356-358`); L9P-F04 (U13's room) PROVISIONAL with F01 (`records/l9t5/l9t5_connected.out:341`). Set 29's L9P-F02 text is not restated by these records |
+| 4.11 | mass, dimension and cost budgets | NOT MOVED | the annex's mock-up sum is an ESTIMATE for a validation task, not the kit's cost budget (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:58`); the H2 row stands (EQ-14) |
+| 4.12 | trade decisions recorded | PARTLY | set 30's SESSION decisions, each in its record: F01 selection (c), a PA drain-current cap, PROVISIONAL (`records/l9t5/README.md:33-39`); L9T5-D9, R602 14.0 k (`records/l9t5/README.md:90-105`); L9T5-D7, revision V fitted, revision X HELD with no admission route (`records/l9t5/T10-ROUND5.md:174`; `records/l9t5/l9t5_t10.out:645-649`); L9T5-D10, the containment in hardware, "a drafted direction, not a closure" (`records/l9t5/T10-ROUND5.md:175,226`); L8R2-D10 the return sockets placed for the study, L8R2-D9 withdrawn (`records/l9t5/README.md:142-144`), L8R2-D11 the fourth lead a route, not drafted (`records/l9t5/l9t5_connected.out:170-172`); L8P-D10, the guard's two paths (`records/l8p/L8P-BREAKER.md:1369-1373`), L8P-D9 withdrawn (`records/l4e9/L4-POWER-ARCHITECTURE.md:460`); V6-m12's F-4b (`records/l9t5/README.md:64-65`); EF-F03's R98 at 511 R (`records/l4e9/L4-POWER-ARCHITECTURE.md:465`). Withdrawn: FAN_OK's R-210 to R-212, "WITHDRAWN (FAN_OK rejected; never applied)" (`records/l4e9/L4-POWER-ARCHITECTURE.md:456,492,505`); route B2, "UNSELECTED and WITHDRAWN AS DRAFTED" (`records/l4e7/B2-PRESENCE.md:4`), "no owner action rests on B2; the approved interface stands" (`records/l4e7/B2-PRESENCE.md:27`). Open as at H2: EQ-01, EQ-06, EQ-07 |
+| 4.13 to 4.18 (a) | power: F01 / D-17, the all-transmit case (P0-1) | **OPEN** | C-ALLTX rev 3 needs 15.5162 V nominal and 16.0718 V with the printed bounds, against REQ-018's 15.5 V (`records/l9t5/l9t5_case.out:40,82`); selection (c) drafted on boards A and D, R-227 and R-238 (`records/l4e9/L4-POWER-ARCHITECTURE.md:466,516`), composed, 11 of 11 mutations fail (`records/l9t5/README.md:43-49`); at the cap 15.1308 V "MODEL on PRINTED bounds", margin 0.3692 V (`records/l9t5/l9t5_connected.out:123-124`); "F01 / D-17 and every dependant (C-ALLTX rev 3 at the cap, U13's room, B-PA1's limit, the PA rail's rows) stay PROVISIONAL" (`records/l9t5/l9t5_f01.out:212-213`); cx44's selection finding as above, cx46 item 2 NOT CLOSED (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:121-123`); REMAINING ENGINEERING: the reference's loading through Q551's hold and release and the acceptance limits (`records/l9t5/l9t5_f01.out:213-214`; `records/l4close/REMAINING-ENGINEERING.md:110-159`); the supplier tasks B-PA1, B-PA2 and V-PA-REF, UNSENT (`records/l9t5/l9t5_f01.out:221-239`); U5 (R-214) MISSING (`records/l9t5/l9t5_f01.out:240`); FAN_OK stays rejected (4.12) |
+| 4.13 to 4.18 (b) | power and thermal: the supervisors' regulators, CAN containment and quorum (P0-3, T10) | **OPEN** | "L9T5-F06 STAYS OPEN" (`records/l9t5/l9t5_t10.out:670`); the set point, CAN SHDN and containment drafts R-242, R-243, R-235, R-245 (`records/l4e9/L4-POWER-ARCHITECTURE.md:463,510-512`); on revision V at R602 14.0 k every row holds its criterion on the MODEL on average currents and "the acceptance reads REMAINING ENGINEERING while the sustained peaks and the latent rail trip are open" (`records/l9t5/l9t5_connected.out:213-215`); "the universal sustained bound and its positive margin are WITHDRAWN" (`records/l9t5/l9t5_t10.out:620`); CON-004's quorum service OPEN, FW-B22 PROVISIONAL, L9T5-F21 OPEN, V-B23's response WITHDRAWN, T10-A3 at a peak PROVISIONAL (`records/l9t5/l9t5_t10.out:662-665`); VOS0 under the trip weakens the controller's survival and FW-B20's and FW-B22's service (`records/l9t5/l9t5_t10.out:605-606`; `records/l9t5/l9t5_connected.out:330-331`); cx46 items 5 to 8 NOT CLOSED (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:136-153`); REMAINING ENGINEERING (`records/l9t5/l9t5_t10.out:665-667`; RE-5 to RE-8 and HO-C to HO-E, `records/l4close/REMAINING-ENGINEERING.md:592-595,603-605`); the contract rows FW-B20 to FW-B22 drafts, UNAPPLIED (Layer 12 below) |
+| 4.13 to 4.18 (c) | protection: the battery FETs' thermal guard (P0-5) | **OPEN** | the two-path delta R-244 DRAFTED (`records/l4e9/L4-POWER-ARCHITECTURE.md:460`), composed, seven mutations FAIL (`records/l8p/l8p_c4.out:342-354`); "V6-m7 OPEN and NOT CLOSED" and "C-PROT rev 1 for the guard PROVISIONAL; L8P-R9-F1, F2 and F3 OPEN" (`records/l8p/L8P-BREAKER.md:1398-1400`); with path 1 lost, path 2's retries leave "the junction's rise in each on-time NOT BOUNDED here" (`records/l8p/l8p_c4.out:283-284`); L4-E11 section 28 "PROVISIONAL, not closed" (`records/l4e11/l4e11_power.out:2066-2070`); cx46 items 9 and 10 NOT CLOSED (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:156-163`); REMAINING ENGINEERING: the retry-energy analysis, an automatic diagnostic or a fault-tolerant redesign, the allowances' restatement (`records/l8p/l8p_c4.out:355-358`; RE-9, RE-10, HO-A, HO-B, `records/l4close/REMAINING-ENGINEERING.md:596-597,601-602`). Also in set 30, record l8p's rounds 3 to 6 on board P, as the record reports its checks (neither check is filed in the tree): B-R2's route R1, a reverse-charge detector, drafted on board P inside the breaker draft and on board A by L4-E11, "B-R2: CONFIRMED AS CONDITIONAL" by V1 with conditions C1 to C4 (`records/l8p/L8P-BREAKER.md:22-28,774-778`); DD-5, the discharge through Q1's body diode, corrected in draft by an ideal diode beside Q1, "the ideal diode CONFIRMED AS CONDITIONAL" by V2 (`records/l8p/L8P-BREAKER.md:30-35,779`); L8P-F06 and L8P-F07 OPEN (`records/l8p/L8P-BREAKER.md:43-46`). E11-29's lead treatment ended on its second negative check, V2RG-B1, "the loop ENDS" (`records/l4e11/README.md:5,11`), and is the supplier's fixture requirement (row (f)). P0-8, E11-37, the charger's gate drive into the three FETs: bounded from the printed limit, TI's answer Q-TI-17 UNSENT, its state "unchanged" (`records/l4close/P0-POWER-LIST.md:25`). Set 29's DD-3 and DD-8 text is not restated by these records |
+| 4.13 to 4.18 (d) | the solar entry: D-10, D-16 and route B2 (P0-7) | **OPEN** | D-16 "CORRECTED in draft" (`records/l9t5/l9t5_connected.out:205`; R-240, `records/l4e9/L4-POWER-ARCHITECTURE.md:488`); "D-10 is an UNRESOLVED PROTECTION DEFECT in the present model" (`records/l4e7/L4E7-P0SOL.md:101`), the receiving company's remaining engineering item E-1 with its failing cases F1 to F4, MODEL (`records/l4e7/L4E7-P0SOL.md:102-110`; `records/l4e7/SUPPLIER-P1-1-P0SOL.md:19-23`); PROVISIONAL until E-1's correction and S1: IF-01's D-10 claim, R-173 as a protection, R-176 rows 2 and 3, R-180, the port's parts, layout and fault table, the guard's Layer 9 rows (`records/l4e7/SUPPLIER-P1-1-P0SOL.md:85-89`); route B2 WITHDRAWN (4.12), no protection credit, outside the baseline (`records/l4e7/B2-PRESENCE.md:4-6,22-25`), its P2 and P3 REMAINING ENGINEERING outside the baseline (`records/l4e7/L4E7-P0SOL.md:139-141`); cx45 P0-7 NOT CONFIRMED (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:10`); cx46: items 11, 12 and 15 CLOSED BY THE CORRECTION in their stated scope only, "D-10 itself remains OPEN REMAINING ENGINEERING" (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:166-173,186-188`), item 18 NOT CLOSED (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:201-203`), its wording since disposed of and HO-G carried (`records/l4close/REMAINING-ENGINEERING.md:410-430`) |
+| 4.13 to 4.18 (e) | the connected candidate and its outputs (P0-6) | **OPEN** | composed and regenerated without KiCad, every draft applied, designators unique (`records/l9t5/l9t5_connected.out:64-73`), every record check DRAWN and every mutation failing (`records/l9t5/l9t5_connected.out:373-374`); the verdict REMAINING ENGINEERING on seven OPEN fault rows (`records/l9t5/l9t5_connected.out:319-340`); cx45 P0-6 NOT CONFIRMED (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:10`); cx46 item 13 NOT CLOSED and item 14 "CLOSED AS CONDITIONAL" on byte-identical repeated runs (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:176-183`; Layer 9's 9.20 below) |
+| 4.13 to 4.18 (f) | the external dependencies (P0 class 3) | **OPEN** (EXTERNAL) | U-01, U-02 and U-04 "3 ARCH", E11-29 "3 (qualification, not ARCH)" (`records/l4close/P0-POWER-LIST.md:26-29`); the annex hands each to the receiving company with specimen, quantity and pass limit and asks the owner for nothing (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:3-10,111-119`); U-04: "(B1)'s mode table (E11-31), D2's step margin and the held pack current stay PROVISIONAL" (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:76`); E11-29 "a QUALIFICATION, kept apart from the architecture blockers", TP-E11-29 "written and NOT EXECUTABLE until L4-E9 restates R-159 and a supplier agrees in writing to the fixture requirement" (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:101-104`); L4-E9's criteria 1 and 5 "cannot read PASS while U-01, U-02 and U-04 stand" (`records/l4e9/L4-POWER-ARCHITECTURE.md:978-979`) |
+
+**Dated notes to the rows above (6 October 2026, W21; at the integration's tip `c4492dd3` unless another commit is named; each row
+above stays as Slot I wrote it at `7070f106`):**
+
+- 4.10, prepared for the next set, not in the candidate: fnd/w11l9t5 at `85b6f258` (it contains W9's fnd/w9l9t5 `02b0d30d`) restates
+  both declared upper bounds of the return with their bases, `85b6f258:v2/docs/records/l9t5/README.md:393` `27.9108 A in the one-node
+  model` and `85b6f258:v2/docs/records/l9t5/README.md:394` `the study's own 27.8159 A` (W9-03 to W9-06); on the candidate the two
+  stand as W12's K-21, `150e908b:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft2.md:410` `the declared upper bound of the
+  return: 27.8159 A`.
+- 4.13 to 4.18 (a), at `c4492dd3`: the P0 list in the tree is still revision 2, `c4492dd3:v2/docs/records/l4close/P0-POWER-LIST.md:1`
+  `revision 2, 5 October 2026, 16:50 CEST`; its revision 3, draft 3 on fnd/w17p0list at `c0f2183b`, marks the rows changed after the
+  review, P0-1's B-PA1 limit and PRINTED-rows band among them, `c0f2183b:v2/docs/records/l4close/P0-POWER-LIST.rev3.draft3.md:10`
+  `Rows whose figures or states changed after the review`; drafted for the coordinator's adoption at promotion (queue item Q-04a), not
+  in the integration.
+- 4.13 to 4.18 (b), prepared for the next set, not in the candidate: fnd/w11l9t5 at `85b6f258` restates the connected generator's T10
+  row, `85b6f258:v2/docs/records/l9t5/l9t5_connected.py:1002` `revision X HELD with no admission route`, with the output left as
+  committed, which at the tip still reads `c4492dd3:v2/docs/records/l9t5/l9t5_connected.out:350` `rev X on V-B20` (W12's K-26,
+  `150e908b:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft2.md:415` `rev X on V-B20`).
+- 4.13 to 4.18 (c), at `c4492dd3`: P0-8, E11-37, is the ledger's handed-over item HO-L, remaining engineering (the ledger's amendment
+  `99bbc0c6`; `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:584` `HO-L: E11-37, the charger's gate drive into three
+  battery FETs`), beside the P0 list's revision 2 state the row quotes. Prepared for the next set, not in the candidate: fnd/w5l8p at
+  `cd19df59` names record l8p's one release for its six drafts, `cd19df59:v2/docs/records/l8p/L8P-BREAKER.md:266` `One release for the
+  six drafts that read this folder's one`, and fnd/w13l4e9 at `56ab0d01` (it contains W7's fnd/w7rem `3e566c55`) writes W5's findings
+  on L4-E9's side as rows WP-01 to WP-27, `56ab0d01:v2/docs/records/l4e9/L4E9-W5-PATCH.md:1` `written as 27 exact rows for the
+  coordinator`, applying nothing.
+- 4.13 to 4.18 (d), at `c4492dd3`: L4-E9's decision row reads D-16 `c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1389`
+  `ADDRESSED IN DRAFTS`, and its section 8a `c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1031` `not independently accepted
+  as closing D-16`, where the row quotes the connected output's D-16 CORRECTED in draft (still so at
+  `c4492dd3:v2/docs/records/l9t5/l9t5_connected.out:205` `D-16 CORRECTED in draft`); W15 classes the move off OPEN as not only
+  narrowing, an unreviewed change (the chain above); D-10 stays OPEN, `c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1384`
+  `ASSIGN to the receiving company's remaining engineering item E-1`. Prepared for the next set, not in the candidate: fnd/w4l4e7 at
+  `786aed2f` makes record l4e7's three P0 pages read D-16's correction `786aed2f:v2/docs/records/l4e7/L4E7-P0SOL.md:165` `ADDRESSED IN
+  DRAFTS, PROVISIONAL, not completed` and route B2 in one wording; fnd/w8l5 at `1ab30f35` (in fnd/w14l5 `910f08ef`) restates
+  IF-EXT-DC's protection, the R-173 row and V-E16 to L4-E9's D-10 as set 31 left it (finding L5-F14),
+  `1ab30f35:v2/docs/HW-FW-CONTRACT.md:508` `By W8 for the next set`.
+- 4.13 to 4.18 (e), at `c4492dd3`: the composition reads the same boards and parts,
+  `c4492dd3:v2/docs/records/l9t5/l9t5_connected.out:64` `board A: 26 drafts, every one applied`, and its change count moved with set
+  31's R-246, `c4492dd3:v2/docs/records/l9t5/l9t5_connected.out:62` `118 changes` (117 at `7070f106`); W16's finding 7 names that
+  paragraph's prose stale since `7070f106`, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:228` `lines 60 to 62 (unchanged prose)`,
+  a note for the next set. Prepared for the next set, not in the candidate: fnd/w11l9t5 at `85b6f258` restates the change-list row,
+  `85b6f258:v2/docs/records/l9t5/l9t5_connected.py:1013` `APPLIED by the integrator at set 30's integration commit 7070f106`, against
+  the committed `c4492dd3:v2/docs/records/l9t5/l9t5_connected.out:362` `L4-E9's own output refuses on this tree at its L4-E11 pin`
+  (W12's K-28).
+- 4.13 to 4.18 (f), at `c4492dd3`: L4-E9 has restated R-159 (set 31, `14082416`, an unreviewed change),
+  `c4492dd3:v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:255` `each FET's (Zself + 2 Zmut) at most 40.78 K/W without m`, the first of
+  the two conditions the row quotes; TP-E11-29 still reads `c4492dd3:v2/docs/test-procedures/TP-E11-29.md:19` `NOT EXECUTABLE.`
+  Prepared for the next set, not in the candidate: fnd/w3annex at `686de0a2` amends the annex,
+  `686de0a2:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:123` `the set 30 note and four reconciliations (record
+  text for the NEXT set)`, among them `686de0a2:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:197` `R-159 restated;
+  TP-E11-29 stays NOT EXECUTABLE (K-06)`, and adds E11-37's row,
+  `686de0a2:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:237` `E11-37, the charger's gate drive into the three
+  battery FETs`.
+
 **After set 29 (4 October 2026): IN_PROGRESS.** The connected power design is `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` (Layer 4 tasks L4-E1 to L4-E13 and their rounds; L4-E9 at round 8). The owner's three decisions stay apart (its section 6): the architecture candidate CONDITIONAL; the power-design closure gate BLOCKED; the fabrication release BLOCKED; the engineer handoff READY TO START, provisional. Status, in the owner's reviewer's words: "Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked." No release check has judged this layer. The rows below are the items set 29's records move; every other item keeps its H2 row below, and where a row differs from a record it cites, the record governs.
 
 | Item | Acceptance item (short) | After set 29 | Evidence, or what remains |
@@ -467,6 +661,29 @@ FAIL with six; r8b: second check with no blocking finding).
 
 ## Layer 8. Schematics
 
+**After set 30 (6 October 2026): IN_PROGRESS on every board.** The P0 candidate's drafts were added as release-guarded apply scripts
+and given rows in L4-E9's change list; "None is APPLIED" (`records/l4e9/L4-POWER-ARCHITECTURE.md:401`); no generator file differs
+between set 29's `aa76c894` and `7070f106`, so no board is regenerated in the tree; the compositions are the records' own
+regenerations without KiCad (`records/l9t5/l9t5_connected.out:64-73`). 8.1 and 8.9 stay MET for the committed generators, as set 29 states (`v2/docs/handover/LAYER-STATUS.md:470`). The row
+below is the item set 30 moves; every other item keeps its "After set 29" or H2 row.
+
+| Item | Acceptance item (short) | After set 30 | Evidence, or what remains |
+|---|---|---|---|
+| 8.10 | known schematic-affecting defects closed per board | **OPEN** | set 30's drafts, each "DRAFTED (not applied)" with its L4-E9 row (`records/l4e9/L4-POWER-ARCHITECTURE.md:451-516`). Board A: +3V3_A2D's eFuse R-220, VBUS20's over-voltage cut-off R-221, the thermal guard R-222 and its two-path delta R-244, I-03's buck R-223, T10's set point R-224 and R-242, the dedicated return R-225, U23 at 511 R R-226, the PA cap's half R-227. Board B: the coolers' decoupling class R-228, PANEL_5V's eFuse R-229, J_QMX and J_CAM on the PH land R-230, the return declared R-231 and the dedicated return R-232, I-03 R-233, T10 R-234 and R-243, the CAN SHDN R-235, the containment R-245, U23 at 750 R R-236, U24 at 1.21 k R-237. Board D: the PTT conductors R-239, the PA cap's half R-238. Board E: P0-7's sense R-240. Board P: B-R2's route R1 detector inside the breaker draft R-206 (`records/l8p/L8P-BREAKER.md:774-775`); DD-5's ideal diode beside Q1, `records/l8p/apply_gen_sch_p_idealdiode.py` (`records/l8p/README.md:146-147,159`), with no row in L4-E9's change list at `7070f106` (a finding for the coordinator). Outside the baseline: route B2's draft `records/l4e7/apply_gen_sch_e_p0sol_b2.py`, kept as a record (`records/l4e7/L4E7-P0SOL.md:130`). An assembly draft: the RockBLOCK's charge pads OPEN, `records/efuse/apply_assembly_rb_pads.py`, unapplied (`records/efuse/EFUSE-SETTINGS.md:162-165`). Composed: A 26 drafts, 838 parts; B 18, 1515; D 4, 254; E 16, 278; designators unique (`records/l9t5/l9t5_connected.out:64-73`); every record check DRAWN on the composed candidate and every mutation fails (`records/l9t5/l9t5_connected.out:373-374`); `check_l8p_netlist.py`'s round 8 reader does not admit the guard's delta, L8P-R9-F3 (`records/l9t5/l9t5_connected.out:355`). The circuit defects these drafts address stay OPEN or PROVISIONAL as Layer 4's rows state (`records/l9t5/l9t5_connected.out:336-340`). Open as at set 29: DD-3; EQ-25 on C, PWR-001 on C, D, E, P and BAT-001 on P as at H2 |
+
+**Dated notes to the row above (6 October 2026, W21; at the integration's tip `c4492dd3` unless another commit is named; the row stays
+as Slot I wrote it at `7070f106`):**
+
+- 8.10, at `c4492dd3`: board P's DD-5 draft has its change-list row since set 31 (`14082416`, an unreviewed change, Layer 4's chain
+  above), `c4492dd3:v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:341` `Board P's ideal diode beside the charge FET Q1`, where the row
+  records none at `7070f106`; record l8r2's board E round composes P0-7's draft since `53a68c7c` (an unreviewed change), its output
+  regenerated in 2b, `c4492dd3:v2/docs/records/l8r2/l8r2_drafts.out:535` `after the whole round (14 drafts, this one last)`; record
+  l6r2's composition names board D's ptt draft once since `33efca07` (W16's finding 1).
+- 8.10, prepared for the next set, not in the candidate: fnd/w5l8p at `cd19df59` makes U101 the latch-off LM5069MM-1 in every file of
+  record l8p and names its one release for six drafts (Layer 4's note (c)), and fnd/w13l4e9 at `56ab0d01` writes the re-take of
+  L4-E9's three l8p input copies as rows WP-01 to WP-06, `56ab0d01:v2/docs/records/l4e9/L4E9-W5-PATCH.md:12` `Section 3 (WP-01 to
+  WP-06)`, applying nothing.
+
 **After set 29 (4 October 2026): IN_PROGRESS on every board.** Records l8gnd, l8r2 (rounds 1 to 6) and l8p, and the Layer 4 records' apply scripts, drafted the known corrections as release-guarded apply scripts; no generator changed, no board regenerated. The rows below are the items sets 28 and 29 moved; every other item (8.1 to 8.4, 8.6, 8.8, 8.9, 8.11 to 8.16, 8.18) keeps its H2 row below (8.1 and 8.9 stay MET for the committed generators; a regeneration with the drafts applied re-opens their parity on the box).
 
 | Item | Acceptance item (short) | After set 29 | Evidence, or what remains |
@@ -501,6 +718,37 @@ FAIL with six; r8b: second check with no blocking finding).
 ---
 
 ## Layer 9. Pre-layout design analysis
+
+**After set 30 (6 October 2026): IN_PROGRESS.** T5 (the all-transmit case), T10 (the supervisors' regulators), the return between
+boards A and B and the battery FETs' guard were analysed on the drafted, composed circuit; every figure is a MODEL reading on the
+composed candidate (`records/l9t5/l9t5_connected.out:336-337`); nothing was routed, built or measured. The rows below are the items
+set 30's records move; every other item keeps its "After set 29" or H2 row.
+
+| Item | Acceptance item (short) | After set 30 | Evidence, or what remains |
+|---|---|---|---|
+| 9.1 | current power calculations with margins and sensitivities | PARTLY | T5: C-ALLTX rev 3 needs 15.5162 V on its text and 16.0718 V with the printed bounds (`records/l9t5/l9t5_case.out:40,82`), 15.1308 V at the PA cap, MODEL, PROVISIONAL (`records/l9t5/l9t5_connected.out:123-124`); the pack's true current 17.1964 A at the indicated 18 A, the breaker's least limit 18.32 A (`records/l9t5/l9t5_connected.out:125-126`); I-03: U7 on C-DEV rev 2 under its loop, U601 under its 3 A (`records/l9t5/l9t5_connected.out:380-381`); the return's currents on the distributed study against the printed and INFERRED least ratings (`records/l9t5/l9t5_connected.out:163-175`); L9T5-F12, the supervisors' HIGH, a LABELLED SCENARIO until the coordinator issues the row (`records/l9t5/l9t5_t10.out:697-699`); remains: the drafts applied and the budget re-run (set 29's row), F01's and V6-B1's remaining engineering (Layer 4) |
+| 9.3 | protection coordination on the current design | PARTLY | row by row on the composed candidate (`records/l9t5/l9t5_connected.out:177-210`): the eFuses' bands against their demands and printed ratings, their contacts at the inside air NOT COVERED and PROVISIONAL (`records/l9t5/l9t5_connected.out:179-186`); the guard's no-trip margins 38.4, 9.8 and 6.0 K on its intact circuit, its C-PROT claim REMAINING ENGINEERING (`records/l9t5/l9t5_connected.out:194-203`); the solar entry's D-10 an unresolved protection defect (`records/l9t5/l9t5_connected.out:204-210`); "the protection rows NOT established" listed (`records/l9t5/l9t5_connected.out:346-348`) |
+| 9.4 | thermal analysis current | **OPEN** | T10 on revision V: every served state at most 105.8 C (MODEL, `records/l9t5/l9t5_t10.out:622-633`); the trip's held maximum 115.4 C, "a constant-current MODEL, not a bound" (`records/l9t5/l9t5_t10.out:615-616`); cx46's periodic countermodel, reproduced, 127.54 C over 125 C (`records/l9t5/l9t5_t10.out:617-621`); the qualification limits "are measurements to take, NOT an acceptance of the sustained bound" (`records/l9t5/l9t5_t10.out:638`); the transient rule's Zth at 181 ms "NOT PRINTED by Diodes" (`records/l9t5/l9t5_t10.out:634-636`); the guard's no-trip margins as 9.3; U-02 (4.8). As at H2 otherwise (FEA-004, EQ-05) |
+| 9.6 | timing analysis | PARTLY | FW-B22's schedule, 822 dominant bit-times against FW-B21's 1000, "a traffic MODEL" (`records/l9t5/apply_hw_fw_contract_t10.py:79-80`); the rail trip's response: V-B23's 0.2 s WITHDRAWN, 0.98 s from the bounded state with the comparator's delay not counted (MODEL, `records/l9t5/l9t5_t10.out:584-586`), 0.9259 s by cx46 (MODEL, `records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:89`), the comparator's delays TYPICAL only (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:88`); the guard's trip within 43.8 ms on path 1 and 40.0 ms on path 2, under the RC hold (`records/l9t5/l9t5_connected.out:197-198`); the PA set point's release within its 30.5 ms ramp, V-PA-REF's row (`records/l9t5/l9t5_f01.out:238-239`) |
+| 9.20 | a representative calculation re-runs from the repository alone | NOT MOVED | the H2 reading stands; set 30 adds: the P0 cascade's eighteen outputs regenerated twice through `regen_out.py`, each pass "exit 0", the second changing no byte (`records/l9t5/stability/DIGESTS-cr3.txt:1-3`; `records/l9t5/stability/RUN-cr3-pass1.log:20`; `records/l9t5/stability/RUN-cr3-pass2.log:20`); at `7070f106` each of the eighteen files equals its DIGESTS-cr3 digest (read by the test); cx46 item 14 "CLOSED AS CONDITIONAL" on "retain or reproduce successful byte-identical repeated output runs on these inputs", the long L4-E7 cache recompute "the box's task" (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:181-183`); the re-takes the change list's application names (L4-E11's and L4-E10's pins of L4-E9's page, Layer 6's compositions) are the integrator's (`records/l9t5/l9t5_connected.out:361-362`) |
+
+**Dated notes to the rows above (6 October 2026, W21; at the integration's tip `c4492dd3` unless another commit is named; each row
+above stays as Slot I wrote it at `7070f106`):**
+
+- 9.1, at `c4492dd3`: record l8r2's GND return output reads `c4492dd3:v2/docs/records/l8r2/l8r2_gndret.out:110` `NOT THE ORDER THIS
+  RECORD COMPOSES` since 2b, W16's finding 2, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:214` `its GND reproduction covers 6 of
+  15 drafted board B rows in its own order`, a note for the next set (board B's change-list composition is the connected output's).
+- 9.1, prepared for the next set, not in the candidate: fnd/w11l9t5 at `85b6f258` (it contains fnd/w9l9t5 `02b0d30d`) restates record
+  l9t5's statements of L4-E9's change list as applied, `85b6f258:v2/docs/records/l9t5/README.md:450` `APPLIED since, by the
+  integrator, at 7070f106`, with W9's twelve restatements W9-01 to W9-12 (the two upper bounds, 15.1308 V, record l4e7's E-1; Layer
+  4's notes 4.10, (b) and (e)); its output not regenerated.
+- 9.20, at `c4492dd3`: 17 of the eighteen DIGESTS-cr3 outputs differ from their digest and `v2/docs/records/l9t5/l9t5_f01_drafts.out`
+  alone equals it (read with git show and sha256sum at `c4492dd3`, held by test_lstat32): the 17 changed between CANDIDATE 3's
+  `ac8efbca` and commit 2b `d83d9f2d` (git diff --name-only), and `33efca07` changed record l6r2's again; the integration's own
+  repeated run is integrate7's, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:134` `cascade twice, pass 2 changing no byte`, its
+  targeted passes converging (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:135-138`); record l4e7's cache,
+  `b8912eef:v2/docs/records/int30/RESULT.draft3.md:197` `On 2b the KEY is a MISMATCH, expected until the re-key`, the re-key's KEY
+  installed by the candidate commit (Layer 4's chain).
 
 **After set 29 (4 October 2026): IN_PROGRESS.** Layer 9's power budget (`records/l9pwr`, item 9.1) and its stackups, copper and protection (`records/l9stk`, item 9.12 and the pack path) landed; nothing was routed, built or measured. The rows below are the items set 29's records move; every other item keeps its H2 row below.
 
@@ -537,6 +785,36 @@ FAIL with six; r8b: second check with no blocking finding).
 ---
 
 ## Layer 12. Firmware, bring-up, test plans and build documentation
+
+**After set 30 (6 October 2026): IN_PROGRESS.** The P0 records add firmware obligations and verification rows as drafts for their
+owners and rewrite one procedure; nothing is applied to `v2/docs/HW-FW-CONTRACT.md` and nothing has run on hardware. The rows below
+are the items set 30's records move; every other item keeps its "After set 29" row.
+
+| Item | Acceptance item (short) | After set 30 | Evidence, or what remains |
+|---|---|---|---|
+| 12.1 | firmware for each controller, with tests of its stated behaviour | PARTLY | set 29's panel row stands; set 30 drafts the supervisors' contract rows FW-B20 (the run state, revision V, R602 14.0 k), FW-B21 (the transmit share and fault handling) and FW-B22 (the quorum's schedule) with V-B20 to V-B23, "UNAPPLIED: the integrator runs it" (`records/l9t5/apply_hw_fw_contract_t10.py:2-12`); `v2/docs/HW-FW-CONTRACT.md` carries none of them at `7070f106`; after cx46 "FW-B22 PROVISIONAL (a traffic model; L9T5-F21 OPEN); V-B23's 0.2 s withdrawn" (`records/l9t5/apply_hw_fw_contract_t10.py:11-12`); the PA cap's firmware row (U14 logs a reading over 6.93 A held beyond 10 ms, no automatic action) a Layer 5 text named by the correction (`records/l9t5/README.md:51-55`); the supervisors' firmware not started |
+| 12.2 | bring-up procedure per board | PARTLY | set 29's row stands; set 30's record names one build check, not yet in `v2/docs/PCB-BRING-UP.md`: on each built kit the PA's drain current at the cap read by U14 and an external meter, inside 6.3518 to 6.9259 A at 25 C into 50 Ohm (`records/l9t5/README.md:55-56`) |
+| 12.3 | test procedures for the qualification route | PARTLY | TP-E11-29 rewritten on L4-E11's rounds 13 to 16 (DELTA-02, V2R, V2RF, V2RG): "**NOT EXECUTABLE.**" until the limits are agreed and a supplier accepts the fixture requirement (`v2/docs/test-procedures/TP-E11-29.md:11-25`), R-159 still reading 45.88 K/W at `records/l4e9/DOWNSTREAM-REGISTER.md:253` against the procedure's restatement owed by L4-E9 (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:103-105`); set 30's records name further validation items with specimen, quantity and pass limit, not yet written as procedures: B-PA1, B-PA2, V-PA-REF (`records/l9t5/l9t5_f01.out:221-239`), V-B20 to V-B23 (`records/l9t5/apply_hw_fw_contract_t10.py:64-90`), the eFuse contacts in a 76 C chamber (`records/efuse/EFUSE-SETTINGS.md:154-157`), T-H1 and U-04's routes (R1) and (R2) (`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:45-79`), S1 after E-1's correction (`records/l4e7/L4E7-P0SOL.md:121-122`); none run |
+| 12.4 | build documentation | NOT MOVED | the RockBLOCK pads' row for `v2/docs/ASSEMBLY.md` is a draft, unapplied (`records/efuse/EFUSE-SETTINGS.md:162-165`); BUILD.md and ASSEMBLY.md as at H2 |
+| 12.5 | physical results recorded | **OPEN** | nothing built or run; every procedure's result is owed, as after set 29 (`v2/docs/handover/LAYER-STATUS.md:549`) |
+
+**Dated notes to the rows above (6 October 2026, W21; at the integration's tip `c4492dd3` unless another commit is named; each row
+above stays as Slot I wrote it at `7070f106`):**
+
+- 12.1, at `c4492dd3`: `v2/docs/HW-FW-CONTRACT.md` still carries none of FW-B20 to FW-B22 and V-B20 to V-B23 (the file does not differ
+  between `7070f106` and `c4492dd3`).
+- 12.1, prepared for the next set, not in the candidate: fnd/w8l5 at `1ab30f35` (in fnd/w14l5 `910f08ef`) changes
+  `v2/docs/HW-FW-CONTRACT.md`'s R-173 row and V-E16 and adds its dated row, `1ab30f35:v2/docs/HW-FW-CONTRACT.md:508` `By W8 for the
+  next set`, with pcb_interfaces.yaml's IF-EXT-DC fields (finding L5-F14); the readers that pin the two files move with it (the next
+  set's 28 pins).
+- 12.1, prepared for the next set, not in the candidate: fnd/w14l5 at `910f08ef` restates record l5pwr's two contract-script tests to
+  the contract files as W8 leaves them, `910f08ef:v2/ecad/tools/tests/test_w14l5.py:4` `test_l5pwr's two tests are restated there with
+  their evidence basis`, and proposes apply_l5f11's ORDER detector correction as a patch row, the script unedited.
+- 12.3, at `c4492dd3`: R-159 is restated on L4-E9's register (Layer 4's note (f)) where the row reads 45.88 K/W at `7070f106`;
+  TP-E11-29's two quotes re-taken on set 31's cells (`2f74beb5`, merged at `2ccf0f20`), the procedure still
+  `c4492dd3:v2/docs/test-procedures/TP-E11-29.md:19` `NOT EXECUTABLE.`; TP-SOLAR and TP-E11-37 re-quoted on the candidate's cells
+  (`3088ee79`, an unreviewed change, Layer 4's chain above). Prepared for the next set, not in the candidate: fnd/w3annex at
+  `686de0a2` carries TP-E11-29 as W3 rewrote it, the next set's one conflict, resolved to W3's whole file (the page's head).
 
 **After set 29 (4 October 2026): IN_PROGRESS.** Outside the nine pre-PCB layers above: the owner's instruction of 2 October 2026 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-02.md`) asks for "L12: firmware, bring-up procedures, test plans and build documentation in parallel wherever dependencies allow; physical results remain open until performed". The item numbers are this page's. No release check has judged this layer, and nothing here has run on hardware.
 
