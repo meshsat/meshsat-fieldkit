@@ -1,0 +1,2427 @@
+                               Product            Order          Technical                Tools &                Support &
+                               Folder             Now            Documents                Software               Community
+
+
+
+                                                                                                                                               LM5069
+                                                                                           SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+                LM5069 Positive High-Voltage Hot Swap and In-Rush Current Controller
+                                         with Power Limiting
+1 Features                                                                    2 Applications
+•
+1   Wide operating range: 9 V to 80 V                                         •    Server backplane systems
+•   In-rush current limit for safe board insertion into                       •    Base station power distribution systems
+    live power sources                                                        •    Solid state circuit breaker
+•   Programmable maximum power dissipation in the                             •    24-V and 48-V Industrial systems
+    external pass device
+•   Adjustable current limit                                                  3 Description
+•   Circuit breaker function for severe overcurrent                           The LM5069 positive hot swap controller provides
+    events                                                                    intelligent control of the power supply connections
+                                                                              during insertion and removal of circuit cards from a
+•   Internal high side charge pump and gate driver for
+                                                                              live system backplane or other hot power sources.
+    external N-channel MOSFET                                                 The LM5069 provides in-rush current control to limit
+•   Adjustable undervoltage lockout (UVLO) and                                system voltage droop and transients. The current limit
+    hysteresis                                                                and power dissipation in the external series pass N-
+•   Adjustable overvoltage lockout (OVLO) and                                 Channel MOSFET are programmable, ensuring
+    hysteresis                                                                operation within the Safe Operating Area (SOA). The
+                                                                              POWER GOOD output indicates when the output
+•   Initial insertion timer allows ringing and transients                     voltage is within 1.25 V of the input voltage. The input
+    to subside after system connection                                        undervoltage and overvoltage lockout levels and
+•   Programmable fault timer avoids nuisance trips                            hysteresis are programmable, as well as the initial
+•   Active high open drain POWER GOOD output                                  insertion delay time and fault detection time. The
+                                                                              LM5069-1 latches off after a fault detection, while the
+•   Available in latched fault and automatic restart                          LM5069-2 automatically restarts at a fixed duty cycle.
+    versions                                                                  LM5069 is available in a 10-pin VSSOP package.
+•   10-Pin VSSOP package
+                                                                                                       Device Information(1)
+                                                                                  PART NUMBER                    PACKAGE           BODY SIZE (NOM)
+                                                                                LM5069                     VSSOP (10)              3.00 mm × 3.00 mm
+                                                                                (1) For all available packages, see the orderable addendum at
+                                                                                    the end of the data sheet.
+
+                                                   Typical Application Diagram
+        VIN                              RSNS                                                             VOUT
+                                                          Q1
+                                                                                          D1              COUT
+          CIN         Z1
+
+
+
+                                                                                               VDD
+                                                                                                                        Only required when
+                                                  SENSE         GATE      OUT
+                                                                                                                        using dv/dt start-up
+                                                                                                  100kŸ
+                       R1     R3            VIN                                                                         D2
+                                                                                    PGD
+                                           UVLO/EN
+                                                          LM5069
+                                           OVLO                                                             1kŸ
+                                           GND                                                                                      Cdv/dt
+                              R4                          PWR         TIMER
+                       R2
+                                                                                                                        Q2
+
+                                                               RPWR       CTIMER
+
+
+
+                                                                                               Copyright © 2016, Texas Instruments Incorporated
+
+
+1
+
+
+
+
+      An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+      intellectual property matters and other important disclaimers. PRODUCTION DATA.
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                                                        www.ti.com
+
+
+                                                                           Table of Contents
+    1   Features .................................................................. 1                 8.4 Device Functional Modes........................................ 13
+    2   Applications ........................................................... 1              9     Application and Implementation ........................ 17
+    3   Description ............................................................. 1                   9.1 Application Information............................................ 17
+    4   Revision History..................................................... 2                       9.2 Typical Application .................................................. 17
+    5   Device Comparison ............................................... 3                     10 Power Supply Recommendations ..................... 27
+    6   Pin Configuration and Functions ......................... 3                             11 Layout................................................................... 28
+                                                                                                      11.1 Layout Guidelines ................................................. 28
+    7   Specifications......................................................... 4
+                                                                                                      11.2 Layout Example .................................................... 29
+         7.1    Absolute Maximum Ratings ...................................... 4
+         7.2    ESD Ratings.............................................................. 4     12 Device and Documentation Support ................. 31
+         7.3    Recommended Operating Conditions....................... 4                             12.1     Device Support...................................................... 31
+         7.4    Thermal Information .................................................. 4              12.2     Documentation Support ........................................ 31
+         7.5    Electrical Characteristics........................................... 5               12.3     Receiving Notification of Documentation Updates 31
+         7.6    Typical Characteristics .............................................. 7              12.4     Community Resources.......................................... 31
+                                                                                                      12.5     Trademarks ........................................................... 31
+    8   Detailed Description ............................................ 11
+                                                                                                      12.6     Electrostatic Discharge Caution ............................ 31
+         8.1 Overview ................................................................. 11
+                                                                                                      12.7     Glossary ................................................................ 31
+         8.2 Functional Block Diagram ....................................... 11
+         8.3 Feature Description................................................. 12            13 Mechanical, Packaging, and Orderable
+                                                                                                   Information ........................................................... 31
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+
+Changes from Revision F (February 2019) to Revision G                                                                                                                             Page
+
+•   Added Device Comparison table ............................................................................................................................................ 3
+
+
+Changes from Revision E (November 2016) to Revision F                                                                                                                             Page
+
+•   Updated the Absolute Maximum Ratings section................................................................................................................... 4
+
+
+Changes from Revision D (May 2013) to Revision E                                                                                                                                  Page
+
+•   Added ESD Ratings table, Feature Description section, Device Functional Modes, Application and Implementation
+    section, Power Supply Recommendations section, Layout section, Device and Documentation Support section, and
+    Mechanical, Packaging, and Orderable Information section ................................................................................................. 1
+•   Added Thermal Information table ........................................................................................................................................... 4
+
+
+
+
+2        Submit Documentation Feedback                                                                            Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                                          Product Folder Links: LM5069
+                                                                                                                                         LM5069
+www.ti.com                                                                                  SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+5 Device Comparison
+               DEVICE NUMBER                            RETRY BEHAVIOR AFTER FAULT                                   PACKAGE
+                   LM5069-1                                      Latch Off on Fault
+                                                                                                                    VSSOP (10)
+                   LM5069-2                                     Auto Retry on Fault
+
+
+6 Pin Configuration and Functions
+
+                                                                   DGS Package
+                                                                   10-Pin VSSOP
+                                                                     Top View
+
+
+
+                                           SENSE          1                            10          GATE
+
+                                               VIN        2                             9          OUT
+
+                                            UVLO          3                             8          PGD
+
+                                            OVLO          4                             7          PWR
+
+                                             GND          5                             6          TIMER
+
+
+
+                                                        Not to scale
+
+
+                                                                 Pin Functions
+            PIN
+                               I/O                                                    DESCRIPTION
+NO.            NAME
+                                       Current sense input: The voltage across the current sense resistor (RS) is measured from VIN to this
+1              SENSE            I
+                                       pin. If the voltage across RS reaches 55 mV the load current is limited and the fault timer activates.
+                                       Positive supply input: A small ceramic bypass capacitor close to this pin is recommended to suppress
+2                 VIN           I
+                                       transients which occur when the load current is switched off.
+                                       Undervoltage lockout: An external resistor divider from the system input voltage sets the undervoltage
+3              UVLO             I      turnon threshold. An internal 21-µA current source provides hysteresis. The enable threshold at the pin
+                                       is 2.5 V. This pin can also be used for remote shutdown control.
+                                       Overvoltage lockout: An external resistor divider from the system input voltage sets the overvoltage
+4              OVLO             I      turnoff threshold. An internal 21-µA current source provides hysteresis. The disable threshold at the pin
+                                       is 2.5 V.
+5                 GND          —       Circuit ground
+                                       Timing capacitor: An external capacitor connected to this pin sets the insertion time delay and the fault
+6              TIMER           I/O
+                                       timeout period. The capacitor also sets the restart timing of the LM5069-2.
+                                       Power limit set: An external resistor connected to this pin, in conjunction with the current sense resistor
+7                 PWR           I
+                                       (RS), sets the maximum power dissipation allowed in the external series pass MOSFET.
+                                       Power Good indicator: An open drain output. When the external MOSFET VDS decreases below 1.25 V,
+8                 PGD           O      the PGD indicator is active (high). When the external MOSFET VDS increases above 2.5 V the PGD
+                                       indicator switches low.
+                                       Output feedback: Connect to the output rail (external MOSFET source). Internally used to determine the
+9                 OUT           I
+                                       MOSFET VDS voltage for power limiting, and to control the PGD indicator.
+                                       Gate drive output: Connect to the external MOSFET’s gate. This pin's voltage is typically 12 V above
+10             GATE             O
+                                       the OUT pin when enabled.
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                     Submit Documentation Feedback              3
+                                                          Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                       www.ti.com
+
+
+7 Specifications
+7.1 Absolute Maximum Ratings
+over operating free-air temperature range (unless otherwise noted) (1) (2)
+                                                                                                      MIN                MAX              UNIT
+VIN to GND (3)                                                                                        –0.3               100                V
+SENSE, OUT, and PGD to GND                                                                            –0.3               100                V
+GATE to GND (3)                                                                                       –0.3               100                V
+OUT to GND (1 -ms transient) (4)                                                                       –1                100                V
+UVLO to GND                                                                                           –0.3               100                V
+OVLO to GND                                                                                           –0.3                7                 V
+VIN to SENSE                                                                                          –0.3                0.3               V
+Maximum junction temperature, TJMAX                                                                                      150               °C
+Storage temperature, Tstg                                                                             –65                150               °C
+
+(1)   Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress ratings
+      only, which do not imply functional operation of the device at these or any other conditions beyond those indicated under Recommended
+      Operating Conditions. Exposure to absolute-maximum-rated conditions for extended periods may affect device reliability.
+(2)   If Military/Aerospace specified devices are required, please contact the Texas Instruments Sales Office/ Distributors for availability and
+      specifications.
+(3)   The GATE pin voltage is typically 12 V above VIN when the LM5069 is enabled. Therefore, the Absolute Maximum Ratings for VIN
+      (100 V) applies only when the LM5069 is disabled, or for a momentary surge to that voltage because the Absolute Maximum Rating for
+      the GATE pin is also 100 V.
+(4)   Select external MOSFET with VGS(th) voltage higher than VOUT during -ve transient. This avoids MOSFET getting turned-ON during -ve
+      transient.
+
+7.2 ESD Ratings
+                                                                                                                         VALUE            UNIT
+                                                                                                      (2)
+                                          Human-body model (HBM), per ANSI/ESDA/JEDEC JS-001                              ±2000
+V(ESD)      Electrostatic discharge (1)                                                                                                     V
+                                          Charged-device model (CDM), per JEDEC specification JESD22-C101 (3)             ±500
+
+(1)   The Human-body model is a 100-pF capacitor discharged through a 1.5-kΩ resistor into each pin.
+(2)   JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process.
+(3)   JEDEC document JEP157 states that 250-V CDM allows safe manufacturing with a standard ESD control process.
+
+7.3 Recommended Operating Conditions
+over operating free-air temperature range (unless otherwise noted) (1)
+                                                                                                               MIN               MAX       UNIT
+VIN         Supply voltage                                                                                        9                80       V
+            PGD off voltage                                                                                       0                80       V
+TJ          Junction temperature                                                                                –40               125       °C
+
+(1)   For detailed information on soldering plastic VSSOP packages, see Absolute Maximum Ratings for Soldering (SNOA549) available from
+      Texas Instruments.
+
+7.4 Thermal Information
+                                                                                                                LM5069
+                                          THERMAL METRIC (1)                                                 DGS (VSSOP)                UNIT
+                                                                                                                10 PINS
+RθJA               Junction-to-ambient thermal resistance                                                         156                   °C/W
+RθJC(top)          Junction-to-case (top) thermal resistance                                                      50.6                  °C/W
+RθJB               Junction-to-board thermal resistance                                                           75.8                  °C/W
+ψJT                Junction-to-top characterization parameter                                                      4.8                  °C/W
+ψJB                Junction-to-board characterization parameter                                                   74.5                  °C/W
+RθJC(bot)          Junction-to-case (bottom) thermal resistance                                                    —                    °C/W
+
+(1)   For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+      report.
+4        Submit Documentation Feedback                                                       Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                          Product Folder Links: LM5069
+                                                                                                                                LM5069
+www.ti.com                                                                               SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+7.5 Electrical Characteristics
+Minimum and maximum limits are specified through test, design, or statistical correlation at TJ= –40°C to 125°C. Typical
+values represent the most likely parametric norm at TJ = 25°C and are provided for reference purposes only. VIN = 48 V
+(unless otherwise noted).
+                 PARAMETER                                            TEST CONDITIONS                          MIN    TYP     MAX UNIT
+INPUT (VIN PIN)
+IIN-EN         Input current, enabled             UVLO > 2.5 V and OVLO < 2.5 V                                        1.3      1.6   mA
+IIN-DIS        Input current, disabled            UVLO < 2.5 V or OVLO > 2.5 V                                         480     650    µA
+               Power-On reset threshold at
+PORIT                                             VIN increasing                                                       7.6        8   V
+               VIN to trigger insertion timer
+               Power-On reset threshold at
+POREN                                             VIN increasing                                                       8.4        9   V
+               VIN to enable all functions
+POREN-HYS      POREN hysteresis                   VIN decreasing                                                        90            mV
+OUT PIN
+IOUT-EN        OUT bias current, enabled          OUT = VIN, Normal operation                                           11
+                                                                                                                                      µA
+IOUT-DIS       OUT bias current, disabled (1)     Disabled, OUT = 0 V, SENSE = VIN                                      50
+UVLO, OVLO PINS
+UVLOTH         UVLO threshold                                                                                  2.45    2.5     2.55   V
+UVLOHYS        UVLO hysteresis current            UVLO = 1 V                                                    12      21      30    µA
+                                                  Delay to GATE high                                                    55            µs
+UVLODEL        UVLO delay
+                                                  Delay to GATE low                                                     11
+UVLOBIAS       UVLO bias current                  UVLO = 48 V                                                                     1   µA
+OVLOTH         OVLO threshold                                                                                   2.4    2.5      2.6   V
+OVLOHYS        OVLO hysteresis current            OVLO = 2.6 V                                                  12      21      30    µA
+                                                  Delay to GATE high                                                    55            µs
+OVLODEL        OVLO delay
+                                                  Delay to GATE low                                                     11
+OVLOBIAS       OVLO bias current                  OVLO = 2.4 V                                                                    1   µA
+POWER LIMIT (PWR PIN)
+PWRLIM-1       Power limit sense voltage          SENSE-OUT = 48 V, RPWR = 150 kΩ                               19      25      31    mV
+PWRLIM-2       (VIN-SENSE)                        SENSE-OUT = 24 V, RPWR = 75 kΩ                                        25            mV
+IPWR           PWR pin current                    VPWR = 2.5 V                                                          20            µA
+GATE CONTROL (GATE PIN)
+               Source current                     Normal operation, GATE-OUT = 5 V                              10      16      22    µA
+IGATE                                             UVLO < 2.5 V                                                 1.75      2      2.6   mA
+               Sink current
+                                                  VIN to SENSE = 150 mV or VIN < PORIT, VGATE = 5 V             45     110     175    mA
+               Gate output voltage in normal
+VGATE                                             GATE-OUT voltage                                             11.4     12     12.6   V
+               operation
+
+(1)   OUT bias current (disabled) due to leakage current through an internal 1-MΩ resistance from SENSE to VOUT.
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                Submit Documentation Feedback         5
+                                                          Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                     www.ti.com
+
+
+Electrical Characteristics (continued)
+Minimum and maximum limits are specified through test, design, or statistical correlation at TJ= –40°C to 125°C. Typical
+values represent the most likely parametric norm at TJ = 25°C and are provided for reference purposes only. VIN = 48 V
+(unless otherwise noted).
+               PARAMETER                                           TEST CONDITIONS                                MIN      TYP       MAX UNIT
+CURRENT LIMIT
+VCL           Threshold voltage                VIN-SENSE voltage                                                  48.5       55       61.5   mV
+tCL           Response time                    VIN-SENSE stepped from 0 mV to 80 mV                                          45               µs
+                                               Enabled, SENSE = OUT                                                          23
+ISENSE        SENSE input current                                                                                                            µA
+                                               Disabled, OUT = 0 V                                                           60
+CIRCUIT BREAKER
+VCB           Threshold voltage                VIN to SENSE                                                         80      105       130    mV
+                                               VIN to SENSE stepped from 0 mV to 150 mV, time to
+tCB           Response time                                                                                                0.44        1.2    µs
+                                               GATE low, no load
+TIMER (TIMER PIN)
+VTMRH         Upper threshold                                                                                     3.76        4       4.16    V
+                                               Restart cycles (LM5069-2)                                         1.187     1.25     1.313     V
+VTMRL         Lower threshold                  End of 8th cycle (LM5069-2)                                                  0.3               V
+                                               Re-enable Threshold (LM5069-1)                                               0.3               V
+              Insertion time current                                                                                 3      5.5          8   µA
+              Sink current, end of insertion
+                                               TIMER pin = 2 V                                                       1      1.5          2   mA
+ITIMER        time
+              Fault detection current                                                                               51       85       120    µA
+              Fault sink current                                                                                  1.25      2.5       3.75   µA
+DCFAULT       Fault restart duty cycle         LM5069-2 only                                                              0.5%
+tFAULT        Fault to GATE low delay          TIMER pin reaches 4 V                                                         12               µs
+POWER GOOD (PGD PIN)
+              Threshold measured at            Decreasing                                                         0.67     1.25       1.85
+PGDTH                                                                                                                                         V
+              SENSE-OUT                        Increasing, relative to decreasing threshold                       0.95     1.25       1.55
+PGDVOL        Output low voltage               ISINK = 2 mA                                                                  60       150    mV
+PGDIOH        Off leakage current              VPGD = 80 V                                                                               5   µA
+
+
+
+
+6        Submit Documentation Feedback                                                        Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                       Product Folder Links: LM5069
+                                                                                                                                                                                                                       LM5069
+www.ti.com                                                                                                                                                    SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+7.6 Typical Characteristics
+TJ = 25°C and VIN = 48 V (unless otherwise noted)
+
+                                            2.0                                                                                                               100
+
+
+
+
+                                                                                                                               SENSE PIN INPUT CURRENT (PA)
+               VIN PIN INPUT CURRENT (mA)
+
+
+
+
+                                                                                                                                                                                       Disabled, UVLO = 0V
+                                            1.5                                                                                                                75
+                                                                            Enabled, UVLO = VIN
+
+
+
+                                            1.0                                                                                                                50
+
+
+
+
+                                            0.5                                                                                                                25
+                                                                            Disabled, UVLO = 0V                                                                                             Enabled, UVLO = VIN
+
+
+                                             0                                                                                                                  0
+                                                     0            20          40          60        80                                                              0            20         40          60        80
+
+                                                                       VIN VOLTAGE (V)                                                                                          SENSE PIN VOLTAGE (V)
+
+
+
+                                             Figure 1. VIN Pin Input Current vs VIN                                                                                  Figure 2. SENSE Pin Input Current
+                                            100                                                                                                                14
+                                                         Load at OUT Pin = 600:
+                                                         Current flow is out of the pin                                                                        12
+                                            80
+             OUT PIN CURRENT (PA)
+
+
+
+
+                                                                                                                                 GATE-OUT VOLTAGE
+                                                                                                                                                               10
+                                            60
+                                                           Disabled, UVLO = 0V
+                                                                                                                                                                8
+                                            40
+                                                                                                                                                                6
+                                            20
+                                                                                                                                                                4
+                                                                                                                                                                                           Enabled, UVLO = VIN
+                                                                            Enabled, UVLO = VIN                                                                                            Normal Operation
+                                             0                                                                                                                  2
+                                                                                                                                                                         POREN
+                                            -20                                                                                                                 0
+                                                     0            20          40          60        80                                                              0       5         10    15    20         70   80
+
+                                                                                                                                                                                      VIN VOLTAGE (V)
+                                                                       VIN VOLTAGE (V)
+
+
+                                                                                                                                                                     Figure 4. GATE Pin Voltage vs VIN
+                                                           Figure 3. OUT Pin Current
+                                             18                                                                                                                0.8
+
+                                             17                                                                                                                0.7
+               GATE PIN CURRENT (PA)
+
+
+
+
+                                             16
+                                                                                                                                                               0.6
+                                                                                                                             PGD VOLTAGE (V)
+
+
+
+
+                                             15
+                                                                                                                                                               0.5
+                                             14
+                                                                                                                                                               0.4
+                                             13
+                                                                                                                                                               0.3
+                                             12
+
+                                             11                              Enabled, UVLO = VIN                                                               0.2
+                                                                             Normal Operation
+                                             10                                                                                                                0.1
+                                                         POREN
+                                                 9                                                                                                              0
+                                                     0        5        10     15     20        70   80                                                               0           5           10         15        20
+                                                                       VIN VOLTAGE (V)                                                                                          PGD SINK CURRENT (mA)
+
+
+
+                                            Figure 5. GATE Pin Source Current vs VIN                                           Figure 6. PGD Pin Low Voltage vs Sink Current
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                                                                                            Submit Documentation Feedback              7
+                                                                                                    Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                                                                                                                        www.ti.com
+
+
+Typical Characteristics (continued)
+TJ = 25°C and VIN = 48 V (unless otherwise noted)
+                                                 240                                                                                                                         250
+
+
+
+
+                                                                                                                                                                                                                 |
+                                                 200
+
+
+
+
+                                                                                                                                 GATE PULLDOWN CURRENT,
+                                                                             RS = 0.005:                                                                                     200
+
+
+
+
+                                                                                                                                   CIRCUIT BREAKER (mA)
+                                                 160
+                                                                      RS = 0.1:                                                                                              150
+          PFET (W)
+
+
+
+
+                                                 120                                   RS = 0.01:
+
+                                                                                                                                                                             100
+                                                  80
+                                                                                        RS = 0.02:
+                                                                                                                                                                              50
+                                                  40
+                                                                                         RS = 0.05:                                                                                       TJ = 25°C
+
+                                                  0
+
+
+
+
+                                                                                                                                                                                                                 |
+                                                                                                                                                                               0
+                                                       0     30         60        90      120        150                                                                            0     10         20         30         82       92
+                                                                        R PWR (k:)
+                                                                                                                                                                                            GATE PIN VOLTAGE (V)
+
+
+     Figure 7. MOSFET Power Dissipation Limit vs RPWR and RS                                                                 Figure 8. GATE Pulldown Current, Circuit Breaker
+                                                                                                                                            vs GATE Voltage
+                                                  23                                                                                                                         23
+
+
+
+
+                                                                                                                                             OVLO HYSTERESIS CURRENT (PA)
+                  UVLO HYSTERESIS CURRENT (PA)
+
+
+
+
+                                                  22                                                                                                                         22
+
+
+
+                                                  21                                                                                                                         21
+
+
+
+                                                  20                                                                                                                         20
+
+
+
+                                                  19                                                                                                                         19
+                                                    -40 -20       0    20    40   60     80   100 125                                                                          -40 -20      0       20    40    60    80    100 125
+                                                            JUNCTION TEMPERATURE (oC)                                                                                                   JUNCTION TEMPERATURE (°C)
+
+
+
+         Figure 9. UVLO Hysteresis Current vs Temperature                                                                   Figure 10. OVLO Hysteresis Current vs Temperature
+                                                 2.55                                                                                                                       1.320
+           UVLO, OVLO THRESHOLD VOLTAGE (V)
+
+
+
+
+                                                                                                                              INPUT CURRENT, ENABLED (mA)
+
+
+
+
+                                                 2.53
+                                                                                                                                                                            1.310
+
+
+                                                 2.51
+                                                                                              UVLO
+                                                           OVLO
+                                                 2.50                                                                                                                       1.300
+                                                 2.49      UVLO                               OVLO
+
+                                                                                                                                                                            1.290
+                                                 2.47
+                                                                                                                                                                                             VIN = 48V
+
+                                                 2.45                                                                                                                       1.280
+                                                    -40 -20       0     20   40    60    80   100 125                                                                            -40 -20        0    20    40    60    80       100 125
+                                                            JUNCTION TEMPERATURE (oC)                                                                                                    JUNCTION TEMPERATURE (oC)
+
+
+
+         Figure 11. UVLO, OVLO Threshold vs Temperature                                                                      Figure 12. Input Current, Enabled vs Temperature
+
+
+
+
+8      Submit Documentation Feedback                                                                                                                                                Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                                                                     Product Folder Links: LM5069
+                                                                                                                                                                                                                   LM5069
+www.ti.com                                                                                                                                                  SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+Typical Characteristics (continued)
+TJ = 25°C and VIN = 48 V (unless otherwise noted)
+                                                                   57                                                                                              115
+
+
+
+
+                                                                                                                                    CIRCUIT BREAKER THRESHOLD
+             CURRENT LIMIT THRESHOLD
+
+
+
+
+                                                                                                                                     (VOLTAGE ACROSS RS) (mV)
+             (VOLTAGE ACROSS RS) (mV)
+
+
+                                                                                                                                                                   110
+                                                                   56
+                                                                                                                                                                   105
+
+
+                                                                   55                                                                                              100
+
+
+                                                                                                                                                                    95
+                                                                   54
+                                                                                                                                                                    90
+
+
+                                                                   53                                                                                               85
+                                                                    -40 -20    0    20   40   60   80   100 125                                                      -40 -20    0   20    40   60   80   100 125
+                                                                                                        o
+                                                                           JUNCTION TEMPERATURE ( C)                                                                       JUNCTION TEMPERATURE (oC)
+
+
+
+           Figure 13. Current Limit Threshold vs Temperature                                                                       Figure 14. Circuit Breaker Threshold vs Temperature
+                                                                   27                                                                                             13.0
+
+
+
+
+                                                                                                                                      GATE OUTPUT VOLTAGE ABOVE
+                                        (VOLTAGE ACROSS RS) (mV)
+             POWER LIMIT THRESHOLD
+
+
+
+
+                                                                   26                                                                                             12.5
+
+
+
+                                                                   25                                                                         OUT PIN (V)         12.0
+
+
+
+                                                                   24                                                                                             11.5
+                                                                        RPWR = 150 k:
+                                                                                                                                                                         GATE-OUT Voltage,
+                                                                        VDS = 48V                                                                                         Normal Operation
+                                                                   23                                                                                             11.0
+                                                                    -40 -20   0     20   40   60   80   100 125                                                      -40 -20   0    20   40    60   80   100 125
+                                                                          JUNCTION TEMPERATURE (oC)                                                                       JUNCTION TEMPERATURE (oC)
+
+
+
+            Figure 15. Power Limit Threshold vs Temperature                                                                              Figure 16. GATE Output Voltage vs Temperature
+                                                       16.4                                                                                                       150
+             GATE SOURCE CURRENT (PA)
+
+
+
+
+                                                                                                                                    GATE PULLDOWN CURRENT,
+
+
+
+
+                                                                                                                                                                  130
+                                                                                                                                      CIRCUIT BREAKER (mA)
+
+
+
+
+                                                       16.2
+
+                                                                                                                                                                  110
+                                                       16.0                                                                                                       100
+                                                                                                                                                                   90
+
+                                                       15.8
+                                                                                                                                                                   70
+                                                                                                                                                                          GATE PIN = 5V
+                                                                              GATE-OUT = 5V
+                                                       15.6                                                                                                        50
+                                                                    -40 -20    0    20   40   60   80   100 125                                                     -40 -20    0    20   40    60   80   100 125
+                                                                           JUNCTION TEMPERATURE (°C)                                                                      JUNCTION TEMPERATURE (°C)
+
+
+
+             Figure 17. GATE Source Current vs Temperature                                                                          Figure 18. GATE Pulldown Current, Circuit Breaker
+                                                                                                                                                    vs Temperature
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                                                                                          Submit Documentation Feedback            9
+                                                                                                            Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                                           www.ti.com
+
+
+Typical Characteristics (continued)
+TJ = 25°C and VIN = 48 V (unless otherwise noted)
+                                                                         160
+
+
+
+
+                                           PGD OUTPUT LOW VOLTAGE (mV)
+                                                                         120
+
+
+
+                                                                         80
+
+
+
+                                                                          .
+                                                                          40
+                                                                                          PGD Sink Current = 2 mA
+
+
+                                                                          0
+                                                                           -40 -20    0   20   40   60   80   100 125
+                                                                                  JUNCTION TEMPERATURE (oC)
+
+
+
+                                                             Figure 19. PGD Low Voltage vs Temperature
+
+
+
+
+10     Submit Documentation Feedback                                                                                Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                                               Product Folder Links: LM5069
+                                                                                                                                                                  LM5069
+www.ti.com                                                                                                          SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+8 Detailed Description
+
+8.1 Overview
+The inline protection functionality of the LM5069 is designed to control the in-rush current to the load upon
+insertion of a circuit card into a live backplane or other hot power source, thereby limiting the voltage sag on the
+backplane's supply voltage and the dV/dt of the voltage applied to the load. Effects on other circuits in the
+system are minimized, preventing possible unintended resets. A controlled shutdown when the circuit card is
+removed can also be implemented using the LM5069.
+In addition to a programmable current limit, the LM5069 monitors and limits the maximum power dissipation in
+the series pass device to maintain operation within the device Safe Operating Area (SOA). Either current limiting
+or power limiting for an extended period of time results in the shutdown of the series pass device. In this event,
+the LM5069-1 latches off while the LM5069-2 retries an infinite number of times to recover after the fault is
+removed. The circuit breaker function quickly switches off the series pass device upon detection of a severe
+overcurrent condition. Programmable undervoltage lockout (UVLO) and overvoltage lockout (OVLO) circuits shut
+down the LM5069 when the system input voltage is outside the desired operating range.
+
+8.2 Functional Block Diagram
+
+
+                                      LM5069                                                                          Charge
+                                                                                                                      Pump
+                                                              55 mV
+                           VIN                          ID
+
+                                                                        Current Limit                                          16 PA
+                                                                         Threshold                                                                      GATE
+                                                                                          Gate                 2 mA            230
+                         SENSE                                                           Control                               mA        12V
+
+                                   1 M:                                                                                                      OUT
+                                                        VDS                Power Limit                                                 Current Limit/
+                                                                           Threshold                                                   Power Limit
+                          OUT                                                                                                          Control
+
+
+                          PGD
+
+                                                               1.25V/
+                                                               2.5V
+
+                                                                                                                    5.5 PA
+                                                                                                                  Insertion
+                                                                                                                     Timer                85 PA
+                                          20 PA                                                                                           Fault
+                                                                                                                                          Timer
+                          PWR
+                                                                   21 PA                                                                                TIMER
+                                                                                            TIMER AND GATE
+                                                                                            LOGIC CONTROL
+
+
+
+
+                                                                                                                                           1.5 mA
+                         OVLO                                                                                                              End
+                                                                                                                   2.5 PA                  Insertion
+                                       2.5V
+                                                                                                                                           Time
+                                                                                                                     Fault
+                                                                                                                Discharge
+
+
+                                       2.5V                                                                               4.0V
+                         UVLO
+
+                                                                                                                             1.25V
+
+                                                                   21 PA
+                                                                                                                          0.3V
+                                                    8.4/8.3V                   Enable POR                    Insertion Timer POR            7.6V
+                          GND
+                                                             VIN                                                                            VIN
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                                                  Submit Documentation Feedback   11
+                                                               Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                          www.ti.com
+
+
+8.3 Feature Description
+8.3.1 Current Limit
+The current limit threshold is reached when the voltage across the sense resistor RS (VIN to SENSE) reaches
+55 mV. In the current limiting condition, the GATE voltage is controlled to limit the current in MOSFET Q1. While
+the current limit circuit is active, the fault timer is active as described in Fault Timer and Restart. If the load
+current falls below the current limit threshold before the end of the fault timeout period, the LM5069 resumes
+normal operation. For proper operation, the RS resistor value must be no larger than 100 mΩ.
+
+8.3.2 Circuit Breaker
+If the load current increases rapidly (for example, the load is short-circuited) the current in the sense resistor (RS)
+may exceed the current limit threshold before the current limit control loop is able to respond. If the current
+exceeds twice the current limit threshold (105 mV/RS), Q1 is quickly switched off by the 230-mA pulldown current
+at the GATE pin, and a fault timeout period begins. When the voltage across RS falls below 105 mV the 230-mA
+pulldown current at the GATE pin is switched off, and the gate voltage of Q1 is then determined by the current
+limit or the power limit functions. If the TIMER pin reaches 4 V before the current limiting or power limiting
+condition ceases, Q1 is switched off by the 2-mA pulldown current at the GATE pin as described in Fault Timer
+and Restart.
+
+8.3.3 Power Limit
+An important feature of the LM5069 is the MOSFET power limiting. The Power Limit function can be used to
+maintain the maximum power dissipation of MOSFET Q1 within the device SOA rating. The LM5069 determines
+the power dissipation in Q1 by monitoring its drain-source voltage (SENSE to OUT), and the drain current
+through the sense resistor (VIN to SENSE). The product of the current and voltage is compared to the power
+limit threshold programmed by the resistor at the PWR pin. If the power dissipation reaches the limiting threshold,
+the GATE voltage is modulated to reduce the current in Q1. While the power limiting circuit is active, the fault
+timer is active as described in Fault Timer and Restart.
+
+8.3.4 Undervoltage Lockout (UVLO)
+The series pass MOSFET (Q1) is enabled when the input supply voltage (VSYS) is within the operating range
+defined by the programmable undervoltage lockout (UVLO) and overvoltage lockout (OVLO) levels. Typically the
+UVLO level at VSYS is set with a resistor divider (R1-R3) as shown in Figure 30. When VSYS is below the UVLO
+level, the internal 21-µA current source at UVLO is enabled, the current source at OVLO is off, and Q1 is held off
+by                                                                                                            the
+2-mA pulldown current at the GATE pin. As VSYS is increased, raising the voltage at UVLO above 2.5 V, the
+21-µA current source at UVLO is switched off, increasing the voltage at UVLO, providing hysteresis for this
+threshold. With the UVLO pin above 2.5 V, Q1 is switched on by the 16-µA current source at the GATE pin if the
+insertion time delay has expired (Figure 22). See Application and Implementation for a procedure to calculate the
+values of the threshold setting resistors (R1-R3). The minimum possible UVLO level at VSYS can be set by
+connecting the UVLO pin to VIN. In this case Q1 is enabled when the VIN voltage reaches the POREN threshold.
+
+8.3.5 Overvoltage Lockout (OVLO)
+The series pass MOSFET (Q1) is enabled when the input supply voltage (VSYS) is within the operating range
+defined by the programmable undervoltage lockout (UVLO) and overvoltage lockout (OVLO) levels. If VSYS raises
+the OVLO pin voltage above 2.5 V, Q1 is switched off by the 2-mA pulldown current at the GATE pin, denying
+power to the load. When the OVLO pin is above 2.5 V, the internal 21-µA current source at OVLO is switched on,
+raising the voltage at OVLO to provide threshold hysteresis. When VSYS is reduced below the OVLO level Q1 is
+enabled. See Application and Implementation for a procedure to calculate the threshold setting resistor values.
+
+8.3.6 Power Good Pin
+During turnon, the Power Good pin (PGD) is high until the voltage at VIN increases above ≊ 5 V. PGD then
+switches low, remaining low as the VIN voltage increases. When the voltage at OUT increases to within 1.25 V of
+the SENSE pin (VDS <1.25 V), PGD switches high. PGD switches low if the VDS of Q1 increases above 2.5 V. A
+pullup resistor is required at PGD as shown in Figure 20. The pullup voltage (VPGD) can be as high as 80 V, with
+transient capability to 100 V, and can be higher or lower than the voltages at VIN and OUT.
+
+
+12     Submit Documentation Feedback                                               Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                    Product Folder Links: LM5069
+                                                                                                                                                           LM5069
+www.ti.com                                                                                                   SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+Feature Description (continued)
+
+                                                                                              V PGD
+
+
+
+                                                                                                      R PG
+                                                                      LM5069
+                                                                                                         Power
+                                                                                                         Good
+                                                                                              PGD
+
+
+
+                                                                              GND
+
+
+                                                        Copyright © 2016, Texas Instruments Incorporated
+
+                                                            Figure 20. Power Good Output
+
+If a delay is required at PGD, suggested circuits are shown in Figure 21. In Figure 21a, capacitor CPG adds delay
+to the rising edge, but not to the falling edge. In Figure 21b, the rising edge is delayed by RPG1 + RPG2 and CPG,
+while the falling edge is delayed a lesser amount by RPG2 and CPG. Adding a diode across RPG2 (Figure 21c)
+allows for equal delays at the two edges, or a short delay at the rising edge and a long delay at the falling edge.
+                                                                                                                                 VPGD
+                                       VPGD                                      VPGD
+                                                                                                                                     R PG1
+                                                                                      R PG1
+                                            R PG1
+                        LM5069                                  LM5069                R PG2                       LM5069
+                                                    Power                                         Power                                            Power
+                                                    Good                                          Good                                             Good
+                                      PGD       CPG                             PGD              CPG                             PGD R PG2        C PG
+
+
+                              GND                                      GND                                               GND
+
+                    a) Delay Rising Edge Only               b) Long delay at rising edge,                     c) Short Delay at Rising Edge and
+                                                               short delay at falling edge                       Long Delay at Falling Edge or
+                                                                                                                 Equal Delays
+
+                                                                                                Copyright © 2016, Texas Instruments Incorporated
+
+                                    Figure 21. Adding Delay to the Power Good Output Pin
+
+
+8.4 Device Functional Modes
+The LM5069 hot swap controller has a power up sequence which can be broken down into 3x distinct sections:
+Insertion Time, In-Rush Limiting, and Normal Operation. Once the device reaches normal operation, the GATE
+and TIMER behavior depends on whether a fault condition is present or not on the output.
+
+8.4.1 Power Up Sequence
+The VIN operating range of the LM5069 is 9 V to 80 V, with a transient capability to 100 V. See Functional Block
+Diagram and Figure 22, as the voltage at VIN initially increases, the external N-channel MOSFET (Q1) is held off
+by an internal 230-mA pulldown current at the GATE pin. The strong pulldown current at the GATE pin prevents
+an inadvertent turnon as the MOSFET’s gate-to-drain (Miller) capacitance is charged. Additionally, the TIMER pin
+is initially held at ground. When the VIN voltage reaches the PORIT threshold (7.6 V) the insertion time begins.
+During the insertion time, the capacitor at the TIMER pin (CT) is charged by a 5.5-µA current source, and Q1 is
+held off by a 2-mA pulldown current at the GATE pin regardless of the VIN voltage. The insertion time delay
+allows ringing and transients at VIN to settle before Q1 can be enabled. The insertion time ends when the TIMER
+pin voltage reaches 4 V. CT is then quickly discharged by an internal 1.5-mA pulldown current. After the insertion
+time, the LM5069 control circuitry is enabled when VIN reaches the POREN threshold (8.4 V). The GATE pin then
+switches on Q1 when VSYS exceeds the UVLO threshold (UVLO pin >2.5 V). If VSYS is above the UVLO threshold
+at the end of the insertion time, Q1 switches on at that time. The GATE pin charge pump sources 16 µA to
+charge Q1’s gate capacitance. The maximum gate-to-source voltage of Q1 is limited by an internal 12-V Zener
+diode.
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                                       Submit Documentation Feedback      13
+                                                                  Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                           www.ti.com
+
+
+Device Functional Modes (continued)
+As the voltage at the OUT pin increases, the LM5069 monitors the drain current and power dissipation of
+MOSFET Q1. In-rush current limiting and/or power limiting circuits actively control the current delivered to the
+load. During the in-rush limiting interval (t2 in Figure 22) an internal 85-µA fault timer current source charges CT.
+If Q1’s power dissipation and the input current reduce below their respective limiting thresholds before the
+TIMER pin reaches 4 V, the 85-µA current source is switched off, and CT is discharged by the internal 2.5-µA
+current sink (t3 in Figure 22). The in-rush limiting interval is complete when the voltage at the OUT pin increases
+to within 1.25 V of the input voltage (VSYS), and the PGD pin switches high.
+If the TIMER pin voltage reaches 4 V before in-rush current limiting or power limiting ceases (during t2), a fault is
+declared and Q1 is turned off. See Fault Timer and Restart for a complete description of the fault mode.
+                                    VSYS
+
+
+                                  UVLO
+                      V IN     POR IT
+
+
+                                                              4V
+                                           5.5 PA                         85 PA                    2.5 PA
+
+                   TIMER
+                      Pin                               1.5 mA
+
+
+
+
+                    GATE      230 mA
+                      Pin    pull-down       2 mA pull-down
+                                                                                   16 PA source
+
+
+                                                              I LIMIT
+                     Load
+                   Current
+
+
+
+
+                    Output
+                   Voltage                                                                1.25V
+                 (OUT Pin)
+
+
+
+
+                     PGD
+
+
+
+                                                    t1                     t2                            t3
+                                             Insertion Time             In- rush                  Normal Operation
+                                                                        Limiting
+
+                                     Figure 22. Power-Up Sequence (Current Limit Only)
+
+8.4.2 Gate Control
+A charge pump provides internal bias voltage above the output voltage (OUT pin) to enhance the N-Channel
+MOSFET’s gate. The gate-to-source voltage is limited by an internal 12-V Zener diode. During normal operating
+conditions (t3 in Figure 22) the gate of Q1 is held charged by an internal 16-µA current source to approximately
+12 V above OUT. If the maximum VGS rating of Q1 is less than 12 V, an external Zener diode of lower voltage
+must be added between the GATE and OUT pins. The external Zener diode must have a forward current rating
+of at least 250 mA.
+When the system voltage is initially applied, the GATE pin is held low by a 230-mA pulldown current. This helps
+prevent an inadvertent turnon of the MOSFET through its drain-gate capacitance as the applied system voltage
+increases.
+During the insertion time (t1 in Figure 22) the GATE pin is held low by a 2-mA pulldown current. This maintains
+Q1 in the off-state until the end of t1, regardless of the voltage at VIN or UVLO.
+Following the insertion time, during t2 in Figure 22, the gate voltage of Q1 is modulated to keep the current or
+power dissipation level from exceeding the programmed levels. While in the current or power limiting mode the
+TIMER pin capacitor is charging. If the current and power limiting cease before the TIMER pin reaches 4 V the
+TIMER pin capacitor then discharges, and the circuit enters normal operation.
+14     Submit Documentation Feedback                                                                Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                          Product Folder Links: LM5069
+                                                                                                                                                 LM5069
+www.ti.com                                                                                             SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+Device Functional Modes (continued)
+If the in-rush limiting condition persists such that the TIMER pin reached 4 V during t2, the GATE pin is then
+pulled low by the 2-mA pulldown current. The GATE pin is then held low until either a power-up sequence is
+initiated (LM5069-1), or until the end of the restart sequence (LM5069-2). See Fault Timer and Restart.
+If the system input voltage falls below the UVLO threshold, or rises above the OVLO threshold, the GATE pin is
+pulled low by the 2-mA pulldown current to switch off Q1.
+                                                                               Q1
+                                              VSYS                                                            VOUT
+                                                                   RS
+                                                                                                             CL
+
+
+                                                VIN              SENSE                  GATE      OUT
+
+
+                                                           Charge
+                                                           Pump
+                                                                         16 PA           12V
+
+                                                                                                    Gate
+                                                                                                   Control
+                                                                                    Fault /
+                                                                        2 mA        UVLO /
+                                                 Current Limit /                    OVLO /      230 mA
+                                                  Power Limit                       Insertion   Circuit Breaker /
+                                                      Control                       time        Initial Hold - down
+
+
+
+
+                                                            Figure 23. Gate Control
+
+8.4.3 Fault Timer and Restart
+When the current limit or power limit threshold is reached during turnon or as a result of a fault condition, the
+gate-to-source voltage of Q1 is modulated to regulate the load current and power dissipation. When either
+limiting function is activated, an 85-µA fault timer current source charges the external capacitor (CT) at the
+TIMER pin as shown in Figure 25 (fault timeout period). If the fault condition subsides during the fault timeout
+period before the TIMER pin reaches 4 V, the LM5069 returns to the normal operating mode and CT is
+discharged by the 2.5-µA current sink. If the TIMER pin reaches 4 V during the fault timeout period, Q1 is
+switched off by a 2-mA pulldown current at the GATE pin. The subsequent restart procedure then depends on
+which version of the LM5069 is in use.
+The LM5069-1 latches the GATE pin low at the end of the fault timeout period. CT is then discharged to ground
+by the 2.5-µA fault current sink. The GATE pin is held low by the 2-mA pulldown current until a power-up
+sequence is externally initiated by cycling the input voltage (VSYS), or momentarily pulling the UVLO pin below
+2.5 V with an open-collector or open-drain device as shown in Figure 24. The voltage at the TIMER pin must be
+<0.3 V for the restart procedure to be effective.
+                                                         V SYS
+
+                                                                                      VIN
+                                                                           R1
+                                                                                       UVLO
+                                               Restart
+                                               Control                     R2                   LM5069-1
+                                                                                      OVLO
+
+                                                                           R3
+                                                                                                 GND
+
+
+                                                         Copyright © 2016, Texas Instruments Incorporated
+
+                                              Figure 24. Latched Fault Restart Control
+
+The LM5069-2 provides an automatic restart sequence which consists of the TIMER pin cycling between 4 V and
+1.25 V seven times after the fault timeout period, as shown in Figure 25. The period of each cycle is determined
+by the 85-µA charging current, and the 2.5-µA discharge current, and the value of the capacitor CT. When the
+TIMER pin reaches 0.3 V during the eighth high-to-low ramp, the 16-µA current source at the GATE pin turns on
+Q1. If the fault condition is still present, the fault timeout period and the restart cycle repeat.
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                                 Submit Documentation Feedback   15
+                                                              Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                               www.ti.com
+
+
+Device Functional Modes (continued)
+
+                                            Fault
+                                          Detection             I LIMIT
+
+                            Load
+                          Current
+
+
+                                                                 2 mA                                             16 PA
+                                                                pulldown                                    Gate Charge
+                           GATE
+                             Pin
+                                              4V                                    2. 5 P A
+                                             85 PA
+
+                          TIMER
+                                            1.25V
+                             Pin                            1             2        3                    7          8      0.3V
+
+                                    Fault Timeout                                        t RESTART
+                                            Period
+
+                                              Figure 25. Restart Sequence (LM5069-2)
+
+8.4.4 Shutdown Control
+The load current can be remotely switched off by taking the UVLO pin below its 2.5-V threshold with an open
+collector or open-drain device, as shown in Figure 26. Upon releasing the UVLO pin the LM5069 switches on the
+load current with in-rush current and power limiting.
+                                                       V SYS
+
+                                                                                   VIN
+                                                                              R1
+                                                                                   UVLO
+                                                Shutdown
+                                                  Control
+                                                                              R2               LM5069
+                                                                                   OVLO
+
+                                                                              R3
+                                                                                                GND
+
+
+                                                      Copyright © 2016, Texas Instruments Incorporated
+
+                                                      Figure 26. Shutdown Control
+
+
+
+
+16     Submit Documentation Feedback                                                                    Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                            Product Folder Links: LM5069
+                                                                                                                                                   LM5069
+www.ti.com                                                                                      SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+9 Application and Implementation
+
+                                                           NOTE
+               Information in the following applications sections is not part of the TI component
+               specification, and TI does not warrant its accuracy or completeness. TI’s customers are
+               responsible for determining suitability of components for their purposes. Customers should
+               validate and test their design implementation to confirm system functionality.
+
+
+9.1 Application Information
+The LM5069 is a hot swap controller which is used to manage inrush current and protect in case of faults. When
+designing a hot swap, three key scenarios must be considered:
+• Start-up
+• Output of a hot swap is shorted to ground when the hot swap is on. This is often referred to as a hot-short.
+• Powering up a board when the output and ground are shorted. This is usually called a start-into-short.
+All of these scenarios place a lot of stress on the hot swap MOSFET and thus special care is required when
+designing the hot swap circuit to keep the MOSFET within its SOA (Safe Operating Area). Detailed design
+examples are provided in the following sections. Solving all of the equations by hand is cumbersome and can
+result in errors. Instead, TI recommends using the LM5069 Design Calculator provided on the product page.
+
+9.2 Typical Application
+9.2.1 48-V, 10-A Hot Swap Design
+This section describes the design procedure for a 48-V, 10-A hot swap design.
+         VIN                                  RSNS                                                             VOUT
+                                                                Q1
+                                                                                               D1              COUT
+            CIN          Z1
+
+
+
+                                                                                                    VDD
+                                                                                                                            Only required when
+                                                        SENSE         GATE      OUT
+                                                                                                                            using dv/dt start-up
+                                                                                                       100kŸ
+                          R1      R3             VIN                                                                        D2
+                                                                                         PGD
+                                                 UVLO/EN
+                                                                LM5069
+                                                 OVLO                                                            1kŸ
+                                                 GND                                                                                    Cdv/dt
+                                  R4                            PWR         TIMER
+                          R2
+                                                                                                                            Q2
+
+                                                                     RPWR       CTIMER
+
+
+
+                                                                                                    Copyright © 2016, Texas Instruments Incorporated
+
+                                             Figure 27. Typical Application Schematic
+
+9.2.1.1 Design Requirements
+Table 1 summarizes the design parameters that must be known before designing a hot swap circuit. When
+charging the output capacitor through the hot swap MOSFET, the FET’s total energy dissipation equals the total
+energy stored in the output capacitor (½CV2). Thus, both the input voltage and output capacitance determine the
+stress experienced by the MOSFET. The maximum load current drives the current limit and sense resistor
+selection. In addition, the maximum load current, maximum ambient temperature, and the thermal properties of
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                            Submit Documentation Feedback         17
+                                                            Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                     www.ti.com
+
+
+Typical Application (continued)
+the PCB (RθCA) drive the selection of the MOSFET RDSON and the number of MOSFETs used. RθCA is a strong
+function of the layout and the amount of copper that is connected to the drain of the MOSFET. Note that the
+drain is not electrically connected to the ground plane and thus the ground plane cannot be used to help with
+heat dissipation. For this design example RθCA = 30°C/W is used, which is similar to the LM5069 EVM. It’s a
+good practice to measure the RθCA of a given design after the physical PCBs are available.
+Finally, it’s important to understand what test conditions the hot swap must pass. In general, a hot swap is
+designed to pass both a Hot-Short and a Start into a Short. Also, TI recommends keeping the load OFF until the
+hot swap is fully powered up. Starting the load early causes unnecessary stress on the MOSFET and could lead
+to MOSFET failures or a failure to start-up.
+                                                              RS
+                                                                         Q1
+                                               VSYS
+
+
+
+
+                                                        VIN                   OUT
+                                                                              PGD
+
+                                                                LM5069
+                                                                                    CL         RL
+                                                                   GND
+
+                                               GND
+
+                                                  Copyright © 2016, Texas Instruments Incorporated
+
+                                          Figure 28. No Load Current During Turnon
+
+
+                                                      Table 1. Design Parameters
+                                    PARAMETER                                                    VALUE
+                                  Input voltage range                                          18 to 30 V
+                                Maximum load current                                                 10 A
+                                Lower UVLO threshold                                                 17 V
+                                Upper UVLO threshold                                                 18 V
+                                Lower OVLO threshold                                                 30 V
+                                Upper OVLO threshold                                                 31 V
+                  Maximum output capacitance of the hot swap                                        330 µF
+                           Maximum ambient temperature                                               55°C
+                         MOSFET RθCA (function of layout)                                        30°C/W
+                              Pass Hot-short on output?                                              Yes
+                               Pass a Start into short?                                              Yes
+                           Is the load off until PG asserted?                                        Yes
+                         Can a hot board be plugged back in?                                         No
+
+9.2.1.2 Detailed Design Procedure
+
+9.2.1.2.1 Select RSNS and CL setting
+The LM5069 monitors the current in the external MOSFET (Q1) by measuring the voltage across the sense
+resistor (RS), connected from VIN to SENSE. When the voltage difference across the VIN and SENSE pins
+(VCL) is greater than 55 mV (typical), the LM5069 begins modulating the MOSFET gate. Size RSNS for maximum
+or minimum VCL for applications that require ensured shutoff or ensured conduction. RSNS is sized to exhibit
+minimum VCL across RSNS at maximum load current in Equation 1.
+               V CL,MIN       48.5mV
+      R SNS                                 0.00485 :
+                 I LIM         10 A
+                                                                                                                                               (1)
+
+
+
+
+18     Submit Documentation Feedback                                                          Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                          Product Folder Links: LM5069
+                                                                                                                              LM5069
+www.ti.com                                                                             SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+Typically sense resistors are only available in discrete value. We choose the next smallest discrete value, 4 mΩ.
+If a precise current limit is desired, a sense resistor along with a resistor divider can be used as shown in
+Figure 29.
+                                                                RSNS
+
+
+
+
+                                                                                R2
+                                                                   R1
+
+
+
+                                                            VIN          SENSE
+
+
+
+
+                                                  Figure 29. SENSE Resistor Divider
+
+If using a resistor divider, then the next larger available sense resistor must be chosen (5 mΩ in this example).
+The ratio of R1 and R2 can then be calculated with Equation 2.
+        R1           R SNS,CLC              4.8 m:
+                                                              24
+       R2       R SNS     R SNS,CLC       5m: 4.8 m:
+                                                                                                                                     (2)
+Note that the SENSE pin pulls 23 µA of current, which creates an offset across R2. TI recommends keeping R2
+below 10 Ω to reduce the offset that this introduces. In addition, the 1% resistors add to the current monitoring
+error. Finally, if the resistor divider approach is used, compute the effective sense resistance (RSNS, EFF) using
+Equation 3 and use that in all equations instead of RSNS.
+                        R SNS u R 1
+       R SNS,EFF
+                         R1 R 2
+                                                                                                                                     (3)
+Note that for many applications, a precise current limit may not be required. In that case, it’s simpler to pick the
+next smaller available sense resistor.
+
+9.2.1.2.2 Selecting the Hot Swap FET(s)
+It is critical to select the correct MOSFET for a hot swap design. The device must meet the following
+requirements:
+• The VDS rating must be sufficient to handle the maximum system voltage along with any ringing caused by
+    transients.
+• The SOA of the FET must be sufficient to handle all usage cases: start-up, hot-short, start into short.
+• RDSON must be sufficiently low to maintain the junction and case temperature below the maximum rating of
+    the FET. In fact, TI recommends keeping the steady state FET temperature below 125°C to allow margin to
+    handle transients.
+• Maximum continuous current rating must be above the maximum load current and the pulsed drain current
+    must be greater than the current threshold of the circuit breaker. Most MOSFETs that pass the first three
+    requirements also pass these two.
+For this design the SUM40N15-38 was selected. After selecting the MOSFET, the maximum steady state case
+temperature can be computed as Equation 4.
+                                2
+       T C,MAX T A,MAX R TCA uI LOAD,MAX u R DSON,MAX TJ
+                                                                                                                                     (4)
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                              Submit Documentation Feedback     19
+                                                        Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                          www.ti.com
+
+
+Note that the RDSON is a strong function of junction temperature, which for most MOSFETs is close to the case
+temperature. A few iterations of the above equations may be necessary to converge on the final RDSON and
+TC,MAX value. According to the CSD19536KTT datasheet, its RDSON is approximately 1.2× at 65°C. Equation 5
+uses this RDSON value to compute the TC,MAX.
+                                  C       2
+      T C,MAX 55 qC 30q             u 10 A u 1.2 u 2.4m:             63.64 qC
+                                  W                                                                                                 (5)
+This maximum steady state case temperature does not indicate that a second MOSFET may be required to
+reduce and distribute power dissipation during normal operation.
+As an aside, when using parallel MOSFETs, the maximum steady state case temperature can be computed in
+Equation 6.
+                                                          2
+                                         § I LOAD,MAX ·
+      T C,MAX        T A,MAX     R TCA u ¨              ¸ u R DSON TJ
+                                         ¨ # of MOSFETs ¸
+                                         ©              ¹                                                                           (6)
+Iterate until the computed TC,MAX is using two parallel MOSFETs is less than to the junction temperature
+assumed for RDSON. Then, no further iterations are necessary.
+
+9.2.1.2.3 Select Power Limit
+In general, a lower-power limit setting is preferred to reduce the stress on the MOSFET. However, when the
+LM5069 is set to a very low power limit setting, it has to regulate the FET current and hence the voltage across
+the sense resistor (VSNS) to a very low value. VSNS can be computed as shown in Equation 7.
+                    PLIM u R SNS
+      V SNS
+                        V DS
+                                                                                                                                    (7)
+To avoid significant degradation of the power limiting accuracy, a VSNS of less than 5 mV is not recommended.
+Based on this requirement the minimum allowed power limit can be computed in Equation 8.
+                      V SNS,MIN u V IN,MAX   5mV u 30 V
+      PLIM,MIN                                                37.5 W
+                               R SNS           4m:
+                                                                                                                                    (8)
+To avoid significant degradation of the power limiting accuracy a VSNS of less than 5 mV is not recommended.
+Based on this requirement, the minimum allowed power limit can be computed with Equation 9.
+                                                              V DS
+      R PWR         1.30 u 10 5 u R SNS (PLIM 1.18mV u               )
+                                                          R SNS
+                                                                                                                                    (9)
+Note that the minimum RPWR would occur when VDS = VIN,MAX. We can then compute the minimum RPWR with
+Equation 10.
+                                    §                  30 V ·
+      R PWR         1.30 u105 u 4m: ¨ 37.5 W 1.18m V u      ¸ 14.9k:
+                                    ©                  4m :¹
+                                                                                                                                   (10)
+To obtain the smallest accurate power limit, the next largest available resistor must be selected. In this case a
+15.8-kΩ resistor was chosen, which sets a 39.23-W power limit.
+
+9.2.1.2.4 Set Fault Timer
+The fault timer runs when the hot swap is in power limit or current limit, which is the case during start-up. Thus
+the timer has to be sized large enough to prevent a time-out during start-up. If the part starts directly into current
+limit (ILIM × VDS < PLIM) the maximum start time can be computed with Equation 11.
+                      C OUT u V IN,MAX
+      t start,max
+                               I LIM
+                                                                                                                                   (11)
+
+
+20     Submit Documentation Feedback                                               Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                    Product Folder Links: LM5069
+                                                                                                                                              LM5069
+www.ti.com                                                                                             SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+For most designs (including this example), ILIM × VDS > PLIM, so the hot swap starts in power limit and transition
+into current limit. In that case, the estimated start time can be computed with Equation 12.
+
+                     C OUT        ªV 2                PLIM º      330PF ª (30 V)2           39.23 W º
+                                    IN,MAX
+       t start                   u«                         »          u«                             »    3.85ms
+                           2      « PLIM                2
+                                                      I LIM »       2   ¬« 39.23 W           (10 A)2 ¼»
+                                  ¬                         ¼                                                                                       (12)
+Note that the above start-time assumes constant, typical current limit and power limit values. The actual startup
+time is slightly longer, as the power limit is a function of Vds and decreases as the output voltage increases. To
+ensure that the timer never times out during start-up, TI recommends setting the minimum fault time (tflt) to be
+greater than the start time (tstart) by adding an additional margin of 50% of the fault time. This accounts for the
+variation in power limit, timer current, and timer capacitance. Thus CTIMER can be computed with Equation 13.
+                       t flt ×i timer(typ)             3.85ms×85μA
+       CTIMER =                              ×1.5=                 ×1.5=123nF
+                           v timer(typ)                     4V                                                                                      (13)
+The next largest available CTIMER is chosen as 150 nf. Once the CTIMER is chosen the actual programmed fault
+time can be computed with Equation 14.
+                 C TIMER u v timer,typ             150nF u 4 V
+       t flt                                                             7.06 ms
+                           i timer,typ               85 PA
+                                                                                                                                                    (14)
+This is the typical time that the LM5069 shuts off the CSD19536KTT MOSFET.
+
+9.2.1.2.5 Check MOSFET SOA
+Once the power limit and fault timer are chosen, it’s critical to check that the FET stays within its SOA during all
+test conditions. During a Hot-Short, the circuit breaker trips and the LM5069 restarts into power limit until the
+timer runs out. In the worst case, the MOSFET’s VDS equals VIN,MAX, IDS equals PLIM / VIN,MAX and the stress
+event lasts for tflt. For this design example, the MOSFET has 30 V, 1.25 A across it for 7.06 ms.
+Based on the SOA of the CSD19536KTT, it can handle 30 V, 9 A for 10 ms and it can handle 30 V, 20 A for
+1 ms. The SOA for 7.06 ms can be extrapolated by approximating SOA versus time as a power function as
+shown Equation 15 through Equation 18.
+       I SOA t             autm
+                                                                                                                                                    (15)
+
+                    I SOA t 1                 § 20 A ·
+               ln                          ln ¨      ¸
+                    I SOA t 2                 © 9A ¹
+       m                                                        0.346
+                       § t1 ·                § 1ms ·
+                    ln ¨ ¸                ln ¨        ¸
+                       ¨t2 ¸                 © 10ms ¹
+                       © ¹                                                                                                                          (16)
+               I SOA t1                   20 A                             0.346
+       a                                                  20 A u 1 ms
+                    t 1m          1ms
+                                              0.346
+                                                                                                                                                    (17)
+                                                          0.346                    0.346
+       I SOA 7.06 ms                20 A u 1 ms                   u 7.06 ms                10.17 A
+                                                                                                                                                    (18)
+Note that the SOA of a MOSFET is specified at a case temperature of 25°C, while the case temperature can be
+much hotter during a hot-short. The SOA must be derated based on TC,MAX using Equation 19.
+                                                                                   T J,ABSMAX   T C,MAX
+       I SOA 7.06 ms, T C,MAX                    I SOA 7.06 ms,25 qC u
+                                                                                   T J,ABSMAX    25 qC
+                                                                                                                                                    (19)
+                               175 qC 63.6 qC
+           10.17 A u                                      7.55 A
+                                175 qC 25 qC
+                                                                                                                                                    (20)
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                              Submit Documentation Feedback     21
+                                                                        Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                  www.ti.com
+
+
+Based on this calculation the MOSFET can handle 7.55 A, 30 V for 7.06 ms at elevated case temperature, and is
+required to handle 1.25 A during a hot-short. This means the MOSFET is not at risk of getting damaged during a
+hot-short. In general, TI recommends for the MOSFET to be able to handle a minimum of 1.3× more power than
+what is required during a hot-short to provide margin to cover the variance of the power limit and fault time.
+
+9.2.1.2.6 Set Undervoltage and Overvoltage Threshold
+By programming the UVLO and OVLO thresholds the LM5069 enables the series pass device (Q1) when the
+input supply voltage (VSYS) is within the desired operational range. If VSYS is below the UVLO threshold, or above
+the OVLO threshold, Q1 is switched off, denying power to the load. Hysteresis is provided for each threshold.
+
+9.2.1.2.6.1 Option A
+The configuration shown in Figure 30 requires three resistors (R1-R3) to set the thresholds.
+                                   V SYS
+
+                                                          VIN
+                                                                        21 PA             LM5069
+                                       R1
+                                            UVLO
+
+                                                      2. 50V
+                                       R2                                       TIMER AND GATE
+                                                                                LOGIC CONTROL
+                                                      2. 50V
+
+
+                                            OVLO
+                                       R3
+
+                                                                        21 PA
+                                                        GND
+
+
+                                                     Copyright © 2016, Texas Instruments Incorporated
+
+                              Figure 30. UVLO and OVLO Thresholds Set By R1-R3
+
+The procedure to calculate the resistor values is as follows:
+1. Choose the upper UVLO threshold (VUVH), and the lower UVLO threshold (VUVL).
+2. Choose the upper OVLO threshold (VOVH).
+3. The lower OVLO threshold (VOVL) cannot be chosen in advance in this case, but is determined after the
+   values for R1-R3 are determined. If VOVL must be accurately defined in addition to the other three thresholds,
+   see Option B below.
+The resistors are calculated with Equation 21, Equation 22, and Equation 23.
+           VUVH - VUVL VUV(HYS)
+     R1 =              =
+              21 PA       21 PA                                                                                                            (21)
+           2.5V x R1 x VUVL
+     R3 =
+          VOVH x (VUVL - 2.5V)                                                                                                             (22)
+          2.5V x R1
+     R2 =             - R3
+          VUVL - 2.5V                                                                                                                      (23)
+The lower OVLO threshold is calculated from Equation 24.
+     VOVL = [(R1 + R2) x ((2.5V) - 21 PA)] + 2.5V
+                            R3                                                                                                             (24)
+As an example, assume the application requires the following thresholds: VUVH = 36 V, VUVL = 32 V, VOVH = 60 V.
+          36V ± 32V     4V
+     R1 =           =        = 190.5 k:
+            21 PA      21 PA                                                                               (25)
+            2.5V x 190.5 k: x 32V
+     R3 =                         = 8.61 k:
+              60V x (32V - 2.5V)                                                                                                           (26)
+
+
+
+22     Submit Documentation Feedback                                                       Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                    Product Folder Links: LM5069
+                                                                                                                                   LM5069
+www.ti.com                                                                               SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+              2.5V x 190.5 k:
+      R2 =                    - 8.61 k: = 7.53 k:
+               (32V - 2.5V)                                                                                                             (27)
+The lower OVLO threshold calculates to 55.8 V, and the OVLO hysteresis is 4.2 V. Note that the OVLO
+hysteresis is always slightly greater than the UVLO hysteresis in this configuration. When the R1-R3 resistor
+values are known, the threshold voltages and hysteresis are calculated from Equation 28 through Equation 33.
+                                     2.5V
+     VUVH = 2.5V + [R1 x (21 PA +           )]
+                                  (R2 + R3)                                                                (28)
+                2.5V x (R1 + R2 + R3)
+       VUVL =
+                        R2 + R3                                                                                                         (29)
+       VUV(HYS) = R1 × 21 µA                                                                                                            (30)
+                2.5V x (R1 + R2 + R3)
+       VOVH =
+                       R3                                                                                                               (31)
+       VOVL = [(R1 + R2) x (2.5V) - 21 PA)] + 2.5V
+                             R3                                                                                                         (32)
+       VOV(HYS) = (R1 + R2) × 21 µA                                                                                                     (33)
+
+9.2.1.2.6.2 Option B
+If all four thresholds must be accurately defined, the configuration in Figure 31 can be used.
+                                           VSYS
+
+                                                                   VIN
+                                                                                21 PA         LM5069
+                                                    R1
+                                                         UVLO
+
+                                                                 2.5V
+                                                    R2                              TIMER AND GATE
+                                              R3                                    LOGIC CONTROL
+                                                                 2.5V
+
+                                                         OVLO
+                                              R4
+                                                                                21 PA
+                                                                 GND
+
+
+                                                         Copyright © 2016, Texas Instruments Incorporated
+
+                                          Figure 31. Programming the Four Thresholds
+
+The four resistor values are calculated as follows:
+1. Choose the upper UVLO threshold (VUVH) and lower UVLO threshold (VUVL) with Equation 34 and
+   Equation 35.
+           VUVH - VUVL VUV(HYS)
+     R1 =              =
+              21 PA       21 PA                                                            (34)
+               2.5V x R1
+      R2 =
+              (VUVL - 2.5V)                                                                                                             (35)
+2. Choose the upper OVLO threshold (VOVH) and lower OVLO threshold (VOVL) with Equation 36 and
+   Equation 37.
+         VOVH - VOVL VOV(HYS)
+    R3 =            =
+            21 PA     21 PA                                                                (36)
+                2.5V x R3
+      R4 =
+              (VOVH - 2.5V)                                                                                                             (37)
+As an example, assume the application requires the following thresholds: VUVH = 22 V, VUVL = 17 V, VOVH = 60 V,
+and VOVL = 58 V. Therefore VUV(HYS) = 5 V, and VOV(HYS) = 2 V. The resistor values are:
+• R1 = 238 kΩ, R2 = 41 kΩ
+• R3 = 95.2 kΩ, R4 = 4.14 kΩ
+Copyright © 2006–2020, Texas Instruments Incorporated                                                   Submit Documentation Feedback    23
+                                                         Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                     www.ti.com
+
+
+Where the R1-R4 resistor values are known, the threshold voltages and hysteresis are calculated from
+Equation 38 to Equation 43.
+    VUVH = 2.5V + [R1 x (2.5V + 21 PA)]
+                          R2                                                                     (38)
+            2.5V x (R1 + R2)
+    VUVL =
+                   R2                                                                            (39)
+     VUV(HYS) = R1 x 21 µA                                                                                                                    (40)
+            2.5V x (R3 + R4)
+     VOVH =
+                    R4                                                                                                                        (41)
+     VOVL = 2.5V + [R3 x (2.5V - 21 PA)]
+                           R4                                                                                                                 (42)
+     VOV(HYS) = R3 x 21 µA                                                                                                                    (43)
+
+9.2.1.2.6.3 Option C
+The minimum UVLO level is obtained by connecting the UVLO pin to VIN as shown in Figure 32. Q1 is switched
+on when the VIN voltage reaches the POREN threshold (≊8.4 V). An external transistor can be connected to
+UVLO to provide remote shutdown control, and to restart the LM5069-1 after a fault detection. The OVLO
+thresholds are set using R3, R4. Their values are calculated using the procedure in Option B.
+                                               VSYS
+
+                                                                     VIN
+                                                                                  21 PA         LM5069
+                                                           100k
+
+                                                           UVLO
+
+                                                                   2.5V
+                                                      R3                              TIMER AND GATE
+                                  Shutdown/                                           LOGIC CONTROL
+                                     Restart                       2.5V
+                                     Control
+
+                                                           OVLO
+                                                      R4
+
+                                                                                  21 PA
+                                                                   GND
+
+
+                                                           Copyright © 2016, Texas Instruments Incorporated
+
+                               Figure 32. UVLO = POREN With Shutdown/Restart Control
+
+9.2.1.2.6.4 Option D
+The OVLO function can be disabled by grounding the OVLO pin. The UVLO thresholds are set as described in
+Option B or Option C.
+For this design example, option B is used and the following values are targeted: VUVH = 10 V, VUVL = 9 V,
+VOVH = 15 V, VOVL = 14 V. R1, R2, R3, and R4 are computed using Equation 44 through Equation 47.
+            V UVH    V UVL     18 V 17 V
+      R1                                         47.62k
+                21µA              21µA
+                                                                                                                                              (44)
+               2.5 V u R1        2.5 V u 47.62k
+      R2                                              8.21k
+             V UVL    2.5 V       17 V 2.5 V
+                                                                                                                                              (45)
+            V OVH    V OVL      31 V 30 V
+      R3                                          47.62k
+                21µA               21µA
+                                                                                                                                              (46)
+               2.5 V u R3        2.5 V u 47.62k
+      R4                                               4.18k
+             V OVH     2.5 V      31V 2.5 V
+                                                                                                                                              (47)
+Nearest available 1% resistors must be chosen. Set R1 = 47.5 kΩ, R2 = 8.25 kΩ, R3 = 47.5 kΩ, and
+R4 = 4.22 kΩ.
+24     Submit Documentation Feedback                                                          Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                      Product Folder Links: LM5069
+                                                                                                                                    LM5069
+www.ti.com                                                                                   SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+9.2.1.2.7 Input and Output Protection
+Proper operation of the LM5069 hot swap circuit requires a voltage clamping element present on the supply side
+of the connector into which the hot swap circuit is plugged in. A TVS is ideal, as depicted in Figure 27. The TVS
+is necessary to absorb the voltage transient generated whenever the hot swap circuit shuts off the load current.
+This effect is the most severe during a hot-short when a large current is suddenly interrupted when the FET
+shuts off. The TVS must be chosen to have minimal leakage current at VIN,MAX and to clamp the voltage to under
+30 V during hot-short events. For many high-power applications intended to clamp at 30 V, SMBJ30A-13-F is a
+good choice.
+
+9.2.1.2.8 Final Schematic and Component Values
+Figure 27 shows the schematic used to implement the requirements described in the previous section. In
+addition, Table 2 below provides the final component values that were used to meet the design requirements for
+a 12-V, 40-A hot swap design. The Application Curves are based on these component values.
+
+                                                          Table 2. Component Values
+                                                COMPONENT                                    VALUE
+                                                        Rsns                                  4 mΩ
+                                                         R1                                  47.5 kΩ
+                                                         R2                                  8.25 kΩ
+                                                         R3                                  47.5 kΩ
+                                                         R4                                  4.22 kΩ
+                                                        RPWR                                 15.8 kΩ
+                                                         Q1                            CSD19536KTT
+                                                         Z1                            SMBJ30A-13-F
+                                                         D1                              MBR3100
+                                                        CTIMER                               150 nF
+                                                        COUT                                 330 µF
+
+9.2.1.3 Application Curves
+
+
+
+
+                              Figure 33. Start-Up                                                 Figure 34. Start-Up (Zoomed In)
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                    Submit Documentation Feedback     25
+                                                              Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                          www.ti.com
+
+
+
+
+                Figure 35. Start-Up into Short Circuit                                 Figure 36. Undervoltage
+
+
+
+
+                       Figure 37. Overvoltage                                      Figure 38. Gradual Overcurrent
+
+
+
+
+                        Figure 39. Load Step                                       Figure 40. Hot-Short on Output
+
+
+
+
+26     Submit Documentation Feedback                                               Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                    Product Folder Links: LM5069
+                                                                                                                              LM5069
+www.ti.com                                                                             SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+
+
+                      Figure 41. Hot-Short (Zoomed In)                                           Figure 42. Auto-Retry
+
+
+
+10 Power Supply Recommendations
+In general, the LM5069 behavior is more reliable if it is supplied from a very regulated power supply. However,
+high-frequency transients on a backplane are not uncommon due to adjacent card insertions or faults. If this is
+expected in the end system, TI recommends placing a 1-µF ceramic capacitor to ground close to the drain of the
+hot swap MOSFET. This reduces the common mode voltage seen by VIN and SENSE. Additional filtering may
+be necessary to avoid nuisance trips.
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                              Submit Documentation Feedback     27
+                                                        Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                          www.ti.com
+
+
+11 Layout
+
+11.1 Layout Guidelines
+11.1.1 PC Board Guidelines
+The following guidelines must be followed when designing the PC board for the LM5069:
+• Place the LM5069 close to the board’s input connector to minimize trace inductance from the connector to the
+   FET.
+• Note that special care must be taken when placing the bypass capacitor for the VIN pin. During hot shorts,
+   there is a very large dV/dt on input voltage after the MOSFET turns off. If the bypass capacitor is placed right
+   next to the pin and the trace from Rsns to the pin is long, an LC filter is formed. As a result, a large differential
+   voltage can develop between VIN and SENSE. To avoid this, place the bypass capacitor close to Rsns
+   instead of the VIN pin.
+
+
+
+
+                                                                          Sense
+                                                                         VIN
+
+
+                                      Trace
+                                   Inductance
+
+
+
+
+                                         Figure 43. Layout Trace Inductance
+
+•    The sense resistor (RS) must be close to the LM5069, and connected to it using the Kelvin techniques shown
+     in Figure 46.
+•    The high current path from the board’s input to the load (via Q1), and the return path, must be parallel and
+     close to each other to minimize loop inductance.
+•    The ground connection for the various components around the LM5069 must be connected directly to each
+     other, and to the LM5069’s GND pin, and then connected to the system ground at one point. Do not connect
+     the various component grounds to each other through the high current ground line.
+•    Provide adequate heat sinking for the series pass device (Q1) to help reduce stresses during turnon and
+     turnoff.
+•    The board’s edge connector can be designed to shut off the LM5069 as the board is removed, before the
+     supply voltage is disconnected from the LM5069. In Figure 45 the voltage at the UVLO pin goes to ground
+     before VSYS is removed from the LM5069 due to the shorter edge connector pin. When the board is inserted
+     into the edge connector, the system voltage is applied to the LM5069’s VIN pin before the UVLO voltage is
+     taken high.
+
+11.1.2 System Considerations
+A) Continued proper operation of the LM5069 hot swap circuit requires capacitance be present on the supply
+side of the connector into which the hot swap circuit is plugged in, as depicted in Figure 44. The capacitor in the
+Live Backplane section is necessary to absorb the transient generated whenever the hot swap circuit shuts off
+the load current. If the capacitance is not present, inductance in the supply lines generate a voltage transient at
+shut-off which can exceed the absolute maximum rating of the LM5069, resulting in its destruction.
+B) If the load powered via the LM5069 hot swap circuit has inductive characteristics, a diode is required across
+the LM5069’s output. The diode provides a recirculating path for the load’s current when the LM5069 shuts off
+that current. Adding the diode prevents possible damage to the LM5069 as the OUT pin is taken below ground
+by the inductive load at shutoff. See Figure 44.
+28      Submit Documentation Feedback                                              Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                    Product Folder Links: LM5069
+                                                                                                                                            LM5069
+www.ti.com                                                                                        SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+Layout Guidelines (continued)
+
+
+                                                        VSYS           RS                      VOUT
+                                                                                   Q1
+                                 +48V
+
+
+                              LIVE
+                           BACKPLANE
+                                                               VIN                         OUT                 CL
+                                                                                                                       Inductive
+                                                                                                                         Load
+                                                                            LM5069
+
+                                                                             GND
+
+
+                                 GND
+
+                                                                     PLUG-IN BOARD
+
+                                                                                     Copyright © 2016, Texas Instruments Incorporated
+
+                                        Figure 44. Output Diode Required for Inductive Loads
+
+
+11.2 Layout Example
+
+
+                           GND
+                                                                                                                     To
+                          VSYS                                                                                      Load
+                                                                            RS            Q1
+
+
+                                                                                   SENSE GATE
+                                                                      R1           VIN    OUT
+                                                                                   UVLO PGD
+                                                                      R2           OVLO PWR
+                                                                      R3           GND TIMER
+
+
+                                                                                     LM5069
+
+
+
+
+                                                                           PLUG-IN CARD
+                                          CARD EDGE
+                                          CONNECTOR
+                                                                                   Copyright © 2016, Texas Instruments Incorporated
+
+                                         Figure 45. Recommended Board Connector Design
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                                            Submit Documentation Feedback   29
+                                                               Product Folder Links: LM5069
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                          www.ti.com
+
+
+Layout Example (continued)
+
+                                                     HIGH CURRENT PATH
+
+
+                                    FROM                                                  TO MOSFET'S
+                                    SYSTEM               SENSE
+                                    INPUT               RESISTOR                             DRAIN
+                                    VOLTAGE               RS
+
+
+
+
+                                                                                    SENSE               10
+                                                                                    VIN                 9
+                                                                                    3                   8
+                                                                                    4     LM5069 7
+                                                                                    5                   6
+
+                                                      Copyright © 2016, Texas Instruments Incorporated
+
+                                          Figure 46. Sense Resistor Connections
+
+
+
+
+                                                          Rsns
+
+
+
+
+                                                              R    R
+                                                          R
+                                 Source                          Hot Swap       C
+                                                          R                                                  Output Caps
+
+                                                          C                 C
+                                                                            IC GND
+
+
+
+
+                                                                                                    High Current GND
+
+
+
+                                       Figure 47. LM5069 Quiet IC Ground Layout
+
+
+
+
+30     Submit Documentation Feedback                                                               Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                    Product Folder Links: LM5069
+                                                                                                                                LM5069
+www.ti.com                                                                             SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+12 Device and Documentation Support
+
+12.1 Device Support
+12.1.1 Development Support
+For the LM5069 Design Calculator, go to Tools & Software in the Product Folder on ti.com.
+
+12.2 Documentation Support
+12.2.1 Related Documentation
+For related documentation see the following:
+• Absolute Maximum Ratings for Soldering (SNOA549)
+• Robust Hot Swap Design (SLVA673)
+
+12.3 Receiving Notification of Documentation Updates
+To receive notification of documentation updates, navigate to the device product folder on ti.com. In the upper
+right corner, click on Alert me to register and receive a weekly digest of any product information that has
+changed. For change details, review the revision history included in any revised document.
+
+12.4 Community Resources
+TI E2E™ support forums are an engineer's go-to source for fast, verified answers and design help — straight
+from the experts. Search existing answers or ask your own question to get the quick design help you need.
+Linked content is provided "AS IS" by the respective contributors. They do not constitute TI specifications and do
+not necessarily reflect TI's views; see TI's Terms of Use.
+
+12.5 Trademarks
+E2E is a trademark of Texas Instruments.
+All other trademarks are the property of their respective owners.
+12.6 Electrostatic Discharge Caution
+          These devices have limited built-in ESD protection. The leads should be shorted together or the device placed in conductive foam
+          during storage or handling to prevent electrostatic damage to the MOS gates.
+
+
+12.7 Glossary
+SLYZ022 — TI Glossary.
+   This glossary lists and explains terms, acronyms, and definitions.
+
+13 Mechanical, Packaging, and Orderable Information
+The following pages include mechanical, packaging, and orderable information. This information is the most
+current data available for the designated devices. This data is subject to change without notice and revision of
+this document. For browser-based versions of this data sheet, refer to the left-hand navigation.
+
+
+
+
+Copyright © 2006–2020, Texas Instruments Incorporated                                              Submit Documentation Feedback       31
+                                                        Product Folder Links: LM5069
+                                                                                                                                                                     PACKAGE OPTION ADDENDUM
+
+       www.ti.com                                                                                                                                                                                                    9-Nov-2025
+
+
+
+
+PACKAGING INFORMATION
+
+       Orderable part number          Status     Material type      Package | Pins      Package qty | Carrier       RoHS             Lead finish/               MSL rating/          Op temp (°C)               Part marking
+                                        (1)            (2)                                                            (3)            Ball material              Peak reflow                                           (6)
+                                                                                                                                          (4)                       (5)
+
+        LM5069MM-1/NOPB               Active      Production      VSSOP (DGS) | 10       1000 | SMALL T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNAB
+       LM5069MM-1/NOPB.A              Active      Production      VSSOP (DGS) | 10       1000 | SMALL T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNAB
+       LM5069MM-1/NOPB.B              Active      Production      VSSOP (DGS) | 10       1000 | SMALL T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNAB
+        LM5069MM-2/NOPB               Active      Production      VSSOP (DGS) | 10       1000 | SMALL T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNBB
+       LM5069MM-2/NOPB.A              Active      Production      VSSOP (DGS) | 10       1000 | SMALL T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNBB
+       LM5069MM-2/NOPB.B              Active      Production      VSSOP (DGS) | 10       1000 | SMALL T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNBB
+        LM5069MMX-1/NOPB              Active      Production      VSSOP (DGS) | 10       3500 | LARGE T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNAB
+       LM5069MMX-1/NOPB.A             Active      Production      VSSOP (DGS) | 10       3500 | LARGE T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNAB
+       LM5069MMX-1/NOPB.B             Active      Production      VSSOP (DGS) | 10       3500 | LARGE T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNAB
+        LM5069MMX-2/NOPB              Active      Production      VSSOP (DGS) | 10       3500 | LARGE T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNBB
+       LM5069MMX-2/NOPB.A             Active      Production      VSSOP (DGS) | 10       3500 | LARGE T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNBB
+       LM5069MMX-2/NOPB.B             Active      Production      VSSOP (DGS) | 10       3500 | LARGE T&R            Yes                  SN             Level-1-260C-UNLIM            -40 to 125                   SNBB
+
+(1)
+      Status: For more details on status, see our product life cycle.
+
+(2)
+   Material type: When designated, preproduction parts are prototypes/experimental devices, and are not yet approved or released for full production. Testing and final process, including without limitation quality assurance,
+reliability performance testing, and/or process qualification, may not yet be complete, and this item is subject to further changes or possible discontinuation. If available for ordering, purchases will be subject to an additional
+waiver at checkout, and are intended for early internal evaluation purposes only. These items are sold without warranties of any kind.
+
+(3)
+      RoHS values: Yes, No, RoHS Exempt. See the TI RoHS Statement for additional information and value definition.
+
+(4)
+   Lead finish/Ball material: Parts may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead finish/Ball material values may wrap to two lines if the finish value exceeds the maximum
+column width.
+
+(5)
+  MSL rating/Peak reflow: The moisture sensitivity level ratings and peak solder (reflow) temperatures. In the event that a part has multiple moisture sensitivity ratings, only the lowest level per JEDEC standards is shown.
+Refer to the shipping label for the actual reflow temperature that will be used to mount the part to the printed circuit board.
+
+(6)
+      Part marking: There may be an additional marking, which relates to the logo, the lot trace code information, or the environmental category of the part.
+
+Multiple part markings will be inside parentheses. Only one part marking contained in parentheses and separated by a "~" will appear on a part. If a line is indented then it is a continuation of the previous line and the two
+combined represent the entire part marking for that device.
+
+
+
+                                                                                                          Addendum-Page 1
+                                                                                                                                                                      PACKAGE OPTION ADDENDUM
+
+    www.ti.com                                                                                                                                                                                                    9-Nov-2025
+
+
+
+
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information provided by third parties, and
+makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and continues to take reasonable steps to provide representative
+and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals. TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers
+and other limited information may not be available for release.
+
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+
+
+
+
+                                                                                                          Addendum-Page 2
+                                                                               PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                                                       31-Jul-2025
+
+
+
+TAPE AND REEL INFORMATION
+
+       REEL DIMENSIONS                                                                      TAPE DIMENSIONS
+                                                                                       K0       P1
+
+
+
+                                                                                                                      B0 W
+                                        Reel
+                                      Diameter
+                                                                                    Cavity           A0
+                                                                A0   Dimension designed to accommodate the component width
+                                                                B0   Dimension designed to accommodate the component length
+                                                                K0   Dimension designed to accommodate the component thickness
+                                                                W    Overall width of the carrier tape
+                                                                P1   Pitch between successive cavity centers
+
+
+                                       Reel Width (W1)
+                              QUADRANT ASSIGNMENTS FOR PIN 1 ORIENTATION IN TAPE
+
+                                                                                                     Sprocket Holes
+
+
+                                                 Q1        Q2          Q1    Q2
+
+                                                 Q3        Q4          Q3    Q4                  User Direction of Feed
+
+
+
+                                                            Pocket Quadrants
+
+
+*All dimensions are nominal
+             Device           Package Package Pins              SPQ       Reel   Reel   A0                  B0         K0     P1     W     Pin1
+                               Type Drawing                             Diameter Width (mm)                (mm)       (mm)   (mm)   (mm) Quadrant
+                                                                          (mm) W1 (mm)
+   LM5069MM-1/NOPB            VSSOP     DGS           10        1000        177.8        12.4        5.3    3.4       1.4    8.0    12.0    Q1
+   LM5069MM-2/NOPB            VSSOP     DGS           10        1000        177.8        12.4        5.3    3.4       1.4    8.0    12.0    Q1
+  LM5069MMX-1/NOPB            VSSOP     DGS           10        3500        330.0        12.4        5.3    3.4       1.4    8.0    12.0    Q1
+  LM5069MMX-2/NOPB            VSSOP     DGS           10        3500        330.0        12.4        5.3    3.4       1.4    8.0    12.0    Q1
+
+
+
+
+                                                                      Pack Materials-Page 1
+                                                                PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                              31-Jul-2025
+
+
+
+ TAPE AND REEL BOX DIMENSIONS
+
+
+
+
+                                                               Width (mm)
+                                                                              H
+                      W
+
+
+
+
+                                                          L
+
+
+
+
+*All dimensions are nominal
+             Device           Package Type   Package Drawing   Pins         SPQ    Length (mm)   Width (mm)   Height (mm)
+   LM5069MM-1/NOPB              VSSOP             DGS           10          1000      208.0        191.0         35.0
+   LM5069MM-2/NOPB              VSSOP             DGS           10          1000      208.0        191.0         35.0
+   LM5069MMX-1/NOPB             VSSOP             DGS           10          3500      367.0        367.0         35.0
+   LM5069MMX-2/NOPB             VSSOP             DGS           10          3500      367.0        367.0         35.0
+
+
+
+
+                                                        Pack Materials-Page 2
+                                                                                                           PACKAGE OUTLINE
+DGS0010A                                                        SCALE 3.200
+                                                                                                      VSSOP - 1.1 mm max height
+                                                                                                                   SMALL OUTLINE PACKAGE
+
+
+
+
+                                                                                                                            C
+                                        5.05
+                                             TYP                                                           SEATING PLANE
+                                        4.75
+
+             A                                  PIN 1 ID                                                                0.1 C
+                                                AREA
+
+                                                                                         8X 0.5
+                                                                                  10
+                    1
+
+           3.1
+           2.9                                                                           2X
+          NOTE 3                                                                          2
+
+
+                    5
+                                                                              6
+                                                                                              0.27
+                                                                                       10X
+                                                                                              0.17
+                                          3.1                                                  0.1   C A   B              1.1 MAX
+                        B
+                                          2.9
+                                        NOTE 4
+
+
+
+
+                                                                                       0.23
+                                                                                            TYP
+                                        SEE DETAIL A                                   0.13
+
+
+
+
+                                                                                         0.25
+                                                                                  GAGE PLANE
+
+
+
+
+                                                                                                                  0.7                    0.15
+                                                                                       0 -8                                              0.05
+                                                                                                                  0.4
+
+                                                                                                                 DETAIL A
+                                                                                                                  TYPICAL
+
+
+                                                                                                                                4221984/A 05/2015
+
+NOTES:
+
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+   per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. This dimension does not include mold flash, protrusions, or gate burrs. Mold flash, protrusions, or gate burrs shall not
+   exceed 0.15 mm per side.
+4. This dimension does not include interlead flash. Interlead flash shall not exceed 0.25 mm per side.
+5. Reference JEDEC registration MO-187, variation BA.
+
+
+
+
+                                                                              www.ti.com
+                                                                                EXAMPLE BOARD LAYOUT
+DGS0010A                                                                                VSSOP - 1.1 mm max height
+                                                                                                          SMALL OUTLINE PACKAGE
+
+
+
+
+                                                10X (1.45)
+                             10X (0.3)                           SYMM                           (R0.05)
+                                            1                                                   TYP
+                                                                                          10
+
+                                                                                               SYMM
+
+
+
+                           8X (0.5)         5                                             6
+
+
+                                                                  (4.4)
+
+
+                                                     LAND PATTERN EXAMPLE
+                                                              SCALE:10X
+
+
+
+
+                SOLDER MASK                                               METAL UNDER                     SOLDER MASK
+                                                 METAL                                                    OPENING
+                OPENING                                                   SOLDER MASK
+
+
+
+
+                                      0.05 MAX                                                0.05 MIN
+                                      ALL AROUND                                              ALL AROUND
+
+                             NON SOLDER MASK                                            SOLDER MASK
+                                 DEFINED                                                  DEFINED
+
+                                                      SOLDER MASK DETAILS
+                                                             NOT TO SCALE
+
+
+
+
+                                                                                                                4221984/A 05/2015
+NOTES: (continued)
+
+6. Publication IPC-7351 may have alternate designs.
+7. Solder mask tolerances between and around signal pads can vary based on board fabrication site.
+
+
+
+
+                                                                www.ti.com
+                                                                               EXAMPLE STENCIL DESIGN
+DGS0010A                                                                                VSSOP - 1.1 mm max height
+                                                                                                         SMALL OUTLINE PACKAGE
+
+
+
+
+                                                10X (1.45)
+                                                                 SYMM                           (R0.05) TYP
+                              10X (0.3)
+                                            1
+                                                                                           10
+
+                                                                                                SYMM
+                                 8X (0.5)
+
+                                            5                                              6
+
+                                                                  (4.4)
+
+
+
+                                                     SOLDER PASTE EXAMPLE
+                                                   BASED ON 0.125 mm THICK STENCIL
+                                                              SCALE:10X
+
+
+
+
+                                                                                                                  4221984/A 05/2015
+NOTES: (continued)
+
+8. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+   design recommendations.
+9. Board assembly site may have different recommendations for stencil design.
+
+
+
+
+                                                                 www.ti.com
+                                         IMPORTANT NOTICE AND DISCLAIMER
+TI PROVIDES TECHNICAL AND RELIABILITY DATA (INCLUDING DATASHEETS), DESIGN RESOURCES (INCLUDING REFERENCE
+DESIGNS), APPLICATION OR OTHER DESIGN ADVICE, WEB TOOLS, SAFETY INFORMATION, AND OTHER RESOURCES “AS IS”
+AND WITH ALL FAULTS, AND DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION ANY
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD
+PARTY INTELLECTUAL PROPERTY RIGHTS.
+These resources are intended for skilled developers designing with TI products. You are solely responsible for (1) selecting the appropriate
+TI products for your application, (2) designing, validating and testing your application, and (3) ensuring your application meets applicable
+standards, and any other safety, security, regulatory or other requirements.
+These resources are subject to change without notice. TI grants you permission to use these resources only for development of an
+application that uses the TI products described in the resource. Other reproduction and display of these resources is prohibited. No license
+is granted to any other TI intellectual property right or to any third party intellectual property right. TI disclaims responsibility for, and you fully
+indemnify TI and its representatives against any claims, damages, costs, losses, and liabilities arising out of your use of these resources.
+TI’s products are provided subject to TI’s Terms of Sale, TI’s General Quality Guidelines, or other applicable terms available either on
+ti.com or provided in conjunction with such TI products. TI’s provision of these resources does not expand or otherwise alter TI’s applicable
+warranties or warranty disclaimers for TI products. Unless TI explicitly designates a product as custom or customer-specified, TI products
+are standard, catalog, general purpose devices.
+TI objects to and rejects any additional or different terms you may propose.
+IMPORTANT NOTICE
+
+                                                Copyright © 2025, Texas Instruments Incorporated
+                                                                Last updated 10/2025
+

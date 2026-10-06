@@ -1,0 +1,312 @@
+                                    SH CONNECTOR
+                                    1.0 mm pitch/Wire-to-Board connectors/Crimp style and Mating style
+
+
+
+                                                                                                                              ■ Specifications
+                                                                                                                                 Current rating: 1.0 A AC/DC（AWG #28）
+                                                                                                                                 Voltage rating: 50 V AC/DC
+                                                                                                                                 Temperature range: ‑25℃ to +85℃
+                            2
+                                3
+                                    4
+                                        5
+                                                                                                                                                       (including temperature rise in
+                                                                                                                                                        applying electrical current)
+                                            6
+                                                7
+                                                    8
+                                                        9
+                                                             10
+                                                                  11
+                                                                       12
+                                                                            13
+                                                                                 14
+                                                                                                                                 Contact resistance:
+                                                                                      15
+
+                                                                                                                                            Initial value/ 20 mΩ max.
+                                                                                                                                            After environmental tests/ 40 mΩ max.
+                                                                                                                                 Insulation resistance: 100 MΩ min.
+                                                                                                                                 Withstanding voltage:
+                                                                                                                                   There shall be no breakdown or flashover while
+                                                                                                                                   applying 500 VAC for one minute.
+                                                                                                                                 Applicable wire range:
+                                                                                                                                         Conductor size/ AWG #32 to AWG #28
+                                                                                                                                         Insulation O.D./ φ0.4 mm to φ0.8 mm
+The SH is the world's first 1.0 mm pitch crimp
+style connector. It features a compact, low                                                                                   * Please refer to the "Handling Precautions for Terminals
+                                                                                                                                and Connectors" on our website (listed in the "Technical
+profile design in a wire-to-board configuration.
+                                                                                                                                Documents" column on the Product Information page)
+Its unique contact engagement with                                                                                              before use.
+the housing lance provides excellent                                                                                          * RoHS2 compliance
+performance in the contact insertion process                                                                                  * Dimensional unit: mm
+when using smaller diameter wires. In addition,                                                                               * Contact JST for details.
+with a high-pressure contact design, the SH
+contact demonstrates excellent contact                                                                                        ■ Standards
+reliability providing an assured connection.                                                                                  For information on overseas standard registrations, please
+                                                                                                                              refer to the "List of Registered Overseas Standards" on
+  Compact and space-saving                                                                                                    our website (listed in the "Technical Documents" column
+  Housing lance system                                                                                                        on the Product Information page).
+  High-pressure contact design for a more                                                                                     * Specifications registered to overseas standards may
+                                                                                                                                 differ from the general specifications listed above.
+  assured connection
+  Socket compatible with IDC style SR connector
+
+
+
+
+PC board layout and Assembly layout
+  Top entry type                                                                                                               Side entry type
+                                                                                                             2.9
+                                                                                                                                                  A±0.1
+                                                            (0.2)
+
+
+
+
+   Connector outline            (0.4)                                                                                                                     0.7 ±0.1     1.2±0.1
+                                                                                                                                      0.6 ±0.05    1.0±0.05
+                                                                                                                            No. 1
+                                                                       ±0.1
+
+
+
+
+                                                                                                                                                                                                               (6.25)
+                                                                                      2.65 ±0.1
+
+
+
+
+                                                                                                                            circuit
+                                                                                                  4.2 ±0.1
+                                                                            1.8
+
+
+
+
+                                                                                                                   （6.3）
+
+
+
+
+                                                                                                                                                                                                                        (2.95)
+                                                                                                                                                                                                    5.55±0.1
+
+
+
+
+No. 1
+circuit
+                                                                                                                                                                                         4.0 ±0.1
+                                                                                                                                                                                ±0.1
+
+
+
+
+   0.6±0.05      1.0±0.05
+                                                                                                                                                                                   1.8
+
+
+
+
+                       0.7±0.1                      1.2 ±0.1
+                                                                                                                                                                        (0.2)
+
+
+
+
+                  ±0.1                                                                                                                                         (0.4)
+                A                                                                                                              Connector outline
+
+
+Note: 1. The PC board layout figure shown is viewed from the connector mounting surface.
+      2. Dimension A: See “Header” section on page 3.
+      3. Tolerance for the PCB pattern pitch shall be ± 0.05, and shall not accumulate more than ± 0.1.
+      4. The above dimensions are reference values. Please contact JST for details.
+
+
+
+                                                                                                                           ‑1‑
+                                                                                            SH CONNECTOR
+
+Contact
+                                                                                            Applicable wire range
+                                                                                                                                     Qʼty/
+                                                               Model No.                Conductor size           Insulation O.D.
+                                                                                                                                     reel
+                                                                                         AWG (mm2)                   (mm)
+                         3.9                              SSH-003T-P0.2-H        #32 to #28 (0.032 to 0.081)          0.4 to 0.8     23,000
+
+                                                                                 Material and Surface ﬁnish, etc.
+
+
+                                   1.35
+                                                                                     Copper alloy, tin-plated
+
+                                                      Note: Contact JST for gold-plated product.
+                                          0.8
+
+                                                      Crimping machine
+                                                                                 Crimping
+                                                                 Contact                      Applicator      Crimp applicator with dies
+                                                                                 machine
+                                                          SSH-003T-P0.2-H        AP-K2N      MKS-L-10-3         APLMK SSH/L003-02
+                                                      Note: Contact JST for fully automatic crimping applicator.
+
+
+
+Housing
+
+                                                                           Model No.                    Dimensions (mm)
+ With protrusions                                     No. of                                                           B             Q'ty/
+                                                      circuits        With          Without
+                                                                                                    A                                box
+                                                                   protrusions     protrusions                With      Without
+                          B                                                                                protrusions protrusions
+ Mark of                  A
+ No. 1 circuit                                             2      SHR-02V-S-B      SHR-02V-S        1.0         5.0         3.0      2,000
+                    1                     2.8              3      SHR-03V-S-B      SHR-03V-S        2.0         6.0         4.0      2,000
+                        3 2    N                           4      SHR-04V-S-B      SHR-04V-S        3.0         7.0         5.0      2,000
+                                                           5      SHR-05V-S-B      SHR-05V-S        4.0         8.0         6.0      2,000
+                                                           6      SHR-06V-S-B      SHR-06V-S        5.0         9.0         7.0      2,000
+                                                5
+
+
+
+
+                                                           7      SHR-07V-S-B      SHR-07V-S        6.0       10.0          8.0      2,000
+                                                           8      SHR-08V-S-B      SHR-08V-S        7.0       11.0          9.0      2,000
+                                                           9      SHR-09V-S-B      SHR-09V-S        8.0       12.0         10.0      2,000
+                                                          10      SHR-10V-S-B      SHR-10V-S        9.0       13.0         11.0      2,000
+                                                          11      SHR-11V-S-B      SHR-11V-S      10.0        14.0         12.0      2,000
+ Without protrusions
+                                                          12      SHR-12V-S-B      SHR-12V-S      11.0        15.0         13.0      2,000
+                          B                               13      SHR-13V-S-B      SHR-13V-S      12.0        16.0         14.0      2,000
+    Mark of               A
+    No. 1 circuit                                         14      SHR-14V-S-B      SHR-14V-S      13.0        17.0         15.0      2,000
+                    1                     2.8
+                                                          15      SHR-15V-S-B      SHR-15V-S      14.0        18.0         16.0      2,000
+                        3 2    N                          16      SHR-16V-S-B           ̶         15.0        19.0          ̶        1,500
+                                                          20      SHR-20V-S-B           ̶         19.0        23.0          ̶        1,000
+                                                5
+
+
+
+
+                                                                                 Material and Surface ﬁnish, etc.
+
+                                                                                       PBT, natural (white)
+
+                                                      Note: For ﬂame retardant grade of resin material used, please refer to
+                                                            the "List of Registered Overseas Standards" on our website (listed in
+                                                            the "Technical Documents" column on the Product Information page).
+
+
+
+
+                                                    ‑2‑
+                                                                                        SH CONNECTOR
+
+Header
+
+                                                                          Model No.              Dimensions (mm)       Q'ty/reel
+ Top entry type                                       No. of
+                                                      circuits Top entry type Side entry type                      Top entry Side entry
+                                                                                                    A       B        type       type
+                                                          2   BM02B-SRSS-TB     SM02B-SRSS-TB       1.0     4.0     1,500     3,000
+No. 1
+circuit                                                   3   BM03B-SRSS-TB     SM03B-SRSS-TB       2.0     5.0     1,500     3,000
+                                                          4   BM04B-SRSS-TB     SM04B-SRSS-TB       3.0     6.0     1,500     3,000
+
+                   4.25
+                                                          5   BM05B-SRSS-TB     SM05B-SRSS-TB       4.0     7.0     1,500     3,000
+                                                          6   BM06B-SRSS-TB     SM06B-SRSS-TB       5.0     8.0     1,500     3,000
+                                                          7   BM07B-SRSS-TB     SM07B-SRSS-TB       6.0     9.0     1,500     3,000
+                                                          8   BM08B-SRSS-TB     SM08B-SRSS-TB       7.0    10.0     1,500     3,000
+                   0.05
+
+
+
+
+          1                                               9   BM09B-SRSS-TB     SM09B-SRSS-TB       8.0    11.0     1,500     3,000
+              A           0.7    2.9                  10      BM10B-SRSS-TB     SM10B-SRSS-TB       9.0    12.0     1,500     3,000
+              B                                       11      BM11B-SRSS-TB     SM11B-SRSS-TB     10.0     13.0     1,500     3,000
+                                                      12      BM12B-SRSS-TB     SM12B-SRSS-TB     11.0     14.0     1,500     3,000
+                                                      13      BM13B-SRSS-TB     SM13B-SRSS-TB     12.0     15.0     1,500     3,000
+ Side entry type                                      14      BM14B-SRSS-TB     SM14B-SRSS-TB     13.0     16.0     1,500     3,000
+                                                      15      BM15B-SRSS-TB     SM15B-SRSS-TB     14.0     17.0     1,500     3,000
+No. 1                                                 16      BM16B-SRSS-TB           ̶           15.0     18.0     1,500       ̶
+circuit                                               20           ̶            SM20B-SRSS-TB     19.0     22.0       ̶       3,000
+
+                                                                              Material and Surface ﬁnish, etc.
+                                             2.9
+
+
+
+
+                                                               Base contact: Copper alloy, tin-plated
+                                                               Base housing: PA (Heat resistance) , natural (ivory)
+                                             0.05
+
+
+
+
+          1                                                    Reinforcement: Copper alloy, tin-plated
+              A           4.25         0.7
+                                                      Note: 1. This product displays (LF)(SN) on a label.
+              B                                             2. This product is supplied on embossed tape and reel packaging.
+                                                               Top-entry headers with suction tape are also available.
+                                                               Please contact JST for details.
+                                                            3. Contact JST for gold-plated product.
+                                                            4. The SH header is compatible with SR series IDC style socket.
+                                                            5. For flame retardant grade of resin material used, please refer to
+                                                               the "List of Registered Overseas Standards" on our website
+                                                               (listed in the "Technical Documents" column on the Product
+                                                               Information page).
+
+
+
+
+                                                    ‑3‑
+                                                                                              SH CONNECTOR
+
+ Model number allocation
+
+Contact                                                           Housing
+
+                                 S SH - 003 T - P 0.2 - H                                               SH R - 02 V - S - B
+
+
+  Supply form: Strip form                                           Series name
+  Series name                                                       Type: For receptacle contact
+  Applicable wire range: AWG #32 to AWG # 28                        No. of circuits
+  Surface ﬁnish: Tin-plated                                         Sub model number
+  Material: Copper alloy                                            Color: Natural (White)
+  Applicable contact size                                           With/without protrusions: B…With protrusions
+  Sub model number                                                                            No indication…Without protrusions
+
+
+
+
+Header
+
+                                 BM 02 B - SR S S - TB
+
+  Header type:
+   BM…SMT Top entry type
+    SM…SMT Side entry type
+  No. of circuits
+  Assembly product
+  Series name
+  Color: S…Natural (Ivory)
+  Sub model number
+  Packaging style: Embossed-taping
+
+
+
+
+                                                            ‑4‑
+

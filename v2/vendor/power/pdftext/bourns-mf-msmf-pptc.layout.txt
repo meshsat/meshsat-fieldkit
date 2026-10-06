@@ -1,0 +1,1174 @@
+                                                                 Features
+
+
+            PL & ,
+           M EE NT
+                               AUTOMOTIVE
+
+
+        CO FR LIA
+
+                NT
+                                       G R A DE                  n Standard 1812 footprint                                          n Agency recognition:
+
+
+              IA
+      00 EN P
+    Q2 OG OM                          (SOME MODELS)
+  C- AL C
+                                                                 n Fast Time-to-Trip (TTT) to protect against                       n TÜV approval to the following standards:
+AE **H oHS
+
+
+                                                                   overcurrent events                                                   IEC 62319-1, IEC 60738-1 and
+     *R
+
+
+
+
+                                                                 n Excellent solderability with ENIG terminal                           IEC 60730-1:2013 clause 15, clause 17
+                                                                                                                                        and Annex J
+                                                                 n Symmetrical designs and low profile
+                                                                 n AEC-Q200 compliant (select models)
+                                                                                                                                             Some models are currently available but
+                                                                 n RoHS compliant* and halogen free**                                         not recommended for new designs.
+
+
+                                                                 MF-MSMF Series – PTC Resettable Fuses
+
+   Electrical Characteristics
+
+                                                                                                                                Tripped
+                                                                                                      Max. Time                                    Agency
+                                                      Ihold      Itrip       Resistance                                          Power
+                                                                                                       to Trip                                   Recognition
+                              Vmax          Imax                                                                              Dissipation                             AEC-Q200
+         Model                                                                 at 23 °C                                        at 23 °C
+                                                        at 23 °C                                         at 23 °C                             cUL           TÜV       Compliant
+                                                                                Ohms                                             Watts
+                              Volts       Amps            Amps              RMin      R1Max      Amps       Seconds              Typ.       E174545     R50256634
+ MF-MSMF010                     60           40       0.10      0.30        0.70        15         0.5          1.5               0.8           3            3                3
+ MF-MSMF010/33X                 33           40       0.10      0.30        0.70        15         0.5          1.5               0.8           3            3                3
+ MF-MSMF010/60X                 60           40       0.10      0.30        0.70        15         0.5          1.5               0.8           3            3                3
+ MF-MSMF014                     60           40       0.14      0.34        0.40        6.5        1.5         0.15               0.8           3            3                3
+ MF-MSMF014/60X                 60           40       0.14      0.34        0.40        6.0        1.5         0.15               0.8           3            3                3
+ MF-MSMF020                     30           80       0.20      0.40        0.40        6.0        6.0         0.06               0.8           3            3                3
+ MF-MSMF020/33X                 33           40       0.20      0.40        0.35        5.0        8.0         0.02               0.8           3            3                3
+ MF-MSMF020/60X                 60           40       0.20      0.40        0.35        4.4        1.0         2.00               0.8           3            3                3
+ MF-MSMF020/60                  60           40       0.20      0.40        0.40        6.0        1.5         0.15               0.8           3            3                3
+ MF-MSMF030                     30           10       0.30      0.60        0.30        3.0        8.0         0.10               0.8           3            3                3
+ MF-MSMF030/33X                 33           40       0.30      0.60        0.30        3.0        8.0         0.10               0.8           3            3                3
+ MF-MSMF030/60X                 60           10       0.30      0.60        0.30        3.0        8.0         0.10               0.8           3            3                3
+ MF-MSMF035/33X                 33           40       0.35      0.70        0.25        1.7        8.0         0.15               0.8           3            3                3
+ MF-MSMF035/60X                 60           10       0.35      0.70        0.25        1.7        8.0         0.15               0.8           3            3                3
+ MF-MSMF050                     15          100       0.50      1.00        0.15        1.0        8.0         0.15               0.8           3            3                3
+ MF-MSMF050/16X                 16          100       0.50      1.00        0.15        1.3        8.0         0.20               0.8           3            3                3
+ MF-MSMF050/24X                 24          100       0.50      1.00        0.15        1.3        8.0         0.20               0.8           3            3                3
+ MF-MSMF050/30X                 30          100       0.50      1.00        0.15        1.3        8.0         0.20               0.8           3            3                3
+ MF-MSMF050/40X                 40           20       0.50      1.00        0.15        1.3        8.0         0.20               0.8           3            3                3
+ MF-MSMF050/60X                 60           10       0.50      1.00        0.15        1.0        8.0         0.20               0.8           3            3                3
+ MF-MSMF075                    13.2         100       0.75      1.50        0.11       0.45        8.0          0.2               0.8           3            3                3
+ MF-MSMF075/16X                 16          100       0.75      1.50        0.11       0.45        8.0          0.2               0.8           3            3                3
+ MF-MSMF075/24X                 24          100       0.75      1.50        0.11       0.40        8.0          0.2               0.8           3            3                3
+ MF-MSMF075/24                  24           40       0.75      1.50        0.11       0.45        8.0          0.2               0.8           3            3                3
+ MF-MSMF075/33X                 33           20       0.75      1.50        0.11       0.40        8.0          0.2               1.4           3            3                3
+ MF-MSMF110/8X                   8          100       1.10      2.20        0.06       0.21        8.0          0.3               0.8           3            3
+ MF-MSMF110/16X                 16          100       1.10      2.20        0.06       0.20        8.0          0.3               0.8           3            3                3
+ MF-MSMF110/16                  16          100       1.10      2.20        0.04       0.21        8.0          0.3               0.8           3            3                3
+ MF-MSMF110/24X                 24           20       1.10      2.20        0.06       0.18        8.0          0.5               0.8           3            3                3
+ MF-MSMF110/33X                 33           20       1.10      2.20        0.06       0.20        8.0          0.5               1.0           3            3                3
+ MF-MSMF125/8X                   8          100       1.25      2.50        0.04       0.14        8.0          0.4               0.8           3            3
+ MF-MSMF125/12X                 12          100       1.25      2.50        0.04       0.14        8.0          0.4               0.8           3            3
+                                                                                                                                                          Continued on next page
+
+
+
+
+                                                                                                                                        Additional Information
+             CALIFORNIA WARNING: Can expose you to lead, a carcinogen and reproductive toxicant.                                    Click these links for more information:
+             See www.P65Warnings.ca.gov
+* RoHS Directive 2015/863, Mar 31, 2015 and Annex.
+** Bourns considers a product to be “halogen free” if (a) the Bromine (Br) content is 900 ppm or less; (b) the Chlorine
+   (Cl) content is 900 ppm or less; and (c) the total Bromine (Br) and Chlorine (Cl) content is 1500 ppm or less.
+Specifications are subject to change without notice. Users should verify actual device performance in their specific                PRODUCT TECHNICAL INVENTORY SAMPLES       CONTACT
+applications. The products described herein and this document are subject to specific legal disclaimers as set forth on the         SELECTOR LIBRARY
+last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+Applications
+Overcurrent and overtemperature protection                      n PCMCIA cards
+for:                                                            n USB port protection - USB 2.0, 3.0 & OTG
+n PC motherboards                                               n Hard disk drives
+n PC peripherals                                                n HDMI 1.4 Source protection
+n Point-of-sale (POS) equipment                                 n Server and data center interfaces
+
+
+
+         MF-MSMF Series – PTC Resettable Fuses
+
+  Electrical Characteristics (continued)
+
+                                                                                                                           Tripped
+                                                                                                    Max. Time                                      Agency
+                                                    Ihold       Itrip      Resistance                                       Power
+                                                                                                     to Trip                                     Recognition
+                              Vmax       Imax                                                                            Dissipation                                       AEC-Q200
+         Model                                                                at 23 °C                                    at 23 °C
+                                                       at 23 °C                                        at 23 °C                               cUL             TÜV          Compliant
+                                                                               Ohms                                         Watts
+                              Volts     Amps             Amps             RMin      R1Max       Amps      Seconds            Typ.          E174545       R50256634
+MF-MSMF125/16X                 16         100       1.25       2.50       0.04        0.14       8.0          0.4             0.8              3               3                3
+MF-MSMF125/24X                 24         20        1.25       2.50       0.04        0.14       8.0          0.4             0.8              3               3                3
+MF-MSMF150/8X                   8         100       1.50       3.00       0.030      0.110       8.0          0.5             0.8              3               3
+MF-MSMF150/12X                 12         100       1.50       3.00       0.030      0.110       8.0          0.5             0.8              3               3
+MF-MSMF150/12                  12         100       1.50       3.00       0.030      0.120       8.0          0.5             0.8              3               3                3
+MF-MSMF150/16X                 16         100       1.50       3.00       0.030      0.120       8.0          0.5             0.8              3               3                3
+MF-MSMF150/24X                 24         20        1.50       3.00       0.030      0.120       8.0          1.5             1.0              3               3                3
+MF-MSMF160/8X                   8         100       1.60       2.80       0.030      0.100       8.0          1.0             0.8              3               3
+MF-MSMF160/12X                 12         100       1.60       2.80       0.030      0.100       8.0          1.0             0.8              3               3
+MF-MSMF160/16X                 16         100       1.60       2.80       0.030      0.100       8.0          1.0             0.8              3               3                3
+MF-MSMF160/24X                 24         20        1.60       3.20       0.030      0.100       8.0          1.0             0.8              3               3                3
+MF-MSMF200/8X                   8         100       2.00       3.50       0.020      0.070       8.0          2.0             0.8              3               3
+MF-MSMF200/12X                 12         100       2.00       3.50       0.020      0.070       8.0          2.0             1.0              3               3
+MF-MSMF200/16X                 16         100       2.00       3.50       0.020      0.070       8.0          2.0             1.0              3               3                3
+MF-MSMF250/16X                 16         100       2.50       5.00       0.015      0.100       8.0          5.0             1.2              3               3                3
+MF-MSMF260/6X                   6         100       2.60       5.20       0.015      0.060       8.0          5.0             0.8              3               3
+MF-MSMF260/8X                   8         100       2.60       5.20       0.015      0.050       8.0          5.0             0.8              3               3
+MF-MSMF260/12X                 12         100       2.60       5.20       0.015      0.050       8.0          5.0             1.2              3               3
+MF-MSMF260/16X                 16         100       2.60       5.00       0.015      0.050       8.0          5.0             1.2              3               3                3
+MF-MSMF300/6X                   6         100       3.00       5.00       0.010      0.040       8.0          5.0             1.2              3               3
+
+
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+         MF-MSMF Series – PTC Resettable Fuses
+
+  Environmental Characteristics
+
+                            Item                                                      Condition                                                       Criteria
+
+ Operating Temperature                                         -40 °C to +85 °C
+
+ Recommended Storage                                           +40 °C max. / 70 % R.H. max.
+
+ Passive Aging                                                 +85 °C, 1000 hours                                            ±5 % typical resistance change
+
+ Humidity Aging                                                +85 °C, 85 % R.H. 1000 hours                                  ±5 % typical resistance change
+
+ Thermal Shock                                                 -40 °C to +85 °C, 20 times                                    ±10 % typical resistance change
+
+ Solvent Resistance                                            MIL-STD-202, Method 215                                       No change (marking still legible)
+
+ Vibration                                                     MIL-STD-883C, Method 2007.1 Condition A                       No change (Rmin < R < R1max)
+
+ Moisture Sensitivity Level (MSL)                              See Note
+
+ ESD Classiﬁcation                                             Class 6 (per AEC-Q200-2, HBM)
+
+
+  Test Procedures and Requirements
+
+ Item                                                             Test Condition                                                   Accept/Reject Criteria
+ Visual/Mechanical                                                Verify dimensions and materials                                  Per MF physical description
+ Resistance                                                       In still air @ 23 °C                                             Rmin ≤ R ≤ Rmax
+ Time to Trip                                                     At specified current, Vmax, 23 °C, still air                     T ≤ max. time to trip (seconds)
+ Hold Current                                                     30 min. at Ihold, still air                                      No trip
+ Trip Cycle Life                                                  Vmax, Imax, 100 cycles                                           No arcing or burning
+ Trip Endurance                                                   Vmax, Imax, 48 hours                                             No arcing or burning
+ Solderability                                                    245 °C ±5 °C, 5 seconds                                          95 % min. coverage
+
+
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+         MF-MSMF Series – PTC Resettable Fuses
+
+  Product Dimensions (see page 7 for outline drawings)
+
+                                         A                           B                            C                            D                            E
+         Model                                                                                                                                                                 Style
+                                Min.          Max.          Min.          Max.           Min.          Max.           Min.          Max.           Min.          Max.
+                                4.37           4.73          3.07          3.41          0.70          1.10           0.30
+MF-MSMF010                                                                                                                            —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.028)       (0.043)        (0.012)
+
+                                4.37           4.83          3.07          3.41          0.60          1.10           0.30          1.20          0.20           0.65
+MF-MSMF010/33X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.024)       (0.043)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.60          1.10           0.30          1.20          0.20           0.65
+MF-MSMF010/60X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.024)       (0.043)        (0.012)       (0.047)       (0.008)        (0.026)
+                                4.37           4.73          3.07          3.41          0.70          1.10           0.30
+MF-MSMF014                                                                                                                            —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.028)       (0.043)        (0.012)
+
+                                4.37           4.83          3.07          3.41          0.60          1.10           0.30          1.20          0.20           0.65
+MF-MSMF014/60X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.024)       (0.043)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.73          3.07          3.41          0.70          1.10           0.30
+MF-MSMF020                                                                                                                            —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.028)       (0.043)        (0.012)
+
+                                4.37           4.83          3.07          3.41          0.60          1.10           0.30          1.20          0.20           0.65
+MF-MSMF020/33X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.024)       (0.043)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.60          1.10           0.30          1.20          0.20           0.65
+MF-MSMF020/60X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.024)       (0.043)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.73          3.07          3.41          0.70          1.10           0.30
+MF-MSMF020/60                                                                                                                         —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.028)       (0.043)        (0.012)
+
+                                4.37           4.73          3.07          3.41          0.70          1.10           0.30
+MF-MSMF030                                                                                                                            —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.028)       (0.043)        (0.012)
+
+                                4.37           4.83          3.07          3.41          0.60          1.10           0.30          1.20          0.20           0.65
+MF-MSMF030/33X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.024)       (0.043)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          1.20          1.80           0.30          1.20          0.20           0.65
+MF-MSMF030/60X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.047)       (0.071)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.60          1.10           0.30          1.20          0.20           0.65
+MF-MSMF035/33X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.024)       (0.043)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          1.20          1.80           0.30          1.20          0.20           0.65
+MF-MSMF035/60X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.047)       (0.071)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.73          3.07          3.41          0.55          0.85           0.30
+MF-MSMF050                                                                                                                            —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.022)       (0.033)        (0.012)
+
+                                4.37           4.83          3.07          3.41          0.40          0.85           0.30          1.20          0.20           0.65
+MF-MSMF050/16X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.016)       (0.033)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.40          0.85           0.30          1.20          0.20           0.65
+MF-MSMF050/24X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.016)       (0.033)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.40          0.85           0.30          1.20          0.20           0.65
+MF-MSMF050/30X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.016)       (0.033)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.40          0.85           0.30          1.20          0.20           0.65
+MF-MSMF050/40X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.016)       (0.033)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          1.20          1.80           0.30          1.20          0.20           0.65
+MF-MSMF050/60X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.047)       (0.071)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                      MM
+                                                                                                                                                            Continued on next page
+  DIMENSIONS:
+                   (INCHES)
+
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+         MF-MSMF Series – PTC Resettable Fuses
+
+  Product Dimensions – continued (see page 7 for outline drawings)
+
+                                         A                           B                            C                            D                            E
+         Model                                                                                                                                                                 Style
+                                Min.          Max.          Min.          Max.           Min.          Max.           Min.          Max.           Min.          Max.
+                                4.37           4.73          3.07          3.41          0.55          0.85           0.30
+MF-MSMF075                                                                                                                            —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.022)       (0.033)        (0.012)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF075/16X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF075/24X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+                                4.37           4.73          3.07          3.41          0.55          0.85           0.30
+MF-MSMF075/24                                                                                                                         —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.022)       (0.033)        (0.012)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF075/33X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF110/8X                                                                                                                                                                     2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF110/16X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.73          3.07          3.41          0.55          0.85           0.30
+MF-MSMF110/16                                                                                                                         —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.022)       (0.033)        (0.012)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF110/24X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          1.20          1.80           0.30          1.20          0.20           0.65
+MF-MSMF110/33X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.047)       (0.071)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF125/8X                                                                                                                                                                     2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF125/12X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF125/16X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF125/24X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF150/8X                                                                                                                                                                     2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF150/12X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.73          3.07          3.41          0.55          0.85           0.30
+MF-MSMF150/12                                                                                                                         —             —              —              1
+                              (0.172)        (0.186)       (0.121)       (0.134)        (0.022)       (0.033)        (0.012)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF150/16X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF150/24X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF160/8X                                                                                                                                                                     2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                      MM                                                                                                                                    Continued on next page
+  DIMENSIONS:
+                   (INCHES)
+
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+         MF-MSMF Series – PTC Resettable Fuses
+
+  Product Dimensions – continued (see page 7 for outline drawings)
+
+                                         A                           B                            C                            D                            E
+         Model                                                                                                                                                                 Style
+                                Min.          Max.          Min.          Max.           Min.          Max.           Min.          Max.           Min.          Max.
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF160/12X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF160/16X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF160/24X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF200/8X                                                                                                                                                                     2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF200/12X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF200/16X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF250/16X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.35          0.80           0.30          1.20          0.20           0.65
+MF-MSMF260/6X                                                                                                                                                                     2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.014)       (0.031)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF260/8X                                                                                                                                                                     2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF260/12X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.70          1.60           0.30          1.20          0.20           0.65
+MF-MSMF260/16X                                                                                                                                                                    2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.028)       (0.063)        (0.012)       (0.047)       (0.008)        (0.026)
+
+                                4.37           4.83          3.07          3.41          0.60          1.10           0.30          1.20          0.20           0.65
+MF-MSMF300/6X                                                                                                                                                                     2
+                              (0.172)        (0.190)       (0.121)       (0.134)        (0.024)       (0.043)        (0.012)       (0.047)       (0.008)        (0.026)
+
+
+                      MM
+  DIMENSIONS:
+                   (INCHES)
+
+
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+                                 MF-MSMF Series – PTC Resettable Fuses                                                                                        100
+
+
+                                                                                                                                                        MF-MSMF010
+
+               Product Dimensions (see previous pages for dimensions)
+            Style 1
+          Style 1Top and Bottom View                                  Side View                                                                                10                            Recommended Pad Layout
+                                                                                                    Terminal material:               MF-MSMF030
+                            Top and Bottom
+                                         A View                   SideC View                                                                                                               Recommended Pad Layout
+                                                                                                       Electroless Ni under immersion Au
+                                           A                      C
+
+
+
+
+                                                                                                                                    Time to Trip (Seconds)
+                                                                                                                                                                                                                                   3.2 ± 0.1
+                                                              B                                                                                                 1                                                               (0.126
+                                                                                                        DIMENSIONS:
+                                                                                                                                MM                                                                                             3.2 ± 0.1± .004)
+                                                      B                                                                      (INCHES)                                                                                       (0.126 ± .004)
+
+                                                                                                                                                                          1.5 ± 0.05                                       2.7 ± 0.1
+                                                              D
+                                                                                                                                                                     1.5(.059  ± .002)
+                                                                                                                                                                          ± 0.05                                     2.7(.106
+                                                                                                                                                                                                                          ± 0.1± .004)
+                                                      D                                                                                                        0.1 (.059 ± .002)                                  (.106 ± .004)
+            Style 2
+          Style 2                          Top View                       Bottom View                       Side View                                                                        Recommended Pad Layout
+                                       Top View                        Bottom View
+                                                                              A                          Side View       C                                                                 Recommended Pad Layout
+                                                                               A                                     C
+                                                                                                                                                              0.01
+                                            8                                                       B
+                                                                                                                                                                                                                                2.95 ± 0.10
+                                          8C                                                    B
+                                                                                                                                                                                                           MF-MSMF014      2.95(.116 ± .004)
+                                                                                                                                                                                                                                 ± 0.10           MF-MSMF075
+
+                                          C                                                                                                                                                                  MF-MSMF020
+                                                                                                                                                                                                                          (.116 ± .004)
+
+                                                                                                                                                                            1.68 ± 0.05                                  3.1 ± 0.10
+                                                              D                                     E                                                        0.001                                                  MF-MSMF050
+                                                                                                                                                                           (.066 ± .002)                            3.1(.122  ± .004)
+                                                      D                                         E                                                                    0.11.68 ± 0.05              1                       ± 0.10
+                                                                                                                                                                                                                             10                        100
+                                                                                                                                                                       (.066 ± .002)                              (.122 ± .004)
+                                                                                                                                                                                                     Fault Current (Amps)
+
+               Typical Time to Trip at 23 °C
+
+                                                                                                                                                                                                                MF-MSMF150/12
+                          100                                                                                                                                 100
+
+
+                    MF-MSMF010
+
+
+
+
+                           10                                                                                                                                  10
+                                       MF-MSMF030
+                                                                                                                                    Time to Trip (Seconds)
+Time to Trip (Seconds)
+
+
+
+
+                            1                                                                                                                                   1
+
+
+
+
+                           0.1                                                                                                                                 0.1
+
+
+
+
+                          0.01                                                                                                                                0.01
+
+
+                                                                                                              MF-MSMF075                                                                                 MF-MSMF020/60
+                                                                      MF-MSMF014
+
+
+                                                                        MF-MSMF020                                                                                                                                                                MF-MSMF110/16
+                                                                                                                                                                                                               MF-MSMF075/24
+                                                                                                                                                             0.001
+                         0.001                                                     MF-MSMF050
+                                                                                                                                                                     0.1                         1                          10                         100
+                                 0.1                      1                              10                          100
+                                                              Fault Current (Amps)                                                                                                                   Fault Current (Amps)
+
+
+The Time to Trip curves represent typical performance of a device in a simulated application environment. Actual performance in specific customer
+applications may differ from these values due to the influence of other variables.
+                                                                          MF-MSMF150/12
+                          100
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+                           10
+                                MF-MSMF Series – PTC Resettable Fuses
+
+                 Typical Time to Trip at 23 °C – continued
+
+                         100
+                                                              E                                                                               100
+                                                      D                         A - MF-MSMF010/33X & 010/60X                                                                         F            E - MF-MSMF075/33X
+                                              B
+                                          A       C               G             B - MF-MSMF014/60X                                                                               E                F - MF-MSMF110/8X & 110/16X
+                                                                                                                                                                          A              G
+                          10                              F                     C - MF-MSMF020/33X & 020/60X                                   10                        C D                      G - MF-MSMF110/24X
+                                                                                D - MF-MSMF030/33X
+TIME TO TRIP (Seconds)
+
+
+
+
+                                                                                                                     TIME TO TRIP (Seconds)
+                                                                                                                                                                         B                        H - MF-MSMF110/33X
+                                                                                E - MF-MSMF030/60X
+                           1                                                    F - MF-MSMF035/33X                                              1
+                                                                                G - MF-MSMF035/60X
+
+                          0.1                                                                                                                  0.1                                                           H
+                                                                                                                                                         A - MF-MSMF050/16X & 050/24X
+                                                                                                                                              0.01       B - MF-MSMF050/30X & 050/40X
+                         0.01
+                                                                                                                                                         C - MF-MSMF050/60X
+                                                                                                                                                         D - MF-MSMF075/16X & 075/24X
+                  0.001                                                                                                                0.001
+                       0.1                                        1                    10                      100                          0.1                              1                          10                      100
+                                                                  FAULT CURRENT (Amps)                                                                                        FAULT CURRENT (Amps)
+
+
+
+
+                         100                  A                                                                                               100
+                                                                             A - MF-MSMF125/8X & 125/12X                                                                                     C - MF-MSMF125/24X
+                                              B                              B - MF-MSMF125/16X                                                                                              D - MF-MSMF150/8X & 150/12X
+                          10                                                 E - MF-MSMF150/16X                                                10                                            F - MF-MSMF150/24X
+TIME TO TRIP (Seconds)
+
+
+
+
+                                                                                                                     TIME TO TRIP (Seconds)
+
+
+
+
+                                                      E                      H - MF-MSMF160/12X & 160/16X                                                                                    G - MF-MSMF160/8X
+                           1                                                 I - MF-MSMF160/24X                                                 1
+
+
+                          0.1                                                          I                                                       0.1
+                                                                                                                                                                                                         F
+                                                                                                   H                                                                                          D          C
+                         0.01                                                                                                                 0.01                                                           G
+
+
+                  0.001                                                                                                                0.001
+                                1                                          10                                  100                                   1                                   10                                     100
+                                                                  FAULT CURRENT (Amps)                                                                                        FAULT CURRENT (Amps)
+
+
+
+
+                         100
+
+
+                          10
+TIME TO TRIP (Seconds)
+
+
+
+
+                           1
+
+                                    A - MF-MSMF200/8X
+                          0.1       B - MF-MSMF200/12X & 200/16X
+                                    C - MF-MSMF250/16X                                         G
+                                                                                                   F
+                                    D - MF-MSMF260/6X                                                  E
+                         0.01       E - MF-MSMF260/8X & 260/12X                                        C
+                                    F - MF-MSMF260/16X                                     A   D       B             The Time to Trip curves represent typical performance of a device in
+                                    G - MF-MSMF300/6X                                                                a simulated application environment. Actual performance in specific
+                  0.001                                                                                              customer applications may differ from these values due to the influence
+                                1                                          10                                  100   of other variables.
+                                                                  FAULT CURRENT (Amps)
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+         MF-MSMF Series – PTC Resettable Fuses
+
+  Thermal Derating Table - Ihold (Amps)
+
+                                                                                    Ambient Operating Temperature
+         Model                  -40 °C            -20 °C            0 °C             23 °C             40 °C             50 °C            60 °C             70 °C             85 °C
+ MF-MSMF010                      0.16              0.14             0.12              0.10              0.08             0.07              0.06              0.05             0.03
+ MF-MSMF010/33X                  0.16              0.14             0.12              0.10              0.08             0.07              0.06              0.05             0.03
+ MF-MSMF010/60X                  0.16              0.14             0.12              0.10              0.08             0.07              0.06              0.05             0.03
+ MF-MSMF014                      0.23              0.20             0.17              0.14              0.12             0.10              0.09              0.08             0.06
+ MF-MSMF014/60X                  0.23              0.20             0.17              0.14              0.12             0.10              0.09              0.08             0.05
+ MF-MSMF020                      0.30              0.27             0.23              0.20              0.17             0.15              0.13              0.12             0.09
+ MF-MSMF020/33X                  0.29              0.26             0.23              0.20              0.17             0.15              0.14              0.12             0.07
+ MF-MSMF020/60X                  0.29              0.26             0.23              0.20              0.17             0.15              0.14              0.12             0.07
+ MF-MSMF020/60                   0.29              0.26             0.23              0.20              0.17             0.15              0.13              0.11             0.08
+ MF-MSMF030                      0.46              0.40             0.36              0.30              0.26             0.22              0.20              0.18             0.14
+ MF-MSMF030/33X                  0.46              0.40             0.36              0.30              0.26             0.22              0.20              0.18             0.13
+ MF-MSMF030/60X                  0.46              0.40             0.36              0.30              0.26             0.22              0.20              0.18             0.13
+ MF-MSMF035/33X                  0.50              0.45             0.40              0.35              0.30             0.26              0.24              0.20             0.15
+ MF-MSMF035/60X                  0.50              0.45             0.40              0.35              0.30             0.26              0.24              0.20             0.15
+ MF-MSMF050                      0.77              0.68             0.59              0.50              0.44             0.40              0.37              0.33             0.29
+ MF-MSMF050/16X                  0.77              0.68             0.59              0.50              0.44             0.40              0.37              0.33             0.25
+ MF-MSMF050/24X                  0.77              0.68             0.59              0.50              0.44             0.40              0.37              0.33             0.25
+ MF-MSMF050/30X                  0.77              0.68             0.59              0.50              0.44             0.40              0.37              0.33             0.25
+ MF-MSMF050/40X                  0.77              0.68             0.59              0.50              0.44             0.40              0.37              0.33             0.25
+ MF-MSMF050/60X                  0.77              0.68             0.59              0.50              0.44             0.40              0.33              0.27             0.20
+ MF-MSMF075                      1.15              1.01             0.88              0.75              0.65             0.60              0.55              0.49             0.43
+ MF-MSMF075/16X                  1.06              0.95             0.84              0.75              0.60             0.55              0.50              0.45             0.37
+ MF-MSMF075/24X                  1.06              0.95             0.84              0.75              0.60             0.55              0.50              0.45             0.37
+ MF-MSMF075/24                   1.15              1.01             0.88              0.75              0.65             0.60              0.55              0.49             0.43
+ MF-MSMF075/33X                  1.16              1.03             0.90              0.75              0.63             0.56              0.49              0.42             0.32
+ MF-MSMF110/8X                   1.58              1.43             1.26              1.10              0.95             0.85              0.77              0.71             0.58
+ MF-MSMF110/16X                  1.58              1.43             1.26              1.10              0.95             0.85              0.77              0.71             0.58
+ MF-MSMF110/16                   1.59              1.43             1.26              1.10              0.95             0.87              0.80              0.71             0.60
+                                                                                                                                                            Continued on next page
+
+
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+         MF-MSMF Series – PTC Resettable Fuses
+
+  Thermal Derating Table - Ihold (Amps) – continued
+
+                                                                                    Ambient Operating Temperature
+         Model                  -40 °C            -20 °C            0 °C             23 °C             40 °C             50 °C            60 °C             70 °C             85 °C
+ MF-MSMF110/24X                  2.00              1.70             1.40              1.10              0.95             0.88              0.80              0.73             0.61
+ MF-MSMF110/33X                  1.55              1.40             1.25              1.10              0.93             0.83              0.73              0.63             0.50
+ MF-MSMF125/8X                   2.00              1.75             1.52              1.25              1.00             0.95              0.90              0.75             0.61
+ MF-MSMF125/12X                  2.00              1.75             1.52              1.25              1.00             0.95              0.90              0.75             0.61
+ MF-MSMF125/16X                  2.00              1.75             1.52              1.25              1.00             0.95              0.90              0.75             0.61
+ MF-MSMF125/24X                  1.98              1.73             1.50              1.25              0.98             0.93              0.86              0.67             0.53
+ MF-MSMF150/8X                   2.06              1.93             1.79              1.50              1.28             1.10              1.02              0.80             0.68
+ MF-MSMF150/12X                  2.06              1.93             1.76              1.50              1.28             1.10              1.02              0.80             0.68
+ MF-MSMF150/12                   2.17              1.95             1.72              1.50              1.30             1.18              1.09              0.97             0.82
+ MF-MSMF150/16X                  2.04              1.88             1.68              1.50              1.25             1.08              1.00              0.78             0.64
+ MF-MSMF150/24X                  2.10              1.90             1.70              1.50              1.25             1.13              1.00              0.88             0.69
+ MF-MSMF160/8X                   2.20              2.06             1.91              1.60              1.36             1.17              1.09              0.85             0.72
+ MF-MSMF160/12X                  2.18              2.03             1.87              1.60              1.33             1.15              1.07              0.83             0.68
+ MF-MSMF160/16X                  2.18              2.03             1.87              1.60              1.33             1.15              1.07              0.83             0.68
+ MF-MSMF160/24X                  2.15              2.00             1.84              1.60              1.31             1.13              1.05              0.81             0.66
+ MF-MSMF200/8X                   2.60              2.44             2.22              2.00              1.78             1.67              1.50              1.45             1.29
+ MF-MSMF200/12X                  2.58              2.41             2.18              2.00              1.75             1.65              1.48              1.43             1.25
+ MF-MSMF200/16X                  2.58              2.41             2.18              2.00              1.75             1.68              1.48              1.43             1.25
+ MF-MSMF250/16X                  3.90              3.42             2.96              2.50              2.24             1.98              1.85              1.29             0.94
+ MF-MSMF260/6X                   3.40              3.16             3.00              2.60              2.30             2.15              2.00              1.85             1.50
+ MF-MSMF260/8X                   3.36              3.12             2.95              2.60              2.26             2.12              1.97              1.82             1.50
+ MF-MSMF260/12X                  3.36              3.12             2.95              2.60              2.26             2.12              1.97              1.82             1.50
+ MF-MSMF260/16X                  3.50              3.42             2.96              2.60              2.30             2.15              2.00              1.85             1.63
+ MF-MSMF300/6X                   4.13              3.75             3.30              3.00              2.62             2.43              2.25              2.00             1.78
+
+
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+         MF-MSMF Series – PTC Resettable Fuses
+
+  Packaging Quantity                                                                               How to Order
+
+ Model                                                      Packaging Quantity                                                              MF - MSMF 160 / 16 X - 2
+ MF-MSMF030/60X                MF-MSMF035/60X                                                   Multifuse® Product Designator
+                                                            1,000 pcs. per reel
+ MF-MSMF050/60X                MF-MSMF110/33X                                                   Series
+                                                                                                    MSMF = 4532 mm (1812 mils)
+ MF-MSMF010                    MF-MSMF014                                                           Surface Mount Component
+ MF-MSMF020                    MF-MSMF020/60                                                    Hold Current, Ihold
+                                                                                                   010 ~ 300 (0.1 ~ 3.0 Amps)
+ MF-MSMF030
+                                                                                                Voltage Options
+ MF-MSMF075/33X                                                                                      6 = 6 Voltage Rated          8 = 8 Voltage Rated
+ MF-MSMF110/24X                MF-MSMF125/16X                                                       12 = 12 Voltage Rated        16 = 16 Voltage Rated
+                                                                                                    24 = 24 Voltage Rated        30 = 30 Voltage Rated
+ MF-MSMF125/24X                MF-MSMF150/16X                                                       33 = 33 Voltage Rated        40 = 40 Voltage Rated
+                                                            1,500 pcs. per reel
+ MF-MSMF150/24X                MF-MSMF160/12X                                                       48 = 48 Voltage Rated        60 = 60 Voltage Rated
+ MF-MSMF160/16X                MF-MSMF160/24X                                                   Multifuse® Design Specific Code
+                                                                                                   Blank = Standard Voltage
+ MF-MSMF200/12X                MF-MSMF200/16X
+                                                                                                   X = Multifuse® freeXpansion™ Design
+ MF-MSMF250/16X                MF-MSMF260/8X                                                    Packaging
+ MF-MSMF260/12X                MF-MSMF260/16X                                                      -2 = Tape and Reel Packaged per EIA-481
+ MF-MSMF300/6X
+
+ MF-MSMF050                    MF-MSMF075
+ MF-MSMF075/24
+ MF-MSMF110/16
+ MF-MSMF150/12
+ MF-MSMF010/33X                MF-MSMF010/60X
+ MF-MSMF014/60X                MF-MSMF020/33X
+ MF-MSMF020/60X                MF-MSMF030/33X
+ MF-MSMF035/33X                MF-MSMF050/16X               2,000 pcs. per reel
+ MF-MSMF050/24X                MF-MSMF050/30X
+ MF-MSMF050/40X                MF-MSMF075/16X
+ MF-MSMF075/24X                MF-MSMF110/8X
+ MF-MSMF110/16X                MF-MSMF125/8X
+ MF-MSMF125/12X                MF-MSMF150/8X
+ MF-MSMF150/12X                MF-MSMF160/8X
+ MF-MSMF200/8X                 MF-MSMF260/6X
+
+
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+         MF-MSMF Series – PTC Resettable Fuses
+
+  Typical Part Marking
+Represents total content. Layout may vary.
+
+
+                        BI-WEEKLY
+                   BI-WEEKLY       DATE
+                             DATE CODE:   CODE: DATE CODE:
+                                       BI-WEEKLY                                                                                   PART IDENTIFICATION
+                                                                                                                                        PART IDENTIFICATION
+                                                                                                                                                     PART IDENTIFICATION
+                   WEEKSWEEKS
+                          49-50 49-50
+                                = Y =WEEKS
+                                        Y      49-50 = Y
+                        YEAR CODE:
+                              YEAR CODE: YEAR CODE:
+         115Y
+         115Y
+
+
+                            115Y
+
+
+
+
+                        5 = 2025
+                              5 = 2025       5 = 2025
+                                                                        2 2                2
+                                                                                      PART IDENTIFICATION
+                                                                                           PART IDENTIFICATION
+                                                                                                                        8 8
+                                                                                                        PART IDENTIFICATION
+                                                                                                                                           8
+                         PART IDENTIFICATION
+                              PART IDENTIFICATION
+                                           PART IDENTIFICATION                                                          C C                C
+                                                                                                                                BI-WEEKLY
+                                                                                                                                     BI-WEEKLY
+                                                                                                                                          DATE CODE:
+                                                                                                                                                 DATE  CODE: DATE CODE:
+                                                                                                                                                     BI-WEEKLY
+                                                                                                                                WEEKSWEEKS
+                                                                                                                                      5-6 = C5-6 = C WEEKS 5-6 = C
+
+  PART IDENTIFICATION EXAMPLES:                            PART IDENTIFICATION E
+                                                                                XAMPLE:                         PART IDENTIFICATION EXAMPLES:
+  MF-MSMF010 = 10                                          MF-MSMF020/60 = 2                                     MF-MSMF010/33X & 010/60X = 0
+  MF-MSMF014 = 14                                                                                                MF-MSMF014/60X = 1
+  MF-MSMF020 = 02                                                                                                MF-MSMF020/33X & 020/60X = 2
+  MF-MSMF030 = 30                                                                                                MF-MSMF030/33X = E
+  MF-MSMF050 = 50                                                                                                MF-MSMF030/60X = I
+  MF-MSMF075 & 075/24 = 75                                                                                       MF-MSMF035/33X = 3
+  MF-MSMF110/16 = 11                                                                                             MF-MSMF035/60X = J
+  MF-MSMF150/12 = 15                                                                                             MF-MSMF050/16X, 050/24X, 050/30X & 050/40X = 4
+                                                                                                                 MF-MSMF050/60X = K
+                                                                                                                 MF-MSMF075/16X & 075/24X = 5
+                                                                                                                 MF-MSMF075/33X = H
+                                                                                                                 MF-MSMF110/8X & 110/16X = N
+                                                                                                                 MF-MSMF110/24X = 6
+                                                                                                                 MF-MSMF110/33X = R
+                                                                                                                 MF-MSMF125/8X & 125/12X = S
+                                                                                                                 MF-MSMF125/16X = M
+                                                                                                                 MF-MSMF125/24X = 7
+                                                                                                                 MF-MSMF150/8X & 150/12X = T
+                                                                                                                 MF-MSMF150/16X = 0
+                                                                                                                 MF-MSMF150/24X = 8
+                                                                                                                 MF-MSMF160/8X = U
+                                                                                                                 MF-MSMF160/12X & 160/16X = W
+                                                                                                                 MF-MSMF160/24X = 9
+                                                                                                                 MF-MSMF200/8X = L
+                                                                                                                 MF-MSMF200/12X & 200/16X = A
+                                                                                                                 MF-MSMF250/16X = C
+                                                                                                                 MF-MSMF260/6X = X
+                                                                                                                 MF-260/8X & 260/12X = Y
+                                                                                                                 MF-MSMF260/16X = D
+                                                                                                                 MF-MSMF300/6X = Z
+
+
+
+
+Americas: Tel: +1 951-781-5500 • Email: americus@bourns.com
+Mexico: Tel: +52-614-478-0400 • Email: mexicus@bourns.com
+Asia: Tel: +886-2-2562-4117 • Email: asiacus@bourns.com
+EMEA: Tel: +36 88 885 877 • Email: eurocus@bourns.com
+www.bourns.com
+
+
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+                MF-MSMF Series – PTC Resettable Fuses
+
+      Solder Reflow Recommendations
+
+                                                                          tp                                         Notes:
+                   TP                                                                                                • MF-MSMF models are intended for reflow soldering
+                                                                                                CRITICAL ZONE
+                                                           RAMP-UP                              T L TO TP              (including but not limited to heating plate, hot air, IR,
+                                                                                                                       nitrogen, and vapor phase).
+                   TL
+                                                                                                                     • Wave soldering is permissible only if the device is on the top
+                                                                                  tL                                   of the PCB, opposite the heat source.
+               TS MAX.                                                                                               • Hand soldering is not recommended for these devices.
+ Temperature
+
+
+
+
+                                                                                                   RAMP-DOWN         • All temperatures refer to the topside of the device,
+                                                                                                                       measured on the device body surface.
+               TS MIN.                                                                                               • If reﬂow temperatures exceed the recommended proﬁle,
+                                           ts                                                                          devices may not meet the published speciﬁcations.
+                                      PREHEAT
+                                                                                                                     • Compatible with Pb and Pb-free solder reﬂow proﬁles.
+                                                                                                                     • Excess solder may cause a short circuit.
+                   25
+                                                                                                                     • Please refer to the Multifuse® Polymer PTC Resettable Fuse
+                                         t 25 °C TO PEAK                                                               Soldering Recommendations document for more details.
+
+
+                                                            Time
+
+                                                           Profile Feature                                           Pb-Free Assembly
+                                  Average Ramp-Up Rate (Ts max to Tp)                                     3 °C / second max.
+                                  PREHEAT:
+                                     Temperature Min. (Tsmin)                                             150 °C
+                                     Temperature Max. (Tsmax)                                             200 °C
+                                     Time (Tsmin to Tsmax) (ts)                                           60~180 seconds
+                 Process       TIME MAINTAINED ABOVE:                                                       Time         Inspect solder joint to determine if solder joint is
+                                             Materials                Temperature                                        acceptable (i.e. exhibits wetting of joint’s surface).
+                Description       Temperature (TL)                                                         Inte°C
+                                                                                                          217  rval
+                                                                                                                         Use the following criteria (ref. acceptability of printed
+1. Apply solder paste to          •Time  (tL) / Ag 3.0 / Cu 0.5
+                                     Sn 96.5                        Room temperature                      60~150 seconds board assemblies, IPC-A-610):
+   test board (8 - 10 mil thick)     Alloy water soluble or no
+                               Peak Temperature (Tp)                                                      260 °C               A) Acceptable (see Figure 1)
+                                     clean solder paste
+                               Time (see
+                                      within 5 °C
+                                           note  1) of Actual Peak Temperature (tp)                       20~40 seconds             (1) The solder connection wetting angle (solder to
+                                  • single sided epoxy glass                                                                            component and solder to PCB termination)
+                               Ramp-Down Rate                                                             6 °C / second max.
+                                     (G10) (UL approved)                                                                                does not exceed 90 °.
+                               Time
+                                  • PC25board
+                                         °C toapprox.
+                                                Peak Temperature
+                                                        4x4x.06 in.                                       8 minutes max.            (2) Solder balls that do not violate minimum
+2. Place test units onto board        6 units/board                                                                                     electrical clearances and are attached
+3. Ramp up                                                                                                                              (soldered) to a metal surface.
+   Packaging Dimensions Convection
+                        – continuedoven(see next page
+                                                   (seefor
+                                                         note 2)     2.5 °C ± 0.5 °/sec.
+                                                           dimensions)
+4. Preheat (TS)                                                            150 °C to 190 °C           90 ± 30 sec.             B) Unacceptable (see Figure 2)
+5. Time above liquidus (TL)                                          P0    220 °C                     60-90 sec.                    (1) Solder connection wetting angle exceeding
+                  T                   D0                        P2                                      E                               90 °.
+6. Peak temperature (TP)                                                                              250 1°C +0 °/-5 °                                                 W2(MEASURED
+                                                                                                      10-20 sec. within             (2) Incomplete reflow of solder paste.
+                                                                                                                                                                      AT HUB)
+                  COVER                                                                               5 °C of peak                  (3) Dewetting.
+          TAPE
+7. Ramp dow n                                                              Room temperature           3 °C ± 0.5 °C/sec.       If unacceptable, determine cause and correct prior to
+                                                                           (see note 2)                                        next run.
+                                                                                                      F
+8. Cleaning water clean profile       High pressure deionized              72 °F to 160 °F            As required         A    NOTES:                                    N(HUB DIA.)
+                                                                                                          E2 W
+  B1                                  water 65 PSI max.                    (22 °C to 71 °C)
+                                                                                                                               1. Water soluble solder paste only above 100K.
+                                                                                                                               2. Refer to ref. temperature profile. Temperature at
+                                                                                                 B0                               lead/pad junction with “K” type thermocouple.
+ Temperature of Lead/Pad Junction                                                                                              3. Units that are board mounted for
+                   T1                                      P1                                                                                                      W1environmental
+                                                                                                                                                                     (MEASURED
+            K 0 6-zone Convection Oven)
+(Derived using                                                                                                                    testing must see a peak temperature    in the reflow
+                                                                                                                                                                     AT HUB)
+                                        A0
+                                                                                                                                  zone, as specified. This is to ensure that all test
+                                                                                                                                  units will see “worst case conditions”.
+ Specifications are subject to change without notice.                                                                               4. Ramp down rate to be measured from 245 °C to
+ Users should verify actual device performance in their specific applications.                                                         150 °C.
+ The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+                                                                                                                               5. Process Description 8 does not apply to open
+                                                                                                                                  frame trimmers.
+          MF-MSMF Series Tape and Reel Specifications
+
+                                                                                                                                  MF-MSMF075/33X
+                                                                                                                                  MF-MSMF110/24X
+                                                                                                                                  MF-MSMF125/16X
+                                                                                                                                  MF-MSMF125/24X
+                                                                            MF-MSMF010/33X                                        MF-MSMF150/16X
+                                                                            MF-MSMF010/60X                                        MF-MSMF150/24X
+                                                                            MF-MSMF014/60X                                        MF-MSMF160/12X
+                                                                            MF-MSMF020/33X                                        MF-MSMF160/16X
+                                                  MF-MSMF110/8X
+                                                                            MF-MSMF020/60X             MF-MSMF075                 MF-MSMF160/24X
+                                                  MF-MSMF110/16X
+                                                  MF-MSMF125/8X             MF-MSMF030/33X             MF-MSMF075/16X             MF-MSMF200/12X
+                                                  MF-MSMF125/12X            MF-MSMF035/33X             MF-MSMF075/24              MF-MSMF200/16X
+                       MF-MSMF010                 MF-MSMF150/8X             MF-MSMF050                 MF-MSMF075/24X             MF-MSMF250/16X
+                       MF-MSMF014                 MF-MSMF150/12X            MF-MSMF050/16X             MF-MSMF110/16              MF-MSMF260/8X                MF-MSMF030/60X
+ Tape                  MF-MSMF020                 MF-MSMF160/8X             MF-MSMF050/24X             MF-MSMF125                 MF-MSMF260/12X               MF-MSMF035/60X
+ Dimensions            MF-MSMF020/60              MF-MSMF200/8X             MF-MSMF050/30X             MF-MSMF150/12              MF-MSMF260/16X               MF-MSMF050/60X
+ per EIA-481           MF-MSMF030                 MF-MSMF260/6X             MF-MSMF050/40X             MF-MSMF160                 MF-MSMF300/6X                MF-MSMF110/33X
+                                                                                                12.00 ± 0.30
+  W
+                                                                                              (0.472 ± 0.012)
+                                                                                                4.00 ± 0.10
+  P0
+                                                                                              (0.157 ± 0.004)
+                                                                                                40.0 ± 0.20
+  10 P0
+                                                                                              (1.575 ± 0.008)
+                                                                                                8.00 ± 0.10
+  P1
+                                                                                              (0.315 ± 0.004)
+                                                                                                2.00 ± 0.05
+  P2
+                                                                                              (0.079 ± 0.002)
+                            3.58 ± 0.10               3.66 ± 0.15                             3.66 ± 0.15                              3.70 ± 0.10                  3.50 ± 0.10
+  A0
+                          (0.141 ± 0.004)           (0.144 ± 0.006)                         (0.144 ± 0.006)                          (0.146 ± 0.004)              (0.138 ± 0.004)
+                            4.93 ± 0.10               4.98 ± 0.10                             4.98 ± 0.10                              5.10 ± 0.10                  4.90 ± 0.10
+  B0
+                          (0.194 ± 0.004)           (0.196 ± 0.004)                         (0.196 ± 0.004)                          (0.201 ± 0.004)              (0.193 ± 0.004)
+                                                                                                    5.90
+  B1 max.
+                                                                                                   (0.232)
+                                                                                               1.50 +0.10/-0
+  D0
+                                                                                             (0.059 +0.004/-0)
+                                                                                                5.50 ± 0.05
+  F
+                                                                                              (0.217 ± 0.002)
+                                                                                                1.75 ± 0.10
+  E1
+                                                                                              (0.069 ± 0.004)
+                                                                                                    10.25
+  E2 typ.
+                                                                                                   (0.404)
+                                                                                                    0.60
+  T max.
+                                                                                                   (0.024)
+                                                                                                    0.10
+  T1 max.
+                                                                                                   (0.004)
+                            1.30 ± 0.10               0.80 ± 0.10                             0.95 ± 0.10                              1.50 ± 0.10                  1.80 ± 0.10
+  K0
+                          (0.051 ± 0.004)           (0.031 ± 0.004)                         (0.037 ± 0.004)                          (0.059 ± 0.004)              (0.071 ± 0.004)
+                                                                                                     390
+  Leader min.
+                                                                                                    (15.4)
+                                                                                                      160
+  Trailer min.
+                                                                                                     (6.3)
+
+ Reel Dimensions
+
+                                                                                                      185
+  A max.
+                                                                                                     (7.3)
+                                                                                                      50
+  N min.
+                                                                                                     (2.0)
+                                                                                                 12.4 +2.0/-0
+  W1
+                                                                                               (0.49 +0.08/-0)
+                                                                                                     18.4
+  W2 max.
+                                                                                                    (0.72)
+
+                                                                                                                                                                                 MM
+                                                                                                                                                             DIMENSIONS:
+                                                                                                                                                                              (INCHES)
+MF-MSMF SERIES, REV. BD, 06/26
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+       Bourns
+       3312 - ®2 Multifuse PPTC Resettable
+                 mm SMD® Trimming          Fuses
+                                    Potentiometer
+  Application Notice
+
+• Users are responsible for independent and adequate evaluation of Bourns® Multifuse® Polymer PTC devices in the user’s
+  application, including the PPTC device characteristics stated in the applicable data sheet.
+
+• Polymer PTC devices must not be allowed to operate beyond their stated maximum ratings. Operation in excess of such
+  maximum ratings could result in damage to the PTC device and possibly lead to electrical arcing and/or fire. Circuits with
+  inductance may generate a voltage above the rated voltage of the polymer PTC device and should be thoroughly evaluated
+  within the user’s application during the PTC selection and qualification process.
+
+• Polymer PTC devices are intended to protect against adverse effects of temporary overcurrent or overtemperature
+  conditions up to rated limits and are not intended to serve as protective devices where overcurrent or overvoltage conditions
+  are expected to be repetitive or prolonged.
+
+• In normal operation, polymer PTC devices experience thermal expansion under fault conditions. Thus, a polymer PTC
+  device must be protected against mechanical stress, and must be given adequate clearance within the user’s application to
+  accommodate such thermal expansion. Rigid potting materials or fixed housings or coverings that do not provide adequate
+  clearance should be thoroughly examined and tested by the user, as they may result in the malfunction of polymer PTC
+  devices if the thermal expansion is inhibited.
+
+• Exposure to lubricants, silicon-based oils, solvents, gels, electrolytes, acids, and other related or similar materials may
+  adversely affect the performance of polymer PTC devices.
+
+• Aggressive solvents may adversely affect the performance of polymer PTC devices. Conformal coating, encapsulating,
+  potting, molding, and sealing materials may contain aggressive solvents including but not limited to xylene and toluene,
+  which are known to cause adverse effects on the performance of polymer PTCs. Such aggressive solvents must be
+  thoroughly cured or baked to ensure their complete removal from polymer PTCs to minimize the possible adverse effect
+  on the device.
+
+• Recommended storage conditions should be followed at all times. Such conditions can be found on the applicable data
+  sheet and on the Multifuse® Polymer PTC Moisture/Reflow Sensitivity Classification (MSL) note:
+  https://www.bourns.com/docs/RoHS-MSL/msl_mf.pdf
+
+
+
+
+MFAN 12/18
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+        Legal Disclaimer Notice
+
+This legal disclaimer applies to purchasers and users of Bourns® products manufactured by or on behalf of Bourns, Inc. and its affiliates (collectively,
+“Bourns”).
+
+Unless otherwise expressly indicated in writing, Bourns® products and data sheets relating thereto are subject to change without notice. Users should check
+for and obtain the latest relevant information and verify that such information is current and complete before placing orders for Bourns® products.
+
+The characteristics and parameters of a Bourns® product set forth in its data sheet are based on laboratory conditions, and statements regarding the
+suitability of products for certain “typical” applications are based on Bourns’ knowledge of typical requirements in generic applications. Bourns assumes
+that “typical” applications include failsafe/backup features to address critical risks to users and are designed to allow rework of Bourns® product to
+avoid scrap of a device solely due to malfunctioning Bourns® product. The characteristics and parameters of a Bourns® product in a user application
+may vary from the data sheet characteristics and parameters due to (i) the combination of the Bourns® product with other components in the user’s
+application, or (ii) the environment of the user application itself. The characteristics and parameters of a Bourns® product also can and do vary in
+different applications and actual performance may vary over time. Thus, users should always verify the actual performance of the Bourns® product in
+their specific devices and applications and make their own independent judgments regarding the suitability of Bourns® product and the amount of
+additional test margin to design into their device or application to compensate for differences between laboratory and real-world conditions.
+
+Unless Bourns has explicitly designated an individual Bourns® product as meeting the requirements of a particular industry standard (e.g., IATF
+16949) or a particular qualification (e.g., UL listed or recognized), Bourns is not responsible for any failure of an individual Bourns® product to meet
+the requirements of such industry standard or particular qualification even if such industry standard or qualification is a “state of art”. Users of Bourns®
+products are responsible for ensuring compliance with safety-related requirements and standards applicable to their devices or applications.
+
+Bourns® products are not recommended, authorized or intended for use in applications where failure or malfunction may result in personal injury,
+death, or severe property or environmental damage, such as without limitation nuclear, life-critical medical and certain automotive and aviation
+applications. Except as set forth in the bullet points below or unless expressly and specifically approved in writing on a case-by-case basis by an
+authorized Bourns’ representative, use of any Bourns® products in such unauthorized high-risk applications is at the user’s sole risk.
+
+     • Bourns considers implantable/invasive devices and devices/procedures designed as life-supporting or life-sustaining by the U.S. Food and Drug
+       Administration or equivalent organizations outside of the United States as “life-critical” medical applications. Bourns expressly identifies those
+       Bourns® standard products that are suitable for use in typical medical applications that are not life-critical in its publication entitled “Bourns
+       Medical Grade Component Guide.”
+
+     • Bourns expressly identifies those Bourns® standard products that are suitable for use in typical automotive applications associated with any
+       Automate Safety Integrity Level (ASIL) in its publication entitled “Bourns Automotive Grade Component Guide.” Bourns’ designation of Bourns®
+       product as compliant with the AEC-Q standard does not by itself mean that Bourns has approved such product for use in an automotive
+       application.
+
+     • Bourns expressly identifies Bourns® standard products that are suitable for use in the typical aviation applications/systems requiring System
+       Design Assurance Level (RTCA DO-254 DAL) of C, D or E in its publication entitled “Bourns Civilian Aerospace/Aviation Grade Component Guide.”
+       Bourns does not test its products for compliance with United States Federal Aviation Administration standards or any other generally equivalent
+       governmental organization standard applicable to products designed or manufactured for use in aviation applications. Use of Bourns® standard
+       components in aviation applications associated with RTCA DO-254 DAL A or B without proper approval noted above shall be at the user’s sole
+       risk.
+
+     • Bourns will review and authorize on a case-by-case basis the use of Bourns® standard products which are at least AEC-Q compliant in space-
+       related civil applications (rockets, satellites) with a negotiated cross-waiver and indemnity agreement.
+
+The use and level of testing applicable to Bourns® custom products shall be negotiated on a case-by-case basis by Bourns and the user for which such
+Bourns® custom products are specially designed. Absent a written agreement between Bourns and the user regarding the use and level of such testing,
+the above provisions applicable to Bourns® standard products shall also apply to such Bourns® custom products.
+
+Use of Bourns® products or Bourns’ technology in military/defense applications must be reviewed with Bourns for compliance with applicable export
+control laws and embargoes. Users shall not sell, transfer, export or re-export (which includes transfers within a country) any Bourns® products or
+technology or technical data for use in activities which involve the design, development, production, use or stockpiling of nuclear, chemical or
+biological weapons or missiles, nor shall they use Bourns® products or technology or technical data in any facility which engages in activities relating
+to such devices. Further, Bourns® products and Bourns’ technology and technical data may not under any circumstance be exported or re-exported to
+countries subject to international sanctions or embargoes. Bourns® products and technology may not, without prior authorization from Bourns and/or
+the Government of a country where such product/technology is designed and/or manufactured, be resold, transferred, or re-exported (including within
+the same country) to any party not eligible to receive commodities, software, and technical data originating in such country.
+
+To the maximum extent permitted by applicable law, Bourns disclaims (i) any and all liability for special, punitive, consequential, incidental or indirect
+damages or lost revenues or lost profits, and (ii) any and all implied warranties (those not based on parameters specified in Bourns’ data sheets and/or
+specifications), including implied warranties of fitness for particular purpose, non-infringement and merchantability.
+
+For your convenience, copies of this Legal Disclaimer Notice with German, Spanish, Japanese, Traditional Chinese and Simplified Chinese bilingual versions are
+available at:
+                                         Web Page: https://www.bourns.com/legal/disclaimers-terms-and-policies
+                                                PDF: https://www.bourns.com/docs/Legal/disclaimer.pdf
+
+
+
+
+                                                                                                                                                    K2540 05/26R
+

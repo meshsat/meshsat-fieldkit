@@ -769,11 +769,21 @@ def rvpwr():
     return _PB["m"]
 
 
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options. Each text is a
+# verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its PDF; _lib/pdftext.py returns it byte
+# for byte and refuses when it is absent, so this script never runs pdftotext (section 1 prints each text's sha256 after the held sheets).
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8r2
+PDFTEXT = {
+    "v2/vendor/cm5/cm5-datasheet.pdf": [["-layout"]],
+    "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
+
+
 def pdf_text(rel):
-    r = subprocess.run(["pdftotext", "-layout", os.path.join(ROOT, rel), "-"], capture_output=True)
-    if r.returncode:
-        raise SystemExit("l8r2_drafts: pdftotext refused %s" % rel)
-    return r.stdout.decode("utf-8", "replace")
+    return PT.pdf_text(ROOT, rel, ["-layout"], PDFTEXT, "v2/docs/records/l8r2")
 
 
 def r4_sources():
@@ -1257,6 +1267,8 @@ def main():
         w("%s %s\n" % (sha(os.path.join(ROOT, p))[:16], p))
     for p, h in HELD:
         w("%s %s (held back by its terms, fetched by fetch_held_back.py)\n" % (h[:16], p))
+    for t, h, _held in PT.inputs(ROOT, PDFTEXT):
+        w("%s %s\n" % (h[:16], t))
 
     w("\n   the figures and their classes\n")
     for k, (v, c, why) in F.items():

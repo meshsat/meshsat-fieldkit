@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/power/tps2596.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/power/tps2596.pdf",
+ "pdf_sha256": "66f6bae4494f7bfe7dfdc314e508f0291d9ca1e87265cca9b6fdfeaa5cb19fe9",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/tps2596.layout.txt",
+ "text_bytes": 170956,
+ "text_sha256": "bab7479f34278e35de82b045a5907f8b70353e5897a1eb4d136c3c56588f1043"
+}

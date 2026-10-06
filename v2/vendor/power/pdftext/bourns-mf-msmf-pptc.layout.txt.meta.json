@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/power/bourns-mf-msmf-pptc.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/power/bourns-mf-msmf-pptc.pdf",
+ "pdf_sha256": "a84b990157dd1d755b5c7a413156ddf8792a3a95cff56f09a95d10754e9e49ed",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/bourns-mf-msmf-pptc.layout.txt",
+ "text_bytes": 120165,
+ "text_sha256": "718f1e924867429151e9902ecda149725d66ee596c9009eb4a7f7bdbcc1d3dd2"
+}

@@ -1,0 +1,2860 @@
+                                            Product                       Order              Technical           Tools &               Support &
+                                            Folder                        Now                Documents           Software              Community
+
+
+
+                                                                                                                                                           TPS2595
+                                                                                                                              SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+                TPS2595xx 2.7 V to 18 V, 4-A, 34-mΩ eFuse With Fast Overvoltage Protection
+1 Features                                                                                            3 Description
+1•      Wide Input Voltage Range: 2.7 V to 18 V                                                       The TPS2595xx family of eFuses (integrated FET hot
+                                                                                                      swap devices) is a highly integrated circuit protection
+        – 20 V Absolute Maximum                                                                       and power management solution in a small package.
+        – 3 V to 18 V for TPS2595x5 Version                                                           The devices provide multiple protection modes using
+•       Low On-Resistance: RON = 34 mΩ (Typical)                                                      very few external components and are a robust
+                                                                                                      defense against overloads, short circuits, voltage
+•       Fast Overvoltage Protection Clamp (3.8-V, 5.7-V,
+                                                                                                      surges, and excessive inrush current.
+        and 13.7-V options) With a Response Time of 5
+        µs (Typical)                                                                                  Output current limit level can be set with a single
+•       TPS2595x0, TPS2595x1, TPS2595x5: Active High                                                  external resistor. It is also possible to get an accurate
+                                                                                                      sense of the output load current by measuring the
+        Enable Input With Adjustable Undervoltage
+                                                                                                      voltage drop across the current limit resistor.
+        Lockout (UVLO)                                                                                Applications     with      particular    inrush   current
+•       TPS2595x3: Active Low Enable Input With                                                       requirements can set the output slew rate with a
+        Adjustable Overvoltage Lockout (OVLO)                                                         single external capacitor. Overvoltage events are
+•       Adjustable Current Limit With Load Current                                                    quickly limited by internal clamping circuits to a safe
+        Monitor Output (ILM)                                                                          fixed maximum, with no external components
+                                                                                                      required. The TPS259573 variant provides an option
+        – Current Range: 0.5 A to 4 A                                                                 to set a user-defined overvoltage cutoff threshold.
+        – Current Limit Accuracy: ±7.5%
+                                                                                                      Quick output discharge function can be implemented
+•       Adjustable Output Slew Rate Control (dVdt)                                                    in the TPS2595x5 variants by connecting the OUT
+•       Over Temperature Protection (OTP)                                                             pin to the QOD pin.
+•       Fault Indication Pin (FLT )                                                                   The devices are characterized for operation over the
+•       UL 2367 Recognition – File No. E169910                                                        temperature range of –40°C to +125°C.
+        – RILM >= 487 Ω (4.42 A maximum)
+                                                                                                                            Device Information(1)
+•       IEC 62368-1 Certified
+                                                                                                          PART NUMBER                  PACKAGE     BODY SIZE (NOM)
+•       Safe During Single Point Failure Test (IEC 62368-                                                TPS2595xxDSG        WSON (8)              2.00 mm × 2.00 mm
+        1)
+                                                                                                         (1) For all available packages, see the orderable addendum at
+        – ILM Pin Open/Short Detection                                                                       the end of the data sheet.
+
+2 Applications
+•       Hot-Swap, Hot-Plug
+•       Adapter Powered Systems
+•       Multi-function Printers
+•       SSDs and HDDs
+•       Industrial Systems
+•       White Goods
+•       Set-Top Box
+•       Digital TV
+                            Simplified Schematic                                                          TPS25953x Overvoltage Clamp Response Time
+                                       TPS2595xx
+    Power
+                                IN                 OUT
+    Supply                                                  VFLT
+                 RVL1
+                                                                   RFLT
+                                                                                                                              0.7 μs
+       CIN                      EN/UVLO            FLT                    Fault      COUT     ROUT
+                 RVL2           dVdt      GND      ILM
+
+                        CdVdt                                   RILM
+
+
+
+
+                                                   Copyright © 2017, Texas Instruments Incorporated
+
+1
+
+
+
+
+             An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+             intellectual property matters and other important disclaimers. PRODUCTION DATA.
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                                                           www.ti.com
+
+
+                                                                          Table of Contents
+    1   Features .................................................................. 1             8.4 Device Functional Modes........................................ 25
+    2   Applications ........................................................... 1          9    Application and Implementation ........................ 27
+    3   Description ............................................................. 1               9.1 Application Information............................................ 27
+    4   Revision History..................................................... 2                   9.2 Typical Application ................................................. 27
+    5   Device Comparison Table..................................... 3                      10 Power Supply Recommendations ..................... 33
+                                                                                                  10.1 Transient Protection .............................................. 33
+    6   Pin Configuration and Functions ......................... 4
+                                                                                                  10.2 Output Short-Circuit Measurements ..................... 34
+    7   Specifications......................................................... 5
+        7.1    Absolute Maximum Ratings ...................................... 5            11 Layout................................................................... 34
+                                                                                                  11.1 Layout Guidelines ................................................. 34
+        7.2    ESD Ratings ............................................................ 5
+                                                                                                  11.2 Layout Example .................................................... 35
+        7.3    Recommended Operating Conditions....................... 5
+        7.4    Thermal Information ................................................. 6      12 Device and Documentation Support ................. 36
+        7.5    Electrical Characteristics........................................... 7            12.1    Documentation Support ........................................ 36
+        7.6    Switching Characteristics .......................................... 8             12.2    Receiving Notification of Documentation Updates 36
+        7.7    Typical Characteristics ............................................ 10            12.3    Community Resources.......................................... 36
+                                                                                                  12.4    Trademarks ........................................................... 36
+    8   Detailed Description ............................................ 18
+                                                                                                  12.5    Electrostatic Discharge Caution ............................ 37
+        8.1 Overview ................................................................. 18
+                                                                                                  12.6    Glossary ................................................................ 37
+        8.2 Functional Block Diagram ....................................... 18
+        8.3 Feature Description................................................. 18         13 Mechanical, Packaging, and Orderable
+                                                                                               Information ........................................................... 37
+
+
+
+4 Revision History
+Changes from Revision B (March 2018) to Revision C                                                                                                                           Page
+
+•   Added (IEC 62368-1) to Safe During Single Point Failure Test in the Features section ....................................................... 1
+•   Changed UL 60950 to IEC 62368-1 in the Specifications Electrical Characteristics table .................................................... 5
+
+
+Changes from Revision A (December 2017) to Revision B                                                                                                                        Page
+
+•   Changed multiplication symbol to an equal symbol before 229.2 mW in Equation 15 ........................................................ 29
+
+
+Changes from Original (June 2017) to Revision A                                                                                                                              Page
+
+•   Changed status from ADVANCE INFORMATION to PRODUCTION DATA ........................................................................ 1
+
+
+
+
+2       Submit Documentation Feedback                                                                        Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                                        Product Folder Links: TPS2595
+                                                                                                                        TPS2595
+www.ti.com                                                                                SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+5 Device Comparison Table
+
+                                                            RESPONSE TO THERMAL                             QUICK OUTPUT
+ DEVICE NUMBER            OUTPUT VOLTAGE CLAMP                                          ENABLE
+                                                               SHUTDOWN (TSD)                                DISCHARGE
+   TPS259520DSG                     3.8 V (typ)                      Latch-off          Active high               No
+   TPS259521DSG                     3.8 V (typ)                      Auto-retry         Active high               No
+   TPS259530DSG                     5.7 V (typ)                      Latch-off          Active high               No
+   TPS259531DSG                     5.7 V (typ)                      Auto-retry         Active high               No
+   TPS259533DSG                     5.7 V (typ)                      Auto-retry         Active low                No
+   TPS259540DSG                    13.7 V (typ)                      Latch-off          Active high               No
+   TPS259541DSG                    13.7 V (typ)                      Auto-retry         Active high               No
+   TPS259570DSG                   No OV clamp                        Latch-off          Active high               No
+   TPS259571DSG                   No OV clamp                        Auto-retry         Active high               No
+                           Programmable Overvoltage
+   TPS259573DSG                                                      Auto-retry         Active low                No
+                                   Lockout
+   TPS259525DSG                     3.8 V (typ)                      Auto-retry         Active high               Yes
+   TPS259535DSG                     5.7 V (typ)                      Auto-retry         Active high               Yes
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                       Submit Documentation Feedback        3
+                                                        Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                                www.ti.com
+
+
+6 Pin Configuration and Functions
+
+                    TPS2595x0/1 DSG Package
+                          8-Pin WSON                                                                TPS2595x5 DSG Package
+                            Top View                                                                     8-Pin WSON
+                                                                                                           Top View
+
+              dVdt        1                       8   GND
+                                                                                             dVdt     1                       8    GND
+
+
+          EN/UVLO         2                       7   ILM
+                                                                                        EN/UVLO       2                       7    ILM
+                                   GND
+                                  (PAD)                                                                         GND
+                   IN     3                       6   FLT                                                      (PAD)
+                                                                                               IN     3                       6    QOD
+
+
+                   IN     4                       5   OUT
+                                                                                               IN     4                       5    OUT
+
+
+
+
+                        TPS2595x3 DSG Package
+                             8-Pin WSON
+                               Top View
+
+
+               dVdt       1                      8    GND
+
+
+
+          EN/OVLO         2                      7    ILM
+                                   GND
+                                  (PAD)
+                   IN     3                      6    FLT
+
+
+                   IN     4                      5    OUT
+
+
+
+
+                                                                 Pin Functions
+             PIN
+                                      TYPE                                                  DESCRIPTION
+NO.            NAME
+                                                      A capacitor from this pin to GND sets the output turn on slew rate. Leave this pin
+1                  dVdt             Analog I/O
+                                                      floating for the fastest turn on slew rate. (See Switching Characteristics).
+                                                      Active high enable for the TPS2595x0, TPS2595x1, TPS2595x5 variants. A resistor
+              EN/UVLO
+                                                      divider can be used to adjust the undervoltage lockout threshold. Do not leave floating.
+2                                  Analog input
+                                                      Active low enable for the TPS2595x3 variants. A resistor divider can be used to adjust
+              EN/OVLO
+                                                      the overvoltage lockout threshold. Do not leave floating.
+3,4                 IN                Power           Power input
+5                  OUT                Power           Power output
+                                                      TPS2595x0, TPS2595x1, TPS2595x3: Fault event indicator which is pulled low when a
+                   FLT
+                                                      fault is detected. It is an open drain output that requires an external pull up resistance.
+6                                  Digital output
+                                                      TPS2595x5: Quick Output Discharge Pin, when tied to OUT directly or through external
+                QOD
+                                                      resistor.
+                                                      This is a dual function pin used to limit and monitor the output current. An external
+7                  ILM              Analog I/O        resistor from this pin to GND sets the output current limit. The pin voltage can also be
+                                                      used to monitor the output load current. Do not leave floating.
+8               GND                   Ground          Ground
+PAD             GND               Thermal/Ground      The exposed pad is used primarily for heat dissipation and must be connected to GND.
+
+
+
+
+4      Submit Documentation Feedback                                                           Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                            Product Folder Links: TPS2595
+                                                                                                                                            TPS2595
+www.ti.com                                                                                           SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+7 Specifications
+7.1 Absolute Maximum Ratings
+Over operating free-air temperature range (unless otherwise noted) (1)
+                                                                                                      MIN               MAX                 UNIT
+VIN                 Maximum input voltage                                   IN                        –0.3               20                  V
+VOUT                Maximum output voltage                                  OUT                       –0.3            VIN + 0.3              V
+VOUT,PLS            Minimum output voltage pulse (< 1 µs)                   OUT                       –1.2                                   V
+VEN                 Maximum enable pin voltage                              EN/UVLO or                –0.3               7                   V
+                                                                            EN/OVLO
+VFLTB               Maximum fault pin voltage (TPS2595x0/1/3)               FLT                       –0.3               7                   V
+VQOD                Maximum QOD pin voltage (TPS2595x5)                     QOD                       –0.3               7                   V
+VdVdt               Maximum dVdt pin voltage                                dVdt                                        2.5                  V
+IFLTB               Maximum fault pin sink current                          FLT                                          10                  mA
+IMAX                Maximum continuous switch current                       IN to OUT                   Internally limited
+TJ,MAX              Maximum junction temperature                                                        Internally limited
+TLEAD               Maximum lead temperature                                                                            300                  °C
+TSTG                Storage temperature                                                                –65              150                  °C
+
+(1)   Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress ratings
+      only, which do not imply functional operation of the device at these or any other conditions beyond those indicated under Recommended
+      Operating Conditions. Exposure to absolute-maximum-rated conditions for extended periods may affect device reliability.
+
+7.2 ESD Ratings
+                                                                                                                          VALUE              UNIT
+                                           Human-body model (HBM), per ANSI/ESDA/JEDEC JS-001 (1)                            ±2500
+V(ESD)     Electrostatic discharge         Charged-device model (CDM), per JEDEC specification JESD22-                                        V
+                                                                                                                             ±500
+                                           C101 (2)
+
+(1)   JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process.
+(2)   JEDEC document JEP157 states that 250-V CDM allows safe manufacturing with a standard ESD control process.
+
+7.3 Recommended Operating Conditions
+Over operating free-air temperature range (unless otherwise noted)
+                                                                                                               MIN             MAX           UNIT
+VIN                Input voltage range (TPS2595x0/1/3)                             IN                           2.7            18 (1)         V
+VIN                Input voltage range (TPS2595x5)                                 IN                           3.0            18 (1)         V
+VOUT               Output voltage                                                  OUT                            0       VIN + 0.3           V
+                                                                                   EN/UVLO or                                         (2)
+VEN                Enable pin voltage                                                                             0               6           V
+                                                                                   EN/OVLO
+VFLTB              Fault pin voltage (TPS2595x0/1/3)                               FLT                            0                6          V
+VQOD               Fault pin voltage (TPS2595x5)                                   QOD                            0                6          V
+                   Continuous output current (TJ = –40 to 125οC)                   IN to OUT                                      4           A
+IMAX
+                   Continuous output current (TJ = –40 to 105οC)                   IN to OUT                                      5 (3)       A
+RILM               ILM pin resistance (Active Current Limiting Operation)          ILM                         487             5000           Ω
+CdVdt              dVdt capacitor value                                            dVdt                       3300                            pF
+VdVdt              dVdt pin capacitor voltage rating                               dVdt                           4                           V
+TJ                 Operating junction temperature                                                              –40                125         °C
+
+(1)   The nominal input voltage should be limited to the output clamp voltage for the selected device option as listed in the Electrical
+      Characteristics section
+(2)   For supply voltages below 6V, it is okay to pull up the EN pin to IN directly. For supply voltages greater than 6V, it is recommended to
+      use an appropriate resistor divider between IN, EN and GND to ensure the voltage at the EN pin is within the specified limits.
+(3)   Guaranteed by design. Not tested at production.
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                 Submit Documentation Feedback                 5
+                                                         Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                        www.ti.com
+
+
+7.4 Thermal Information
+                                                                                                          TPS2595x
+                                       THERMAL METRIC (1)                                               DSG (WSON)                UNIT
+                                                                                                            8 PINS
+RθJA                              Junction-to-ambient thermal resistance                                     65.6                 °C/W
+RθJC(top)                         Junction-to-case (top) thermal resistance                                  73.3                 °C/W
+RθJB                              Junction-to-board thermal resistance                                       28.3                 °C/W
+ψJT                               Junction-to-top characterization parameter                                   2                  °C/W
+ψJB                               Junction-to-board characterization parameter                               28.4                 °C/W
+RθJC(bot)                         Junction-to-case (bottom) thermal resistance                                9.8                 °C/W
+
+(1)   For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+      report.
+
+
+
+
+6        Submit Documentation Feedback                                                   Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                      Product Folder Links: TPS2595
+                                                                                                                                           TPS2595
+www.ti.com                                                                                                    SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+7.5 Electrical Characteristics
+(Test conditions unless otherwise noted) –40°C ≤ TJ ≤ 125°C, VIN = 12 V for TPS25954x/7x, VIN = 5 V for TPS25953x, VIN =
+3.3 V for TPS25952x, VEN = 5 V (= 0 V for TPS2595x3 only) , RILM = 487 Ω , CdVdT = Open, OUT = Open. All voltages
+referenced to GND.
+                  PARAMETER                                                 TEST CONDITIONS                              MIN     TYP     MAX     UNIT
+INPUT SUPPLY (IN)
+                                                      TPS2595x0/1/5         VEN ≥ VUVLO
+IQ            IN quiescent current                                                                                                175     250    µA
+                                                      TPS2595x3             VEN ≤ VOVLO
+                                                                                                  VIN ≤ 5 V                      0.04            µA
+                                                      TPS2595x0/1/5         VEN < 0.5V
+ISD           IN shutdown current                                                                 5 V < VIN ≤ 18 V               0.45       2    µA
+                                                      TPS2595x3             VEN > 2 V                                              45      65    µA
+                                                      TPS2595x5             VIN Rising                                    2.7     2.8      2.9    V
+              IN Undervoltage Protection              TPS2595x5             VIN Falling                                  2.58    2.68    2.78     V
+VUVP
+              Threshold                               TPS2595x0/1/3         VIN Rising                                   2.44    2.54    2.64     V
+                                                      TPS2595x0/1/3         VIN Falling                                  2.33    2.43    2.53     V
+OUTPUT VOLTAGE CLAMP (OUT)
+                                                      TPS25952x                                                          3.65    3.87      4.1    V
+                                            (1)
+VOVC          Overvoltage clamp threshold             TPS25953x             VIN Rising, ROUT = 10 kΩ                      5.5     5.7      5.9    V
+                                                      TPS25954x                                                          13.3    13.7    14.3     V
+                                                      TPS25952x                                                           3.4     3.6      3.8    V
+                                                (1)
+VCLAMP        Output voltage while clamping           TPS25953x             VIN ≥ VOVC, IOUT = 10 mA                      5.2    5.45      5.7    V
+                                                      TPS25954x                                                            13   13.55    14.1     V
+                                                                            IOUT = 4 A                                              5             µs
+tOVC          Output clamp response time (1)          TPS25952x/3x/4x
+                                                                            IOUT = 100 mA                                          10             µs
+OUTPUT CURRENT LIMIT AND MONITOR (ILM)
+              Current monitor gain as                 IOUT = 4 A                                                          254     276     299    µA/A
+GIMON         measured on ILM pin
+              (IILM / IOUT)                           IOUT = 1 A                                                          249     276     304    µA/A
+
+                                                      RILM = 487 Ω                                                       3.87    4.17    4.42     A
+                                                      RILM = 1780 Ω                                                      1.09    1.17    1.24     A
+ILIMIT        IOUT Current limit (2)                                  (3)
+                                                      RILM = 4420 Ω                                                      0.46    0.49    0.52     A
+                                                      RILM = Open (Single Point Failure Test IEC 62368-1)                           0             A
+              IOUT Circuit Breaker Threshold          RILM = Short to GND (Single Point Failure Test IEC 62368-
+ICB                                                                                                                                 3             A
+              during RILM Short condition             1)
+tLIM          Current limit response time (2)         IOUT > ILIMIT + 20% to IOUT ≤ ILIMIT                                        250             µs
+tSC           Short circuit response time (4)         IOUT > ISC to IOUT ≤ ILIMIT                                                   5             µs
+ON-RESISTANCE (IN - OUT)
+                                                                            TJ = 25°C                                              34      37    mΩ
+                                                      VIN = 4 V to 18 V     TJ = –40°C to 85°C                                             47    mΩ
+                                                                            TJ = –40°C to 125°C                                            53    mΩ
+RON           ON state resistance
+                                                                            TJ = 25°C                                              36      40    mΩ
+                                                      VIN = 2.7 V to 4 V    TJ = –40°C to 85°C                                             51    mΩ
+                                                                            TJ = –40°C to 125°C                                            58    mΩ
+
+(1)    Refer to Fig 49
+(2)    Refer to Fig 50
+(3)    Guaranteed by design and characterization. Not tested at production.
+(4)    Refer to Fig 52
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                          Submit Documentation Feedback            7
+                                                              Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                      www.ti.com
+
+
+Electrical Characteristics (continued)
+(Test conditions unless otherwise noted) –40°C ≤ TJ ≤ 125°C, VIN = 12 V for TPS25954x/7x, VIN = 5 V for TPS25953x, VIN =
+3.3 V for TPS25952x, VEN = 5 V (= 0 V for TPS2595x3 only) , RILM = 487 Ω , CdVdT = Open, OUT = Open. All voltages
+referenced to GND.
+               PARAMETER                                        TEST CONDITIONS                            MIN      TYP       MAX     UNIT
+ENABLE / UNDERVOLTAGE LOCKOUT (EN/UVLO) - TPS2595x0/1/5
+IEN         EN/UVLO pin leakage current                                                                   –0.1                 0.1        µA
+VUVLO(R)                                     VEN rising                                                   1.13          1.2   1.27        V
+            Undervoltage lockout threshold
+VUVLO(F)                                     VEN falling                                                  1.03          1.1   1.17        V
+ENABLE / OVERVOLTAGE LOCKOUT (EN/OVLO) - TPS2595x3
+IEN         EN/OVLO pin leakage current                                                                   –0.1                 0.1        µA
+VOVLO(R)                                     VEN rising                                                   1.13          1.2   1.27        V
+            Overvoltage lockout threshold
+VOVLO(F)                                     VEN falling                                                  1.03          1.1   1.17        V
+            Overvoltage lockout response
+tOVLO                                        VEN > VOVLO to FLT ↓                                                        3                µs
+            time
+FAULT INDICATION (FLT ) - TPS2595x0/1/3
+RFLTB       FLT pin resistance               FLT ↓                                                                      12                Ω
+IFLTB       FLT pin leakage current          VEN = 2 V, VFLTB = 0 V to 6 V                                –0.1                 0.1        µA
+QUICK OUTPUT DISCHARGE (QOD) - TPS2595x5
+RQOD        QOD effective resistance         IN connected to EN, OUT connected to QOD, EN↓ to 1V                        19                Ω
+OVERTEMPERATURE PROTECTION (TSD)
+TSD         Thermal shutdown                                     TJ Rising                                             157                °C
+TSDHYS      Thermal shutdown hysteresis                          TJ Falling                                              5                °C
+            Thermal Shutdown Auto-Retry                          Device Enabled and TJ < TSD -
+tTSD,RST                                     TPS2595x1/3/5                                                              93                ms
+            Interval                                             TSDHYS
+
+
+7.6 Switching Characteristics
+Typical Values are taken at TJ = 25°C unless specifically noted otherwise. ROUT = 100 Ω, COUT = 1 µF
+                       PARAMETER                                       VIN            CdVdt = Open        CdVdt = 3300pF         UNIT
+                                                                      3.3 V                16.3                  10.0
+SRON                      Output Rising slew rate                      5V                  21.9                  11.6            V/ms
+                                                                      12 V                 38.2                  12.4
+                                                                      3.3 V                147                   254
+tD,ON                     Turn on delay                                5V                  149                   289                 µs
+                                                                      12 V                 153                   335
+                                                                      3.3 V                157                   259
+tR                        Rise time                                    5V                  179                   349                 µs
+                                                                      12 V                 248                   763
+                                                                      3.3 V                11.6                  11.6
+tD,OFF                    Turn off delay                               5V                  11.3                  11.5                µs
+                                                                      12 V                 11.0                  11.4
+
+
+
+
+8        Submit Documentation Feedback                                                 Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                     Product Folder Links: TPS2595
+                                                                                                                               TPS2595
+www.ti.com                                                                                       SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+
+
+                                      VEN/UVLO
+
+                           EN/UVLO                UVLO
+
+                                            0
+
+                                                                  tON                      tD,OFF
+
+                                          VIN                SRON                        90%
+
+                                OUT
+                                          0V                                                         10%
+                                                                        tR                 tF
+                                                                        tD,ON
+
+
+                                                                                Time
+
+                              Figure 1. TPS2595x0, TPS2595x1, TPS2595x5 Switching Times
+
+
+
+                           VEN/UVLO
+
+                                           OVLO
+                  EN /OVLO
+                                 0
+
+                                                           tON                                   tD,OFF
+
+
+                                VIN                      SRON                              90%
+
+                     OUT
+                                                                                                           10%
+                               0V
+                                                                 tR                             tF
+                                                                  tD,ON
+
+
+
+                                                                                Time
+
+                                                  Figure 2. TPS2595x3 Switching Times
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                Submit Documentation Feedback      9
+                                                         Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                                                                           www.ti.com
+
+
+7.7 Typical Characteristics
+
+                          60                                                                                           0.9
+                                                                                                                                  2.7 V
+                                                                                                                       0.8        3.3 V
+                                                                                                                       0.7        5V
+                          50                                                                                                      12 V
+                                                                                                                       0.6        18 V
+                                                                                                                       0.5
+             RON (m:)
+
+
+
+
+                                                                                                     ISD (PA)
+                          40                                                                                           0.4
+                                                                                                                       0.3
+                                                                               2.7 V                                   0.2
+                          30                                                   3.3 V
+                                                                               5V                                      0.1
+                                                                               12 V                                      0
+                                                                               18 V
+                          20                                                                                           -0.1
+                           -50      -25        0   25    50      75   100   125      150                                   -50     -25          0     25      50       75     100      125
+                                                   Temperature (qC)                    D008
+                                                                                                                                                    Temperature (qC)                    D002
+  IOUT = 0.5A , Different Input Voltages                                                                              TPS2595x0/1/5, EN=GND, OUT=Open, Different Input Voltages
+
+                                     Figure 3. On-resistance vs Temperature                                                      Figure 4. Shutdown Current vs Temperature
+                          2.82                                                                                        2.56
+
+                           2.8                                                                                        2.54
+                          2.78
+                                                                                                                      2.52
+     UVP Threshold (V)
+
+
+
+
+                                                                                                 UVP Threshold (V)
+
+
+                          2.76
+                                                                                                                       2.5
+                          2.74
+                                                                                                                      2.48
+                          2.72                                                                                                                                                   Rising
+                                                                                                                      2.46                                                       Falling
+                           2.7
+                                                                                                                      2.44
+                          2.68
+
+                          2.66       Rising                                                                           2.42
+                                     Falling
+                          2.64                                                                                         2.4
+                             -50     -25       0   25    50      75   100    125       150                               -50      -25       0       25    50      75    100    125      150
+                                                   Temperature (qC)                       D004
+                                                                                                                                                    Temperature (qC)                        D005
+  TPS2595x5                                                                                      TPS2595x0/1/3
+
+                                     Figure 5. UVP Threshold vs Temperature                                                       Figure 6. UVP Threshold vs Temperature
+                          1.22                                                                                        1.22
+
+                           1.2                                                                                         1.2
+                                   Rising
+                                                                                                                                 Rising
+                                                                                                 OVLO Threshold (V)
+     UVLO Threshold (V)
+
+
+
+
+                          1.18                                                    2.7 V                               1.18
+                                                                                  5V                                                                                                2.7 V
+                          1.16                                                    18 V                                1.16                                                          5V
+                                                                                  2.7 V                                                                                             18 V
+                                                                                  5V                                                                                                2.7 V
+                          1.14                                                                                        1.14                                                          5V
+                                                                                  18 V
+                                                                                                                                                                                    18 V
+                          1.12     Falling                                                                            1.12       Falling
+
+
+                           1.1                                                                                         1.1
+
+                          1.08                                                                                        1.08
+                             -50     -25       0   25    50      75   100    125       150                               -50      -25       0       25    50      75    100    125      150
+                                                   Temperature (qC)                       D006
+                                                                                                                                                    Temperature (qC)                        D007
+  TPS2595x0/1/5, Different Input Voltages                                                        TPS259573, Different Input Voltages
+
+                                    Figure 7. UVLO Threshold vs Temperature                                                      Figure 8. OVLO Threshold vs Temperature
+
+
+
+
+10                          Submit Documentation Feedback                                                                                Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                                            Product Folder Links: TPS2595
+                                                                                                                                                                                                               TPS2595
+www.ti.com                                                                                                                                                                    SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+Typical Characteristics (continued)
+                              210                                                                                                                    13.7
+                                                                                                                                                    13.65
+                              200
+                                                                                                                                                     13.6
+
+
+
+
+                                                                                                         Output Clamp Voltage (V)
+                              190                                                                                                                   13.55                                                      10 mA
+                                                                                                                                                                                                               1A
+                                                                                                                                                     13.5
+                                                                                                                                                                                                               3A
+                              180
+        Iq (PA)
+
+
+
+
+                                                                                                                                                    13.45
+                                                                                                                                                     13.4
+                              170
+                                                                                                                                                    13.35
+                              160                                                                                                                    13.3
+                                                                                                                                                    13.25
+                              150                            -40 qC          85 qC       125 qC
+                                                                                                                                                     13.2
+                                                             25 qC           105 qC
+                              140                                                                                                                   13.15
+                                     0            5             10               15               20                                                     -50    -25       0      25    50      75      100    125     150
+                                                         Input Voltage (V)                        D003
+                                                                                                                                                                                 Temperature (qC)                      D009
+                                                                                                         TPS25954x, Different Output Load Currents
+
+                                         Figure 9. Quiescent Current vs Input Voltage                                                                          Figure 10. OVC Threshold vs Temperature
+                              5.55                                                                                                                   3.7
+                               5.5
+                                                                                                                                                     3.6
+                              5.45
+   Output Clamp Voltage (V)
+
+
+
+
+                                                                                                                         Output Clamp Voltage (V)
+                                                                                          10 mA                                                      3.5
+                               5.4
+                                                                                          1A
+                              5.35                                                        3A
+                                                                                                                                                     3.4
+                               5.3
+                              5.25                                                                                                                   3.3
+
+                               5.2                                                                                                                   3.2
+                              5.15                                                                                                                                                                            10 mA
+                                                                                                                                                     3.1                                                      1A
+                               5.1
+                                                                                                                                                                                                              3A
+                              5.05                                                                                                                     3
+                                 -50       -25     0     25    50      75        100    125   150                                                       -50    -25    0         25    50      75      100    125    150
+                                                         Temperature (qC)                         D010
+                                                                                                                                                                                Temperature (qC)                      D011
+  TPS25953x, Different Output Load Currents                                                              TPS25952x, Different Output Load Currents
+
+                                          Figure 11. OVC Threshold vs Temperature                                                                              Figure 12. OVC Threshold vs Temperature
+                               10                                                                                                                     6
+                                                                                                                                                                                   4420 :          1020 :     487 :
+                                                                                                                                                     5.5
+                                                                                                                                                                                   1780 :          681 :
+                                                                                                                                                      5
+   Output Current Limit (A)
+
+
+
+
+                                                                                                                      Output Current Limit (A)
+
+
+
+
+                                                                                                                                                     4.5
+                                                                                                                                                      4
+                                                                                                                                                     3.5
+                                                                                                                                                      3
+                                1
+                                                                                                                                                     2.5
+                                                                                                                                                      2
+                                                                                                                                                     1.5
+                                                                                                                                                      1
+                              0.21                                                                                                                   0.5
+                                 100                          1000                            10000                                                     -50           0               50              100           150
+                                                             RILM (:)                             D012
+                                                                                                                                                                                Temperature (qC)                      D013
+                                                                                                         VIN = 12V, Different RILM values
+
+                                         Figure 13. Output Current Limit (ILIMIT) vs RILM                                                              Figure 14. Output Current Limit (ILIMIT) vs Temperature
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                                                                                          Submit Documentation Feedback                 11
+                                                                                       Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                                                                                             www.ti.com
+
+
+Typical Characteristics (continued)
+                                     6                                                                                                 3
+                                    5.5                     487 :      1020 :        4420 :
+                                                            681 :      1780 :
+                                     5                                                                                                 2
+
+
+
+
+                                                                                                         Current Limit Accuracy (%)
+                                    4.5
+                                     4                                                                                                 1
+                                    3.5
+     ILIMIT (A)
+
+
+
+
+                                     3                                                                                                 0
+                                    2.5
+                                     2                                                                                                 -1
+                                    1.5                                                                                                                                                             -40 qC
+                                     1                                                                                                 -2                                                           25 qC
+                                                                                                                                                                                                    85 qC
+                                    0.5                                                                                                                                                             125 qC
+                                     0                                                                                                 -3
+                                          1        2           3                4             5                                             0          1           2            3               4            5
+                                                             VDS (V)                          D023
+                                                                                                                                                               Output Current Limit (A)                      D027
+  Different RILM values                                                                              VIN = 5 V
+
+                                              Figure 15. Output Current Limit vs VDS                                                  Figure 16. Output Current Limit Accuracy vs Output Current
+                                                                                                                                                                 Limit
+                                     4                                                                                                 4
+                                                                           4420 :     681 :                                                                                          4420 :         681 :
+                                     3                                     1780 :     487 :                                            3                                             1780 :         487 :
+                                                                           1020 :                                                                                                    1020 :
+       Current Limit Accuracy (%)
+
+
+
+
+                                                                                                         Current Limit Accuracy (%)
+
+                                     2                                                                                                 2
+
+                                     1                                                                                                 1
+
+                                     0                                                                                                 0
+
+                                    -1                                                                                                 -1
+
+                                    -2                                                                                                 -2
+
+                                    -3                                                                                                 -3
+                                     -50          0           50              100         150                                           -50                0            50                100             150
+                                                        Temperature (qC)                      D028
+                                                                                                                                                                  Temperature (qC)                           D029
+  VIN = 3.3 V, Different RILM values                                                                 VIN = 5 V, Different RILM values
+
+                                    Figure 17. Output Current Limit Accuracy vs Temperature                                            Figure 18. Output Current Limit Accuracy vs Temperature
+                                     4                                                                                                281
+                                                                           4420 :     681 :
+                                     3                                     1780 :     487 :                                           280
+                                                                           1020 :
+       Current Limit Accuracy (%)
+
+
+
+
+                                     2                                                                                                279
+                                                                                                      GIMON (PA/A)
+
+
+
+
+                                     1                                                                                                278
+
+                                     0                                                                                                277
+
+                                    -1                                                                                                276                                                             0.5 A
+                                                                                                                                                                                                      1A
+                                                                                                                                                                                                      2A
+                                    -2                                                                                                275                                                             3A
+                                                                                                                                                                                                      4A
+                                    -3                                                                                                274
+                                     -50          0           50              100         150                                           -50      -25       0       25    50      75       100       125      150
+                                                        Temperature (qC)                      D030
+                                                                                                                                                                   Temperature (qC)                           D020
+  VIN = 12 V, Different RILM values                                                                  Different Output Load Currents
+
+                                    Figure 19. Output Current Limit Accuracy vs Temperature                                                 Figure 20. Load Current Monitor Gain vs Temperature
+
+
+
+
+12                                   Submit Documentation Feedback                                                                                     Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                                                    Product Folder Links: TPS2595
+                                                                                                                                                                                    TPS2595
+www.ti.com                                                                                                                                           SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+Typical Characteristics (continued)
+                         20                                                                                                 900
+                                                                              Maximum                                                      Open        4700 pF
+                                                                              Typical                                       800            3300 pF     6800 pF
+                         15
+                                                                              Minimum
+                                                                                                                            700
+                         10
+    GIMON Accuracy (%)
+
+
+
+
+                                                                                                                            600
+
+
+
+
+                                                                                                              tD,ON (Ps)
+                          5                                                                                                 500
+
+                          0                                                                                                 400
+
+                                                                                                                            300
+                          -5
+                                                                                                                            200
+                         -10
+                                                                                                                            100
+
+                         -15                                                                                                  0
+                               0        1         2              3        4             5                                         0              5            10              15        20
+                                                      IOUT (A)                          D031
+                                                                                                                                                       Input Voltage (V)                 D022
+  Normalized to reference value of GIMON = 276uA/A                                             Different CdVdt values
+
+                          Figure 21. Load Current Monitor Gain Accuracy vs Load                                                           Figure 22. Turn on Delay vs Input Voltage
+                                                  Current
+                         40                                                                                                 1800
+                                   Open                                                                                                    Open
+                         35        3300 pF                                                                                  1600           3300 pF
+                                   4700 pF                                                                                                 4700 pF
+                                   6800 pF                                                                                  1400           6800 pF
+                         30
+                                                                                                                            1200
+    SRON (V/ms)
+
+
+
+
+                         25
+                                                                                                     tR (Ps)
+
+
+
+
+                                                                                                                            1000
+                         20
+                                                                                                                             800
+                         15
+                                                                                                                             600
+                         10
+                                                                                                                             400
+                          5                                                                                                  200
+
+                          0                                                                                                    0
+                           2.5              5          7.5           10             12.5                                        2.5              5             7.5            10        12.5
+                                                Input Voltage (V)                       D024
+                                                                                                                                                        Input Voltage (V)                D025
+  Different CdVdt values                                                                       Different CdVdt values
+
+                                   Figure 23. ON Slew Rate vs Input Voltage                                                                 Figure 24. Rise Time vs Input Voltage
+                         12                                                                                                 10000
+                                                                                                                                                                                    -40 qC
+                                                                                                                                                                                    25 qC
+                         11
+                                                                                               Thermal Shutdown Time (ms)
+
+
+
+
+                                                                                                                             1000                                                   85 qC
+                                                                                                                                                                                    125 qC
+                         10
+    tD,OFF (Ps)
+
+
+
+
+                                                                                                                              100
+                          9
+                                                                                                                               10
+                          8
+                                                                              Open
+                                                                              3300 pF                                             1
+                          7
+                                                                              4700 pF
+                                                                              6800 pF
+                          6                                                                                                   0.1
+                           2.5              5          7.5           10             12.5                                              1                        10                        100
+                                                Input Voltage (V)                       D026
+                                                                                                                                                      Power Dissipation (W)                  D001
+  Different CdVdt values
+
+                                   Figure 25. Turn OFF Delay vs Input Voltage                                                 Figure 26. Thermal Shutdown Time vs Power Dissipation
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                                                                 Submit Documentation Feedback             13
+                                                                              Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                                  www.ti.com
+
+
+Typical Characteristics (continued)
+                                                     98
+                                                                                                      2.7 V
+                                                                                                      3.3 V
+                                                     96                                               5V
+                                                                                                      12 V
+                                                                                                      18 V
+                                                     94
+
+
+
+
+                                     tTSD,RST (ms)
+                                                     92
+
+
+                                                     90
+
+
+                                                     88
+
+
+                                                     86
+                                                      -50   -25      0    25    50      75   100   125     150
+                                                                          Temperature (qC)                    D019
+  TPS2595x1/3/5, Different Input Voltages
+
+                                     Figure 27. Thermal Shutdown Auto-Retry Interval vs Temperature
+
+
+
+
+  VIN = 12 V, COUT = 10 µF, RILM = 487 Ω, VEN = 5 V                               VIN = 12 V, COUT = 10 µF, RILM = 487 Ω, VEN = 5 V
+
+      Figure 28. Output Voltage Ramp and Inrush Current at Start                      Figure 29. Output Voltage Ramp and Inrush Current at Start
+                           Up, CdVdT = Open                                                                Up, CdVdT = 22 nF
+
+
+
+
+  VIN = 12 V, COUT = 1 µF, RILM = 487 Ω, ROUT = 100 Ω                             VIN = 12 V, COUT = 1 µF, RILM = 487 Ω, ROUT = 100 Ω
+
+                       Figure 30. Turn ON Delay                                                          Figure 31. Turn OFF Delay
+
+
+
+14     Submit Documentation Feedback                                                               Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                                  Product Folder Links: TPS2595
+                                                                                                                              TPS2595
+www.ti.com                                                                                      SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+Typical Characteristics (continued)
+
+
+
+
+  VIN = 12 V, COUT = 1 µF, RILM = 487 Ω, ROUT varied from 12 Ω to       VIN = 12 V, COUT = 1 µF, RILM = 487 Ω, ROUT varied from 12 Ω to
+  2 Ω to 12 Ω                                                           2 Ω to 12 Ω
+
+       Figure 32. TPS2595x1, TPS2595x3, TPS2595x5 OverCurrent                      Figure 33. TPS2595x0 Overcurrent Response
+                              Response
+
+
+
+
+  VIN = 12 V, COUT = 1 µF, RILM = 487 Ω                                 VIN = 12 V, COUT = 1 µF, RILM = 487 Ω
+
+              Figure 34. Output Hot Short to GND Response                   Figure 35. Output Hot Short to GND Response (Zoomed In)
+
+
+
+
+  VIN = 12 V, COUT = 1 µF, RILM = 487 Ω                                 VIN = 12 V, COUT = 1 µF, RILM = 487 Ω
+
+              Figure 36. Wake Up With Output Short to GND                   Figure 37. Wake Up With Output Short to GND (Zoomed In)
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                            Submit Documentation Feedback            15
+                                                        Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                     www.ti.com
+
+
+Typical Characteristics (continued)
+
+
+
+
+  VIN = 12 V, COUT = 1 µF, RILM = 487 Ω, IOUT stepped from 4 A to    VIN = 12 V, COUT = 1 µF, RILM = 487 Ω, FLT = 3.3 V through 10
+  4.8 A                                                              kΩ
+
+              Figure 38. Output Load Transient Response                                 Figure 39. Hot Plug Response
+
+
+
+
+  VIN stepped from 12 V to 18 V, COUT = 1 µF, RILM = 487 Ω, FLT =    VIN stepped from 12 V to 18 V, COUT = 1 µF, RILM = 487 Ω, FLT =
+  3.3 V through 10 kΩ, ROUT = 100 Ω                                  3.3 V through 10 kΩ, ROUT = 100 Ω
+
+         Figure 40. TPS259573 Overvoltage Lockout Response                Figure 41. TPS259573 Overvoltage Lockout FLT Response
+
+
+
+
+  VIN stepped from 3 V to 6 V, COUT = 1 µF, RILM = 487 Ω, FLT= 3.3   VIN stepped from 5 V to 8 V, COUT = 1 µF, RILM = 487 Ω, FLT =
+  V through 10 kΩ, ROUT = 10 Ω                                       3.3 V through 10 kΩ, ROUT = 10 Ω
+
+         Figure 42. TPS25952x Overvoltage Clamp Response                     Figure 43. TPS25953x Overvoltage Clamp Response
+
+
+16     Submit Documentation Feedback                                                  Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                     Product Folder Links: TPS2595
+                                                                                                                                   TPS2595
+www.ti.com                                                                                            SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+Typical Characteristics (continued)
+
+
+
+
+  VIN Stepped from 12 V to 15 V, COUT = 1 µF, RILM = 487 Ω, FLT =          VIN = 5 V, COUT = 1 µF, RILM = 487 Ω
+  3.3 V through 10 kΩ, ROUT = 20 Ω
+                                                                                Figure 45. TPS2595x5 Quick Output Discharge, EN stepped
+           Figure 44. TPS25954x Overvoltage Clamp Response                                           from 5 V to 0 V
+
+
+                                                                                                VIN
+
+
+
+
+                                                                                                VOUT
+
+
+
+
+                                                                                                 EN
+
+
+
+
+                                                        VIN = 5 V, COUT = 1 µF, RILM = 487 Ω
+
+                                   Figure 46. TPS2595x5 Quick Output Discharge, EN stepped from 5 V to 1 V
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                  Submit Documentation Feedback        17
+                                                          Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                            www.ti.com
+
+
+8 Detailed Description
+
+8.1 Overview
+The TPS2595xx devices are integrated eFuse that are used to manage load voltage and load current. The
+device provides various factory programmed settings and user manageable settings, which allow device
+configuration for handling different transient and steady state supply and load fault conditions, thereby protecting
+the input supply and the downstream circuits connected to the device. The device also uses an in-built thermal
+shutdown mechanism to protect itself during these fault events.
+
+8.2 Functional Block Diagram
+
+
+
+                                      IN 3                                                              5 OUT
+
+                                      IN 4             +
+                                                                                             Current
+                                                       ±                   Charge
+                                                                  OVC(4)                     Limit &    7 ILM
+                                                                           Pump     Driver
+                                                 UVP                                         Monitor
+
+                              EN/UVLO(1) 2        +
+                                                                Control
+                                                                                                        1 dVdt
+                                                                 Logic
+                                                  ±
+                                             UVLO(3)                                                             (2)
+                                                                                                        6 FLT
+
+
+                                               Over Temperature                                         8 GND
+                                                  Protection
+
+
+
+      (1)   For TPS2595x3, this pin is EN/OVLO
+      (2)   For TPS2595x5, this pin is QOD
+      (3)   For TPS2595x3, this voltage is OVLO
+      (4)   This block is not available in the TPS25957x
+
+8.3 Feature Description
+8.3.1 Undervoltage Protection (UVP) and Undervoltage Lockout (UVLO)
+All the TPS2595xx devices constantly monitor the input supply to ensure that the load is powered up only when
+the voltage is at a sufficient level. During the start-up condition, the device waits for the input supply to rise above
+a fixed threshold VUVP before it proceeds to turn ON the FET. Similarly, during the ON condition, if the input
+supply falls below the UVP threshold, the FET is turned OFF. The UVP rising and falling thresholds are slightly
+different, thereby providing some hysteresis and ensuring stable operation around the threshold voltage.
+The TPS2595x0, TPS2595x1, TPS2595x5 devices provide an user programmable UVLO mechanism to ensure
+that the load is powered up only when the voltage is at a sufficient level. This can be achieved by dividing the
+input supply and feeding it to the EN/UVLO pin. Whenever the voltage at the EN/UVLO pin falls below a
+threshold VUVLO, the device turns OFF the FET. The FET is turned ON again when the voltage rises above the
+threshold. The rising and falling thresholds on this pin are slightly different, thereby providing some hysteresis
+and ensuring stable operation around the threshold voltage.
+The user must choose the resistor divider values appropriately to map the desired input undervoltage level to the
+UVLO threshold of the part. See Figure 47.
+
+
+
+
+18     Submit Documentation Feedback                                                         Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                           Product Folder Links: TPS2595
+                                                                                                                     TPS2595
+www.ti.com                                                                              SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+Feature Description (continued)
+
+                                                                          VIN
+
+
+                                                                                R1
+                                                               EN
+
+
+
+                                                                                R2
+
+
+
+
+                                                   Figure 47. Undervoltage Lockout
+
+                      V UVLO u R1 R2
+       V SUPPLY
+                                R2                                                                                            (1)
+
+8.3.2 Overvoltage Protection
+The TPS2595xx devices provide 2 ways to handle an input overvoltage condition.
+
+8.3.2.1 Overvoltage Lockout (OVLO)
+The TPS259573 device provides an user programmable OVLO mechanism to ensure that the supply to the load
+is cut off if the input supply voltage exceeds a certain level. This can be achieved by dividing the input supply
+and feeding it to the EN/OVLO pin. Whenever the voltage at the EN/OVLO pin rises above a threshold VOVLO, the
+device turns OFF the FET. When the voltage at the EN/OVLO pin falls below the threshold, the FET is turned
+ON again.
+The user should choose the resistor divider values appropriately to map the desired input overvoltage level to the
+OVLO threshold of the part.
+                                                                          VIN
+
+
+                                                                                R1
+                                                               EN
+
+
+
+                                                                                R2
+
+
+
+
+                                                    Figure 48. Overvoltage Lockout
+
+8.3.2.2 Overvoltage Clamp (OVC)
+The TPS25952x, TPS25953x, TPS25954x devices provide a mechanism to clamp the output voltage to a
+predefined level quickly if the input voltage crosses a certain threshold. This ensures the load is not exposed to
+high voltages on any overvoltage at the input supply, and lowers the dependency on external protection devices
+(such as TVS/Zener diodes) in this condition. Once the input supply voltage rises above the OVC threshold
+voltage VOVC, the device responds by clamping the voltage to VCLAMP within a very short response time tOVC. As
+long as an overvoltage condition is present on the input, the output voltage will be clamped to VCLAMP. When the
+input drops below the output clamp threshold VOVC, the clamp releases the output voltage. See Figure 49.
+During the overvoltage clamp condition, there could be significant heat dissipation in the internal FET depending
+on the VIN - VOUT voltage drop and the current through the FET leading to a thermal shutdown if the condition
+persists for an extended period of time. In this case, the device would either stay latched-off or start a auto retry
+cycle as explained in the Overtemperature Protection (OTP) section.
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                    Submit Documentation Feedback        19
+                                                        Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                 www.ti.com
+
+
+Feature Description (continued)
+
+
+                                        VUVLO
+                                  EN
+                                            0        Input         Auto-Restart      Input
+                                                  Overvoltage       with Input    Overvoltage
+                                                    Event          Overvoltage     Removed
+
+                                  IN     VOVC
+
+
+                                            0
+                                                       tOVC
+
+
+                                        VCLAMP
+                               OUT
+                                            0
+
+
+                                         VFLT
+
+                                  FLT                                  tTSD,RST
+                                            0
+
+
+
+                                         TSD
+                                       TSDHYS
+                             TJ
+                                           TJ
+
+
+                                                                    Time
+
+                         Figure 49. TPS2595xx Overvoltage Clamp Response (Auto-Retry)
+
+Multiple device options are offered with different clamping voltage thresholds. See the Device Comparison Table
+for list of available voltage clamp options.
+
+8.3.3 Inrush Current, Overcurrent and Short Circuit Protection
+The TPS2595xx devices incorporates three levels of protection against overcurrent:
+• Adjustable slew rate for inrush current control (dVdt).
+• Active current limiting (ILIMIT) for overcurrent protection.
+• A fast short circuit limit (ISC) to protect against hard short circuits.
+
+8.3.3.1 Slew Rate and Inrush Current Control (dVdt)
+The inrush current during turn on is directly proportional to the load capacitance and rising slew rate. Equation 2
+can be used to find the slew rate SRON required to limit the inrush current IINRUSH for a given load capacitance
+COUT.
+            § V · I INRUSH mA
+     SR ON ¨     ¸
+            © ms ¹   COUT PF                                                                                     (2)
+For loads requiring a slower rising slew rate, a capacitance can be added to the dVdt pin to adjust the rising slew
+rate and lower the inrush current during turn on. The required CdVdt capacitance to produce a given slew rate can
+be calculated using Equation 3.
+
+
+
+20     Submit Documentation Feedback                                              Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                 Product Folder Links: TPS2595
+                                                                                                                          TPS2595
+www.ti.com                                                                                   SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+Feature Description (continued)
+                                42000
+       C dVdt pF
+                                    § V ·
+                              SR ON ¨    ¸
+                                    © ms ¹                                                                                         (3)
+
+8.3.3.2 Active Current Limiting
+The load current is monitored during start-up and normal operation. When the load current exceeds the current
+limit trip point ILIMIT programmed by RILM resistor, the device regulates the current to the set limit ILIMIT within tLIM.
+The device exits current limiting when the load current falls below limit. Equation 4 can be used to find the RILM
+value for a desired current limit.
+                     2000
+       R ILM
+                I LIMIT 0.04
+                                                                                                                                   (4)
+In the current limiting state, the output voltage drops resulting in increased power dissipation in the internal FET
+leading to a thermal shutdown if the condition persists for an extended period of time. In this case, the device
+either stays latched-off or starts an auto retry cycle as explained in the Overtemperature Protection (OTP)
+section.
+
+
+                                      Soft Short on VOUT                        Auto Retry             Auto Retry
+                                                                                Into Short          (Short Removed)
+
+
+
+                 IOUT     ILIMIT
+
+
+
+                              0
+
+
+
+                            VIN
+
+                 OUT
+                              0
+
+                                                    tLIM
+
+                          VFLTB
+                  FLT                                      tTSD,RST                                     tTSD,RST
+                              0
+
+
+
+                          TSD
+
+            TJ          TSDHYS
+
+                            TJ
+
+                                                                                Time
+
+                   Figure 50. TPS2595x1, TPS2595x3, TPS2595x5 Overcurrent Response (Auto-Retry)
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                         Submit Documentation Feedback        21
+                                                             Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                     www.ti.com
+
+
+Feature Description (continued)
+
+
+
+                    VUVLO
+
+            EN
+
+                         0
+
+                              Soft Short on VOUT                                        Short                  Manual Restart
+                                                                                       Removed               (Device Re-enabled)
+
+
+
+            IOUT     ILIMIT
+
+
+
+                         0
+
+
+
+                       VIN
+
+            OUT
+
+                         0
+                                               tLIM
+
+
+                     VFLTS
+
+            FLT
+                         0
+
+
+
+                     TSD
+
+       TJ          TSDHYS
+
+                       TJ
+
+
+                                                                          Time
+
+                               Figure 51. TPS2595x0 Overcurrent Response (Latch-Off)
+
+8.3.3.3 Short Circuit Protection
+The current through the device increases very rapidly during a transient short circuit event. The short circuit
+threshold ISC is adjusted based on the selected current limit. When a short circuit is detected, the device quickly
+limits the current to ILIMIT. The device stops limiting the current once the load current falls below the programmed
+ILIMIT threshold. See Figure 52.
+The output voltage drops in the current limiting state, resulting in increased power dissipation in the internal FET
+and leads to a thermal shutdown if the condition persists for an extended period of time. In this case, the device
+either stays latched-off or starts an auto retry cycle as explained in the Overtemperature Protection (OTP)
+section.
+
+
+
+
+22      Submit Documentation Feedback                                                 Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                      Product Folder Links: TPS2595
+                                                                                                                           TPS2595
+www.ti.com                                                                                   SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+Feature Description (continued)
+
+
+
+                              VEN/UVLO
+
+                         EN
+                                     0
+                                             Hard Short on VOUT
+                                                                           Short Removed
+
+
+
+
+                       IOUT        ILIM
+
+
+
+                                     0
+
+
+
+                                   VIN
+
+                       OUT
+
+                                     0
+
+                                                            tSC
+
+                                VFLTB
+                       FLT
+
+                                     0
+
+
+
+
+                  TJ
+
+                                   TJ
+
+                                                                              Time
+
+                                          Figure 52. TPS2595xx Short Circuit Response
+
+8.3.4 Overtemperature Protection (OTP)
+Thermal shutdown occurs when the junction temperature TJ exceeds TSD. When the TPS2595x0 detects a
+thermal overload, it shuts down and remains latched off until the device is re-enabled or power cycled. When the
+TPS2595x1, TPS2595x3, TPS2595x5 devices detects a thermal overload, it remains off until the TJ decreases by
+TSDHYS and then waits for an additional delay of tTSD,RST after which it automatically retries to turn on if it is still
+enabled. See Table 1.
+
+                                                Table 1. TPS2595xx Thermal Shutdown
+                       Device                                     Enter TSD                                Exit TSD
+                                                                                           TJ < TSD and Device Power Cycled or re-
+             TPS2595x0 (Latch-off)                                 TJ ≥ TSD
+                                                                                           enabled using EN/UVLO pin
+ TPS2595x1, TPS2595x3, TPS2595x5 (Auto-                                                    TJ < TSD – TSDHYS and tTSD,RST Timer
+                                                                   TJ ≥ TSD
+                 retry)                                                                    Expired
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                          Submit Documentation Feedback         23
+                                                         Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                               www.ti.com
+
+
+8.3.5 Fault Indication (FLT )
+Table 2 summarizes the protection response to various fault conditions.
+
+                                Table 2. TPS2595x0, TPS2595x1, TPS2595x3 Fault Summary
+              EVENT / FAULT                       PROTECTION RESPONSE                             FLT INDICATION
+              Overtemperature                             Shutdown                                       Yes
+                                                 Output Voltage Clamp (OVC)
+                Overvoltage                                                                               No
+                                            (TPS25952x,TPS25953x,TPS25954x only)
+                                                      Shutdown (OVLO)
+                Overvoltage                                                                              Yes
+                                                      (TPS259573 only)
+                Undervoltage                      Shutdown (UVP or UVLO)                                  No
+                Overcurrent                            Current Limiting                                   No
+                Short circuit                          Current Limiting                                   No
+                ILM pin open                              Shutdown                                        No
+                ILM pin short                       Shutdown If IOUT > ICB                         Yes If IOUT > ICB
+
+When the TPS2595x0, TPS2595x1, TPS2595x3 devices are turned off as a result of a fault as described in the
+table above, the FLT pin is pulled low.
+All faults will be cleared if the device loses power or if it is re-enabled using the EN/UVLO (or EN/OVLO) pin.
+
+8.3.6 Quick Output Discharge (QOD)
+Some applications require the output capacitor to be discharged quickly when the eFuse is turned off. This
+prevents any unpredictable behavior from the downstream devices as the capacitor discharges slowly. The
+TPS2595x5 device provides a Quick Output Discharge feature that can be enabled by connecting OUT pin to
+QOD pin. An internal FET provides a fast discharge path for the output capacitor resulting in the OUT voltage
+falling to 0 V in a short time. The FET initially operates in saturation region and provides a constant current
+discharge. After the FET enters linear region, it offers a discharge path similar to a resistor.
+It is possible to model this as a simple equivalent resistance, which would discharge a given capacitor charged to
+a given voltage in the same time as the overall discharge circuit. This parameter is specified as the effective
+QOD resistance RQOD for the device. It takes a time equivalent to 5 time constants (τ = R × C) to discharge a
+capacitor by 99.3%. For example, with an effective QOD resistance of 19 Ω, the time taken to discharge a 100-
+µF capacitor from 5 V to 35 mV can be calculated as in Equation 5.
+      tDischarge = 5 × 19 Ω × 100 µF = 9.5 ms                                                                                    (5)
+
+
+
+
+24     Submit Documentation Feedback                                            Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                Product Folder Links: TPS2595
+                                                                                                                                             TPS2595
+www.ti.com                                                                                                      SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+8.4 Device Functional Modes
+The features of the device depend on the operating mode.
+
+8.4.1 Enable and Fault Pin Functional Mode 1: Single Device, Self-Controlled
+In this mode of operation, the device is enabled by the VIN voltage without the need of an external processor to
+drive the ENABLE pin. The FLT pin is optionally monitored by an external host. See Figure 53.
+
+                                                                 TPS2595
+                                        VIN
+                                                                                         VFLT
+                                                           IN
+
+                                              R1                                                RFLT
+
+                                                           EN               FLT                               GPIO
+
+                                              R2
+
+
+
+
+                                                                 Copyright © 2017, Texas Instruments Incorporated
+
+                                               Figure 53. Single Device, Self-Controlled
+
+8.4.2 Enable and Fault Pin Functional Mode 2: Single Device, Host-Controlled
+In this mode of operation, the device enable pin is driven by an external host. The pin can be driven directly from
+a GPIO without the need for any glue logic. The FLT pin is optionally monitored by the host. See Figure 54.
+
+                                                                        TPS2595
+                                                    VIN
+                                                                                                VFLT
+                                                                  IN
+
+                                                                                                       RFLT
+
+                                           GPIO                    EN              FLT                        GPIO
+
+                                                        Copyright © 2017, Texas Instruments Incorporated
+
+                                               Figure 54. Single Device, Host-Controlled
+
+8.4.3 Enable and Fault Pin Functional Mode 2: Multiple Devices, Self-Controlled
+In this mode of operation, the devices are self-controlled (no host present). The EN and FLT pins are shorted
+together, and connected with up to three total devices as shown in Figure 55. In this configuration, when any one
+of the TPS2595xx devices detects a fault, it automatically disables the other TPS2595xx devices in the system.
+
+                                                        NOTE
+               This configuration is only applicable to the Active High Enable variants TPS2595x0,
+               TPS2595x1, TPS2595x5.
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                            Submit Documentation Feedback        25
+                                                            Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                              www.ti.com
+
+
+Device Functional Modes (continued)
+
+                                                                   TPS2595
+
+                                                                                             VIN
+
+
+                                                                  EN         FLT                   R1
+
+                                                  EN
+
+                                            TPS2595                                                R2
+
+
+                                                  FLT
+
+                                                                  EN         FLT
+
+
+
+
+                                                                   TPS2595
+
+                                                  Copyright © 2017, Texas Instruments Incorporated
+
+                                       Figure 55. Multiple Devices, Self-Controlled
+
+
+                                                                                                                                        VOUT1
+
+
+
+                                                           VOUT1
+                                                                                                                                        VOUT2
+
+
+
+                                                          VOUT2
+
+
+                                                                                                                                         EN
+
+
+                                                            EN
+
+                                                                                                                                         IIN
+
+                                                            IIN
+
+
+
+
+      Figure 56. TPS259541 Self-controlled Mode Response with                      Figure 57. TPS259541 Self-controlled Mode Response with
+         Overload Fault on OUT1 Followed by Auto-retry with                           Overload on OUT1 Followed by Recovery with Fault
+                           Persistent Fault                                                               Removed
+
+
+
+
+26     Submit Documentation Feedback                                                           Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                      Product Folder Links: TPS2595
+                                                                                                                                           TPS2595
+www.ti.com                                                                                                    SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+9 Application and Implementation
+
+                                                           NOTE
+               Information in the following applications sections is not part of the TI component
+               specification, and TI does not warrant its accuracy or completeness. TI’s customers are
+               responsible for determining suitability of components for their purposes. Customers should
+               validate and test their design implementation to confirm system functionality.
+
+
+9.1 Application Information
+The TPS2595xx device is an integrated eFuse that is typically used for hot-swap and power rail protection
+applications. The device operates from 2.7 V to 18 V with programmable current limit and undervoltage
+protection. The device aids in controlling the in-rush current and provides precise current limiting during overload
+conditions for systems such as set-top box, DTVs, gaming consoles, SSDs, HDDs, and smart meters. The
+device also provides robust protection for multiple faults on the sub-system rail.
+The following design procedure can be used to select the supporting component values based on the application
+requirement. Additionally, a spreadsheet design tool TPS2595xx Design Calculation Tool is available.
+
+9.2 Typical Application
+                                                                                                            3.3 V
+
+
+                   VIN = 2.7 to 18 V
+                                                        IN                                         OUT                              VOUT
+
+                                        CIN(1)
+                                       0.1 µF                           34 m                                                 COUT
+                            R1                                                                                  R3           1 µF
+                          1 0Ÿ                                                                                  10 NŸ
+                                                                                                    FLT
+
+                                                    EN/UVLO
+                                                                          TPS259541                 ILM                             ADC
+                            R2
+                        387 NŸ                          dVdt
+                                    CdVDt                                      GND
+                                                                                                                      RILM
+                                   3.3 nF                                                                            546 Ÿ
+
+
+
+
+                                                                                     Copyright © 2017, Texas Instruments Incorporated
+
+       (1)   CIN is optional and 0.1 µF is recommended to suppress transients due to the inductance of PCB routing or from input
+             wiring.
+
+                     Figure 58. Typical Application Schematic: Simple e-Fuse for Set-Top Boxes
+
+9.2.1 Design Requirements
+Table 3 lists the TPS25954x design requirements.
+
+                                                             Table 3. Design Parameters
+                         DESIGN PARAMETER                                                                   EXAMPLE VALUE
+                            Input voltage , VIN                                                                     12 V
+                  Undervoltage lockout set point, VUV                                                               4.3 V
+                 Overvoltage protection set point , VOV                                                   Default: VOVC = 13.7 V
+                         Load at start-up, RL(SU)                                                                   4Ω
+                           Current limit, ILIMIT                                                                    3.7 A
+                        Load capacitance, COUT                                                                      1 µF
+                  Maximum ambient temperatures, TA                                                                  85°C
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                          Submit Documentation Feedback        27
+                                                               Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                            www.ti.com
+
+
+9.2.2 Detailed Design Procedure
+The designer must know the following:
+• Normal input operation voltage
+• Maximum output capacitance
+• Maximum current Limit
+• Load during start-up
+• Maximum ambient temperature of operation
+This design procedure seeks to control the junction temperature of device under both static and transient
+conditions by proper selection of output ramp-up time and associated support components. The designer can
+adjust this procedure to fit the application and design criteria.
+
+9.2.2.1 Programming the Current-Limit Threshold: RILM Selection
+The RILM resistor at the ILM pin sets the over load current limit, this can be set using Equation 6.
+                 2000
+    R ILM
+            I LIMIT 0.04                                                                                                      (6)
+For ILIMIT = 3.7 A, from Equation 6, RILM is 546 Ω, choose closest standard value resistor with 1% tolerance.
+
+9.2.2.2 Undervoltage Lockout Set Point
+The undervoltage lockout (UVLO) trip point is adjusted using the external voltage divider network of R1 and R2 as
+connected between IN, EN/UVLO and GND pins of the device. The values required for setting the undervoltage
+are calculated solving Equation 7.
+                 R1 R2
+      V UV             u V UVLO(R)
+                   R2                                                                                                         (7)
+
+Where VUVLO(R) is UVLO rising threshold (1.2 V). Because R1 and R2 leak the current from input supply VIN,
+these resistors must be selected based on the acceptable leakage current from input power supply VIN.
+The current drawn by R1 and R2 from the power supply is IR12 = VIN / (R1 + R2).
+However, leakage currents due to external active components connected to the resistor string can add error to
+these calculations. So, the resistor string current, IR12 must be chosen to be 20 times greater than the leakage
+current expected.
+To set the UVLO at VUVR = 4.3 V, select R2 = 387 kΩ, and R1 = 1 MΩ.
+
+9.2.2.3 Setting Output Voltage Ramp Time (TdVdT)
+For a successful design, the junction temperature of device must be kept below the absolute maximum rating
+during both dynamic (start-up) and steady state conditions. Dynamic power stresses often are an order of
+magnitude greater than the static stresses, so it is important to determine the right start-up time and in-rush
+current limit required with system capacitance to avoid thermal shutdown during start-up with and without load.
+The required ramp-up capacitor CdVdT is calculated considering the two possible cases (see Case 1: Start-Up
+Without Load. Only Output Capacitance COUT Draws Current and Case 2: Start-Up With Load. Output
+Capacitance COUT and Load Draw Current ).
+
+9.2.2.3.1 Case 1: Start-Up Without Load. Only Output Capacitance COUT Draws Current
+During start-up, as the output capacitor charges, the voltage drop as well as the power dissipated across the
+internal FET decreases. The average power dissipated in the device during start-up is calculated using
+Equation 9.
+For TPS2592xx device, the inrush current is determined as shown in Equation 8.
+                             VIN
+      I INRUSH    C OUT u
+                            TdVdT                                                                                             (8)
+Power dissipation during start-up is shown in Equation 9.
+28     Submit Documentation Feedback                                         Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                             Product Folder Links: TPS2595
+                                                                                                                                                                       TPS2595
+www.ti.com                                                                                                                                SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+      PD(INRUSH)        0.5 u VIN u I INRUSH                                                                                                                                    (9)
+Equation 9 assumes that load does not draw any current until the output voltage has reached its final value.
+
+9.2.2.3.2 Case 2: Start-Up With Load. Output Capacitance COUT and Load Draw Current
+When the load draws current during the turnon sequence, there is additional power dissipated. Considering a
+resistive load during start-up RL(SU), load current ramps up proportionally with increase in output voltage during
+TdVdT time. Equation 10 to Equation 13 show the average power dissipation in the internal FET during charging
+time due to resistive load.
+                      § 1·   VIN2
+      PD(LOAD)        ¨6¸ Ru
+                      © ¹    L(SU)                                                                                                                                            (10)
+Total power dissipated in the device during start-up is Equation 11.
+      PD(STARTUP)         PD(INRUSH)        PD(LOAD)                                                                                                                          (11)
+Total current during start-up is given by Equation 12.
+      I STARTUP      I INRUSH I L (t)                                                                                                                                         (12)
+If ISTARTUP > ILIMIT, the device limits the current to ILIMIT and the current-limited charging time is determined by
+Equation 13.
+                                                    ª                                                   §                    ·º
+                                                    «I                                                  ¨       I INRUSH     ¸»
+                                  C OUT u R L(SU) u «                                                   ¨                    ¸»
+                                                         LIMIT
+       TdvdT(Current Limited)                                                                      1 LN
+                                                    « I INRUSH                                          ¨              VIN ¸ »
+                                                    «                                                   ¨ I LIMIT R          ¸»
+                                                    ¬                                                   ©              L(SU) ¹ ¼                                              (13)
+The power dissipation, with and without load, for selected start-up time must not exceed the shutdown limits as
+shown in Figure 59.
+                                                                                10000
+                                                                                                                          -40 qC
+                                                                                                                          25 qC
+                                                   Thermal Shutdown Time (ms)
+
+
+
+
+                                                                                 1000                                     85 qC
+                                                                                                                          125 qC
+
+
+                                                                                  100
+
+
+                                                                                   10
+
+
+                                                                                    1
+
+
+                                                                                  0.1
+                                                                                        1                  10                  100
+                                                                                                  Power Dissipation (W)            D001
+
+
+
+                                              Figure 59. Thermal Shutdown Limit Plot
+
+For the design example under discussion, select ramp-up capacitor CdVdt = OPEN. The default slew rate for CdVdt
+= OPEN is 38.2 mV/µs. With slew rate of 38.2 mV/µs, the ramp-up time TdVdt for 12 V input is 248 µs.
+The inrush current drawn by the load capacitance COUT during ramp-up using Equation 14.
+                1 ) × 38.2 mV
+     I INRUSH =                = 38.2 mA
+                       V                                                                                                                                                      (14)
+The inrush power dissipation is calculated using Equation 15.
+      PD(INRUSH)        0.5 u 12 u 38.2 m                                         229.2 mW                                                                                    (15)
+For 229.2 mW of power loss, the thermal shutdown time of the device must not be less than the ramp-up time
+TdVdt to avoid the false trip at the maximum operating temperature. Figure 59 shows the thermal shutdown limit at
+TA = 85°C, for 229.2 mW of power, the shutdown time is infinite. Therefore, it is safe to use 248 µs as the start-
+up time without any load on the output.
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                                                      Submit Documentation Feedback        29
+                                                                                        Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                www.ti.com
+
+
+The additional power dissipation when a 4 Ω load is present during start-up is calculated using Equation 10.
+                   12 x 12
+      PD(LOAD) =           =6W
+                    6 ´ 4                                                                                                        (16)
+The total device power dissipation during start-up is given in Equation 17.
+      PD(STARTUP)      6     229.2 m        6.229 W                                                                              (17)
+The Figure 59 shows TA = 85°C and the thermal shutdown time for 6.229 W is more than 10 ms, which is well
+within the acceptable limits to not use an external capacitor CdVdt with a start-up load of 4 Ω.
+When COUT is large, there is a need to decrease the power dissipation during start-up. This can be done by
+increasing the value of the CdVdt capacitor.
+
+9.2.3 Support Component Selection: CIN
+CIN is a bypass capacitor to help control transient voltages, unit emissions, and local supply noise. Where
+acceptable, a value in the range from 0.001 μF to 0.1 μF is recommended for CIN.
+
+9.2.4 Application Curves
+
+
+                                                      VIN                                                                  VIN
+
+                                                    VOUT                                                                  VOUT
+
+
+
+
+                                                      EN                                                                   EN
+
+
+
+                                                                                                                           IIN
+
+
+
+                                                      IIN
+
+
+
+
+              Figure 60. Output Ramp without Any Load                    Figure 61. Output Ramp with 4 Ω Load at Start-up
+
+
+9.2.5 Controlled Power Down (Quick Output Discharge) using TPS2595x5
+When the TPS2595x5 device is disabled, the output voltage is left floating and the power-down profile is entirely
+dictated by the load. In some applications, this can lead to undesired activity because the load is not powered
+down to a defined state. Controlled output discharge can ensure the load is completely turned off and is not in an
+undefined operational state. The QOD pin in the TPS2595x5 device can be connected to the OUT pin to facilitate
+the Quick Output Discharge function, as shown in Figure 62. When the TPS2595x5 device is disabled, the QOD
+pin is pulled low and provides a quick discharge path for the output capacitor. The output voltage discharge rate
+is dictated by the output capacitor COUT, the total discharge path resistance (internal plus external), and the load.
+
+
+
+
+30     Submit Documentation Feedback                                             Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                Product Folder Links: TPS2595
+                                                                                                                                     TPS2595
+www.ti.com                                                                                         SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+
+
+              VIN = 5 V                                                                                                    VOUT
+                                           IN                                      OUT
+
+                             CIN
+                             0.1 µF                           34 m                                            COUT          RLOAD
+                                                                                                RQODEXT
+                                                                                                              100 µF        1000 Ÿ
+
+                                                                                   QOD
+                   from µC
+                                           EN/UVLO
+                                                              TPS2595x5            ILM
+
+                                           dVdt                                                 RILM
+                              CdVDt                              GND
+                                                                                                487 Ÿ
+                             3.3 nF
+
+
+
+
+                                                                                      Copyright © 2017, Texas Instruments Incorporated
+
+          Figure 62. Circuit Implementation with Quick Output Discharge Function using TPS2595x5
+
+
+                                                        VIN                                                                  VIN
+
+
+
+
+                                                                VOUT                                                                     VOUT
+
+
+
+
+                                                                 EN                                                                      EN
+
+
+
+
+        Figure 63. Output Voltage Discharge using TPS259535                     Figure 64. Output Voltage Discharge using TPS259535
+       without QOD [VIN = 5 V, EN = H → L, COUT = 100 µF, RLOAD                with QOD [VIN = 5 V, EN = H → L, COUT = 100 µF, RLOAD =
+                     = 1000 Ω, RQODEXT = OPEN]                                                1000 Ω, RQODEXT = Short]
+
+
+9.2.6 Overvoltage Lockout using TPS259573
+The TPS259573 device incorporates a circuit to protect the system during overvoltage conditions. A resistor
+divider connected from the supply to the EN/OVLO pin to GND (as shown in Figure 65) programs the
+overvoltage threshold. A voltage more than VOVLO on the EN/OVLO pin turns off the internal FET and protects
+the downstream load. Figure 66 shows overvoltage cut-off at the input voltage of 15 V.
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                               Submit Documentation Feedback               31
+                                                          Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                                        www.ti.com
+
+
+                                                                                       3.3 V
+
+
+
+           VIN = 2.7 to 18 V                                                                                         VOUT
+                                            IN                               OUT
+
+                               CIN
+                               0.1 µF                   34 m                               R3           COUT         RLOAD
+                                                                                           10 NŸ        1 µF         100 Ÿ
+                R1
+                1 0Ÿ
+                                                                             FLT
+
+                                         EN/OVLO
+                                                       TPS259573              ILM
+              R2                            dVdt
+              86.9 NŸ           CdVDt                      GND
+                               3.3 nF                                                          RILM
+                                                                                               487 Ÿ
+
+
+
+                                                                              Copyright © 2017, Texas Instruments Incorporated
+
+                  Figure 65. Circuit Implementation for Overvoltage Lockout using TPS259573
+
+
+
+
+                                 Figure 66. Overvoltage Lockout Response using TPS259573
+
+
+
+
+32     Submit Documentation Feedback                                                 Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                                   Product Folder Links: TPS2595
+                                                                                                                                              TPS2595
+www.ti.com                                                                                                 SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+10 Power Supply Recommendations
+The TPS2595xx devices are designed for a supply voltage range of 2.7 V ≤ VIN ≤ 18 V. An input ceramic bypass
+capacitor higher than 0.1 μF is recommended if the input supply is located more than a few inches from the
+device. The power supply must be rated higher than the set current limit to avoid voltage droops during
+overcurrent and short-circuit conditions.
+
+10.1 Transient Protection
+In the case of a short circuit and overload current limit when the device interrupts current flow, the input
+inductance generates a positive voltage spike on the input, and the output inductance generates a negative
+voltage spike on the output. The peak amplitude of voltage spikes (transients) is dependent on the value of
+inductance in series to the input or output of the device. Such transients can exceed the absolute maximum
+ratings of the device if steps are not taken to address the issue. Typical methods for addressing transients
+include:
+• Minimize lead length and inductance into and out of the device.
+• Use a large PCB GND plane.
+• Use a Schottky diode across the output to absorb negative spikes.
+• Use a low-value ceramic capacitor CIN = 0.001 μF to 0.1 μF to absorb the energy and dampen the transients.
+The approximate value of input capacitance can be estimated with Equation 18:
+                                                        L IN
+       VSPIKE Absolute            V IN    I LOAD u
+                                                        C IN
+
+       where
+             •     V(IN) is the nominal supply voltage
+             •     I(LOAD) is the load current
+             •     L(IN) equals the effective inductance seen looking into the source
+             •     C(IN) is the capacitance present at the input                                                                                  (18)
+Some applications may require the addition of a Transient Voltage Suppressor (TVS) to prevent transients from
+exceeding the absolute maximum ratings of the device.
+The circuit implementation with optional protection components (a ceramic capacitor, TVS and Schottky diode) is
+shown in Figure 67.
+                                                                                                   3.3 V
+
+
+
+             VIN = 2.7 to 18 V                                                                                                     VOUT
+                                              IN                                        OUT
+
+                                 CIN
+                                 0.1 µF                            34 m                                R3                COUT      RLOAD
+                                                                                                       10 NŸ             1 µF      100 Ÿ
+                 R1
+                 1 0Ÿ
+                                                                                         FLT
+
+                                              EN/UVLO
+                                                                   TPS2595xx             ILM
+             R2                               dVdt
+             86.9 NŸ              CdVDt                                GND
+                                                                                                           RILM
+                                 3.3 nF
+                                                                                                           487 Ÿ
+
+
+
+                                                                                           Copyright © 2017, Texas Instruments Incorporated
+
+                         Figure 67. Circuit Implementation with Optional Protection Components
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                       Submit Documentation Feedback          33
+                                                               Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                             www.ti.com
+
+
+10.2 Output Short-Circuit Measurements
+It is difficult to obtain repeatable and similar short-circuit testing results. The following contribute to variation in
+results:
+• Source bypassing
+• Input leads
+• Circuit layout
+• Component selection
+• Output shorting method
+• Relative location of the short
+• Instrumentation
+The actual short exhibits a certain degree of randomness because it microscopically bounces and arcs. Ensure
+that configuration and methods are used to obtain realistic results. Do not expect to see waveforms exactly like
+those in this data sheet because every setup is different.
+
+11 Layout
+
+11.1 Layout Guidelines
+•    For all applications, a ceramic decoupling capacitor of 0.01 µF or greater is recommended between the IN
+     terminal and GND terminal. For hot-plug applications, where input power-path inductance is negligible, this
+     capacitor can be eliminated or minimized.
+•    The optimal placement of the decoupling capacitor is closest to the IN and GND terminals of the device. Care
+     must be taken to minimize the loop area formed by the bypass-capacitor connection, the IN terminal, and the
+     GND terminal of the IC. See Figure 68 for a PCB layout example.
+•    High current-carrying power-path connections must be as short as possible and must be sized to carry at
+     least twice the full-load current.
+•    The GND terminal must be tied to the PCB ground plane at the terminal of the IC. The PCB ground must be a
+     copper plane or island on the board.
+•    Locate the following support components close to their connection pins:
+     – RILM
+     – CdVdT
+     – Resistors for the EN/UVLO (or EN/OVLO) pin
+     Connect the other end of the component to the GND pin of the device with shortest trace length. The trace
+     routing for the RILM and CdVdT components to the device must be as short as possible to reduce parasitic
+     effects on the current limit and soft start timing. These traces must not have any coupling to switching signals
+     on the board.
+•    Protection devices such as TVS, snubbers, capacitors, or diodes must be placed physically close to the
+     device they are intended to protect. These protection devices must be routed with short traces to reduce
+     inductance. For example, a protection Schottky diode is recommended to address negative transients due to
+     switching of inductive loads, and it must be physically close to the OUT pins.
+•    Obtaining acceptable performance with alternate layout schemes is possible; Layout Example has been
+     shown to produce good results and is intended as a guideline.
+
+
+
+
+34      Submit Documentation Feedback                                         Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                              Product Folder Links: TPS2595
+                                                                                                                                 TPS2595
+www.ti.com                                                                                         SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+11.2 Layout Example
+                                  Top Layer
+
+                                  Bottom Layer Ground Plane
+
+                                  Via to Bottom Ground Plane
+
+
+
+
+                                                                    Power Ground
+
+
+
+
+                                              dVdt          1                        8      GND
+
+
+                                                                                                             Bottom
+                                              EN/UVLO       2                        7      ILM              Ground
+                                                                                                              Layer
+                                                                       GND
+
+                                                     IN     3                        6      FLT
+                           VIN                                                                                VOUT
+
+                                                     IN     4                        5      OUT
+                                   *                                                               *
+
+
+                                                     High
+                                                     Frequency
+                                                     Bypass
+                                                     Capacitor
+
+                                                                  Power Ground
+
+       (1)   Optional: Needed only to suppress the transients caused by inductive load switching
+
+                                                          Figure 68. TPS2595xx Layout
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                                  Submit Documentation Feedback     35
+                                                            Product Folder Links: TPS2595
+TPS2595
+SLVSE57C – JUNE 2017 – REVISED APRIL 2018                                                                              www.ti.com
+
+
+12 Device and Documentation Support
+
+12.1 Documentation Support
+12.1.1 Related Documentation
+For related documentation see the following:
+    TPS2595EVM eFuse Evaluation Board
+    TPS2595xx Design Calculation Tool
+
+12.1.2 Related Links
+The table below lists quick access links. Categories include technical documents, support and community
+resources, tools and software, and quick access to order now.
+
+                                                Table 4. Related Links
+                                                                TECHNICAL               TOOLS &                 SUPPORT &
+       PARTS           PRODUCT FOLDER       ORDER NOW
+                                                                DOCUMENTS              SOFTWARE                 COMMUNITY
+     TPS259520              Click here       Click here           Click here             Click here               Click here
+     TPS259521              Click here       Click here           Click here             Click here               Click here
+     TPS259530              Click here       Click here           Click here             Click here               Click here
+     TPS259531              Click here       Click here           Click here             Click here               Click here
+     TPS259533              Click here       Click here           Click here             Click here               Click here
+     TPS259540              Click here       Click here           Click here             Click here               Click here
+     TPS259541              Click here       Click here           Click here             Click here               Click here
+     TPS259570              Click here       Click here           Click here             Click here               Click here
+     TPS259571              Click here       Click here           Click here             Click here               Click here
+     TPS259573              Click here       Click here           Click here             Click here               Click here
+     TPS259525              Click here       Click here           Click here             Click here               Click here
+     TPS259535              Click here       Click here           Click here             Click here               Click here
+
+
+12.2 Receiving Notification of Documentation Updates
+To receive notification of documentation updates, navigate to the device product folder on ti.com. In the upper
+right corner, click on Alert me to register and receive a weekly digest of any product information that has
+changed. For change details, review the revision history included in any revised document.
+
+12.3 Community Resources
+The following links connect to TI community resources. Linked contents are provided "AS IS" by the respective
+contributors. They do not constitute TI specifications and do not necessarily reflect TI's views; see TI's Terms of
+Use.
+TI E2E™ Online Community TI's Engineer-to-Engineer (E2E) Community. Created to foster collaboration
+           among engineers. At e2e.ti.com, you can ask questions, share knowledge, explore ideas and help
+           solve problems with fellow engineers.
+Design Support TI's Design Support Quickly find helpful E2E forums along with design support tools and
+           contact information for technical support.
+
+12.4 Trademarks
+E2E is a trademark of Texas Instruments.
+All other trademarks are the property of their respective owners.
+
+
+
+
+36     Submit Documentation Feedback                                           Copyright © 2017–2018, Texas Instruments Incorporated
+
+                                              Product Folder Links: TPS2595
+                                                                                                                             TPS2595
+www.ti.com                                                                                    SLVSE57C – JUNE 2017 – REVISED APRIL 2018
+
+
+12.5 Electrostatic Discharge Caution
+          This integrated circuit can be damaged by ESD. Texas Instruments recommends that all integrated circuits be handled with
+          appropriate precautions. Failure to observe proper handling and installation procedures can cause damage.
+          ESD damage can range from subtle performance degradation to complete device failure. Precision integrated circuits may be more
+          susceptible to damage because very small parametric changes could cause the device not to meet its published specifications.
+
+12.6 Glossary
+SLYZ022 — TI Glossary.
+   This glossary lists and explains terms, acronyms, and definitions.
+
+13 Mechanical, Packaging, and Orderable Information
+The following pages include mechanical, packaging, and orderable information. This information is the most
+current data available for the designated devices. This data is subject to change without notice and revision of
+this document. For browser-based versions of this data sheet, refer to the left-hand navigation.
+
+
+
+
+Copyright © 2017–2018, Texas Instruments Incorporated                                           Submit Documentation Feedback        37
+                                                        Product Folder Links: TPS2595
+                                                                                                                              PACKAGE OPTION ADDENDUM
+
+  www.ti.com                                                                                                                                                 10-Nov-2025
+
+
+
+
+PACKAGING INFORMATION
+
+ Orderable part number   Status   Material type   Package | Pins   Package qty | Carrier   RoHS      Lead finish/       MSL rating/        Op temp (°C)   Part marking
+                           (1)         (2)                                                  (3)      Ball material      Peak reflow                            (6)
+                                                                                                          (4)                (5)
+
+    TPS259520DSGR        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES20
+   TPS259520DSGR.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES20
+   TPS259520DSGRG4       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES20
+  TPS259520DSGRG4.A      Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES20
+    TPS259520DSGT        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES20
+   TPS259520DSGT.A       Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES20
+    TPS259521DSGR        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES21
+   TPS259521DSGR.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES21
+    TPS259521DSGT        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES21
+   TPS259521DSGT.A       Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES21
+   TPS259521DSGTG4       Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES21
+  TPS259521DSGTG4.A      Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES21
+    TPS259525DSGR        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES25
+   TPS259525DSGR.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES25
+    TPS259525DSGT        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES25
+   TPS259525DSGT.A       Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES25
+    TPS259530DSGR        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES30
+   TPS259530DSGR.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES30
+    TPS259530DSGT        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES30
+   TPS259530DSGT.A       Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES30
+    TPS259531DSGR        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES31
+   TPS259531DSGR.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES31
+   TPS259531DSGRG4       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES31
+  TPS259531DSGRG4.A      Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES31
+    TPS259531DSGT        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES31
+   TPS259531DSGT.A       Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES31
+    TPS259533DSGR        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES33
+   TPS259533DSGR.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES33
+    TPS259533DSGT        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES33
+
+
+                                                                                   Addendum-Page 1
+                                                                                                                             PACKAGE OPTION ADDENDUM
+
+www.ti.com                                                                                                                                                  10-Nov-2025
+
+
+
+
+Orderable part number   Status   Material type   Package | Pins   Package qty | Carrier   RoHS      Lead finish/       MSL rating/        Op temp (°C)   Part marking
+                          (1)         (2)                                                  (3)      Ball material      Peak reflow                            (6)
+                                                                                                         (4)                (5)
+
+ TPS259533DSGT.A        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES33
+ TPS259533DSGTG4        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES33
+TPS259533DSGTG4.A       Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES33
+  TPS259535DSGR         Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES35
+ TPS259535DSGR.A        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES35
+  TPS259535DSGT         Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES35
+ TPS259535DSGT.A        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES35
+  TPS259540DSGR         Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES40
+ TPS259540DSGR.A        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES40
+ TPS259540DSGRG4        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES40
+TPS259540DSGRG4.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES40
+  TPS259540DSGT         Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES40
+ TPS259540DSGT.A        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES40
+  TPS259541DSGR         Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES41
+ TPS259541DSGR.A        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES41
+ TPS259541DSGRG4        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES41
+TPS259541DSGRG4.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES41
+  TPS259541DSGT         Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES41
+ TPS259541DSGT.A        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES41
+  TPS259570DSGR         Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES70
+ TPS259570DSGR.A        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES70
+ TPS259570DSGRG4        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES70
+TPS259570DSGRG4.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES70
+  TPS259570DSGT         Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES70
+ TPS259570DSGT.A        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES70
+  TPS259571DSGR         Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES71
+ TPS259571DSGR.A        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES71
+ TPS259571DSGRG4        Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES71
+TPS259571DSGRG4.A       Active    Production     WSON (DSG) | 8    3000 | LARGE T&R        Yes        NIPDAU        Level-2-260C-1 YEAR    -40 to 125       ES71
+  TPS259571DSGT         Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES71
+ TPS259571DSGT.A        Active    Production     WSON (DSG) | 8     250 | SMALL T&R        Yes        NIPDAU        Level-1-260C-UNLIM     -40 to 125       ES71
+
+
+                                                                                  Addendum-Page 2
+                                                                                                                                                                      PACKAGE OPTION ADDENDUM
+
+       www.ti.com                                                                                                                                                                                                   10-Nov-2025
+
+
+
+
+       Orderable part number          Status     Material type      Package | Pins      Package qty | Carrier        RoHS             Lead finish/              MSL rating/               Op temp (°C)          Part marking
+                                        (1)            (2)                                                             (3)            Ball material             Peak reflow                                           (6)
+                                                                                                                                            (4)                      (5)
+
+          TPS259573DSGR               Active      Production       WSON (DSG) | 8        3000 | LARGE T&R             Yes                NIPDAU           Level-2-260C-1 YEAR              -40 to 125               ES73
+         TPS259573DSGR.A              Active      Production       WSON (DSG) | 8        3000 | LARGE T&R             Yes                NIPDAU           Level-2-260C-1 YEAR              -40 to 125               ES73
+        TPS259573DSGRG4               Active      Production       WSON (DSG) | 8        3000 | LARGE T&R             Yes                NIPDAU           Level-2-260C-1 YEAR              -40 to 125               ES73
+       TPS259573DSGRG4.A              Active      Production       WSON (DSG) | 8        3000 | LARGE T&R             Yes                NIPDAU           Level-2-260C-1 YEAR              -40 to 125               ES73
+          TPS259573DSGT               Active      Production       WSON (DSG) | 8         250 | SMALL T&R             Yes                NIPDAU            Level-1-260C-UNLIM              -40 to 125               ES73
+         TPS259573DSGT.A              Active      Production       WSON (DSG) | 8         250 | SMALL T&R             Yes                NIPDAU            Level-1-260C-UNLIM              -40 to 125               ES73
+
+(1)
+      Status: For more details on status, see our product life cycle.
+
+(2)
+   Material type: When designated, preproduction parts are prototypes/experimental devices, and are not yet approved or released for full production. Testing and final process, including without limitation quality assurance,
+reliability performance testing, and/or process qualification, may not yet be complete, and this item is subject to further changes or possible discontinuation. If available for ordering, purchases will be subject to an additional
+waiver at checkout, and are intended for early internal evaluation purposes only. These items are sold without warranties of any kind.
+
+(3)
+      RoHS values: Yes, No, RoHS Exempt. See the TI RoHS Statement for additional information and value definition.
+
+(4)
+   Lead finish/Ball material: Parts may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead finish/Ball material values may wrap to two lines if the finish value exceeds the maximum
+column width.
+
+(5)
+  MSL rating/Peak reflow: The moisture sensitivity level ratings and peak solder (reflow) temperatures. In the event that a part has multiple moisture sensitivity ratings, only the lowest level per JEDEC standards is shown.
+Refer to the shipping label for the actual reflow temperature that will be used to mount the part to the printed circuit board.
+
+(6)
+      Part marking: There may be an additional marking, which relates to the logo, the lot trace code information, or the environmental category of the part.
+
+Multiple part markings will be inside parentheses. Only one part marking contained in parentheses and separated by a "~" will appear on a part. If a line is indented then it is a continuation of the previous line and the two
+combined represent the entire part marking for that device.
+
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information provided by third parties, and
+makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and continues to take reasonable steps to provide representative
+and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals. TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers
+and other limited information may not be available for release.
+
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+
+
+
+
+                                                                                                          Addendum-Page 3
+                                                                             PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                                                       3-Sep-2026
+
+
+
+TAPE AND REEL INFORMATION
+
+       REEL DIMENSIONS                                                                    TAPE DIMENSIONS
+                                                                                     K0         P1
+
+
+
+                                                                                                                      B0 W
+                                       Reel
+                                     Diameter
+                                                                                  Cavity             A0
+                                                              A0   Dimension designed to accommodate the component width
+                                                              B0   Dimension designed to accommodate the component length
+                                                              K0   Dimension designed to accommodate the component thickness
+                                                              W    Overall width of the carrier tape
+                                                              P1   Pitch between successive cavity centers
+
+
+                                      Reel Width (W1)
+                              QUADRANT ASSIGNMENTS FOR PIN 1 ORIENTATION IN TAPE
+
+                                                                                                     Sprocket Holes
+
+
+                                                Q1       Q2          Q1    Q2
+
+                                                Q3       Q4          Q3    Q4                    User Direction of Feed
+
+
+
+                                                          Pocket Quadrants
+
+
+*All dimensions are nominal
+             Device           Package Package Pins            SPQ        Reel   Reel   A0                   B0         K0     P1     W     Pin1
+                               Type Drawing                            Diameter Width (mm)                 (mm)       (mm)   (mm)   (mm) Quadrant
+                                                                         (mm) W1 (mm)
+    TPS259520DSGR             WSON     DSG           8        3000        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259520DSGR             WSON     DSG           8        3000        178.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+   TPS259520DSGRG4            WSON     DSG           8        3000        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259520DSGT             WSON     DSG           8         250        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259521DSGR             WSON     DSG           8        3000        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259521DSGT             WSON     DSG           8         250        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+   TPS259521DSGTG4            WSON     DSG           8         250        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259525DSGR             WSON     DSG           8        3000        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259525DSGT             WSON     DSG           8         250        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259530DSGR             WSON     DSG           8        3000        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259530DSGT             WSON     DSG           8         250        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259531DSGR             WSON     DSG           8        3000        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+   TPS259531DSGRG4            WSON     DSG           8        3000        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259531DSGT             WSON     DSG           8         250        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259533DSGR             WSON     DSG           8        3000        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+    TPS259533DSGT             WSON     DSG           8         250        180.0           8.4        2.3    2.3       1.15   4.0    8.0     Q2
+
+
+
+
+                                                                     Pack Materials-Page 1
+                                                           PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                         3-Sep-2026
+
+
+
+             Device   Package Package Pins   SPQ       Reel   Reel   A0           B0     K0     P1     W     Pin1
+                       Type Drawing                  Diameter Width (mm)         (mm)   (mm)   (mm)   (mm) Quadrant
+                                                       (mm) W1 (mm)
+   TPS259533DSGTG4    WSON     DSG     8     250       180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259535DSGR     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259535DSGT     WSON     DSG     8     250       180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259540DSGR     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+  TPS259540DSGRG4     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259540DSGT     WSON     DSG     8     250       180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259541DSGR     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+  TPS259541DSGRG4     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259541DSGT     WSON     DSG     8     250       180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259570DSGR     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+  TPS259570DSGRG4     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259570DSGT     WSON     DSG     8     250       180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259571DSGR     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+  TPS259571DSGRG4     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259571DSGT     WSON     DSG     8     250       180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259573DSGR     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+  TPS259573DSGRG4     WSON     DSG     8     3000      180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+    TPS259573DSGT     WSON     DSG     8     250       180.0      8.4      2.3   2.3    1.15   4.0    8.0     Q2
+
+
+
+
+                                                   Pack Materials-Page 2
+                                                                PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                              3-Sep-2026
+
+
+
+ TAPE AND REEL BOX DIMENSIONS
+
+
+
+
+                                                               Width (mm)
+                                                                              H
+                      W
+
+
+
+
+                                                          L
+
+
+
+
+*All dimensions are nominal
+             Device           Package Type   Package Drawing   Pins         SPQ    Length (mm)   Width (mm)   Height (mm)
+     TPS259520DSGR               WSON             DSG           8           3000      210.0        185.0         35.0
+     TPS259520DSGR               WSON             DSG           8           3000      208.0        191.0         35.0
+   TPS259520DSGRG4               WSON             DSG           8           3000      210.0        185.0         35.0
+     TPS259520DSGT               WSON             DSG           8           250       210.0        185.0         35.0
+     TPS259521DSGR               WSON             DSG           8           3000      210.0        185.0         35.0
+     TPS259521DSGT               WSON             DSG           8           250       210.0        185.0         35.0
+   TPS259521DSGTG4               WSON             DSG           8           250       210.0        185.0         35.0
+     TPS259525DSGR               WSON             DSG           8           3000      210.0        185.0         35.0
+     TPS259525DSGT               WSON             DSG           8           250       210.0        185.0         35.0
+     TPS259530DSGR               WSON             DSG           8           3000      210.0        185.0         35.0
+     TPS259530DSGT               WSON             DSG           8           250       210.0        185.0         35.0
+     TPS259531DSGR               WSON             DSG           8           3000      210.0        185.0         35.0
+   TPS259531DSGRG4               WSON             DSG           8           3000      210.0        185.0         35.0
+     TPS259531DSGT               WSON             DSG           8           250       210.0        185.0         35.0
+     TPS259533DSGR               WSON             DSG           8           3000      210.0        185.0         35.0
+     TPS259533DSGT               WSON             DSG           8           250       210.0        185.0         35.0
+   TPS259533DSGTG4               WSON             DSG           8           250       210.0        185.0         35.0
+     TPS259535DSGR               WSON             DSG           8           3000      210.0        185.0         35.0
+
+
+
+
+                                                        Pack Materials-Page 3
+                                                        PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                   3-Sep-2026
+
+
+
+             Device   Package Type   Package Drawing   Pins     SPQ     Length (mm)   Width (mm)   Height (mm)
+    TPS259535DSGT        WSON             DSG           8       250        210.0        185.0         35.0
+    TPS259540DSGR        WSON             DSG           8       3000       210.0        185.0         35.0
+   TPS259540DSGRG4       WSON             DSG           8       3000       210.0        185.0         35.0
+    TPS259540DSGT        WSON             DSG           8       250        210.0        185.0         35.0
+    TPS259541DSGR        WSON             DSG           8       3000       210.0        185.0         35.0
+   TPS259541DSGRG4       WSON             DSG           8       3000       210.0        185.0         35.0
+    TPS259541DSGT        WSON             DSG           8       250        210.0        185.0         35.0
+    TPS259570DSGR        WSON             DSG           8       3000       210.0        185.0         35.0
+   TPS259570DSGRG4       WSON             DSG           8       3000       210.0        185.0         35.0
+    TPS259570DSGT        WSON             DSG           8       250        210.0        185.0         35.0
+    TPS259571DSGR        WSON             DSG           8       3000       210.0        185.0         35.0
+   TPS259571DSGRG4       WSON             DSG           8       3000       210.0        185.0         35.0
+    TPS259571DSGT        WSON             DSG           8       250        210.0        185.0         35.0
+    TPS259573DSGR        WSON             DSG           8       3000       210.0        185.0         35.0
+   TPS259573DSGRG4       WSON             DSG           8       3000       210.0        185.0         35.0
+    TPS259573DSGT        WSON             DSG           8       250        210.0        185.0         35.0
+
+
+
+
+                                                Pack Materials-Page 4
+                                                                  GENERIC PACKAGE VIEW
+DSG 8                                                                   WSON - 0.8 mm max height
+2 x 2, 0.5 mm pitch                                                         PLASTIC SMALL OUTLINE - NO LEAD
+
+
+
+
+               This image is a representation of the package family, actual package may vary.
+                             Refer to the product data sheet for package details.
+
+
+
+
+                                                                                                   4224783/A
+
+
+
+
+                                                    www.ti.com
+                                                                                                            PACKAGE OUTLINE
+DSG0008A                                                          SCALE 5.500
+                                                                                                        WSON - 0.8 mm max height
+                                                                                                            PLASTIC SMALL OUTLINE - NO LEAD
+
+
+
+
+                                                      2.1                           B
+                                  A
+                                                      1.9
+
+
+
+
+                                                                                                            0.32
+                PIN 1 INDEX AREA                                                                            0.18
+                                                                                    2.1
+                                                                                    1.9
+
+                                                                                                                             0.4
+                                                                                                                             0.2
+
+                                                                                                       ALTERNATIVE TERMINAL SHAPE
+                                                                                                                   TYPICAL
+
+
+
+
+                           0.8                                                                 C
+                           0.7
+
+                                                                                                   SEATING PLANE
+                           0.05                                                                                          SIDE WALL
+                                                                                                   0.08 C
+                           0.00                                                                                      METAL THICKNESS
+                                                                                                                            DIM A
+                                                                                                                    OPTION 1     OPTION 2
+                                                                                                                      0.1          0.2
+
+                          EXPOSED
+                       THERMAL PAD                  0.9 0.1                                                                  (DIM A) TYP
+
+
+                                        4                                       5
+
+                               6X 0.5
+
+                         2X
+                                                         9
+                         1.5                                                         1.6 0.1
+
+
+
+
+                                                                                8
+                                        1
+
+                               PIN 1 ID                                                        0.32
+                                                                                          8X
+                            (45 X 0.25)                    0.4                                 0.18
+                                                        8X
+                                                           0.2                                  0.1    C A B
+                                                                                                0.05    C
+
+
+                                                                                                                             4218900/E 08/2022
+
+NOTES:
+
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+   per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. The package thermal pad must be soldered to the printed circuit board for thermal and mechanical performance.
+
+
+
+
+                                                                  www.ti.com
+                                                                                       EXAMPLE BOARD LAYOUT
+DSG0008A                                                                                         WSON - 0.8 mm max height
+                                                                                                          PLASTIC SMALL OUTLINE - NO LEAD
+
+
+
+
+                                                                     (0.9)            ( 0.2) VIA
+                                       8X (0.5)
+                                                                                      TYP
+                                                  1
+                                                                                            8
+
+
+                                   8X (0.25)
+                                                                                                (0.55)
+                                         SYMM                           9
+                                                                                                         (1.6)
+
+
+                                       6X (0.5)
+                                                                                            5
+                                                  4
+
+                                 (R0.05) TYP                        SYMM
+
+                                                                     (1.9)
+
+                                                      LAND PATTERN EXAMPLE
+                                                                  SCALE:20X
+
+
+
+
+                                               0.07 MAX                                                    0.07 MIN
+                                               ALL AROUND                                                  ALL AROUND
+
+
+
+
+                    SOLDER MASK                       METAL                    METAL UNDER                        SOLDER MASK
+                    OPENING                                                    SOLDER MASK                        OPENING
+                                    NON SOLDER MASK
+                                                                                                   SOLDER MASK
+                                        DEFINED
+                                                                                                     DEFINED
+                                      (PREFERRED)
+
+                                                             SOLDER MASK DETAILS
+
+
+
+                                                                                                                            4218900/E 08/2022
+
+NOTES: (continued)
+
+4. This package is designed to be soldered to a thermal pad on the board. For more information, see Texas Instruments literature
+   number SLUA271 (www.ti.com/lit/slua271).
+5. Vias are optional depending on application, refer to device data sheet. If any vias are implemented, refer to their locations shown
+   on this view. It is recommended that vias under paste be filled, plugged or tented.
+
+
+
+
+                                                                       www.ti.com
+                                                                               EXAMPLE STENCIL DESIGN
+DSG0008A                                                                                 WSON - 0.8 mm max height
+                                                                                                PLASTIC SMALL OUTLINE - NO LEAD
+
+
+
+
+                                  8X (0.5)                       SYMM               METAL
+                                             1
+                                                                                            8
+
+                             8X (0.25)
+                                                                                                (0.45)
+                                  SYMM
+                                                                      9
+
+
+
+                                  6X (0.5)                                                           (0.7)
+
+                                                                                            5
+                                             4
+
+                            (R0.05) TYP                           (0.9)
+
+                                                                  (1.9)
+
+
+                                                    SOLDER PASTE EXAMPLE
+                                                  BASED ON 0.125 mm THICK STENCIL
+
+                                                       EXPOSED PAD 9:
+                                     87% PRINTED SOLDER COVERAGE BY AREA UNDER PACKAGE
+                                                          SCALE:25X
+
+
+
+
+                                                                                                                  4218900/E 08/2022
+
+NOTES: (continued)
+
+6. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+   design recommendations.
+
+
+
+
+                                                                 www.ti.com
+                                         IMPORTANT NOTICE AND DISCLAIMER
+TI PROVIDES TECHNICAL AND RELIABILITY DATA (INCLUDING DATASHEETS), DESIGN RESOURCES (INCLUDING REFERENCE
+DESIGNS), APPLICATION OR OTHER DESIGN ADVICE, WEB TOOLS, SAFETY INFORMATION, AND OTHER RESOURCES “AS IS”
+AND WITH ALL FAULTS, AND DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION ANY
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD
+PARTY INTELLECTUAL PROPERTY RIGHTS.
+These resources are intended for skilled developers designing with TI products. You are solely responsible for (1) selecting the appropriate
+TI products for your application, (2) designing, validating and testing your application, and (3) ensuring your application meets applicable
+standards, and any other safety, security, regulatory or other requirements.
+These resources are subject to change without notice. TI grants you permission to use these resources only for development of an
+application that uses the TI products described in the resource. Other reproduction and display of these resources is prohibited. No license
+is granted to any other TI intellectual property right or to any third party intellectual property right. TI disclaims responsibility for, and you fully
+indemnify TI and its representatives against any claims, damages, costs, losses, and liabilities arising out of your use of these resources.
+TI’s products are provided subject to TI’s Terms of Sale, TI’s General Quality Guidelines, or other applicable terms available either on
+ti.com or provided in conjunction with such TI products. TI’s provision of these resources does not expand or otherwise alter TI’s applicable
+warranties or warranty disclaimers for TI products. Unless TI explicitly designates a product as custom or customer-specified, TI products
+are standard, catalog, general purpose devices.
+TI objects to and rejects any additional or different terms you may propose.
+IMPORTANT NOTICE
+
+                                                Copyright © 2026, Texas Instruments Incorporated
+                                                                Last updated 10/2025
+
