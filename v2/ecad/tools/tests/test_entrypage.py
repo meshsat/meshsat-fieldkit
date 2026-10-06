@@ -61,6 +61,20 @@ ADD = "v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md"
 REM = "v2/docs/records/l4close/REMAINING-ENGINEERING.md"
 ANX = "v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md"
 S, H, B, F = "S", "H", "SH", ""   # on the supplier page, on START-HERE, on both, a fact read in the source only
+# Restated by W33 (6 October 2026). Basis: W32's read of the adoption (`<worktrees>/_runs/claude/w32read/REPORT-AS-RECEIVED.md`),
+# finding 2 (the Packaged row named dd1aed00 as "the commit every file of this revision is taken from", while RESULT.md and both
+# pages' section 0 are absent at dd1aed00) and its citation finding (the owner-file lines bound to 6fe398e9 are one line later at
+# dd1aed00, part 26's inserted row), with the coordinator's rulings 2 and 6 in W33's brief. The revisions table names four
+# revisions: Tested (the promoted commit), Adopted (the adoption commit), Packaged (the commit the supplier delta's README names in
+# its header, cut after the adoption, so no page can carry it) and Reviewed. The owner-file citations of section 0 are written
+# `dd1aed00:<path>:N` and read at the tested revision; the QUOTES rows of OWN below stay at WRITTEN_AT as history and are read
+# again at the bound line (OWN_BOUND).
+TESTED = "dd1aed00d0a0a521063b5792550bc510c4707c59"       # the promoted revision the suite and the gate ran on
+ADOPTED = "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec"      # the adoption commit (main after the adoption, 6 October 2026)
+PACKAGED_CELL = "the commit the supplier delta's README names in its header"
+PACKAGED_WHAT = "cut after the adoption; the README states its difference from the tested revision and which checks cover it"
+OWN_BOUND = {844: 845, 470: 471, 480: 481, 483: 484, 485: 486, 786: 787}   # a line at WRITTEN_AT -> the same words at TESTED
+BOUND_TOK = re.compile(r"`([0-9a-f]{8,40}):(v2/[^`\s:]+):(\d+)(?:-(\d+))?`")
 
 # (file, first line, last line, the words, the pages that quote them); lines are at WRITTEN_AT
 QUOTES = (
@@ -339,6 +353,10 @@ def t_the_placeholder_is_literal_and_alone():
         for label in ("Tested", "Packaged"):
             cell = _row(s0, label)
             assert cell is not None, "%s section 0 has no %s row" % (p, label)
+            if label == "Packaged" and not held:   # W33: filled, the Packaged row is the README's commit, never a sha here
+                errs = _packaged_errors(s0)
+                assert not errs, "%s: %s" % (p, errs)
+                continue
             got = _commit_cell(cell)
             assert got, "%s: the %s revision is neither the literal placeholder nor a commit: %s" % (p, label, cell)
             assert (got == PLACEHOLDER) == held, "%s: the %s revision reads %s while the pages %s the placeholder elsewhere" % (
@@ -349,24 +367,81 @@ def t_the_placeholder_is_literal_and_alone():
 
 
 def t_a_filled_placeholder_names_one_promoted_commit_and_the_adopted_files():
-    """Inactive while the placeholder stands. Once the coordinator fills it, the Tested and Packaged rows of both pages name one
-    commit; it exists, it descends from the reviewed commit and from the commit the text was written from, and the files the
-    pages call 'at adoption' exist, with LAYER-STATUS's blocks headed After set 30."""
+    """Inactive while the placeholder stands. Once the coordinator fills it, the Tested rows of both pages name one commit, the
+    promoted one; it exists, it descends from the reviewed commit and from the commit the text was written from, and the files the
+    pages call 'at adoption' exist, with LAYER-STATUS's blocks headed After set 30. Restated by W33 (6 October 2026, W32's finding 2
+    and the coordinator's ruling 2): the Packaged row names the commit by the supplier delta's README (cut after the adoption), and
+    the Adopted row of both pages names the adoption commit, which descends from the tested one."""
     if PLACEHOLDER in _page(SUPPLIER):
         assert PLACEHOLDER in _page(START)
         return
-    got = set()
-    for p in PAGES:
-        for label in ("Tested", "Packaged"):
-            got.add(_commit_cell(_row(_section0(p), label)))
+    got, adopted = set(), set()
+    for p in PAGES:   # W33: Tested names the promoted commit; Adopted the adoption commit; Packaged the README's commit
+        got.add(_commit_cell(_row(_section0(p), "Tested")))
+        adopted.add(_row(_section0(p), "Adopted"))
+        errs = _packaged_errors(_section0(p))
+        assert not errs, "%s: %s" % (p, errs)
     assert len(got) == 1, "the pages name more than one integrated commit: %s" % sorted(got)
     c = got.pop()
+    assert c == TESTED, "the Tested row names %s, not the promoted commit" % c
     assert _git("cat-file", "-e", c + "^{commit}").returncode == 0, "%s is not a commit of this repository" % c
     for anc in (REVIEWED, WRITTEN_AT):
         assert _git("merge-base", "--is-ancestor", anc, c).returncode == 0, "%s does not descend from %s" % (c, anc[:8])
+    assert adopted == {"`%s` (`%s`)" % (ADOPTED[:8], ADOPTED)}, "the Adopted rows read %s" % sorted(str(a) for a in adopted)
+    assert _git("cat-file", "-e", ADOPTED + "^{commit}").returncode == 0, "the adoption commit is not in this repository"
+    assert _git("merge-base", "--is-ancestor", c, ADOPTED).returncode == 0, "the adoption commit does not descend from the tested one"
     for f in AT_ADOPTION:   # W30: adopted in the tree, or landing with its adoption branch
         assert landing_error(f) is None, "filled, but %s is not adopted: %s" % (f, landing_error(f))
     assert "**After set 30" in open(os.path.join(ROOT, LS), encoding="utf-8").read(), "filled, but LAYER-STATUS has no After set 30"
+
+
+def _packaged_errors(s0):
+    """W33: the Packaged row names the commit by the README that carries it (cut after the adoption), never a sha on the page."""
+    m = re.search(r"^\| Packaged \| (.+?) \| (.+?) \|$", s0, re.M)
+    if not m:
+        return ["no Packaged row"]
+    errs = []
+    if m.group(1) != PACKAGED_CELL:
+        errs.append("the Packaged row reads %r, not %r" % (m.group(1)[:60], PACKAGED_CELL))
+    if m.group(2) != PACKAGED_WHAT:
+        errs.append("the Packaged row's definition reads %r" % m.group(2)[:60])
+    if re.search(r"`[0-9a-f]{8,40}`", m.group(0)):
+        errs.append("the Packaged row names a commit")
+    return errs
+
+
+def _bound_errors(s0, flag, at=None):
+    """W33: section 0 cites the owner-instruction file only as `TESTED[:8]:<path>:N`; each QUOTES row of OWN quoted on this page
+    is cited at its bound line, whose words are those of the row; no bare `path:N` citation of the file is left."""
+    at = at or (lambda n: _at(OWN, TESTED)[n - 1] if 1 <= n <= len(_at(OWN, TESTED)) else "")
+    errs = []
+    if re.search(r"`%s:\d+" % re.escape(OWN), s0):
+        errs.append("a bare citation of the owner file is left")
+    cited = set()
+    for m in BOUND_TOK.finditer(s0):
+        if m.group(2) != OWN:
+            continue
+        if not TESTED.startswith(m.group(1)):
+            errs.append("the owner file is cited at %s, not at the tested revision" % m.group(1))
+        cited.add(int(m.group(3)))
+    for f, a, b, words, pages in QUOTES:
+        if f != OWN or flag not in pages:
+            continue
+        n = OWN_BOUND[a]
+        if n not in cited:
+            errs.append("line %d (%d at %s) is not cited" % (n, a, WRITTEN_AT[:8]))
+        elif _norm(words) not in _norm(at(n)):
+            errs.append("line %d at %s does not read %r" % (n, TESTED[:8], words[:40]))
+    extra = cited - set(OWN_BOUND[a] for f, a, b, w, pg in QUOTES if f == OWN and flag in pg)
+    if extra:
+        errs.append("bound lines with no quotation row: %s" % sorted(extra))
+    return errs
+
+
+def t_the_owner_file_citations_are_bound_to_the_tested_revision():
+    for p, flag in ((START, "H"), (SUPPLIER, "S")):
+        errs = _bound_errors(_section0(p), flag)
+        assert not errs, "%s: %s" % (p, errs)
 
 
 # -------------------------------------------------------------------------------------------------------- the content
@@ -473,6 +548,27 @@ def t_the_checkers_refuse_their_defects():
     # the commit cell takes the literal placeholder or a hex commit, nothing else
     assert _commit_cell("`__INTEGRATED__`") == PLACEHOLDER and _commit_cell("`4d0ff8a2` (`%s`)" % REVIEWED) == "4d0ff8a2"
     assert not _commit_cell("`INTEGRATED`") and not _commit_cell("`the promoted commit`")
+    # W33: the Packaged row in the README form passes; a sha, another wording or a missing definition is refused
+    ok = "| Packaged | %s | %s |" % (PACKAGED_CELL, PACKAGED_WHAT)
+    assert not _packaged_errors(ok)
+    assert _packaged_errors("| Packaged | `%s` | the commit every file of this revision is taken from |" % TESTED)
+    assert _packaged_errors(ok.replace("README names", "README states"))
+    assert _packaged_errors(ok.replace(PACKAGED_WHAT, "cut after the adoption"))
+    # W33: an owner-file citation at its bound line passes; the old line at the tested revision, a bare one or another revision fails
+    words = [q for q in QUOTES if q[0] == OWN and q[1] == 844][0][3]
+    lines = {845: words}
+    at = lambda n: lines.get(n, "")  # noqa: E731
+    good = "(`%s:%s:845`)" % (TESTED[:8], OWN)
+    one = [r for r in QUOTES if r[0] == OWN and r[1] == 844]
+    saved = list(QUOTES)
+    try:
+        globals()["QUOTES"] = tuple(one)
+        assert not _bound_errors(good, "H", at)
+        assert _bound_errors("(`%s:%s:844`)" % (TESTED[:8], OWN), "H", at), "the unshifted line passed"
+        assert _bound_errors("(`%s:845`)" % OWN, "H", at), "a bare owner-file citation passed"
+        assert _bound_errors("(`%s:%s:845`)" % (WRITTEN_AT[:8], OWN), "H", at), "a citation at another revision passed"
+    finally:
+        globals()["QUOTES"] = tuple(saved)
 
 
 for _n in [n for n in list(globals()) if n.startswith("t_")]:

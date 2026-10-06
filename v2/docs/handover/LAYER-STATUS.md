@@ -21,7 +21,10 @@ block carries dated notes read at the integration's committed tip `c4492dd3` on 
 commit 2b `d83d9f2d`, record l6r2's correction `33efca07` and the merge `c4492dd3` of W19's regression test `2d4f6df5`). Their
 citations read `<commit>:<path>:<line>` at the commit they name, and a code span right after one is the words quoted from that line;
 `v2/ecad/tools/tests/test_lstat32.py` holds them. The candidate commit and the promoted revision do not exist yet (Layer 4's chain
-below); nothing here is read at them. Since `7070f106` the integration also carries record l5pwr's S27-B6 restatement (`6ab17e21`,
+below); nothing here is read at them. Dated note (W33, 6 October 2026, after the adoption at `836f711b`, 11:25 CEST): both exist
+since, the candidate commit and the promoted revision being `dd1aed00` (Layer 4's chain below), main fast-forwarded to it at the
+promotion of 6 October 2026, 10:36:57 CEST; so the promotion that the head paragraph above writes as the coordinator's to make is
+made, a DESK candidate; these notes stay read at `c4492dd3`. Since `7070f106` the integration also carries record l5pwr's S27-B6 restatement (`6ab17e21`,
 merged at `3c118b43`) and record l6r2's composition correction (`33efca07`); this fold adds no block for Layers 5 and 6. A note marked
 prepared for the next set, not in the candidate, names a branch and its tip that neither the integration nor the candidate carries.
 **The next set's inputs** (W10's plan, `<worktrees>/_runs/int31/PLAN.draft.md:67,75-76,101,136,244-245`, re-read on 2b; summarised in
@@ -393,11 +396,13 @@ its "After set 29" or H2 row, and where a row differs from a record it cites, th
   - `53a68c7c`: P0-7's draft added to record l8r2's board E composition, where L4-E9's table puts it (R-240);
   - `3088ee79`: TP-SOLAR's acceptance quotes carry P1-1's narrowing to E-1 and R-189's replacement by S3 and S4.
 
-  The promoted DESK candidate carries the 13 as UNREVIEWED CHANGES: `b8912eef:v2/docs/records/int30/RESULT.draft3.md:87` `None of
+  The promoted DESK candidate carries the 13 as UNREVIEWED CHANGES (the 13 of W15's range `4d0ff8a2..6bc4424e`, its 38 commits; with
+  commit 2b, 14 of the 45 commits of `4d0ff8a2..dd1aed00`, the dated note at the end of this item): `b8912eef:v2/docs/records/int30/RESULT.draft3.md:87` `None of
   these 13 was checked by an independent checker after cx46.`, `b8912eef:v2/docs/records/int30/RESULT.draft3.md:90` `never as checked,
   never credited, each owing its own targeted verification before any credit`. W15's range ends at `6bc4424e`; W18 reads commit 2b
   from its diff and names record l8r2's gndret output in it as not a binding-only change (W16's finding 2, Layer 9 below); the commits
-  after 2b are in no classification draft yet. Dated at the adoption (W27, 6 October 2026): at `dd1aed00`: 14 of 45 (`records/int30/CLASSIFICATION.md` rows 39 to 45; `records/int30/RESULT.md` section 2).
+  after 2b were in no classification draft yet at `c4492dd3` (a draft state until the adoption at `836f711b`, 11:25 CEST, whose
+  classification classes them as rows 39 to 45). Dated at the adoption (W27, 6 October 2026): at `dd1aed00`: 14 of 45 (`records/int30/CLASSIFICATION.md` rows 39 to 45; `records/int30/RESULT.md` section 2).
 - Remaining engineering. The ledger at the tip carries cx46's twelve, `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:100`
   `The twelve cx46 findings NOT CLOSED, each a REMAINING ENGINEERING item`; D-10 as E-1,
   `c4492dd3:v2/docs/records/l4close/REMAINING-ENGINEERING.md:499` `HO-F: D-10 / E-1, the solar guard-on failing cases F1 to F4 and the
@@ -420,7 +425,7 @@ its "After set 29" or H2 row, and where a row differs from a record it cites, th
   `33efca07` and `2d4f6df5` above; 2 and 4 to 7 notes for the next set; `b8912eef:v2/docs/records/int30/RESULT.draft3.md:231` `Nothing
   here blocks the freeze on what was read`. It is a reviewer's reading of commit 2b, not a verdict on the power design.
 
-**The Layer 4 DESK gate:** the coordinator's judgement of 6 October 2026, 10:45 CEST, on the promoted revision `dd1aed00`: Layer 4's DESK gate NOT PASSED; engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6, where the judgement's text is held at the adoption on two sentences for the coordinator to restate).
+**The Layer 4 DESK gate:** the coordinator's judgement of 6 October 2026, 10:45 CEST, on the promoted revision `dd1aed00`: Layer 4's DESK gate NOT PASSED; engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6, where the coordinator inserted the judgement's text whole in the adoption commit `836f711b` at 11:25 CEST, after W27 held it on two sentences while drafting).
 
 **The completion claims, each reported apart** (the five of the owner's instruction of 2 October 2026,
 `v2/docs/handover/OWNER-INSTRUCTION-2026-10-02.md:45-51`, with power-design closure reported separately,
@@ -428,6 +433,8 @@ its "After set 29" or H2 row, and where a row differs from a record it cites, th
 
 - documents and editable artifacts: on main as a DESK candidate (the coordinator's promotion; at this draft's base `7070f106` the
   candidate is on its own branch);
+  dated note (W33, 6 October 2026): the base of a draft until the adoption at `836f711b`, 11:25 CEST; main was fast-forwarded to the
+  candidate `dd1aed00` at its promotion (Layer 4's chain above);
 - design reviewed and accepted: NO (cx45 and cx46 above; no independent check accepts the candidate);
 - implemented: NONE (`records/l4e9/L4-POWER-ARCHITECTURE.md:401`, every row of `records/l4e9/L4-POWER-ARCHITECTURE.md:451-516`);
 - qualified: NONE (`records/l4close/REMAINING-ENGINEERING.md:15`);
@@ -441,6 +448,10 @@ release separately.`; the words W18's draft 3 gives them, `b8912eef:v2/docs/reco
 - engineering-handover readiness: NOT YET ASSESSED, pending the coordinator's Layer 4 DESK-gate assessment, queue item Q-05, on the
   promoted revision (`b8912eef:v2/docs/records/int30/RESULT.draft3.md:306` `the coordinator's Layer 4 DESK-gate assessment (queue item
   Q-05) on the promoted revision decides it`); the DESK gate's cell above keeps its placeholder;
+  dated note (W33, 6 October 2026, after the adoption at `836f711b`, 11:25 CEST): assessed since, by the coordinator at 10:45 CEST on
+  the promoted revision `dd1aed00`, READY AS A DESK PACKAGE OF OPEN ITEMS, which the DESK gate's cell above carries in place of its
+  placeholder (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6); NOT YET ASSESSED and the placeholder are this note's
+  state at `c4492dd3`;
 - power-design closure at the integration's tip: BLOCKED (`c4492dd3:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005` `the
   power-design closure gate is BLOCKED`; `c4492dd3:v2/docs/records/l9t5/l9t5_connected.out:4` `No completion claim: power-design
   closure and fabrication release stay BLOCKED.`);
@@ -481,7 +492,8 @@ above stays as Slot I wrote it at `7070f106`):**
   `revision 2, 5 October 2026, 16:50 CEST`; its revision 3, draft 3 on fnd/w17p0list at `c0f2183b`, marks the rows changed after the
   review, P0-1's B-PA1 limit and PRINTED-rows band among them, `c0f2183b:v2/docs/records/l4close/P0-POWER-LIST.rev3.draft3.md:10`
   `Rows whose figures or states changed after the review`; drafted for the coordinator's adoption at promotion (queue item Q-04a), not
-  in the integration.
+  in the integration. Dated note (W33, 6 October 2026): a draft until the adoption at `836f711b`, 11:25 CEST, which adopts revision 3
+  as `records/l4close/P0-POWER-LIST.md` and keeps revision 2 as `records/l4close/P0-POWER-LIST.rev2-2026-10-05.md`.
 - 4.13 to 4.18 (b), prepared for the next set, not in the candidate: fnd/w11l9t5 at `85b6f258` restates the connected generator's T10
   row, `85b6f258:v2/docs/records/l9t5/l9t5_connected.py:1002` `revision X HELD with no admission route`, with the output left as
   committed, which at the tip still reads `c4492dd3:v2/docs/records/l9t5/l9t5_connected.out:350` `rev X on V-B20` (W12's K-26,

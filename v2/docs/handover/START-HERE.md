@@ -94,6 +94,8 @@ Added 6 October 2026 under MESHSAT-1357. A receiving company starts at the suppl
 whose section 0 states this revision in full; this section is the short form for a reader who opens this page first, and where the
 two differ the entry page governs. `path:N` is line N of that file at commit `6fe398e9`
 (`6fe398e9f624160429411e975c26564e553714d3`), the commit this section was written from; `:N` repeats the path cited just before it.
+The owner-instruction file is cited as `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:N`, line N at the tested revision `dd1aed00`:
+part 26's row, filed after `6fe398e9`, moved every later line of that file by one (dated note, W33, 6 October 2026).
 `dd1aed00d0a0a521063b5792550bc510c4707c59` is the promoted commit (main was fast-forwarded to it on 6 October 2026), filled in at the adoption. Prototype framing: nothing in the kit
 has been built, bought, powered or measured.
 
@@ -101,17 +103,18 @@ has been built, bought, powered or measured.
 
 | Revision | Commit | What it is |
 |---|---|---|
-| Tested | `dd1aed00d0a0a521063b5792550bc510c4707c59` | the commit the gated release suite ran on (the package's `README.md`, section "What was tested, and how") |
-| Packaged | `dd1aed00d0a0a521063b5792550bc510c4707c59` | the commit every file of this revision is taken from |
+| Tested | `dd1aed00d0a0a521063b5792550bc510c4707c59` | the promoted revision: the commit the gated release suite and the promotion gate ran on (the package's `README.md`, section "What was tested, and how") |
+| Adopted | `836f711b` (`836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`) | the adoption commit (6 October 2026, 11:25 CEST), to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 30 records as adopted |
+| Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its difference from the tested revision and which checks cover it |
 | Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate cx46 read (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`) |
 
-The owner's binding rule (part 25, `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:844`): "Use the existing integration gate to
+The owner's binding rule (part 25, `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:845`): "Use the existing integration gate to
 record the reviewed and integrated revisions and the intervening changes. If changes are only verified bindings or presentation, record
 that equivalence. If they change a circuit, assumption, model, limit or substantive claim, the affected result needs targeted
 verification before being credited. Passing the software suite alone cannot transfer an engineering verdict to altered claims." The
 integration record `v2/docs/records/int30/RESULT.md` binds the two revisions, and `v2/docs/records/int30/CLASSIFICATION.md` classifies
 every commit between them. What the promoted revision is, and is not, in the integration record's words (its sections 1, 2 and 6):
-"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit".
+"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`).
 
 **The states, each apart.**
 
@@ -159,7 +162,7 @@ power-design closure gate is BLOCKED**" (`v2/docs/records/l4e9/L4-POWER-ARCHITEC
 responsible personnel, deliverables, exclusions, cost and schedule (the constitution's section 11,
 `v2/docs/EXECUTION-CONSTITUTION.md:94`); to take over the remaining engineering as the ledger scopes it; to validate the annex's four
 items. Nothing is ordered or funded: "We are not undertaking or funding the physical validation now." (the owner's part 19,
-`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:470`). Not asked: to fabricate, assemble or order a board from the package; to read a
+`dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:471`). Not asked: to fabricate, assemble or order a board from the package; to read a
 desk check, an AI review or a passing suite as sign-off or qualification; to run a proposed procedure unchanged; to treat remaining
 engineering as qualification-only; to change a requirement or adopt the Saft MP 176065 xtd PROPOSAL without the owner's ruling.
 

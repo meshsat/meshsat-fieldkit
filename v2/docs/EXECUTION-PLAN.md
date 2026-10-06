@@ -1707,10 +1707,11 @@ three skips were board gates' outputs absent from the worktree's evidence; the s
 **What it closes:** no power item. Set 30 integrates the P0 power candidate's records after cx46 as a DESK candidate; the 14
 commits after the review that change reviewed inputs are UNREVIEWED CHANGES, credited nothing (W15's 13 of 38 to `6bc4424e`; at `dd1aed00`: 14 of 45 (`records/int30/CLASSIFICATION.md` rows 39 to 45; `records/int30/RESULT.md` section 2)).
 
-**The three claims, apart, and the gate (the coordinator's judgement of 10:45 CEST, one count corrected at 11:15):** engineering-handover readiness READY AS A
+**The three claims, apart, and the gate (the coordinator's judgement of 10:45 CEST, one count corrected at about 10:59 by the clock, inserted whole in the assessment in the adoption commit `836f711b` at 11:25 CEST):** engineering-handover readiness READY AS A
 DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED. Layer 4's DESK gate NOT PASSED: its premise,
 every desk-fixable defect corrected and independently checked, is not met (twelve corrections NOT CLOSED under an ended method, the
-receiving company's remaining engineering; fourteen unreviewed changes after cx46, seven of them not only narrowing).
+receiving company's remaining engineering; fourteen unreviewed changes after cx46 over `4d0ff8a2..dd1aed00`, seven of them not only
+narrowing).
 
 **Pending:** the owner's decision on Layer 5. Part 19 opens it at Layer 4's DESK gate; with the gate NOT PASSED, Layers 5 to 12 stay
 paused unless the owner rules that a handover-ready desk package with its remaining engineering named opens the next layer (reported,
@@ -1718,7 +1719,8 @@ not asked). Set 31 is prepared on branches (record text), not in this revision.
 
 **The records:** `records/l4close/P0-POWER-LIST.md` (revision 3, adopted on `dd1aed00`; revision 2 kept as
 `records/l4close/P0-POWER-LIST.rev2-2026-10-05.md`); `records/l4close/L4-DESK-GATE-ASSESSMENT.md` (the assessment on `dd1aed00`,
-the coordinator's judgement held at the adoption on two sentences); `records/l4close/REMAINING-ENGINEERING.md` (the ledger);
+the coordinator's judgement inserted whole in its section 6 in the adoption commit `836f711b` at 11:25 CEST, after W27 held it on two
+sentences while drafting); `records/l4close/REMAINING-ENGINEERING.md` (the ledger);
 `records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md` (the annex); `records/int30/RESULT.md` and
 `records/int30/CLASSIFICATION.md` (adopted on `fnd/adopt30a`); `handover/LAYER-STATUS.md` (Layer 4's block).
 
