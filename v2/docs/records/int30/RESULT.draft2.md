@@ -10,11 +10,17 @@ promotes nothing and changes no verdict. **Power-design closure: BLOCKED. Fabric
 the coordinator's assessment, kept apart from both (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:798`;
 `v2/docs/EXECUTION-CONSTITUTION.md:23`). Prototype framing: nothing in the kit is built, bought, powered or measured.
 
+**After this draft's base.** The coordinator's note of 01:56 CEST (`<worktrees>/_runs/claude/recpack/INBOX.md`): the candidate branch
+has merged Slot H's set 31 record (`6fe398e9`, carrying `bca7b0dc`, `14082416` and `17ce29d5`), because the release suite on the
+applied change list needs the page, the generator's data and the `test_l4e9` expectations that match it; the final integrated revision
+is not yet known (the cascade regenerates again, a re-key follows). Citations stay at `bbba3e53`; the four commits are classified in
+section 2 (rows S1 to S4), and where the merge changes a statement this draft cites, section 5 names it with the line at `6fe398e9`.
+
 **What governs this page.** The owner's part 25 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:844`): "Use the existing integration
 gate to record the reviewed and integrated revisions and the intervening changes. If changes are only verified bindings or presentation,
 record that equivalence. If they change a circuit, assumption, model, limit or substantive claim, the affected result needs targeted
 verification before being credited. Passing the software suite alone cannot transfer an engineering verdict to altered claims." The
-freeze order is the constitution's section 9 (`v2/docs/EXECUTION-CONSTITUTION.md:105`); the coordinator's runbook is outside the tree
+freeze order is the constitution's section 9 (`v2/docs/EXECUTION-CONSTITUTION.md:76`); the coordinator's runbook is outside the tree
 (`<worktrees>/_runs/int30/PLAN.md`, sections 4 to 6).
 
 **Citations and placeholders.** `path:N` (or `N-M`) is a line of that file at `bbba3e53` unless a revision is named; a bare `:N` is a
@@ -32,6 +38,7 @@ path and line range at `bbba3e53`, the quoted anchors on their lines and every c
 | THE P0 ROUND'S BASE: `fnd/p0base` | `e132db0e73da723cf18d32788aa8c9252c0bcfbe` | none of its own; cx45's JSON names it as its base_commit | `v2/docs/records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:8` |
 | THE FIRST DRAFT'S BASE (Slot D) | `1c6d56f5c4208349d382ecdb5c34ffaa4bb0037e` | none | its commit subject: "checkpoint of the disposition" |
 | THE CANDIDATE, integration commit 2a: THIS DRAFT'S BASE | `bbba3e53e396d3fe0f8ddd2f38d0c169bcc99c45` | none: no check has read it | `v2/docs/records/l9t5/README.md:1` ("CANDIDATE READY 3: ac8efbca"); section 2 rows 12 to 18 |
+| THE CANDIDATE BRANCH'S TIP at this writing: set 31 merged | `6fe398e9f624160429411e975c26564e553714d3` | none | section 2, rows S1 to S4 |
 | COMMIT 2b: the integration's regeneration | `__COMMIT2B__` | none | section 3 |
 | THE RE-KEY: record l4e7's results cache | `__REKEY__` | none | section 2, row P2 |
 | INTEGRATED: the revision promoted | `__INTEGRATED__` | none; the suite's pass transfers no engineering verdict (part 25 above) | section 6 |
@@ -48,8 +55,9 @@ cx46's items, as given (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-
 every file it touches and, for a merge, `git show --remerge-diff`; the class comes from what the diff changes, never from the subject
 line. Rows 1 to 11 are the first draft's (fnd/int30rec at 7930ae68, its section 2), adopted after this worker's read of each file list
 and of the four merges' remerge diffs (none carries resolution content except row 9's heading, as the first draft says); their line
-citations are re-pointed to `bbba3e53` (none of rows 1 to 11 moved). Rows 12 to 18 are this worker's. Rows M1 to M4 are on main and not
-in this history at `bbba3e53`; they enter with the merge of main that the runbook's fast-forward needs. Rows P1 and P2 are the
+citations are re-pointed to `bbba3e53` (none of rows 1 to 11 moved). Rows 12 to 18 are this worker's. Rows S1 to S4 came after this
+draft's base on the candidate branch (the set 31 merge). Rows M1 to M4 are on main and not in this history at `bbba3e53`; they enter
+with the merge of main that the runbook's fast-forward needs. A citation at another revision is written `<sha>:path:N`. Rows P1 and P2 are the
 coordinator's placeholders, written from his notes (`<worktrees>/_runs/int30/RESULT-classification.draft.md`, rows `__COMMIT2__` and
 `__REKEY__`) and his diff read (`<worktrees>/_runs/int30/diffread-2b.txt`).
 
@@ -72,19 +80,24 @@ data and L4-E9's output (section 2, rows 17 and 18; section 5, item 7). Oldest f
 | 11 | `1c6d56f5c4208349d382ecdb5c34ffaa4bb0037e` | `0b33a1f9` | `L9T5-CASES.md`, the l9t5 README, `l9t5_f01.py`/`.out` | the band's disclaimer reworded to "which is NOT a bound on the cap" (`v2/docs/records/l9t5/l9t5_f01.out:134`); the case page's row 1 brought to the 6.351 A of row 5 (`v2/docs/records/l9t5/L9T5-CASES.md:49`); README line 1 | (a) presentation | no figure moved; two digest pins left stale, re-pinned by row 14 |
 | 12 | `a1b68e75459766cfa79a082e63791744bec87d73` | `1c6d56f5` | `v2/docs/records/l4close/REMAINING-ENGINEERING.md` (new, 646 lines) | the remaining-engineering ledger's checkpoint: record text gathering filed verdicts; it "designs nothing, computes no new figure, consumes no review and changes no verdict" (`v2/docs/records/l4close/REMAINING-ENGINEERING.md:11-16`) | (a) record text, a new file | no script, output, predicate or existing test touched |
 | 13 | `6d9ec491d0a178c0e163f5f8d0f041ec64f884b6` | `a1b68e75` | the ledger (+15, -12) and `v2/ecad/tools/tests/test_remeng.py` (new, 238 lines) | the ledger finished; a new test module over it (no existing expectation changed) | (a) record text and its new test | as row 12 |
-| 14 | `ac8efbcabcf315d6bd58c8bebef3c048580e6fc1` | `1c6d56f5` | the l9t5 README line 1; two digest lines (`v2/docs/records/l9t5/l9t5_connected.out:21`, `v2/docs/records/l9t5/l9t5_f01_drafts.out:11`); `v2/docs/records/l9t5/stability/DIGESTS-cr3.txt` and `RUN-cr3-pass1.log`; one assertion of `test_l9t5.py` | BINDINGS: the two stale pins of row 11 re-pinned; the cr3 stability record retaken on candidate 3 ("started 22:26, pass 1 ended 22:36, pass 2 22:45", `v2/docs/records/l9t5/stability/DIGESTS-cr3.txt:1`). PRESENTATION: the README's status line adds "a DRAFTED CANDIDATE, unchecked" and "L9T5-F13, F16 and F17 OPEN" for T10 (narrower words for states the T10 output already carries). TEST: the expected words follow row 11's reword (`v2/ecad/tools/tests/test_l9t5.py:956`) | (a) bindings and presentation | no output figure, limit, model or predicate in the diff. The label and the limit the coordinator's notes name for this commit are in rows 11 and 5 (section 5, item 6) |
+| 14 | `ac8efbcabcf315d6bd58c8bebef3c048580e6fc1` | `1c6d56f5` | the l9t5 README line 1; two digest lines (`v2/docs/records/l9t5/l9t5_connected.out:21`, `v2/docs/records/l9t5/l9t5_f01_drafts.out:11`); `v2/docs/records/l9t5/stability/DIGESTS-cr3.txt` and `RUN-cr3-pass1.log`; one assertion of `test_l9t5.py` | BINDINGS: the two stale pins of row 11 re-pinned; the cr3 stability record retaken on candidate 3 ("started 22:26, pass 1 ended 22:36, pass 2 22:45", `v2/docs/records/l9t5/stability/DIGESTS-cr3.txt:1`). PRESENTATION: the README's status line adds "a DRAFTED CANDIDATE, unchecked" and "L9T5-F13, F16 and F17 OPEN" for T10 (narrower words for states the T10 output already carries). TEST: the expected words follow row 11's reword (`v2/ecad/tools/tests/test_l9t5.py:956`) | (a) bindings, presentation and one test's expected words | no output figure, limit, model or predicate in the diff. The label and the limit the coordinator's notes name for this commit are in rows 11 and 5 (section 5, item 6) |
 | 15 | `d5abed7cfd0228384445851864e3aa8afd324f6b` | `ac8efbca` | the l9t5 README, line 1 | "CANDIDATE 3 COMMITTED" becomes "CANDIDATE READY 3: ac8efbca" (`v2/docs/records/l9t5/README.md:1`) | (a) a README line | none touched |
-| 16 | `3d2746c9bdd9a17ad81e19889892e5691973eb63` | `d5abed7c`, `6d9ec491` | the two files of rows 12 and 13 | a merge; `--remerge-diff` empty | (a) a merge carrying rows 12 and 13 | as rows 12 and 13 |
+| 16 | `3d2746c9bdd9a17ad81e19889892e5691973eb63` | `d5abed7c`, `6d9ec491` | the two files of rows 12 and 13 | a merge; `--remerge-diff` empty | (a) a merge carrying rows 12 and 13 (record text and its new test) | as rows 12 and 13 |
 | 17 | `7070f1060a69735632338d39d744d3340ce75568` | `3d2746c9` | `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md` (+32), `L4-POWER-ARCHITECTURE.md` (161 lines), `l4e9_power_path.py` (91 lines) | APPLIED, verbatim from the draft that was in the reviewed `4d0ff8a2` (`git show 4d0ff8a2:v2/docs/records/l9t5/apply_l4e9_changelist_p0.py`, its PY_EDITS at line 47): register rows R-220 to R-245, no R-241 (`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:314-338`); the page's P0 note and change-list table (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:422`); in the generator's DATA, D-10's state (`v2/docs/records/l4e9/l4e9_power_path.py:4288-4296`), D-16's state from "OPEN (a DEMONSTRATED DEFECT ...)" to "ADDRESSED IN DRAFTS: CORRECTED in draft by P0-7 (R-240 ...)" (`:4391-4394`), the next actions of D-10 and D-16 (`:5630`, `:5635`), the change order and its constraints, and the WITHDRAWN state for FAN_OK's rows (`:5614`). CLERICAL: the applied R-240 row names D-10's item E-1, "its later validation step is S1" (`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:334`) | (b) claim (the states of D-10 and D-16 in the generator's data), with (a) rows and table | NOT only a narrowing: D-10's text restates the defect as E-1; D-16's moves from OPEN to ADDRESSED IN DRAFTS, PROVISIONAL on S3. Its basis is cx45's Q6 ("U5's residual internal-amplifier output is properly PROVISIONAL on S3", `v2/docs/records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:105`) on a P0-7 draft unchanged since `06077cee`. Owed before credit: the targeted verification of the applied D-10 and D-16 texts against cx45's Q6 and cx46's P0-7 sentence; B2's "an owner item" in the applied D-10 text (section 5, item 1) |
 | 18 | `bbba3e53e396d3fe0f8ddd2f38d0c169bcc99c45` | `7070f106` | `l4e9_power_path.py` (16 lines), `l4e9_power_path.out` (228 lines), `v2/docs/records/l9t5/apply_l4e9_changelist_p0.py` (37 lines) | BINDINGS: L4-E9's pins of l4e10's, l4e11's and l4e12's outputs, l4e11's page, TI-QUESTIONS.md and the charger draft (`v2/docs/records/l4e9/l4e9_power_path.py:112`, `:122-123`, `:125`, `:155`, `:162`). TOOL: the D-10/D-16 citation check reads L4-E7's P0 output too (`:180`, `:2418`); the applier's applied-state reader, `--write` still refusing twice (`v2/docs/records/l9t5/apply_l4e9_changelist_p0.py:107`, `:160`). OUTPUT: `l4e9_power_path.out` regenerated, 15 digest lines and 214 other lines: the register 209 to 234 items, the change list 92 to 117 changes, D-10's and D-16's texts, and "17, 2 open; 5 addressed in drafts (D-11, D-13, D-14, D-16, D-15 ...)" (`v2/docs/records/l4e9/l4e9_power_path.out:572`) where `7070f106` read "17, 3 open; 4 addressed in drafts"; "criterion 2 CONDITIONAL with 2 defects open" (`:1017`) | (b) by what its output carries (row 17's applied states), with (a) re-pins and two tool corrections | the output's criterion 2 count moves (3 open to 2 open): owed with row 17. The citation check's source set widens by the output the applied D-10 text cites (its refusal of 83.48 V: `<worktrees>/_runs/int30/integrate6-0054.log:16`); a figure is still refused unless one of L4-E7's outputs prints it. Four of the new pins name bytes that only commit 2b carries (section 3) |
 
 **Totals in this history:** (a) 10: rows 1, 2, 3, 4, 11, 12, 13, 14, 15, 16. (b) 8: rows 5, 6, 7, 8, 9, 10, 17, 18 (rows 7 and 9 are merges
 carrying rows 6 and 8).
 
-**Outside this history at `bbba3e53`, and the placeholders:**
+**Outside this history at `bbba3e53`, and the placeholders.** After the base, on the candidate branch: (b) 4, rows S1 to S4. On main:
+(a) 4, rows M1 to M4. Placeholders: rows P1 and P2.
 
 | # | Commit | Parents | What the diff touches | What it changes | Class | Equivalence or verification owed |
 |---|---|---|---|---|---|---|
+| S1 | `bca7b0dc293f7b778caf24239a6a8624a1028bd1` | `bbba3e53` | `v2/docs/records/l4e9/l4e9_power_path.py` (+61, -64) | the generator's data: D-10, D-16 and D-17 restated from the two set 30 drafts (the section 8 restatement on fnd/l4e9s8 at f47d1fc4, the page consistency draft on fnd/l4e9pc at 8282895e; both outside this history) | (b) claims | the record classes its D-10, D-16, D-17 change "CLAIM CHANGE" and states that every claim change "narrows a claim or states an open state" (`6fe398e9:v2/docs/records/l4e9/SET31-CHANGES.md:33`, `6fe398e9:v2/docs/records/l4e9/SET31-CHANGES.md:16`); owed: the targeted verification of the restated states |
+| S2 | `140824161161eb3e3b09c324d06b8f297746744c` | `bca7b0dc` | `DOWNSTREAM-REGISTER.md` (59 lines), `l4e9_power_path.py` (399 lines) | the gate, the classes, blocks 8e to 8g and the register restated from the two drafts; page and output not yet regenerated (its subject) | (b) claims | as S1; criterion 2 moves from CONDITIONAL to FAIL, the coordinator's verdict words (`6fe398e9:v2/docs/records/l4e9/SET31-CHANGES.md:32`): a narrowing |
+| S3 | `17ce29d52ea5ac5844e2f988aa08d8317cef2dde` | `14082416` | the page (374 lines), the register (2), `SET31-CHANGES.md` (new, 136), `l4e9_power_path.out` (166), `l4e9_power_path.py` (58), `v2/ecad/tools/tests/test_l4e9.py` (54) | the page's section 8 with the coordinator's criteria words (1 CONDITIONAL, 2 FAIL, 3 PASS, 4 PASS, 5 CONDITIONAL); PC-01 to PC-16 applied; D-16 ADDRESSED IN DRAFTS throughout (`6fe398e9:v2/docs/records/l4e9/SET31-CHANGES.md:41`); route B2 with "no owner item" in the data (`:54`); R-246, board P's ideal diode, ADDED to the change list and its order (`:45`); the output regenerated against 2b's pinned outputs placed in its working tree only (`:20`); `test_l4e9`'s expectations changed, each with its basis (`:60`) | (b) claims, a change-list row, test expectations | narrows, except R-246: registering record l8p's round 4 draft in board P's round is not a narrowing; owed: its composition read in board P's round and l6r2's board P tables regenerated, with the targeted verification of the restated states. The changed test expectations: their bases are the record's (`:60`), not independently read here |
+| S4 | `6fe398e9f624160429411e975c26564e553714d3` | `bbba3e53`, `17ce29d5` | the six files of S1 to S3 | a merge; `--remerge-diff` empty | (b) by what it carries (S1 to S3) | as S1 to S3; it resolves this draft's contradictions 1, 2 and 4 in L4-E9's files and opens item 9 (section 5) |
 | M1 | `b0a67a45d6d21a8bf631f8c1b293e61b0e5a52b2` | `0d5f855e` (main) | the owner file only (+221: part 26's table row at line 26 and its text after line 861) | the owner's communications bootstrap instruction filed as received | (a) inputs filed | no design file; every line of the owner file after line 25 moves down by one once main is merged (part 25's binding rule from 844 to 845) |
 | M2 | `989b30f35220b87352ae598fab1d4dce70b4e293` | `b0a67a45` (main) | `README.md` and 46 new files under `compact/` (another session, MESHSAT-1500) | the compact kit's folder; nothing under `v2/` | (a) UNRELATED | `git diff --stat b0a67a45 24708af3 -- v2` is empty; the suite runs over them (public hygiene) |
 | M3 | `c0ec8b77ce594044e44766e127a1e166b7150e81` | `989b30f3` (main) | `README.md` | the README's top block and news table | (a) UNRELATED | as M2 |
@@ -97,7 +110,11 @@ carrying rows 6 and 8).
 Source: `<worktrees>/_runs/int30/diffread-2b.txt` (read 01:53 CEST, the working tree of the candidate against `bbba3e53`), 30 changed
 files, "TOTAL non-digest changed lines: 94" (its line 76). Where the diff read shows only the first lines of a file ("... N more"),
 this worker read the rest of that file's diff from the same working tree at 02:05 (files dated 01:56:48); a committed 2b may differ, and
-the coordinator's `__NONDIGEST__` list governs.
+the coordinator's `__NONDIGEST__` list governs. **The diff read predates the set 31 merge** (`6fe398e9`, 01:56): S3 changed L4-E9's
+page, register and output again and added R-246 to board P's round, so the page's digest that l4e10 and l4e11 pin, l5pwr's line
+numbers into the page, and l6r2's board P composition move again; S3's own record names those re-pins as owed at the freeze
+(`6fe398e9:v2/docs/records/l4e9/SET31-CHANGES.md:118-119`). The statements below describe the 01:53 working tree on `bbba3e53` and
+are to be read again on the committed 2b.
 
 - **Digest lines only, 19 outputs:** `efuse/efuse_check.out` (4), `l4e10/l4e10_cell_thermal.out` (2), `l4e11/l4e11_power.out` (2),
   `l4e12/l4e12_thermal.out` (2), `l6pwr/l6pwr_parts.out` (6), `l7pwr/l7pwr_fans_th1.out` (6), `l8gnd/l8gnd_drafts.out` (4),
@@ -119,7 +136,7 @@ the coordinator's `__NONDIGEST__` list governs.
   round as the page's table now gives it, lines 54 to 56); `l6r2/l6r2_passives.out` (12: the board A, B and D chains with the P0
   drafts, two "a pending draft names" lines, lines 43 to 50). No baseline draft or generator changes in 2b (the file list).
 - **The three h3 scanner outputs restored to HEAD (14 of the 94 lines), and why.** `h3/public_check.out` prints the time it asked and the
-  public repository's head ("An answer is true at the time printed on its first line, not later", `v2/docs/records/h3/public_check.py:16`);
+  public repository's head ("An answer is true at the time printed on its first line, not later", `v2/docs/records/h3/public_check.py:14`);
   two runs differ, so the tool refuses it (round 2: "REFUSED, R3 the two runs differ", `<worktrees>/_runs/int30/integrate4-2352.log.targeted:34`).
   `h3/same_patches.out` prints the commit it ran against, "against HEAD (089f7f27)" becoming "(bbba3e53)" (diff read lines 17 to 18),
   so it changes with every commit. `h3/apply_rebinds.out` is the H3 pages' rebind finding of 27 September; regenerated, it reads today's
@@ -137,7 +154,7 @@ the coordinator's `__NONDIGEST__` list governs.
   `.py`, held makers' sheets set aside, the commit-bound pins of `l4e11_power.py` lines 148, 3230 to 3232 and 3795 to 3796 set aside;
   no generator run):** fourteen stale, every one moved by 2b. Four are AHEAD of the tree: `v2/docs/records/l4e9/l4e9_power_path.py:112`,
   `:122`, `:125` and `:180` name l4e10's, l4e11's, l4e12's and L4-E7's P0 outputs at `aab5ae6b`, `1938c400`, `31883eca` and `28a5b9fd`,
-  the bytes 2b carries (`<worktrees>/_runs/int30/integrate4-2352.log:12-16`, `integrate4-2352.log.targeted:10`), while the files at
+  the bytes 2b carries (`<worktrees>/_runs/int30/integrate4-2352.log:12-16`, `<worktrees>/_runs/int30/integrate4-2352.log.targeted:10`), while the files at
   `bbba3e53` read `bbacc459`, `40ca9c03`, `3bdd5e3e` and `a343ccfe`. So `bbba3e53` alone is not a regenerable revision: its
   `l4e9_power_path.out` was regenerated in a working tree that already held 2b's outputs, and L4-E9's script would refuse on these pins
   at `bbba3e53` (inferred from its refusal form, `<worktrees>/_runs/int30/integrate4-2352.log.targeted:11`; not run here). Ten are
@@ -149,7 +166,7 @@ the coordinator's `__NONDIGEST__` list governs.
   `bbba3e53` (`v2/docs/records/l9t5/stability/DIGESTS-cr3.txt:4-21`, read file by file here), with `l9t5_f01.out` at `2aa78a957e497677`
   (`:15`); the reviewed revision's record is `v2/docs/records/l9t5/stability/RUN-4d0ff8a2-pass2.log:1-19`. The coordinator's two cascade
   passes on the integration tree read "already identical" for all 18 outputs in pass 2 (`<worktrees>/_runs/int30/integrate5-0025.log:28-47`,
-  `integrate6b-0057.log:26-45`). cx46 item 14 reads "CLOSED AS CONDITIONAL" with the condition "retain or reproduce successful
+  `<worktrees>/_runs/int30/integrate6b-0057.log:26-45`). cx46 item 14 reads "CLOSED AS CONDITIONAL" with the condition "retain or reproduce successful
   byte-identical repeated output runs on these inputs" (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:183`):
   met for `4d0ff8a2` and for candidate 3 by the files above; owed again on `__INTEGRATED__`, whose outputs 2b changes.
 
@@ -171,14 +188,20 @@ Set 29's manifest declared four historical outputs unbound by path (`v2/docs/rec
    `v2/docs/records/l4e9/l4e9_power_path.out:600`; the draft it came from (`v2/docs/records/l9t5/apply_l4e9_changelist_p0.py:23`, `:47`);
    the comment at `v2/docs/records/l4e9/l4e9_power_path.py:6609-6610`; against `v2/docs/records/l4e7/B2-PRESENCE.md:4-6`, `:27-29`
    ("UNSELECTED and WITHDRAWN AS DRAFTED"; no owner action), `v2/docs/records/l9t5/l9t5_connected.out:359-360` ("no owner item") and the
-   owner's part 25 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:836-838`: "B2 need not remain an outstanding owner action").
+   owner's part 25 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:834-838`: "B2 need not remain an outstanding owner action").
    Also `v2/docs/records/l4e7/L4E7-P0SOL.md:99`'s heading "(a partial proposal)" against its own `:128-130`. cx46 item 18 asked for the
-   withdrawal "throughout" (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:203`).
+   withdrawal "throughout" (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:203`). **Changed by `6fe398e9` in
+   L4-E9's generator:** D-10's data now reads "Route B2 (not a baseline row) is UNSELECTED and WITHDRAWN AS DRAFTED, with no protection
+   credit and no owner item" (`6fe398e9:v2/docs/records/l4e9/l4e9_power_path.out:600`, the data at `6fe398e9:v2/docs/records/l4e9/l4e9_power_path.py:4243-4244`), and no "an owner item" or "the owner's
+   item" is left in that file; the draft's texts (`v2/docs/records/l9t5/apply_l4e9_changelist_p0.py:23`, `:47`) and `L4E7-P0SOL.md:99`
+   are unchanged (item 9).
 2. **D-10's item name: resolved in the register by row 17.** The first draft's item 2 (R-240 calling D-10 "item S1") no longer holds:
    `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:334` reads "the receiving company's engineering item E-1 (its later validation step is
    S1 ...)". The page's decisions table still reads D-10 "ASSIGN to the supplier's phase 1, task P1-1"
    (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1278`) against the generator's applied next action, E-1
-   (`v2/docs/records/l4e9/l4e9_power_path.py:5630`).
+   (`v2/docs/records/l4e9/l4e9_power_path.py:5630`). **Changed by `6fe398e9`:** the page's table reads D-10 "ASSIGN to the receiving
+   company's remaining engineering item E-1" (`6fe398e9:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1384`) and R-240 "item l4e7's
+   E-1" (`6fe398e9:v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:336`).
 3. **T10's row in the connected output.** `v2/docs/records/l9t5/l9t5_connected.out:350-351` ("rev X on V-B20; the containment ...
    CORRECTED IN DRAFT, UNCHECKED") against `v2/docs/records/l9t5/l9t5_t10.out:645-647` (revision X HELD, round 5's route SUPERSEDED) and
    `:662` ("cx45's Q3 NOT CLOSED"). Unchanged since the first draft.
@@ -187,7 +210,11 @@ Set 29's manifest declared four historical outputs unbound by path (`v2/docs/rec
    defect" (`:979`). L4-E9's regenerated output, row 18: "constraint: three material defects are open: D-10's ... and D-16"
    (`v2/docs/records/l4e9/l4e9_power_path.out:560`) against "17, 2 open; 5 addressed in drafts" (`:572`) and "criterion 2 CONDITIONAL
    with 2 defects open" (`:1017`). The page still reads D-16 OPEN (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:840`, `:1283`) where the
-   generator's data reads ADDRESSED IN DRAFTS (`v2/docs/records/l4e9/l4e9_power_path.py:4391-4394`).
+   generator's data reads ADDRESSED IN DRAFTS (`v2/docs/records/l4e9/l4e9_power_path.py:4391-4394`). **Changed by `6fe398e9`:**
+   criterion 2 reads "FAIL" with "two material defects are open: D-10 (E-1) and D-17 (RE-2)"
+   (`6fe398e9:v2/docs/records/l4e9/l4e9_power_path.out:559-560`); the page names "Set 29's inconsistency, corrected in the text"
+   (`6fe398e9:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1007`) and its decisions table reads D-16 "ADDRESSED IN DRAFTS"
+   (`6fe398e9:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1389`). This draft did not re-read every place of the page at `6fe398e9`.
 5. **L4-E9's rows in the connected output.** `v2/docs/records/l9t5/l9t5_connected.out:361-362` ("L4-E9's change-list rows: drafted ...;
    L4-E9's own output refuses on this tree at its L4-E11 pin") against row 17 (the rows applied, `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:314-338`;
    "117 changes; none APPLIED" to a generator, `v2/docs/records/l4e9/l4e9_power_path.out:1310`) and row 18 (L4-E9's output regenerated).
@@ -200,10 +227,19 @@ Set 29's manifest declared four historical outputs unbound by path (`v2/docs/rec
    that was in the reviewed candidate 4d0ff8a2 and narrow or restate a state" (`<worktrees>/_runs/int30/RESULT-classification.draft.md:18`)
    and the regenerated outputs of commit 2 "digest lines only" (`:19`). The texts are verbatim (this worker counted each in the applier at
    `4d0ff8a2`, `1c6d56f5` and `bbba3e53`), but D-16's move from OPEN to ADDRESSED IN DRAFTS is not a narrowing, and row 18's
-   `l4e9_power_path.out` carries 214 non-digest lines (`:572`, `:600`, `:615`, `:1017`).
+   `l4e9_power_path.out` carries 214 non-digest lines (`v2/docs/records/l4e9/l4e9_power_path.out:572`, `:600`, `:615`, `:1017`).
 8. **The ledger's own list.** `v2/docs/records/l4close/REMAINING-ENGINEERING.md:619-639` names six more (A to F: one finding identifier
    for two findings, two figures for the return's upper bound, the stability condition, two MODEL readings each for V-B23's response and
    the countermodel's peak, the back-feed's placement, the P0 list's revision); not repeated here.
+9. **The change-list draft's applied-state reader against the set 31 merge (a finding opened by `6fe398e9`; inferred, not run).** At
+   `bbba3e53` the reader demands every added register row, every register edit and every script edit of the draft verbatim in the tree,
+   and otherwise refuses "the register carries R-220 but the applied texts are not this draft's"
+   (`v2/docs/records/l9t5/apply_l4e9_changelist_p0.py:117-121`). Set 31 restated several of those texts. This worker compared the
+   draft's literal lists (read with `ast`) with the files at `6fe398e9`: 16 texts are no longer verbatim (9 of the added register rows,
+   among them R-225, R-227, R-232 and R-236; the three register edits of R-210 to R-212; four script edits, among them D-10's and
+   D-16's data); at `bbba3e53` none is missing. The connected script reads the change list through that draft
+   (`v2/docs/records/l9t5/l9t5_connected.py:178`), so on `6fe398e9` its regeneration and `apply_l4e9_changelist_p0.py --check` are
+   expected to refuse until the reader or the draft follows set 31. For the coordinator before the cascade runs again.
 
 ## 6. The gate lines (left to the coordinator; nothing here is filled)
 
@@ -218,7 +254,7 @@ Set 29's manifest declared four historical outputs unbound by path (`v2/docs/rec
 | Runner pass (`test_l4e7`) | `<worktrees>/_runs/int30s1/runner/suite-runner.log` | `__RUNNER__` | |
 | suite_gate with G7 (identity, module coverage, 0 failed, 0 load errors, every skip explained, totals consistent) | `<worktrees>/_bin/suite_gate.py` over the three logs | `__GATE__` | |
 | Promotion (fast-forward of main, push, mirror, candidate_guard check on main) | the runbook's section 5 | `__PROMO__` | |
-| Targeted verification of the (b) rows 5, 6, 8, 10, 17 and 18 before any credit (part 25) | the coordinator's choice of verifier; not the ended review method | owed | |
+| Targeted verification of the (b) rows 5, 6, 8, 10, 17, 18 and S1 to S3 before any credit (part 25) | the coordinator's choice of verifier; not the ended review method | owed | |
 
 **Measured so far (`<worktrees>/_runs/int30/*.log`, CEST, the integration working tree; none is a gate line):**
 
@@ -226,12 +262,12 @@ Set 29's manifest declared four historical outputs unbound by path (`v2/docs/rec
 |---|---|---|---|---|
 | The record l4e7 re-key's first measurement on the suite4 box | 21:02 | 21:31 | 29 min | `<worktrees>/_runs/int30/PLAN.md:9` |
 | The re-key trial on the suite4 box | 22:51 | 23:18 | 27 min | the coordinator's brief to this worker; no log in `<worktrees>/_runs/int30`; the watchdog reads suite4 ACTIVE from 22:50:02 to 23:30:02 (`<worktrees>/_runs/vast/watchdog.log:1751-1775`) |
-| integrate3: every pair's first pass, STOPPED | 23:06:30 | 23:52:53 | 46 min 23 s | `integrate3-2306.log:1`, `:16` ("pass 1 covered the pairs up to l4e8 (alphabetical)") |
-| integrate4: the L4 pin chain, its stability pass, targeted rounds 1 and 2, stopped | 23:52:53 | 00:24:29 | 31 min 36 s | `integrate4-2352.log:1`, `:28`; `integrate4-2352.log.targeted:1` (00:00:48) |
-| integrate5: the applied-state reader, the cascade's two passes (pass 2 all identical), targeted passes, stopped | 00:25:14 | 00:54:14 | 29 min 0 s (the two cascade passes and step 1 before 00:45:31: 20 min 17 s) | `integrate5-0025.log:1`, `:49`; `integrate5-0025.log.targeted:1` |
-| integrate6: L4-E9's stale pins, stopped for the D-10 citation fix | 00:54:43 | 00:56:36 | 1 min 53 s | `integrate6-0054.log:1`, `:16` |
-| integrate6b: L4-E9 regenerated, the cascade's two passes (pass 2 all identical) | 00:57:54 | 01:18:19 | 20 min 25 s | `integrate6b-0057.log:1`; `integrate6b-0057.log.targeted:1` |
-| integrate6b's targeted rounds, the KEY check and the affected tests | 01:18:19 | 01:53:09 | 34 min 50 s | `integrate6b-0057.log.targeted:1`; `finish-0137.log:1`, `:40` |
+| integrate3: every pair's first pass, STOPPED | 23:06:30 | 23:52:53 | 46 min 23 s | `<worktrees>/_runs/int30/integrate3-2306.log:1`, `:16` ("pass 1 covered the pairs up to l4e8 (alphabetical)") |
+| integrate4: the L4 pin chain, its stability pass, targeted rounds 1 and 2, stopped | 23:52:53 | 00:24:29 | 31 min 36 s | `<worktrees>/_runs/int30/integrate4-2352.log:1`, `:28`; `<worktrees>/_runs/int30/integrate4-2352.log.targeted:1` (00:00:48) |
+| integrate5: the applied-state reader, the cascade's two passes (pass 2 all identical), targeted passes, stopped | 00:25:14 | 00:54:14 | 29 min 0 s (the two cascade passes and step 1 before 00:45:31: 20 min 17 s) | `<worktrees>/_runs/int30/integrate5-0025.log:1`, `:49`; `<worktrees>/_runs/int30/integrate5-0025.log.targeted:1` |
+| integrate6: L4-E9's stale pins, stopped for the D-10 citation fix | 00:54:43 | 00:56:36 | 1 min 53 s | `<worktrees>/_runs/int30/integrate6-0054.log:1`, `:16` |
+| integrate6b: L4-E9 regenerated, the cascade's two passes (pass 2 all identical) | 00:57:54 | 01:18:19 | 20 min 25 s | `<worktrees>/_runs/int30/integrate6b-0057.log:1`; `<worktrees>/_runs/int30/integrate6b-0057.log.targeted:1` |
+| integrate6b's targeted rounds, the KEY check and the affected tests | 01:18:19 | 01:53:09 | 34 min 50 s | `<worktrees>/_runs/int30/integrate6b-0057.log.targeted:1`; `<worktrees>/_runs/int30/finish-0137.log:1`, `:40` |
 
 The affected tests at 01:53 on the uncommitted working tree, as printed: "tests: 346 passed, 16 failed, 0 skipped" (13 of `test_l4e9`,
 two of `test_l8r2`, one of `test_l9t5`; `<worktrees>/_runs/int30/finish-0137.log:37`). That is the state before commit 2b, not a gate
@@ -243,7 +279,7 @@ result; the gate lines above decide.
 runbook, `<worktrees>/_runs/int30/PLAN.md:50`): the twelve findings cx46 left NOT CLOSED are carried as REMAINING ENGINEERING
 (`v2/docs/records/l4close/REMAINING-ENGINEERING.md:85`), the connected verdict reads "THE CONNECTED ELECTRICAL VERDICT: REMAINING
 ENGINEERING." (`v2/docs/records/l9t5/l9t5_connected.out:336`), and L4-E9's page reads "**Layer 4's power architecture closes: NO**"
-(`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:972`). The P0 list's revision 3 is drafted beside this page
+(`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:972`); after the set 31 merge, "**Layer 4's power architecture closes: NO**: on the set 30 candidate **the power-design closure gate is BLOCKED**" (`6fe398e9:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005`). The P0 list's revision 3 is drafted beside this page
 (`v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md`).
 
 | Claim (the constitution's section 2, `v2/docs/EXECUTION-CONSTITUTION.md:22-23`; set 29's form, `v2/docs/records/int29/RESULT.md:67-75`) | State after this set |
