@@ -10,7 +10,13 @@ record's, read here at the integration's commit through git. The predicates:
 - the [OWN:n] rows: the new line of the owner file carries the quoted words and the old line does not (part 26 moved them by one);
 - the proposed test lines hold where they say: W20-19's per-row RE item on the register (a swapped item fails it), W20-21's phrase in
   D-10's state; the cited readings of sections 4 and 5 (the l4e7 pages at 786aed2f, 83.47 and 83.48 V, the dated heading of line 975);
-- no em or en dash, and the prototype framing.
+- no em or en dash, and the prototype framing;
+- set 31's application (W25, 6 October 2026): the predicates above read the integration's commit through git and stay as the
+  history (the rows were once true); at this tree every row W20-01 to W20-24 stands applied, its New text once and its Old text gone
+  (W24's f08dbb97 for the six files, W23's 92b754c5 for W20-13 and W20-14, W25's bf3a7b18 for the five test rows), each applying
+  commit carrying the New text where its parent does not; of the NEEDS items N1a (W24, b2564b59) and N3a, N3b (candidate A, the
+  coordinator's N3, ed430f76, its lines a citation the re-cited ledger carries) stand applied, and N2a to N2c wait with their Old
+  texts once (R-217's words wait for record l4e11's restatement of E11-43, the coordinator's N2).
 
 Predicates on record text: they establish no electrical or thermal property, close nothing and accept nothing.
 """
@@ -30,6 +36,13 @@ C = "c4492dd370c592e9899a8e526113958f4dc20554"
 W4 = "786aed2fb32e45e1fba04a516e04c8eff8e89c3a"
 DASHES = (chr(0x2013), chr(0x2014))
 _G = {}
+LEDGER = "v2/docs/records/l4close/REMAINING-ENGINEERING.md"
+# set 31's application, row -> the commit that applied it (W25's restatement of 6 October 2026)
+APPLIED = dict([("W20-%02d" % i, "f08dbb97") for i in list(range(1, 13)) + [15, 16, 17, 23, 24]]   # W24, fnd/int31l4e9
+               + [("W20-13", "92b754c5"), ("W20-14", "92b754c5")]                                 # W23, fnd/int31cite (merged ce122dfa)
+               + [("W20-%02d" % i, "bf3a7b18") for i in range(18, 23)])                           # W25, fnd/int31tests
+NEEDS_APPLIED = {"W20-N1a": "b2564b59", "W20-N3a": "ed430f76", "W20-N3b": "ed430f76"}   # candidate A each (the coordinator's N1a, N3)
+NEEDS_WAITING = ("W20-N2a", "W20-N2b", "W20-N2c")   # the coordinator's N2: R-217's words wait for record l4e11
 
 
 def _patch():
@@ -221,3 +234,67 @@ def t_no_dashes_and_the_prototype_framing():
         assert ch not in open(os.path.abspath(__file__), encoding="utf-8").read()
     assert "nothing in the kit is built, bought, powered or measured" in t
     assert t.startswith("**DONE:**") and "**NOT DONE:**" in t and "**NEXT:**" in t
+
+
+def _tree(rel):
+    return open(need(os.path.join(ROOT, rel), "a file a row names"), encoding="utf-8").read()
+
+
+def _applied_problem(text, new, old):
+    """None when `new` stands once in `text` and `old` is gone outside it (a New text that contains its Old is read with the New taken
+    out; the Old is matched as text, never only as a whole line, so a row whose Old starts inside a line is held too)."""
+    if text.count(new) != 1:
+        return "new text %d times" % text.count(new)
+    if text.replace(new, "\0").count(old):
+        return "old text still present"
+    return None
+
+
+def _cand_a_pattern(a):
+    """N3's candidate A as a pattern: its placeholder line a number, its trailing note dropped."""
+    a = a.replace(" with the ledger re-cited", "")
+    return re.escape(a).replace(re.escape("<the end line the coordinator reads>"), r"(\d+)").replace(
+        re.escape("<the start line the coordinator reads>"), r"(\d+)")
+
+
+def t_set31s_applied_rows_stand_at_this_tree_and_the_waiting_ones_do_not():
+    rows = {r["id"]: r for r in _rows()}
+    assert sorted(APPLIED) == sorted(rows), "every row W20-01 to W20-24 is applied in set 31"
+    bad = []
+    for rid, r in sorted(rows.items()):
+        p = _applied_problem(_tree(r["rel"]), r["new"], r["old"])
+        if p:
+            bad.append("%s: %s at this tree" % (rid, p))
+        c = APPLIED[rid]
+        if _show(c, r["rel"]).count(r["new"]) != 1 or _show(c + "^", r["rel"]).count(r["new"]) != 0:
+            bad.append("%s: %s is not the commit that wrote its new text" % (rid, c))
+    ns = {n["id"]: n for n in _needs()}
+    for nid, c in sorted(NEEDS_APPLIED.items()):
+        n = ns[nid]
+        t = _tree(n["rel"])
+        if nid == "W20-N1a":
+            p = _applied_problem(t, n["a"], n["old"])
+            if p:
+                bad.append("%s: %s at this tree" % (nid, p))
+            continue
+        hits = re.findall(_cand_a_pattern(n["a"]), t)
+        if len(hits) != 1 or n["old"] in t:
+            bad.append("%s: candidate A %d times, old text %d times" % (nid, len(hits), t.count(n["old"])))
+            continue
+        line = re.search(_cand_a_pattern(n["a"]), t).group(0)
+        a_, s_, e_ = re.match(r'\("(\w+)", (\d+), (\d+),', line).groups()
+        if "[%s:%s-%s]" % (a_, s_, e_) not in _tree(LEDGER):
+            bad.append("%s: the ledger carries no [%s:%s-%s]" % (nid, a_, s_, e_))
+        if not re.search(_cand_a_pattern(n["a"]), _show(c, n["rel"])) or n["old"] not in _show(c + "^", n["rel"]):
+            bad.append("%s: %s is not the commit that applied candidate A" % (nid, c))
+    for nid in NEEDS_WAITING:
+        n = ns[nid]
+        t = _tree(n["rel"])
+        if t.count(n["old"]) != 1 or n["b"] in t:
+            bad.append("%s: waits, but its old text stands %d times or candidate B is written" % (nid, t.count(n["old"])))
+    assert not bad, "; ".join(bad)
+    # a mutation: a test row reverted and a waiting row written are both named
+    r = rows["W20-22"]
+    assert _applied_problem(_tree(r["rel"]).replace(r["new"], r["old"]), r["new"], r["old"]), "a reverted row is not named"
+    n = ns["W20-N2a"]
+    assert _tree(n["rel"]).replace(n["old"], n["b"]).count(n["old"]) == 0, "candidate B written would be seen"
