@@ -2,8 +2,10 @@
 
 DONE: the enumeration (section 2), the location decision (section 3), the helper, the re-take script and the regression, 25 generators
 converted (section 4: the brief's six records, then every remaining run-time caller outside section 5); W36's findings applied by W37
-(section 7: F-P1, F-P2, F-R1, F-R2, F-K5 corrected; F-C1 stated; the integration order of F-K1 to F-K3 in section 6). NOT DONE: section
-5's 15 scripts, each for its stated reason. NEXT: the coordinator's adoption in set 32 (section 6).
+(section 7: F-P1, F-P2, F-R1, F-R2, F-K5 corrected; F-C1 stated; the integration order of F-K1 to F-K3 in section 6); W53's finding
+closed by W55 (section 8: l8p_c4.py's undeclared read declared, every converted generator and reader run with the tools refused, the
+static declaration check). NOT DONE: section 5's 15 scripts, each for its stated reason. NEXT: the coordinator's adoption in set 32
+(sections 6 and 8).
 
 Author W34 (tooling, inside the records), 6 October 2026 (Europe/Amsterdam), branch `fnd/w34pdftext` from `aed4bd23` (set 31's
 regenerated lineage). This branch changes HOW a generator obtains a maker's PDF text, never WHAT it computes from it: no verdict, figure,
@@ -31,13 +33,14 @@ not those of a module it imports). "Named in the file" lists the PDF paths a scr
 | Class | Files |
 |---|---|
 | RUN-TIME EXTRACTION, CONVERTED | 25 |
+| RUN-TIME EXTRACTION THROUGH ANOTHER SCRIPT'S READER, CONVERTED (W55; not in the census by name) | 1 |
 | RUN-TIME EXTRACTION, NOT CONVERTED (l4e7 KEY group) | 6 |
 | RUN-TIME EXTRACTION, NOT CONVERTED (accepted Layer 3) | 5 |
 | RUN-TIME EXTRACTION, NOT CONVERTED (the coordinator's checker) | 1 |
 | RUN-TIME EXTRACTION, NOT CONVERTED (historical) | 3 |
 | FETCH, SCAN, APPLY OR RE-TAKE SCRIPT (untouched) | 8 |
 | DRY-RUN OR TRANSCRIPT, no call of its own (untouched) | 15 |
-| total | 63 |
+| total | 64 (63 by name at the base, and W55's row) |
 
 | Script (under `v2/docs/records/`) | Class | Why | PDFs (paths under `v2/vendor/`) | Test modules that name it |
 |---|---|---|---|---|
@@ -75,6 +78,7 @@ not those of a module it imports). "Named in the file" lists the PDF paths a scr
 | `l7pwr/l7pwr_fans_th1.py` | RUN-TIME EXTRACTION, CONVERTED | a remaining run-time caller; reads the committed text (section 4) | 5 committed, 0 held back (declared in its PDFTEXT table): `cm5/rpi-cm5-cooler-product-brief-2024-12.pdf`, `fans/samesky-cfm-60bg68-dc-axial-fan-2024-09-12.pdf`, `fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf`, `fans/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.pdf`, `precidip/precidip-catalog-slc-2018-03-20.pdf` | test_l7pwr, test_l8r2 |
 | `l7r2/l7r2_items.py` | RUN-TIME EXTRACTION, CONVERTED | a remaining run-time caller; reads the committed text (section 4) | 3 committed, 0 held back (declared in its PDFTEXT table): `bulgin/bulgin-px0833-sealed-rj45-coupler.pdf`, `d38999/amphenol-d38999-iii-federal.pdf`, `d38999/glenair-series-iii-iv-panel-cutouts.pdf` | test_l7r2 |
 | `l8p/l8p_drafts.py` | RUN-TIME EXTRACTION, CONVERTED | a remaining run-time caller; reads the committed text (section 4) | 11 committed, 1 held back (declared in its PDFTEXT table): `battery/murata-nxrt15xh103fa1b.pdf`, `battery/murata-prf-series.pdf`, `battery/ti-bq4050.pdf`, `battery/ti-csd17570q5b.pdf`, `battery/ti-csd18510q5b.pdf`, `battery/ti-sluuaq3a-bq4050-trm.pdf`, `diodes/diodes-bzt52c-ds18004.pdf`, `power/jscj-2n7002-c8545.pdf`, `power/st-semtech-1n4148w-c81598.pdf`, `ti/ti-lm5069.pdf`, `ti/ti-lm74700-q1.pdf`; held back: `ti/held/ti-opa187-sbos807e.pdf` | test_l8p |
+| `l8p/l8p_c4.py` | RUN-TIME EXTRACTION THROUGH ANOTHER SCRIPT'S READER, CONVERTED (W55) | named no pdftotext at the base, so the census by name missed it: it ran pdftotext through `l8p_guard.pdftext()` (and refused on this branch, W53); it declares and reads its three sheets with its own table since W55 (section 8) | 2 committed, 1 held back (declared in its PDFTEXT table): `diodes/diodes-bzt52c-ds18004.pdf`, `power/jscj-2n7002-c8545.pdf`; held back: `ti/held/ti-lm26lv-snis144g.pdf` | test_l8p |
 | `l8p/l8p_guard.py` | RUN-TIME EXTRACTION, CONVERTED | a remaining run-time caller; reads the committed text (section 4) | 5 committed, 2 held back (declared in its PDFTEXT table): `battery/ti-csd17570q5b.pdf`, `battery/ti-csd18510q5b.pdf`, `power/aos-ao3400a-n-mosfet.pdf`, `power/jscj-2n7002-c8545.pdf`, `ti/ti-lm5069.pdf`; held back: `ti/held/ti-lm26lv-snis144g.pdf`, `ti/held/ti-tps709-sbvs186h.pdf` | test_l8p |
 | `l8r2/l8r2_dist.py` | DRY-RUN OR TRANSCRIPT, no call of its own (untouched) | reads through l8r2_gndret.py and l8r2_p0.py (converted) | 0 committed, 0 held back (named in the file) | test_l8r2 |
 | `l8r2/l8r2_drafts.py` | RUN-TIME EXTRACTION, CONVERTED | one of the brief's six records; reads the committed text (section 4) | 2 committed, 0 held back (declared in its PDFTEXT table): `cm5/cm5-datasheet.pdf`, `fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf` | test_l8r2 |
@@ -158,6 +162,7 @@ held-back sheet" (a finding, never a silent gap); `test_pdftext_input` re-derive
 | `l7pwr/l7pwr_fans_th1.py` | 1 | 5 PDFs, 5 extractions (5 committed, 0 held back) | pdftotext denied: 0 calls, exit 0, output = committed + the text lines (and moved source pins) |
 | `l7r2/l7r2_items.py` | 1 | 3 PDFs, 3 extractions (3 committed, 0 held back) | pdftotext denied: 0 calls, exit 0, output = committed + the text lines (and moved source pins) |
 | `l8p/l8p_drafts.py` | 1 | 12 PDFs, 12 extractions (11 committed, 1 held back) | pdftotext denied: 0 calls, exit 0, output = committed + the text lines (and moved source pins) |
+| `l8p/l8p_c4.py` (W55) | 3 (its calls of `l8p_guard.pdftext()`) | 3 PDFs, 3 extractions (2 committed, 1 held back; each already declared by l8p_drafts or l8p_guard, so no new text) | pdftotext and pdftocairo refused: 0 calls, exit 0, output = committed + 3 text lines and 2 moved source pins (section 8) |
 | `l8p/l8p_guard.py` | 1 | 7 PDFs, 7 extractions (5 committed, 2 held back) | pdftotext denied: 0 calls, exit 0, output = committed + the text lines (and moved source pins) |
 | `l9pwr/l9pwr_budget.py` | 1 | 7 PDFs, 7 extractions (7 committed, 0 held back) | pdftotext denied: 0 calls, exit 0, output = committed + the text lines (and moved source pins) |
 | `l9stk/l9stk_copper.py` | 1 | 3 PDFs, 3 extractions (3 committed, 0 held back) | pdftotext denied: 0 calls, exit 0, output = committed + the text lines (and moved source pins) |
