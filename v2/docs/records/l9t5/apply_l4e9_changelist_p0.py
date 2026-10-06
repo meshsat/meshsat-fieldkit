@@ -28,7 +28,8 @@ What it changes, and nothing else:
 The re-takes it owes at integration (named, not done here): L4-E11's pin "arch" and l4e11_power.out; L4-E10's pin and
 l4e10_cell_thermal.out; Layer 6's l6r2_passives.out (its compositions gain the new rows' drafts: a content change, Layer 6's); the
 digest lines of the records that pin the page (l9pwr_budget.out, l8r2_gndret.out, l8r2_drafts.out, l9t5_drafts.out); L4-E9's own
-output once its L4-E11 pin is re-taken (it refuses on this tree since the P0 base).
+output once its L4-E11 pin is re-taken (it refused on the tree from the P0 base until set 31: the generator re-pinned at bbba3e53,
+its four cascade pins at commit 2b, d83d9f2d).
 Usage:  apply_l4e9_changelist_p0.py [ROOT] [--check | --write]     (default: the repository this file sits in; --check writes nothing)
 Exit 0: checked (or written); 3: refused (a file is not the expected text, the rows are already there, or the patched change list is
 refused by L4-E9's own cons_changes)."""

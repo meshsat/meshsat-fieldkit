@@ -514,8 +514,8 @@ def main():
         # 2. composition
         pos, n_ch, L4m, page_ok, wd = change_list_order()
         w("2. THE COMPOSITION (4c, P0-6, boards A, B and D; board E with P0-7): L4-E9'S CHANGE-LIST ORDER, then Layer 6's order-free tables. The list is L4-E9's register and")
-        w("   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-245 for the drafts")
-        w("   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): %d changes, every" % n_ch)
+        w("   script, which carry this record's text draft apply_l4e9_changelist_p0.py (V6-m11: rows R-220 to R-245 for the drafts that had none)")
+        w("   as the integrator applied it at 7070f106, read from the tree (the draft's applied state), set 31's R-246 with them: %d changes, every" % n_ch)
         w("   order constraint held by L4-E9's own cons_changes; the patched page's section 3 is the patched list: %s; WITHDRAWN: %s" % (
             "yes" if page_ok else "NO", ", ".join(wd) or "none"))
         P0_ = {"the drafted change list carries rows R-220 to R-245 (no R-241: route B2 out), holds every order constraint, its page table is its list, FAN_OK withdrawn":
@@ -840,7 +840,7 @@ def main():
             b14[3], max(r[3] for r in v14), "every one holds" if all(r[4] == "holds" for r in v14) else "NOT every one holds"))
         w("     criterion on the MODEL; the acceptance reads %s while the sustained peaks and the latent rail trip are open (section 11) (125 C" % (
             RE if (OPEN[6] or OPEN[7]) else "as the rows show"))
-        w("     sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: %s over (%s): rev X stays on V-B20" % (
+        w("     sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: %s over (%s): revision X stays HELD with no admission route (round 5's V-B20 route SUPERSEDED, 10j (f))" % (
             len(y_fail), "; ".join("%s %.1f C" % (r[0], r[3]) for r in y_fail)))
         P["every revision V T10 row holds its criterion at the taken set point on the MODEL; its acceptance reads REMAINING ENGINEERING while the peaks and the latent rail trip are open"] = (
             all(r[4] == "holds" for r in v14) and (OPEN[6] or OPEN[7]))
