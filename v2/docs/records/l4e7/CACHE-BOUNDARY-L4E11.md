@@ -1,4 +1,4 @@
-DONE: the l4e7 results cache KEY holds the numbers it reads of l4e11_power.out, not the file's bytes (W61); the adoption prepared on W64's conditions (W67, section 7: F-1, F-4, the KEY check's new version beside the old). NOT DONE: the re-key and the regeneration (the coordinator's). NEXT: one re-key on a rented box at this branch's tip, the KEY check swapped in, l4e7_p0sol.out and its dependents regenerated.
+DONE: the l4e7 results cache KEY holds the numbers it reads of l4e11_power.out, not the file's bytes (W61); the adoption prepared on W64's conditions (W67, section 7: F-1, F-4, the KEY check's new version beside the old); W70's recheck answered (W71, section 8: R-2 to R-6 corrected outside the KEY, R-1 and R-7 written into section 7's regeneration list; the KEY's parts at this tip equal 2d81d8b2's). NOT DONE: the re-key and the regeneration (the coordinator's). NEXT: one re-key on a rented box at this branch's tip (it equals one at 2d81d8b2), the KEY check swapped in, l4e7_p0sol.out and its dependents regenerated, the annex re-cited (R-1).
 
 # Record L4-E7's results cache at the L4-E11 boundary (W61, 6 October 2026, MESHSAT-1357)
 
@@ -101,7 +101,7 @@ regeneration. Nothing was re-keyed, no `_R()` test of test_l4e7 was run and no `
 |---|---|---|---|
 | condition 1 | one re-key on a rented box; until then no `_R()` test of test_l4e7 on the runner | nothing to do here; no `_R()` test run | the re-key at this branch's tip (not at 849e66c7: F-4 moved the extractor's source, so the KEY's src part moved again) |
 | condition 2, F-2's second half | `l4e11_numbers` in the KEY check's part list; its exit 3 documented | the check is runner-local (`_runs/int30/l4e7_key_check.py`, outside git) and in use by set 31's dependents pass, so by the coordinator's correction of about 19:30 its new version is written beside it as `_runs/int30/l4e7_key_check.py.new` (sha256 26dfef093053c9e0) with its fixture test `_runs/int30/test_l4e7_key_check.py` (05279611e823b9f6). The part list gains `l4e11_numbers` (and then any other part either side holds, sorted); a move of the numbers alone prints `parts moved: l4e11_numbers` with one `numbers <name>: <committed> -> <now>` line per moved value group and no file line; exit 3 (the record's refusal before any KEY) is documented beside 0, 1 and 2 and its message quoted on stderr in a line that starts `l4e7 key check REFUSED (exit 3)`; the first line and the file lines keep the format `_bin/preflight.py` and `_runs/int32/chain.sh` parse | swap it in at set 32's adoption (`mv l4e7_key_check.py.new l4e7_key_check.py` in `_runs/int30/`) |
-| condition 3, F-1 | regenerate `l4e7_p0sol.out` and its dependents, its 0a sentence restated | `l4e7_p0sol.py`: 0a's reading is `key_state()` and its sentence `para_0a()`. The sentence states only what the KEY check proves and the cache's own fields record (its parts' Python and pdftotext versions; beside the KEY the evidence's sha256 of `l4e11_power.out`, the same bytes as the tree's or a prose-only difference); the typed history (who re-keyed, on what box, after which rounds) and the constant `KEY_AT` are gone. A move of the part `l4e11_numbers` alone refuses (exit 4) naming that part and the moved numbers (`inp 7.23 -> 7.24`); any other stale state names each part plainly; a holding KEY without the evidence field refuses. Before the re-key the script refuses with: "the cache's KEY differs from this tree in: the file v2/docs/records/l4e11/l4e11_power.out (a2089b3f6682d7fd in the cache's KEY, not in the KEY's files part here); the part l4e11_numbers (...); the part src; the cache is stale for this tree: re-key it ...". In memory, served a cache keyed on this tree (nothing written), it exits 0 and differs from the committed `.out` in the pin of `l4e7_stage_settings.py` and the 0a paragraph only | the regeneration below |
+| condition 3, F-1 | regenerate `l4e7_p0sol.out` and its dependents, its 0a sentence restated | `l4e7_p0sol.py`: 0a's reading is `key_state()` and its sentence `para_0a()`. The sentence states only what the KEY check proves and the cache's own fields record (its parts' Python and pdftotext versions; beside the KEY the evidence's sha256 of `l4e11_power.out`, the same bytes as the tree's or, since W71 on W70's R-2, "a difference outside the sixteen numbers the record reads" where 2d81d8b2 printed "a difference of prose only"); the typed history (who re-keyed, on what box, after which rounds) and the constant `KEY_AT` are gone. A move of the part `l4e11_numbers` alone refuses (exit 4) naming that part and the moved numbers (`inp 7.23 -> 7.24`); any other stale state names each part plainly; a holding KEY without the evidence field refuses. Before the re-key the script refuses with: "the cache's KEY differs from this tree in: the file v2/docs/records/l4e11/l4e11_power.out (a2089b3f6682d7fd in the cache's KEY, not in the KEY's files part here); the part l4e11_numbers (...); the part src; the cache is stale for this tree: re-key it ...". In memory, served a cache keyed on this tree (nothing written), it exits 0 and differs from the committed `.out` in the pin of `l4e7_stage_settings.py` (line 9), the pin of its results file (line 11) and the 0a paragraph, which gains a line, 7 to 8 (corrected by W71 on W70's R-6: 2d81d8b2 read "in the pin of `l4e7_stage_settings.py` and the 0a paragraph only"; at W71's wording the paragraph is 9 lines, section 8) | the regeneration below |
 | condition 4, F-2's first half | the preflight's moved-files blind spot | already done by W60 in `_bin/preflight.py` (`KEY_PART_FILES` maps the part `l4e11_numbers` to `l4e11_power.out` for `--key-expect`; an exit outside 0, 1 and 2 refuses in every mode); the new check's test t7 reads both through `check_key` | none |
 | F-3 | "non-increasing" against the code's "descends" | checked: section 2 above and the extractor's message both say "descends", as the code does (`vals[0] <= vals[1] <= vals[2]`, an equal triple accepted); the queue's "non-increasing" was the coordinator's wording; no file edited | none |
 | F-4 | `\d` matches Unicode digits | every regular expression call of `l4e11_numbers()` passes `re.ASCII`; a consumed number written in fullwidth digits (U+FF10 to U+FF19), in Arabic-Indic digits (U+0660 to U+0669) or with one fullwidth digit among ASCII ones now refuses (exit 3, out of its declared form) where 849e66c7 read it as 7.23 (`test_l4e7_cachekey` t_g) | none (the re-key covers the moved source) |
@@ -110,16 +110,28 @@ regeneration. Nothing was re-keyed, no `_R()` test of test_l4e7 was run and no `
 regen_targeted, `repin_l4e9.py`, regen_targeted again, the KEY-only check):
 1. The re-key on a rented box at the adoption tip: `l4e7_stage_settings.py --recompute`, its results file then carrying the part
    `l4e11_numbers` and the field `evidence`; `l4e7_stage_settings.out` is expected byte for byte (the same floats feed compute()).
-   The KEY check then reads MATCH.
+   The KEY check then reads MATCH. If the re-key's preflight is given `--key-expect`, it names the part `src` too (W70's R-7):
+   `--key-expect src --key-expect v2/docs/records/l4e11/l4e11_power.out`; the file alone (the example at
+   `_runs/int31/rekey8_chain.sh` line 12) refuses on this tip (W70: `REFUSE ['src', 'v2/docs/records/l4e11/l4e11_power.out']`;
+   with `src` added, `PASS`). If the re-keyed `l4e7_stage_settings.out` is NOT byte-identical (expected 2ad2015b0c7aea91), five more
+   pins move (W70): `l4e13_panel.py` line 68 and `.out` line 10, `l4e9_power_path.py` line 93 (`l4e7r`) and `.out` line 41,
+   `l6pwr_parts.out` line 22.
 2. `python3 _bin/regen_out.py <worktree> v2/docs/records/l4e7/l4e7_p0sol.py v2/docs/records/l4e7/l4e7_p0sol.out` (it pins the record's
    script, its output and its results file; the 0a paragraph changes as above).
+2a. Then the supplier annex `v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md` (W70's R-1, the coordinator's; not
+   edited here): its `[SOLO:402]` (line 217, "not computed here") and `[SOLO:403]` (line 227, "Validation: P1-1's S1"; and the
+   pointer of line 293) cite the WORKING `l4e7_p0sol.out` by line, and every line after 0a moves down by as many lines as 0a
+   gains. READ the regenerated output first and re-cite from what it prints; at this tip's wording 0a grows from 7 to 9 lines
+   (W71, the sentence wrapped as render() wraps it on the expected state, no run of the script), so expect `[SOLO:404]` and
+   `[SOLO:405]`. Then rerun `test_w3annex.` (W70: it fails on two quotes otherwise).
 3. The outputs that pin p0sol (`git grep` of its path and of its digests at 849e66c7, 34541a3d3a6c800a for the script and
    7d0ec93f47ae7e62 for the output): `l4e9_power_path.py` line 180 (the typed pin `l4e7p0`, the output's full sha256: `repin_l4e9.py`)
    and `l4e9_power_path.out` line 106; `l9t5_connected.out` line 23 (the output) and line 26 (the script, stale already on this branch:
-   `l4e7_p0sol.py` is now d79ffb469ca00d5d). Then their own dependents in the same pass (`l5pwr_contracts.out` pins
+   `l4e7_p0sol.py` was d79ffb469ca00d5d at 2d81d8b2 and is d39fde5caefe8960 at W71's 935584bf). Then their own dependents in the same pass (`l5pwr_contracts.out` pins
    `l4e9_power_path.out` at line 12; the l9t5 cascade).
 4. Then the tests that read them: test_l4e7's two p0sol output tests (`t_p0sol_committed_out_is_what_the_script_prints`,
-   `t_p0sol_the_inputs_it_pins_are_this_trees_files`), test_l4e9, test_l9t5, and the `_R()` tests of test_l4e7 once the KEY holds.
+   `t_p0sol_the_inputs_it_pins_are_this_trees_files`), test_l4e9, test_l9t5, and the `_R()` tests of test_l4e7 once the KEY holds;
+   with them (W70's condition 4) test_w3annex (after 2a), test_w8l5, test_l5pwr and test_w11l9t5, which read the working output.
 
 **Tests as run on the runner** (no solver; one module at a time; `TMPDIR` in the session's scratch):
 - `test_l4e7_cachekey.`: `tests: 7 passed, 0 failed, 0 skipped` (W61's six and t_g).
@@ -141,6 +153,78 @@ regen_targeted, `repin_l4e9.py`, regen_targeted again, the KEY-only check):
   is the question a numbers-only move raises; neither `preflight.py` nor `chain.sh` reads such a line (they read the first line and
   the `file` lines). Reverse: drop the block.
 - `l4e7_p0sol.py` refuses a holding KEY without the evidence field. Reason: the record's own `load_cache()` never renders from such a
-  cache, and 0a's sentence names the evidence. Reverse: drop the third refusal of `key_state()`.
-- `re.ASCII` is passed to all four regular expression calls of the extractor, the widened pattern (`\S`, no `\d`) included, so the
+  cache, and 0a's sentence names the evidence. Reverse: drop the evidence refusal of `key_state()` (its last; W71 added the key
+  field's refusal before it).
+- `re.ASCII` is passed to all five regular expression call sites of the extractor (`re.compile` twice, `re.finditer`, `re.fullmatch`,
+  `re.search`: four distinct functions; corrected by W71 on W70's R-6, 2d81d8b2 read "all four regular expression calls"), the
+  widened pattern (`\S`, no `\d`) included, so the
   flag is uniform; after `flat()` no Unicode whitespace remains, so `\S` reads the same. Reverse: drop the flag from that call.
+
+## 8. W70's recheck answered (W71, 6 October 2026, 20:10 to 20:35 CEST)
+
+W70 rechecked W67's delta 849e66c7..2d81d8b2 (an AI review, not a qualified one; `_runs/claude/w70rechkkey/REPORT-AS-RECEIVED.md`):
+fit for set 32's one re-key on five conditions, with findings R-1 to R-7, none touching `l4e7_stage_settings.py`. W71 corrected R-2 to
+R-6 OUTSIDE the l4e7 KEY: `l4e7_stage_settings.py` and every file of the cache's files part are byte-identical to 2d81d8b2, so set 32's
+one re-key at this tip equals one at 2d81d8b2 (proof below). R-1 and R-7 are set 32's chain items (the coordinator's): written into
+section 7's regeneration list (steps 1 and 2a); the annex and every runner file are not edited here. Nothing was re-keyed, no `_R()`
+test was run and no `.out` was regenerated.
+
+| W70 | Finding | Done (W71, 935584bf) | Fixture test (fails at 2d81d8b2, passes at 935584bf) |
+|---|---|---|---|
+| R-1 | the annex's `[SOLO:402]` and `[SOLO:403]` cite lines that move when 0a grows | section 7, step 2a (read first, re-cite; expected +2 at this wording); test_w3annex added to step 4 | none (a chain item) |
+| R-2 | "a difference of prose only" and "computed on this record's source" claim more than the parts show | `para_0a()`: "a difference outside the sixteen numbers the record reads, since the part l4e11_numbers holds"; "computed on the definitions compute() reaches in l4e7_stage_settings.py as they read here (the part src; render() and what only it reaches are outside it)"; the count is the record's own declaration (`O["n11"]` from `LS.L4E11_NUMBERS`, written as a word); W67's test restated with its basis (its docstring says why) | `t_p0sol_0a_r2_the_sentence_claims_only_what_its_key_parts_cover` |
+| R-3 | the `[("files", L4E11_OUT)]` acceptance and para_0a's first branch unreachable | `key_state()` accepts ONE state (no part differing, the key field the key of its parts, the evidence there); the file-alone acceptance, para_0a's first branch ("30 to 50 core-minutes") and `O["key_holds"]` removed; the files diff taken over both sides' files; its docstring, the module docstring and compute()'s comment say so. The refusal stays closed: the pre-WP-B cache refuses with the same text as before (section 7) | `t_p0sol_0a_r3_a_cache_differing_in_the_file_alone_refuses_and_no_dead_sentence_is_left` |
+| R-4 | no refusal when the cache's key field is not the key of its parts while no part differs | `key_state(data, parts_now, nums_now, key_of)` (the record's `key_of()`): refuses (exit 4) "the cache's key field (...) is not the key of its own parts (...), while no part differs from this tree's: the record's load_cache() never renders from such a cache" | `t_p0sol_0a_r4_a_key_field_not_the_key_of_its_parts_refuses` |
+| R-5 | `%g` can print "inp 7.23 -> 7.23" | each moved value printed as its float's repr: "(inp 7.23 -> 7.2300001; ocp 6.364/6.8/7.136 -> 6.364/6.8/7.1360000001)" | `t_p0sol_0a_r5_a_numbers_only_move_prints_each_value_as_its_repr` |
+| R-6 | section 7: the results-file pin also moves and 0a gains a line; five regex call sites, not four | corrected in place in section 7 (each marked with W70's R-6 and the old words) | none (prose) |
+| R-7 | the re-key's preflight `--key-expect` must name `src` too | section 7, step 1 | none (a chain item) |
+
+**The KEY's parts, 2d81d8b2 against 935584bf** (W70's method: `key_parts()` of the record on the committed cache's file list, in a
+`--shared` sparse clone under the session scratch with the 70 held sheets copied in, `python3 -B`; no solver, no re-key, no `_R()`;
+177 files, none missing):
+
+```
+2d81d8b2 KEY 6e11114faadda427 missing files 0
+935584bf KEY 6e11114faadda427 missing files 0
+stage_settings sha256 equal: True 69614857cfa8c4f2
+  files          EQUAL
+  l4e11_numbers  EQUAL
+  pdftotext      EQUAL
+  python         EQUAL
+  scans          EQUAL
+  solver         EQUAL
+  src            EQUAL
+files: 177 recorded, 0 differing
+KEY 2d81d8b2 6e11114faadda427, 935584bf 6e11114faadda427: EQUAL
+```
+
+The KEY at 2d81d8b2 is W70's tip value (6e11114f...). Only `src` could differ at all (it is read from `l4e7_stage_settings.py`, whose
+sha256 is unchanged), and it does not; the two changed files (`l4e7_p0sol.py`, `test_l4e7.py`) and this page are not in the cache's
+files part.
+
+**Tests as run on the runner** (no solver; one module at a time; `TMPDIR` in the session's scratch):
+- `test_l4e7_cachekey.`: `tests: 7 passed, 0 failed, 0 skipped`.
+- `test_l4e7.t_p0sol`: `tests: 16 passed, 2 failed, 0 skipped; failed: test_l4e7.t_p0sol_committed_out_is_what_the_script_prints,
+  test_l4e7.t_p0sol_the_inputs_it_pins_are_this_trees_files` (the twelve of section 7 and W71's four; the two failures are the two
+  owed to the re-key: the script refuses with "the cache's KEY differs from this tree in: the file
+  v2/docs/records/l4e11/l4e11_power.out (a2089b3f6682d7fd in the cache's KEY, not in the KEY's files part here); the part
+  l4e11_numbers (...); the part src; the cache is stale for this tree", as at 2d81d8b2).
+- `test_l4e7.t_p0sol_0a` with 935584bf's test file against 2d81d8b2's script (the scratch clone): `tests: 0 passed, 5 failed, 0
+  skipped` (R-2: the old sentence; R-3, R-4: "no refusal"; R-5: "inp 7.23 -> 7.23"; W67's restated test: its fixture's O no longer
+  carries `key_diff`); at 935584bf `tests: 5 passed, 0 failed, 0 skipped`.
+- `test_public_hygiene.`: `tests: 4 passed, 0 failed, 0 skipped`.
+
+**SESSION decisions** (`authority: SESSION`, under the owner's standing rule of 26 September 2026; none is an owner question):
+- R-3 by removal, not by making the branch reachable: the state it served (a cache keyed on the file's whole digest and nothing else
+  moved) cannot exist after WP-B, so one accepted state is the true contract. Reverse: restore the acceptance and the sentence of
+  2d81d8b2.
+- `O["key_holds"]` removed: after R-3 and R-4 the KEY holds in the one state `key_state()` accepts, so a branch on it is dead code.
+  Reverse: restore it with para_0a's "does NOT hold" alternative.
+- The files diff is taken over the files of both sides, so "no part differs" with the key field check means the KEY holds exactly
+  (it changes nothing on this cache: the tree's files part is computed from the cache's list). Reverse: the cache's files only.
+- The count in 0a is the record's declaration, written as a word (sixteen), not typed. Reason: a changed extractor list would
+  otherwise leave the sentence wrong in silence. Reverse: type "sixteen".
+- The fixture tests call `key_state()` as the version under test takes it (they read its signature), so each fails at 2d81d8b2 for
+  the defect it pins, not for the added `key_of` argument. Reverse: call it with four arguments.
+- 0a's wording grows the paragraph to 9 lines (from 7; 8 at 2d81d8b2). Reason: R-2 asks for the narrower claims and they cost words;
+  the annex's re-cite (R-1) is owed by the regeneration either way. Reverse: shorten the sentence; step 2a then expects other lines.
