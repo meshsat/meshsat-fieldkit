@@ -1690,3 +1690,40 @@ portions marked PROVISIONAL; no desk-solvable defect parked in the supplier list
 `records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md` (its revised scope accepted by part 20, not its circuitry). P0 and the three
 assignments are unchanged; Slot B's first run (cx44, Astra) returned NOT SUPPORTED on the F01 selection (c) and is kept as given.
 
+### Milestone, 6 October 2026 10:36:57 CEST: integration set 30 promoted as a DESK candidate (main `dd1aed00`)
+
+**Promoted:** main `dd1aed00` (`dd1aed00d0a0a521063b5792550bc510c4707c59`), `fnd/p0pwr`'s tip, by fast-forward at 10:36:57 CEST;
+the public mirror synced 2026-10-06T08:37:03Z, GitHub main at the same sha. INTEGRATED = CANDIDATE = PROMOTED. REVIEWED: `4d0ff8a2`
+(cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."). Gated by `_bin/suite_gate.py` (`suite_gate: PASS`) on four passes of that commit
+against one manifest of 997 evidence files: box pass A (Ubuntu 24.04, Python 3.12.3) 2770 passed, 0 failed, 2 skipped; box pass B
+(Python 3.11.17, test_l4e10 and test_l4e12) 48 passed; the records box (debian:12, Python 3.11.2, pdftotext 22.12.0) 234 passed;
+the runner (Python 3.11.2, test_l4e7) 64 passed, 1 skipped; 236 of 236 modules, 3116 PASS lines, 3 explained skips, 0 FAIL.
+`candidate_guard: PASS` on every host and on main at the promotion; the l4e7 KEY MATCH df9030eaf2c8e7bf (the cache keyed on Python
+3.11 and pdftotext 22.12.0). The first box pass, on `c4438d6a`, was not gated: 149 of its failures were the boxes' missing
+poppler-data, one was the pack specification's unclassified `compact/` files (the candidate's defect, fixed in `dd1aed00`), and its
+three skips were board gates' outputs absent from the worktree's evidence; the second gate attempt refused one missing-input skip
+(13 IBIS models, installed; the manifest 984 to 997 files).
+
+**What it closes:** no power item. Set 30 integrates the P0 power candidate's records after cx46 as a DESK candidate; the 14
+commits after the review that change reviewed inputs are UNREVIEWED CHANGES, credited nothing (W15's 13 of 38 to `6bc4424e`; at `dd1aed00`: 14 of 45 (`records/int30/CLASSIFICATION.md` rows 39 to 45; `records/int30/RESULT.md` section 2)).
+
+**The three claims, apart, and the gate (the coordinator's judgement of 10:45 CEST, one count corrected at about 10:59 by the clock, inserted whole in the assessment in the adoption commit `836f711b` at 11:25 CEST):** engineering-handover readiness READY AS A
+DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED. Layer 4's DESK gate NOT PASSED: its premise,
+every desk-fixable defect corrected and independently checked, is not met (twelve corrections NOT CLOSED under an ended method, the
+receiving company's remaining engineering; fourteen unreviewed changes after cx46 over `4d0ff8a2..dd1aed00`, seven of them not only
+narrowing).
+
+**Pending:** the owner's decision on Layer 5. Part 19 opens it at Layer 4's DESK gate; with the gate NOT PASSED, Layers 5 to 12 stay
+paused unless the owner rules that a handover-ready desk package with its remaining engineering named opens the next layer (reported,
+not asked). Set 31 is prepared on branches (record text), not in this revision.
+
+**The records:** `records/l4close/P0-POWER-LIST.md` (revision 3, adopted on `dd1aed00`; revision 2 kept as
+`records/l4close/P0-POWER-LIST.rev2-2026-10-05.md`); `records/l4close/L4-DESK-GATE-ASSESSMENT.md` (the assessment on `dd1aed00`,
+the coordinator's judgement inserted whole in its section 6 in the adoption commit `836f711b` at 11:25 CEST, after W27 held it on two
+sentences while drafting); `records/l4close/REMAINING-ENGINEERING.md` (the ledger);
+`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md` (the annex); `records/int30/RESULT.md` and
+`records/int30/CLASSIFICATION.md` (adopted on `fnd/adopt30a`); `handover/LAYER-STATUS.md` (Layer 4's block).
+
+**Compute of set 30 (6 October):** suite5 54417830 about 6.2 h at 0.1663 USD/h total (0.12 compute and the 100 GB disk); rekey6
+54423482 about 0.5 h and rekey7 54433045 about 0.25 h (unused) at 0.068; the records box 54444804 about 2 h at 0.068; suite4
+54347953 stopped by the watchdog at 01:30 and never restarted; every instance stopped, disks kept, none destroyed.
