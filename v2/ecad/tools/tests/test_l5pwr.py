@@ -17,9 +17,9 @@ ramp, a withdrawn text still in a target names its finding, and the page's secti
 files, nor any wording of set 28's sweep, the tree carries both restatements as the Layer 4 files printed them when the scripts
 were applied ("already applied"; their Layer 4 reads pinned at a49a2b13 since W1) on every text W8 did not restate, and on the five
 W8 restated (L5-F09 a to d, F11-09; its change record row "| 2 (W8, L5-F14) |") three properties in their place (W14, 6 October
-2026: on that tree the first script refuses by its docstring's rule and the second refused at its ORDER check until f0d0e54e applied W14's correction
-test_w14l5.PATCH_L5F11_ORDER to it in set 31, and now refuses with its own state (W35's restatement below)), each script applies once to the files it was
-written against and is idempotent, and the second refuses before the first. W1 (6 October 2026): S27-B6 reads L4-E9's D-10 as set 31
+2026: on that tree the first script refuses by its docstring's rule and the second at its ORDER check, whose proposed correction is
+test_w14l5.PATCH_L5F11_ORDER), each script applies once to the files it was
+written against and is idempotent, and the second refuses before the first. Since f0d0e54e applied that correction to the second script in set 31, it refuses on this tree with its own state, no longer at its ORDER check (W35's restatement below; W41, 6 October 2026, W38's F7, after W20-18's applied words). W1 (6 October 2026): S27-B6 reads L4-E9's D-10 as set 31
 left it, refusing set 28's sentence on the page and set 31's on a copy that carries set 28's.
 Software predicates on text: they establish no electrical property and accept nothing.
 """

@@ -109,7 +109,7 @@ PINS = {
     "l8p_breaker": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-6eeb6cfe.txt", "e8f1294bb0f76c75d146332e41d3783256474804905faa296bcdca8bc0cf2693"),
     "l8p_enable": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-69b8c3bb.txt", "c1fa1713c6e5fe291984e8f31e8a47eff447743c38dfc364d05b9e80dcfe5912"),
     "l8p_ptc": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-8e6a938c.txt", "cedae4eb4572a6a5b137dfc151b07d96ac9004e332317dba1c6d703941ce95c0"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "b4a5022e9bf72fe804c4871f4e07bb97b8a618a4b91a7f1376cc8068e2561397"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "30228a3a971405b0c120502b528ac63480382f19f56dbebf958db7758f9d8300"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -119,10 +119,10 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "4496ea7a4aa9b610bd943d02bd62b787729a96620cb95fd98d6efec71a5276f0"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "36141414a1b60011353db8749fef37201f12804bf2f38f408360753645d44a10"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "101b9896de5195619dda7fb97eafd24fd349abaeb879bb79edc4456ced6bf4b3"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "7fca5dd8d7938e84fd284e6403d296677056228b7afa23f3e1383d43760cddf4"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "68d3df24f9e105cd2e062c3ef4b23fe572e98489186fee4c0e5194df9a8fb51a"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
@@ -177,7 +177,7 @@ PINS = {
     "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "eda720a68db60cd314547a8552c09952a6a7a8803de9e07b63af9a0d09b5851f"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # set 30 (6 October 2026): the P0 round's solar record output, read by the D-10 / D-16 citation check (the applied change-list text cites its figures)
-    "l4e7p0": ("v2/docs/records/l4e7/l4e7_p0sol.out", "061ddb2d6756e1e8cc4a81c127f508bf3816b76320c1b2d9e779606221461082"),
+    "l4e7p0": ("v2/docs/records/l4e7/l4e7_p0sol.out", "7d0ec93f47ae7e62c177b1feead4dab1ca25260f24f25088b169cea27e476c63"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
     "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47"),
     "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "04025bca610844ddc0910c7cd96528cb2345a8d9d3cf2c979ac1d8c87214bc4d"),

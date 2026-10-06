@@ -204,7 +204,7 @@ check are re-taken against this restatement and a supplier agrees the fixture re
 requirement" [SET31:80-81]). This branch re-takes the quotation: TP-E11-29 quotes the restated R-159 cell [TP29:613-666] and the
 restated 5d Specimen cell [TP29:130-133], and states its first condition on them [TP29:718-724]. The check's committed output is the
 coordinator's to re-take at adoption; no supplier has agreed. **The narrower statement:** TP-E11-29 stays NOT EXECUTABLE; its first
-condition is met on set 31's lineage (`fnd/int31regen`, which carries this re-quotation; set 30's promoted `dd1aed00` does not) once the coordinator re-takes the check there, not before; the second, a
+condition is met on the promoted set of the integration after set 30 (`fnd/int31regen`), which adopts TP-E11-29's restated condition (set 30's promoted `dd1aed00` carries the re-quoted cells but its condition (1) still reads that the two quotes differ), once the coordinator re-takes the check there, not before; the second, a
 supplier's written agreement, is not met. Set 29's per-FET 45.88 K/W stood in L4-E9's D-14 rows, U-04's row and UDC-1's
 comparison [SET31:120-122], [L4E9:1401] until W7's rows were applied in set 31 (467c2aaa); those rows now label it SUPERSEDED beside 40.78 K/W without m and the 37.59 K/W target (dated history, restated by W41 on 6 October 2026: W38's F5); this annex's targets are
 E11-29's row's [ANX:105].
