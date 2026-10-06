@@ -334,6 +334,9 @@ def t_every_citation_lies_inside_its_file_at_the_base():
     assert not bad, "; ".join(bad[:8])
 
 
+ADOPTED_ON_30A = {"records/int30/CLASSIFICATION.md": "b7769c8c", "records/int30/RESULT.md": "b7769c8c"}
+
+
 def t_every_path_named_exists():
     paths = set(PATH.findall(_set30())) | set(_cites())
     bad = []
@@ -343,6 +346,12 @@ def t_every_path_named_exists():
             ok = os.path.isdir(os.path.join(ROOT, rp))
         else:
             ok = _blob(p) is not None or os.path.isfile(os.path.join(ROOT, rp))
+            if not ok and p in ADOPTED_ON_30A:
+                # restated at the adoption (W27, 6 October 2026): the coordinator's correction of 11:15 has Layer 4's block name
+                # the two records the other adoption author adopts on fnd/adopt30a (b7769c8c); until both adoption branches merge
+                # they exist at that commit, after it in the tree
+                ok = subprocess.run(["git", "-C", ROOT, "cat-file", "-e", "%s:%s" % (ADOPTED_ON_30A[p], rp)],
+                                    capture_output=True).returncode == 0
         if not ok: bad.append(p)
     assert len(paths) >= 30, "the set 30 text names fewer paths than it did: %d" % len(paths)
     assert not bad, "paths naming nothing at the base or in the tree: %s" % bad
@@ -393,12 +402,19 @@ def t_the_verdicts_are_the_filed_ones_and_cx46_counts_agree():
     assert _json(CX46)["owner_decision_required"] is False
 
 
+DESK_CELL = ("**The Layer 4 DESK gate:** the coordinator's judgement of 6 October 2026, 10:45 CEST, on the promoted revision `dd1aed00`: "
+             "Layer 4's DESK gate NOT PASSED; engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS; power-design closure "
+             "BLOCKED; fabrication release BLOCKED (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6")
+
+
 def t_the_desk_gate_is_the_placeholder_and_the_claims_read_as_briefed():
-    """The placeholder is the coordinator's to replace at adoption; until then it stands once, literally, in Layer 4's
-    block. After adoption this rule names the replacement as the reason it fails, so the coordinator restates it."""
-    assert _page().count(PLACEHOLDER) == 1, "the DESK-gate placeholder must appear once, literally (replaced at adoption?)"
+    """The placeholder was the coordinator's to replace at adoption. Restated by W27 at the adoption (6 October 2026; basis: the
+    coordinator's judgement of 10:45 CEST on the promoted revision dd1aed00): the placeholder is gone and the cell carries the
+    coordinator's three claims, each with its own state word, citing the assessment, once in Layer 4's block."""
+    assert _page().count(PLACEHOLDER) == 0, "the DESK-gate placeholder still stands after the adoption"
     l4 = _block("4")
-    assert "**The Layer 4 DESK gate:** " + PLACEHOLDER in l4
+    assert sum(1 for x in l4.splitlines() if x.startswith(DESK_CELL)) == 1, "the DESK-gate cell is not the coordinator's claims"
+    assert _page().count("**The Layer 4 DESK gate:**") == 1
     lines = [x for x in l4.splitlines() if x.startswith("- ")]
     for c in CLAIMS:
         assert sum(1 for x in lines if x.startswith(c)) == 1, "the claim line is missing or doubled: %s" % c
