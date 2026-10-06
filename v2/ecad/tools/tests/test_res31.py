@@ -47,7 +47,8 @@ PATCH_TOKENS = ("__PROMOTED__", "__ADOPTION__")
 # main's commits named by the record, not in this branch's history until main is merged into set 31's lineage
 OUTSIDE = {"eff28be3b80f882db545a849b0da1def0217f63d": "main's follow-up after set 30's adoption, the copies' source",
            "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec": "set 30's adoption commit on main",
-           "4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31 at W39's last commit, the counts before W50's reconciliation"}
+           "4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31 at W39's last commit, the counts before W50's reconciliation",
+           "353b41dd2144dba237f2df9616dadd452f62569f": "fnd/res31 at W50's last commit, the counts before W51's five rows"}
 S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
 S30C = "v2/docs/records/int30/CLASSIFICATION.md"
 RIC = "REVIEWED-INPUT CHANGED"
