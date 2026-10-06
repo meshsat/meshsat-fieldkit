@@ -43,6 +43,25 @@ owner's standing rule of 26 September 2026 (authority SESSION, W103, on the coor
 the working tree's two pages, which a later set edits by its own rows and holds by its own tests (test_patch32 for set 32);
 reversed by reading `_read(p)` again in t_the_entry_pages_are_the_copies_with_every_row_applied.
 
+Restated by W105 (7 October 2026, fnd/adopt32; basis: set 32's 38 rows of `v2/docs/records/int32/ENTRY-PAGES.patch.md`, applied to
+the four pages on fnd/adopt32, and W99's finding C6 as W102 listed it there, "The tests the rows break"): set 32's rows put a set 32
+block directly under each of Layers 4, 5, 8, 9 and 12, above set 31's (L-02 to L-06), set 32's milestone after set 31's at the plan's
+end (P-01), the DESK gate and the three claims a second time on each entry page (S-05, U-03), set 32's citations at `ee940742`,
+`3057ae43` and `4d07a401` into the text this module took as set 31's, and the GATE token onto the entry pages. Five predicates read
+set 31's text from the WORKING TREE's pages and so judged set 32's rows: t_the_pages_carry_only_their_declared_tokens,
+t_the_set_31_blocks_sit_first_under_their_headings, t_every_dated_citation_resolves_and_its_quote_is_found,
+t_the_claims_are_the_assessments_lines_verbatim and t_the_plan_entry_is_one_and_last (with the placement fixture of
+t_the_checkers_refuse_their_defects and the shared text31, which t_set_31s_text_carries_no_dash_no_acceptance_word_and_no_percentage
+reads). Each now judges set 31's pages where set 31's adoption made them, at both commits of ADOPTED through `git show` (W103's form),
+with the same predicate and the same fixtures; block31 starts at set 31's own block, so a set 32 block above it is never read as set
+31's. The working tree's four pages are held by set 32's tests: test_patch32 (every row's new text on its page, set 32's blocks first
+and its milestone last, the rows' counts, claims, quotes and citations) and test_adopt32 (each page equals set 31's adopted page at
+ad757edb with the pinned branches' own changes and set 32's rows, nothing else; set 32's tokens by the fill's stage; set 32's text
+without a dash, an acceptance word or a percentage). The records this module reads in the tree (the int31 record, its copies, the
+assessment) and t_the_counts_are_the_classifications_and_gits keep reading the tree. Taken under the owner's standing rule of 26
+September 2026 (authority SESSION, W105, on the brief's form for set 31's tests); reversed by reading `_read(p)` for the four pages
+again in those predicates.
+
 Runs under the suite's runner (`python3 v2/ecad/tools/tests/run.py test_adopt31.`) and under pytest (each t_ function has a
 test_ alias). Without git or a cited commit, the predicates that read it skip with their reason."""
 import os
@@ -261,9 +280,11 @@ def _section(t, h):
 
 
 def block31(t, n):
-    """Layer n's set 31 block: from the line after its heading to the next set's block."""
+    """Layer n's set 31 block: from its own heading line (the line after the layer's heading at set 31's adoption; W105: below set
+    32's block once set 32's rows are applied) to the next set's block."""
     s = _section(t, L31[n])
-    body = s[len(L31[n]) + 1:]
+    i = s.find("\n" + BLOCK31, len(L31[n]) - 1)
+    body = s[len(L31[n]) + 1:] if i < 0 else s[i + 1:]
     ends = [x for x in (body.find("\n**After set 30 (6 October 2026"), body.find("\n**After set 29 (4 October 2026")) if x >= 0]
     return body[:min(ends) + 1] if ends else body
 
@@ -299,14 +320,22 @@ def _plan_entry(t):
     return t[hs[0].start():]
 
 
-def text31():
-    """Every text set 31's adoption adds: the head paragraph, the five blocks, the plan entry and the entry pages' changed lines."""
-    t = _read(LS)
+def _at31(c, p):
+    """W105: a page as set 31's adoption commit c holds it (git show; Skip where c is absent, an error where the file is)."""
+    t = _show(c, p)
+    assert t is not None, "%s: no %s" % (c[:8], p)
+    return t
+
+
+def text31(c):
+    """Every text set 31's adoption adds: the head paragraph, the five blocks, the plan entry and the entry pages' changed lines,
+    read at set 31's adoption commit c (W105: the working tree's pages carry set 32's rows too)."""
+    t = _at31(c, LS)
     i = t.index(HEAD31)
-    parts = [t[i:t.index("\n", i)]] + [block31(t, n) for n in L31] + [_plan_entry(_read(PLAN))]
+    parts = [t[i:t.index("\n", i)]] + [block31(t, n) for n in L31] + [_plan_entry(_at31(c, PLAN))]
     for p in COPIES:
-        old = set(_read(COPIES[p]).split("\n"))
-        parts.append("\n".join(x for x in _read(p).split("\n") if x not in old))
+        old = set(_at31(c, COPIES[p]).split("\n"))
+        parts.append("\n".join(x for x in _at31(c, p).split("\n") if x not in old))
     return "\n\n".join(parts)
 
 
@@ -391,17 +420,19 @@ def t_the_entry_pages_are_the_copies_with_every_row_applied():
 
 
 def t_the_pages_carry_only_their_declared_tokens():
-    errs = []
-    for name in (START, SUPPLIER, PATCH):
-        errs += token_errors(name, _read(name))
-    errs += token_errors(LS, "\n".join(block31(_read(LS), n) for n in L31))
-    errs += token_errors(PLAN, _plan_entry(_read(PLAN)))
-    assert not errs, errs
-    t = _read(LS)
-    outside = t
-    for n in L31:
-        outside = outside.replace(block31(t, n), "", 1)
-    assert not PH.findall(outside), "a token outside set 31's blocks: %s" % PH.findall(outside)[:3]
+    # W105: judged at set 31's adoption commits (docstring); set 32's tokens on the working tree are test_adopt32's
+    for c in ADOPTED:
+        errs = []
+        for name in (START, SUPPLIER, PATCH):
+            errs += token_errors(name, _at31(c, name))
+        errs += token_errors(LS, "\n".join(block31(_at31(c, LS), n) for n in L31))
+        errs += token_errors(PLAN, _plan_entry(_at31(c, PLAN)))
+        assert not errs, "%s: %s" % (c[:8], errs)
+        t = _at31(c, LS)
+        outside = t
+        for n in L31:
+            outside = outside.replace(block31(t, n), "", 1)
+        assert not PH.findall(outside), "%s: a token outside set 31's blocks: %s" % (c[:8], PH.findall(outside)[:3])
     res = open(os.path.join(TOOLS, "tests", "test_res31.py"), encoding="utf-8").read()
     m = re.search(r"^PATCH_TOKENS = \(([^)]*)\)", res, re.M)
     assert m and set(re.findall(r"\"(__[A-Z]+__)\"", m.group(1))) == TOKENS[PATCH], "test_res31's PATCH_TOKENS differ"
@@ -415,31 +446,34 @@ def t_the_pages_carry_only_their_declared_tokens():
 
 
 def t_the_set_31_blocks_sit_first_under_their_headings():
-    errs = placement_errors(_read(LS))
+    # W105: judged at set 31's adoption commits (docstring); on the working tree set 32's blocks stand above them (test_patch32)
+    errs = ["%s: %s" % (c[:8], e) for c in ADOPTED for e in placement_errors(_at31(c, LS))]
     assert not errs, errs
 
 
 def t_every_dated_citation_resolves_and_its_quote_is_found():
-    bad, n = citation_errors(text31())
-    assert n >= 30, "set 31's text cites less than written: %d" % n
-    assert not bad, bad[:6]
+    for c in ADOPTED:   # W105: set 31's text at set 31's adoption commits (docstring)
+        bad, n = citation_errors(text31(c))
+        assert n >= 30, "%s: set 31's text cites less than written: %d" % (c[:8], n)
+        assert not bad, (c[:8], bad[:6])
 
 
 def t_the_claims_are_the_assessments_lines_verbatim():
     a = _show(LINEAGE, ASSESS).split("\n")
     tree = _read(ASSESS).split("\n")
-    l4 = _norm(block31(_read(LS), "4"))
-    for n, w in CLAIMS.items():
-        assert w in a[n - 1] and w in tree[n - 1], "the assessment's line %d does not read %r" % (n, w)
-        assert ("`%s:%s:%d` `%s`" % (LINEAGE[:8], ASSESS, n, _norm(w))) in l4, "Layer 4's set 31 block does not quote line %d" % n
-    plan = _norm(_plan_entry(_read(PLAN)))
-    for w in ("engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS", "power-design closure BLOCKED",
-              "fabrication release BLOCKED", "Layer 4's DESK gate NOT PASSED"):
-        assert w in plan, "the plan entry lacks %r" % w
-    for p in COPIES:   # the entry pages keep set 30's four claims in the coordinator's words (test_w30entry holds the block)
-        for w in ("\"Layer 4's DESK gate: NOT PASSED\"", "\"Power-design closure: BLOCKED.\"", "\"Fabrication release: BLOCKED.\""):
-            assert _read(p).count(w) == 1, "%s: %s" % (p, w)
-    assert "Set 31 closes NO power item." in _read(RESULT) and "\"Set 31 closes NO power item.\"" in plan
+    for c in ADOPTED:   # W105: set 31's pages at set 31's adoption commits (docstring); the assessment and the record in the tree
+        l4 = _norm(block31(_at31(c, LS), "4"))
+        for n, w in CLAIMS.items():
+            assert w in a[n - 1] and w in tree[n - 1], "the assessment's line %d does not read %r" % (n, w)
+            assert ("`%s:%s:%d` `%s`" % (LINEAGE[:8], ASSESS, n, _norm(w))) in l4, "%s: Layer 4's set 31 block does not quote line %d" % (c[:8], n)
+        plan = _norm(_plan_entry(_at31(c, PLAN)))
+        for w in ("engineering-handover readiness READY AS A DESK PACKAGE OF OPEN ITEMS", "power-design closure BLOCKED",
+                  "fabrication release BLOCKED", "Layer 4's DESK gate NOT PASSED"):
+            assert w in plan, "%s: the plan entry lacks %r" % (c[:8], w)
+        for p in COPIES:   # the entry pages keep set 30's four claims in the coordinator's words (test_w30entry holds the block)
+            for w in ("\"Layer 4's DESK gate: NOT PASSED\"", "\"Power-design closure: BLOCKED.\"", "\"Fabrication release: BLOCKED.\""):
+                assert _at31(c, p).count(w) == 1, "%s: %s: %s" % (c[:8], p, w)
+        assert "Set 31 closes NO power item." in _read(RESULT) and "\"Set 31 closes NO power item.\"" in plan
 
 
 def t_the_counts_are_the_classifications_and_gits():
@@ -484,17 +518,19 @@ def t_the_merged_branches_the_cache_commit_and_the_contract():
 
 
 def t_the_plan_entry_is_one_and_last():
-    t = _read(PLAN)
-    e = _plan_entry(t)
-    assert t.index("### Milestone, 6 October 2026 10:36:57 CEST: integration set 30 promoted") < t.index(e), "out of order"
-    assert "\n### " not in e[4:], "a heading after set 31's entry"
-    head = e.split("\n", 1)[0]
-    assert re.fullmatch(re.escape(PLANHEAD % "\x00").replace("\x00", "(?:__CANDIDATE__|[0-9a-f]{8,40})"), head), head
+    for c in ADOPTED:   # W105: at set 31's adoption commits (docstring); set 32's milestone follows it on the working tree (test_patch32)
+        t = _at31(c, PLAN)
+        e = _plan_entry(t)
+        assert t.index("### Milestone, 6 October 2026 10:36:57 CEST: integration set 30 promoted") < t.index(e), "%s: out of order" % c[:8]
+        assert "\n### " not in e[4:], "%s: a heading after set 31's entry" % c[:8]
+        head = e.split("\n", 1)[0]
+        assert re.fullmatch(re.escape(PLANHEAD % "\x00").replace("\x00", "(?:__CANDIDATE__|[0-9a-f]{8,40})"), head), (c[:8], head)
 
 
 def t_set_31s_text_carries_no_dash_no_acceptance_word_and_no_percentage():
-    errs = word_errors(text31())
-    assert not errs, errs
+    for c in ADOPTED:   # W105: set 31's text at set 31's adoption commits (docstring); set 32's text is test_adopt32's
+        errs = word_errors(text31(c))
+        assert not errs, (c[:8], errs)
     m = open(os.path.abspath(__file__), encoding="utf-8").read()
     assert not any(d in m for d in DASHES), "a dash in this module"
 
@@ -542,8 +578,9 @@ def t_the_checkers_refuse_their_defects():
         assert row_errors(rs, pages, cp), "row_errors accepts %s" % name
     # tokens: an undeclared one, __PROMOTED__
     assert token_errors(START, "x `__GATE__`") and token_errors(START, "x `__PROMOTED__`") and not token_errors(START, "`__ADOPTION__`")
-    # placement: the real page passes; set 31's Layer 9 block moved below its set 30 block fails
-    t = _read(LS)
+    # placement: the real page passes; set 31's Layer 9 block moved below its set 30 block fails (W105: the page at set 31's
+    # adoption commit, as t_the_set_31_blocks_sit_first_under_their_headings reads it)
+    t = _at31(ADOPTED[-1], LS)
     assert not placement_errors(t)
     b9 = block31(t, "9")
     moved = t.replace(L31["9"] + "\n" + b9, L31["9"] + "\n", 1)

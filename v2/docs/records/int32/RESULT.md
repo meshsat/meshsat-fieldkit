@@ -12,11 +12,12 @@ to 13.4, none `REVIEWED-INPUT CHANGED`, read by W87, an AI review, and each stil
 revision (set 32's base), the chain's counts and the freeze's and the gate's lines, the re-key's cache commit, the candidate, the
 promotion and the adoption commit, each a placeholder that the coordinator's fill tool fills (the paragraph "Placeholders" below).
 **NEXT:** at the adoption, in this order: the coordinator runs the fill tool on both files and the patch file they name (`<worktrees>/_bin/fill_res.py --set 32`:
-template, values, apply; ADOPTION in its second run; `test_res32.py` holds this file before the fill and after each run, W80), applies
-the patch file's rows to the four pages (W95; restating the tests of set 31's pages that the rows break, the patch file's paragraph
-"The tests the rows break"), fills the pages' two ADOPTION cells (the patch file's rows S-07 and U-05) in the fill's second run once
-the coordinator extends `fill_res.py --set 32` to the four pages (queue item Q-124), and until then by hand, exactly those two cells
-with the second run's value, writes
+template, values, apply; ADOPTION in its second run; `test_res32.py` holds this file before the fill and after each run, W80), after
+merging branch fnd/adopt32 (W105: the patch file's rows applied to the four pages with their tokens, the tests of set 31's pages that
+the rows break restated, `test_adopt32` new; the patch file's paragraph "The rows applied and the tests restated"), so that the
+fill's first run fills the four pages' CANDIDATE and GATE tokens and its second run their two ADOPTION cells (the patch file's rows
+S-07 and U-05) with the rest, since W103 extended `fill_res.py --set 32` to the four pages (queue item Q-124; W106's N-a), confirms
+W99's notes N6 and N7 before the adoption commit (the patch file's NEXT, item 3; W106's N-b), writes
 the classification's row 31 in full (it carries no token) and its rows 32 and 33's other cells from git by hand, recomputes its section
 2, extends the ranges of `test_res32.py` over the integration's commits, restates this header and the patch file's for the state
 after the fill and the adoption, and adopts this file with `CLASSIFICATION.md`; then the coordinator's dependency pass for the
@@ -432,7 +433,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 | W36's, W52's, W64's and W70's reports as received; W37's plan draft; the chain, its README and W66's dry run logs | `<worktrees>/_runs/claude/w36rev/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/claude/w52rev32b/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/claude/w64revkey/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/claude/w70rechkkey/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/int32/PLAN.draft.md`, `<worktrees>/_runs/int32/README.md`, `<worktrees>/_runs/int32/chain.sh`, `<worktrees>/_runs/int32/dryfull-1955-wpb.log` | outside the repository; cited, never copied (they carry host paths) |
 | Set 31's records | `v2/docs/records/int31/RESULT.md` and `CLASSIFICATION.md` on fnd/res31 `4196e9df` and later | adopted at set 31's promotion; not in this record's branch history |
 | The assessment and the three claims | `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` | in this branch's history since main's adoption was merged into set 31's lineage (`d5d9c252`) |
-| The rows for the four adoption pages (W95) | `v2/docs/records/int32/ENTRY-PAGES.patch.md` | 38 rows (START-HERE.md 15, SUPPLIER-HANDOVER.md 16, LAYER-STATUS.md 6, EXECUTION-PLAN.md 1), written against the pages as set 32's integration holds them (main `ad757edb`, the four other pinned branches and the chain's step a5; U-16's line corrected by W102 on W99's B1); applied at set 32's adoption; the fill tool fills its tokens because this file names it; `test_patch32.py` holds the rows |
+| The rows for the four adoption pages (W95) | `v2/docs/records/int32/ENTRY-PAGES.patch.md` | 38 rows (START-HERE.md 15, SUPPLIER-HANDOVER.md 16, LAYER-STATUS.md 6, EXECUTION-PLAN.md 1), written against the pages as set 32's integration holds them (main `ad757edb`, the four other pinned branches and the chain's step a5; U-16's line corrected by W102 on W99's B1); applied to the four pages on fnd/adopt32 by W105 (merged at set 32's adoption; `test_adopt32.py` holds the pages); the fill tool fills its tokens because this file names it; `test_patch32.py` holds the rows |
 
 ## 8. Left out, and why
 
@@ -469,7 +470,10 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   a5; the patch file's paragraph "How the rows were checked again"): the template 97 rows (this count unchanged), the first run 79
   lines with 3 ADOPTION occurrences deferred, the second 3 lines, a third refused; `test_res32`, `test_patch32` and
   `test_public_hygiene` read 30 passed before the fill, after the first run and with the rows applied, and after the second run once
-  the pages' two ADOPTION cells were filled by hand (before that `test_patch32` refused S-07 and U-05, W99's B2).
+  the pages' two ADOPTION cells were filled by hand (before that `test_patch32` refused S-07 and U-05, W99's B2). That hand fill
+  described the tool before W103's extension (queue item Q-124): the second run now fills both cells (W106's N-a). With the rows
+  applied to the four pages on fnd/adopt32 (W105), the tool's template also counts the pages' tokens, 25 more rows (START-HERE.md 8,
+  SUPPLIER-HANDOVER.md 8, LAYER-STATUS.md 3, EXECUTION-PLAN.md 6), each the token of a row of the patch file.
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.

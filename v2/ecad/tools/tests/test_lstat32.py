@@ -246,7 +246,10 @@ def t_the_placeholders_stand():
     l4 = _block(t, "4")
     # restated by W65 (6 October 2026, fnd/adopt31; basis: set 31's blocks carry set 31's declared __CANDIDATE__ until set 31's
     # adoption fills it, held by test_adopt31): set 30's two placeholders are filled everywhere outside set 31's blocks
-    t30 = re.sub(r"\*\*After set 31 \(6 October 2026\): IN_PROGRESS.*?(?=\n\*\*After set (?:30|29) )", "", t, flags=re.S)
+    # restated by W105 (7 October 2026, fnd/adopt32; basis: set 32's row L-02 of v2/docs/records/int32/ENTRY-PAGES.patch.md writes
+    # set 32's CANDIDATE and GATE tokens into Layer 4's set 32 block until set 32's fill, held by test_adopt32 and test_patch32):
+    # set 30's two placeholders are filled everywhere outside set 31's and set 32's blocks
+    t30 = re.sub(r"\*\*After set 3(?:1 \(6 October 2026\)|2): IN_PROGRESS.*?(?=\n\*\*After set (?:31|30|29) )", "", t, flags=re.S)
     for p in ("__CANDIDATE__", "__PROMOTED__"):
         assert p not in t30, "%s still stands on the page" % p
     assert ("INTEGRATED: `%s`" % PROM) in _norm(l4) and ("PROMOTED: `%s`" % PROM) in _norm(l4), "the chain's two shas"
