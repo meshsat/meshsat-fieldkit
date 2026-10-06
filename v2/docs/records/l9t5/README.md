@@ -411,3 +411,15 @@ and K-28 are generated lines of `l9t5_connected.out` (350 to 351, "rev X on V-B2
 output refuses on this tree at its L4-E11 pin"), the coordinator's at the regeneration; this README's line 76 ("it is the
 integrator's to apply") and line 158 (L4-E9 refuses at its L4-E11 pin, in the cx45 correction set kept as history) were not restated
 here: the change list was applied at integration commit 7070f106.
+
+**Tests (W9, run one process at a time on this branch):** `python3 -u v2/ecad/tools/tests/run.py test_w9l9t5.` printed "tests: 11
+passed, 0 failed, 0 skipped"; `test_public_hygiene.` "tests: 4 passed, 0 failed, 0 skipped"; the hand-page tests that read these pages
+(test_l9t5: `t_the_page_carries_the_outputs_figures`, `t_round3_l8r2_f35_is_answered_in_the_drafts_and_the_readme`,
+`t_round4_the_page_and_the_readme_carry_t10_and_the_cm5_assessment`, `t_round5_the_page_carries_the_outputs_figures`,
+`t_round6_t10_cx45_q3_the_containment_and_the_envelope_are_re_solved`, `t_p0_f01_the_ten_findings_are_disposed_of_and_f01_reads_provisional`,
+`t_record_hygiene`; test_l8r2: `t_the_page_and_the_record_carry_no_dash_and_no_claim_word`, `t_closing_check_c4_3_names_the_measured_steady_current`,
+`t_round8_the_page_and_the_readme_carry_the_rounds`, `t_p0_v6_b1_reproduces_v6_and_the_disposition_is_provisional_and_open_where_no_layout_realises_it`,
+`t_p0_the_group_centre_reading_is_withdrawn_as_realisability`) "tests: 12 passed, 0 failed, 0 skipped". Not run here: test_l9t5's and
+test_l8r2's composing tests (they regenerate the records for many minutes; `t_round4_the_connected_path_consumes_l8r2s_worst_vertex_and_is_never_a_pass`
+reads only the claim table's span of this README, which W9 leaves unchanged) and `test_remeng` (its quotation rule over these pages is
+held by `t_the_ledgers_quotations_in_these_pages_stay_found`).
