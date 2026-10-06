@@ -7,21 +7,21 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
 
 0. PINS (sha256/16 path)
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
-   1978ea89e6df4760 v2/docs/records/l4e9/l4e9_power_path.py
-   1357ff2601a30943 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
-   f247b65f2cf3bcf1 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   de921fea754869ef v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
+   3e3c80cea11d4952 v2/docs/records/l4e9/l4e9_power_path.py
+   a2e63ac72de83586 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   d6dedef36512d893 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   e90c11e00aeecbfb v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
    336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
-   f226c64941563f9c v2/docs/records/l9pwr/l9pwr_budget.out
-   8acf4bdd288c57cd v2/docs/records/l9t5/l9t5_drafts.out
-   2bd1e85ba1cfb3b3 v2/docs/records/efuse/efuse_check.out
-   bded1419103fdca8 v2/docs/records/l9stk/l9stk_protection.out
+   a3aa39fc2b240a5d v2/docs/records/l9pwr/l9pwr_budget.out
+   66bcd44bf9056180 v2/docs/records/l9t5/l9t5_drafts.out
+   9a87c24ad73d4e72 v2/docs/records/efuse/efuse_check.out
+   4567223ca918a873 v2/docs/records/l9stk/l9stk_protection.out
    3dbd9bda6bce760d v2/docs/records/l8p/l8p_c4.out
-   cb41e726c781a74f v2/docs/records/l9t5/l9t5_t10.out
-   95b8e7d13e5372f8 v2/docs/records/l9t5/l9t5_f01.out
-   5c969c371ff2b582 v2/docs/records/l8r2/l8r2_p0.out
-   430d1591714b49de v2/docs/records/l4e7/l4e7_p0sol.out
-   393b2bac6ffcb9a6 v2/docs/records/l8r2/l8r2_dist.out
+   557d846dc4651c25 v2/docs/records/l9t5/l9t5_t10.out
+   3f56104f2f0f8af6 v2/docs/records/l9t5/l9t5_f01.out
+   904c76d0daf2ab72 v2/docs/records/l8r2/l8r2_p0.out
+   03d24a1d6cc5f0df v2/docs/records/l4e7/l4e7_p0sol.out
+   398fc8a09de87bca v2/docs/records/l8r2/l8r2_dist.out
    f8960d36a62b8ee9 v2/docs/records/l8r2/l8r2_dist.py
    4f62b9d5b49179e0 v2/docs/records/l4e7/l4e7_p0sol.py
    e91265091bfd67b0 v2/docs/records/l9t5/l9t5_t10.py
@@ -58,8 +58,8 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
      at rest), which is a different state; each figure below names its row
 
 2. THE COMPOSITION (4c, P0-6, boards A, B and D; board E with P0-7): L4-E9'S CHANGE-LIST ORDER, then Layer 6's order-free tables. The list is L4-E9's register and
-   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-245 for the drafts
-   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): 118 changes, every
+   script, which carry this record's text draft apply_l4e9_changelist_p0.py (V6-m11: rows R-220 to R-245 for the drafts that had none)
+   as the integrator applied it at 7070f106, read from the tree (the draft's applied state), set 31's R-246 with them: 118 changes, every
    order constraint held by L4-E9's own cons_changes; the patched page's section 3 is the patched list: yes; WITHDRAWN: R-210, R-212, R-211
    board A: 26 drafts, every one applied; regenerated rc 0: 838 parts, 0 unplaced, intent written True, designators unique
      l4e6/r12 R-01; l4e11/guard R-124; l4e11/charger R-209; l4e4/r11 R-04; l4e8/bank R-07; l4e4/r138 R-05; l4e9/u17 R-06; l8gnd/gnd002 R-191; l8gnd/hotr1 R-192; l8r2/d8v3 R-220; l8r2/vbus20ov R-221; l8r2/packrtn R-201; l8r2/slotlm R-199; l8r2/fb01 R-200; l8p/ptc R-208; l4e11/dd7 R-217; l8p/thguard R-222; l8p/thgfs R-244; l9t5/iocbuck R-223; l9t5/iocpre R-224; l9t5/iocset R-242; l8r2/gndrtn R-225; efuse/u23ilm R-226; l9t5/paloop R-227; d8dec31/mainpb R-193; l6r2/lcsc order-free
@@ -213,7 +213,7 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    the supervisors' LDOs at R602 14.0 k (T10, Slot C's part 22 rows; section 10's decision): on revision V (fitted, L9T5-D7) the bounded
      state 103.9 C, every row at most 121.5 C (MODEL at 76.25 C on average currents, the drop's worst corner): every one holds against each row's
      criterion on the MODEL; the acceptance reads REMAINING ENGINEERING while the sustained peaks and the latent rail trip are open (section 11) (125 C
-     sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: 2 over (B7b, SHDN ignored (L9T5-D5) 125.9 C; babbling (nothing ends it) 134.7 C): rev X stays on V-B20
+     sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: 2 over (B7b, SHDN ignored (L9T5-D5) 125.9 C; babbling (nothing ends it) 134.7 C): revision X stays HELD with no admission route (round 5's V-B20 route SUPERSEDED, 10j (f))
    U551 INA250A2 at the cap's top: junction 98.8 C at 76.25 C air (TYPICAL RthJA; l9t5_f01.out)
    R55 (WSL2512 6 mOhm): 0.288 W at the cap's top with R55's other loads, 105.0 C at 76.25 C air (MODEL, ASSUMPTION 100 K/W); U13's least
      limit is taken at that temperature (printed TCR), so the coordination of section 8 carries R55's own heating
@@ -347,9 +347,9 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
      J_PA at the inside air (L9T5-F26), the guard's double failure and its draw (L8P-R9-F1, L8P-R9-F2; Slot C's); the CAN
      service for a TX pin toggled as a GPIO and after a latent stuck comparator (5; L9T5-F21, handed over, Slot C's)
    the reference at its actual load (V-PA-REF, l9t5_f01.out 6) beside B-PA1 and B-PA2
-   T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20; the containment (Slot C's round 6, composed here) CORRECTED IN
-     DRAFT, UNCHECKED, its qualification limits (the LDO's resistance and Zth on board B) and the VOS0 residual handed over (10j (e));
-     L9T5-F27, the decision identifier both records use (10)
+   T10: L9T5-F06 OPEN pending its independent check; revision X HELD with no admission route (round 5's V-B20 route SUPERSEDED, 10j (f));
+     the containment (Slot C's round 6, composed here) drafted, composed, read by pin and mutated, cx45's Q3 NOT CLOSED (10j, after cx46);
+     its qualification limits (the LDO's resistance and Zth on board B) and the VOS0 residual handed over (10j (e)); L9T5-F27, the decision identifier both records use (10)
    the guard's two paths (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance against the 30 uA row (L8P-R9-F2: L4-E11
      section 28 restated, record l9stk 15.9's re-take owed); the double failure after a latent first one (L8P-R9-F1, handed over);
      check_l8p_netlist.py's round 8 reader does not admit the delta (L8P-R9-F3): the composed board A is read by check_l8p_fs.py (3)
@@ -358,8 +358,8 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
      a 1x4 VH with two contacts a pole (a harness row and a board A land)
    the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (E-1, the receiving company's remaining engineering item); route
      B2 UNSELECTED and WITHDRAWN AS DRAFTED, out of the baseline, no protection credit and no owner item; it does not close D-10
-   L4-E9's change-list rows: drafted (apply_l4e9_changelist_p0.py), applied by the integrator with the re-takes it names (L4-E11's
-     and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin
+   L4-E9's change-list rows: drafted here (apply_l4e9_changelist_p0.py), APPLIED by the integrator at set 30's integration commit 7070f106 to L4-E9's
+     register, script and page; applying them accepts no draft (cx46: CORRECTIONS NOT CLOSED; the claims read OPEN or PROVISIONAL as above); L4-E9's generator re-pinned at 2a (bbba3e53), its output regenerated in set 31 with its four cascade pins (l4e10, l4e11, l4e12, L4-E7's P0) at commit 2b's digests, refusing at those pins on a tree without them
 
 12. THE PREDICATES
    the drafted change list carries rows R-220 to R-245 (no R-241: route B2 out), holds every order constraint, its page table is its list, FAN_OK withdrawn yes

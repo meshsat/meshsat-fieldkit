@@ -18,7 +18,7 @@
    v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json  sha256 19fa94a2bce5dd52  (intent_d)
    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json  sha256 4b328380172ff2c7  (intent_e)
    v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json  sha256 657f4c42db51e4da  (intent_p)
-   v2/ecad/tools/pcb_interfaces.yaml  sha256 393305bed4edfd26  (interfaces)
+   v2/ecad/tools/pcb_interfaces.yaml  sha256 b0ea9ce43308e789  (interfaces)
    v2/docs/records/l9stk/inputs/price-readings-2026-10-03.json  sha256 421d4a4feca5ef17  (prices)
    v2/docs/layout-constraints/calc/stack_solves.out  sha256 47c68e2571a51228  (stack_solves)
    v2/ecad/tools/stackup_write.py  sha256 b55a3c0f58c805c2  (stackup_write)

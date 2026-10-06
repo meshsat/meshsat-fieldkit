@@ -6,13 +6,13 @@ prototype design; nothing built, powered or measured; nothing applied to the tre
 3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
 55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
 14ea032a7fdd86ac v2/ecad/tools/pcb_rules.yaml
-393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
+b0ea9ce43308e789 v2/ecad/tools/pcb_interfaces.yaml
 119ca354c7ff83bc v2/docs/GROUNDING-AND-SHIELDS.md
-9b0d04c39beafb7d v2/docs/HW-FW-CONTRACT.md
+f26757c7c5004cdd v2/docs/HW-FW-CONTRACT.md
 c883f948f3221e74 v2/docs/ARCHITECTURE.md
 6cb7b241cb84d729 v2/docs/CONOPS.md
 5d4c8fa5e6638f89 v2/docs/handover/LAYER-STATUS.md
-f247b65f2cf3bcf1 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+d6dedef36512d893 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
 2a9d80931a0bed4b v2/vendor/cluster/ksz989x-hw-design-checklist.pdf
 d6d6b918dec76c7b v2/vendor/connectors/amphenol-rjhse5380-rj45-jack.pdf
 76b85b47d0bd9f46 v2/vendor/pulse/pulse-h5007nl.pdf
