@@ -13,8 +13,11 @@ ledger's RE sections, each quoting its classification entry and evidence verbati
 of its items, each section carrying every field the owner's words require and no closure word; the four closed and two
 conditional findings each have one row quoting its entry; the cases the brief names are handed over; the summary carries
 every item once with one of the five classes and its counts line agrees; every quotation in the ledger is found verbatim
-in a file it cites; the seven open fault rows of the connected output are all ledger items; no em or en dash. These are
-software predicates on record text: they establish no electrical or thermal property and close nothing.
+in a file it cites; the seven open fault rows of the connected output are all ledger items; no em or en dash. The
+amendment of 6 October 2026 (branch fnd/ledgerfix from 6fe398e9): E11-37 is handed over as HO-L with its rows in sections 4
+and 5, each key citation of it reading the line it names; HO-F carries the back-feed as remaining engineering inside E-1
+with S1's row (b) its later validation, and section 6's item E keeps the disagreement named. These are software predicates
+on record text: they establish no electrical or thermal property and close nothing.
 
 Runs under the suite's runner (`env -C v2/ecad/tools/tests python3 run.py test_remeng`) and under pytest (each t_
 function has a test_ alias)."""
@@ -40,7 +43,7 @@ CLASSES = ("remaining engineering", "qualification", "external architecture fact
 RE_FIELDS = ("**Check's words.**", "**Failed case", "**Attempted correction", "**Unresolved", "**Affected",
              "**Receiving company's task", "**Reproduce.**", "**State on this tip.**")
 HANDED_OVER = ("L8P-R9-F1", "retry heating", "L9T5-F21", "latent stuck comparator", "VOS0", "D-10", "F1 to F4",
-               "back-feed", "P2 and P3", "E11-29", "U-01", "U-02", "U-04")
+               "back-feed", "P2 and P3", "E11-29", "U-01", "U-02", "U-04", "E11-37")
 CITE = re.compile(r"\[([A-Z][A-Z0-9]*)(?::(\d+)(?:-(\d+))?)?\]")
 ALIAS = re.compile(r"^\| ([A-Z][A-Z0-9]*) \| `(v2/[^`]+)` \|$", re.M)
 DASHES = (chr(0x2013), chr(0x2014))  # the en dash and the em dash, by code point
@@ -226,6 +229,71 @@ def t_the_header_says_what_it_is_and_is_not():
     for w in ("**What this file is.**", "**What it is not.**", "It is not an acceptance, a closure",
               "nothing in the kit has been built, bought, powered or measured", "1c6d56f5", "4d0ff8a2"):
         assert w in _norm(head), "the header lacks: %s" % w
+
+
+HO_L_FIELDS = ("**Class, and why", "**The open case.**", "**What is bounded, and from which printed figure.**",
+               "**Attempted correction", "**The vendor question, drafted and UNSENT.**", "**Affected provisional outputs.**",
+               "**Receiving company's task and acceptance.**", "**Reproduce.**", "**State on this tip.**")
+# The amendment's key citations (read at 6fe398e9), each with a phrase the cited line or range carries: a citation that
+# drifts off its subject (a revised P0 list, a re-cut record) fails here and is re-cited, never left pointing elsewhere.
+AMENDMENT_CITES = (
+    ("P0L", 25, 25, "| P0-8 | E11-37"), ("P0L", 11, 11, "missing evidence boundable at the desk"),
+    ("E11", 508, 508, "E11-37 | EVIDENCE"), ("E11", 1110, 1116, "E11-37 REBOUND TO THE THREE-DEVICE NETWORK"),
+    ("E11", 1459, 1459, "E11-37 STAYS OPEN"), ("E11", 1465, 1465, "E11-37 OPEN (TI or the bench)"),
+    ("E11P", 1551, 1551, "| Row E11-37 |"), ("E11P", 1673, 1690, "Block E11-37"),
+    ("TIQ", 74, 74, "Q-TI-17 (E11-37"), ("TIQ", 96, 110, "Q-TI-17, extended"), ("TIQ", 112, 125, "Q-TI-17 (f)"),
+    ("ANX", 73, 73, "E11-37"), ("L4E9", 1134, 1134, "with E11-37 OPEN"), ("L4E9", 1401, 1401, "R-183"),
+    ("REG", 279, 279, "| R-183 |"),
+    ("CX46", 95, 95, "lower-source back-feed"), ("CX46", 188, 188, "lower-source back-feed"),
+    ("B2", 168, 170, "below the stage's voltage"), ("SOLO", 399, 404, "BELOW the stage's voltage"),
+    ("P11", 120, 123, "back-feeding PV_F through Q12's body diode"),
+    ("OWN", 680, 680, "Supplier item S1 must carry that engineering problem"),
+    ("OWN", 825, 825, "D-10 remains receiving-company engineering item E-1."),
+)
+
+
+def _rows(title, rid):
+    return [r for r in _section(title).splitlines() if r.startswith("| ") and rid in r]
+
+
+def t_e11_37_is_handed_over_with_its_rows():
+    ho = _sections("HO-")
+    assert "HO-L" in ho, "E11-37 has no handed-over section"
+    s = ho["HO-L"]; head = s.splitlines()[0]
+    assert "E11-37" in head and "REMAINING ENGINEERING" in head and "P0-8" in head, head
+    missing = [f for f in HO_L_FIELDS if f not in s]
+    assert not missing, "HO-L lacks %s" % missing
+    vendor = _norm(s.split("**The vendor question, drafted and UNSENT.**", 1)[1].split("\n- **", 1)[0])
+    assert "Q-TI-17" in vendor and "UNSENT" in vendor, "HO-L's vendor field does not keep Q-TI-17 UNSENT"
+    assert "NOT a demonstrated failure" in _norm(s), "HO-L's class widens the claim to a demonstrated failure"
+    assert len(_rows("## 4.", "HO-L")) == 1, "section 4 has no single row weakened by HO-L"
+    row = [r for r in _rows("## 5. Summary", "HO-L") if r.startswith("| HO-L |")]
+    assert len(row) == 1 and row[0].split("|")[2].strip() == "remaining engineering", row
+
+
+def t_the_amendments_citations_read_what_they_cite():
+    a = _aliases(); t = _ledger(); bad = []
+    for k, s, e, phrase in AMENDMENT_CITES:
+        cite = "[%s:%d]" % (k, s) if s == e else "[%s:%d-%d]" % (k, s, e)
+        if cite not in t:
+            bad.append("%s not in the ledger" % cite); continue
+        lines = open(os.path.join(ROOT, a[k]), encoding="utf-8").read().splitlines()
+        if _norm(phrase) not in _norm(" ".join(lines[s - 1:e])):
+            bad.append("%s does not read %r" % (cite, phrase))
+    assert not bad, "; ".join(bad)
+
+
+def t_the_back_feed_reads_as_engineering_inside_e1():
+    f = _norm(_sections("HO-")["HO-F"])
+    for w in ("REMAINING ENGINEERING inside E-1", "the later validation of that computation, not a substitute for it",
+              "It is an open case, not a failed one"):
+        assert w in f, "HO-F lacks: %s" % w
+    assert "reclassifies nothing" not in f, "HO-F still leaves the back-feed unplaced"
+    row = [r for r in _rows("## 5. Summary", "HO-F") if r.startswith("| HO-F |")]
+    assert len(row) == 1 and "back-feed" in row[0] and "not a substitute" in row[0], row
+    e = _norm(_section("## 6.").split("- **E.", 1)[1].split("- **F.", 1)[0])
+    for w in ("[CX46:95]", "[P11:120-123]", "is the narrower one", "Record l4e7's own text stands as written"):
+        assert w in e, "section 6, item E lacks: %s" % w
 
 
 def t_no_em_or_en_dash():
