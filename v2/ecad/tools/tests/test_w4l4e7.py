@@ -127,7 +127,9 @@ def t_the_back_feed_is_engineering_inside_e1_on_every_page():
         p = _page(nm)
         assert "REMAINING ENGINEERING inside E-1" in p, nm
         assert re.search(r"row \(b\) is the later validation of that computation, not a substitute for it", p), nm
-        assert "OWNER-INSTRUCTION-2026-10-05.md:680" in p and "HO-F" in p, nm
+        # W28 (set 31's Q-40, 6 October 2026): the owner file's lines moved by one at b0a67a45 (part 26's table row at line 26), so
+        # the part 23 sentence W4 cited at :680 stands at :681; the pages' citations were moved with it (W23's finding)
+        assert "OWNER-INSTRUCTION-2026-10-05.md:681" in p and "HO-F" in p, nm
         assert "F5" not in p, nm
         assert "Not computed here; validation P1-1's S1" not in p, nm
     assert "Added, whatever happens to route B2" not in _unquoted("SUPPLIER-P1-1-P0SOL.md")

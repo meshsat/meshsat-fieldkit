@@ -21,9 +21,9 @@ route B2 UNSELECTED and WITHDRAWN AS DRAFTED and no owner item (`v2/docs/records
 remaining-engineering ledger's HO-F (`v2/docs/records/l4close/REMAINING-ENGINEERING.md` on `fnd/ledgerfix` `99bbc0c6`, cited as text
 only; its section 6, item E) settles the lower-source back-feed as REMAINING ENGINEERING inside E-1, S1's row (b) its later
 validation, on the owner's part 23: "Supplier item S1 must carry that engineering problem, rather than presenting it solely as an
-unperformed validation test." (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`). This page now says the same: D-16 is
+unperformed validation test." (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:681`). This page now says the same: D-16 is
 CORRECTED IN DRAFT and PROVISIONAL (sections 3 and 4 (d)); the back-feed is an open case inside E-1 (section 4 (a)); section 4's
-heading carries the one wording for B2 that the owner's part 25 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:838`) and cx46
+heading carries the one wording for B2 that the owner's part 25 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:839`) and cx46
 item 18 (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:111`, `:201`) ask for; E-1 here is record l4e7's E-1, not
 record l9stk's (section 4). No figure, verdict, draft or output is changed: `l4e7_p0sol.out` still prints round 5's wording in its
 3 (d) and 5g until the next set regenerates it from a changed generator text, which is not this branch's file.
@@ -121,7 +121,7 @@ the declared envelope.
 ## 4. D-10: an unresolved protection defect, the remaining engineering item E-1, and route B2 (UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline)
 
 Heading restated 6 October 2026 (set 30 note): round 3 (5 October 2026) described route B2 in the owner's part 23 terms; round 5
-withdrew it as drafted (the owner's part 25, `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:838`; cx46 item 18, which asked for
+withdrew it as drafted (the owner's part 25, `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:839`; cx46 item 18, which asked for
 the withdrawal "throughout", `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:111`, `:201`), and the heading now
 says so (K-24 of the DESK-gate draft, `fnd/dgate` `249e9e47`; item 1 of set 30's records pack, `fnd/recpack` `35dca639`).
 
@@ -145,7 +145,7 @@ without renaming either:
   ENGINEERING inside E-1, computed by the receiving company on E-1's corrected circuit as part of E-1's correction, against (b)'s
   requirements and S1's own criterion for the case (Q12's body-diode current inside its pulsed rating); S1's added row (b) is the
   later validation of that computation, not a substitute for it (set 30 note: the remaining-engineering ledger's HO-F and its
-  section 6, item E, `fnd/ledgerfix` `99bbc0c6`; the owner's part 23, `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`;
+  section 6, item E, `fnd/ledgerfix` `99bbc0c6`; the owner's part 23, `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:681`;
   cx46: "D-10's E-1 retains F1-F4 and the lower-source back-feed case.",
   `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:95`).
 - **(b) The requirements, unchanged:** L4-E9's single fault D-10 from REQ-015's 9 to 36 V source class; the owner's amendment of
