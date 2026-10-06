@@ -20,6 +20,10 @@ until it lands); the P0 list the pages call revision 3 is revision 3 (in the tre
 en dash. Fixtures show that each checker refuses the defect it is for. These are software predicates on record text: they
 establish no electrical or thermal property and accept, close or promote nothing.
 
+Restated by W65 for set 31's rows (6 October 2026, fnd/adopt31): the pages may carry set 31's two declared tokens (__CANDIDATE__,
+__ADOPTION__; test_adopt31 holds them), the promoted commit stands 4 times on each page, and the Tested, Adopted and documents rows
+name set 31's revisions with set 30's kept as dated history (the comment above FILLED gives the rows).
+
 Runs under the suite's runner (`python3 v2/ecad/tools/tests/run.py test_w30entry.`) and under pytest (each t_ function has a
 test_ alias)."""
 import os
@@ -42,6 +46,13 @@ PROMOTED = "dd1aed00d0a0a521063b5792550bc510c4707c59"     # ADOPTION-VALUES.md: 
 # dd1aed00, so it is not the packaged commit; the coordinator's ruling 2 in W33's brief): the Packaged row of each page names the
 # commit by the supplier delta's README, which carries it, so the promoted commit stands once less on each page.
 FILLED = {START: 6, SUPPLIER: 7}
+# Restated by W65 (6 October 2026, fnd/adopt31; basis: W39's rows of v2/docs/records/int31/ENTRY-PAGES.patch.md, applied as
+# test_adopt31 holds them): set 31's rows replace the promoted commit with set 31's tokens in START-HERE's documents row (S-09) and
+# checkout line (S-11) and in the supplier page's documents row (U-08), checkout line (U-10) and suite line (U-11); the Tested and
+# Adopted rows keep set 30's commits as dated history. So the promoted commit stands 4 times on each page, and set 31's two
+# declared tokens (filled at set 31's adoption) are the only placeholders a page may carry.
+FILLED = {START: 4, SUPPLIER: 4}
+SET31 = ("__CANDIDATE__", "__ADOPTION__")
 ADOPTED = "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec"      # the adoption commit (main after the adoption), ruling 2's Adopted row
 PACKAGED = ("| Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its "
             "difference from the tested revision and which checks cover it |")
@@ -139,7 +150,7 @@ def _placeholder_errors(name, text, n):
     errs = []
     if PLACEHOLDER in text:
         errs.append("%s still carries %s" % (name, PLACEHOLDER))
-    for tok in set(UNDERS.findall(text)):
+    for tok in set(UNDERS.findall(text)) - set(SET31):   # W65: set 31's declared tokens, held by test_adopt31
         errs.append("%s carries a placeholder %s" % (name, tok))
     if "(at adoption)" in text:
         errs.append("%s still marks a record (at adoption)" % name)
@@ -176,12 +187,18 @@ def t_every_placeholder_is_filled_with_the_promoted_commit():
 
 def t_the_revision_rows_name_the_promoted_commit():
     # restated by W33 (basis above FILLED): Tested is the promoted commit; Adopted the adoption commit, after it; Packaged the README's
+    # restated by W65 (6 October 2026; basis: rows S-05, S-06, S-09, U-04, U-05 and U-08 of ENTRY-PAGES.patch.md): Tested and the
+    # documents row name set 31's candidate (__CANDIDATE__ until set 31's adoption fills it), Adopted set 31's adoption commit
+    # (__ADOPTION__); set 30's promoted and adoption commits stand in those rows as dated history
+    c31, a31 = r"(?:__CANDIDATE__|[0-9a-f]{8,40})", r"(?:__ADOPTION__|[0-9a-f]{8,40})"
     for p in PAGES:
         t = _page(p)
-        assert re.search(r"^\| Tested \| `%s` \|" % PROMOTED, t, re.M), "%s: the Tested row is not the promoted commit" % p
-        assert re.search(r"^\| Adopted \| `%s` \(`%s`\) \|" % (ADOPTED[:8], ADOPTED), t, re.M), "%s: the Adopted row" % p
+        assert re.search(r"^\| Tested \| `%s` \| set 31's promoted revision \(set 30's was `%s`, kept as dated history\):" % (c31, PROMOTED),
+                         t, re.M), "%s: the Tested row is not set 31's with the promoted commit as dated history" % p
+        assert re.search(r"^\| Adopted \| `%s` \| .*\(set 30's was `%s`, 6 October 2026, 11:25 CEST, kept as dated history\) \|$"
+                         % (a31, ADOPTED), t, re.M), "%s: the Adopted row" % p
         assert len([ln for ln in t.split("\n") if ln.startswith("| Packaged |")]) == 1 and PACKAGED in t, "%s: the Packaged row" % p
-        assert "| Documents and editable artifacts | on main as a DESK candidate (`%s`) |" % PROMOTED in t, p
+        assert re.search(r"^\| Documents and editable artifacts \| on main as a DESK candidate \(`%s`, set 31\) \|$" % c31, t, re.M), p
     assert _git("merge-base", "--is-ancestor", PROMOTED, ADOPTED).returncode == 0, "the adoption commit does not follow the promoted one"
 
 

@@ -1727,3 +1727,27 @@ sentences while drafting); `records/l4close/REMAINING-ENGINEERING.md` (the ledge
 **Compute of set 30 (6 October):** suite5 54417830 about 6.2 h at 0.1663 USD/h total (0.12 compute and the 100 GB disk); rekey6
 54423482 about 0.5 h and rekey7 54433045 about 0.25 h (unused) at 0.068; the records box 54444804 about 2 h at 0.068; suite4
 54347953 stopped by the watchdog at 01:30 and never restarted; every instance stopped, disks kept, none destroyed.
+
+### Milestone, 6 October 2026: integration set 31 promoted as a DESK candidate (main `__CANDIDATE__`)
+
+**Promoted:** main `__CANDIDATE__`, the candidate on fnd/int31regen, by fast-forward: `__GATE__`. INTEGRATED = CANDIDATE = PROMOTED.
+REVIEWED: `4d0ff8a2` (cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."), unchanged: no independent check read a later revision. The base:
+set 30's promoted `dd1aed00`; the lineage `31928583`, 103 commits over the base; record l4e7's results cache re-keyed on it in
+`aa332280`. Gated by `_bin/suite_gate.py`: `__GATE__`. `candidate_guard`: `__GATE__`.
+
+**What it closes:** no power item. "Set 31 closes NO power item." (`records/int31/RESULT.md`, section 6). Set 31 adopts the record
+text set 30's integration prepared (the authors' restatements, the filed patch rows applied, the citations re-taken), regenerated to
+convergence; no baseline circuit draft, board generator or netlist changed. Its classification counts 24 REVIEWED-INPUT CHANGED
+commits over `dd1aed00..31928583` (set 30's rule, reading A; `records/int31/CLASSIFICATION.md`, section 2), each UNREVIEWED since
+cx46 and credited nothing, beside set 30's 14 over `4d0ff8a2..dd1aed00`.
+
+**The three claims, apart, and the gate, unchanged from set 30** (the coordinator's judgement of 6 October 2026, 10:45 CEST, in
+`records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6, of which set 31 changes no line): engineering-handover readiness READY AS A
+DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED. Layer 4's DESK gate NOT PASSED.
+
+**Pending:** as after set 30, the owner's decision on Layer 5 (reported, not asked).
+
+**The records:** `records/int31/RESULT.md`, `records/int31/CLASSIFICATION.md` and `records/int31/ENTRY-PAGES.patch.md` (the entry
+pages' rows, applied); `handover/START-HERE.md` and `handover/supplier/SUPPLIER-HANDOVER.md` (section 0's revisions at set 31);
+`handover/LAYER-STATUS.md` (the blocks headed After set 31, Layers 4, 5, 8, 9 and 12). Compute: `records/int31/RESULT.md`, section 5
+(compute and storage apart, no total).

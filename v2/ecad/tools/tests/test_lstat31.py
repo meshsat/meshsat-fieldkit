@@ -313,7 +313,13 @@ def t_each_block_sits_between_its_heading_and_its_set_29_block_and_no_other_laye
         s = _section(n)
         assert s.count("**After set 30 (6 October 2026): IN_PROGRESS") == 1, "layer %s: no single set 30 block" % n
         assert s.count("**After set 29 (4 October 2026): IN_PROGRESS") == 1, "layer %s: no single set 29 block" % n
-        assert s.split("**After set 30", 1)[0] == LAYERS[n] + "\n", "layer %s: text between the heading and set 30" % n
+        # restated by W65 (6 October 2026, fnd/adopt31; basis: the page's set 31 head paragraph, newest block first as set 30's
+        # stand above set 29's): between the heading and set 30's block stands nothing or exactly one set 31 block, which carries
+        # no other set's block (test_adopt31 holds it)
+        between = s.split("**After set 30", 1)[0][len(LAYERS[n]):]
+        assert between == "\n" or (between.startswith("\n**After set 31 (6 October 2026): IN_PROGRESS")
+                                    and between.count("**After set") == 1 and between.endswith("\n\n")), \
+            "layer %s: text between the heading and set 30" % n
     for h in OTHERS:
         i = t.index("\n" + h) + 1
         j = t.find("\n---\n", i)
