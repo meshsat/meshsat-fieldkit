@@ -7,15 +7,20 @@ fnd/res32 and corrected by worker W102 on W99's independent read of them (an AI 
 tree set 32's integration patches (B1), the known item's source (C2), the counts' scope (C1, C5), the held-back texts (C3), the tests
 the rows break (C6), the candidate_guard line (C7), set 31's adoption dated (C8), L-03's wording (N8) and the claims pinned (N2);
 `v2/ecad/tools/tests/test_patch32.py` holds every row against the pages as set 32's integration holds them (the paragraph "What the
-rows are read against"). **NOT DONE:** no page is edited here; the rows are applied by the adoption author at set 32's adoption, and
-the tokens in their new texts are filled by the coordinator's fill tool (`<worktrees>/_bin/fill_res.py --set 32`, which reaches this
-file because `records/int32/RESULT.md` names it). **NEXT:** at set 32's adoption, in this order: (1) the fill's first run (the
-CANDIDATE and GATE tokens, each GATE from the source the paragraph "Filling the GATE tokens" names); (2) the rows applied on the named
-lines in the order given; (3) the tests of set 31's pages that the rows break restated with their bases (the paragraph "The tests the
-rows break"); (4) the fill's second run (the ADOPTION token) and the pages' two ADOPTION cells, rows S-07 and U-05: filled by the
-fill tool once the coordinator extends `fill_res.py --set 32` to the four pages (queue item Q-124), and until then by hand, exactly
-those two cells, with the value the second run writes; (5) this header and RESULT's restated for the state after the fill and the
-adoption; (6) the coordinator's dependency pass for the changed pages (l8gnd's pin of LAYER-STATUS and its cascade), as after set 31.
+rows are read against"); applied to the four pages on branch fnd/adopt32 by worker W105 (7 October
+2026), each by its old text, the tokens left for the fill, and the tests of set 31's pages they break restated there with
+`test_adopt32` new (the paragraph "The rows applied and the tests restated"). **NOT DONE:** the tokens in the rows' new texts, in this
+file and on the four pages, are filled by the coordinator's fill tool (`<worktrees>/_bin/fill_res.py --set 32`, which reaches this
+file because `records/int32/RESULT.md` names it, and the four pages since W103's extension, queue item Q-124); the adoption.
+**NEXT:** at set 32's adoption, after its promotion, in this order: (1) fnd/adopt32 merged into set 32's lineage (set 31's step 12a
+pattern); (2) the fill's first run (the CANDIDATE and GATE tokens of this file and of the four pages, each GATE from the source the
+paragraph "Filling the GATE tokens" names); (3) W99's notes N6 and N7 confirmed (W106's N-b): L-05's "regenerates the cascade's
+outputs", L-06's "re-cited at the chain's step a5" and L-06's note on 12.1 against RESULT's section 3b once its rows are filled, and
+S-09's and U-07's "no independent check of the engineering read a later revision" against the scope of the planned independent read
+of set 32's lineage (a read of the integration leaves them true; a read of the engineering restates both rows); (4) the adoption
+commit; (5) the fill's second run (the ADOPTION token, here and in the pages' two ADOPTION cells, rows S-07 and U-05, which the
+tool fills since W103's extension); (6) this header and RESULT's restated for the state after the fill and the adoption; (7) the
+coordinator's dependency pass for the changed pages (l8gnd's pin of LAYER-STATUS and its cascade), as after set 31.
 
 Record text only: it changes no state of any page, accepts nothing and closes nothing; prototype framing: nothing in the kit has been
 built, bought, powered or measured.
@@ -92,6 +97,9 @@ first run applied 79 lines with 3 ADOPTION occurrences deferred, and the three m
 three modules read 30 passed and set 31's page tests failed as the next paragraph lists; the second run applied 3 lines, after which
 `test_patch32` refused S-07 and U-05 (the pages' two ADOPTION cells, W99's B2) until those two cells were filled by hand with the
 second run's value, then 30 passed; a third run refused (exit 2). AI work, not a qualified review; no page of the tree was edited.
+That hand fill described the tool before W103's extension (queue item Q-124, `<worktrees>/_bin/fill_res.py`, sha256
+05d3017ce94d32a920c7fe4b0ebf41532e456c792600ae7dffb49bed28f2214f): the second run now fills S-07's and U-05's cells itself (W106's N-a;
+W105's stages in the paragraph "The rows applied and the tests restated").
 
 **The tests the rows break (W99's C6).** Applied to the integrated tree, the rows break these tests of set 31's pages, each to be
 restated at the adoption with the row that moves the line it pins as its basis (as W65 restated set 30's for set 31): test_adopt31,
@@ -102,8 +110,29 @@ restated at the adoption with the row that moves the line it pins as its basis (
 `t_the_six_states_stand_apart_in_each_page`); test_w30entry, 2 (`t_every_placeholder_is_filled_with_the_promoted_commit`,
 `t_the_revision_rows_name_the_promoted_commit`); test_lstat31, 1
 (`t_each_block_sits_between_its_heading_and_its_set_29_block_and_no_other_layer_has_one`). test_lstat32 and test_res31 hold. A sixth
-of test_adopt31's, `t_the_entry_pages_are_the_copies_with_every_row_applied`, already fails on the integrated tree before any row of
-set 32 (W99's N1, the coordinator's queue item Q-123) and is not counted among the five.
+of test_adopt31's, `t_the_entry_pages_are_the_copies_with_every_row_applied`, failed on the integrated tree before any row of set 32
+when W99 read it (W99's N1) and is not counted among the five; since W103's `33a7b7d5` (queue item Q-123) it judges set 31's rows at
+set 31's adoption commits through git and passes there (W106's N-a).
+
+**The rows applied and the tests restated (W105, 7 October 2026, from 00:43 CEST, branch fnd/adopt32).** fnd/adopt32 starts at main
+`ad757edb`, with W103's `33a7b7d5` and this branch's `607cd157` merged; the 38 rows were applied to main's four pages, each located by
+its old text (exactly once on its page) and applied bottom-up, two rows on one line in the given order, every token left for the
+fill. Every old text stood once on its named line but U-16's, which stands on main's line 407: the 7 lines fnd/w34pdftext adds to
+section 7 of the supplier page are not on this branch (they arrive with set 32's lineage and do not touch U-16's lines, so the merge
+carries U-16's paragraph to line 414's place). Applied before the fill (W65's form for set 31), the rows broke 15 tests on
+fnd/adopt32: the eleven of the paragraph above; three that only the tokens standing before the fill break
+(`test_adopt31.t_the_pages_carry_only_their_declared_tokens`, `test_entrypage.t_the_placeholder_is_literal_and_alone`,
+`test_lstat32.t_the_placeholders_stand`); and `test_l8gnd.t_the_committed_output_is_what_the_script_prints`, whose output pins
+LAYER-STATUS.md's digest and is owed to the coordinator's dependency pass, as after set 31. Each set 31 page test is restated with
+these rows as its basis, in W103's form: a predicate that pins set 31's rows judges them at set 31's adoption commits `73941afc` and
+`ad757edb` through git, with the same predicate; what set 32 does not change stays read on the working tree (test_entrypage's other
+anchors and its five other states, test_w30entry's Packaged row and its refusal of the INTEGRATED placeholder and of any token but
+set 32's three, test_lstat31's counts of set 30's and set 29's blocks), and test_lstat32's set 30 placeholders stay read on the tree
+outside set 31's and set 32's blocks. The working tree's four pages are held by `test_adopt32` (new): each page equals set 31's
+adopted page at `ad757edb` with the own change of each pinned branch the judged revision holds, step a5 where the page carries its
+sentence, and these 38 rows, nothing else (so the eight texts of set 31's rows no set 32 row replaces, W106's N-d, are held there),
+the tokens as the fill's stage leaves them, and set 32's added text without a dash, an acceptance word or a percentage; it judges
+the newest revision whose START-HERE line 3 names set 32, so a later set's rows never fail it. AI work, not a qualified review.
 
 ## START-HERE.md
 

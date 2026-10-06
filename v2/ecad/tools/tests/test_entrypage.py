@@ -16,6 +16,19 @@ six states stand apart in each page with their exact words; the statements set 3
 place; no em or en dash. Fixtures show that each checker refuses the defect it is for. These are software predicates on
 record text: they establish no electrical or thermal property and accept, close or promote nothing.
 
+Restated by W105 (7 October 2026, fnd/adopt32; basis: set 32's rows of `v2/docs/records/int32/ENTRY-PAGES.patch.md`, applied to
+the pages on fnd/adopt32, and W99's finding C6 as W102 listed it there): set 32's rows replace set 31's text that four predicates
+pinned on the working tree: the supplier page's section 0 heading (U-02) and START-HERE's (S-04), the Tested rows (S-06, U-04), the
+documents rows (S-11, U-10), and they bring the GATE token onto both pages (S-05, U-03). Where a predicate pins set 31's rows it now
+judges them where set 31's adoption made them, the pages at both commits of ADOPTED31 through `git show` (W103's form in
+test_adopt31): t_a_filled_placeholder_names_one_promoted_commit_and_the_adopted_files whole, the two set 31 headings of
+t_every_section_a_page_points_to_exists (the other anchors stay on the tree), the documents row of
+t_the_six_states_stand_apart_in_each_page (the five other states and the rows' order stay on the tree as well), and
+t_the_placeholder_is_literal_and_alone at those commits with set 31's tokens; on the tree that predicate declares set 32's three
+tokens (SET32), which test_adopt32 holds by the fill's stage. The working tree's set 32 text is held by test_patch32 and
+test_adopt32. Taken under the owner's standing rule of 26 September 2026 (authority SESSION, W105); reversed by reading the tree's
+pages in those predicates again.
+
 Runs under the suite's runner (`python3 v2/ecad/tools/tests/run.py test_entrypage`) and under pytest (each t_ function
 has a test_ alias)."""
 import os
@@ -79,6 +92,12 @@ PACKAGED_WHAT = "cut after the adoption; the README states its difference from t
 # history (rows S-05, S-06, S-09, U-04, U-05, U-08); U-02 renames the supplier page's section 0 heading. Those two tokens are the
 # only others a page may carry; the predicates below name each change where they make it.
 SET31 = ("__CANDIDATE__", "__ADOPTION__")
+# W105 (basis in the docstring): set 31's adoption commits, where the predicates that pin set 31's rows judge them (the fill's first
+# run and its second run on main), and set 32's three tokens, which set 32's rows bring onto the working tree's pages until the fill
+ADOPTED31 = ("73941afc2d4698c5cf81da443064fe7ffe7ca620", "ad757edb1be7e0fe3b586f986d2d704c9836fdcf")
+SET32 = tuple("__%s__" % n for n in ("CANDIDATE", "ADOPTION", "GATE"))   # built, so no literal token is added to this file
+ANCHORS31 = ((SUPPLIER, "## 0. This revision: set 31 over set 30"),
+             (START, "## 0. Set 30's revision (6 October 2026): what it hands over, and set 31 over it"))
 OWN_BOUND = {844: 845, 470: 471, 480: 481, 483: 484, 485: 486, 786: 787}   # a line at WRITTEN_AT -> the same words at TESTED
 BOUND_TOK = re.compile(r"`([0-9a-f]{8,40}):(v2/[^`\s:]+):(\d+)(?:-(\d+))?`")
 
@@ -196,7 +215,10 @@ def _repo(p):
     return "v2/docs/" + p if p.startswith("records/") else p
 
 
-def _page(p):
+def _page(p, c=None):
+    """The page in the tree, or (W105) as set 31's adoption commit c holds it (git show; Skip where c is absent)."""
+    if c is not None:
+        return "\n".join(_at(p, c))
     if p not in _C:
         _C[p] = open(need(os.path.join(ROOT, p), "the entry page"), encoding="utf-8").read()
     return _C[p]
@@ -277,11 +299,12 @@ def _missing_paths(text, exists, lands=lambda p: False):
     return sorted(set(bad))
 
 
-def _placeholder_errors(texts):
-    """The placeholder is literal and alone; filled, it is filled everywhere with one commit."""
+def _placeholder_errors(texts, declared=SET31):
+    """The placeholder is literal and alone; filled, it is filled everywhere with one commit. declared: the other set's tokens a page
+    may carry (W105: set 31's at its adoption commits, set 32's on the working tree)."""
     errs = []
     for name, t in texts.items():
-        for tok in set(UNDERS.findall(t)) - {PLACEHOLDER} - set(SET31):   # W65: set 31's tokens, held by test_adopt31
+        for tok in set(UNDERS.findall(t)) - {PLACEHOLDER} - set(declared):   # W65: set 31's tokens, held by test_adopt31
             errs.append("%s carries an unknown placeholder %s" % (name, tok))
         for m in HALF.finditer(t):
             if t[m.start():m.start() + len(PLACEHOLDER)] != PLACEHOLDER:
@@ -297,8 +320,8 @@ def _row(text, label):
     return m.group(1) if m else None
 
 
-def _section0(p):
-    t = _page(p)
+def _section0(p, c=None):
+    t = _page(p, c)
     i = t.find("\n## 0. ")
     j = t.find("\n## 1. ", i)
     assert i >= 0 and j > i, "%s has no section 0 before its section 1" % p
@@ -344,18 +367,30 @@ def t_every_section_a_page_points_to_exists():
         path = os.path.join(ROOT, f)
         if adoption and not filled:
             continue
+        if (f, head) in ANCHORS31:   # W105: set 31's two headings, renamed by set 32's U-02 and S-04, at set 31's adoption (below)
+            continue
         txt = open(need(path, "a file the entry pages point to"), encoding="utf-8").read()
         assert any(ln.startswith(head) for ln in txt.split("\n")), "%s has no heading %r" % (f, head)
+    assert set(ANCHORS31) <= set((f, h) for f, h, _a in ANCHORS), "ANCHORS31 names a heading ANCHORS does not"
+    for c in ADOPTED31:
+        for f, head in ANCHORS31:
+            assert any(ln.startswith(head) for ln in _page(f, c).split("\n")), "%s at %s has no heading %r" % (f, c[:8], head)
 
 
 # ------------------------------------------------------------------------------------------------------ the placeholder
 def t_the_placeholder_is_literal_and_alone():
-    texts = {p: _page(p) for p in PAGES}
-    errs = _placeholder_errors(texts)
-    assert not errs, errs
-    held = PLACEHOLDER in _page(SUPPLIER)
+    # W105: on the working tree with set 32's tokens declared, and at set 31's adoption commits with set 31's (docstring)
+    for c, declared in [(None, SET32)] + [(x, SET31) for x in ADOPTED31]:
+        _placeholder_alone(c, declared)
+
+
+def _placeholder_alone(c, declared):
+    texts = {p: _page(p, c) for p in PAGES}
+    errs = _placeholder_errors(texts, declared)
+    assert not errs, (c and c[:8], errs)
+    held = PLACEHOLDER in _page(SUPPLIER, c)
     for p in PAGES:
-        s0 = _section0(p)
+        s0 = _section0(p, c)
         for label in ("Tested", "Packaged"):
             cell = _row(s0, label)
             assert cell is not None, "%s section 0 has no %s row" % (p, label)
@@ -378,14 +413,24 @@ def t_a_filled_placeholder_names_one_promoted_commit_and_the_adopted_files():
     pages call 'at adoption' exist, with LAYER-STATUS's blocks headed After set 30. Restated by W33 (6 October 2026, W32's finding 2
     and the coordinator's ruling 2): the Packaged row names the commit by the supplier delta's README (cut after the adoption), and
     the Adopted row of both pages names the adoption commit, which descends from the tested one."""
-    if PLACEHOLDER in _page(SUPPLIER):
-        assert PLACEHOLDER in _page(START)
+    # W105: judged at set 31's adoption commits, whose Tested, Adopted and documents rows are set 31's (docstring); the tree's are
+    # set 32's (test_patch32, test_adopt32); the records written at adoption and LAYER-STATUS's set 30 blocks stay read in the tree
+    for c in ADOPTED31:
+        _filled_at(c)
+    for f in AT_ADOPTION:   # W30: adopted in the tree, or landing with its adoption branch
+        assert landing_error(f) is None, "filled, but %s is not adopted: %s" % (f, landing_error(f))
+    assert "**After set 30" in open(os.path.join(ROOT, LS), encoding="utf-8").read(), "filled, but LAYER-STATUS has no After set 30"
+
+
+def _filled_at(at):
+    if PLACEHOLDER in _page(SUPPLIER, at):
+        assert PLACEHOLDER in _page(START, at)
         return
     got, adopted = set(), set()
     for p in PAGES:   # W33: Tested names the promoted commit; Adopted the adoption commit; Packaged the README's commit
-        got.add(_commit_cell(_row(_section0(p), "Tested")))
-        adopted.add(_row(_section0(p), "Adopted"))
-        errs = _packaged_errors(_section0(p))
+        got.add(_commit_cell(_row(_section0(p, at), "Tested")))
+        adopted.add(_row(_section0(p, at), "Adopted"))
+        errs = _packaged_errors(_section0(p, at))
         assert not errs, "%s: %s" % (p, errs)
     assert len(got) == 1, "the pages name more than one integrated commit: %s" % sorted(got)
     c = got.pop()
@@ -393,7 +438,7 @@ def t_a_filled_placeholder_names_one_promoted_commit_and_the_adopted_files():
     # commit that descends from set 30's promoted one; the Adopted row names __ADOPTION__ or a commit that descends from the tested
     # one; set 30's tested and adoption commits stand in those rows as dated history and keep their order
     for p in PAGES:
-        s0 = _section0(p)
+        s0 = _section0(p, at)
         assert ("set 30's was `%s`, kept as dated history" % TESTED) in s0, "%s: set 30's tested commit is not kept in the Tested row" % p
         assert ("set 30's was `%s`, 6 October 2026, 11:25 CEST, kept as dated history" % ADOPTED) in s0, "%s: set 30's adoption" % p
     assert _git("merge-base", "--is-ancestor", TESTED, ADOPTED).returncode == 0, "set 30's adoption does not follow its tested commit"
@@ -408,9 +453,6 @@ def t_a_filled_placeholder_names_one_promoted_commit_and_the_adopted_files():
         assert a and a != SET31[0] and _git("cat-file", "-e", a + "^{commit}").returncode == 0, "the Adopted row reads %s" % cell
         if c != SET31[0]:
             assert _git("merge-base", "--is-ancestor", c, a).returncode == 0, "the adoption commit does not descend from the tested one"
-    for f in AT_ADOPTION:   # W30: adopted in the tree, or landing with its adoption branch
-        assert landing_error(f) is None, "filled, but %s is not adopted: %s" % (f, landing_error(f))
-    assert "**After set 30" in open(os.path.join(ROOT, LS), encoding="utf-8").read(), "filled, but LAYER-STATUS has no After set 30"
 
 
 def _packaged_errors(s0):
@@ -464,13 +506,21 @@ def t_the_owner_file_citations_are_bound_to_the_tested_revision():
 
 # -------------------------------------------------------------------------------------------------------- the content
 def t_the_six_states_stand_apart_in_each_page():
+    # W105: every state on the tree but the documents row's value (set 32's S-11 and U-10), and all six at set 31's adoption commits
+    for c in (None,) + ADOPTED31:
+        _states_at(c)
+
+
+def _states_at(c):
     for p in PAGES:
-        s0 = _section0(p)
+        s0 = _section0(p, c)
         m = re.search(r"^\| What \| State \|\n\|---\|---\|\n((?:\|.*\|\n)+)", s0, re.M)
         assert m, "%s section 0 has no states table" % p
         rows = [tuple(c.strip() for c in ln.strip("|").split("|")) for ln in m.group(1).strip("\n").split("\n")]
         assert [r[0] for r in rows] == [w for w, _ in STATES], "%s: the states table's rows are %s" % (p, [r[0] for r in rows])
         for (what, word), (_, got) in zip(STATES, rows):
+            if "%s" in word and c is None:   # W105: the documents row on the tree is set 32's (test_patch32's S-11 and U-10)
+                continue
             if "%s" in word:
                 ok = re.fullmatch(re.escape(word).replace(re.escape("%s"), r"([0-9a-f]{8,40}|%s|%s)" % (PLACEHOLDER, SET31[0])), got)
             else:

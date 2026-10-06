@@ -225,6 +225,24 @@ def _page():
     return _C["p"]
 
 
+# W105 (7 October 2026, fnd/adopt32; basis: set 32's rows L-02 to L-06 of v2/docs/records/int32/ENTRY-PAGES.patch.md put a set 32
+# block directly under each of Layers 4, 5, 8, 9 and 12, above set 31's): the placement W65 restated for set 31 ("nothing or exactly
+# one set 31 block" between a heading and set 30's block) is judged where set 31's adoption made the page, at both of set 31's
+# adoption commits through git show (W103's form in test_adopt31); on the working tree the rest of the predicate stands, and what
+# stands above set 30's block there is held by test_patch32 (set 32's blocks first) and test_adopt32 (the page is set 31's adopted
+# page with set 32's rows, nothing else). Taken under the owner's standing rule of 26 September 2026 (authority SESSION, W105);
+# reversed by running the between check on _page() again.
+ADOPTED31 = ("73941afc2d4698c5cf81da443064fe7ffe7ca620", "ad757edb1be7e0fe3b586f986d2d704c9836fdcf")
+
+
+def _page_at(c):
+    k = ("at", c)
+    if k not in _C:
+        _git("cat-file", "-e", c + "^{commit}")
+        _C[k] = _git("show", "%s:v2/docs/handover/LAYER-STATUS.md" % c)
+    return _C[k]
+
+
 def _head():
     """The head paragraph "After set 30" (one line on the page)."""
     t = _page()
@@ -233,9 +251,9 @@ def _head():
     return t[i:t.index("\n", i)]
 
 
-def _section(n):
-    """Layer n's section, from its heading to the next rule or heading of level 2."""
-    t = _page()
+def _section(n, t=None):
+    """Layer n's section, from its heading to the next rule or heading of level 2 (W105: of the page t, the tree's by default)."""
+    t = _page() if t is None else t
     i = t.index(LAYERS[n])
     j = min(x for x in (t.find("\n---\n", i), t.find("\n## ", i + 1), len(t)) if x >= 0)
     return t[i:j]
@@ -307,16 +325,23 @@ def t_the_head_paragraph_follows_set_29s_and_names_what_set_30_carries():
 
 
 def t_each_block_sits_between_its_heading_and_its_set_29_block_and_no_other_layer_has_one():
-    t = _page()
+    for c in (None,) + ADOPTED31:   # W105: the tree, then set 31's adoption commits (the comment above ADOPTED31)
+        _placement_at(c)
+
+
+def _placement_at(c):
+    t = _page() if c is None else _page_at(c)
     assert t.count("**After set 30 (6 October 2026") == 1 + len(LAYERS), "the page carries set 30 blocks it should not"
     for n in LAYERS:
-        s = _section(n)
+        s = _section(n, t)
         assert s.count("**After set 30 (6 October 2026): IN_PROGRESS") == 1, "layer %s: no single set 30 block" % n
         assert s.count("**After set 29 (4 October 2026): IN_PROGRESS") == 1, "layer %s: no single set 29 block" % n
         # restated by W65 (6 October 2026, fnd/adopt31; basis: the page's set 31 head paragraph, newest block first as set 30's
         # stand above set 29's): between the heading and set 30's block stands nothing or exactly one set 31 block, which carries
         # no other set's block (test_adopt31 holds it)
         between = s.split("**After set 30", 1)[0][len(LAYERS[n]):]
+        if c is None:   # W105: on the working tree set 32's block stands above set 31's (test_patch32, test_adopt32)
+            continue
         assert between == "\n" or (between.startswith("\n**After set 31 (6 October 2026): IN_PROGRESS")
                                     and between.count("**After set") == 1 and between.endswith("\n\n")), \
             "layer %s: text between the heading and set 30" % n
