@@ -12,11 +12,12 @@ fast-forwarded to), __ADOPTION__ (the adoption commit) and __GATE__ (a gate's lo
 `_runs/int31/freeze/fill_res31.py` fills (the coordinator's ruling, authority SESSION, in its brief to W65; W39's rows used
 __PROMOTED__ for the tested revision and were renamed, test_res31's PATCH_TOKENS with them).
 
-The predicates: every row and extra is applied on the entry page it names, located by its TEXT, not by a line number (W103,
-7 October 2026, below): its new text reads exactly once on that page, every token literal or filled with one commit throughout
-both pages; its old text survives neither on the line or lines that hold the new text nor anywhere on the page beyond what the
-copy with every row applied keeps; and the rows of a page stand in their copy's order; each row and extra reads once on its copy's
-line and its new text differs; each page carries only its
+The predicates: at set 31's two adoption commits (ADOPTED: 73941afc, the fill's first run, and ad757edb, its second run; W103,
+7 October 2026, below), read through git with the patch file and the copies of the same commit, each entry page equals its copy
+with the rows and extras applied, every token literal or filled with one commit throughout both pages, and every row and extra is
+found on the page it names by its TEXT: its new text reads exactly once there, its old text survives neither on the line or lines
+that hold the new text nor anywhere on the page beyond what the copy with every row applied keeps, and the rows of a page stand in
+their copy's order; each row and extra reads once on its copy's line and its new text differs; each page carries only its
 declared tokens and none carries __PROMOTED__ or __REKEY__; fill_res31.py (where the run folder exists) knows the tokens;
 the set 31 blocks sit first under their headings, one per layer named and none elsewhere, the head paragraph between W21's
 paragraph and the reading guide; every dated citation of set 31's text resolves at its commit (the lineage 31928583 or fnd/res31's
@@ -27,16 +28,20 @@ one, last, and states the three claims and the gate apart; set 31's text carries
 quotation and no percentage. Fixtures show that each checker refuses the defect it is for. These are software predicates on
 record text: they establish no electrical or thermal property and accept, close or promote nothing.
 
-Restated by W103 (7 October 2026; basis: W99's note N1, `_runs/claude/w99readpatch32/REPORT-FULL-AS-RECEIVED.md`): the entry
-pages were compared WHOLE with their copies, so set 32's own branches, which edit the supplier page (fnd/w34pdftext adds seven lines
+Restated by W103 (7 October 2026; basis: W99's note N1, `_runs/claude/w99readpatch32/REPORT-FULL-AS-RECEIVED.md`, and W100's B2
+as the coordinator relayed it: "a rule about history: every later edit of those pages fails it"): the entry pages of the WORKING
+TREE were compared whole with their copies, so set 32's own branches, which edit the supplier page (fnd/w34pdftext adds seven lines
 to its section 7; the chain's step a5 rewrites one line of section 0e), failed this module on the integrated tree before any set 32
-row ("line 931 reads ..." before a5, "line 761 ..." after it), although every set 31 row stood applied. The row check now locates
-each row by its text, the copy's line kept only as a hint in the message; a row whose new text is missing, doubled or on the other
-page, a row whose old text survives, a token filled with two values and two rows out of their copy's order still fail (fixtures in
-t_the_checkers_refuse_their_defects). What it no longer judges, taken under the owner's standing rule of 26 September 2026
-(authority SESSION, W103): an edit outside every row of the two pages, which a later set makes by its own rows and holds by its own
-tests (test_patch32 for set 32); reversed by restoring the whole-page comparison (`page_errors`, kept below) in
-t_the_entry_pages_are_the_copies_with_every_row_applied.
+row ("line 931 reads ..." before a5, "line 761 ..." after it), and set 32's own rows replace set 31's text at its adoption. The
+check now judges set 31's adoption where it happened: the pages, the patch file and the copies as committed at ADOPTED, through
+`git show`, so no later edit of the tree reaches it; it raises Skip only where a commit of ADOPTED is absent from the object store
+(never on the runner or a box with the full history). At each commit the whole-page comparison stands as before, and the row check
+locates each row by its text, the copy's line kept only as a hint in the message: a row whose new text is missing, doubled or on
+the other page, a row whose old text survives, a token filled with two values and two rows out of their copy's order fail
+(fixtures in t_the_checkers_refuse_their_defects; W103's mutants change the bytes read at the commit, in memory). Taken under the
+owner's standing rule of 26 September 2026 (authority SESSION, W103, on the coordinator's instruction): what it no longer judges is
+the working tree's two pages, which a later set edits by its own rows and holds by its own tests (test_patch32 for set 32);
+reversed by reading `_read(p)` again in t_the_entry_pages_are_the_copies_with_every_row_applied.
 
 Runs under the suite's runner (`python3 v2/ecad/tools/tests/run.py test_adopt31.`) and under pytest (each t_ function has a
 test_ alias). Without git or a cited commit, the predicates that read it skip with their reason."""
@@ -62,6 +67,8 @@ RESULT = REC + "/RESULT.md"
 ASSESS = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
 COPIES = {START: REC + "/inputs/START-HERE-eff28be3.md", SUPPLIER: REC + "/inputs/SUPPLIER-HANDOVER-eff28be3.md"}
 BASE = "dd1aed00d0a0a521063b5792550bc510c4707c59"          # set 30's promoted revision, set 31's base
+# W103: set 31's adoption commits, where its rows are judged: the fill's first run (ADOPTION deferred) and its second run on main
+ADOPTED = ("73941afc2d4698c5cf81da443064fe7ffe7ca620", "ad757edb1be7e0fe3b586f986d2d704c9836fdcf")
 LINEAGE = "31928583c612ea43df17df5d7e0cbb2f66090f8e"       # W41's converged commit, the lineage the record reads
 RES31 = "5f910eb5"                                          # fnd/res31 at W56's commit, merged into this branch at 1e8fa025
 CACHE = "aa3322806da156d12f2b23dbe9fc98a8805926f0"         # record l4e7's results cache re-keyed on the lineage (rekey10)
@@ -363,10 +370,24 @@ def t_each_row_and_extra_reads_once_on_its_copy_line_and_changes_it():
         assert basis and new != old and "\n" not in new, (p, n)
 
 
+def adopted_errors(c):
+    """The entry pages at adoption commit c against the copies and the rows of the same commit: the whole-page comparison and the
+    row check (W103). A file absent at c is an error; c absent from the object store raises Skip (_show)."""
+    got = {k: _show(c, k) for k in (PATCH, START, SUPPLIER, COPIES[START], COPIES[SUPPLIER])}
+    absent = sorted(k for k, v in got.items() if v is None)
+    if absent:
+        return ["%s: no %s" % (c[:8], ", ".join(absent))]
+    rows = all_rows(got[PATCH])
+    pages, copies = {p: got[p] for p in COPIES}, {p: got[COPIES[p]] for p in COPIES}
+    want = "\n\x00 the next page \x00\n".join(apply_rows(copies[p], p, rows) for p in (START, SUPPLIER))
+    errs = page_errors(want, "\n\x00 the next page \x00\n".join(pages[p] for p in (START, SUPPLIER)))
+    return ["%s: %s" % (c[:8], e) for e in errs + row_errors(rows, pages, copies)]
+
+
 def t_the_entry_pages_are_the_copies_with_every_row_applied():
-    # W103 (W99's N1): each row located by its text on the page it names, no longer the whole page against the copy (docstring)
-    errs = row_errors(all_rows(_read(PATCH)), {p: _read(p) for p in COPIES}, {p: _read(COPIES[p]) for p in COPIES})
-    assert not errs, errs
+    # W103 (W99's N1, W100's B2): judged at set 31's adoption commits, never on the working tree's pages (docstring)
+    errs = [e for c in ADOPTED for e in adopted_errors(c)]
+    assert not errs, errs[:6]
 
 
 def t_the_pages_carry_only_their_declared_tokens():
