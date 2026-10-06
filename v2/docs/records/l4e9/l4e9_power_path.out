@@ -103,7 +103,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l4e7md    8f6b173d8329c5dd  v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
    e7guard   eda720a68db60cd3  v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
    l4e7chk5  eec75531f82ced65  v2/docs/records/l4e7/checks/check-l4e7r-5.md
-   l4e7p0    d99b3b7f414cb41f  v2/docs/records/l4e7/l4e7_p0sol.out
+   l4e7p0    430d1591714b49de  v2/docs/records/l4e7/l4e7_p0sol.out
    e11aux    3d0a7b1d7d0bd8bf  v2/docs/records/l4e11/apply_gen_sch_e_aux.py
    e11dock   04025bca610844dd  v2/docs/records/l4e11/apply_pcb_interfaces_dock.py
    pending: none: L4-E7R is accepted (the coordinator's check 4, fnd/l4e7 91e9a4b5; its figures at 675b8068): the CS101 correction moved the bulk ahead of the sense bank and filtered the trip input, so defect D-01 is resolved in design (drafted, not applied)

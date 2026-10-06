@@ -213,7 +213,11 @@ def compute():
         elif data["parts"][part_] != parts_now[part_]:
             diff.append((part_, None, None, None))
     O["key_diff"] = diff
-    if [(d_[0], d_[1]) for d_ in diff] != [("files", L4E11_OUT)]:
+    # the P0 round read a cache computed at set 29's freeze, whose KEY differed from the tree in exactly l4e11_power.out; set 30's
+    # integration re-keyed the cache on the integrated tree, so the KEY now differs in NOTHING (6 October 2026, the regeneration after the
+    # re-key: this check refused the current cache as "more than" the one file with an empty list). Both states are the record's; any
+    # other difference is a stale cache.
+    if [(d_[0], d_[1]) for d_ in diff] not in ([], [("files", L4E11_OUT)]):
         refuse(4, "the cache's KEY differs from this tree in more than %s: %s" % (L4E11_OUT, [(d_[0], d_[1]) for d_ in diff]))
     src_ls = open(os.path.join(TOP, LS_PY), encoding="utf-8").read()
     pats = ((r"UVLO: on at ([\d.]+) / ([\d.]+) / ([\d.]+) V, off at", "UVLO rising"),
@@ -930,13 +934,21 @@ def render(O, K, R, b6, r3, K2):
     P("")
     # ---------------------------------------------------------------- 0
     P("0. REPRODUCTION ON THE BASE (fnd/p0base e132db0e), before any change")
-    d_ = O["key_diff"][0]
-    wrap("  0a ", "     ", "The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree. The only part that differs "
-         "is the file %s (%s at %s, set 29's freeze, against %s here: L4-E11's rounds 12 to 16). The figures compute() reads from it, "
-         "with its own patterns, in both versions: %s. EQUAL in both, so the cached results are this base's results; the cache is "
-         "not re-keyed here (the record's own recompute, 30 to 50 core-minutes, is the integrator's on a rented box, and the "
-         "record's tests read the cache through results(), which recomputes whenever the KEY does not hold)." % ("does NOT hold" if not O["key_holds"] else "holds", d_[1], d_[2][:16], CACHE_AT, (d_[3] or "missing")[:16],
-                                "; ".join("%s %s" % (w_, "/".join(a_)) for w_, a_, _b in O["o11"])))
+    if O["key_diff"]:
+        d_ = O["key_diff"][0]
+        wrap("  0a ", "     ", "The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree. The only part that differs "
+             "is the file %s (%s at %s, set 29's freeze, against %s here: L4-E11's rounds 12 to 16). The figures compute() reads from it, "
+             "with its own patterns, in both versions: %s. EQUAL in both, so the cached results are this base's results; the cache is "
+             "not re-keyed here (the record's own recompute, 30 to 50 core-minutes, is the integrator's on a rented box, and the "
+             "record's tests read the cache through results(), which recomputes whenever the KEY does not hold)." % ("does NOT hold" if not O["key_holds"] else "holds", d_[1], d_[2][:16], CACHE_AT, (d_[3] or "missing")[:16],
+                                    "; ".join("%s %s" % (w_, "/".join(a_)) for w_, a_, _b in O["o11"])))
+    else:
+        wrap("  0a ", "     ", "The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree: no part differs, the cache "
+             "was re-keyed on the integrated tree by set 30's integrator (a rented debian:12 box, Python 3.11 and pdftotext 22.12.0 as the "
+             "runner's) after L4-E11's rounds 12 to 16 had moved %s (%s at %s, set 29's freeze, against %s here). The figures compute() "
+             "reads from that file, with its own patterns, in both versions: %s. EQUAL in both, so the cached results are this base's "
+             "results and the re-keyed cache's alike." % ("holds" if O["key_holds"] else "does NOT hold", L4E11_OUT, O["o11_sha"][0][:16], CACHE_AT, O["o11_sha"][1][:16],
+                                    "; ".join("%s %s" % (w_, "/".join(a_)) for w_, a_, _b in O["o11"])))
     wrap("  0b ", "     ", "render(cache) against the committed l4e7_stage_settings.out: BYTE-IDENTICAL (sha256 %s)." % O["out_sha"][:16])
     d16 = O["d16"]
     wrap("  0c ", "     ", "D-16 recomputed by the record's own sense_ripple on its cached parameters (the as-drafted split; 25 V in, the "
