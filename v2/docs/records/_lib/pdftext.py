@@ -19,7 +19,8 @@ WHERE THE TEXT LIVES (a SESSION decision under the owner's standing rule of 26 S
 sha256 and length, the options, `pdftotext -v`'s first line, the poppler-data version, the date). A held-back PDF's text is itself
 held back: it lands under the PDF's `held/` folder, which .gitignore already excludes, because every held sheet's terms (each
 record's fetch_held_back.py header) grant no redistribution, and the full text of a sheet is a copy of it. It is refused when absent
-exactly as the PDF is, and the route is the record's fetch_held_back.py, then the re-take.
+exactly as the PDF is, and the route the refusal names is the fetch script that fetches THAT sheet (FETCH below: often another
+record's, W36's finding F-P2, restated by W37 on 6 October 2026), then the re-take.
 
 THE INVENTORY (every .py under v2/docs/records/ that mentions pdftotext on the base aed4bd23: 63 files, classified; the table with the
 PDFs each reads, committed or held back, and the reasons is PDFTEXT-INVENTORY.md beside this file):
@@ -55,6 +56,60 @@ import sys
 RETAKE = "v2/docs/records/_lib/retake_pdf_text.py"
 FOLDER = "pdftext"
 _SHA = {}
+
+# The held-back sheets the PDFTEXT tables declare, each with the records whose fetch_held_back.py fetches it (W37, 6 October 2026,
+# W36's finding F-P2: the refusal named "the record's fetch_held_back.py", the wrong script for 12 reads: efuse and l4e8 have no fetch
+# script of their own; l4e12's CSD17577/CSD17578 come from s117's, l4e13's SunPower sheets from a1solar's, l9t5's INA250 from l4e7's,
+# l9t5_t10's INA169 and TPS3701 from l4e7's and l6pwr's, l4e8's Uniroyal sheet from w5identc's). Read from each fetch script's own
+# document list (parsed, never run); test_pdftext_input re-derives the map from those scripts and refuses a difference. A refusal names
+# the reading record's own script when it is listed, else the first. No declared held sheet lacks a fetch route on 6 October 2026; one
+# that did would read () here and its refusal would say so (a sheet with no fetch route is a finding, never a silent gap).
+FETCH_SCRIPT = "v2/docs/records/%s/fetch_held_back.py"
+FETCH = {
+    "v2/vendor/adi/held/adi-adl5513-revb.pdf": ("l9t5",),
+    "v2/vendor/adi/held/adi-adl5902-revb.pdf": ("l9t5",),
+    "v2/vendor/adi/held/adi-ltc5582-revd.pdf": ("l9t5",),
+    "v2/vendor/battery/held/lg-inr18650hg2-rev0-2014.pdf": ("l4e10",),
+    "v2/vendor/battery/held/saft-lsh20-31015-2-0426.pdf": ("l4e10",),
+    "v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf": ("l4e10", "l6pwr"),
+    "v2/vendor/battery/held/samsung-inr18650-30q-v1.0-2015.pdf": ("l4e10",),
+    "v2/vendor/battery/held/samsung-inr18650-30q6-draft-v0.1-2024.pdf": ("l4e10",),
+    "v2/vendor/battery/held/samsung-inr18650-30q6-v1.0-2020.pdf": ("l4e10",),
+    "v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf": ("l4e11",),
+    "v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf": ("l4e11", "l6pwr"),
+    "v2/vendor/nexperia/held/nexperia-pxp9r1-30ql.pdf": ("l4e11",),
+    "v2/vendor/passives/held/moolee-hollr2512-ho-a0-2022-01-06.pdf": ("l4e11",),
+    "v2/vendor/passives/held/murata-grm3195c1h104ga05-01a-2026-06-11.pdf": ("l4e11",),
+    "v2/vendor/passives/held/murata-grm3195c1h683ja05-01a-2026-06-11.pdf": ("l4e11",),
+    "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf": ("w5identc",),
+    "v2/vendor/power/held/adi-ltc3115-1-rev-e.pdf": ("l4e11",),
+    "v2/vendor/power/held/aos-aons21357-rev2.1-2023-11.pdf": ("l4e11",),
+    "v2/vendor/power/held/diodes-b520c-b560c-ds13012-rev18-2.pdf": ("l4e11", "l6pwr"),
+    "v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf": ("l4e11", "l4e9"),
+    "v2/vendor/power/held/vishay-sqj403ep-67109-reva.pdf": ("l4e11",),
+    "v2/vendor/power/held/vishay-sqj407ep-62806-revb.pdf": ("l4e11",),
+    "v2/vendor/solar/held/solbian-sx-series-datasheet-eng-2023-02.pdf": ("l4e13",),
+    "v2/vendor/solar/held/sunpower-flex-safety-installation-524958-revf.pdf": ("a1solar",),
+    "v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf": ("a1solar",),
+    "v2/vendor/ti/held/ti-bq25730-sluse65a.pdf": ("l4e11", "l6pwr"),
+    "v2/vendor/ti/held/ti-csd17577q5a-slps516.pdf": ("s117",),
+    "v2/vendor/ti/held/ti-csd17578q5a-slps526.pdf": ("s117",),
+    "v2/vendor/ti/held/ti-csd19536ktt-slps540c.pdf": ("l4e11", "l6pwr"),
+    "v2/vendor/ti/held/ti-ina169-sbos181f.pdf": ("l4e7", "l6pwr"),
+    "v2/vendor/ti/held/ti-ina250-sbos511c.pdf": ("l4e7",),
+    "v2/vendor/ti/held/ti-lm26lv-snis144g.pdf": ("l8p",),
+    "v2/vendor/ti/held/ti-lmh2110-snws022d.pdf": ("l9t5",),
+    "v2/vendor/ti/held/ti-opa187-sbos807e.pdf": ("l8p",),
+    "v2/vendor/ti/held/ti-slva673a.pdf": ("l9stk",),
+    "v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf": ("l4e11",),
+    "v2/vendor/ti/held/ti-tlv755p-c404027.pdf": ("l4e12",),
+    "v2/vendor/ti/held/ti-tps1663-slvset9g.pdf": ("l4e11", "l6pwr"),
+    "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf": ("l4e7", "l6pwr"),
+    "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf": ("l4e11", "l4e7", "l6pwr", "l8r2"),
+    "v2/vendor/ti/held/ti-tps55340-slvsbd4e.pdf": ("l4e11",),
+    "v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf": ("l4e11",),
+    "v2/vendor/ti/held/ti-tps709-sbvs186h.pdf": ("l8p",),
+}
 
 
 def refuse(msg):
@@ -118,6 +173,17 @@ def retake_command(record):
     return "python3 %s %s" % (RETAKE, record or "<record dir>")
 
 
+def fetch_route(pdf_rel, record=None):
+    """The words that name how a held-back sheet is fetched: the fetch script FETCH lists for it (the reading record's own when listed),
+    or, for a sheet no script fetches, that finding."""
+    recs = FETCH.get(str(pdf_rel).replace(os.sep, "/"), ())
+    if not recs:
+        return ("no record's fetch_held_back.py fetches the held-back sheet %s (a sheet with no fetch route is a finding: add it, with "
+                "the address and sha256 v2/vendor/sources.txt records, to a fetch script and to pdftext.FETCH)" % pdf_rel)
+    own = os.path.basename(os.path.normpath(record)) if record else None
+    return "fetch the held-back sheet with python3 %s" % (FETCH_SCRIPT % (own if own in recs else recs[0]))
+
+
 def _sha_file(p):
     st = os.stat(p)
     k = (p, st.st_size, st.st_mtime_ns)
@@ -126,13 +192,14 @@ def _sha_file(p):
     return _SHA[k]
 
 
-def read_pdf_text(pdf_path, txt_path, retake=None, universal_newlines=False):
+def read_pdf_text(pdf_path, txt_path, retake=None, universal_newlines=False, record=None):
     """The text at txt_path, as pdftotext wrote it at the re-take (decoded UTF-8, errors replaced, as the generators decoded their
     pipe). Refuses (exit 2) when the text or its sidecar is absent, when the text is not the bytes the sidecar records, or when the PDF
-    is present and is not the file the text was taken from. universal_newlines=True gives what subprocess's text=True gave."""
+    is present and is not the file the text was taken from. universal_newlines=True gives what subprocess's text=True gave. A held-back
+    sheet's route names the fetch script FETCH lists for it (fetch_route; record, when given, prefers the reader's own)."""
     route = retake or retake_command(None)
     if held(_rel(pdf_path)):
-        route = "fetch the held-back sheet with the record's fetch_held_back.py, then %s" % route
+        route = "%s, then %s" % (fetch_route(_rel(pdf_path), record), route)
     if not os.path.isfile(txt_path):
         refuse("the extracted text %s of %s is absent; take it with: %s" % (_rel(txt_path), _rel(pdf_path), route))
     mp = txt_path + ".meta.json"
@@ -164,7 +231,7 @@ def pdf_text(top, pdf_rel, options, declared, record, universal_newlines=False):
         refuse("%s with %s is not declared in %s's PDFTEXT table; declare it, then %s" % (
             pdf_rel, " ".join(map(str, options)) or "(no options)", record, retake_command(record)))
     return read_pdf_text(os.path.join(top, pdf_rel), os.path.join(top, text_path(pdf_rel, options)), retake_command(record),
-                         universal_newlines)
+                         universal_newlines, record)
 
 
 def inputs(top, declared):

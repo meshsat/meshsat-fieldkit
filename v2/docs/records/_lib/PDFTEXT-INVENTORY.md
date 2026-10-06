@@ -186,7 +186,27 @@ SunPower sheets) and `ripple_dense.py` (its 19 page reads gone; L4-E4's `compute
   source is pinned by the released H1 to H3 manifests.
 - **Outside the records** (not in this brief): `v2/ecad/tools/part_identities.py`, `pack_protection.py`, `edge_length.py`,
   `handover_exports.py`; the tests that run pdftotext themselves (`test_energy_chain`, `test_l3r5`, `test_l5r4`, `test_l8r2`'s fan sheets).
-  A suite box therefore still needs `poppler-data` for these readers; the converted ones no longer read the host's tool at all.
+
+**What still reads the host's poppler (restated by W37, 6 October 2026, on W36's finding F-P1; the sentence it replaces said the
+converted generators "no longer read the host's tool at all", which is false).** The converted generators no longer run `pdftotext`
+on any path of their own. They still reach the host's poppler in two ways:
+
+- **`pdftocairo -svg`, run by two converted generators** to read a maker's plotted curve as drawn: `l4e9/l4e9_power_path.py`, one
+  call site (the CSD19532Q5B safe-operating-area page 6; W36 logged 1 call per run, W37 the same), and `l4e11/l4e11_power.py`, three
+  call sites (the CSD19532Q5B and the held CSD19536KTT at page 6, the held AONS21357 at page 5; 5 calls per run). The SVG is not a
+  committed input; pdftocairo's own host sensitivity has not been measured (W36, "Not checked"). `test_pdftext_input` pins these four
+  call sites and these calls (section 7).
+- **`pdftotext` through a module a converted generator runs**: `l4e13/l4e13_panel.py` runs `l4e/l4e_replay.main()` in-process (39
+  extractions per run, W36's logged count), and `l4e8/ripple_dense.py` reaches `r11dep/r11_dep.py` through L4-E4's `compute()`; both
+  modules are the l4e7 KEY group's (section 5, first item), listed in the regression as KNOWN callers with that reason.
+
+A suite box therefore still needs poppler's `pdftotext` 22.12.0 and the `poppler-data` package for: the l4e7 KEY group (its KEY
+records the host's `pdftotext -v`; `test_l4e7`, and a recompute reads the CID sheets); `r11dep/r11_dep.py`, which reads
+`passives/milliohm-hojlr2512-series.pdf` (CID Type 0, no ToUnicode, the JST VH signature, W36's font census) in `test_r11dep`,
+`test_l4e4`, `test_l4e5` and `test_l4e6`, and in `test_l4e8` through `ripple_dense`; `l4close/verify_risks.py` (`test_l4close`, both
+CID sheets); `l4e13` through `l4e_replay` (`test_l4e13`); the accepted Layer 3 and historical readers above; and the four tools and
+four tests outside the records. It needs `pdftocairo` for `l4e9` and `l4e11` and the tests that run them. W36's census is static (no
+box was rented for it); the converted generators' own reads are the only ones W34 made host-independent.
 
 ## 6. What the coordinator does at set 32's integration
 
