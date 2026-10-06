@@ -114,11 +114,13 @@ def applied_state(root):
         return None
     py = open(p_py, encoding="utf-8").read()
     page = open(p_page, encoding="utf-8").read()
-    missing = [r[:40] for _a, rows in REG_ADD for r in rows if r not in reg]
-    missing += [rep[:40] for _o, rep in REG_EDITS if rep not in reg]
-    missing += [rep[:40] for _o, rep in PY_EDITS if rep not in py]
+    # The applied tree is authoritative once the rows exist: later record rounds (set 31's restatement of the page, the register and the
+    # generator's data) may edit the applied texts, so the test is the PRESENCE of every row this draft adds (by id) and of the page's P0
+    # note, not the verbatim text; the change list is then read from the tree's own register and script.
+    ids = [re.match(r"\| (R-\d+) \|", r).group(1) for _a, rows in REG_ADD for r in rows]
+    missing = [i for i in ids if "| %s |" % i not in reg]
     if missing or not any(l.startswith("**The P0 round (record l9t5") for l in page.split("\n")):
-        refuse("the register carries R-220 but the applied texts are not this draft's: %r" % missing[:3])
+        refuse("the register carries R-220 but not every row this draft adds, or the page lacks the P0 note: %r" % missing[:5])
     m = module_of(py, p_py)
     ch = m.cons_changes(m.md_table(reg, "| ID | Kind |"))
     m.ALREADY_APPLIED = True
@@ -157,7 +159,7 @@ def main(argv):
     if applied:
         if flags == ["--write"]:
             refuse("the register already carries R-220: applied before")
-        print("%s: APPLIED BEFORE (the tree carries this draft's rows verbatim), nothing to write" % NAME)
+        print("%s: APPLIED BEFORE (the tree carries every row this draft adds and the page's P0 note; the change list is read from the tree), nothing to write" % NAME)
         return 0
     if flags != ["--write"]:
         print("%s: CHECK OK, nothing written" % NAME)
