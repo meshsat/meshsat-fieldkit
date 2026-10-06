@@ -288,6 +288,7 @@ def t_the_new_texts_name_the_current_row_and_label_the_old_bar():
         old, new = _norm(rows[k]["old"]), _norm(rows[k]["new"])
         assert "40.78 K/W without m" in new and "37.59 K/W" in new and "SUPERSEDED" in new and "4 October 2026" in new, k
         assert _labelled(new), "%s: an unlabelled 45.88 K/W" % k
+        assert "E-1" not in new.replace(rows[k]["old"], ""), "%s: no bare E-1 added (K-08: one identifier, two items)" % k
         assert not ("40.78 K/W without m" in old and _labelled(old)), "%s: the old text already met the predicate" % k
     for k in ("P-02", "P-04", "P-07", "P-10"):
         assert "45.88" in rows[k]["new"] or "%s K/W (set 29's %s K/W" in rows[k]["new"], k
@@ -370,6 +371,31 @@ def t_the_p0_rows_hold_and_their_old_texts_fail():
     else:
         skipped += 1
     assert skipped <= 3, "too many checks skipped (%d)" % skipped
+
+
+QPROSE = re.compile(r"\"([^\"]{8,400}?)\"[^\"`]{0,80}?\(?`(?:([0-9a-f]{8}):)?(v2/[^`:\s]+):(\d+)(?:-(\d+))?`")
+
+
+def t_every_prose_quotation_reads_on_its_cited_lines():
+    """Each quotation of the two patch files' prose followed by a line citation is found on the cited lines (at the tree, or at the
+    commit the citation names, where that commit is in the object store); the rows' fenced texts are held by the tests above."""
+    checked = skipped = 0
+    for rel in (L4E9P, P0P):
+        prose = re.sub(r"```text\n.*?\n```", "", _read(rel), flags=re.S)
+        prose = "\n".join(ln for ln in prose.split("\n") if not ln.startswith("- Check:"))
+        flat = " ".join(prose.split())
+        for m in QPROSE.finditer(flat):
+            sha, path, a = m.group(2), m.group(3), int(m.group(4))
+            b = int(m.group(5) or a)
+            f = _git_show(sha, path) if sha else open(os.path.join(ROOT, path), encoding="utf-8").read()
+            if f is None:
+                skipped += 1
+                continue
+            seg = _norm(" ".join(f.split("\n")[a - 1:b]))
+            for part in _norm(m.group(1)).split("..."):
+                assert part.strip() in seg, "%s: %r is not on %s:%d-%d" % (rel, part.strip()[:60], path, a, b)
+            checked += 1
+    assert checked >= 8, "the quotations were read (%d, %d skipped)" % (checked, skipped)
 
 
 def t_no_dashes_and_the_prototype_framing():

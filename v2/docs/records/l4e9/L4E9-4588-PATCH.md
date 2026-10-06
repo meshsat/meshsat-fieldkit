@@ -32,9 +32,11 @@ table's D-14 row, U-04's choice row, UDC-1's comparison and the 8a history parag
   (`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:255`).
 - **What 45.88 K/W still is, and stays:** the bound on each junction's worst-split figure at its own m (line 1 of E11-29's acceptance,
   the row above), and section 21b's bar at m of 1/4 or more. Every new text below keeps it only in those two roles, or labelled
-  "set 29's ... SUPERSEDED as the per-FET bar". Labels: 40.78 and 37.59 K/W are L4-E11's INFERRED and SESSION figures as its row
-  prints them; no row below claims either is achievable (L4-E11: "whether 40.78 K/W can be met at all (no printed or measured figure
-  shows it)", `v2/docs/records/l4e11/README.md:79`).
+  "set 29's ... SUPERSEDED as the per-FET bar". Labels as L4-E11 gives them: 40.78 K/W is round 11's "SESSION selection; CONDITIONAL
+  on E11-29 (coupon) and E11-36" (`v2/docs/records/l4e11/README.md:110`); 37.59 K/W is round 16's design target at the SESSION
+  allowance of 10 mW a lead, "(INFERRED; the coupling at its bound for planning)"
+  (`v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md:3233`). No row below claims either is achievable (L4-E11: "whether 40.78 K/W
+  can be met at all (no printed or measured figure shows it)", `v2/docs/records/l4e11/README.md:79`).
 
 ## 2. How to apply
 
