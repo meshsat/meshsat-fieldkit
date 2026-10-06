@@ -184,11 +184,14 @@ def main(argv):
         else:
             print(__doc__)
             return 2
-    # ORDER: apply_l5pwr2_contracts.py must be applied to these files first
-    r = subprocess.run([sys.executable, "-B", os.path.join(HERE, "apply_l5pwr2_contracts.py"), "--check", "--yaml", paths["yaml"],
-                        "--hwfw", paths["hwfw"]], capture_output=True, text=True)
-    if r.returncode != 0 or "already applied" not in r.stdout:
-        refuse("ORDER: apply_l5pwr2_contracts.py is not applied to these files (%s)" % (r.stdout + r.stderr).strip().splitlines()[-1][:160])
+    # ORDER: apply_l5pwr2_contracts.py must be applied to these files first: every old text of it gone. A later round may restate
+    # its new texts in place (W8 restated L5-F09 a to d under L5-F14): that tree is applied, then restated, not unapplied, and
+    # this script's own state below reads each of its edits as it stands (record l5pwr, W14 of 6 October 2026).
+    import collections
+    pre = {k: open(p, encoding="utf-8").read() for k, p in paths.items()}
+    left = [i for i, tg, _w, old, _n in A.edits(collections.defaultdict(str)) if rx(old).search(pre[tg])]
+    if left:
+        refuse("ORDER: apply_l5pwr2_contracts.py is not applied to these files (its old text still in them: %s)" % ", ".join(left))
     V = l4()
     texts = {k: open(p, encoding="utf-8").read() for k, p in paths.items()}
     E = []
