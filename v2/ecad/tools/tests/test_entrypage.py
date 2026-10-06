@@ -161,7 +161,7 @@ ANCHORS = (
     (SUPPLIER, "## 2. Requirements, operating modes and fixed constraints", False), (SUPPLIER, "## 4. Layer by layer", False),
     (SUPPLIER, "## 7. How to check the claims", False), (SUPPLIER, "4. **What the project tested", False),
     (SUPPLIER, "## 8. What we ask a supplier to quote for", False), (SUPPLIER, "## 10. Changes since the release-candidate", False),
-    (START, "## 0. Set 30's revision (6 October 2026): what it hands over, and set 31 over it", False),  # W69 from W68's F2: set 30's (START, "## 6. Regenerating and verifying", False),
+    (START, "## 0. Set 30's revision (6 October 2026): what it hands over, and set 31 over it", False), (START, "## 6. Regenerating and verifying", False),  # W69 from W68's F2: set 30's; the second tuple restored by the coordinator after W72's R1
     (REM, "## 1. The twelve cx46 findings NOT CLOSED", False), (REM, "## 2. The cases the authors handed over", False),
     (REM, "## 5. Summary", False), (REM, "## 7. Reproducing the records", False),
     (ANX, "## 1. U-02, the sealed case's heat rejection", False), (ANX, "## 2. U-04, the charger", False),
