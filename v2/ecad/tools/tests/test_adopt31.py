@@ -18,8 +18,8 @@ declared tokens and none carries __PROMOTED__ or __REKEY__; fill_res31.py (where
 the set 31 blocks sit first under their headings, one per layer named and none elsewhere, the head paragraph between W21's
 paragraph and the reading guide; every dated citation of set 31's text resolves at its commit (the lineage 31928583 or fnd/res31's
 5f910eb5, both in this branch's history) and its quote is on the cited lines; the three claims and the DESK gate are the
-assessment's lines verbatim at the lineage and in the tree; the counts typed (103 commits to the lineage, 104 classified to the cache
-commit, 24 REVIEWED-INPUT CHANGED) are the classification's and git's; the eight next-set branches are in the lineage and the cache commit follows it; the plan's entry is
+assessment's lines verbatim at the lineage and in the tree; the counts typed (103 commits to the lineage, 104 to the cache commit, 106
+classified to the second candidate, 25 REVIEWED-INPUT CHANGED; W83) are the classification's and git's; the eight next-set branches are in the lineage and the cache commit follows it; the plan's entry is
 one, last, and states the three claims and the gate apart; set 31's text carries no em or en dash, no acceptance word outside a
 quotation and no percentage. Fixtures show that each checker refuses the defect it is for. These are software predicates on
 record text: they establish no electrical or thermal property and accept, close or promote nothing.
@@ -51,6 +51,8 @@ BASE = "dd1aed00d0a0a521063b5792550bc510c4707c59"          # set 30's promoted r
 LINEAGE = "31928583c612ea43df17df5d7e0cbb2f66090f8e"       # W41's converged commit, the lineage the record reads
 RES31 = "5f910eb5"                                          # fnd/res31 at W56's commit, merged into this branch at 1e8fa025
 CACHE = "aa3322806da156d12f2b23dbe9fc98a8805926f0"         # record l4e7's results cache re-keyed on the lineage (rekey10)
+FIRST = "d0e283aa52ceb7f303358862b539161b721475e5"         # set 31's first candidate: the re-key's dependents (its gate FAILED)
+CAND = "5f25daf3762ecd69c8764bf60de81a80f4119eab"          # set 31's second candidate: the coordinator's test correction (W83)
 NEXT_SET = ("786aed2f", "cd19df59", "910f08ef", "85b6f258", "56ab0d01", "57bcdbfc", "150e908b", "686de0a2")
 # the coordinator's tokens per file (W63's fill_res31.py names them so)
 TOKENS = {START: {"__CANDIDATE__", "__ADOPTION__"}, SUPPLIER: {"__CANDIDATE__", "__ADOPTION__"},
@@ -367,22 +369,31 @@ def t_the_claims_are_the_assessments_lines_verbatim():
 
 def t_the_counts_are_the_classifications_and_gits():
     # restated by W69 (6 October 2026, from W68's finding F1; basis: the classification gained row 34, the re-key's cache commit
-    # aa332280, classed DIGEST RE-PIN, so it counts 104 commits to the cache commit; the lineage's 103 to 31928583 stand as typed)
+    # aa332280, classed DIGEST RE-PIN, so it counts 104 commits to the cache commit; the lineage's 103 to 31928583 stand as typed).
+    # Restated by W83 (6 October 2026; basis: the classification gained rows 35, the first candidate d0e283aa, REVIEWED-INPUT CHANGED,
+    # and 36, the coordinator's test correction 5f25daf3, TEST, so it counts 106 commits to the second candidate, 25 of them
+    # REVIEWED-INPUT CHANGED; the 103 and the 104 stand as typed history, and W56's quoted "None of the 24" stays a dated quotation)
     c = _read(CLASS)
-    assert "| `REVIEWED-INPUT CHANGED` | 24 | 24 |" in c and re.search(r"^\| total \| 104 \| \|$", c, re.M), "the classification's counts"
+    assert "| `REVIEWED-INPUT CHANGED` | 25 | 25 |" in c and re.search(r"^\| total \| 106 \| \|$", c, re.M), "the classification's counts"
     k = _git("rev-list", "--count", "%s..%s" % (BASE, LINEAGE))
     kc = _git("rev-list", "--count", "%s..%s" % (BASE, CACHE))
-    if k.returncode != 0 or kc.returncode != 0:
+    kn = _git("rev-list", "--count", "%s..%s" % (BASE, CAND))
+    if k.returncode != 0 or kc.returncode != 0 or kn.returncode != 0:
         raise Skip("the lineage is not in this object store")
-    assert k.stdout.decode().strip() == "103" and kc.stdout.decode().strip() == "104"
+    assert k.stdout.decode().strip() == "103" and kc.stdout.decode().strip() == "104" and kn.stdout.decode().strip() == "106"
+    assert _git("rev-parse", FIRST + "^1").stdout.decode().strip() == CACHE, "the first candidate does not follow the cache commit"
+    assert _git("rev-parse", CAND + "^1").stdout.decode().strip() == FIRST, "the second candidate does not follow the first"
     l4 = _norm(block31(_read(LS), "4"))
     assert "None of the 24 REVIEWED-INPUT CHANGED commits" in l4 and "103 commits over the base" in l4
-    assert "104 commits over the base" in l4 and "classes the 104 commits of `dd1aed00..aa332280`" in l4
-    assert "counts 24 REVIEWED-INPUT CHANGED commits over `dd1aed00..aa332280`" in _norm(_plan_entry(_read(PLAN)))
+    assert "104 commits over the base" in l4 and "classes the 106 commits of `dd1aed00..5f25daf3`" in l4
+    assert "106 commits over the base" in l4 and "(reading A): 25 REVIEWED-INPUT CHANGED" in l4 and "four-log gate FAILED" in l4
+    plan = _norm(_plan_entry(_read(PLAN)))
+    assert "counts 25 REVIEWED-INPUT CHANGED commits over `dd1aed00..5f25daf3`" in plan and "106 commits over the base" in plan
+    assert "whose four-log gate FAILED" in plan
     for p in COPIES:
         t = _norm(_read(p))
-        assert t.count("24 commits that change what cx46 read") == 2 and "over the 104 commits of `dd1aed00..aa332280`" in t, p
-        assert "31928583" not in t, "%s names the lineage 31928583 where the classification reads to aa332280" % p
+        assert t.count("25 commits that change what cx46 read") == 2 and "over the 106 commits of `dd1aed00..5f25daf3`" in t, p
+        assert "31928583" not in t, "%s names the lineage 31928583 where the classification reads to the candidate" % p
 
 
 def t_the_merged_branches_the_cache_commit_and_the_contract():

@@ -1,19 +1,22 @@
 # Set 31: the result of the integration (MESHSAT-1357)
 
-**DONE:** the record of set 31 drafted on its lineage as last read, `aa332280` (the re-key's cache commit on W41's converged commit
-`31928583`, after main's adoption of set 30 was merged at `d5d9c252`): what was adopted and from whom, W38's review and its findings,
-W41's corrections, W48's recheck, the classification's reconciliation under the coordinator's ruling, the three chain runs as logged,
-the refusals, the KEY before and after the re-key, the two spent re-keys as rework, the compute, the three claims as the assessment
-gives them, the classification bound (W69 wrote the re-key's results and W68's findings in, 6 October 2026 from 19:46 CEST).
-**NOT DONE:** what the freeze, the gate and the promotion will give (the placeholders for the candidate commit, the promoted revision
-and the gate lines, sections 1, 2c, 4, 6 and 8), and the classification's row for the candidate commit (its row 35, named by the fill and
-classed after it). **NEXT:** the coordinator fills the placeholders line by line from git and the logs at the adoption
-(`fill_res31.py`, FREEZE-PLAN step 12) and adopts this file with `CLASSIFICATION.md` and `ENTRY-PAGES.patch.md`.
+**DONE:** the record of set 31 drafted on its lineage as last read, `5f25daf3` (set 31's second candidate: the coordinator's test
+correction after the first candidate `d0e283aa`, the re-key's dependents regenerated on the re-key's cache commit `aa332280`,
+FAILED its four-log gate; main's adoption of set 30 merged at `d5d9c252` before them): what was adopted and from whom, W38's review
+and its findings, W41's corrections, W48's recheck, the classification's reconciliation under the coordinator's ruling, the three
+chain runs as logged, the refusals, the KEY before and after the re-key, the two spent re-keys as rework, the first candidate with
+its gate's verdict, its two causes, the correction and the re-take, and the coordinator's known item (section 4a), the compute, the
+three claims as the assessment gives them, the classification bound (W69 wrote the re-key's results and W68's findings in, 6
+October 2026 from 19:46 CEST; W83 the first candidate, its gate and the second candidate, from 21:55 CEST). **NOT DONE:** what the
+second candidate's freeze, its gate and the promotion will give (the placeholders for the candidate commit, the promoted revision and
+the gate lines, sections 1, 2c, 4, 6 and 8). **NEXT:** the coordinator fills the placeholders line by line from git and the logs at
+the adoption (`fill_res.py --set 31`, FREEZE-PLAN step 12) and adopts this file with `CLASSIFICATION.md` and `ENTRY-PAGES.patch.md`.
 
 **Status: a draft for adoption** at set 31's promotion (queue item Q-58), written by worker W39 on branch fnd/res31 (base fnd/int31regen
 `f0748b490e183082b2da4361a5d24ee60d5fba40`) on 6 October 2026 from 15:28 CEST, brought to `31928583` by worker W56 from 18:11 CEST
-(W39 drafted it; W50 and W51 reconciled its classification), and brought to the re-key's cache commit `aa332280` with W68's
-findings by worker W69 from 19:46 CEST, in the form of set 30's record
+(W39 drafted it; W50 and W51 reconciled its classification), brought to the re-key's cache commit `aa332280` with W68's
+findings by worker W69 from 19:46 CEST, and brought to set 31's second candidate `5f25daf3` after the first candidate's failed gate
+by worker W83 from 21:55 CEST, in the form of set 30's record
 (`v2/docs/records/int30/RESULT.md` at main `eff28be3`). It is record text: its author ran no generator, suite, gate or box job; it
 accepts nothing, closes nothing, promotes nothing and changes no verdict. Prototype framing: nothing in the kit has been built, bought,
 powered or measured; every figure below is a time, a count or a digest copied from a log or a commit (elapsed times computed from logged
@@ -22,7 +25,9 @@ stamps say so), and no figure is an engineering result.
 **What set 31 is.** An adoption of record text prepared during set 30's integration by workers W3 to W28 (the queue's rows Q-13 to
 Q-51), on the promoted set 30 (`dd1aed00`), with W31's tooling and the coordinator's items, regenerated to convergence by W29 and W35, and
 with main's adoption of set 30 merged into the lineage (`d5d9c252`), and W41's second corrections round from W38's review with the
-chain's third run on it (`3057ae43`, `31928583`; sections 2b and 3f).
+chain's third run on it (`3057ae43`, `31928583`; sections 2b and 3f), the re-key's cache commit and its dependents (`aa332280`, and
+`d0e283aa`, the first candidate), and the coordinator's test correction after that candidate's gate FAILED (`5f25daf3`, the second
+candidate; section 4a).
 It closes NO power item, is not power-design closure and releases nothing; Layer 4's DESK gate stays NOT PASSED as the coordinator
 judged it on set 30 (section 6).
 
@@ -46,11 +51,13 @@ every commit named, every count and every placeholder.
 | The lineage at the merge of main | `d5d9c252db128bc71db42d068477e1b370e750b4` (fnd/int31regen: the merge of main `eff28be3`; `git rev-parse` at 15:55 and 16:10 CEST) | 101 commits over the base (rows 1 to 31 of the classification) | `git rev-list --count dd1aed00..d5d9c252` |
 | W41's second corrections round (queue item Q-60) | `3057ae43f4fb7fc5e3d6282ce52d448c8ee27929` (W41's items, 16:14:18) | W38's F2, OW-4, F4 to F7 and F10 corrected (section 2b) | `git log -1 3057ae43` |
 | W41's chain, the third run, converged | `31928583c612ea43df17df5d7e0cbb2f66090f8e` (18:10:32) | 25 outputs and 4 tool-moved pins with W48's N1 and N2; the l4e7 KEY MISMATCH on `l4e11_power.out` alone until the re-key (section 3f) | `<worktrees>/_runs/int31/chain3-1614.log:230` `== committed 31928583 at 18:10:37 (32 files); status empty` |
-| The re-key's cache commit, the lineage as last read by this record | `aa3322806da156d12f2b23dbe9fc98a8805926f0` (fnd/int31regen, 19:00:45; `git rev-parse` at 19:54 CEST) | record l4e7's results cache re-keyed on `31928583` on a fresh box (rekey10, rented 18:11:26, section 5), the KEY MATCH after it (section 3e); 104 commits over the base, classified (section 2, row 34); the re-keys on `aed4bd23` and `562edf6a` are spent (section 3g); the lineage moves once more after it, to the candidate below | `git rev-list --count dd1aed00..aa332280`; `<worktrees>/_runs/int30/QUEUE.md`, entry "18:58 to 19:00 (clock) SET 31'S RE-KEY DONE", `the coordinator committed the one staged file with the script's message: CACHE COMMIT` |
+| The re-key's cache commit, the lineage as W69 last read it | `aa3322806da156d12f2b23dbe9fc98a8805926f0` (fnd/int31regen, 19:00:45; `git rev-parse` at 19:54 CEST) | record l4e7's results cache re-keyed on `31928583` on a fresh box (rekey10, rented 18:11:26, section 5), the KEY MATCH after it (section 3e); 104 commits over the base, classified (section 2, row 34); the re-keys on `aed4bd23` and `562edf6a` are spent (section 3g); the lineage moved twice after it, to the two candidates below | `git rev-list --count dd1aed00..aa332280`; `<worktrees>/_runs/int30/QUEUE.md`, entry "18:58 to 19:00 (clock) SET 31'S RE-KEY DONE", `the coordinator committed the one staged file with the script's message: CACHE COMMIT` |
+| The first candidate: the re-key's dependents regenerated; SUPERSEDED | `d0e283aa52ceb7f303358862b539161b721475e5` (fnd/int31regen, 20:41:35) | 105 commits over the base (row 35 of the classification); its four-log gate FAILED and it was not promoted (section 4a) | `git rev-list --count dd1aed00..d0e283aa`; `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:7` `suite_gate: FAIL` |
+| The coordinator's test correction, set 31's second candidate, the lineage as last read by this record | `5f25daf3762ecd69c8764bf60de81a80f4119eab` (fnd/int31regen, 21:48:00; `git rev-parse` at 22:05 CEST) | four fixed-size source windows converted in two test modules (section 4a); 106 commits over the base, classified (section 2, row 36); in its freeze when this record was last written | `git rev-list --count dd1aed00..5f25daf3`; `git log -1 5f25daf3` |
 | INTEGRATED = CANDIDATE: the candidate commit | `__CANDIDATE__` | no independent check of its engineering | the coordinator's commit on fnd/int31regen |
 | PROMOTED: main after the fast-forward | `__PROMOTED__` | a DESK candidate, not an accepted power design (section 6) | the promotion's log |
 
-**The lineage's first-parent line** (`git log --first-parent dd1aed00..aa332280`; the 34 numbered rows of `CLASSIFICATION.md`, each
+**The lineage's first-parent line** (`git log --first-parent dd1aed00..5f25daf3`; the 36 numbered rows of `CLASSIFICATION.md`, each
 merge's branch commits listed under it there):
 
 | Rows | Commits | What they did |
@@ -68,18 +75,24 @@ merge's branch commits listed under it there):
 | 32 | `3057ae43` | W41's items from W38's review (section 2b) |
 | 33 | `31928583` | W41's chain, the third run, with W48's N1 and N2 (sections 2b, 2c and 3f) |
 | 34 | `aa332280` | the coordinator's commit of record l4e7's results cache re-keyed on `31928583` (rekey10; sections 3e and 5) |
+| 35 | `d0e283aa` | the coordinator's regeneration of the re-key's dependents, set 31's first candidate; its four-log gate FAILED (section 4a) |
+| 36 | `5f25daf3` | the coordinator's test correction (four fixed-size source windows), set 31's second candidate (section 4a) |
 
 ## 2. What changed (every adopted branch, the coordinator's items, the tooling, the corrections)
 
 **The classification is bound by its path:** `v2/docs/records/int31/CLASSIFICATION.md`, adopted with this file. It classes each of the
-104 commits of `git rev-list dd1aed00..aa332280` (79 commits and 25 merges) from its diff into the brief's fixed set, and counts, first
-class per row: REVIEWED-INPUT CHANGED 24; RECORD TEXT 36; GENERATOR DATA (text) 0; TEST 14; DIGEST RE-PIN 3; MERGE 25; TOOLING 2;
-total 104 (its section 2; over the 73 commits to `f0748b49` alone, REVIEWED-INPUT CHANGED 17); W41's two commits, rows 32 and 33, are both
-REVIEWED-INPUT CHANGED, and the re-key's cache commit, row 34, is a DIGEST RE-PIN (the cache's KEY and one part's digest; its results
-object equal before and after). The candidate commit, row 35, is named by the fill at the adoption and classed after it. The class is set 30's rule (line 11 of
+106 commits of `git rev-list dd1aed00..5f25daf3` (81 commits and 25 merges) from its diff into the brief's fixed set, and counts, first
+class per row: REVIEWED-INPUT CHANGED 25; RECORD TEXT 36; GENERATOR DATA (text) 0; TEST 15; DIGEST RE-PIN 3; MERGE 25; TOOLING 2;
+total 106 (its section 2; over the 73 commits to `f0748b49` alone, REVIEWED-INPUT CHANGED 17); W41's two commits, rows 32 and 33, are both
+REVIEWED-INPUT CHANGED; the re-key's cache commit, row 34, is a DIGEST RE-PIN (the cache's KEY and one part's digest; its results
+object equal before and after); the first candidate, row 35, the re-key's dependents regenerated, is REVIEWED-INPUT CHANGED by W83's
+SESSION decision under reading A (record l4e7's paragraph 0a, in a file of the delta cx46 read, moves from the KEY not holding, as
+cx46 read it, to the KEY holding, with a history sentence that is false for set 31's cache: the coordinator's known item, section
+4a); and the coordinator's correction, row 36, is a TEST. Row 36 is the second candidate; the fill writes its name into that row at
+the adoption. The class is set 30's rule (line 11 of
 `records/int30/CLASSIFICATION.md` at main `eff28be3`), its second sentence read literally as the coordinator ruled on 6 October 2026
 (reading A): a change of what cx46 read, or another row's change carried into a file of the reviewed tree, each reason saying whether
-the file was in the delta cx46 read (its 60 files plus the L4-E9 page and output). **None of the 24 REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,
+the file was in the delta cx46 read (its 60 files plus the L4-E9 page and output). **None of the 25 REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,
 never credited, and owes its own targeted verification before any credit.** The method ended with cx46's second negative, and no
 further Astra run on this candidate is authorised; passing the suite transfers no engineering verdict to them. The reviews and the
 reconciliation that shaped the lineage and this classification after the branch was cut are in sections 2a to 2d.
@@ -225,11 +238,15 @@ W41's (section 3d); no independent reader has read row 33.
 - **W51** (Q-70) read the five rows W49 left not determined line by line: row 31.24 to REVIEWED-INPUT CHANGED, rows 31.14, 31.17,
   31.21 and 31.25 kept as record text by W51's SESSION decision that the coordinator's DESK-gate judgement is not a value cx46 read:
   `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W51 at about 17:45 CEST", `reversing it makes RIC 25` (over the 101 commits to `d5d9c252`; over the
-  104 to `aa332280`, 27).
+  104 to `aa332280`, 27; over the 106 to `5f25daf3`, 28).
 - **W56** classed W41's two commits under reading A (rows 32 and 33) and recomputed the counts from the table: REVIEWED-INPUT CHANGED
   24 of 103.
 - **W69** wrote the re-key's cache commit `aa332280` as row 34 (DIGEST RE-PIN, as set 30's row 43 classed its own re-key) and kept the
   candidate commit a placeholder row (row 35), and recomputed the counts from the table: REVIEWED-INPUT CHANGED 24 of 104.
+- **W83** wrote the first candidate `d0e283aa` as row 35 (REVIEWED-INPUT CHANGED + GENERATOR DATA (text) + DIGEST RE-PIN under
+  reading A, taken under the owner's standing rule of 26 September 2026 with its reversal in `CLASSIFICATION.md`; set 30 classed
+  the same move of paragraph 0a on its row 44 a digest re-pin and generator text) and the coordinator's correction `5f25daf3` as
+  row 36 (TEST), in place of W69's placeholder row, and recomputed the counts from the table: REVIEWED-INPUT CHANGED 25 of 106.
 
 ## 3. The integration, measured
 
@@ -324,8 +341,9 @@ section 5), its recompute from `<worktrees>/_runs/int31/rekey10-chain-1811.log:1
 to `<worktrees>/_runs/int31/rekey10-chain-1811.log:22` `recompute ended 18:58:29`. Its cache was committed as `aa332280` (19:00:45, one
 file, `v2/docs/records/l4e7/l4e7_stage_settings.results.json`; the coordinator's entry: `<worktrees>/_runs/int30/QUEUE.md`, entry "18:58 to 19:00 (clock) SET 31'S RE-KEY DONE",
 `the numbers did not move, only the KEY`), and the KEY-only check after it read `<worktrees>/_runs/int31/cache-commit-1859.log:42` `l4e7 KEY MATCH b8fc6fe2d285112c`,
-with the cache test `<worktrees>/_runs/int31/cache-commit-1859.log:45` `tests: 1 passed, 0 failed, 0 skipped`. The KEY on the candidate
-commit is the freeze's (section 4).
+with the cache test `<worktrees>/_runs/int31/cache-commit-1859.log:45` `tests: 1 passed, 0 failed, 0 skipped`. On the first candidate
+`d0e283aa`, after its dependents were regenerated, the KEY-only check read `<worktrees>/_runs/int31/dependents-1929.log:189` `l4e7 KEY MATCH b8fc6fe2d285112c` (section 4a; W72's note N3); the second
+candidate `5f25daf3` changes two test modules only, and the KEY on it is the freeze's (section 4).
 
 ### 3f. W41's chain, the third run (on `3057ae43`; committed `31928583`)
 
@@ -377,7 +395,7 @@ The re-key that counts ran on `31928583` (section 3e; its cache commit `aa332280
 | W41's second corrections round and the chain to convergence (F2, F4 to F8, F10; W48's N1 and N2) | W41's commits and chain log | `3057ae43` and `31928583`, converged at pass 1 with the KEY MISMATCH on `l4e11_power.out` alone (section 3f) |
 | The re-key's cache commit and its KEY (rekey10 on `31928583`, rented 18:11:26) | the cache commit on fnd/int31regen; the KEY-only check's line | `aa332280`; `<worktrees>/_runs/int31/cache-commit-1859.log:42` `l4e7 KEY MATCH b8fc6fe2d285112c` (section 3e) |
 | W48's condition (4): the 47 `test_l4e7` tests that reach the solver, after the re-key | the box's or the runner pass's log | `__GATE__` |
-| The re-key's dependents regenerated (record l4e7's P0 output, L4-E9's l4e7p0 pin, the connected output) | the dependents' log | `__GATE__` |
+| The re-key's dependents regenerated (record l4e7's P0 output, L4-E9's l4e7p0 pin, the connected output) | the dependents' log | `d0e283aa`, the first candidate (section 4a): `<worktrees>/_runs/int31/dependents-1929.log:189` `l4e7 KEY MATCH b8fc6fe2d285112c`; `<worktrees>/_runs/int31/dependents-1929.log:198` `== d6: ADDED ABSENT rows? 0` |
 | Set 30's evidence archive installed before the manifest (W31's C5) | the freeze's log | `__GATE__` |
 | The candidate commit | `git log` on fnd/int31regen | `__CANDIDATE__` |
 | The manifest (candidate_guard record) and the evidence tar | `__GATE__` | `__GATE__` |
@@ -388,7 +406,69 @@ The re-key that counts ran on `31928583` (section 3e; its cache commit `aa332280
 | Runner pass (`test_l4e7`, and the modules that read `_runs`, section 8) | `__GATE__` | `__GATE__` |
 | suite_gate with G7 over the logs | `__GATE__` | `__GATE__` |
 | Promotion: fast-forward of main, push, the mirror, the guard on main | `__GATE__` | `__PROMOTED__` |
-| Targeted verification of the 24 unreviewed changes of section 2 | the coordinator's choice of verifier; not the ended review method | owed; none performed |
+| Targeted verification of the 25 unreviewed changes of section 2 | the coordinator's choice of verifier; not the ended review method | owed; none performed |
+
+### 4a. The first candidate `d0e283aa`: its gate FAILED; the correction, the re-take and the known item
+
+**The first candidate.** The coordinator committed the re-key's dependents regenerated on `aa332280` as set 31's candidate
+`d0e283aa` (20:41:35; row 35 of the classification): the dependents' pass ended `<worktrees>/_runs/int31/dependents-1929.log:199` `== dependents done at 2026-10-06 20:40:42 CEST`, its KEY-only check
+`<worktrees>/_runs/int31/dependents-1929.log:189` `l4e7 KEY MATCH b8fc6fe2d285112c`; the freeze followed
+(`<worktrees>/_runs/int30/QUEUE.md`, entry "20:41 CANDIDATE COMMITTED", `pre-commit PASSED; the known item in its body`).
+
+**Its four-log gate, verbatim** (`suite_gate.py` over the four pass logs, the coordinator's copy of the failed run kept under
+`_runs/int31s1/superseded-d0e283aa/`):
+
+- `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:1` `suite_gate: candidate d0e283aa52ce; totals tests: 2952 passed, 1 failed, 2 skipped; failed: test_rule_windows.t_the_number_of_fixed_window_rules_never_rises + tests: 26 passed, 0 failed, 0 skipped + tests: 234 passed, 0 failed, 0 skipped + tests: 150 passed, 0 failed, 1 skipped; result lines 3366 (3362 PASS, 3 SKIP, 1 FAIL); modules 261 of 261 ran`
+- `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:2` `FAIL suite-box.log: G2 the last EXIT line reads 'EXIT 1'`
+- `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:3` `FAIL suite-box.log: G3 the totals read 1 failed`
+- `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:4` `FAIL suite-box.log: G4 a traceback (1 line(s))`
+- `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:5` `FAIL suite-box.log: G4 1 FAIL result line(s)`
+- `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:6` `FAIL G6 the suite changed 1 tracked file(s):  M v2/docs/CURRENT-EVIDENCE.md`
+- `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:7` `suite_gate: FAIL`
+
+The first candidate FAILED its gate and was not promoted; it is SUPERSEDED by the second candidate below. The box pass A log reads
+`<worktrees>/_runs/int31s1/superseded-d0e283aa/suite-box.log:4033` `tests: 2952 passed, 1 failed, 2 skipped; failed: test_rule_windows.t_the_number_of_fixed_window_rules_never_rises`
+and `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite-box.log:4034` `EXIT 1`; the other three passes read 0 failed (the summary
+line above).
+
+**The two causes** (the coordinator's diagnosis as its brief to W83 states it, each read here against the log):
+
+1. **A test-suite rule failed on tests of set 31's own lineage** (G2, G3 and both G4 lines): `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite-box.log:3347` `fixed-size source windows in the suite: 87 against the declared 83`;
+   the four windows over the declared count were added on set 31's lineage (`<worktrees>/_runs/claude/w83res31b/BRIEF.md:6` `in test_w11l9t5.py and test_w4l4e7.py`). It was not found before the
+   freeze: `test_rule_windows` is a whole-suite rule, and no test log of the lineage under
+   `_runs/int31` (section 3d, the dependents' pass) names it.
+2. **The suite changed a tracked page on the box** (G6): `pcb_interfaces.yaml` changed on the lineage (rows 3.1, `8840adda`, and 13,
+   `f08dbb97`) after the INT-001 readings that the installed evidence carried, so a page-writing test rewrote
+   `v2/docs/CURRENT-EVIDENCE.md` on the box (`<worktrees>/_runs/claude/w83res31b/BRIEF.md:6` `pcb_interfaces.yaml changed on the lineage (8840adda, f08dbb97) after the INT-001 readings`).
+
+Neither cause is in a circuit draft, a figure, a verdict or a case: one is a defect of the lineage's tests, the other a stale
+reading in the evidence the freeze installed. Both are defects the four-log gate exists to find, and it refused the candidate on them.
+
+**The correction.** The coordinator's commit `5f25daf3` (21:48:00; row 36 of the classification, TEST) converts the four windows in
+`test_w4l4e7.py` (+15 -2) and `test_w11l9t5.py` (+4 -1): the first reads the note and the D-16 sentence to their own raw
+paragraph's end, the second matches each run at its own length. Its commit message states the basis (`test_rule_windows`'s declared
+count, which may fall and never rise) and the measured paragraph lengths, two mutants it refuses and its own run of
+`test_rule_windows`, `test_w4l4e7` and `test_w11l9t5`, 23 passed, 0 failed. No independent reader has read the correction; whether
+the second candidate's suite holds is the gate's (section 4).
+
+**The re-take.** The coordinator re-took INT-001 (`interfaces.py`) on the committed tree `5f25daf3`, `<worktrees>/_runs/claude/w83res31b/BRIEF.md:8` `re-took interfaces.py on the committed tree (21:49:00; the`;
+the re-taken verdict carries its own stamp (`ts` 2026-10-06T19:49:00Z, `version` 5f25daf3762e, verdict PASS; the int31 worktree's
+gitignored evidence, `v2/ecad/out/interfaces.verdict.json`), and the evidence page re-renders byte-identical,
+`<worktrees>/_runs/claude/w83res31b/BRIEF.md:9` `rules_render: 16 document(s), 0 out of date`. The re-take is evidence, not a
+commit: it changes no tracked file.
+
+**The coordinator's known item, carried and not corrected in set 31.** Record l4e7's paragraph 0a on the regenerated output is
+printed by the script's typed template: `d0e283aa:v2/docs/records/l4e7/l4e7_p0sol.out:31` `its KEY holds on this tree: no part differs`
+(true: the KEY-only check above) and `d0e283aa:v2/docs/records/l4e7/l4e7_p0sol.out:32` `re-keyed on the integrated tree by set 30's integrator`,
+with L4-E11's rounds 12 to 16 as the re-key's history, which is false for set 31's cache: `<worktrees>/_runs/int30/QUEUE.md`, entry "20:40:42 set 31's DEPENDENTS PASS DONE", `FALSE for set 31's cache (re-keyed by set 31's coordinator at aa332280)`.
+The coordinator's SESSION decision under the owner's standing rule of 26 September 2026 (the same entry,
+`a template edit moves the output's lines that the supplier annex cites`): carried as a declared known item in the candidate's
+commit message and named here, to be corrected with set 32's single re-key (WP-B, branch fnd/l4e7cache, which replaces the template with
+what the KEY check proves); reversal: a set 31 fix with the annex re-cited. It is one of the reasons row 35 is classed
+REVIEWED-INPUT CHANGED (section 2).
+
+**The second candidate.** `5f25daf3` = `d0e283aa` + the correction; its freeze's lines are the table's rows above, filled at the
+adoption from the second freeze's logs (never from the first's).
 
 ## 5. Compute (the boxes rented for set 31; compute and storage kept apart, no total computed)
 
@@ -415,13 +495,20 @@ The re-key that counts ran on `31928583` (section 3e; its cache commit `aa332280
   (`<worktrees>/_runs/int31/rekey10-chain-1811.log:33` `stop sent: b'{"success": true}'`; `<worktrees>/_runs/vast/LOG-20261006.md:21` `54507159 rekey8: STOPPED after the fetch (disk kept)`,
   the label rekey8 a fixed word of the chain script, the box rekey10's), the chain ending `<worktrees>/_runs/int31/rekey10-chain-1811.log:34` `== rekey8_chain done at 2026-10-06 18:59:12 CEST`.
   Measured from the logged stamps: rented 18:11:26 to the chain's end 18:59:12, 47 min 46 s; its result is the cache commit `aa332280`.
-- No other instance was rented for set 31 (the vast log's lines 13 to 21 name these three boxes alone); every earlier instance stays
+- **54526559, suite31-2041 (ubuntu:24.04), and 54526562, recbox31-2041 (debian:12), rented 20:41 for the first candidate's freeze**
+  `<worktrees>/_runs/vast/LOG-20261006.md:22` `RENTED 54526559 meshsat-1357-suite31-2041` and
+  `<worktrees>/_runs/vast/LOG-20261006.md:23` `RENTED 54526562 meshsat-1357-recbox31-2041`, at the listed 0.0681 and 0.0516 USD/h
+  (copied, not measured costs); the records box stopped after its fetch,
+  `<worktrees>/_runs/vast/LOG-20261006.md:24` `STOPPED after the fetch of the records pass (disk kept)`; their passes are section
+  4a's (the first candidate's, FAILED at the gate). The suite box's stop and any box of the second candidate's freeze come after the
+  vast log's line 24, as this record was last written.
+- No other instance was rented for set 31 to the first candidate's gate (the vast log's lines 13 to 24 name these five boxes alone); every earlier instance stays
   stopped with its disk kept, none destroyed (the vast log's 10:38 line, `<worktrees>/_runs/vast/LOG-20261006.md:12` `Running instances: none.`).
 
 ## 6. What set 31 closes and what it does not
 
 **Set 31 closes NO power item.** It adopts record text prepared during set 30's integration, with the regenerated outputs and pins that
-text moves. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, section 2). Its 24
+text moves. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, section 2). Its 25
 REVIEWED-INPUT CHANGED commits narrow, tighten, restate, carry, re-take, re-adopt or annotate; none is a checked correction, and none is
 credited.
 
@@ -440,14 +527,14 @@ copy of `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` at main `eff28be3`;
 | Fabrication release | BLOCKED | the same line |
 
 Kept apart from all three: documents and editable artifacts (a DESK candidate once promoted, `__PROMOTED__`); design reviewed and
-accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, set 30's 14 unreviewed changes and this set's 24); circuit changes
+accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, set 30's 14 unreviewed changes and this set's 25); circuit changes
 implemented (NONE); physical qualification (NONE). A promoted integration set is none of the three claims by itself.
 
 ## 7. The records this result binds
 
 | Record | Path | State |
 |---|---|---|
-| The classification of set 31 | `v2/docs/records/int31/CLASSIFICATION.md` | 104 commits classified over `dd1aed00..aa332280`; 24 REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46; the candidate's row a placeholder |
+| The classification of set 31 | `v2/docs/records/int31/CLASSIFICATION.md` | 106 commits classified over `dd1aed00..5f25daf3`; 25 REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46; the candidate's name in row 36 written by the fill |
 | The entry pages' set 31 rows | `v2/docs/records/int31/ENTRY-PAGES.patch.md` | patch rows for `START-HERE.md` and `SUPPLIER-HANDOVER.md`, applied to the two pages by W65 on fnd/adopt31 (queue item Q-84) before the adoption; their revisions are filled at the adoption |
 | Set 30's adopted records | `v2/docs/records/int30/RESULT.md`, `CLASSIFICATION.md`, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` at main | on main since the adoption `836f711b` and the follow-up `eff28be3`, in the lineage since `d5d9c252`; not in this record's branch history, so the assessment and the two entry pages are copied verbatim under `inputs/` |
 | The drafts set 31 adopts as files | `v2/docs/records/int30/RESULT.draft2.md`, `RESULT.draft3.md`, `CLASSIFICATION.draft.md`, `NEXT-SET-SMALL-ITEMS.patch.md`; `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md`, `.draft3.md`, `.patch.md`, `L4-DESK-GATE-ASSESSMENT.draft.md`, `.draft2.md`; `v2/docs/records/l4e9/L4E9-4588-PATCH.md`, `L4E9-W5-PATCH.md` | history and patch files; where main holds the adopted record, the adopted record governs |
@@ -461,10 +548,12 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   Q-53, the handover ZIP's cap raised to 100 MiB, applied at set 32 (`<worktrees>/_runs/int30/QUEUE.md`, entry "13:35 (clock) Q-53 DECIDED", `applied at set 32's integration, not now`);
   Q-55, N1a's phrase carried into V-E16 of `HW-FW-CONTRACT.md`, in set 32 with its re-key (`<worktrees>/_runs/int30/QUEUE.md`, entry "| Q-55 |", `in set 32 with its re-key`);
   W36's conditions F-K1 to F-K3, F-S2 and F-R1 (W37's branch, Q-56).
-- **Open in this lineage when this record was written:** W48's condition (4) after the re-key (`__GATE__`); the ledger's `[CON:21]` re-cite after the regeneration (section 2); the coordinator's N2, R-217's release words, waiting
+- **Open in this lineage when this record was written:** W48's condition (4) after the re-key (`__GATE__`); the coordinator's
+  known item, record l4e7's paragraph 0a's history sentence (section 4a), set 32's with its re-key; the ledger's `[CON:21]` re-cite after the regeneration (section 2); the coordinator's N2, R-217's release words, waiting
   for record l4e11's E11-43 restatement; W13's WP-23 to WP-27 (with the next circuit change); the exclusion of s122's self-writing
   scripts from the targeted pass (W29's F1; the third run restored them again, section 3c); W48's residuals of F4 and F10, set 32's
-  (section 2c). Closed since the first draft: W41's round (sections 2b and 3f), the re-key on `31928583` (its cache commit `aa332280` and its KEY MATCH, section 3e), and the eleven outputs both sides regenerated at the
+  (section 2c). Answered since the first candidate's gate, the gate on the second candidate to read them: its two causes, by the correction
+  `5f25daf3` and the re-take of INT-001 (section 4a). Closed since the first draft: W41's round (sections 2b and 3f), the re-key on `31928583` (its cache commit `aa332280` and its KEY MATCH, section 3e), and the eleven outputs both sides regenerated at the
   merge `d5d9c252`, regenerated on the merged tree by the third run (its cascade and targeted passes, section 3f).
 - **A note for the freeze, found while writing this record:** the predicates of `test_w18result` (adopted in this set) and of
   `test_res31` that read the coordinator's logs raise Skip where `_runs` is absent, which is every rented box; suite_gate's G7 accepts

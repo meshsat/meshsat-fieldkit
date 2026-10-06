@@ -3,7 +3,7 @@
 **DONE:** 24 exact rows (S-01 to S-11 for `v2/docs/handover/START-HERE.md`, U-01 to U-13 for
 `v2/docs/handover/supplier/SUPPLIER-HANDOVER.md`) that bring the two entry pages from set 30 to set 31, applied to the two pages
 on branch fnd/adopt31 by worker W65 (queue item Q-84) with the tests that pin the replaced lines restated, and W68's findings applied
-to rows S-03, S-07, S-08, U-06 and U-07 by worker W69. **NOT DONE:** the values of the candidate commit and the adoption commit,
+to rows S-03, S-07, S-08, U-06 and U-07 by worker W69; the counts in rows S-04, S-08, U-03 and U-07 brought to the classification over `dd1aed00..5f25daf3` (106 commits, 25 of them REVIEWED-INPUT CHANGED) by worker W83 after the first candidate's failed gate, on the rows and the pages alike. **NOT DONE:** the values of the candidate commit and the adoption commit,
 which the freeze, the promotion and the adoption give. **NEXT:** at set 31's adoption the coordinator fills them line by line
 (`fill_res31.py`, the adoption commit in its second run); `test_adopt31.py` holds the pages to these rows.
 
@@ -92,7 +92,7 @@ has been built, bought, powered or measured.
 
 **Set 31 over set 30 (6 October 2026).** This section was written for set 30. Set 31 changes the Tested and Adopted revisions below,
 adds its integration record to the list of what set 30 adds, and changes none of the states: Layer 4's DESK gate and the three
-completion claims stand as the assessment gives them on set 30. Its classification counts 24 commits that change what cx46 read or
+completion claims stand as the assessment gives them on set 30. Its classification counts 25 commits that change what cx46 read or
 carry another row's change into a file of the reviewed tree (set 30's rule, reading A), each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2).
 ```
 Basis: `v2/docs/records/int31/RESULT.md`, section 6 (the three claims unchanged) and section 2.
@@ -141,7 +141,7 @@ Old text:
 ```
 New text:
 ```text
-(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 104 commits of `dd1aed00..aa332280`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
+(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
 ```
 Basis: `v2/docs/records/int31/CLASSIFICATION.md`, section 2.
 
@@ -223,7 +223,7 @@ framing: nothing in the kit has been built, bought, powered or measured.
 restatements its authors wrote during set 30's integration, the filed patch rows applied to L4-E9's page, register and generator, and
 the citation re-takes, regenerated to convergence. It changes the Tested and Adopted revisions of 0a, adds its integration record to
 0c, and changes none of the states of 0b: "Set 31 closes NO power item." (`records/int31/RESULT.md`, section 6). Its classification
-counts 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A), each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2).
+counts 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A), each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2).
 ```
 Basis: `v2/docs/records/int31/RESULT.md`, sections 2 and 6.
 
@@ -271,7 +271,7 @@ Old text:
 ```
 New text:
 ```text
-(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 104 commits of `dd1aed00..aa332280`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
+(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
 ```
 Basis: as S-08.
 
