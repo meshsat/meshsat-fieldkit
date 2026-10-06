@@ -1,6 +1,6 @@
 # Set 31: every commit between the promoted set 30 and set 31's lineage, classified (bound by `records/int31/RESULT.md`; the owner's part 25; MESHSAT-1357)
 
-**DONE:** the 103 commits of `git rev-list dd1aed00..31928583` classified, first-parent with each merge's branch commits under it; the counts; W41's two commits after the merge of main (rows 32 and 33) classed under the rule as ruled (reading A) by W56 (6 October 2026; the paragraph after "What this is"). **NOT DONE:** the rows for the commits that follow `31928583` on fnd/int31regen (the re-key's cache, the dependents, the candidate commit), each a placeholder row below. **NEXT:** the coordinator fills the placeholder rows from git at the adoption, classes them by the rule below as ruled (reading A) and recomputes section 2. W38's independent table was compared with this one row by row by W49, and W49's section 4 is applied here (W50, 6 October 2026; the paragraph after "What this is"). The five rows W49 and W50 left not determined were read line by line by W51 (6 October 2026; section 2): row 31.24 reads `REVIEWED-INPUT CHANGED`, rows 31.14, 31.17, 31.21 and 31.25 stay `RECORD TEXT`.
+**DONE:** the 104 commits of `git rev-list dd1aed00..aa332280` classified, first-parent with each merge's branch commits under it; the counts; W41's two commits after the merge of main (rows 32 and 33) classed under the rule as ruled (reading A) by W56 (6 October 2026; the paragraph after "What this is"); the re-key's cache commit `aa332280` (row 34) classed by W69 (6 October 2026; the paragraph "Brought to the re-key's cache commit"). **NOT DONE:** the row of set 31's candidate commit, which follows `aa332280` on fnd/int31regen and did not exist when this table was last read: row 35, a placeholder row. **NEXT:** the fill names the candidate in row 35 at the adoption (`fill_res31.py`; `test_res31.py` holds the row before and after it); the coordinator then classes the row from git by the rule below as ruled (reading A), moves `test_res31.py`'s TIP to the candidate and recomputes section 2. W38's independent table was compared with this one row by row by W49, and W49's section 4 is applied here (W50, 6 October 2026; the paragraph after "What this is"). The five rows W49 and W50 left not determined were read line by line by W51 (6 October 2026; section 2): row 31.24 reads `REVIEWED-INPUT CHANGED`, rows 31.14, 31.17, 31.21 and 31.25 stay `RECORD TEXT`.
 
 **What this is.** Drafted by worker W39 on branch fnd/res31 (base `f0748b49`) on 6 October 2026 from 15:28 CEST, for adoption with
 `records/int31/RESULT.md` at set 31's promotion (queue item Q-58). It is the classification the owner's part 25 asks the promotion to
@@ -25,15 +25,27 @@ rule's second sentence as ruled (reading A), each reason naming its source rows 
 W41's round is removed (filled by these two rows); section 2 is recomputed from the table. No verdict, figure or claim of any file was
 changed.
 
-**The bounds.** BASE: set 30's promoted revision `dd1aed00d0a0a521063b5792550bc510c4707c59` (RESULT.md section 1 names it in the
-REVIEWED role of the brief; no independent check read it). The last independent check of the power candidate is cx46, which read
+**Brought to the re-key's cache commit (6 October 2026, from 19:46 CEST).** Worker W69 (from W68's independent read of the record
+before the adoption, its finding F1) wrote row 34 (`aa332280`, the coordinator's commit of record l4e7's re-keyed results cache), read
+with `git show -U0` and its one file compared with json before and after, and classed it `DIGEST RE-PIN` as set 30's row 43
+(`c2a532a9`) classed set 30's re-key: the cache's KEY and one part's digest move, its results object is equal, and a digest is neither
+a quote nor a restatement of another row's change (as row 31.27). Row 35, the candidate commit, stays a placeholder row; taken under the
+owner's standing rule of 26 September 2026 (authority SESSION, W69): the fill names it (its sha cell) and the coordinator classes it
+from git after the fill, because its class is a judgement on a diff that does not exist yet, not a value a fill can type (set 30's
+candidate, row 44 `c4438d6a`, moved record l4e7's paragraph 0a from "its KEY does NOT hold on this tree" to "its KEY holds", which
+reading A may class `REVIEWED-INPUT CHANGED`). Reversal: the coordinator writes row 35 in full before the fill and moves
+`test_res31.py`'s TIP to it. Section 2 is recomputed from the table over the 104 commits to `aa332280`.
+
+**The bounds.** BASE: set 30's promoted revision `dd1aed00d0a0a521063b5792550bc510c4707c59` (RESULT.md section 1 names it BASE, the
+role W39's brief named REVIEWED; no independent check read it). The last independent check of the power candidate is cx46, which read
 `4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e` (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md`, its
 `"base_commit"` at line 8, its verdict "P0 RECHECK: CORRECTIONS NOT CLOSED." at line 10); the 45 commits from `4d0ff8a2` to the base
-are classified in set 30's record. TIP: set 31's lineage as committed when this table was last read (6 October 2026, read with `git rev-parse` at 18:16 and 18:24 CEST, W41's
-converged commit; W39 read `d5d9c252` at 15:55 and 16:10 CEST), fnd/int31regen `31928583c612ea43df17df5d7e0cbb2f66090f8e`, W41's chain
-on its items `3057ae43`, which follow the coordinator's merge of main `eff28be3` (set 30's adoption), `d5d9c252`, on W29's, W35's and
-the coordinator's commits to `f0748b49`. `git rev-list --count dd1aed00..31928583` prints 103: 78 commits and 25 merges
-(`--no-merges` 78, `--merges` 25); `--first-parent` prints 33, the numbered rows; the other 70 are the branch commits of the merges, rows
+are classified in set 30's record. TIP: set 31's lineage as committed when this table was last read (6 October 2026, read with `git rev-parse` at 19:54 CEST by W69;
+W56 read `31928583` at 18:16 and 18:24 CEST, W39 read `d5d9c252` at 15:55 and 16:10 CEST), fnd/int31regen
+`aa3322806da156d12f2b23dbe9fc98a8805926f0`, the coordinator's commit of the re-keyed results cache on W41's converged commit `31928583`,
+W41's chain on its items `3057ae43`, which follow the coordinator's merge of main `eff28be3` (set 30's adoption), `d5d9c252`, on W29's, W35's and
+the coordinator's commits to `f0748b49`. `git rev-list --count dd1aed00..aa332280` prints 104: 79 commits and 25 merges
+(`--no-merges` 79, `--merges` 25); `--first-parent` prints 34, the numbered rows; the other 70 are the branch commits of the merges, rows
 `n.m` under merge `n`, each listed by `git rev-list --topo-order --reverse <first parent>..<second parent> ^dd1aed00`. Every commit of
 the range has exactly one row.
 
@@ -64,8 +76,9 @@ REVIEWED-INPUT CHANGED; set 30's adopted record is not edited.
 September 2026, reversed by narrowing the set to the 60 and restating each row's membership). The set no longer bounds the class: a
 change carried into a file of the reviewed tree outside it is `REVIEWED-INPUT CHANGED` too, its reason naming the source row and saying
 the file was not in the delta, so W39's earlier note that this set "labels more as unreviewed, never less" does not hold against set 30's
-rule (row 10.1 is the case). 38 of the range's 104 changed files are in that set; no `apply_gen_sch_*` draft, no `gen_sch_*` generator
-and no netlist changed in the range (`git diff --name-only dd1aed00 31928583`; the same 104 files as to `d5d9c252`). Every row that touches or brings a file of that set, and
+rule (row 10.1 is the case). 38 of the range's 105 changed files are in that set; no `apply_gen_sch_*` draft, no `gen_sch_*` generator
+and no netlist changed in the range (`git diff --name-only dd1aed00 aa332280`; the 104 files to `31928583`, the same as to `d5d9c252`,
+and the results cache of row 34). Every row that touches or brings a file of that set, and
 every `REVIEWED-INPUT CHANGED` row, says **UNREVIEWED since cx46**: no independent checker read any change of this range, and none is
 credited.
 
@@ -192,15 +205,16 @@ No class of the set is OUTSIDE P0: no commit of the range touches `compact/` or 
 | 31.27 | `eff28be3` / `eff28be3b80f882db545a849b0da1def0217f63d` | 2026-10-06 13:22:43 | chore(records): the record outputs re-pinned after the adoption and W33's corrections on main (l8gnd's pin of LAYER-STATUS.md and its cascade through l9pwr_budget into the l9t5 family, l8r2 and efuse; one dependency pass with base dd1aed00, rounds to convergence, the affected tests green) [MESHSAT-1357] | main (the coordinator's follow-up after the adoption) | 11: v2/docs/records/efuse/ (1), v2/docs/records/l8gnd/ (1), v2/docs/records/l8r2/ (1), v2/docs/records/l9pwr/ (1), v2/docs/records/l9t5/ (7) | DIGEST RE-PIN | eleven outputs re-pinned after the adoption's edits (l8gnd's pin of LAYER-STATUS.md and its cascade through l9pwr_budget into the l9t5 family, l8r2 and efuse): every changed line a digest; reviewed files it touches (10): `efuse_check.out`, `l8r2_dist.out`, `l9pwr_budget.out`, `l9t5_a1.out`, `l9t5_case.out`, `l9t5_cm5.out`, `l9t5_connected.out`, `l9t5_drafts.out`, `l9t5_f01.out`, `l9t5_t10.out`; UNREVIEWED since cx46 |
 | 32 | `3057ae43` / `3057ae43f4fb7fc5e3d6282ce52d448c8ee27929` | 2026-10-06 16:14:18 | chore(records): checkpoint, W41's items on set 31's lineage (W38's review): the eleven placeholders filled with the promoted dd1aed00, OW-4 re-pinned after the fill (f64a657a4343954a), F4 F5 F6 F7 F10 restated, the annex's ledger and P0 list citations re-cited after the merge of main; tests restated with their bases [MESHSAT-1357] | fnd/int31regen (W41, Q-60: W38's F2, OW-4, F4 to F7 and F10) | 16: v2/docs/records/l4close/ (1), v2/docs/records/l4e7/ (3), v2/docs/records/l4e9/ (1), v2/docs/records/l8p/ (2), v2/docs/records/l9t5/ (2), v2/ecad/tools/ (7) | REVIEWED-INPUT CHANGED + GENERATOR DATA (text) + RECORD TEXT + DIGEST RE-PIN + TEST | W41's items on the lineage after main's merge (W38's review; read by W56, every hunk not digest-only): classed REVIEWED-INPUT CHANGED under set 30's rule's second sentence as ruled (reading A): W38's F5 carries row 11's change (`467c2aaa`, the per-FET bar from 45.88 to 40.78 K/W without m, stricter) into the annex, `d5d9c252:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:208` `Set 29's per-FET 45.88 K/W still stands in L4-E9's D-14 rows` now `3057ae43:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:209` `those rows now label it SUPERSEDED beside 40.78 K/W without m and the 37.59 K/W target` (a restatement of a tightening), and W38's F10 carries row 4.4's change (`29422b2c`, T10's containment from `4d0ff8a2:v2/docs/records/l9t5/l9t5_connected.py:909` `the containment (Slot C's round 6, composed here) CORRECTED IN` to NOT CLOSED) into the generator's printed row with each check's own word, `d5d9c252:v2/docs/records/l9t5/l9t5_connected.py:1003` `cx45's Q3 NOT CLOSED (10j, after cx46);` now `3057ae43:v2/docs/records/l9t5/l9t5_connected.py:1003` `Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'` (GENERATOR DATA (text); narrower or equal by W48's recheck, no state moved off OPEN); both files were in the delta cx46 read; the rest: F2, the eleven placeholders for set 30's promoted sha filled with `dd1aed00` in the annex and five pages of records l4e7 and l8p (a revision name: RECORD TEXT); F4, the generator's and the l9t5 README's pin sentence restated, `3057ae43:v2/docs/records/l9t5/l9t5_connected.py:1014` `at those outputs' current digests, which the chain re-pins` (GENERATOR DATA (text) and RECORD TEXT, no figure); F6, L4-E9's section 8 citation basis, `3057ae43:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:967` `except [OWN:N], which is line N of the owner file as it stands at commit b0a67a45` (RECORD TEXT); OW-4's typed pin moved to the filled page's bytes, `3057ae43:v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1263` `in the tree, f64a657a4343954a, UNSENT` (DIGEST RE-PIN); the annex's ledger citations re-cited after main's three inserted lines, `3057ae43:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:169` `HO-H to HO-K [REM:552-584]`, and its P0L alias named at revision 2's dated file (RECORD TEXT); F7 and the restated tests in seven modules, `test_l5pwr.py`, `test_w11l9t5.py`, `test_w23cite.py`, `test_w28q40.py`, `test_w3annex.py`, `test_w4l4e7.py` and `test_w5l8p.py` (TEST); the annex's sentence at its line 207 on where TP-E11-29's first condition holds is W48's N1, corrected at row 33; reviewed files it touches (9): `SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`, `B2-PRESENCE.md`, `L4E7-P0SOL.md`, `SUPPLIER-P1-1-P0SOL.md`, `L4-POWER-ARCHITECTURE.md`, `L8P-BREAKER.md`, `README.md` (l8p), `README.md` (l9t5), `l9t5_connected.py`; UNREVIEWED since cx46 |
 | 33 | `31928583` / `31928583c612ea43df17df5d7e0cbb2f66090f8e` | 2026-10-06 18:10:32 | chore(records): set 31's chain re-run on W41's items (3057ae43): the L4 pin chain, the l9t5 cascade twice, l4e9's l4e7p0 pin, regen_targeted on base dd1aed00 converged (15, 5, 1, 0), the stability checks identical; W48's N1 and N2 (TP-E11-29's first condition at one locus, W20-18's words kept in test_l5pwr); 25 outputs and 4 tool-moved pins, the l4e7 KEY MISMATCH on l4e11_power.out alone, re-key owed [MESHSAT-1357] | fnd/int31regen (W41, Q-60: the chain's third run, chain3, with W48's N1 and N2) | 32: v2/docs/records/efuse/ (1), v2/docs/records/l4close/ (1), v2/docs/records/l4e10/ (2), v2/docs/records/l4e11/ (2), v2/docs/records/l4e12/ (2), v2/docs/records/l4e7/ (1), v2/docs/records/l4e9/ (2), v2/docs/records/l5pwr/ (1), v2/docs/records/l6r2/ (1), v2/docs/records/l7pwr/ (1), v2/docs/records/l8gnd/ (1), v2/docs/records/l8r2/ (4), v2/docs/records/l9pwr/ (1), v2/docs/records/l9stk/ (2), v2/docs/records/l9t5/ (7), v2/docs/test-procedures/ (2), v2/ecad/tools/ (1) | REVIEWED-INPUT CHANGED + RECORD TEXT + DIGEST RE-PIN + TEST | W41's third chain run on row 32 (`_runs/int31/chain3-1614.log`; RESULT.md section 3f) with W48's N1 and N2: 25 outputs and 4 tool-moved pins (32 files, 76 changed lines each way; read by W56, the six hunks not digest-only quoted here); classed REVIEWED-INPUT CHANGED under set 30's rule's second sentence as ruled (reading A): the regeneration carries row 32's restatement of row 4.4's verdict words into `l9t5_connected.out`, a file in the delta cx46 read, `3057ae43:v2/docs/records/l9t5/l9t5_connected.out:351` `cx45's Q3 NOT CLOSED (10j, after cx46);` now `31928583:v2/docs/records/l9t5/l9t5_connected.out:351` `Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'`, and row 32's pin sentence, `31928583:v2/docs/records/l9t5/l9t5_connected.out:362` `at those outputs' current digests, which the chain re-pins`; every other changed output line is a digest, record l4e7's paragraph 0a still reading `31928583:v2/docs/records/l4e7/l4e7_p0sol.out:31` `its KEY does NOT hold on this tree` (the MISMATCH on `l4e11_power.out` alone until the re-key); N1, one locus for TP-E11-29's first condition in the procedure (a file of the reviewed tree outside the delta) and in the annex (a file of the delta), `31928583:v2/docs/test-procedures/TP-E11-29.md:21` `which adopts this page's restated condition` and `31928583:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:207` `carries the re-quoted cells but its condition (1) still reads that the two quotes differ` (where the condition is met, not its value: RECORD TEXT, W56's reading; it does not change the row's first class), with `tp_check.out`'s digest of the procedure; N2, test_l5pwr's prose keeping W20-18's applied words with F7's correction after them, `31928583:v2/ecad/tools/tests/test_l5pwr.py:22` `Since f0d0e54e applied that correction to the second script in set 31` (TEST); reviewed files it touches (21): `efuse_check.out`, `SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`, `l4e11_power.out`, `l4e11_power.py`, `l4e7_p0sol.out`, `l4e9_power_path.out`, `l4e9_power_path.py`, `l6r2_passives.out`, `l8r2_dist.out`, `l8r2_gndret.out`, `l8r2_p0.out`, `l9pwr_budget.out`, `l9stk_copper.out`, `l9stk_protection.out`, `l9t5_a1.out`, `l9t5_case.out`, `l9t5_cm5.out`, `l9t5_connected.out`, `l9t5_drafts.out`, `l9t5_f01.out`, `l9t5_t10.out`; UNREVIEWED since cx46 |
-| 34 | `__REKEY__` | not determined | the re-key's commit of record l4e7's results cache on `31928583` (rekey10, a fresh box rented at 18:11; the re-keys on `aed4bd23` and `562edf6a` are spent) | fnd/int31regen (the coordinator) | not determined | not determined | filled from git at the adoption |
-| 35 | `__CANDIDATE__` | not determined | set 31's candidate commit (the re-key's dependents, the evidence install, `candidate_guard record`) | fnd/int31regen (the coordinator) | not determined | not determined | filled from git at the adoption |
+| 34 | `aa332280` / `aa3322806da156d12f2b23dbe9fc98a8805926f0` | 2026-10-06 19:00:45 | chore(records): record l4e7's results cache re-keyed on set 31's lineage (l4e7_stage_settings.py --recompute on a debian:12 box, rekey10, from 31928583): the KEY follows the regenerated l4e11_power.out; set 31's cache commit [MESHSAT-1357] | fnd/int31regen: the re-key (the coordinator; computed on the debian:12 box rekey10) | 1: v2/docs/records/l4e7/ (1) | DIGEST RE-PIN | one file, `v2/docs/records/l4e7/l4e7_stage_settings.results.json` (+1 -1 by `git show --numstat`): the cache's key moves from df9030eaf2c8e7bf to b8fc6fe2d285112c and its part for `l4e11_power.out` from a2089b3f6682 to 36141414a1b6, the output row 33 regenerated; its results object R equal before and after (read with json at `31928583` and `aa332280`); the KEY-only check after it `<worktrees>/_runs/int31/cache-commit-1859.log:42` `l4e7 KEY MATCH b8fc6fe2d285112c`; no figure, verdict, script or test; a file of the reviewed tree (present at `4d0ff8a2`) outside the delta cx46 read, its change a digest, not a quote or restatement of another row's change (as row 31.27); as set 30's row 43 (`c2a532a9`) |
+| 35 | `__CANDIDATE__` | not determined | set 31's candidate commit (the re-key's dependents regenerated, FREEZE-PLAN step 0) | fnd/int31regen (the coordinator) | not determined | not determined | named by the fill at the adoption; classed from git by the coordinator after it (the paragraph "Brought to the re-key's cache commit") |
 
 ## 2. Summary
 
-**Counts per class** over the 103 commits of `dd1aed00..31928583` (the first class of each row; each row counted once; the two
-placeholder rows not counted; recomputed by `test_res31.py` from the table; under reading A since W50's reconciliation, W39's counts
+**Counts per class** over the 104 commits of `dd1aed00..aa332280` (the first class of each row; each row counted once; the
+candidate's placeholder row not counted; recomputed by `test_res31.py` from the table; under reading A since W50's reconciliation, W39's counts
 before it are this file at `4196e9df`; with W51's five rows since, W50's counts before them are this file at `353b41dd`; with W56's
-rows 32 and 33 since, W51's counts over the 101 commits to `d5d9c252` before them are this file at `7155b626`):
+rows 32 and 33 since, W51's counts over the 101 commits to `d5d9c252` before them are this file at `7155b626`; with W69's row 34
+since, W56's counts over the 103 commits to `31928583` before it are this file at `5f910eb5`):
 
 | Class | Rows (first class) | Rows carrying it at all |
 |---|---|---|
@@ -208,16 +222,16 @@ rows 32 and 33 since, W51's counts over the 101 commits to `d5d9c252` before the
 | `RECORD TEXT` | 36 | 54 |
 | `GENERATOR DATA (text)` | 0 | 8 |
 | `TEST` | 14 | 47 |
-| `DIGEST RE-PIN` | 2 | 8 |
+| `DIGEST RE-PIN` | 3 | 9 |
 | `MERGE` | 25 | 25 |
 | `TOOLING` | 2 | 3 |
-| total | 103 | |
+| total | 104 | |
 
 Over the 73 commits to `f0748b49` (rows 1 to 30 and their branch rows), before main's merge: REVIEWED-INPUT CHANGED 17; RECORD TEXT
 26; GENERATOR DATA (text) 0; TEST 12; DIGEST RE-PIN 1; MERGE 15; TOOLING 2. Row 31 and its 27 branch rows (main's commits after
 `dd1aed00`, set 30's adoption) add: REVIEWED-INPUT CHANGED 5 (rows 31.3, 31.5, 31.12, 31.16 and 31.24), RECORD TEXT 10, TEST 2,
-DIGEST RE-PIN 1 (row 31.27), MERGE 10. Rows 32 and 33 (W41's two commits after `d5d9c252`) add: REVIEWED-INPUT CHANGED 2 (rows 32
-and 33).
+DIGEST RE-PIN 1 (row 31.27), MERGE 10. Rows 32, 33 and 34 (after `d5d9c252`: W41's two commits and the re-key's cache commit) add: REVIEWED-INPUT
+CHANGED 2 (rows 32 and 33); DIGEST RE-PIN 1.
 
 **The `REVIEWED-INPUT CHANGED` rows: 24, all UNREVIEWED since cx46.** In table order: `bf44eb8c` (1.1), `786aed2f` (1.2), `ccae87a2`
 (2.1), `8840adda` (3.1), `a971a04b` (4.1), `29422b2c` (4.4), `c49680b2` (10.1), `406d9f90` (10.2), `467c2aaa` (11), `bad162ad` (12),
@@ -253,18 +267,18 @@ and 33).
   and 31.5), `facbea08` (31.12), `93182ef8` (31.16), `0d0235c6` (31.16) and `7e280107` (31.24); each merge's rows are `git rev-list <first parent>..<second
   parent> ^dd1aed00`; the 11 first-parent rows among them (11, 12, 13, 14, 23, 25, 27, 28, 29, 32 and 33) are brought by no merge.
 - **No baseline circuit draft, no board generator and no netlist changed** in the range; no requirement row and no case row of
-  `L9T5-CASES.md` changed (`git diff --name-only dd1aed00 31928583`).
+  `L9T5-CASES.md` changed (`git diff --name-only dd1aed00 aa332280`).
 
 **The statement RESULT.md binds** (every number from the table above):
 
-> Between the promoted set 30 `dd1aed00` and set 31's lineage `31928583` the 103 commits of `git rev-list dd1aed00..31928583` (78
+> Between the promoted set 30 `dd1aed00` and set 31's lineage `aa332280` the 104 commits of `git rev-list dd1aed00..aa332280` (79
 > commits, 25 merges) change what cx46 read, or carry another row's change into a file of the reviewed tree, in 24 commits classed
 > REVIEWED-INPUT CHANGED under set 30's rule as ruled (reading A): 10 narrow, tighten or restate a state to a weaker claim, 13 do not
 > only narrow, and 1 re-adopts the P0 list; 11 merges bring them. None of the 24 was read by an independent checker after cx46: each
 > is UNREVIEWED since cx46, never credited, and owes its own targeted verification before any credit (W48's recheck read row 32's
-> commit for W38's findings, not as a check of the engineering). The other 79 rows are classed as
+> commit for W38's findings, not as a check of the engineering). The other 80 rows are classed as
 > changing no figure, state, composition, case, requirement or limit of a file cx46 read and carrying no other row's change into a file
-> of the reviewed tree: 25 merges (the 11 above among them), 36 record text, 14 tests, 2 digest re-pins and 2 tooling; the record text
+> of the reviewed tree: 25 merges (the 11 above among them), 36 record text, 14 tests, 3 digest re-pins and 2 tooling; the record text
 > rows 31.14, 31.17, 31.21 and 31.25 were read line by line for a carried change (below). Passing the suite transfers no engineering
 > verdict to the 24 changed rows.
 
@@ -292,13 +306,13 @@ state words counted on each side with their line numbers; each word or figure fo
   readiness words stand unchanged in their dated milestone (`4d0ff8a2:v2/docs/EXECUTION-PLAN.md:1361` `the engineer handoff READY TO START, provisional`);
   the judgement is a verdict first recorded after cx46, which rows 31.14, 31.21 and 31.23 record as record text, and no row of either
   table changes it from a value cx46 read. Reversal: if the coordinator rules the judgement a carried change, rows 31.14, 31.21 and
-  31.25 read `REVIEWED-INPUT CHANGED` first and the count moves from 24 to 27 of the 103 (RECORD TEXT from 36 to 33; over the 101 to
+  31.25 read `REVIEWED-INPUT CHANGED` first and the count moves from 24 to 27 of the 104 (RECORD TEXT from 36 to 33; over the 101 to
   `d5d9c252`, from 22 to 25, as W51 wrote it); the merges
   that bring them (`d5d9c252`, `facbea08`, `0d0235c6` and `7e280107`) are in the list already and would each name the added rows.
 
 **Not determined here:**
 
-- The rows after `31928583` (the two placeholder rows); this table's counts are over `dd1aed00..31928583` only.
+- The row after `aa332280`, the candidate commit (row 35, a placeholder row); this table's counts are over `dd1aed00..aa332280` only.
 - W38's independent table, its count over the 73 commits to `f0748b49` as the queue records it (`_runs/int30/QUEUE.md`, entry "native
   completion of W38 at about 15:44 CEST"): REVIEWED-INPUT CHANGED 15, RECORD TEXT 25, MERGE 15, TEST 12, DIGEST RE-PIN 3, TOOLING 2,
   GENERATOR DATA (text) 1. Dated note, 6 October 2026: W49 compared it with this table row by row (`_runs/claude/w49recon/REPORT-AS-RECEIVED.md`,

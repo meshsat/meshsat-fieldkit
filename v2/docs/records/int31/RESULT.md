@@ -1,16 +1,19 @@
 # Set 31: the result of the integration (MESHSAT-1357)
 
-**DONE:** the record of set 31 drafted on its lineage as last read, `31928583` (W41's converged commit, after main's adoption of set 30
-was merged at `d5d9c252`): what was adopted and from whom, W38's review and its findings, W41's corrections, W48's recheck, the
-classification's reconciliation under the coordinator's ruling, the three chain runs as logged, the refusals, the KEY before the
-re-key, the two spent re-keys as rework, the compute, the three claims as the assessment gives them, the classification bound.
-**NOT DONE:** what the re-key (rented at 18:11 CEST on a fresh box), the freeze and the gate will give (the placeholders `__REKEY__`,
-`__CANDIDATE__`, `__PROMOTED__` and `__GATE__`, sections 1, 4 and 5). **NEXT:** the coordinator fills them from git and the logs at the
-adoption, adds the classification's rows after `31928583`, and adopts this file with `CLASSIFICATION.md` and `ENTRY-PAGES.patch.md`.
+**DONE:** the record of set 31 drafted on its lineage as last read, `aa332280` (the re-key's cache commit on W41's converged commit
+`31928583`, after main's adoption of set 30 was merged at `d5d9c252`): what was adopted and from whom, W38's review and its findings,
+W41's corrections, W48's recheck, the classification's reconciliation under the coordinator's ruling, the three chain runs as logged,
+the refusals, the KEY before and after the re-key, the two spent re-keys as rework, the compute, the three claims as the assessment
+gives them, the classification bound (W69 wrote the re-key's results and W68's findings in, 6 October 2026 from 19:46 CEST).
+**NOT DONE:** what the freeze, the gate and the promotion will give (the placeholders for the candidate commit, the promoted revision
+and the gate lines, sections 1, 2c, 4, 6 and 8), and the classification's row for the candidate commit (its row 35, named by the fill and
+classed after it). **NEXT:** the coordinator fills the placeholders line by line from git and the logs at the adoption
+(`fill_res31.py`, FREEZE-PLAN step 12) and adopts this file with `CLASSIFICATION.md` and `ENTRY-PAGES.patch.md`.
 
 **Status: a draft for adoption** at set 31's promotion (queue item Q-58), written by worker W39 on branch fnd/res31 (base fnd/int31regen
 `f0748b490e183082b2da4361a5d24ee60d5fba40`) on 6 October 2026 from 15:28 CEST, brought to `31928583` by worker W56 from 18:11 CEST
-(W39 drafted it; W50 and W51 reconciled its classification), in the form of set 30's record
+(W39 drafted it; W50 and W51 reconciled its classification), and brought to the re-key's cache commit `aa332280` with W68's
+findings by worker W69 from 19:46 CEST, in the form of set 30's record
 (`v2/docs/records/int30/RESULT.md` at main `eff28be3`). It is record text: its author ran no generator, suite, gate or box job; it
 accepts nothing, closes nothing, promotes nothing and changes no verdict. Prototype framing: nothing in the kit has been built, bought,
 powered or measured; every figure below is a time, a count or a digest copied from a log or a commit (elapsed times computed from logged
@@ -38,17 +41,16 @@ every commit named, every count and every placeholder.
 
 | Role | Revision | State as given | Source |
 |---|---|---|---|
-| REVIEWED (the brief's role name for set 31's base): set 30's promoted revision | `dd1aed00d0a0a521063b5792550bc510c4707c59` | a DESK candidate, not an accepted power design; no independent check read it. The last independent check is cx46 on `4d0ff8a2`, "P0 RECHECK: CORRECTIONS NOT CLOSED." | `<worktrees>/_runs/int30/promote-1036.log:2` `main fast-forwarded to dd1aed00d0a0a521063b5792550bc510c4707c59`; `dd1aed00:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.` |
+| BASE: set 30's promoted revision, set 31's base (W39's brief named this role REVIEWED; the entry pages' Reviewed revision is cx46's `4d0ff8a2`) | `dd1aed00d0a0a521063b5792550bc510c4707c59` | a DESK candidate, not an accepted power design; no independent check read it. The last independent check is cx46 on `4d0ff8a2`, "P0 RECHECK: CORRECTIONS NOT CLOSED." | `<worktrees>/_runs/int30/promote-1036.log:2` `main fast-forwarded to dd1aed00d0a0a521063b5792550bc510c4707c59`; `dd1aed00:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.` |
 | The lineage when this record's branch was cut | `f0748b490e183082b2da4361a5d24ee60d5fba40` (fnd/int31regen) | 73 commits over the base; the l4e7 KEY MISMATCH until the re-key (section 3e) | `git rev-list --count dd1aed00..f0748b49` |
 | The lineage at the merge of main | `d5d9c252db128bc71db42d068477e1b370e750b4` (fnd/int31regen: the merge of main `eff28be3`; `git rev-parse` at 15:55 and 16:10 CEST) | 101 commits over the base (rows 1 to 31 of the classification) | `git rev-list --count dd1aed00..d5d9c252` |
 | W41's second corrections round (queue item Q-60) | `3057ae43f4fb7fc5e3d6282ce52d448c8ee27929` (W41's items, 16:14:18) | W38's F2, OW-4, F4 to F7 and F10 corrected (section 2b) | `git log -1 3057ae43` |
 | W41's chain, the third run, converged | `31928583c612ea43df17df5d7e0cbb2f66090f8e` (18:10:32) | 25 outputs and 4 tool-moved pins with W48's N1 and N2; the l4e7 KEY MISMATCH on `l4e11_power.out` alone until the re-key (section 3f) | `<worktrees>/_runs/int31/chain3-1614.log:230` `== committed 31928583 at 18:10:37 (32 files); status empty` |
-| The lineage as last read by this record | `31928583c612ea43df17df5d7e0cbb2f66090f8e` (fnd/int31regen; `git rev-parse` at 18:16 and 18:24 CEST, unchanged) | 103 commits over the base, classified (section 2); the lineage moves again after it (the re-key's cache, the dependents, the candidate), each a placeholder below, filled by the coordinator at the adoption | `git rev-list --count dd1aed00..31928583` |
-| The re-key's cache commit | `__REKEY__` | record l4e7's results cache re-keyed on `31928583` on a fresh box (rekey10, rented 18:11:26, section 5); the re-keys on `aed4bd23` and `562edf6a` are spent (section 3g) | the coordinator's commit on fnd/int31regen |
+| The re-key's cache commit, the lineage as last read by this record | `aa3322806da156d12f2b23dbe9fc98a8805926f0` (fnd/int31regen, 19:00:45; `git rev-parse` at 19:54 CEST) | record l4e7's results cache re-keyed on `31928583` on a fresh box (rekey10, rented 18:11:26, section 5), the KEY MATCH after it (section 3e); 104 commits over the base, classified (section 2, row 34); the re-keys on `aed4bd23` and `562edf6a` are spent (section 3g); the lineage moves once more after it, to the candidate below | `git rev-list --count dd1aed00..aa332280`; `<worktrees>/_runs/int30/QUEUE.md`, entry "18:58 to 19:00 (clock) SET 31'S RE-KEY DONE", `the coordinator committed the one staged file with the script's message: CACHE COMMIT` |
 | INTEGRATED = CANDIDATE: the candidate commit | `__CANDIDATE__` | no independent check of its engineering | the coordinator's commit on fnd/int31regen |
 | PROMOTED: main after the fast-forward | `__PROMOTED__` | a DESK candidate, not an accepted power design (section 6) | the promotion's log |
 
-**The lineage's first-parent line** (`git log --first-parent dd1aed00..31928583`; the 33 numbered rows of `CLASSIFICATION.md`, each
+**The lineage's first-parent line** (`git log --first-parent dd1aed00..aa332280`; the 34 numbered rows of `CLASSIFICATION.md`, each
 merge's branch commits listed under it there):
 
 | Rows | Commits | What they did |
@@ -65,14 +67,16 @@ merge's branch commits listed under it there):
 | 31 | `d5d9c252` | the coordinator's merge of main `eff28be3`, set 30's adoption (W38's F1; section 2a) |
 | 32 | `3057ae43` | W41's items from W38's review (section 2b) |
 | 33 | `31928583` | W41's chain, the third run, with W48's N1 and N2 (sections 2b, 2c and 3f) |
+| 34 | `aa332280` | the coordinator's commit of record l4e7's results cache re-keyed on `31928583` (rekey10; sections 3e and 5) |
 
 ## 2. What changed (every adopted branch, the coordinator's items, the tooling, the corrections)
 
 **The classification is bound by its path:** `v2/docs/records/int31/CLASSIFICATION.md`, adopted with this file. It classes each of the
-103 commits of `git rev-list dd1aed00..31928583` (78 commits and 25 merges) from its diff into the brief's fixed set, and counts, first
-class per row: REVIEWED-INPUT CHANGED 24; RECORD TEXT 36; GENERATOR DATA (text) 0; TEST 14; DIGEST RE-PIN 2; MERGE 25; TOOLING 2;
-total 103 (its section 2; over the 73 commits to `f0748b49` alone, REVIEWED-INPUT CHANGED 17); W41's two commits, rows 32 and 33, are both
-REVIEWED-INPUT CHANGED. The class is set 30's rule (line 11 of
+104 commits of `git rev-list dd1aed00..aa332280` (79 commits and 25 merges) from its diff into the brief's fixed set, and counts, first
+class per row: REVIEWED-INPUT CHANGED 24; RECORD TEXT 36; GENERATOR DATA (text) 0; TEST 14; DIGEST RE-PIN 3; MERGE 25; TOOLING 2;
+total 104 (its section 2; over the 73 commits to `f0748b49` alone, REVIEWED-INPUT CHANGED 17); W41's two commits, rows 32 and 33, are both
+REVIEWED-INPUT CHANGED, and the re-key's cache commit, row 34, is a DIGEST RE-PIN (the cache's KEY and one part's digest; its results
+object equal before and after). The candidate commit, row 35, is named by the fill at the adoption and classed after it. The class is set 30's rule (line 11 of
 `records/int30/CLASSIFICATION.md` at main `eff28be3`), its second sentence read literally as the coordinator ruled on 6 October 2026
 (reading A): a change of what cx46 read, or another row's change carried into a file of the reviewed tree, each reason saying whether
 the file was in the delta cx46 read (its 60 files plus the L4-E9 page and output). **None of the 24 REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,
@@ -141,7 +145,7 @@ became of it (W48's readings are section 2c's):
 |---|---|---|---|
 | F1 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:22` `are not in the lineage. 18 files differ on both sides` (main's commits `836f711b` to `eff28be3`) | provenance | the coordinator merged main `eff28be3` into the lineage, `d5d9c252` (row 31); W48: closed |
 | F2 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:23` `placeholders are unfilled. No recorded deferral in the QUEUE` (eleven, for set 30's promoted sha; OW-4 pinned to the unfilled bytes) | provenance | W41 filled them with `dd1aed00` and took OW-4 after the fill (`3057ae43`, row 32); W48: closed |
-| F3 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:24` `The l4e7 KEY MISMATCH at the tip.` | provenance | known and owed: the re-key after W41's commit (sections 3e and 3g, `__REKEY__`); W48: open as expected |
+| F3 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:24` `The l4e7 KEY MISMATCH at the tip.` | provenance | known and owed: the re-key after W41's commit, done since, the cache commit `aa332280` with its KEY MATCH (sections 3e and 3g); W48: open as expected |
 | F4 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:25` `A W11 statement is stale at the tip.` | figure | W41 restated it (`3057ae43`), printed at `31928583`; W48: closed, one residual (section 2c) |
 | F5 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:26` `The annex contradicts a row applied in the same lineage` | figure (K-06) | W41 restated it (`3057ae43`); W48: closed |
 | F6 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:27` `The section now cites on two bases.` | provenance | W41 restated the basis (`3057ae43`); W48: closed |
@@ -193,7 +197,7 @@ The constitution's one targeted recheck of W38's findings (an AI review, not a q
 | Item | W48's reading on `3057ae43` | Since |
 |---|---|---|
 | F1, F2, OW-4, F4, F5, F6, F7, F8, F10 | `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W48 at about 17:56 CEST", `F1, F2, OW-4, F4, F5, F6, F7, F8 (42 passed on W38's list in a scratch clone), F10 CLOSED` | unchanged at `31928583` by W41's account; not re-read by W48 |
-| F3 | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:15` `**Open as expected:** F3, the KEY` | open until the re-key (section 3e, `__REKEY__`) |
+| F3 | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:15` `**Open as expected:** F3, the KEY` | open until the re-key; the re-key's cache commit `aa332280` since, its KEY MATCH (section 3e); W48 did not read it |
 | F9 | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:16` `**Unchanged:** F9.` | no action |
 | N1, new (minor provenance) | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:100` `Fix: state one locus in both pages.` | corrected at `31928583` (row 33; section 2b) |
 | N2, new (a test regression) | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:19` `the F7 rewrite removed W20-18's applied text. Three tests now fail` | corrected at `31928583`; W41's set A, which runs `test_w20oneliners` and `test_w25tests`, 284 passed, 0 failed (section 3d) |
@@ -221,9 +225,11 @@ W41's (section 3d); no independent reader has read row 33.
 - **W51** (Q-70) read the five rows W49 left not determined line by line: row 31.24 to REVIEWED-INPUT CHANGED, rows 31.14, 31.17,
   31.21 and 31.25 kept as record text by W51's SESSION decision that the coordinator's DESK-gate judgement is not a value cx46 read:
   `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W51 at about 17:45 CEST", `reversing it makes RIC 25` (over the 101 commits to `d5d9c252`; over the
-  103 to `31928583`, 27).
+  104 to `aa332280`, 27).
 - **W56** classed W41's two commits under reading A (rows 32 and 33) and recomputed the counts from the table: REVIEWED-INPUT CHANGED
   24 of 103.
+- **W69** wrote the re-key's cache commit `aa332280` as row 34 (DIGEST RE-PIN, as set 30's row 43 classed its own re-key) and kept the
+  candidate commit a placeholder row (row 35), and recomputed the counts from the table: REVIEWED-INPUT CHANGED 24 of 104.
 
 ## 3. The integration, measured
 
@@ -313,8 +319,13 @@ On W41's third run, after the fill of the placeholders (F2) and OW-4's re-pin mo
 KEY-only check read `<worktrees>/_runs/int31/chain3-1614.log:179` `l4e7 KEY MISMATCH committed df9030eaf2c8e7bf now b8fc6fe2d285112c; parts moved: files`,
 the one moved part `<worktrees>/_runs/int31/chain3-1614.log:180` `   file v2/docs/records/l4e11/l4e11_power.out: a2089b3f6682 -> 36141414a1b6`,
 and the same on the commit (`<worktrees>/_runs/int31/chain3-1614.log:233` `key check exit 1 (on the commit)`, after lines 231 and 232).
-The re-key on `31928583` runs on a fresh box (`<worktrees>/_runs/int31/rekey10-chain-1811.log:1` `== rekey8_chain on 31928583c612ea43df17df5d7e0cbb2f66090f8e at 2026-10-06 18:11:24 CEST`;
-section 5): `__REKEY__` (the cache commit and the KEY line the coordinator reads on the candidate).
+The re-key on `31928583` ran on a fresh box (`<worktrees>/_runs/int31/rekey10-chain-1811.log:1` `== rekey8_chain on 31928583c612ea43df17df5d7e0cbb2f66090f8e at 2026-10-06 18:11:24 CEST`;
+section 5), its recompute from `<worktrees>/_runs/int31/rekey10-chain-1811.log:15` `== polling the recompute (expected about 27 min) from 18:25:14`
+to `<worktrees>/_runs/int31/rekey10-chain-1811.log:22` `recompute ended 18:58:29`. Its cache was committed as `aa332280` (19:00:45, one
+file, `v2/docs/records/l4e7/l4e7_stage_settings.results.json`; the coordinator's entry: `<worktrees>/_runs/int30/QUEUE.md`, entry "18:58 to 19:00 (clock) SET 31'S RE-KEY DONE",
+`the numbers did not move, only the KEY`), and the KEY-only check after it read `<worktrees>/_runs/int31/cache-commit-1859.log:42` `l4e7 KEY MATCH b8fc6fe2d285112c`,
+with the cache test `<worktrees>/_runs/int31/cache-commit-1859.log:45` `tests: 1 passed, 0 failed, 0 skipped`. The KEY on the candidate
+commit is the freeze's (section 4).
 
 ### 3f. W41's chain, the third run (on `3057ae43`; committed `31928583`)
 
@@ -356,7 +367,7 @@ Two recomputes of record l4e7's results cache were started and spent before thei
 | rekey8 on `aed4bd23`, box 54468046 | `<worktrees>/_runs/int31/rekey8-chain-1228.log:9` `rekey8 start on aed4bd234644c80fa494299b21099acf6d2454c1`, polled from 12:29:35 (line 11) | killed at 12:33, `<worktrees>/_runs/vast/LOG-20261006.md:15` `the recompute on aed4bd23 KILLED (W29's finding F3` | W29's F3: OW-4's typed pin, moved after W28's edit, moves `l4e11_power.out` and with it the KEY, so the re-key would have run on a stale input (`<worktrees>/_runs/int30/QUEUE.md`, entry "12:35 (clock) ACTED ON F3", `the re-key on aed4bd23 was KILLED on box 54468046 at 12:33`) | the recompute's minutes to 12:33 (the vast log's stamp is to the minute); the box then stood idle until the watchdog stopped it at 15:10:11 (section 5) |
 | rekey9 on `562edf6a`, box 54487140 | `<worktrees>/_runs/int31/rekey9-chain-1515.log:16` `== polling the recompute (expected about 27 min) from 15:22:20` | marked spent at 15:49 (`<worktrees>/_runs/int31/rekey9/SPENT.txt:1` `SPENT: the re-key of 562edf6a`), killed at poll 60, `<worktrees>/_runs/int31/rekey9-chain-1515.log:24` `recompute ended 15:57:50`; the box stopped, `<worktrees>/_runs/int31/rekey9-chain-1515.log:38` `== rekey8_chain done at 2026-10-06 15:58:12 CEST` | W38's F1 and F2: the merge of main and the fill of the placeholders both move `l4e11_power.out`; the coordinator's lesson, `<worktrees>/_runs/int30/QUEUE.md`, entry "15:46 (clock) COORDINATOR: W38's F1 acted on", `lesson: the review before the re-key, the constitution's section 9 order: merges and input changes first` | the recompute 15:22:20 to 15:57:50, 35 min 30 s; the box rented 15:15:17 to the chain's end 15:58:12, 42 min 55 s |
 
-The re-key that counts runs on `31928583` (section 3e; `__REKEY__`), after the merges and input changes, as the lesson asks.
+The re-key that counts ran on `31928583` (section 3e; its cache commit `aa332280`), after the merges and input changes, as the lesson asks.
 
 
 ## 4. The freeze and the gates (the coordinator's; every value to be copied from the logs, never typed)
@@ -364,7 +375,7 @@ The re-key that counts runs on `31928583` (section 3e; `__REKEY__`), after the m
 | Step | Where the coordinator reads it | Result |
 |---|---|---|
 | W41's second corrections round and the chain to convergence (F2, F4 to F8, F10; W48's N1 and N2) | W41's commits and chain log | `3057ae43` and `31928583`, converged at pass 1 with the KEY MISMATCH on `l4e11_power.out` alone (section 3f) |
-| The re-key's cache commit and the KEY on the candidate (rekey10 on `31928583`, rented 18:11:26) | the cache commit on fnd/int31regen; the KEY check's line | `__REKEY__` |
+| The re-key's cache commit and its KEY (rekey10 on `31928583`, rented 18:11:26) | the cache commit on fnd/int31regen; the KEY-only check's line | `aa332280`; `<worktrees>/_runs/int31/cache-commit-1859.log:42` `l4e7 KEY MATCH b8fc6fe2d285112c` (section 3e) |
 | W48's condition (4): the 47 `test_l4e7` tests that reach the solver, after the re-key | the box's or the runner pass's log | `__GATE__` |
 | The re-key's dependents regenerated (record l4e7's P0 output, L4-E9's l4e7p0 pin, the connected output) | the dependents' log | `__GATE__` |
 | Set 30's evidence archive installed before the manifest (W31's C5) | the freeze's log | `__GATE__` |
@@ -400,8 +411,11 @@ The re-key that counts runs on `31928583` (section 3e; `__REKEY__`), after the m
 - **54507159, rekey10 (debian:12), rented 18:11 for the re-key on `31928583`** `<worktrees>/_runs/int31/rekey10-chain-1811.log:5` `RENTED 54507159 meshsat-1357-rekey10 18:11:26`;
   the offer `<worktrees>/_runs/int31/rekey10-chain-1811.log:4` `offer 52494645 -> 54507159` at the listed 0.0556 USD/h (line 3, copied,
   not a measured cost); the vast log's line `<worktrees>/_runs/vast/LOG-20261006.md:20` `2026-10-06 18:13 CEST RENTED 54507159 meshsat-1357-rekey10`.
-  Running when this record was last written; its result, its stop and its duration: `__REKEY__`.
-- No other instance was rented for set 31 (the vast log's lines 13 to 20 name these three boxes alone); every earlier instance stays
+  Its recompute ran 18:25:14 to 18:58:29 (section 3e), 33 min 15 s; the box was stopped after the fetch
+  (`<worktrees>/_runs/int31/rekey10-chain-1811.log:33` `stop sent: b'{"success": true}'`; `<worktrees>/_runs/vast/LOG-20261006.md:21` `54507159 rekey8: STOPPED after the fetch (disk kept)`,
+  the label rekey8 a fixed word of the chain script, the box rekey10's), the chain ending `<worktrees>/_runs/int31/rekey10-chain-1811.log:34` `== rekey8_chain done at 2026-10-06 18:59:12 CEST`.
+  Measured from the logged stamps: rented 18:11:26 to the chain's end 18:59:12, 47 min 46 s; its result is the cache commit `aa332280`.
+- No other instance was rented for set 31 (the vast log's lines 13 to 21 name these three boxes alone); every earlier instance stays
   stopped with its disk kept, none destroyed (the vast log's 10:38 line, `<worktrees>/_runs/vast/LOG-20261006.md:12` `Running instances: none.`).
 
 ## 6. What set 31 closes and what it does not
@@ -433,8 +447,8 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 
 | Record | Path | State |
 |---|---|---|
-| The classification of set 31 | `v2/docs/records/int31/CLASSIFICATION.md` | 103 commits classified over `dd1aed00..31928583`; 24 REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46; two placeholder rows |
-| The entry pages' set 31 rows | `v2/docs/records/int31/ENTRY-PAGES.patch.md` | patch rows for `START-HERE.md` and `SUPPLIER-HANDOVER.md`, applied by the coordinator at the adoption |
+| The classification of set 31 | `v2/docs/records/int31/CLASSIFICATION.md` | 104 commits classified over `dd1aed00..aa332280`; 24 REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46; the candidate's row a placeholder |
+| The entry pages' set 31 rows | `v2/docs/records/int31/ENTRY-PAGES.patch.md` | patch rows for `START-HERE.md` and `SUPPLIER-HANDOVER.md`, applied to the two pages by W65 on fnd/adopt31 (queue item Q-84) before the adoption; their revisions are filled at the adoption |
 | Set 30's adopted records | `v2/docs/records/int30/RESULT.md`, `CLASSIFICATION.md`, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` at main | on main since the adoption `836f711b` and the follow-up `eff28be3`, in the lineage since `d5d9c252`; not in this record's branch history, so the assessment and the two entry pages are copied verbatim under `inputs/` |
 | The drafts set 31 adopts as files | `v2/docs/records/int30/RESULT.draft2.md`, `RESULT.draft3.md`, `CLASSIFICATION.draft.md`, `NEXT-SET-SMALL-ITEMS.patch.md`; `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md`, `.draft3.md`, `.patch.md`, `L4-DESK-GATE-ASSESSMENT.draft.md`, `.draft2.md`; `v2/docs/records/l4e9/L4E9-4588-PATCH.md`, `L4E9-W5-PATCH.md` | history and patch files; where main holds the adopted record, the adopted record governs |
 | The chain's logs | `<worktrees>/_runs/int31/CHAIN-LOG.md`, `chain-1059.log`, `chain2-1241.log`, `chain3-1614.log`, the re-key logs and the test logs cited in section 3 | outside the repository; cited, never copied (they carry host paths) |
@@ -447,11 +461,10 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   Q-53, the handover ZIP's cap raised to 100 MiB, applied at set 32 (`<worktrees>/_runs/int30/QUEUE.md`, entry "13:35 (clock) Q-53 DECIDED", `applied at set 32's integration, not now`);
   Q-55, N1a's phrase carried into V-E16 of `HW-FW-CONTRACT.md`, in set 32 with its re-key (`<worktrees>/_runs/int30/QUEUE.md`, entry "| Q-55 |", `in set 32 with its re-key`);
   W36's conditions F-K1 to F-K3, F-S2 and F-R1 (W37's branch, Q-56).
-- **Open in this lineage when this record was written:** the re-key on `31928583` and W48's condition (4) after it (`__REKEY__`,
-  `__GATE__`); the ledger's `[CON:21]` re-cite after the regeneration (section 2); the coordinator's N2, R-217's release words, waiting
+- **Open in this lineage when this record was written:** W48's condition (4) after the re-key (`__GATE__`); the ledger's `[CON:21]` re-cite after the regeneration (section 2); the coordinator's N2, R-217's release words, waiting
   for record l4e11's E11-43 restatement; W13's WP-23 to WP-27 (with the next circuit change); the exclusion of s122's self-writing
   scripts from the targeted pass (W29's F1; the third run restored them again, section 3c); W48's residuals of F4 and F10, set 32's
-  (section 2c). Closed since the first draft: W41's round (sections 2b and 3f), and the eleven outputs both sides regenerated at the
+  (section 2c). Closed since the first draft: W41's round (sections 2b and 3f), the re-key on `31928583` (its cache commit `aa332280` and its KEY MATCH, section 3e), and the eleven outputs both sides regenerated at the
   merge `d5d9c252`, regenerated on the merged tree by the third run (its cascade and targeted passes, section 3f).
 - **A note for the freeze, found while writing this record:** the predicates of `test_w18result` (adopted in this set) and of
   `test_res31` that read the coordinator's logs raise Skip where `_runs` is absent, which is every rented box; suite_gate's G7 accepts
