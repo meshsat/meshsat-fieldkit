@@ -7,7 +7,7 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
 
 0. PINS (sha256/16 path)
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
-   d7a6021351c3f879 v2/docs/records/l4e9/l4e9_power_path.py
+   38b43a63b7dbbce4 v2/docs/records/l4e9/l4e9_power_path.py
    9120e34a9d327ba2 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    8890e94fdb94ffef v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    a83c1ee27168f7bb v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
@@ -20,7 +20,7 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    e106c880d49ceaea v2/docs/records/l9t5/l9t5_t10.out
    df62d62f595c7f04 v2/docs/records/l9t5/l9t5_f01.out
    fb51fe98ed200a8b v2/docs/records/l8r2/l8r2_p0.out
-   04594e7019226117 v2/docs/records/l4e7/l4e7_p0sol.out
+   6291e79aee4dda5a v2/docs/records/l4e7/l4e7_p0sol.out
    900549eeed640f89 v2/docs/records/l8r2/l8r2_dist.out
    f8960d36a62b8ee9 v2/docs/records/l8r2/l8r2_dist.py
    a85ee7b3cacceb0d v2/docs/records/l4e7/l4e7_p0sol.py

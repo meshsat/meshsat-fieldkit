@@ -8,12 +8,12 @@ circuit, against the same failure case.
 INPUTS (sha256, the first 16 hex digits)
   69614857cfa8c4f2 v2/docs/records/l4e7/l4e7_stage_settings.py
   2ad2015b0c7aea91 v2/docs/records/l4e7/l4e7_stage_settings.out
-  5fd7755d79b3668c v2/docs/records/l4e7/l4e7_stage_settings.results.json
+  cd694c93ba7a9e6b v2/docs/records/l4e7/l4e7_stage_settings.results.json
   f7547d465e0eb7d2 v2/docs/records/l4e7/apply_gen_sch_e_p0sol.py
-  f617613b3fb9e54d v2/docs/records/l4e7/apply_gen_sch_e_p0sol_b2.py
+  c667045dc0365c34 v2/docs/records/l4e7/apply_gen_sch_e_p0sol_b2.py
   f846e138cb53a8c6 v2/ecad/tools/gen_sch_e.py
   2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
-  cb09152d6f8e796b v2/docs/records/l4e11/l4e11_power.out
+  e742b1eb590e408a v2/docs/records/l4e11/l4e11_power.out
   8f552a0b57677bfa v2/vendor/power/lt8705a.pdf
   dbb74b6cdc543135 v2/vendor/ti/held/ti-ina169-sbos181f.pdf
   27c94a6c3a243bf5 v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf
@@ -33,7 +33,7 @@ INPUTS (sha256, the first 16 hex digits)
      l4e7_stage_settings.py as they read here (the part src; render() and what only it reaches are outside it) and on inputs whose
      KEY parts equal this tree's, the part l4e11_numbers (the sixteen numbers the record reads of
      v2/docs/records/l4e11/l4e11_power.out) among them. The cache's own fields: its parts name Python 3.11 and pdftotext version
-     22.12.0; beside the KEY its evidence names v2/docs/records/l4e11/l4e11_power.out at cb09152d6f8e796b, the same bytes as here.
+     22.12.0; beside the KEY its evidence names v2/docs/records/l4e11/l4e11_power.out at e742b1eb590e408a, the same bytes as here.
      The figures compute() reads from that file, with its own patterns, at 69921ce8 (set 29's freeze) and here: UVLO rising
      7.87/8.14/8.44; UVLO falling 7.46/7.66/7.95; the start's slew 17.28/20.71/24.65; INP high 7.23; the short-circuit threshold
      10.36/12.04/13.87; the overcurrent threshold 6.364/6.8/7.136. EQUAL in both, so the cached results are this base's results.
@@ -280,9 +280,9 @@ INPUTS (sha256, the first 16 hex digits)
         the port's energy, a different cut-off element or method, or a model revision on measured loops and resistances only. S1
         and S2 then qualify the correction; M2 and M3 are re-run wherever it changes the port.
     (d) PROVISIONAL until then: IF-01's D-10 protection claim, R-173 as a protection, R-176 rows 2 and 3, R-180, the port's parts
-        and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows. Completed independently
-        on the present port network: D-16's correction (section 2), the regulation and its correlated margin, the 100 W bound
-        re-run, M2 with the selected sensing (re-run only if the correction changes the port), INP's divider ratio.
+        and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows. Independent of E-1,
+        ADDRESSED IN DRAFTS and PROVISIONAL: D-16's correction (section 2), the regulation and its correlated margin, the 100 W
+        bound re-run, M2 with the selected sensing (re-run only if the correction changes the port), INP's divider ratio.
 
 4. VERDICTS
   D-16 (B6-ENG-2): CORRECTED on the drafted circuit (composition, netlist and mutations in 2a; electrical acceptance in 2d to 2f), PROVISIONAL in
@@ -402,5 +402,5 @@ INPUTS (sha256, the first 16 hex digits)
      closed (a parallel connection behind the plug) steps onto the port with the guard on, exactly section 2b's case; a stiff
      source BELOW the stage's voltage arriving after a withdrawal draws the stage's charge back through Q12's body diode (PV_P
      back-feeds PV_F through it while the guard is off), the reverse of the step, not computed here; the timing proof (5e) and the
-     pair's fault detection and INP's protection (5f). Validation: P1-1's S1 (the first two added to its rows); the last two are
-     REMAINING ENGINEERING outside the baseline, not validation.
+     pair's fault detection and INP's protection (5f). Validation: P1-1's S1 rows (a) and (b), after the first two are computed as
+     REMAINING ENGINEERING inside E-1; the last two are REMAINING ENGINEERING outside the baseline, not validation.
