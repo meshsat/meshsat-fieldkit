@@ -160,6 +160,24 @@ def t_the_judge_is_re_solved_from_the_printed_values():
     assert re.search(r"^   the judge: HOLDS$", text_, re.M)
 
 
+def t_the_makers_rows_are_read_as_printed():
+    """the record's own reads of the makers' texts (through its PDFTEXT table; the held sheets' texts staged as the suite stages them):
+    SLVS841F's 49.9 kOhm row and deglitch, the FAULT rows, SBVS067W's EN low and its shutdown current (TYPICAL), the AO3400A's 2.5 V
+    row, the BAT46W's forward rows, DS12110 revision V's VBOR2 and its ADC note, SLLSEQ7F's undervoltage row, RM0433's reset sentence,
+    UNI-ROYAL's 2512 rating, overload factor, TCR and load life"""
+    m = _mod(SCRIPT, "l4hod_under_test")
+    F = m.figures()
+    assert F["ios49"][0] == (0.475, 0.52, 0.565) and F["ios49"][1] == "PRINTED"
+    assert F["deglitch"][0] == (0.005, 0.0075, 0.01) and F["deglitch"][1] == "PRINTED" and F["tios"][1] == "TYPICAL"
+    assert F["flt_vol"][0] == (0.18, 0.001) and F["flt_lkg"][0] == 1e-6 and F["flt_sink"][0] == (0.025, 0.01)
+    assert F["ldo_en_lo"][0] == 0.5 and F["ldo_shdn"][1] == "TYPICAL" and F["ldo_rja"][0] == 76.0
+    assert F["rds25"][0] == 0.048 and F["vth"][0] == (0.65, 1.05, 1.45) and F["vf"][0] == (0.25, 0.45)
+    assert F["vbor2"][0] == (2.25, 2.31, 2.37) and F["tue_typ"][1] == "TYPICAL" and F["tcan_uv"][0] == (1.65, 2.0, 2.5)
+    assert F["rm_reset"].startswith("During and just after reset") and F["latch_exit"].startswith("The device remains off")
+    assert F["uni_p"][0] == 1.0 and F["uni_ov_k"][0] == 2.5 and abs(F["uni_tcr"][0] - 200e-6) < 1e-12 and F["uni_life"][0] == (0.01, 0.05)
+    assert [F["t9"][p_][1] for p_ in (15, 16, 42)] == ["FT_a", "FT_ha", "FT_h"]
+
+
 def t_the_judges_mutants_fail():
     """a test load that never makes a healthy limiter limit (10 Ohm) cannot tell a lost limit from a healthy one: J1 FAILS; a TYPICAL
     deglitch used as a bound FAILS J0; single steps over the least deglitch FAIL J6; re-run here on the module's judge"""
@@ -203,8 +221,16 @@ def t_the_interval_and_the_detection_interval():
     assert abs(vals[6] - step4) < 1e-3
     det = _num(r"a limit lost after start-up is found within\s+3600 s \+ [\d.]+ s = ([\d.]+) s", text_)
     assert 3600.0 < det < 3610.0
-    assert "W139's loss count respected" in text_ and "survivors' gap 0 windows against the loss count 3" in text_
-    assert "is NOT bounded on printed figures" in text_ and "PROVISIONAL, finding W146-F10" in text_
+    flat = " ".join(text_.split())
+    assert "W139's loss count respected" in flat and "survivors' gap 0 windows against the loss count 3" in flat
+    assert "is NOT bounded on printed figures" in flat and "PROVISIONAL, finding W146-F10" in flat
+    # the hold-up, re-solved: the rail before the step on record l9t5's path with all three at their peak, the survivors' need at their
+    # limiter's input (the TPS737's 1.5 % and 0.25 V at 1 A scaled, plus the limiter's 0.135 Ohm), board B's 10.3 uF, a survivor's 12.0 uF
+    v0 = 3.7579 - 3 * 0.4240 * 0.04252
+    need_ = 3.3 * 1.015 + 0.25 * 0.4240 + 0.4240 * 0.135
+    t_rail = 10.3e-6 * (v0 - need_) / 1.4396
+    t_hold = 12.0e-6 * (3.3 * 0.985 - 2.37) / 0.4240
+    assert abs(_num(r"the survivors stay out of reset if U601 and the lead carry the step within ([\d.]+) us", text_) - (t_rail + t_hold) * 1e6) < 0.15
 
 
 def t_the_page_states_the_disposition():

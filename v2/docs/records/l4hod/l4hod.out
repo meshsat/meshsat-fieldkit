@@ -30,6 +30,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    9a90d9411907d535 v2/vendor/ti/held/pdftext/ti-tps2553-slvs841f.layout.txt  (held back)
    72c280f85723bbb9 v2/vendor/ti/held/pdftext/ti-tps737-sbvs067w.layout.txt  (held back)
    810dc4dbcf529687 v2/vendor/ti/pdftext/ti-tcan334-can-fd-transceiver.layout.txt
+   010f30f3bffdad5f v2/vendor/ti/pdftext/ti-tps62933.layout.txt
    3bc31f4a5302521c v2/vendor/diodes/diodes-bat46w.pdf
    9c60d0b6c1ddc760 v2/vendor/power/aos-ao3400a-n-mosfet.pdf
    9b27d1d993a8bc5b v2/vendor/st/st-stm32h743xi-datasheet.pdf
@@ -37,6 +38,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    88e453700cea2b26 v2/vendor/ti/held/ti-tps2553-slvs841f.pdf  (held back)
    9ba54135736a47a3 v2/vendor/st/st-rm0433-rev8.pdf
    bb89f067e6a79028 v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf
+   16ec2eac43c7374e v2/vendor/ti/ti-tps62933.pdf
    11cd644d5d8a34a6 v2/vendor/passives/held/uniroyal-series-11cd644d.pdf  (held back)
 
 2. WHY (quoted; the drafts it rests on are unchecked)
@@ -91,6 +93,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    UNI-ROYAL overload change          0.01, 0.05                   PRINTED  UNI-ROYAL V.3 p.6 (1 %: change after 2.5 x RCWV for 5 s)
    UNI-ROYAL TCR 1-10 Ohm             0.0002                       PRINTED  UNI-ROYAL V.3 p.6 (+-, 1 to 10 Ohm, 0805 to 2512)
    UNI-ROYAL load life                0.01, 0.05                   PRINTED  UNI-ROYAL V.3 p.7 (1 %: after 1,000 h at RCWV, 70 C)
+   TPS62933 fSW, RT open              450000                       PRINTED  SLUSEA4D 7.5 p.7 (minimum, RT floating)
    described: SLVS841F 10.1.1 (page 17, application information, 'not part of the TI component specification'): "The latch-off devices (TPS255x-1) assert the FAULT flag after the deglitch period and immediately turn off the device."
    described: SLVS841F 9.3.1 (page 13): "The device remains off until power is cycled or the device enable is toggled."; SBVS067W 6.3.4 (page 19): "To make sure that all charge is removed from the gate of the pass transistor, the EN pin must be driven low before the input voltage is removed."
    described: SLLSEQ7F 6.3.4 (page 19): "This protects the bus during an under voltage event on VCC by placing the bus into a high impedance biased to ground state"; RM0433 Rev 8 p.533: "During and just after reset, the alternate functions are not active and most of the I/O ports are configured in analog mode."
@@ -256,16 +259,23 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
      if latched (step 4) or simply readmitted if never latched; that supervisor's tests stop until the next start (DRAFTED, W146-D6)
    THE INTERVAL THE TARGET IS OUT of the quorum: 5.945 s (the announcement 0.1 s, step 1 2.190 s, settle 0.020 s, step 2 0.012 s, step 3 0.019 s, step 4 3.604 s)
      (MODEL on PRINTED, DRAFTED and the boot and domain ASSUMPTIONs; record l4canen's recovery 5.603 s is step 4 plus its 2.0 s decision)
-   THE SERVICE LOST: two of three serve for that interval (IOHA row 3: ownership unaffected); the quorum has no spare then (a second supervisor out
-     is row 4's home assignment); 0.50 % of the time at 3600 s a supervisor; the survivors keep their supply on the DC path (J2 and record
-     l4reg's J4 (c)); the transient dip of +5V_IOC at the test's load step (at most 0.5704 A with a healthy limit, 1.4396 A with the limit lost, for the
-     closer's 0.2 ms) is NOT bounded on printed figures (U601's load-transient response and the lead's inductance are not printed; the base
-     design's own overload step of up to IOSmax has the same open term, W138's J7 being a DC row): PROVISIONAL, finding W146-F10, the supplier's
-     task in L4HOD.md; their frames hold: the target's transceivers go to the protected mode (bus high impedance) as its rail falls under
-     UV(VCC) 1.65 to 2.50 V (PRINTED),
-     its TXDs rest recessive on canmb's pull-ups, and W139's row R3 (a controller dark, its onset scanned over the window) reads 'a node out and contained' with the
-     survivors' gap 0 windows against the loss count 3: W139's loss count respected; the target itself is lost to the quorum by that count, as
-     planned, and rejoins listening first (W139-D9)
+   THE SERVICE LOST: two of three serve for that interval (IOHA row 3: ownership unaffected); the quorum has no spare then (a
+     second supervisor out is row 4's home assignment); 0.50 % of the time at 3600 s a supervisor. The survivors keep their
+     supply on the DC path (J2 and record l4reg's J4 (c)); the transient dip of +5V_IOC at the test's load step (at most 0.5704
+     A with a healthy limit, 1.4396 A with the limit lost, for the closer's 0.2 ms) is NOT bounded on printed figures (U601's
+     load-transient response and the lead's inductance are not printed; the base design's own overload step of up to IOSmax has
+     the same open term, W138's J7 being a DC row): PROVISIONAL, finding W146-F10. The hold-up it would need (MODEL on the
+     drawn capacitors and the printed thresholds): board B's +5V_IOC carries 10.3 uF (C900, C940, C950, C960); from 3.7039 V
+     before the step to the survivors' need 3.5127 V at their limiter's input it carries the lost limit's step 1.37 us, the
+     healthy step 3.45 us; each survivor's own 12.0 uF (B's: C421, C422, C423, C424, C425, C426, C432, C433, C953, C954, C955,
+     C956) then holds its rail from the regulator's least 3.2505 V over VBOR2's highest falling 2.37 V (PRINTED) for 24.9 us at
+     its 0.4240 A peak: the survivors stay out of reset if U601 and the lead carry the step within 26.3 us (12 of U601's
+     switching periods at its printed least 450 kHz); its load-transient response is printed only as TYPICAL figures, so that
+     time is the supplier's pass limit (L4HOD.md section 11, task 2). Their frames hold: the target's transceivers go to the
+     protected mode (bus high impedance) as its rail falls under UV(VCC) 1.65 to 2.50 V (PRINTED), its TXDs rest recessive on
+     canmb's pull-ups, and W139's row R3 (a controller dark, its onset scanned over the window) reads 'a node out and
+     contained' with the survivors' gap 0 windows against the loss count 3: W139's loss count respected; the target itself is
+     lost to the quorum by that count, as planned, and rejoins listening first (W139-D9)
    W143's self-test skips its phases while the target is out (its own precondition: all three functional): a latent vote-path fault arising in a
      test is found within 2.60 s + 5.945 s = 8.545 s (finding W146-F2)
    THE DETECTION INTERVAL of a lost limit (MODEL on the drafted schedule and the printed timing): a limit lost after start-up is found within
