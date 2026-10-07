@@ -27,6 +27,13 @@ puts E-6b on one basis and states the nine-part count's; 4j also carries the sta
 SNVSBJ1E 8.3.5.1 and the cycling load on Vishay's continuous-pulse line; section 8 lists L8P-R12-F1 and the PGD-low disarm among
 L8P-R10-F1's conditions and corrects round 12's "the service untouched".
 
+ROUND 14 (W161, 7 October 2026, after Q-179, W158's one bounded check of round 13's disarm: SUPPORTED AS CONDITIONAL; NO CIRCUIT
+CHANGED): 4k answers W158's findings as record text, conditions and compared alternatives: F1 the trip between BRK_VIN 7.6 and 10.16 V
+as a bounded provisional choice with its supplier task E-12p, and the stiffer PGD divider compared and not adopted; F5 Q114's IGSS
+counted (check_l8p_och.py) and the ASSUMED rule's margin; F7 D107's bound at the site; F8; F9; 4g adds R144 shorted, R143 shorted's
+consequence, D107 open in a clamp surge and the gate shorts of Q113 and Q114 with its scope (F2, F3, F10); 4j scopes the start
+service to a power-on start on record l9stk's IF-1 (F4); section 8 restates row (c)'s status from the three AI reviews.
+
 This script prints:
   0. its pins (the records and the makers' documents it reads, sha256);
   1. the finding and the case (RECORD: record l8p round 10, l8p_rowc.py's own computation, records l9stk and l8p);
@@ -37,6 +44,7 @@ This script prints:
      ratings and leakages, power-up and the start, its standing current, its own single failures; round 12 adds 4c' (a source's
      share, R140's restated pulse with a read candidate part, Q111's row) and 4i (the BRK_VIN range, the band, the on-time bound);
      round 13 adds 4j (the PGD-low disarm on leakage: round 12's level, three corrections, the selection and its levels);
+     round 14 adds 4k (Q-179's findings: the provisional choice under 10.16 V, the compared divider, the gate's leakage margin);
   5. the draft composed in L4-E9's order, read by check_l8p_netlist.py and check_l8p_och.py, and its mutations;
   6. L4A-67: C-PROT rev 1 for the guard on the corrected circuit, part by part, with the trip intact and with it latently failed;
   7. L4A-68: the guard's allowance as its consumers are to restate it (the texts of the two apply scripts);
@@ -553,7 +561,7 @@ def compute():
     # an ASSUMED 1 nF (Q114's Ciss 50 pF is listed by JSCJ as unverifiable, D107's capacitance is not printed)
     need(prot, r"insertion 4\.23 to 15\.25 ms \(3 to 8 uA\)", "the insertion time (record l9stk)")
     need(prot, r"a start \(the gauge's FET on, a retry, assembly\) \| 0\.659 A at most for 40\.7 ms", "the start's current (record l9stk)")
-    g_fin = BRK_LEAST_V - R144 * 1.01 * (O.IDSS_HOT + O.IR_ZENER_HOT)
+    g_fin = BRK_LEAST_V - R144 * 1.01 * (O.IDSS_HOT + O.IR_ZENER_HOT + O.IGSS)      # round 14 (Q-179's F5): Q114's IGSS counted
     t_rise = R144 * 1.01 * 1e-9 * math.log(g_fin / (g_fin - O.VTH_Q106))
     R.update(ins_least=4.23e-3, start_i=0.659, t_rise=t_rise, t_disarm_start=tcts2[1] + t_rise, g_fin=g_fin)
     # the band's upper edge with the loop (the recheck's F2): the most-limit unit's VCL at its limit (PRINTED 61.5 mV), the -1's two
@@ -579,6 +587,36 @@ def compute():
     p_rated = 9 * 1.5 * R["derate_air"]
     R.update(cont_line=watts_c(R["t_on_max"]), cont_w100=w100_c, train_tmin=t_min, train_mean=R["e_s"] / t_min,
              train_need=R["e_s"] / p_rated, train_need_src=R["e_v"] / p_rated, p_rated=p_rated, part_band=R["p_stall"] / 9)
+
+    # 4k. ROUND 14 (Q-179, W158's findings; NO CIRCUIT CHANGED). F1: the PGD pin's off leakage that keeps BRK_PGD at Q113's (and
+    # Q106's) 2.5 V maximum threshold at BRK_VIN 7.6 V (R116 and R117 nominal, as 16j's 10.16 V), and W158's stiffer divider (R116 and
+    # R117 at 200 kOhm: a 100 kOhm Thevenin) on the printed 5 uA, with what it adds from BRK_VIN at the pack's 16.8 V
+    bz = flat(pdftext("bzt"))
+    need(bz, r"BZT52C12 WH 12 11\.4 12\.7 5 25 150 1\.0 0\.1 8\.0 6\.0 10\.0 5", "BZT52C12 temperature coefficient 6.0 to 10.0 mV/C at 5 mA")
+    need(bz, r"Power Dissipation \(Note 8\) @TA = \+25.C PD 370 mW", "BZT52C PD")
+    need(n7, r"Continuous Drain Current ID 0\.115 A Power Dissipation PD 0\.225 W", "2N7002 ID and PD")
+    thev = 0.5e6
+    R["pgd_i_max"] = (BRK_LEAST_V / 2 - O.VTH_Q106) / thev - 2 * O.IGSS
+    R["v_pgd5_200k"] = 2 * (O.VTH_Q106 + 0.1e6 * (5e-6 + 2 * O.IGSS))
+    R["div_add_run"] = PACK_MOST / 400e3 - PACK_MOST / 2e6
+    R["div_add_low"] = (PACK_MOST - O.VOL_PGD) / 200e3 - (PACK_MOST - O.VOL_PGD) / 1e6
+    # F5: Q114's gate with its own IGSS; the leakage on the record's doubling rule and its margins to the printed 7 Ohm row (VGS 5 V)
+    # and to the 2.5 V threshold maximum, in factor and in site kelvin on the rule; the compared R144 at 100 kOhm
+    i_leak = O.IDSS_HOT + O.IR_ZENER_HOT + O.IGSS
+    r144 = R144 * 1.01
+    R["g_igss"] = BRK_LEAST_V - r144 * i_leak
+    R["g_no_igss"] = BRK_LEAST_V - r144 * (O.IDSS_HOT + O.IR_ZENER_HOT)
+    R["i_leak"] = i_leak
+    R["marg_5v"] = (BRK_LEAST_V - O.VGS_RDS) / r144 / i_leak
+    R["marg_vth"] = (BRK_LEAST_V - O.VTH_Q106) / r144 / i_leak
+    R["marg_5v_k"] = DOUBLING_K * math.log2(R["marg_5v"])
+    R["marg_vth_k"] = DOUBLING_K * math.log2(R["marg_vth"])
+    R["marg_5v_100k"] = (BRK_LEAST_V - O.VGS_RDS) / (100e3 * 1.01) / i_leak
+    R["r144_100k_add"] = PACK_MOST / (100e3 * 0.99) - PACK_MOST / (R144 * 0.99)
+    # F7: D107 (and D105) at the site: 12.7 V at its 5 mA row and 25 C plus the printed +10.0 mV/C at most (DS18004)
+    R["vz_site"] = 12.7 + 10.0e-3 * (SITE - 25.0)
+    # F9: Vishay's single-pulse line holds under 1000 pulses: E-12f's interval in breaker turn-offs
+    R["e12f_turnoffs"] = 999
     return R
 
 
@@ -872,6 +910,10 @@ def render(R, K):
     w("   4g. ITS OWN SINGLE FAILURES (INFERRED from the circuit as drawn):")
     for a, b in FAILS:
         w("     %-52s %s" % (a, b))
+    w("     4g's scope (round 14, SESSION L8P-R14-D2): the rows above; resistor shorts and FET gate shorts are listed for round 13's parts")
+    w("       (R143, R144, Q113, Q114); the failure modes of the other parts not in a row above (among them the shorts of R132 to R142 and")
+    w("       the gate shorts of Q110 to Q112) are NOT LISTED: REMAINING ENGINEERING with L4A-67's latent clause (the trip's complete")
+    w("       failure-mode table, the receiving company's); a FET 'shorted' reads drain to source (W158's reading, taken)")
     w("     so a latent first failure returns the design to round 10's rows at %s A held (the blades at %s %% of their rerated current, no part" % (
         fmt(I), fmt(100 * I / W["I_rr_air"], 1)))
     w("       the guard protects exposed: M-A holds the FETs at %s A on a board whose path meets E-1's bar); no automatic diagnostic is" % fmt(I))
@@ -989,7 +1031,8 @@ def render(R, K):
     w("         to PACK_N, its gate OCH_PN PGD inverted by Q113 (2N7002, gate on BRK_PGD) against R144 200 kOhm from BRK_VIN, the zener D107")
     w("         (BZT52C12) keeping it under 12.7 V; D106 kept for the on-time bound: SELECTED (SESSION L8P-R13-D1)")
     w("     THE SELECTION'S LEVELS (check_l8p_och.py on the composed netlist, section 5; BRK_VIN 7.6 V unless stated):")
-    w("       PGD low: Q114's gate at least %s V with Q113's off leakage and D107's reverse current at the site through R144 at +1 %%" % fmt(L["gate"], 2))
+    w("       PGD low: Q114's gate at least %s V with Q113's off leakage, D107's reverse current and (round 14) its own IGSS at the site" % fmt(L["gate"], 2))
+    w("         through R144 at +1 %")
     w("         (BZT52C12 0.1 uA at 8 V and 25 C PRINTED), at or over the 5 V where JSCJ prints 7 Ohm: OCH_S2 at most %s mV with R143's" % fmt(L["pgd_low"] * 1e3, 2))
     w("         current at the clamp and D106's %s uA through it; the level holds for any on-resistance up to %s kOhm, so the hot rise of" % (
         fmt(R["d106_site"] * 1e6, 1), fmt(0.792 / (L["pgd_low"] / O.RDS_5V) / 1e3, 2)))
@@ -1020,6 +1063,13 @@ def render(R, K):
     w("       THE START SERVICE SHOWN on those figures (in round 12's drawing not shown, the recheck's F1); the LM5069 releases PGD itself")
     w("       under about 5 V of VIN (SNVS452G 8.3.6, no figure printed): armed with the -1's gate held off, no discharge over the window")
     w("       through R10, as in rounds 11 and 12")
+    w("       (round 14, Q-179's F4) ITS SCOPE: the start's %s A rests on record l9stk's IF-1 (board A's loads on VSYS stay off, under 0.81 A," % fmt(R["start_i"], 3))
+    w("       until the breaker's start ends, at most 40.7 ms, or follow its PGD; owners L4-E11 with board A's generator), a condition of the")
+    w("       start service; the %s ms against %s ms comparison covers a POWER-ON START only (the insertion time runs only when VIN passes" % (
+        fmt(R["t_disarm_start"] * 1e3, 2), fmt(R["ins_least"] * 1e3, 2)))
+    w("       PORIT); at a DOCKING (VIN already present, the start after the RC hold's 0.110 to 0.907 s) PGD's fall is NOT BOUNDED against")
+    w("       the hold on printed figures (PGD's release near 5 V of VIN and PORIT print no minimum): named, not shown; a docking start that")
+    w("       draws the start's own current stays under the window, so only a faulted start over the window depends on it")
     w("     SNVSBJ1E 8.3.5.1 (the recheck's F5): a CTS capacitor not fully discharged when a fault returns gives a shorter next delay; TI asks")
     w("       the time between faults over 10 %% of the programmed delay: channel 1's least %s ms exceeds 10 %% of channel 2's most (%s ms)," % (
         fmt(R["tcts1"][0] * 1e3, 3), fmt(R["tcts2"][1] * 1e2, 3)))
@@ -1036,6 +1086,64 @@ def render(R, K):
         fmt(R["derate_air"], 3), fmt(R["p_rated"], 1), fmt(R["train_need"] * 1e3, 1), fmt(R["train_need_src"] * 1e3, 0), fmt(R["train_tmin"] * 1e3, 2)))
     w("       a faster train is NOT BOUNDED (named: the kit's loads, Layer 7's list, must show none re-enters the window within %s ms of a" % fmt(R["train_need_src"] * 1e3, 0))
     w("       trip; the smallest correction for a next round, not drafted: a re-arm hold-off on U107's CTR2 longer than that period)")
+    w("   4k. ROUND 14 (Q-179, W158's one bounded check of round 13's disarm, an AI review: SUPPORTED AS CONDITIONAL; its findings answered")
+    w("     as record text, conditions and compared alternatives; NO CIRCUIT CHANGED)")
+    w("     F1, THE TRIP BETWEEN BRK_VIN 7.6 AND %s V (Amendment 1, item 2):" % fmt(R["v_pgd5"], 2))
+    w("       THE CLAIM: the trip armed whenever the breaker runs, over the -1's run from 7.6 V (C-PROT rev 1, 12d), so L8P-R10-F1's")
+    w("         correction covers that run; on the PGD pin's printed off leakage (5 uA at 80 V, SNVS452G) BRK_PGD's released level clears")
+    w("         Q113's (and Q106's) 2.5 V threshold maximum from BRK_VIN %s V, under the pack's least in service %s V: SHOWN on printed" % (
+        fmt(R["v_pgd5"], 2), fmt(PACK_LEAST, 1)))
+    w("         figures over the pack's service range %s to %s V" % (fmt(PACK_LEAST, 1), fmt(PACK_MOST, 1)))
+    w("       THE AFFECTED FILES AND DECISIONS: apply_gen_sch_p_breaker.py (R116, R117 and Q106, round 2's PGD gating), apply_gen_sch_p_ocheld.py")
+    w("         (Q113), check_l8p_och.py's armed level, L8P-R13-D1 and L8P-R10-F1's correction under %s V" % fmt(R["v_pgd5"], 2))
+    w("       THE BOUNDED PROVISIONAL CHOICE (SESSION L8P-R14-D1): the drawing stands (R116 and R117 1 MOhm); between 7.6 and %s V the trip" % fmt(R["v_pgd5"], 2))
+    w("         is taken armed PROVISIONALLY on the PGD pin's off leakage at most %s uA at VPGD 2.5 to 3.8 V and the site's temperature (the" % fmt(R["pgd_i_max"] * 1e6, 2))
+    w("         most that keeps BRK_PGD at 2.5 V at BRK_VIN 7.6 V beside Q106's and Q113's 80 nA gates; R116 and R117 nominal, as 16j's")
+    w("         %s V); if the pin leaks more the failure direction is a disarm, never a crowbar: L8P-R10-F1 uncorrected in that band (round" % fmt(R["v_pgd5"], 2))
+    w("         10's rows), and Q106 off lets the breaker's restart inhibit reach UVLO through Q105 on a running breaker whose pad reads hot")
+    w("         (a stop of the service, no protection lowered); PROVISIONAL in this record and for the register")
+    w("       THE SUPPLIER'S TASK, E-12p (new; (a) the pin, (b) the gate below): specimen U101 (the LM5069-1) as fitted on E-12s's three board")
+    w("         P specimens; quantity three, each at 25 C and in a chamber at the 76.25 C air; the breaker running with PGD released at")
+    w("         BRK_VIN 7.6, 8.8 and %s V, BRK_PGD read at U101's pin 8 (no test point is drawn), the pin's leakage taken from R116's and" % fmt(R["v_pgd5"], 2))
+    w("         R117's measured values; pass: the pin's off leakage at most %s uA at every point (BRK_PGD at 2.5 V or more at 7.6 V) and TP112" % fmt(R["pgd_i_max"] * 1e6, 2))
+    w("         armed (over %s V); the reading transfers to its specimens only: a population figure is TI's (a vendor question for the" % fmt(O.REL_MAX, 3))
+    w("         supplier list, UNSENT)")
+    w("     COMPARED ALTERNATIVE, NOT ADOPTED: R116 and R117 at 200 kOhm (W158's stiffer divider): BRK_PGD's Thevenin 100 kOhm arms the trip")
+    w("       on the printed 5 uA from BRK_VIN %s V, so over the -1's whole run from 7.6 V; it adds %s uA from BRK_VIN while the breaker" % (
+        fmt(R["v_pgd5_200k"], 2), fmt(R["div_add_run"] * 1e6, 1)))
+    w("       runs and %s uA while PGD is low (R116 into the PGD pin, inside its 2 mA VOL row) at %s V, standby figures for the battery" % (
+        fmt(R["div_add_low"] * 1e6, 1), fmt(PACK_MOST, 1)))
+    w("       stream; NOT ADOPTED: it changes round 2's breaker draft, a design change that constitution section 6 sends to its own check,")
+    w("       it moves the standby draw, and the band it adds lies under the pack's least in service; Layer 6 or the receiving company may")
+    w("       take it with its own check")
+    w("     F5, THE GATE'S LEAKAGE ON THE ASSUMED RULE: Q114's gate with its own IGSS counted (check_l8p_och.py, round 14) at least %s V" % fmt(R["g_igss"], 3))
+    w("       (round 13: %s V without it); the leakage into it at the site, Q113's IDSS %s uA and D107's IR %s uA on the record's doubling" % (
+        fmt(R["g_no_igss"], 3), fmt(O.IDSS_HOT * 1e6, 2), fmt(O.IR_ZENER_HOT * 1e6, 2)))
+    w("       rule (ASSUMED) and IGSS 0.08 uA (PRINTED, 25 C), %s uA; the margin to the printed 7 Ohm row at VGS 5 V is %sx (%s K of site" % (
+        fmt(R["i_leak"] * 1e6, 2), fmt(R["marg_5v"], 3), fmt(R["marg_5v_k"], 2)))
+    w("       temperature on the rule) and to the 2.5 V threshold maximum %sx (%s K), where no on-resistance is printed and the level needs" % (
+        fmt(R["marg_vth"], 2), fmt(R["marg_vth_k"], 1)))
+    w("       under 4.35 kOhm: CONDITIONAL on the rule; THE PROVISIONAL CHOICE (SESSION L8P-R14-D3): R144 200 kOhm stands on the rule;")
+    w("       COMPARED, NOT ADOPTED: R144 at 100 kOhm gives %sx to the 5 V row for %s uA more at %s V while PGD is high (a design change," % (
+        fmt(R["marg_5v_100k"], 2), fmt(R["r144_100k_add"] * 1e6, 0), fmt(PACK_MOST, 1)))
+    w("       its own check); E-12p (b): with PGD low at BRK_VIN 7.6 V in the chamber at the 76.25 C air, Q114's gate (its pin: no test")
+    w("       point on OCH_PN) at 5.0 V or more on each specimen")
+    w("     F7, D107'S BOUND AT THE SITE: 12.7 V PRINTED at its 5 mA row and 25 C and a temperature coefficient of at most +10.0 mV/C PRINTED")
+    w("       (DS18004) give %s V at the %s C site (INFERRED; it carries at most %s uA, under that row, where its voltage is lower): Q114's" % (
+        fmt(R["vz_site"], 2), fmt(SITE), fmt((CLAMP - 11.4) / (R144 * 0.99) * 1e6, 0)))
+    w("       gate at most %s V against the 2N7002's 20 V, and D105's crowbar gate the same against the CSD18510Q5B's 20 V; the drafts'" % fmt(R["vz_site"], 2))
+    w("       intent lines keep 12.7 V at 25 C (no verdict rests on them; restated at the drafts' next design round)")
+    w("     F8: the trip-asserted level at -20 C, %s V, sits %s %% under VITN's least 0.792 V, at the edge of the 20 %% overdrive at which" % (
+        fmt(L["low"], 2), fmt(100 * (0.792 - L["low"]) / 0.792, 1)))
+    w("       SNVSBJ1E 7.6 prints its delays (%s %% at 25 C): the on-time bound is taken on that condition (ASSUMED), not new" % fmt(
+        100 * (0.792 - (L["low"] - O.VF_COLD)) / 0.792, 1))
+    w("     F9: a shorted D106 (4g) makes one pulse inside E-6b per breaker turn-off while armed and Vishay's single-pulse line holds under")
+    w("       1000 pulses, so E-12f's interval is bounded at %d turn-offs after such a short can occur; the operating envelope states no" % R["e12f_turnoffs"])
+    w("       turn-offs a day, so the interval in days is OPEN with the duty profile (Layer 7): named")
+    w("     F2, F3 AND F10: 4g adds R144 shorted, R143 shorted's consequence, D107 open in a clamp surge and the gate shorts of Q113 and Q114,")
+    w("       with its scope stated (SESSION L8P-R14-D2)")
+    w("     F6 (a note): the PGD-low predicate does not see D107 reversed or removed, or a gate net on PACK_N; the pin checks catch all three")
+    w("       (W158's own mutations): kept as pin checks, not modelled")
     w("")
     w("5. THE DRAFT COMPOSED IN L4-E9'S ORDER (board P; INFERRED from the regenerated netlist)")
     for name, r in K["steps"]:
@@ -1093,15 +1201,19 @@ def render(R, K):
     w("     acceptance on printed figures: no current held over %s A, %s %% of the blades' rerated current at the band, the held service" % (
         fmt(hi), fmt(100 * hi / O.BLADE_BAND, 1)))
     w("     untouched (round 13 corrects round 12's 'the service untouched': at a start it was not shown in round 12's drawing, the recheck's")
-    w("     F1; with round 13's disarm it is shown, 4j); CONDITIONAL on E-6 (R10's sheet within -7.3 to +8.3 %), E-6b (R140's printed pulse,")
+    w("     F1; with round 13's disarm it is shown, 4j, for a power-on start on record l9stk's IF-1, a docking not bounded: round 14, Q-179's")
+    w("     F4); CONDITIONAL on E-6 (R10's sheet within -7.3 to +8.3 %), E-6b (R140's printed pulse,")
     w("     RESTATED in round 12, on one basis in round 13: %s J in %s ms), L8P-R12-F1 (4g: R140 held near 118 W after a shorted crowbar with" % (
         fmt(R["e_r140"], 2), fmt(R["t_on_max"] * 1e3, 2)))
     w("     a source, a single-failure hazard the trip itself adds; its series element named as Layer 6's, chosen with R140's part), the")
-    w("     PGD-low disarm of 4j (the recheck's F1, corrected in draft by round 13, UNVERIFIED until its one bounded check), E-10")
+    w("     PGD-low disarm of 4j (the recheck's F1, corrected in draft by round 13; Q-179, W158, read it SUPPORTED AS CONDITIONAL: on F5,")
+    w("     the gate's hot leakage on the ASSUMED rule; F1, the trip between BRK_VIN 7.6 and %s V PROVISIONAL on the PGD pin, E-12p; F4," % fmt(R["v_pgd5"], 2))
+    w("     IF-1 and the power-on scope; F2, 4g completed in round 14; 4k), E-10")
     w("     (the key-down excursions under 0.282 ms: a bench item, the check's F7), E-12f, E-12s (round 12, 4i) and the latent-failure")
     w("     residual of 4g; round 12 corrects the band of 4i (a demonstrated defect of round 11's drawing) by the on-time bound, composed,")
-    w("     read DRAWN and mutated (section 5); UNVERIFIED until the targeted recheck (L4A-69); the approaches (A) NOT SUPPORTED and (C) NOT")
-    w("     SELECTED on printed figures")
+    w("     read DRAWN and mutated (section 5); the focused check (W147) and the targeted recheck (W153), AI reviews, read the correction")
+    w("     SUPPORTED AS CONDITIONAL (round 12's text 'UNVERIFIED until the targeted recheck' answered); the approaches (A) NOT SUPPORTED")
+    w("     and (C) NOT SELECTED on printed figures")
     w("   L4A-67: C-PROT rev 1 for the guard on the corrected circuit: every series part within its printed limits below and above the trip")
     w("     where a printed figure exists; NOT SHOWN, each missing figure named and CONDITIONAL: board P's switches' hot RDS(on) (E-8, E-11),")
     w("     R10, R101, R102 and R140 (E-6, E-6b), the 12 AWG wires (a maker's ampacity at 76.25 C with its insulation class), the dock pins'")
@@ -1110,6 +1222,15 @@ def render(R, K):
     w("     trip's silent failures (4g) and the guard's on a board that misses E-1's bar have no detection interval (REMAINING ENGINEERING;")
     w("     the check's F6; round 11's 'DONE on the desk' withdrawn); L8P-R12-F1 (a shorted crowbar with a source, 4g) OPEN")
     w("   L4A-68: the allowance stated for its consumers (section 7, two apply scripts, NOT APPLIED); the replay is record l4e11's round 19")
+    w("   ROW (C) AS A WHOLE (restated in round 14 from the three AI reviews, W147, W153 and W158; no verdict upgraded): SUPPORTED AS")
+    w("     CONDITIONAL; no cx46 item closes unconditionally. Its conditions: W147's E-05, E11-29, E11-36 and E-9 (RE-10 and HO-A by M-A,")
+    w("     the battery FETs), RE-9's two apply scripts applied by their owners, E-6, E-6b, E-12f and E-10 (the trip); W153's E11-29u (each")
+    w("     built board's path), E-6b as restated, E-12s, Q111's SOA with a source (E-2, E-3), the PGD-low disarm's correction (round 13)")
+    w("     and L8P-R12-F1 (OPEN); W158's F5 (the gate's hot leakage on the ASSUMED doubling rule: %sx to the 5 V row, %sx to the" % (
+        fmt(R["marg_5v"], 3), fmt(R["marg_vth"], 2)))
+    w("     threshold), F1 (the trip between BRK_VIN 7.6 and %s V PROVISIONAL on the PGD pin, E-12p), F4 (the start service on IF-1, for" % fmt(R["v_pgd5"], 2))
+    w("     a power-on start; a docking not bounded) and F2 (4g completed, round 14); L8P-R11-F1 (OPEN) and the fast cycling load (NOT")
+    w("     BOUNDED, 4j). L4A-67's acceptance reads NOT MET on its latent-failure clause (REMAINING ENGINEERING); HO-L stays OPEN on E-05")
     w("")
     w("9. PREDICATES")
     for name, ok in R["preds"]:
@@ -1128,12 +1249,30 @@ FAILS = (
     ("D106 open (rounds 12 and 13)", "the on-time bound lost, LATENT: round 11's state, 4i's band unbounded (E-12f reads TP112)"),
     ("R143 open (round 13)", "OCH_S2 without its pull-up: armed or disarmed on leakage alone while PGD is high, LATENT (E-12f: TP112 running)"),
     ("C120 open (round 12)", "the bound at 17 us: the crowbar too short to latch the -1: the trip lost, LATENT (E-12f: TP111's pulse)"),
-    ("R143 shorted (round 13)", "OCH_S2 on BRK_VIN: both disarms lost; Q114 at PGD's next fall, D106 and RESET1 at the next trip overstressed (E-12f)"),
+    ("R143 shorted (round 13; consequence, round 14)", "OCH_S2 on BRK_VIN: both disarms lost; at every fall of PGD, the first power-up included,"),
+    ("", "  Q114 turns on across BRK_VIN (its printed 0.115 A and 0.225 W far exceeded): FOUND AT ONCE, WITH DAMAGE; Q114 failing short"),
+    ("", "  ties BRK_VIN to PACK_N upstream of the -1 (only the gauge's short-circuit protection on R10 and F2 end it: the kit dark);"),
+    ("", "  failing open leaves the trip with neither disarm, D106 and RESET1 overstressed at the next trip (E-12f: TP112, breaker off)"),
+    ("R144 shorted (round 14, Q-179's F2)", "OCH_PN on BRK_VIN: D107 across BRK_VIN and PACK_N over its 11.4 V (its printed 0.37 W far exceeded),"),
+    ("", "  Q113 across them whenever PGD is high (0.115 A, 0.225 W far exceeded), Q114's gate at BRK_VIN: FOUND AT ONCE, WITH DAMAGE;"),
+    ("", "  a part failing short ties BRK_VIN to PACK_N upstream of the -1 (the gauge's protection and F2 end it: the kit dark); Q113"),
+    ("", "  failing open leaves Q114 on: the trip never armed, LATENT, as Q114 shorted (E-12f: TP112 while running)"),
     ("D106 shorted (round 13; round 12's 'as drawn' withdrawn)", "OCH_S2 on OCH_R: both disarms still act; while armed a fall of PGD drives the crowbar through Q114 for"),
-    ("", "  the arming delay: one pulse inside E-6b at each breaker turn-off (the line's n < 1000), LATENT (E-12f: TP111 at a turn-off)"),
+    ("", "  the arming delay: one pulse inside E-6b at each breaker turn-off (the line's n < 1000), LATENT (E-12f: TP111 at a turn-off);"),
+    ("", "  round 14 (Q-179's F9): E-12f's interval at most 999 breaker turn-offs after such a short can occur (4k)"),
     ("Q113 shorted, R144 open, D107 shorted, Q114 open (r13)", "the PGD-low disarm lost, LATENT: the crowbar armed through starts (E-12f: TP112 with the breaker off)"),
     ("Q113 open, Q114 shorted (round 13)", "OCH_S2 held low: the trip disarmed, LATENT: as RESET2 stuck low (E-12f: TP112 while running)"),
-    ("D107 open (round 13)", "Q114's gate at BRK_VIN while PGD is low: within 20 V to the pack's 16.8 V, over it only in a clamp surge"),
+    ("D107 open (round 13; round 14, F3)", "Q114's gate at BRK_VIN while PGD is low: within 20 V to the pack's 16.8 V; a clamp surge while"),
+    ("", "  PGD is low takes it to 29.2 V, over its 20 V: its gate may then fail (as its gate shorts below); D107 open itself LATENT (no"),
+    ("", "  test point on OCH_PN): E-12f finds only that consequence (TP112), E-12p (b) reads the gate's level"),
+    ("Q113 gate-drain shorted (round 14, F10)", "BRK_PGD on OCH_PN: PGD low pulls it low (Q114 off: armed through starts); PGD released, Q113"),
+    ("", "  as a diode holds it near its own threshold, so Q114's state and Q106's gating are undetermined on printed figures: the"),
+    ("", "  arming inverted or undetermined, LATENT (E-12f: TP112 with the breaker off reads armed)"),
+    ("Q113 gate-source shorted (round 14, F10)", "BRK_PGD on PACK_N: Q113 off, Q114 on: the trip disarmed, LATENT (E-12f: TP112 while running);"),
+    ("", "  Q106 off: the breaker's restart inhibit reaches UVLO through Q105 on a running breaker at a hot pad (a stop, no protection lowered)"),
+    ("Q114 gate-drain shorted (round 14, F10)", "OCH_S2 on OCH_PN: Q113 holds it low while PGD is high (the trip disarmed while running); with PGD"),
+    ("", "  low Q114 as a diode holds it near its threshold (1 to 2.5 V at 250 uA PRINTED), about or over VITN: armed through starts, LATENT"),
+    ("Q114 gate-source shorted (round 14, F10)", "OCH_PN on PACK_N: Q114 off: the PGD-low disarm lost, LATENT, as Q114 open (E-12f: TP112, breaker off)"),
 )
 
 import apply_pcb_interfaces_guard_allowance as A5   # noqa: E402  Layer 5's text, one source
@@ -1216,10 +1355,11 @@ def rows(R):
         ["D106 (BAT46W), R143 (330 kOhm since round 13), Q113, Q114 (2N7002), R144 (200 kOhm), D107 (BZT52C12; round 13)",
          "held: D106 reverse at most the clamp's 29.2 V against 100 V, forward at most %s uA against 150 mA; R143 %s mW and R144 %s mW at" % (
              fmt(CLAMP / (R143 * 0.99) * 1e6, 0), fmt(CLAMP ** 2 / (R143 * 0.99) * 1e3, 2), fmt(CLAMP ** 2 / (R144 * 0.99) * 1e3, 2)),
-         "  the clamp; Q113 and Q114 VDS at most 29.2 V against 60 V, VGS at most 14.6 V (Q113) and 12.7 V (Q114) against 20 V, Q114 at",
-         "  most %s mA against 115 mA; D107 at most %s uA, %s mW | WITHIN" % (
-             fmt((CLAMP / (R143 * 0.99) + O.IR_D106_HOT) * 1e3, 3), fmt((CLAMP - 11.4) / (R144 * 0.99) * 1e6, 0),
-             fmt((CLAMP - 11.4) / (R144 * 0.99) * 12.7 * 1e3, 2))],
+         "  the clamp; Q113 and Q114 VDS at most 29.2 V against 60 V, VGS at most 14.6 V (Q113) and 12.7 V at 25 C, %s V at the site" % fmt(
+             R["vz_site"], 2),
+         "  (Q114; D107's printed temperature coefficient, round 14) against 20 V, Q114 at most %s mA against 115 mA; D107 at most %s uA," % (
+             fmt((CLAMP / (R143 * 0.99) + O.IR_D106_HOT) * 1e3, 3), fmt((CLAMP - 11.4) / (R144 * 0.99) * 1e6, 0)),
+         "  %s mW | WITHIN" % fmt((CLAMP - 11.4) / (R144 * 0.99) * 12.7 * 1e3, 2)],
         ["R10 (2 mOhm 2512 2 W, the gauge's sense and the trip's)",
          "held: %s W at %s A | the event: the hot-short row's 16.5 us | NOT SHOWN: MISSING its maker's sheet (tolerance, temperature" % (fmt(hi ** 2 * 2e-3, 2), fmt(hi)),
          "  coefficient, derating at the band; E-6); the trip's window holds for R10 within -7.3 to +8.3 %"],
@@ -1300,6 +1440,16 @@ def predicates(R, K):
          R["e_r140"] == R["e_v"] and R["share_worst"] < R["crcw"]["w"][2]),
         ("R13 F7: the continuous-pulse mean condition needs a period longer than a load could make", R["train_need"] > R["train_tmin"]),
         ("R13 F7: the 2512's continuous-pulse line's long end meets its printed 1.5 W", abs(R["cont_w100"] - 1.5) < 0.05),
+        # round 14 (Q-179; no circuit changed)
+        ("R14 F1: on the PGD pin's printed 5 uA the trip is armed from under the pack's least in service", R["v_pgd5"] < PACK_LEAST),
+        ("R14 F1: the provisional choice's pin bound at 7.6 V is under the printed 5 uA (a bound to read, not a printed figure)",
+         0.0 < R["pgd_i_max"] < 5e-6),
+        ("R14 F1: the compared divider (R116, R117 200 kOhm) arms from under the -1's 7.6 V on the printed 5 uA", R["v_pgd5_200k"] < BRK_LEAST_V),
+        ("R14 F5: the reader counts Q114's IGSS: its gate level equals the computed one and stays at or over 5 V",
+         abs(K["levels"]["gate"] - R["g_igss"]) < 1e-9 and R["g_igss"] >= O.VGS_RDS and R["g_igss"] < R["g_no_igss"]),
+        ("R14 F5: on the ASSUMED rule the margin is under 2x to the 5 V row and about 2x to the threshold", 1.0 < R["marg_5v"] < 2.0 and 1.9 < R["marg_vth"] < 2.1),
+        ("R14 F7: D107's bound at the site with its printed temperature coefficient stays under the 2N7002's 20 V", R["vz_site"] < 20.0),
+        ("R14 F8: the trip-asserted level at -20 C lies under 20 % overdrive from VITN's least (the edge named)", (0.792 - K["levels"]["low"]) / 0.792 < 0.20),
     ]
 
 

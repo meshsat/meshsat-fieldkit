@@ -25,7 +25,13 @@ electrical predicate. Changed expectations and their basis (constitution section
 BRK_PGD; R143 now sits on BRK_VIN, so the same three requirements (OCH_S2 under the threshold while the trip asserts, BRK_PGD over
 Q106's threshold, OCH_S2 armed over the release) are asserted on round 13's values, and R143 at 100 kOhm now fails on D106's current
 past its printed 0.1 mA VF row rather than on BRK_PGD, which it no longer touches; E-6b is stated on one basis (the recheck's F3), so
-R140's pulse is the voltage-bound case, larger than round 12's split case."""
+R140's pulse is the voltage-bound case, larger than round 12's split case.
+
+Round 14 (W161, 7 October 2026, after Q-179, W158's one bounded check; NO CIRCUIT CHANGED): the reader counts Q114's own IGSS in its
+gate level (W158's F5), so the gate reads 5.046 V where round 13's reader read 5.062 V: the regression below fails against round 13's
+reader and passes on round 14's; 4k's figures (the provisional choice under 10.16 V, the compared divider, the gate's margins, D107's
+bound at the site, E-12f's interval), 4g's new rows and scope, the start's scope, row (c)'s restated status, page section 16k and the
+README's round 14 paragraph are read; the drafts' values are read unchanged (no circuit moved). No earlier expectation changed."""
 import importlib.util
 import os
 import re
@@ -356,3 +362,53 @@ def t_round13_the_page_section_and_the_readme():
     r13 = [q for q in heads if q.startswith("**ROUND 13")]
     assert r12 and r13 and paras.index(r13[0]) == paras.index(r12[0]) + 1
     assert all(w in r13[0] for w in ("DONE", "NOT DONE", "NEXT"))
+
+
+def t_round14_the_reader_counts_q114s_igss_and_the_record_answers_q179():
+    O = _O()
+    base = {"R135": "1k", "C117": "10n 50V C0G (SENSE1's filter)", "C119": "4.7n 50V C0G 5%", "C120": "22n 50V C0G 5%", "R143": "330k 1%",
+            "R144": "200k 1%"}
+    nl = {"comps": {k: {"value": v} for k, v in base.items()}, "pins": {}, "on": {}}
+    b = O.bound_levels(nl)
+    g_r13 = 7.6 - 200e3 * 1.01 * (O.IDSS_HOT + O.IR_ZENER_HOT)                  # round 13's reader, IGSS left out
+    g_r14 = 7.6 - 200e3 * 1.01 * (O.IDSS_HOT + O.IR_ZENER_HOT + O.IGSS)
+    assert abs(b["gate"] - g_r14) < 1e-9 and b["gate"] < g_r13 and b["gate"] >= O.VGS_RDS, (b["gate"], g_r13)
+    assert abs(g_r13 - 5.062) < 0.001 and abs(b["gate"] - 5.046) < 0.001
+    R, K = _R()
+    assert abs(K["levels"]["gate"] - R["g_igss"]) < 1e-9 and K["och"][0] == "DRAWN" and len(K["muts"]) == 21
+    assert all(v == "FAIL" for _n, v, _w in K["muts"])
+    assert 1.0 < R["marg_5v"] < 1.05 and 1.95 < R["marg_vth"] < 2.05, (R["marg_5v"], R["marg_vth"])
+    assert abs(R["v_pgd5"] - 10.16) < 0.005 and R["v_pgd5"] < 10.6 and abs(R["pgd_i_max"] - 2.44e-6) < 0.005e-6
+    assert abs(R["v_pgd5_200k"] - 6.03) < 0.01 and R["v_pgd5_200k"] < 7.6
+    assert abs(R["div_add_run"] - 33.6e-6) < 0.1e-6 and abs(R["div_add_low"] - 66.6e-6) < 0.1e-6
+    assert abs(R["vz_site"] - 13.3125) < 1e-9 and R["e12f_turnoffs"] == 999 and (0.792 - K["levels"]["low"]) / 0.792 < 0.20
+    out = open(OUT, encoding="utf-8").read()
+    for s_ in ("4k. ROUND 14", "THE BOUNDED PROVISIONAL CHOICE (SESSION L8P-R14-D1)", "E-12p", "COMPARED ALTERNATIVE, NOT ADOPTED",
+               "R144 shorted (round 14", "Q113 gate-drain shorted", "Q113 gate-source shorted", "Q114 gate-drain shorted",
+               "Q114 gate-source shorted", "4g's scope (round 14", "record l9stk's IF-1", "POWER-ON START only", "at a DOCKING", "13.31 V",
+               "999 breaker turn-offs", "ROW (C) AS A WHOLE", "HO-L stays OPEN on E-05", "reads NOT MET on its latent-failure clause",
+               "2.44 uA", "6.03 V", "33.6 uA", "66.6 uA", "5.046 V", "1.018x", "2.00x", "19.2 %"):
+        assert s_ in out, s_
+    page = open(PAGE, encoding="utf-8").read()
+    assert "#### 16k. Round 14" in page
+    sec = page.split("#### 16k. Round 14")[1]
+    for s_ in ("2.44 uA", "10.16 V", "6.03 V", "33.6 uA", "66.6 uA", "5.046 V", "1.018x", "2.00x", "13.31 V", "19.2 %", "999", "IF-1",
+               "E-12p", "NOT ADOPTED", "SUPPORTED AS", "NOT MET", "HO-L stays OPEN on E-05", "no verdict upgraded", "NO circuit"):
+        assert s_ in sec, s_
+    docs = yaml.safe_load(re.search(r"```yaml\n(.*?)```", sec, re.S).group(1))
+    assert [d["id"] for d in docs] == ["L8P-R14-D1", "L8P-R14-D2", "L8P-R14-D3"], docs
+    for dct in docs:
+        for k in ("id", "title", "authority", "authority_why", "ruled_by", "ruled_on", "reversed_by", "outcome"):
+            assert k in dct and str(dct[k]).strip(), (dct.get("id"), k)
+        assert dct["authority"] == "SESSION"
+    # no circuit moved: the drafts keep the values the provisional choices stand on
+    draft = open(DRAFT, encoding="utf-8").read()
+    brk = open(os.path.join(REC, "apply_gen_sch_p_breaker.py"), encoding="utf-8").read()
+    assert 'r("R144", "200k 1%", "BRK_VIN", "OCH_PN")' in draft and 'r("R143", "330k 1%", "BRK_VIN", "OCH_S2")' in draft
+    assert 'r("R116", "1M", "BRK_VIN", "BRK_PGD"); r("R117", "1M", "BRK_PGD", "PACK_N")' in brk
+    paras = open(README, encoding="utf-8").read().split("\n\n")
+    heads = [q for q in paras if q.startswith("**ROUND 1")]
+    r13 = [q for q in heads if q.startswith("**ROUND 13")]
+    r14 = [q for q in heads if q.startswith("**ROUND 14")]
+    assert r13 and r14 and paras.index(r14[0]) == paras.index(r13[0]) + 1
+    assert all(w in r14[0] for w in ("DONE", "NOT DONE", "NEXT"))

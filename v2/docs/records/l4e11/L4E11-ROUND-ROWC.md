@@ -93,3 +93,25 @@ its replay as reproduced. What it found that reaches this record:
   option (S2) stays visible (round FET).
 
 Nothing here is verified, built or measured; UNVERIFIED until the targeted recheck (L4A-69).
+
+## 6. After the targeted recheck and Q-179 (W161, 7 October 2026, with record l8p's rounds 13 and 14; [ROWC 1])
+
+The targeted recheck (W153, `_runs/claude/w153rechkrowc/REPORT-FULL-AS-RECEIVED.md`) read row (c) as SUPPORTED AS CONDITIONAL and this
+record's replay as reproduced; record l8p's round 13 redrew the trip's PGD-low disarm, and Q-179 (W158,
+`_runs/claude/w158chkr13/REPORT-FULL-AS-RECEIVED.md`), the one bounded check of that redraw, read it SUPPORTED AS CONDITIONAL. Both are
+AI reviews. What reaches this record:
+
+- **The trip's nets.** Since record l8p's round 13 R143 runs from BRK_VIN, and Q113's gate is the trip's only part on BRK_PGD (Q113,
+  Q114, R144, D107 and the net OCH_PN added). Still nothing on DOCK_EN_OUT, DOCK_EN_RET, BRK_UVLO, BRK_H, BRK_HD or BRK_G2
+  (`check_l8p_och.py`'s APART), so section 28 and 20f are unchanged. The trip has fifteen nets ([ROWC 1] reads "and 11 more"); section
+  5's "fourteen" and "R143 from BRK_PGD" are round 12's and stand as its history; [ROWC 1] and [ROWC 5] now name both rounds.
+- **Row (c)'s status, restated (record l8p 16k and `l8p_cprot.out` section 8; no verdict upgraded).** Row (c) as a whole is SUPPORTED
+  AS CONDITIONAL and no cx46 item closes unconditionally. W147's conditions: E-05, E11-29, E11-36 and E-9 (RE-10, HO-A by M-A, the
+  battery FETs), RE-9's two apply scripts applied by their owners, E-6, E-6b, E-12f and E-10 (the trip). W153's: E11-29u, E-6b as
+  restated, E-12s, Q111's SOA with a source, the PGD-low disarm's correction and L8P-R12-F1 (OPEN). W158's: the gate's hot leakage on
+  the ASSUMED doubling rule (1.018x to the printed 5 V row), the trip between BRK_VIN 7.6 and 10.16 V PROVISIONAL on the PGD pin's
+  leakage (E-12p), the start service on record l9stk's IF-1 for a power-on start (a docking not bounded), and 4g completed (record l8p
+  round 14). L8P-R11-F1 stays OPEN; its stretch of DD-7's timeline (section 5, 2.55 s) is unchanged by rounds 13 and 14. L4A-67's
+  acceptance reads NOT MET on its latent-failure clause (REMAINING ENGINEERING). HO-L stays OPEN on E-05 (round FET).
+
+Nothing here is verified, built or measured. No further check is due under constitution section 6 without a changed design.
