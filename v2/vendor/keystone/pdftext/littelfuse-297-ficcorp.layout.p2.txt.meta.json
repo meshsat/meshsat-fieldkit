@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 2 -l 2 v2/vendor/keystone/littelfuse-297-ficcorp.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "2",
+  "-l",
+  "2"
+ ],
+ "pdf": "v2/vendor/keystone/littelfuse-297-ficcorp.pdf",
+ "pdf_sha256": "98a7e99bc5bbdf2abc9f329de5b779ea97fc78a3ba9aa8d8fecc0ec5b9c3a778",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/keystone/pdftext/littelfuse-297-ficcorp.layout.p2.txt",
+ "text_bytes": 1532,
+ "text_sha256": "04d3562ec8909329412707979385e93bd31f96184ecdb873ff7156f0dbf16280"
+}

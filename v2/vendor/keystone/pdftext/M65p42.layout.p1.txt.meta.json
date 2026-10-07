@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 1 -l 1 v2/vendor/keystone/M65p42.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "1",
+  "-l",
+  "1"
+ ],
+ "pdf": "v2/vendor/keystone/M65p42.pdf",
+ "pdf_sha256": "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/keystone/pdftext/M65p42.layout.p1.txt",
+ "text_bytes": 23184,
+ "text_sha256": "e9582864633e9e94e535c3ca0869147977c3ea0454c1a825ce7cbe0e925f14fc"
+}

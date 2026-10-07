@@ -276,6 +276,9 @@ def t_the_retake_writes_the_text_and_its_sidecar_for_a_fixture_pdf():
 # (pdftotext, the page cited)" (the text it reads was taken by pdftotext) is not read as a command.
 TOKEN = re.compile(r"[\s;&|()`$<>=\"']+")
 PDFTOCAIRO_SITES = {"l4e9/l4e9_power_path.py": 1, "l4e11/l4e11_power.py": 3}   # W36 F-P1: l4e9:2541; l4e11:348, :930, :1778 at 6dc69ad2
+# set 33 (the coordinator, 7 October 2026): row (c)'s l8p_rowc.py reads two plotted figures as vector paths (BUK6Y10-30P Fig. 4 and
+# Littelfuse 297 page 2, svg_paths()), the class of l4e9's and l4e11's sites, at one call site; its page texts are converted
+PDFTOCAIRO_SITES["l8p/l8p_rowc.py"] = 1
 # record modules a converted generator reaches by path that still run pdftotext themselves, each with its reason (W36 F-R1; inventory
 # section 5): the l4e7 KEY group, not converted because its KEY records the host's pdftotext and these sources are pinned by sha
 KNOWN = {

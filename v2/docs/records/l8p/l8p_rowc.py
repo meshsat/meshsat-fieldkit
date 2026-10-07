@@ -31,6 +31,7 @@ Run from anywhere:  python3 v2/docs/records/l8p/l8p_rowc.py   (l8p_rowc.out is i
 Exit 0: printed, whatever the verdicts; 3: refused (an input missing, a sha256 that differs, a printed row not found on its page, a
 guard tripped)."""
 import hashlib
+import importlib.util
 import math
 import os
 import re
@@ -97,6 +98,24 @@ DOCS = {
             "3ecc2424acfa1753c2aec0b62d5706d4f25b7a08e731795c0d84d59938a3158e", "Eaton SCF9550 data sheet ELX1135"),
 }
 
+# the page texts this script reads, from their committed extractions (taken by v2/docs/records/_lib/retake_pdf_text.py
+# v2/docs/records/l8p; a held-back sheet's text is held back with it); the coordinator's conversion in set 33's integration
+PDFTEXT = {
+    "v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf": [["-layout", "-f", "1", "-l", "1"]],
+    "v2/vendor/battery/amass-xt60-spec-tme.pdf": [["-layout", "-f", "1", "-l", "1"]],
+    "v2/vendor/battery/eaton-scf9550-elx1135.pdf": [["-layout", "-f", "2", "-l", "2"], ["-layout", "-f", "4", "-l", "4"]],
+    "v2/vendor/battery/ti-csd17570q5b.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "3", "-l", "3"]],
+    "v2/vendor/battery/ti-csd18510q5b.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "3", "-l", "3"]],
+    "v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf": [["-layout", "-f", "1", "-l", "1"]],
+    "v2/vendor/keystone/M65p42.pdf": [["-layout", "-f", "1", "-l", "1"]],
+    "v2/vendor/keystone/littelfuse-297-ficcorp.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "2", "-l", "2"]],
+    "v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf": [["-layout", "-f", "3", "-l", "3"], ["-layout", "-f", "5", "-l", "5"], ["-layout", "-f", "6", "-l", "6"]],
+    "v2/vendor/passives/held/rohm-gmr100hj-rev006e-2026-03-05.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "2", "-l", "2"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
+
 # ---------------------------------------------------------------- the readings of the makers' drawings (READING, vector paths)
 # BUK6Y10-30P Fig. 4 (page 5), in the page coordinates pdftocairo's SVG gives: the decade grid lines (each read back below), and the
 # eight curves' order by their start, top to bottom, against the figure's own labels (duty cycle = 1, 0.70, 0.50, 0.30, 0.10, 0.05,
@@ -149,10 +168,13 @@ def doc(key):
 
 
 def pdftext(key, page):
-    r = subprocess.run(["pdftotext", "-layout", "-f", str(page), "-l", str(page), doc(key), "-"], capture_output=True)
-    if r.returncode != 0:
-        refuse("pdftotext failed on %s page %d" % (DOCS[key][0], page))
-    return r.stdout.decode("utf-8", "replace")
+    """One page's committed extraction (-layout -f N -l N; _lib/pdftext.py, set 32's conversion, W34: the bytes pdftotext printed at the
+    re-take); the sheet's presence and pin are checked first, as before."""
+    doc(key)
+    try:
+        return PT.pdf_text(ROOT, DOCS[key][0], ["-layout", "-f", str(page), "-l", str(page)], PDFTEXT, "v2/docs/records/l8p")
+    except SystemExit as e:
+        refuse("the extracted text of %s page %d (exit %s; the reason is on stderr)" % (DOCS[key][0], page, e.code))
 
 
 def row(key, page, *tokens):

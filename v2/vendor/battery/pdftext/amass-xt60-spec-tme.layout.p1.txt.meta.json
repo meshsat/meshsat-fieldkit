@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 1 -l 1 v2/vendor/battery/amass-xt60-spec-tme.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "1",
+  "-l",
+  "1"
+ ],
+ "pdf": "v2/vendor/battery/amass-xt60-spec-tme.pdf",
+ "pdf_sha256": "c2cbb5962c1f37da89e76e505c75184dd07e84eec3a6fe5f24569dafc6f6b9e9",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/amass-xt60-spec-tme.layout.p1.txt",
+ "text_bytes": 1899,
+ "text_sha256": "5451ec1a5b91edcbc38f17b375ab550049ef1b15b98066602e0ef46502ede0b5"
+}

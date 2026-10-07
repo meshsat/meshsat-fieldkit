@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 1 -l 1 v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "1",
+  "-l",
+  "1"
+ ],
+ "pdf": "v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf",
+ "pdf_sha256": "8ef40cd98d95c653ce506a1af457656b287a475342684ac110cf594f923782d6",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/connectors/pdftext/millmax-rugged-power-spring-pins-page28.layout.p1.txt",
+ "text_bytes": 1836,
+ "text_sha256": "7361c2a800505baa7ad5d8e7e5e39b887ef428df78153f2b2232f38272f36e0e"
+}

@@ -76,6 +76,38 @@ DOCS = [
     ("v2/vendor/passives/held/moolee-hollr2512-ho-a0-2022-01-06.pdf",
      "https://datasheet.lcsc.com/datasheet/pdf/a6c04b348627a06d1c2e9d73fb46c6ff.pdf?productCode=C2985708",
      "5dac9ede82062791abe6128aa7cad87c1422993820fbd21efa33dbea2ce04005"),
+    # record l8p's row (c) script (l8p_rowc.py): ROHM's GMR100 HJ sheet its PDFTEXT declares, also fetched by
+    # l8p/fetch_held_back_rowc.py; listed here and not in l8p/fetch_held_back.py, whose digest l8p_drafts.out pins (the coordinator,
+    # set 33's integration, 7 October 2026: the extraction helper's FETCH map reads this script's list)
+    ("v2/vendor/passives/held/rohm-gmr100hj-rev006e-2026-03-05.pdf",
+     "https://fscdn.rohm.com/en/products/databook/datasheet/passive/resistor/chip_resistor/gmr100-e.pdf",
+     "3b5ac7258851583c154cc33c7ec7b8be4768702f633402ab72341c42ca525266"),
+    # record l4e11's round FET (l4e11_fet.py): the text sheets its PDFTEXT declares, also fetched by fetch_held_back_fet.py (the
+    # coordinator, set 33's integration, 7 October 2026: the extraction helper's FETCH map reads this script's list)
+    ("v2/vendor/power/held/vishay-sqja37ep-75171-revb.pdf",
+     "https://www.vishay.com/docs/75171/sqja37ep.pdf",
+     "6a723edefaa97d2049c9746296b3d74eba826a2f6f5bdd1325892c2bd03f5668"),
+    ("v2/vendor/power/held/vishay-sqjq131el-77936-reva.pdf",
+     "https://www.vishay.com/docs/77936/sqjq131el.pdf",
+     "d5dd14f0499cbfb3f6287b0d6adca930e7fb10cdc882e90a579afa74eeabbbeb"),
+    ("v2/vendor/power/held/vishay-sqs407enw-76627-reva.pdf",
+     "https://www.vishay.com/docs/76627/sqs407enw.pdf",
+     "1970576e979a94559427babe70aac12d0817db1b43cfe6fda23f8ed3b91ef378"),
+    ("v2/vendor/power/held/vishay-sqs415enw-77427-revc.pdf",
+     "https://www.vishay.com/docs/77427/sqs415enw.pdf",
+     "3d777ff9639c8c9efd8b4f2b98c0feb00289da487d20e4f5d4323dd4a797731b"),
+    ("v2/vendor/power/held/vishay-sqs401en-65529-revd.pdf",
+     "https://www.vishay.com/docs/65529/sqs401en.pdf",
+     "385fae910ca444d9d219eeeebe52b11e94d5c3e66e303f1c432e6004c4fafa6f"),
+    ("v2/vendor/power/held/infineon-ipd042p03l3-g-rev2.2-2014-05-16.pdf",
+     "https://www.infineon.com/assets/row/public/documents/24/49/infineon-ipd042p03l3-g-datasheet-en.pdf",
+     "8dbb10cfa21baa671bc6b86e8718bc2c40606504fca7d24e8a21ac11a8d414d1"),
+    ("v2/vendor/power/held/infineon-bso301sp-h-rev1.32-2010-05-12.pdf",
+     "https://www.infineon.com/assets/row/public/documents/24/49/infineon-bso301sp-h-datasheet-en.pdf",
+     "f391eea4f0ea21cb1c2970fc544a1a5fdd7ea8b4fae35e3b2193c1a4f49044dc"),
+    ("v2/vendor/power/held/infineon-bsz086p03ns3-g-rev2.4-2019-12-03.pdf",
+     "https://www.infineon.com/assets/row/public/documents/24/49/infineon-bsz086p03ns3-g-datasheet-en.pdf",
+     "1e67b3366caacf20bf990e5238cd3b7d963a1276d6f97b69f79a658513f2a6a2"),
 ]
 
 

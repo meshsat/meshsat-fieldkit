@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 4 -l 4 v2/vendor/battery/eaton-scf9550-elx1135.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "4",
+  "-l",
+  "4"
+ ],
+ "pdf": "v2/vendor/battery/eaton-scf9550-elx1135.pdf",
+ "pdf_sha256": "3ecc2424acfa1753c2aec0b62d5706d4f25b7a08e731795c0d84d59938a3158e",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/eaton-scf9550-elx1135.layout.p4.txt",
+ "text_bytes": 2520,
+ "text_sha256": "6625addc6d189544d9650e34fd76464ccc9e7e4048f4ac7286ce1b940c5f96aa"
+}
