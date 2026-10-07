@@ -32,3 +32,9 @@ fetched: v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf | https://www.ti.com/lit/ds/s
   2644509 bytes | sha256 cc65714774e50c97dca9a1bf094489b17350cc70fa16068880e108e320f8a6ea | TI SBVS249B, revised November 2020: held
   back as the project holds its other TI sheets (no redistribution grant read); v2/docs/records/l9t5hoe/fetch_held_back.py fetches and
   checks it (a folder of its own: l9t5's fetch script is pinned by l9t5_a1.py and l9t5_f01.py, SESSION W148-4)
+
+l4reg-l4reg_compare-d6c7e771.out sha256 d6c7e771a97eadb6f9e6432811fbcb6fdc6a3a5666e40d49e2959048300ff08b
+  record l4reg's output as row (b)'s composite carries it (fnd/l4hod 23384006, W159's round 11, read by row (b)'s targeted recheck
+  Q-183; v2/docs/records/l4reg/l4reg_compare.out, last changed there by 8b75762a): the limiter's band on W159's envelope of the tested
+  row and TI's Equation 1, IOS 0.4702 to 0.5878 A (SESSION W159-D2). Copied byte for byte by W167 on 7 October 2026 (W163-N4) so that
+  l9t5_hoe.py reads the current band from its own tree; the 9fbda7a6 copy above stays as filed (its 0.5704 A is W138's tested row).

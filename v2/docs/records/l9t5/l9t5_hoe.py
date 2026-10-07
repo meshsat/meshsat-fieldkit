@@ -90,6 +90,7 @@ DOCS = {"draft": REC + "/apply_gen_sch_b_vcoremon.py", "guard": REC + "/apply_ge
         "cx46": "v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md", "trace": "v2/docs/REQUIREMENTS-TRACE.md",
         "ioha": "v2/docs/ARCH-PCB-B-IOHA.md",
         "l4reg": REC + "/inputs/l4reg-L4REG-3b6eb8be.md", "l4regout": REC + "/inputs/l4reg-l4reg_compare-9fbda7a6.out",
+        "l4regenv": REC + "/inputs/l4reg-l4reg_compare-d6c7e771.out",   # W167 on W163-N4: the band on W159's envelope (fnd/l4hod 23384006)
         "regstage": REC + "/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py", "round6": REC + "/inputs/l4canmb-T10-ROUND6-0a94dd2c.md",
         "canmb": REC + "/inputs/l4canmb-apply_gen_sch_b_canmb-8fb8815a.py", "sources": REC + "/inputs/SOURCES-HOE.txt",
         "u23": "v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py", "u24": "v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py",
@@ -686,7 +687,7 @@ def main():
     # ---------------------------------------------------------------- 1. inputs
     w("1. INPUTS, pinned by sha256")
     pins = [RM, DS, AN, TPS, TPS38, TPS3703, ES, "v2/docs/records/l9t5hoe/fetch_held_back.py"] + [DOCS[k] for k in ("draft", "guard", "drafts", "t10out", "t10py", "gen_b", "gennet", "ledger", "cx46", "l4reg",
-                                                         "l4regout", "regstage", "round6", "canmb", "sources", "u23", "u24", "contract",
+                                                         "l4regout", "l4regenv", "regstage", "round6", "canmb", "sources", "u23", "u24", "contract",
                                                          "cdraft", "ct10")]
     for rel in pins:
         w("   %s %s" % (sha(rel), rel))
@@ -695,10 +696,10 @@ def main():
             refuse("%s is absent; %s" % (tp, PDFT.retake_command(REC)))
         w("   %s %s" % (h[:16], tp))
     named = dict(re.findall(r"^(\S+) sha256 ([0-9a-f]{64})$", text(DOCS["sources"]), re.M))
-    copies = [DOCS[k] for k in ("l4reg", "l4regout", "regstage", "round6", "canmb")]
+    copies = [DOCS[k] for k in ("l4reg", "l4regout", "l4regenv", "regstage", "round6", "canmb")]
     copies_ok = sorted(named) == sorted(os.path.basename(c) for c in copies) and all(
         hashlib.sha256(open(os.path.join(ROOT, c), "rb").read()).hexdigest() == named[os.path.basename(c)] for c in copies)
-    w("   the five copies from W137's and W138's branches equal the sha256 inputs/SOURCES-HOE.txt names: %s" % ("yes" if copies_ok else "NO"))
+    w("   the six copies from W137's, W138's and row (b)'s branches equal the sha256 inputs/SOURCES-HOE.txt names: %s" % ("yes" if copies_ok else "NO"))
     w("")
     # ---------------------------------------------------------------- 2. the failed case
     air = float(need(t10, r"THE JUNCTION TEMPERATURE at L4-E12's inside air, ([\d.]+) C", "T10's inside air").group(1))
@@ -712,7 +713,12 @@ def main():
     cx = text(DOCS["cx46"])
     need(cx, r"the MCU reaches its 105 C VOS0 PRINTED LIMIT at approximately 0\.1936 A, MODEL, below the trip band", "cx46 finding 17")
     m = need(reg, r"TPS2553-1 at 49\.9 kOhm IOS ([\d.]+) to ([\d.]+) A", "W138's limiter band (l4reg_compare.out)")
+    ios_w138 = (float(m.group(1)), float(m.group(2)))
+    # W167 on W163-N4: the band this record uses is W159's envelope (SESSION W159-D2), read from row (b)'s composite's l4reg output
+    m = need(text(DOCS["l4regenv"]), r"RILIM 49\.9 kOhm 1 %: IOS ([\d.]+) to ([\d.]+) A \(MODEL: the PRINTED row", "the limiter's band on W159's envelope")
     ios = (float(m.group(1)), float(m.group(2)))
+    if abs(ios[0] - ios_w138[0]) > 1e-9 or ios[1] < ios_w138[1]:
+        refuse("the envelope %.4f to %.4f A does not contain W138's band %.4f to %.4f A" % (ios + ios_w138))
     need(text(DOCS["l4reg"]), r"L4REG-F7\*\* \(L4A-59, HO-E\): round 6's rail trip held each controller's average", "W138's finding L4REG-F7")
     if abs(F["ja"]["LQFP100"] - th) > 1e-9:
         refuse("T10's LQFP100 theta %.1f is not DS12110 Rev 11 Table 222's %.1f" % (th, F["ja"]["LQFP100"]))
@@ -737,7 +743,8 @@ def main():
     w("     peripherals disabled: none at or under 105 C (the least excess over the column's own TJ +%.1f K; %.1f C at the 105 C column)" % ops["dis"])
     w("     peripherals enabled:  none at or under 105 C (the least excess +%.1f K; %.1f C at the 105 C column)" % ops["en"])
     w("   the protection now: W138's selection (record l4reg, SESSION W138-1, filed in inputs/) puts a TPS2553-1 ahead of each supervisor's")
-    w("     regulator with IOS %.4f to %.4f A and removes round 6's rail trip (W138-2); its finding L4REG-F7 hands the controller's protection" % ios)
+    w("     regulator with IOS %.4f to %.4f A (W159's envelope of TI's tested row and its Equation 1, record l4reg at fnd/l4hod 23384006, filed" % ios)
+    w("     in inputs/; W138's tested row gave %.4f to %.4f A; W167 on W163-N4) and removes round 6's rail trip (W138-2); its finding L4REG-F7 hands the controller's protection" % ios_w138)
     w("     to this task. At %.4f A (all of it in the controller, the brief's convention) the junction would read %.1f C; the controller's own" % (ios[1], tj_at(ios[1])))
     w("     VOS0 maximum at 105 C, %.3f A, lies inside the limiter's band, so whether the limiter ever acts on a VOS0 state is not printed," % F["vos0_en"][3])
     w("     and from %.4f A to the band's bottom it never does" % i105)
@@ -1750,7 +1757,7 @@ def main():
     sk = [r for r in S if r[0] == "S-k"][0]
     sm = [r for r in S if r[0] == "S-m"][0]
     pt0 = loop_point(0.0)
-    P = [("the five filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it)", copies_ok),
+    P = [("the six filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it)", copies_ok),
          ("every quoted sentence of H-1 is in its pinned text, with its page", True),
          ("no option-byte field of FLASH_OPTSR_PRG and no PWR pin of Table 32 selects a voltage scale or the supply configuration", not vos_like and not pin_scale),
          ("T10's 0.1936 A and 112.7 C are reproduced from T10's own air and theta", abs(i105 - i105_t10) < 5e-5 and abs(tj_at(i_trip) - tj_t10) < 0.05),
