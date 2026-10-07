@@ -529,12 +529,12 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   `_runs/int31/cache_commit.sh` before their reuse (W43's README section 3); the KEY check's swap (`l4e7_key_check.py.new`).
 - **W73's two findings on the chain, answered by W66** (W75's F1): the re-key's box label (section 3c); and the deferral counts of this
   record's files, which `placeholders-deferred.tsv` typed at W44's revision: its two RECORD-DRAFT rows now carry "*", recounted from
-  the file at every run, `<worktrees>/_runs/int32/placeholders-deferred.tsv` `count recounted from the file since W66, 6 October 2026: never typed; W73 found 2 at ab0cdd9e where this row typed 4`,
-  by the checker's rule `<worktrees>/_runs/int32/placeholders_check.py:10` `their count field is "*": RECOUNTED from the file at every run, never typed`.
+  the file at every run, `<worktrees>/_runs/int32/placeholders-deferred.tsv.pre-swap1247` `count recounted from the file since W66, 6 October 2026: never typed; W73 found 2 at ab0cdd9e where this row typed 4`,
+  by the checker's rule `<worktrees>/_runs/int32/placeholders_check.py.pre-swap1247:10` `their count field is "*": RECOUNTED from the file at every run, never typed`.
   The row for `test_res32.py` stays typed (1, TEST-PREDICATE), and this revision keeps the candidate's token once in that file, twice in
   `RESULT.md` and once in `CLASSIFICATION.md` (W78's count with `grep -c` before its commit), the name INTEGRATED as a token nowhere.
   W75's residual on the CLASSIFICATION row's reason (its check 4: rows 15 to 17, row 33 since W73) was answered by W66 at 21:06 (the
-  file's time, read by W78 at 21:16, the newest): `<worktrees>/_runs/int32/placeholders-deferred.tsv` `(rows 15 to 17 at 838fd265; row 33 at ab0cdd9e, W75's read)`;
+  file's time, read by W78 at 21:16, the newest): `<worktrees>/_runs/int32/placeholders-deferred.tsv.pre-swap1247` `(rows 15 to 17 at 838fd265; row 33 at ab0cdd9e, W75's read)`;
   row 33 is still the one row carrying the candidate's token after W78.
 - **The fill tool for set 32** (W73's third finding, W75's F11) exists since 20:59 CEST: `<worktrees>/_bin/fill_res.py --set 32`
   (W76) lists `v2/docs/records/int32/RESULT.md` and `CLASSIFICATION.md` and fills the same five tokens; `test_res32` reads its pattern
