@@ -41,27 +41,3 @@ cases-cdev-rev2-20261005.md sha256 85156e936ce21bcce6dc372ebdc70fcc16e47bb3fb733
   b2dfb4a643f9f99741d7027dd1fca4f4632d68b639ab21b66685b19c684a6104), copied verbatim with its 16:25 CEST clarification, 5 October
   2026, by Slot C's T10 round 5 (fnd/p0t10 ed021fac); the whole file at that sha is record l8r2's
   inputs/coordinator-cases-2026-10-05-cdev-rev2.md. Read by l9t5_t10.py; the case row is the coordinator's.
-
-Inputs filed by W140 on 7 October 2026 (Layer 4 task L4A-59, HO-E's comparison, branch fnd/l4hoe from 06d064ff), each byte for byte
-from a commit on another branch, read here as text only:
-
-l4reg-L4REG-3b6eb8be.md sha256 3b6eb8be505a5c85102aba8e69065f4706a1e6524da4b52259c67b9a8c500585
-  record l4reg's page as W138 committed it (fnd/l4reg 86dbcdff, v2/docs/records/l4reg/L4REG.md): the selection SESSION W138-1
-  (TPS2553-1 at RILIM 49.9 kOhm, IOS 0.4702 to 0.5704 A, with TPS73733DCQRM3, 76.0 C/W), the rail trip removed (W138-2) and finding
-  L4REG-F7 handing the controller's protection to L4A-59; read by W140 for HO-E (L4A-59), not merged.
-
-l4reg-l4reg_compare-9fbda7a6.out sha256 9fbda7a6e79430c2aea3986a3f20b256084b9d5d8f82f65072bf5ce16689ad7a
-  record l4reg's output as W138 committed it (fnd/l4reg 86dbcdff, v2/docs/records/l4reg/l4reg_compare.out): the limiter's band
-  and the regulators' printed theta, the figures HO-E's acceptance reads (L4A-59, W140).
-
-l4reg-apply_gen_sch_b_regstage-469594bb.py sha256 469594bb5b4fa6be16a3e313761a7d822c6bc8d427ef0894d15c219d0f54cbea
-  W138's draft as committed (fnd/l4reg 86dbcdff, v2/docs/records/l9t5/apply_gen_sch_b_regstage.py), byte for byte; W140 composes
-  its own draft with it on scratch copies to show the two share no designator or net edit (never applied).
-
-l4canmb-T10-ROUND6-0a94dd2c.md sha256 0a94dd2c444e2b89d580bbe80f98ce6a8c81a66b53b38c2e639c8e0436b89b6e
-  W137's round 7 page as committed (fnd/l4canmb 0d079eaf, v2/docs/records/l9t5/T10-ROUND6.md): the peers' TXD observation and 2-of-2
-  SHDN vote (method M-B), read by W140 for H-2's peers path (L4A-59).
-
-l4canmb-apply_gen_sch_b_canmb-8fb8815a.py sha256 8fb8815ac815d870826bab86c18ae6fd6e198de9d533cc1be80339d94f6f68f3
-  W137's draft as committed (fnd/l4canmb 0d079eaf, v2/docs/records/l9t5/apply_gen_sch_b_canmb.py), byte for byte; composed by W140
-  with its own draft on scratch copies only (never applied).
