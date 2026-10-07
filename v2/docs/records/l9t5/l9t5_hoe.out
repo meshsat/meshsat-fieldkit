@@ -22,6 +22,7 @@ printed thermal resistances, never a measured temperature
    469594bb5b4fa6be v2/docs/records/l9t5/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py
    0a94dd2c444e2b89 v2/docs/records/l9t5/inputs/l4canmb-T10-ROUND6-0a94dd2c.md
    8fb8815ac815d870 v2/docs/records/l9t5/inputs/l4canmb-apply_gen_sch_b_canmb-8fb8815a.py
+   bdabec47041fc99b v2/docs/records/l9t5/inputs/SOURCES-HOE.txt
    cf216d4c1162798b v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py
    ea3b0cb6d96b12b9 v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py
    c2dd2d711142bb57 v2/vendor/st/pdftext/st-an4938-rev7.layout.p10.txt
@@ -41,6 +42,7 @@ printed thermal resistances, never a measured temperature
    127ce3e43e52f0ca v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p248.txt
    bacf4b71a3afaebc v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p29.txt
    0667290f86625994 v2/vendor/ti/pdftext/ti-tps37-snvsbj1e.layout.txt
+   the five copies from W137's and W138's branches equal the sha256 inputs/SOURCES-HOE.txt names: yes
 
 2. THE FAILED CASE, REPRODUCED, AND WHAT THE PROTECTION NOW ADMITS
    T10 10j (c) and (e) (record l9t5, l9t5_t10.out): 'VOS0 under the trip takes the controller past its own 105 C VOS0 limit from 0.1936 A',
@@ -49,7 +51,7 @@ printed thermal resistances, never a measured temperature
      Table 222, p.344) at 3.3 V: 105 C at 0.1936 A; 112.7 C at 0.2452 A (the removed rail trip's average maximum)
    the 105 C itself: DS12110 Rev 11 Table 112 note 5, p.210: "5. TJMax = 105 °C.", on the VOS0 rows; Table 113, p.210: VOS0 LDO, Max TJ 105 C,
      480 MHz, VDDLDO from 1.7 V; VOS1 to VOS3: 125 C. Table 111 (absolute maximum ratings), p.208: TJ 125 C
-   the VOS0 rows ST prints (Table 119, p.215, revision V, LDO ON, maxima 'Guaranteed by characterization results'; mA):
+   the VOS0 rows ST prints (Table 119, p.215, revision V, LDO ON, the maxima by characterization, its note 2; mA):
      480 MHz, all peripherals disabled    typ 148 (TYPICAL)   max 226 / 307 / 390 at TJ 25 / 85 / 105 C (PRINTED)
      480 MHz, all peripherals enabled     typ 226 (TYPICAL)   max 348 / 439 / 550 at TJ 25 / 85 / 105 C (PRINTED)
    the operating point on the printed maxima (TJ = air + theta x VDD x Imax(TJ), linear between the printed columns; MODEL):
@@ -148,6 +150,9 @@ printed thermal resistances, never a measured temperature
        so every VCAP in VOS3's printed band leaves the monitor released (1.0969 V over 1.05 V), and every VCAP in VOS1's or VOS0's band
        trips it (1.1303 V under 1.15 V): any VOS1 entry, and so any VOS0 entry (RM0433 p.280's note), resets the controller to VOS3
        (p.279). VOS2's band (1.05 to 1.15 V) straddles the trip: a VOS2 entry is caught only above 1.1303 V (section 6, S-f)
+       the reset state the ending relies on: "When a system reset occurs, the voltage regulator is enabled and supplies VCORE." (RM0433 p.263); PWR_D3CR "Reset value: 0x0000 4000 (Following reset VOSRDY will be read 1 by software)." (p.309: VOS = 01, Scale 3);
+       SYSCFG_PWRCR "Reset Value: 0x0000 0000" (p.560: ODEN = 0). The manual does not name which resets clear the two registers: READ AS the system
+       reset an NRST pulse makes, to be confirmed by reading PWR_CSR1's ACTVOS after the monitor's reset (supplier task S2)
        the ending's timing, VCAP over the trip to the controller in reset:
          TPS37 sense delay tCTS 8 us typ, 17 us max at VIT 800 mV with CTS open, '20% Overdrive from VIT' (7.6, p.9, PRINTED);
            VOS0's bottom 1.26 V is 11.5 % over the trip's top, VOS1's 1.15 V is 1.7 %: under 20 %, so the printed maximum does NOT cover
@@ -156,7 +161,7 @@ printed thermal resistances, never a measured temperature
            (VOL 300 mV at 5 mA, p.7: at most 60 Ohm, MODEL) against NRST's 10 k (+-5 %, ASSUMPTION) and RPU 30 to 50 kOhm (Table 152, p.248)
            and the 100 nF reset capacitor (+-20 %, ASSUMPTION): at most 130.2 us (MODEL); the peak sink 4.52 mA under the recommended 5 mA
            (7.3, p.6) and the absolute 10 mA (7.1, p.6)
-         NRST's 'Input not filtered pulse' at least 300 ns (Table 152, p.248, guaranteed by design)
+         NRST's 'Input not filtered pulse' at least 300 ns (Table 152 and its note 2, p.248)
          t_resp = 17 + 130.2 + 0.3 us = 147.5 us (CONDITIONAL on S2's sense delay)
        power-up: 'When the voltage on VDD is less than the UVLO voltage, but greater than the power-on reset voltage (VPOR), the output pins will be in reset, regardless of the voltage at SENSE pins.' (8.3.1.1, p.18), VPOR 1.4 V; the H743 leaves its own BOR0 reset from 1.62 to 1.71 V rising (Table 116, p.212), so
          NRST is held until the TPS37's VDD reaches its 2.7 V minimum; then 'During the power-on sequence, VDD must be at or above VDD (MIN) for at least tSD before the output is in the correct state based on VSENSE.' (7.6 note 4, p.9), tSD 2 ms (p.9);
@@ -284,11 +289,12 @@ printed thermal resistances, never a measured temperature
    S1: the controller's junction-to-ambient transient impedance on board B, three first-article supervisors, a junction step at
      1.320 W: pass at most 4.09 K/W at 147.5 us and 19.96 K/W at 3.0 ms (or ST's transient thermal data for the LQFP100 with board B's copper)
    S2: the monitor's entry-to-NRST interval at a VOS0 entry and at the self-test's Scale 1 entry, three supervisors, the chamber at
-     76 C: pass at most 147.5 us
+     76 C: pass at most 147.5 us, and PWR_CSR1's ACTVOS reading Scale 3 at the restart
    S3: VCAP in VOS3 with the divider fitted, under the controller's load steps: inside 0.95 to 1.05 V and under the trip's least 1.0969 V
    S4: NRST held low from the TPS37's VPOR through tSD + tCTR at power-up (scope, ten power cycles each supervisor)
 
 10. THE PREDICATES
+   the five filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it) yes
    every quoted sentence of H-1 is in its pinned text, with its page                                                      yes
    no option-byte field of FLASH_OPTSR_PRG selects a voltage scale or the supply configuration                            yes
    T10's 0.1936 A and 112.7 C are reproduced from T10's own air and theta                                                 yes

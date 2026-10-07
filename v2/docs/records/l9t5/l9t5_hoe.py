@@ -69,7 +69,7 @@ DOCS = {"draft": REC + "/apply_gen_sch_b_vcoremon.py", "guard": REC + "/apply_ge
         "ioha": "v2/docs/ARCH-PCB-B-IOHA.md",
         "l4reg": REC + "/inputs/l4reg-L4REG-3b6eb8be.md", "l4regout": REC + "/inputs/l4reg-l4reg_compare-9fbda7a6.out",
         "regstage": REC + "/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py", "round6": REC + "/inputs/l4canmb-T10-ROUND6-0a94dd2c.md",
-        "canmb": REC + "/inputs/l4canmb-apply_gen_sch_b_canmb-8fb8815a.py",
+        "canmb": REC + "/inputs/l4canmb-apply_gen_sch_b_canmb-8fb8815a.py", "sources": REC + "/inputs/SOURCES-HOE.txt",
         "u23": "v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py", "u24": "v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py"}
 TAGS = "ABC"
 EN = chr(0x2013)       # the sheets' dash, written by its code point (no long dash in this file)
@@ -332,13 +332,18 @@ def main():
     # ---------------------------------------------------------------- 1. inputs
     w("1. INPUTS, pinned by sha256")
     pins = [RM, DS, AN, TPS] + [DOCS[k] for k in ("draft", "guard", "drafts", "t10out", "t10py", "gen_b", "gennet", "ledger", "cx46", "l4reg",
-                                                  "l4regout", "regstage", "round6", "canmb", "u23", "u24")]
+                                                  "l4regout", "regstage", "round6", "canmb", "sources", "u23", "u24")]
     for rel in pins:
         w("   %s %s" % (sha(rel), rel))
     for tp, h, _held in PDFT.inputs(ROOT, PDFTEXT):
         if h is None:
             refuse("%s is absent; %s" % (tp, PDFT.retake_command(REC)))
         w("   %s %s" % (h[:16], tp))
+    named = dict(re.findall(r"^(\S+) sha256 ([0-9a-f]{64})$", text(DOCS["sources"]), re.M))
+    copies = [DOCS[k] for k in ("l4reg", "l4regout", "regstage", "round6", "canmb")]
+    copies_ok = sorted(named) == sorted(os.path.basename(c) for c in copies) and all(
+        hashlib.sha256(open(os.path.join(ROOT, c), "rb").read()).hexdigest() == named[os.path.basename(c)] for c in copies)
+    w("   the five copies from W137's and W138's branches equal the sha256 inputs/SOURCES-HOE.txt names: %s" % ("yes" if copies_ok else "NO"))
     w("")
     # ---------------------------------------------------------------- 2. the failed case
     air = float(need(t10, r"THE JUNCTION TEMPERATURE at L4-E12's inside air, ([\d.]+) C", "T10's inside air").group(1))
@@ -365,7 +370,7 @@ def main():
     w("     Table 222, p.344) at %.1f V: 105 C at %.4f A; %.1f C at %.4f A (the removed rail trip's average maximum)" % (vdd, i105, tj_at(i_trip), i_trip))
     w("   the 105 C itself: DS12110 Rev 11 Table 112 note 5, p.210: \"%s\", on the VOS0 rows; Table 113, p.210: VOS0 LDO, Max TJ %d C," % (F["note5"], F["t113"]["VOS0"][0]))
     w("     480 MHz, VDDLDO from %.1f V; VOS1 to VOS3: %d C. Table 111 (absolute maximum ratings), p.208: TJ %d C" % (F["t113"]["VOS0"][2], F["t113"]["VOS1"][0], F["tj_abs"]))
-    w("   the VOS0 rows ST prints (Table 119, p.215, revision V, LDO ON, maxima 'Guaranteed by characterization results'; mA):")
+    w("   the VOS0 rows ST prints (Table 119, p.215, revision V, LDO ON, the maxima by characterization, its note 2; mA):")
     for lab, row in (("480 MHz, all peripherals disabled", F["vos0_dis"]), ("480 MHz, all peripherals enabled", F["vos0_en"])):
         w("     %-36s typ %3.0f (TYPICAL)   max %3.0f / %3.0f / %3.0f at TJ 25 / 85 / 105 C (PRINTED)" % (lab, row[0] * 1e3, row[1] * 1e3, row[2] * 1e3, row[3] * 1e3))
     ops = {}
@@ -499,6 +504,12 @@ def main():
     w("       so every VCAP in VOS3's printed band leaves the monitor released (%.4f V over %.2f V), and every VCAP in VOS1's or VOS0's band" % (lo, vc["VOS3"][2]))
     w("       trips it (%.4f V under %.2f V): any VOS1 entry, and so any VOS0 entry (RM0433 p.280's note), resets the controller to VOS3" % (hi, vc["VOS1"][0]))
     w("       (p.279). VOS2's band (%.2f to %.2f V) straddles the trip: a VOS2 entry is caught only above %.4f V (section 6, S-f)" % (vc["VOS2"][0], vc["VOS2"][2], hi))
+    q_sr = quote(t262, "When a system reset occurs, the voltage regulator is enabled and supplies VCORE.", "RM0433 p.263")
+    q_d3 = quote(t307, "Reset value: 0x0000 4000 (Following reset VOSRDY will be read 1 by software).", "RM0433 p.309 PWR_D3CR reset value")
+    q_od = quote(t560, "Reset Value: 0x0000 0000", "RM0433 p.560 SYSCFG_PWRCR reset value")
+    w("       the reset state the ending relies on: \"%s\" (RM0433 p.263); PWR_D3CR \"%s\" (p.309: VOS = 01, Scale 3);" % (q_sr, q_d3))
+    w("       SYSCFG_PWRCR \"%s\" (p.560: ODEN = 0). The manual does not name which resets clear the two registers: READ AS the system" % q_od)
+    w("       reset an NRST pulse makes, to be confirmed by reading PWR_CSR1's ACTVOS after the monitor's reset (supplier task S2)")
     # timing
     rail = (3.2422, 3.3577)                  # W137's rail band (canmb section 6, the AP2112K); W138's TPS73733 band 3.2505 to 3.3495 lies inside it
     need(r6, r"Each rail 3\.2422 to 3\.3577 V", "W137's rail band")
@@ -524,7 +535,7 @@ def main():
     w("           and the 100 nF reset capacitor (+-20 %%, ASSUMPTION): at most %.1f us (MODEL); the peak sink %.2f mA under the recommended %.0f mA" % (
         t_fall * 1e6, i_pk * 1e3, F["ireset_rec"] * 1e3))
     w("           (7.3, p.6) and the absolute %.0f mA (7.1, p.6)" % (F["ireset_abs"] * 1e3))
-    w("         NRST's 'Input not filtered pulse' at least %.0f ns (Table 152, p.248, guaranteed by design)" % (F["vnf"] * 1e9))
+    w("         NRST's 'Input not filtered pulse' at least %.0f ns (Table 152 and its note 2, p.248)" % (F["vnf"] * 1e9))
     w("         t_resp = %.0f + %.1f + %.1f us = %.1f us (CONDITIONAL on S2's sense delay)" % (F["tcts"][1] * 1e6, t_fall * 1e6, F["vnf"] * 1e6, t_resp * 1e6))
     w("       power-up: '%s' (8.3.1.1, p.18), VPOR %.1f V; the H743 leaves its own BOR0 reset from %.2f to %.2f V rising (Table 116, p.212), so" % (
         F["uvlo_q"], F["vpor"], F["bor0"][0], F["bor0"][2]))
@@ -714,14 +725,15 @@ def main():
     w("     %.3f W: pass at most %.2f K/W at %.1f us and %.2f K/W at %.1f ms (or ST's transient thermal data for the LQFP100 with board B's copper)" % (
         p_ex, z_need, t_resp * 1e6, z_need1, t_dead * 1e3))
     w("   S2: the monitor's entry-to-NRST interval at a VOS0 entry and at the self-test's Scale 1 entry, three supervisors, the chamber at")
-    w("     %.0f C: pass at most %.1f us" % (air, t_resp * 1e6))
+    w("     %.0f C: pass at most %.1f us, and PWR_CSR1's ACTVOS reading Scale 3 at the restart" % (air, t_resp * 1e6))
     w("   S3: VCAP in VOS3 with the divider fitted, under the controller's load steps: inside %.2f to %.2f V and under the trip's least %.4f V" % (
         vc["VOS3"][0], vc["VOS3"][2], lo))
     w("   S4: NRST held low from the TPS37's VPOR through tSD + tCTR at power-up (scope, ten power cycles each supervisor)")
     w("")
     # ---------------------------------------------------------------- 10. predicates
     w("10. THE PREDICATES")
-    P = [("every quoted sentence of H-1 is in its pinned text, with its page", True),
+    P = [("the five filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it)", copies_ok),
+         ("every quoted sentence of H-1 is in its pinned text, with its page", True),
          ("no option-byte field of FLASH_OPTSR_PRG selects a voltage scale or the supply configuration", not vos_like),
          ("T10's 0.1936 A and 112.7 C are reproduced from T10's own air and theta", abs(i105 - i105_t10) < 5e-5 and abs(tj_at(i_trip) - tj_t10) < 0.05),
          ("no printed VOS0 row has an operating point at or under 105 C at the case's air", ops["dis"][0] > 0 and ops["en"][0] > 0),
