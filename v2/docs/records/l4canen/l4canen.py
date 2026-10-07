@@ -805,7 +805,7 @@ def main():
         steps[3], "yes" if carried else "NO", F["acc_a9"]))
     w("")
     # ---------------------------------------------------------------- 10. decisions, findings, disposition
-    w("10. SESSION DECISIONS (W143-D1 to D10), FINDINGS (W143-F1 to F9) AND WHAT CLOSES ONCE CHECKED: in record l9t5's T10-ROUND9.md")
+    w("10. SESSION DECISIONS (W143-D1 to D10), FINDINGS (W143-F1 to F11) AND WHAT CLOSES ONCE CHECKED: in record l9t5's T10-ROUND9.md")
     w("   sections 7 to 9, with their reasons and reversals; nothing closes here: W139-F2's recovery proof for a latched supervisor, cx46's")
     w("   item 5, CON-004's quorum service and FW-B22 keep their states until the independent check (L4A-62) reads this round")
     w("")
