@@ -270,7 +270,7 @@ Old text:
 ```
 New text:
 ```text
-| Adopted | `__ADOPTION__` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `
+| Adopted | `9a0a0f6a` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `
 ```
 Basis: the Adopted row's definition on this page; set 31's adoption commit, which the row's next code span holds after set 31's
 fill, stays in the row as dated history (row S-08 closes the sentence).
@@ -453,7 +453,7 @@ Old text:
 ```
 New text:
 ```text
-| Adopted | `__ADOPTION__` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `
+| Adopted | `9a0a0f6a` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `
 ```
 Basis: as S-07.
 
