@@ -861,8 +861,11 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      (1) the bus-fault rows served: IOSmin 0.4702 A over the largest served 0.4239 A by 0.0463 A, no served state limited, no bridging capacitance
        needed; the 180 mA a transceiver (PRINTED) enters (f1), (f2) and S3' above. THE WINDOW: 0.0463 A between the largest served state and
        the limiter's least, and 0.1696 A between its most and the regulator's 125 C current on the printed theta (zero at E-17's pass limit by
-       construction). Row (b)'s own rail additions (the buffers, gates, pull-ups and votes of canmb, canen and hodtest) are the drafts'
-       records' figures, read against this window in the connected record (l9t5_connected.out 11a), never typed here
+       construction). ROW (b)'s ENABLED SET (FW-B20 restated: TIM3 for canmb's captures, an ADC of ADC1/ADC2 for hodtest's reads, neither in
+       10c's set): TIM3 2.7 + ADC12 registers 3.3 + ADC12 kernel 0.6 uA/MHz (TYPICAL, Table 137, VOS3) at 144 MHz times 3.103 (10c's ratio at 125 C) = 0.0029 A, MODEL; and the ADC's
+       analog current on VDDA, 1.44 mA at 16 bits and 25 MHz (TYPICAL only, Table 184), taken at 3 times (ASSUMPTION): at most 0.0073 A
+       on a controller's rail; the window after it 0.0390 A. The drafts' own rail additions (the buffers, gates, pull-ups and votes of
+       canmb, canen and hodtest) are their records' figures, read against this window in the connected record (l9t5_connected.out 11a)
      (2) the output short: (f) (i) latched within 10 ms, (ii) excluded with its reason (W151-1, W138-3, W135-2)
      (3) the limiter's own dissipation: 24.3 mW at S3' (80.7 C on 182.6 C/W) and 43.9 mW at IOSmax in regulation; it holds 125 C to 1110 C/W, so
        no measurement decides it; limiting into a short at most 2.348 W for at most 10 ms (its junction then not computed: no Zth printed;

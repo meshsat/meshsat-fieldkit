@@ -1045,7 +1045,9 @@ def rowb_figures():
     s = t10.split("\n11a. ROUND 10", 1)[1].split("\n12. THE PREDICATES", 1)[0]
     F = {}
     m = need(s, r"IOSmin ([\d.]+) A over the largest served ([\d.]+) A by ([\d.]+) A", "T10 11a's window")
-    F["ios_lo"], F["served"], F["window"] = (float(x) for x in m.groups())
+    F["ios_lo"], F["served"], F["window0"] = (float(x) for x in m.groups())
+    m = need(s, r"at most ([\d.]+) A\s*\n\s*on a controller's rail; the window after it ([\d.]+) A", "T10 11a's window after row (b)'s enabled set")
+    F["en_add"], F["window"] = float(m.group(1)), float(m.group(2))
     m = need(s, r"IOS ([\d.]+) to ([\d.]+) A", "T10 11a's band")
     F["ios_hi"] = float(m.group(2))
     m = need(s, r"K2  holds the regulator's junction at constant maximum dissipation ([\d.]+) C \(([\d.]+) W at [\d.]+ A, the drop ([\d.]+) V, ([\d.]+) C/W PRINTED\)",
@@ -1088,13 +1090,15 @@ def rowb_section(w, FC, t14, FR, P):
     for k in ("canmb", "canen", "hod"):
         w("   %s %s" % (sha(ROWB_OUTS[k]), ROWB_OUTS[k]))
     w("   (b) THE SERVICE WINDOW ON THE COMPOSED CANDIDATE (C-DEV rev 2, conditional on FW-B20 and FW-B21): T10 11a reads IOSmin %.4f A over the" % F["ios_lo"])
-    w("     largest served %.4f A by %.4f A; the drafts add on a controller's own rail at most %.4f A (record l4canen %.4f A with canmb's %.4f A in" % (
-        F["served"], F["window"], add, F["canen"], F["canmb"]))
+    w("     largest served %.4f A by %.4f A, and %.4f A after row (b)'s enabled set (%.4f A, TIM3 and an ADC, FW-B20 restated); the drafts add on" % (
+        F["served"], F["window0"], F["window"], F["en_add"]))
+    w("     a controller's own rail at most %.4f A (record l4canen %.4f A with canmb's %.4f A in" % (add, F["canen"], F["canmb"]))
     w("     it, record l4hod %.3f mA, over round 6's %.4f A less its limiters' pull-ups %.3f mA, which canmb removes and this sum does not credit:" % (
         F["hod"] * 1e3, F["r6"], F["pu"] * 1e3))
     w("     MODEL, the drafts' records' figures, labelled scenarios for C-DEV): the window %+.4f A, %s" % (win, "no served state limited" if win > 0 else "CLOSED"))
-    rows = [(lab, i_ + add, air + F["drop"] * (i_ + add) * F["rja"]) for lab, i_, _t in FC["serve"]]
-    w("   (c) THE FINAL FIGURES RESTATED (section 10's served rows plus the drafts' additions, on the TPS73733DCQRM3's printed %.1f C/W at the" % F["rja"])
+    rows = [(lab, i_ + add + F["en_add"], air + F["drop"] * (i_ + add + F["en_add"]) * F["rja"]) for lab, i_, _t in FC["serve"]]
+    w("   (c) THE FINAL FIGURES RESTATED (section 10's served rows plus row (b)'s enabled set and the drafts' additions, on the TPS73733DCQRM3's")
+    w("     printed %.1f C/W at the" % F["rja"])
     w("     drop's worst corner %.4f V; MODEL, CONDITIONAL on E-17's theta at the site, PROVISIONAL until L4A-62):" % F["drop"])
     for lab, i_, t_ in rows:
         w("     %-46s %.4f A  sustained  criterion 125 C: %5.1f C (margin %+5.1f K)" % (lab, i_, t_, 125.0 - t_))
