@@ -114,14 +114,16 @@ FETCH = {
     "v2/vendor/ti/held/ti-slva673a.pdf": ("l9stk",),
     "v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf": ("l4e11",),
     "v2/vendor/ti/held/ti-tlv755p-c404027.pdf": ("l4e12",),
+    "v2/vendor/ti/held/ti-tlv757p-sbvs322c.pdf": ("l4reg",),   # W138 (L4A-56): record l4reg's screened regulators
     "v2/vendor/ti/held/ti-tps1663-slvset9g.pdf": ("l4e11", "l6pwr"),
-    "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf": ("l4canen",),   # W143 (L4A-54 round 9): the limiter whose EN the restart route drives (record l4reg lists it too, on fnd/l4reg)
+    "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf": ("l4canen", "l4reg"),   # W143 (L4A-54 round 9): the limiter whose EN the restart route drives; W138 (L4A-56): the limiter (record l4lim's fetch lists it too, unread here); the union of fnd/l4canmb 664d4019 and fnd/l4reg 86dbcdff (W146's merge, W143-F2)
     "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf": ("l4e7", "l6pwr"),
     "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf": ("l4e11", "l4e7", "l6pwr", "l8r2"),
     "v2/vendor/ti/held/ti-tps55340-slvsbd4e.pdf": ("l4e11",),
     "v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf": ("l4e11",),
     "v2/vendor/ti/held/ti-tps709-sbvs186h.pdf": ("l8p",),
-    "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf": ("l4canen",),   # W143 (L4A-54 round 9): the regulator behind it (record l4reg lists it too, on fnd/l4reg)
+    "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf": ("l4canen", "l4reg"),   # W143 (L4A-54 round 9): the regulator behind it; W138 (L4A-56): the selected regulator; the union (W146's merge, W143-F2)
+    "v2/vendor/ti/held/ti-tps7a37-sbvs220b.pdf": ("l4reg",),   # W138 (L4A-56): the adjustable alternate
 }
 
 
