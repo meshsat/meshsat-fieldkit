@@ -8,10 +8,14 @@ Why (the ledger's RE-5 and HO-C, `records/l4close/REMAINING-ENGINEERING.md`; cx4
 transmit-share limiter admits a TX pin toggled as a GPIO under its least 4.7 % share and a latent stuck comparator, so CON-004's
 quorum service stays OPEN. The record's own route (l9t5_t10.out 10j (c)): "each controller's TXD read by the other two and a 2-of-2
 vote of the other two on its SHDN or its LDO's EN". This draft takes it on SHDN, per fabric:
-  1. OBSERVATION (twelve inputs): each controller's TXD on each fabric (IOC{t}_CAN1_TX, IOC{t}_CAN2_TX) reaches each of the other
-     two controllers through its own 2.2 kOhm 1 % (R(600 + 20k + 11 to 14)): pins 63 to 66 (PC6 to PC9, TIM3_CH1 to TIM3_CH4 on AF2,
-     DS12110 Rev 10 Table 12) of the reader read the next controller's TXD on fabric A and B, then the one after it on A and B. The
-     resistor keeps a faulty reader from moving the line: the TXD output holds its level against it (l9t5_canmb.out section 4).
+  1. OBSERVATION (twelve inputs): each controller's TXD on each fabric (IOC{t}_CAN1_TX, IOC{t}_CAN2_TX) drives a 74LVC1G34 buffer on
+     its own 3.3 V (U(580 + 2k + j)), whose output (IOC{t}_CANn_TXB) reaches each of the other two controllers through its own 2.2 kOhm
+     1 % (R(600 + 20k + 11 + 2j + i)); pins 63 to 66 (PC6 to PC9, TIM3_CH1 to TIM3_CH4 on AF2, DS12110 Rev 10 Table 12) of the reader
+     read the next controller's TXD on fabric A and B, then the one after it on A and B. The buffer keeps every reader off the TXD
+     itself, so a faulty reader that drives its input can never pull a TXD dominant, not even while that controller is in reset with
+     its TX pin undriven (l9t5_canmb.out section 6); an unpowered buffer's output (Ioff) leaves a dark controller reading recessive.
+     Each TXD is held recessive by 10 kOhm 1 % to its controller's own rail (R(600 + 20k + 6 + 4j), the limiter pull-up's place) while
+     its controller is in reset: TI prints no minimum for the TCAN334's integrated pull-up (SLLSEQ7F: TXD IIL -4 to 0 uA).
   2. THE VOTE (twelve outputs, two per transceiver): each controller drives four votes on pins 55 to 58 (PD8 to PD11, GPIO), one
      per transceiver of the other two; each transceiver's two votes enter an SN74LVC1G08 (U(40 + 10k + 7 + j), the limiter's place)
      on the TARGET controller's own 3.3 V, whose output lifts that transceiver's SHDN through a 1N4148W (D(400 + 10k + 2j + 1), the
@@ -19,12 +23,13 @@ vote of the other two on its SHDN or its LDO's EN". This draft takes it on SHDN,
      low by 10 kOhm (R(600 + 20k + 4 + 4j) and R(600 + 20k + 5 + 4j), the limiter's dividers' places) while its voter is in reset
      or dark. The controller's own SHDN request keeps its diode and SD's 100 kOhm (canshdn and iocguard, unchanged).
   3. THE LIMITER REMOVED (SESSION W137-D2, reversible): the six TPS3701 share comparators, their 1 MOhm and 150 kOhm dividers, 1 uF
-     filters and 10 kOhm pull-ups go; the rail trips of iocguard stay as they are (RE-6 and RE-7 are L4A-56 to L4A-58's).
+     filters and LIMO pull-ups go (their places re-used above); the rail trips of iocguard stay as they are (RE-6 and RE-7 are L4A-56 to
+     L4A-58's).
 CON-004's two fabrics, their six transceivers, their four split terminations and the two break links of test A7 are untouched.
-Designators: twelve new resistors R611 to R614, R631 to R634, R651 to R654 (R(600 + 20k + 11 + 2j + i)); the gates take U47, U48,
-U57, U58, U67, U68 and their decoupling C944, C946, C954, C956, C964, C966 (the comparators' places); removed: R606, R610, R626,
-R630, R646, R650 and C943, C945, C953, C955, C963, C965. The SN74LVC1G08DBVR (JLCPCB C7666) and the 1N4148W (C81598) are board
-B's parts already.
+Designators: twelve new resistors R611 to R614, R631 to R634, R651 to R654 and six new buffers U580 to U585; the gates take U47, U48,
+U57, U58, U67, U68 with C944, C946, C954, C956, C964, C966, the buffers C943, C945, C953, C955, C963, C965, the TXD pull-ups R606, R610,
+R626, R630, R646, R650 (the limiter's places); nothing is removed outright. The SN74LVC1G08DBVR (JLCPCB C7666), the 74LVC1G34W5-7
+(C526347) and the 1N4148W (C81598) are board B's parts already.
 Usage:  apply_gen_sch_b_canmb.py TARGET [--check | --write]     (default --check: nothing is written)
 Exit 0: checked (or written); 3: refused (already applied, iocguard absent, an old text missing, a designator or a pin in use, or the
 repository's own generator named before RELEASE-T10.md releases it)."""
@@ -36,19 +41,20 @@ import sys
 
 NAME = "apply_gen_sch_b_canmb"
 BOARD = "b"
-ADDS = tuple("R%d" % (600 + 20 * k + 11 + n) for k in range(3) for n in range(4))
-REMOVES = tuple("R%d" % (600 + 20 * k + n) for k in range(3) for n in (6, 10)) + tuple("C%d" % (940 + 10 * k + n) for k in range(3) for n in (3, 5))
+ADDS = tuple("R%d" % (600 + 20 * k + 11 + n) for k in range(3) for n in range(4)) + tuple("U%d" % (580 + n) for n in range(6))
+REMOVES = ()   # every part of the limiter is re-used in place (the docstring's designators)
 # the pin plan, read by l9t5_canmb.py (never typed there): LQFP-100 pin -> (port, which peer (1 next, 2 the one after), fabric, use, AF)
 OBS_PINS = {63: ("PC6", 1, "A", "TIM3_CH1", 2), 64: ("PC7", 1, "B", "TIM3_CH2", 2), 65: ("PC8", 2, "A", "TIM3_CH3", 2), 66: ("PC9", 2, "B", "TIM3_CH4", 2)}
 VOTE_PINS = {55: ("PD8", 1, "A"), 56: ("PD9", 1, "B"), 57: ("PD10", 2, "A"), 58: ("PD11", 2, "B")}
 R_ISO, R_VOTE, GATE, GATE_LCSC = "2.2k 1%", "10k", "SN74LVC1G08DBVR", "C7666"
+R_TXPU, BUF, BUF_LCSC = "10k 1%", "74LVC1G34", "C526347"
 
 _OLD_MAP = '              83: "IOC%s_CAN1_SHDN" % _tag, 53: "IOC%s_CAN2_SHDN" % _tag})\n'
 _NEW_MAP = ('              83: "IOC%s_CAN1_SHDN" % _tag, 53: "IOC%s_CAN2_SHDN" % _tag,\n'
             '              # T10 ROUND 7 (record l9t5, L4A-54, M-B; apply_gen_sch_b_canmb.py, NOT APPLIED): the peers\' observation and vote.\n'
             '              # PC6 to PC9 (pins 63 to 66; TIM3_CH1 to TIM3_CH4, AF2, DS12110 Rev 10 Table 12) read the next controller\'s TXD on\n'
-            '              # fabric A and B, then the one after it on A and B, each through the 2.2 kOhm of the controller it reads; PD8 to PD11\n'
-            '              # (pins 55 to 58, GPIO outputs) are this controller\'s votes to silence those four transceivers (2 of 2 with the other peer)\n'
+            '              # fabric A and B, then the one after it on A and B, each through the buffer and the 2.2 kOhm of the controller it reads; PD8\n'
+            '              # to PD11 (pins 55 to 58, GPIO outputs) are this controller\'s votes to silence those four transceivers (2 of 2 with the other peer)\n'
             '              63: "IOC%s_CAN1_OBS%s" % ("ABC"[(_k + 1) % 3], _tag), 64: "IOC%s_CAN2_OBS%s" % ("ABC"[(_k + 1) % 3], _tag),\n'
             '              65: "IOC%s_CAN1_OBS%s" % ("ABC"[(_k + 2) % 3], _tag), 66: "IOC%s_CAN2_OBS%s" % ("ABC"[(_k + 2) % 3], _tag),\n'
             '              55: "IOC%s_CAN1_VOTE%s" % ("ABC"[(_k + 1) % 3], _tag), 56: "IOC%s_CAN2_VOTE%s" % ("ABC"[(_k + 1) % 3], _tag),\n'
@@ -72,15 +78,17 @@ _OLD_LIM = (
     '        _intent.bypass(_GC(4 + 2 * _j), U_(7 + _j), "5", "+5V_IOC")\n')
 _NEW_VOTE = (
     "        # T10 ROUND 7 (record l9t5, Layer 4 task L4A-54: RE-5 and HO-C by method M-B; apply_gen_sch_b_canmb.py, a DRAFT, NOT APPLIED):\n"
-    "        # THE PEERS' 2-OF-2 VOTE takes the place of round 6's transmit-share limiter (removed: SESSION W137-D2). This TXD reaches each\n"
-    "        # of the other two controllers through its own 2.2 kOhm (a faulty reader cannot move the line: the push-pull output holds its\n"
-    "        # level against it, l9t5_canmb.out section 4); those two each drive one input of an SN74LVC1G08 on THIS controller's own 3.3 V,\n"
-    "        # whose output lifts this transceiver's SHDN through a 1N4148W only while BOTH drive it, so one faulty peer cannot silence a\n"
-    "        # healthy controller (SHDN high: driver and receiver off, RXD high, SLLSEQ7F Table 6-5). Each vote input is held low by 10 kOhm\n"
-    "        # while its voter is in reset or dark. The controller's own SHDN request keeps its diode; SD's 100 kOhm holds normal mode\n"
-    "        # otherwise. CON-004's two fabrics, their transceivers and termination are unchanged (IOHA row 7, test A7)\n"
+    "        # THE PEERS' 2-OF-2 VOTE takes the place of round 6's transmit-share limiter (removed: SESSION W137-D2). This TXD drives a\n"
+    "        # 74LVC1G34 on this controller's own 3.3 V whose output reaches each of the other two controllers through its own 2.2 kOhm, so\n"
+    "        # no reader touches the TXD itself (a faulty reader cannot pull it dominant, not even while this controller is in reset); 10 kOhm\n"
+    "        # holds the TXD recessive while the controller is in reset (TI prints no minimum for its integrated pull-up). Those two each\n"
+    "        # drive one input of an SN74LVC1G08 on this controller's own 3.3 V, whose output lifts this transceiver's SHDN through a\n"
+    "        # 1N4148W only while BOTH drive it, so one faulty peer cannot silence a healthy controller (SHDN high: driver and receiver off,\n"
+    "        # RXD high, SLLSEQ7F Table 6-5). Each vote input is held low by 10 kOhm while its voter is in reset or dark. The controller's\n"
+    "        # own SHDN request keeps its diode; SD's 100 kOhm holds normal mode otherwise. CON-004's two fabrics, their transceivers and\n"
+    "        # termination are unchanged (IOHA row 7, test A7); record l9t5's l9t5_canmb.out reads every level and the self-test\n"
     '        _j = _un - 3\n'
-    '        _sd, _mb = "IOC%s_CAN%d_SD" % (_tag, _un - 2), "IOC%s_CAN%d_MB" % (_tag, _un - 2)\n'
+    '        _sd, _mb, _txb = "IOC%s_CAN%d_SD" % (_tag, _un - 2), "IOC%s_CAN%d_MB" % (_tag, _un - 2), "IOC%s_CAN%d_TXB" % (_tag, _un - 2)\n'
     '        _p1, _p2 = "ABC"[(_k + 1) % 3], "ABC"[(_k + 2) % 3]   # the next controller and the one after it\n'
     '        _v1, _v2 = "IOC%s_CAN%d_VOTE%s" % (_tag, _un - 2, _p1), "IOC%s_CAN%d_VOTE%s" % (_tag, _un - 2, _p2)\n'
     '        part(_GD(2 * _j), "Device", "D", "1N4148W: controller %s\'s own SHDN request onto its fabric %s transceiver (cathode on SD)" % (_tag, _f), "SOD123", {"1": _sd, "2": "IOC%s_CAN%d_SHDN" % (_tag, _un - 2)}, "C81598")\n'
@@ -88,8 +96,10 @@ _NEW_VOTE = (
     '        r(_GR(3 + 4 * _j), "100k", _sd, "GND")\n'
     '        r(_GR(4 + 4 * _j), "10k", _v1, "GND"); r(_GR(5 + 4 * _j), "10k", _v2, "GND")   # each vote input low while its voter is in reset or dark\n'
     '        lvc1g08(U_(7 + _j), _v1, _v2, _mb, v33, _GC(4 + 2 * _j), "controller %s\'s fabric %s silence, the 2-of-2 vote of controllers %s and %s (record l9t5, M-B)" % (_tag, _f, _p1, _p2))\n'
+    '        r(_GR(6 + 4 * _j), "10k 1%", v33, _tx)   # the TXD recessive while the controller is in reset\n'
+    '        lvc1g34("U%d" % (580 + 2 * _k + _j), _tx, _txb, v33, _GC(3 + 2 * _j), "controller %s\'s fabric %s TXD to its two readers (record l9t5, M-B)" % (_tag, _f))\n'
     '        for _i, _o in enumerate((_p1, _p2)):\n'
-    '            r(_GR(11 + 2 * _j + _i), "2.2k 1%", _tx, "IOC%s_CAN%d_OBS%s" % (_tag, _un - 2, _o))   # controller _o reads this TXD through it\n')
+    '            r(_GR(11 + 2 * _j + _i), "2.2k 1%", _txb, "IOC%s_CAN%d_OBS%s" % (_tag, _un - 2, _o))   # controller _o reads this TXD through it\n')
 EDITS = [(_OLD_MAP, _NEW_MAP), (_OLD_LIM, _NEW_VOTE)]
 PLANNED = tuple(OBS_PINS) + tuple(VOTE_PINS)
 
@@ -107,8 +117,8 @@ def patched(text):
     for ref in ADDS:
         if re.search(r'"%s"' % ref, text):
             refuse("%s is already drawn as a literal designator" % ref)
-    if not re.search(r"U_ = lambda n, _k=_k: \"U%d\" % \(40 \+ 10 \* _k \+ n\)", text) or "def lvc1g08(" not in text:
-        refuse("the controllers' numbering (U_(n) = U40 + 10k + n) or the SN74LVC1G08 helper is not the one this draft was written against")
+    if not re.search(r"U_ = lambda n, _k=_k: \"U%d\" % \(40 \+ 10 \* _k \+ n\)", text) or "def lvc1g08(" not in text or "def lvc1g34(" not in text:
+        refuse("the controllers' numbering (U_(n) = U40 + 10k + n) or the SN74LVC1G08 and 74LVC1G34 helpers are not the ones this draft was written against")
     blk = text[text.index("    m.update({14: \"IOC%s_RST_n\" % _tag"):text.index(_OLD_MAP)]
     taken = [p for p in PLANNED if re.search(r"(?<![\d.])%d: " % p, blk)]
     if taken:
