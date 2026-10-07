@@ -1,0 +1,56 @@
+TPS3808
+SBVS050N – MAY 2004 – REVISED AUGUST 2026                                                                                           www.ti.com
+
+
+6.5 Electrical Characteristics
+1.7V ≤ VDD ≤ 6.5V, RLRESET = 100kΩ, CLRESET = 50pF, over operating temperature range (TJ = –40°C to 125°C), unless
+otherwise noted. Typical values are at TJ = 25°C(1).
+                           PARAMETER                                    TEST CONDITIONS                     MIN       TYP       MAX     UNIT
+                                                              –40°C < TJ < 125°C                             1.7                  6.5      V
+    VDD        Input supply range
+                                                              0°C < TJ < 85°C                               1.65                  6.5      V
+                                                              VDD = 3.3V, RESET not asserted
+                                                                                                                        2.4         5
+                                                              MR, RESET, CT open
+    IDD        Supply current (current into VDD pin)                                                                                      μA
+                                                              VDD = 6.5V, RESET not asserted
+                                                                                                                        2.7         6
+                                                              MR, RESET, CT open
+                                                              1.3V ≤ VDD < 1.8V, IOL = 0.4mA                                      0.3
+    VOL        Low-level output voltage
+                                                              1.8V ≤ VDD ≤ 6.5V, IOL = 1mA                                        0.4      V
+    VPOR       Power-up reset voltage(2)                      VOL (max) = 0.2V, I RESET = 15μA                                    0.8
+                                       TPS3808G01                                                           –2%       ±1%         2%
+                                       VIT ≤ 3.3V                                                         –1.5%     ±0.5%       1.5%
+               Negative-going input
+    VIT                                3.3V < VIT ≤ 5.0V                                                    –2%       ±1%         2%
+               threshold accuracy
+                                       VIT ≤ 3.3V             –40°C < TJ < 85°C                         –1.25%      ±0.5%     1.25%
+                                       3.3V < VIT ≤ 5.0V      –40°C < TJ < 85°C                           –1.5%     ±0.5%       1.5%
+                                       TPS3808G01                                                                    1.5%         3%
+    VHYS       Hysteresis on VIT pin                                                                                                      VIT
+                                       Fixed versions                                                                  1%       2.5%
+    R MR       MR Internal pullup resistance                                                                  70        90                kΩ
+
+               Input current at        TPS3808G01             VSENSE = VIT                                  –25                    25     nA
+    ISENSE
+               SENSE pin               Fixed versions         VSENSE = 6.5V                                             1.7               μA
+    IOH        RESET leakage current                          V RESET = 6.5V, RESET not asserted                                 300      nA
+
+               Input capacitance, any CT pin                  VIN = 0V to VDD                                             5
+    CIN                                                                                                                                   pF
+               pin                    Other pins              VIN = 0V to 6.5V                                            5
+    VIL        MR logic low input                                                                              0              0.3VDD
+                                                                                                                                           V
+    VIH        MR logic high input                                                                       0.7VDD                  VDD
+
+(1)        The lowest supply voltage (VDD) at which RESET becomes active. Trise(VDD) ≥ 15 μs/V.
+(2)        RLRESET and CLRESET are the resistor and capacitor connected to the RESET pin.
+
+
+
+
+6          Submit Document Feedback                                                                Copyright © 2026 Texas Instruments Incorporated
+
+                                                           Product Folder Links: TPS3808
+
