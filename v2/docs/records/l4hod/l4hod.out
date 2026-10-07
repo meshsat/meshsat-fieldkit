@@ -1,0 +1,408 @@
+l4hod: record l4hod, Layer 4 task L4A-58 (the ledger's HO-D under W138's limiter): the peers' in-service test of each supervisor's
+TPS2553-1 drafted as record l9t5's apply_gen_sch_b_hodtest.py, composed with W137's canmb, W138's regstage and W143's canen in every order
+they admit, its levels, its acceptance, its procedure and detection interval, and its own faults (MESHSAT-1357, W146; a DRAFT, NOT APPLIED;
+prototype design, nothing built or measured; it closes no cx46 item and moves no state)
+
+1. INPUTS (sha256/16)
+   92e23993ab3f4c42 v2/docs/records/l8p/L8P-BREAKER.md
+   1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
+   52009c60e3b0f864 v2/docs/records/l4canen/l4canen.out
+   74ff2f7753360af6 v2/docs/records/l4canen/l4canen.py
+   51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
+   cfa7ed0220b4f68c v2/docs/records/l9t5/l9t5_canmb.out
+   266f221e85668e80 v2/docs/records/l9t5/l9t5_canq.out
+   3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+   f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
+   89576bfb472d983e v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
+   55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
+   fe5e69e35142a031 v2/docs/records/l4reg/l4reg_compare.out
+   c9dec1b3079d2393 v2/docs/records/l4reg/l4reg_compare.py
+   7e473e35ac8efde0 v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md
+   c4084ad21bcc6d2f v2/docs/records/l4hod/inputs/l4ai-register-L4A-58-row.tsv
+   fb40f56837a717cb v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
+   37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
+   d2f9cb974c384add v2/docs/records/l9t5/l9t5_t10.out
+   be3b47d2770da1c2 v2/vendor/diodes/pdftext/diodes-bat46w.layout.txt
+   9e327f9bfd6f5a7c v2/vendor/passives/held/pdftext/uniroyal-series-11cd644d.layout.f4.l7.txt  (held back)
+   39f205116896b7e2 v2/vendor/power/pdftext/aos-ao3400a-n-mosfet.layout.txt
+   effd7e3b13daebbf v2/vendor/st/pdftext/st-rm0433-rev8.layout.p1919.txt
+   2f564310c540626a v2/vendor/st/pdftext/st-rm0433-rev8.layout.p329.txt
+   250e2fbafb819570 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p333.txt
+   227510d881e3f97a v2/vendor/st/pdftext/st-rm0433-rev8.layout.p533.txt
+   8b51c389f0e8ace7 v2/vendor/st/pdftext/st-stm32h743xi-datasheet.layout.txt
+   9a90d9411907d535 v2/vendor/ti/held/pdftext/ti-tps2553-slvs841f.layout.txt  (held back)
+   72c280f85723bbb9 v2/vendor/ti/held/pdftext/ti-tps737-sbvs067w.layout.txt  (held back)
+   810dc4dbcf529687 v2/vendor/ti/pdftext/ti-tcan334-can-fd-transceiver.layout.txt
+   010f30f3bffdad5f v2/vendor/ti/pdftext/ti-tps62933.layout.txt
+   3bc31f4a5302521c v2/vendor/diodes/diodes-bat46w.pdf
+   9c60d0b6c1ddc760 v2/vendor/power/aos-ao3400a-n-mosfet.pdf
+   9b27d1d993a8bc5b v2/vendor/st/st-stm32h743xi-datasheet.pdf
+   f706914950efed0b v2/vendor/ti/held/ti-tps737-sbvs067w.pdf  (held back)
+   88e453700cea2b26 v2/vendor/ti/held/ti-tps2553-slvs841f.pdf  (held back)
+   9ba54135736a47a3 v2/vendor/st/st-rm0433-rev8.pdf
+   bb89f067e6a79028 v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf
+   16ec2eac43c7374e v2/vendor/ti/ti-tps62933.pdf
+   11cd644d5d8a34a6 v2/vendor/passives/held/uniroyal-series-11cd644d.pdf  (held back)
+
+2. WHY (quoted; the drafts it rests on are unchecked)
+   W138's new failure mode (l4reg_compare.out section 4 (7)): "the limiter's latent loss of its limit (HO-D, L4A-58: FAULT asserts only while limiting)"
+   SLVS841F 9.3.3 (page 14, DESCRIBED): "The FAULT open-drain output is asserted (active low) during an overcurrent, overtemperature, or reverse-voltage condition."; and: "The TPS255x-1 asserts the FAULT signal during a fault condition and remains asserted while the part is latched-off. The FAULT signal is de-asserted once device power is cycled or the enable is toggled"
+   the ledger's HO-D (REMAINING-ENGINEERING.md): "Unresolved. A diagnostic with a bounded interval covering faults after start-up and in the diagnostic itself"
+   the guard's objection (L8P-BREAKER.md, finding L8P-R9-F1): "No automatic diagnostic is drafted: one that tests a shunt opens
+     the breaker in service": here the quorum tolerates one supervisor out (IOHA row 3: "the other two are a majority and
+     ownership is unaffected"), so a test that switches its target off is admissible
+   the owner's part 24: "Any automatic diagnostic needs a bounded detection/response interval, including faults that arise after startup and faults affecting the diagnostic itself."
+   the register's row (inputs/l4ai-register-L4A-58-row.tsv, sha256 c4084ad2, copied from the coordinator's _runs/l4ai/register.tsv): L4A-58 HO-D under the limiter: a peer-run in-service test of each supervisor's limiter ...
+
+3. THE MAKERS' ROWS READ (value, label, where)
+   TPS2553-1 IOS at 49.9 kOhm         0.475, 0.52, 0.565           PRINTED  SLVS841F 7.5 p.7 (min / typ / max, -40 to 125 C TJ)
+   TPS2553-1 rDS(on)                  0.135                        PRINTED  SLVS841F 7.5 p.7 (maximum, -40 to 125 C TJ)
+   TPS2553-1 FAULT deglitch           0.005, 0.0075, 0.01          PRINTED  SLVS841F 7.5 p.7 (min / typ / max)
+   TPS2553-1 ton                      0.003                        PRINTED  SLVS841F 7.5 p.7 (maximum, CL 1 uF, RL 100 ohm)
+   TPS2553-1 toff                     0.003                        PRINTED  SLVS841F 7.5 p.7 (maximum)
+   TPS2553-1 tr                       0.0015                       PRINTED  SLVS841F 7.5 p.7 (maximum, VIN 6.5 V, CL 1 uF, RL 100 ohm)
+   TPS2553-1 tIOS                     2e-06                        TYPICAL  SLVS841F p.1 (Features; 7.5 prints tIOS typical only)
+   TPS2553-1 FAULT VOL (V, at A)      0.18, 0.001                  PRINTED  SLVS841F 7.5 p.7 (maximum at 1 mA)
+   TPS2553-1 FAULT leakage            1e-06                        PRINTED  SLVS841F 7.5 p.7 (maximum)
+   TPS2553-1 FAULT sink               0.025, 0.01                  PRINTED  SLVS841F 7.1 p.5 (absolute) and 7.3 p.6 (recommended)
+   TPS2553-1 EN VIL                   0.66                         PRINTED  SLVS841F 7.3 p.6
+   TPS737 theta JA (DCQ)              76                           PRINTED  SBVS067W 5.4 p.4 (DCQ, new silicon)
+   TPS737 EN high                     1.7                          PRINTED  SBVS067W 5.6 p.6
+   TPS737 EN low                      0.5                          PRINTED  SBVS067W 5.6 p.6
+   TPS737 VIN                         2.2, 5.5                     PRINTED  SBVS067W 5.3 p.4
+   TPS737 IGND at 10 mA               0.0004                       TYPICAL  SBVS067W 5.6 p.6 (typical only)
+   TPS737 ISHDN                       2e-08                        TYPICAL  SBVS067W 5.6 p.6 (typical only)
+   AO3400A VGS(th)                    0.65, 1.05, 1.45             PRINTED  AO3400A p.2 (TJ 25 C)
+   AO3400A RDS(on) 2.5 V              0.048                        PRINTED  AO3400A p.2 (VGS 2.5 V, TJ 25 C)
+   AO3400A RDS(on) 10 V 25/125 C      0.0265, 0.038                PRINTED  AO3400A p.2 (VGS 10 V: TJ 25 C and 125 C maxima)
+   AO3400A ID at 70 C                 4.7                          PRINTED  AO3400A p.1 (TA 70 C)
+   AO3400A IDM                        30                           PRINTED  AO3400A p.1
+   AO3400A IGSS                       1e-07                        PRINTED  AO3400A p.2 (TJ 25 C)
+   BAT46W VF (0.1, 10 mA)             0.25, 0.45                   PRINTED  DS30044 p.2 (maximum at 0.1 mA and 10 mA, TA 25 C)
+   BAT46W IR (1.5 V; 25, 60 C)        3e-07, 5e-06                 PRINTED  DS30044 p.2 (maximum at VR 1.5 V, 25 C and TJ 60 C)
+   BAT46W IF                          0.15                         PRINTED  DS30044 p.2
+   BAT46W TJ max                      125                          PRINTED  DS30044 p.2
+   H743 VIL / VDD                     0.3                          PRINTED  DS12110 Table 157 p.243
+   H743 VIH / VDD                     0.7                          PRINTED  DS12110 Table 157 p.243
+   H743 FT leakage                    2.5e-07                      PRINTED  DS12110 Table 157 p.243 (FT_xx)
+   H743 VOH drop at -8 mA             0.4                          PRINTED  DS12110 Table 158 p.245 (at -8 mA)
+   H743 VPDR falling                  1.58, 1.62, 1.68             PRINTED  DS12110 Table 126 p.215 (falling)
+   H743 VBOR2 falling                 2.25, 2.31, 2.37             PRINTED  DS12110 Table 126 p.215 (falling)
+   H743 CADC                          4e-12                        TYPICAL  DS12110 Table 184 p.277 (typical only)
+   H743 ADC TUE (LSB)                 10, -20                      TYPICAL  DS12110 Table 186 p.282 (16 bits, typical only)
+   TCAN334 UV(VCC) falling            1.65, 2, 2.5                 PRINTED  SLLSEQ7F 5.5 p.6 (falling, protected mode)
+   UNI-ROYAL 2512 power               1                            PRINTED  UNI-ROYAL V.3 p.4 (2512, at 70 C)
+   UNI-ROYAL overload / RCWV          2.5                          PRINTED  UNI-ROYAL V.3 p.5 (RCWV = sqrt(P x R))
+   UNI-ROYAL overload change          0.01, 0.05                   PRINTED  UNI-ROYAL V.3 p.6 (1 %: change after 2.5 x RCWV for 5 s)
+   UNI-ROYAL TCR 1-10 Ohm             0.0002                       PRINTED  UNI-ROYAL V.3 p.6 (+-, 1 to 10 Ohm, 0805 to 2512)
+   UNI-ROYAL load life                0.01, 0.05                   PRINTED  UNI-ROYAL V.3 p.7 (1 %: after 1,000 h at RCWV, 70 C)
+   TPS62933 fSW, RT open              450000                       PRINTED  SLUSEA4D 7.5 p.7 (minimum, RT floating)
+   described: SLVS841F 10.1.1 (page 17, application information, 'not part of the TI component specification'): "The latch-off devices (TPS255x-1) assert the FAULT flag after the deglitch period and immediately turn off the device."
+   described: SLVS841F 9.3.1 (page 13): "The device remains off until power is cycled or the device enable is toggled."; SBVS067W 6.3.4 (page 19): "To make sure that all charge is removed from the gate of the pass transistor, the EN pin must be driven low before the input voltage is removed."
+   described: SLLSEQ7F 6.3.4 (page 19): "This protects the bus during an under voltage event on VCC by placing the bus into a high impedance biased to ground state"; RM0433 Rev 8 p.533: "During and just after reset, the alternate functions are not active and most of the I/O ports are configured in analog mode."
+   DS12110 Table 186 note 1: "Data guaranteed by characterization for BGA packages. The values for LQFP packages might differ." (no maximum printed)
+   the limiter's band with the 1 % RILIM (MODEL on PRINTED, W138's): 0.4702 to 0.5878 A; the regulator's 125 C current at the corner: 0.7399 A (76.25 C air, 0.8669 V drop)
+
+4. THE COMPOSITION on board B in L4-E9's change-list order: record l9t5's iocpre, canshdn, iocset and iocguard, then W137's canmb, W138's
+   regstage, W143's canen and this draft in every order they admit (canen after canmb and regstage; this draft after regstage), then the
+   efuse record's R-236 and R-237 and Layer 6's three; the generator run to its end through record l8p's gen_netlist.py
+     order canmb, regstage, canen, hodtest:       22 steps, every one OK
+     order canmb, regstage, hodtest, canen:       22 steps, every one OK
+     order regstage, canmb, canen, hodtest:       22 steps, every one OK
+     order regstage, canmb, hodtest, canen:       22 steps, every one OK
+     order regstage, hodtest, canmb, canen:       22 steps, every one OK
+   the netlists of the 5 orders: IDENTICAL (1608 parts, 1165 nets); without this draft (canmb, regstage, canen): 1554 parts, 1132 nets
+   this draft adds 54: C970, C971, C980, C981, C990, C991, D404, D405, D406, D414, D415, D416, D424, D425, D426, Q590, Q591,
+     Q592, Q593, Q594, Q595, R800, R801, R802, R803, R804, R805, R806, R807, R808, R809, R810, R820, R821, R822, R823, R824,
+     R825, R826, R827, R828, R829, R830, R840, R841, R842, R843, R844, R845, R846, R847, R848, R849, R850
+   it removes 0; changes the value or nets of 6: U41, U45, U51, U55, U61, U65
+   CON-004 on the composed netlist (record l4canen's reading): HOLDS; canmb by pin on the limiter's state: DRAWN; canen's EN route by pin: DRAWN
+
+5. THE TEST PATH READ BY PIN (per controller t: the 3.0 Ohm on t's limiter output, the upper AO3400A gated by t's next controller through 1 kOhm
+   with 100 kOhm to ground, the lower to ground gated by the one after, t's FAULT on its own node with the two peers' BAT46W cathodes, each
+   anode on its peer's pin with 10 kOhm to that peer's own rail, each peer's 10k over 20k with 10 nF to its ADC pin; nothing else on these
+   nets but the third BAT46W from t's regulator EN to the load's bottom; traced from the load to ground: who can start the test; traced from
+   the output and FAULT: who reads them)
+     every order: MREH DRAWN, MRHE DRAWN, RMEH DRAWN, RMHE DRAWN, RHME DRAWN
+     controller A's test: 2 of 2 (every path needs B and C); its output read by {B, C}, its FAULT by {B, C}
+     controller B's test: 2 of 2 (every path needs A and C); its output read by {A, C}, its FAULT by {A, C}
+     controller C's test: 2 of 2 (every path needs A and B); its output read by {A, B}, its FAULT by {A, B}
+     mutated, a test a single peer can start (both halves' gates from controller B):                           FAIL (A's test: 1 of 1; read by {B,C} / {B,C})
+     mutated, a test a single peer can start (the upper half bridged: the load straight to the middle node):   FAIL (A's test: 1 of 1; read by {B,C} / {B,C})
+     mutated, the target in its own test (A's pin 42 on its own upper half, B's pin 43 on B's lower):          FAIL (A's test: SELF; read by {B,C} / {B,C})
+     mutated, a test that cannot detect a lost limit (the load on +5V_IOC, ahead of the limiter):              FAIL (A's test: NO LOAD; read by {B,C} / {B,C})
+     mutated, the load on another supervisor's output (A's on B's):                                            FAIL (A's test: SELF; read by {B,C} / {B,C})
+     mutated, a peer reading the limiter's input, not its output (B's divider on +5V_IOC):                     FAIL (A's test: 2 of 2; read by {C} / {B,C})
+     mutated, a peer reading another limiter's FAULT (A's and B's BAT46W swapped):                             FAIL (A's test: 2 of 2; read by {B,C} / {C})
+   the draft on a generator without regstage: refused; a second time: refused; on the tree's own generator: refused (NOT RELEASED)
+   writing the tree's generator also needs canen's EN route in it (the test's restore); scratch copies take every order
+
+6. THE PIN PLAN on the composed candidate, read against DS12110 Rev 10 Table 9 and RM0433 Rev 8 p.533
+     controller A pin 15 PC0   FT_a   reads B's output                   net IOCB_VSA       free before: yes; ADC123_INP10 read
+     controller A pin 16 PC1   FT_ha  reads C's output                   net IOCC_VSA       free before: yes; ADC123_INP11 read
+     controller A pin 42 PE12  FT_h   closes its half of the test switch on B net IOCB_TSWA      free before: yes
+     controller A pin 43 PE13  FT_h   closes its half of the test switch on C net IOCC_TSWA      free before: yes
+     controller A pin 44 PE14  FT_h   reads B's FAULT                    net IOCB_FLTA      free before: yes
+     controller A pin 45 PE15  FT_h   reads C's FAULT                    net IOCC_FLTA      free before: yes
+     controller B pin 15 PC0   FT_a   reads C's output                   net IOCC_VSB       free before: yes; ADC123_INP10 read
+     controller B pin 16 PC1   FT_ha  reads A's output                   net IOCA_VSB       free before: yes; ADC123_INP11 read
+     controller B pin 42 PE12  FT_h   closes its half of the test switch on C net IOCC_TSWB      free before: yes
+     controller B pin 43 PE13  FT_h   closes its half of the test switch on A net IOCA_TSWB      free before: yes
+     controller B pin 44 PE14  FT_h   reads C's FAULT                    net IOCC_FLTB      free before: yes
+     controller B pin 45 PE15  FT_h   reads A's FAULT                    net IOCA_FLTB      free before: yes
+     controller C pin 15 PC0   FT_a   reads A's output                   net IOCA_VSC       free before: yes; ADC123_INP10 read
+     controller C pin 16 PC1   FT_ha  reads B's output                   net IOCB_VSC       free before: yes; ADC123_INP11 read
+     controller C pin 42 PE12  FT_h   closes its half of the test switch on A net IOCA_TSWC      free before: yes
+     controller C pin 43 PE13  FT_h   closes its half of the test switch on B net IOCB_TSWC      free before: yes
+     controller C pin 44 PE14  FT_h   reads A's FAULT                    net IOCA_FLTC      free before: yes
+     controller C pin 45 PE15  FT_h   reads B's FAULT                    net IOCB_FLTC      free before: yes
+   every pin: the generator's port name, a Table 9 row with an FT type, free before this draft, no debug pin (PA15, PA14, PA13, PB4, PB3), the ADC function where read: yes
+   the switch outputs are analog (high impedance) during and just after reset (RM0433 p.533), so each 100 kOhm holds its half off then
+   THE COUNT (CON-017's convention), per controller: before this draft 43 of 100; 14 supplies, 43 unconnected; with it 49 of 100; 14 supplies, 37
+     unconnected (the same for B and C: yes); CON-017 restated for its owner (finding W146-F3)
+
+7. THE LEVELS on the makers' printed rows (MODEL from PRINTED; assumptions named)
+   the switch gates: a peer's high at least 2.8422 V (VDD - 0.4 V at 8 mA, Table 158) through 1 kOhm over 100 kOhm: 2.8141 V,
+     over the 2.5 V RDS(on) row (AO3400A, TJ 25 C PRINTED; hot 68.8 mOhm INFERRED from the 10 V rows' 125 C ratio); a peer in
+     reset or dark leaves its pin analog (RM0433 p.533) and the gate at most 0.0350 V (the pin's 250 nA and IGSS 100 nA into 100
+     kOhm) against VGS(th) 0.65 V
+   FAULT low at a peer's pin: VOL 0.18 V at 1 mA (PRINTED; it sinks at most 0.707 mA from the two pull-ups) plus the BAT46W's
+     VF 0.45 V at 10 mA (PRINTED, 25 C) and 0.10 V for the cold (ASSUMPTION): at most 0.730 V against 0.3 VDD = 0.9727 V (Table
+     157)
+   FAULT high at a peer's pin: its own rail through 10 kOhm less the pin's 250 nA, the other (dark) peer's diode reverse
+     current 20 uA (ASSUMPTION at 76.25 C: 5 uA at 60 C and 1.5 V PRINTED) and FAULT's 1 uA off-state leakage (PRINTED): at least
+     3.0191 V against 0.7 VDD = 2.3504 V; no pin ever sees more than its own rail; a dark peer's anode sits at its dark rail, its
+     diode reverse biased
+   each ADC pin: at most 2.7491 V (the output's top 4.1174 V on the divider's highest ratio), inside 0 to VREF+ (Table 184,
+     VREF+ the peer's own rail, at least 3.2422 V) and under the FT pins' 4.0 V unpowered (FT_xxx: Min(VDD, ...) + 4.0 V, so 4.0
+     V unpowered); a shorted divider top puts the output on the pin, 4.1174 V at most: inside an FT pin's limit while powered
+     (VDD + 3.6 V, Table 157 note 6), 0.1174 V over 4.0 V only while that peer is dark (a residual of the double condition,
+     W146-F9)
+   the loads the path adds: the two dividers 0.277 mA on each limiter's output; a peer's rail carries its two FAULT pull-ups
+     only while FAULT is low (0.353 mA); the gates draw nothing static: no case row changes (a labelled scenario for the
+     coordinator, W146-F6)
+   the tested target's regulator while the load conducts: the load's bottom at most 0.0809 V (IOSmax through both switches hot,
+     INFERRED), its EN through the BAT46W at most 0.4309 V (VF 0.25 V at 0.1 mA PRINTED, it carries 18 uA from the EN's 100 kOhm,
+     and 0.10 V for the cold, ASSUMPTION) against the TPS737's 0.5 V low (SBVS067W 5.6, PRINTED): the regulator is off and blocks
+     reverse current (6.3.4, DESCRIBED); with either half open the load carries nothing, its bottom sits at the output and the
+     diode is off; with the limit lost the bottom rises to the lost current's drop and the test aborts anyway
+   the second barrier: while its limiter limits the output is 1.288 to 1.847 V, so the target's rail is under VBOR2's 2.25 V
+     falling minimum (PRINTED) and with BOR at level 2 (DRAFTED, W146-D9) it is held in reset even with the EN diode open
+   all levels hold: yes
+
+8. THE TEST'S ELECTRICAL ACCEPTANCE (the judge; MODEL on PRINTED; ASSUMPTION and DRAFTED figures named)
+   the reading (each peer, its own): I = V / 3.0 Ohm from the output's mean 1 to 4 ms after the drop, the pin's voltage taken against the peer's own
+     3.3 V as 3.3 V; its error terms over every corner: R_T 2.8602 to 3.1417 Ohm (1 %, 200 ppm/C over 51 K PRINTED, the load life's +-(1 % + 0.05 Ohm) as ageing,
+     ASSUMPTION past 1,000 h); the divider 0.66565 to 0.66768 (0.1 %, 25 ppm/C); the rail 3.2422 to 3.3577 V (record l4canen's envelope); the ADC +-10 mV at the pin
+     (ASSUMPTION: Table 186's TYPICAL +10/-20 LSB at 16 bits, no maximum printed, characterised on BGA); what the output feeds besides the load, B, 0 to
+     0.5 mA: the two dividers and the regulator's EN pull-up at the output's top (MODEL on the drawn resistors) and the regulator held off by the
+     EN diode (ASSUMPTION 0.3 mA: ISHDN 20 nA TYPICAL only); with that diode open, the target held in reset by BOR level 2 (its rail under the
+     output, at most 1.8467 V, under VBOR2's 2.25 V falling minimum, PRINTED), B at most 20 mA (ASSUMPTION): the second barrier
+   record l9t5's supply path at board B (W138's reading of it): the least input 3.7579 V less 0.04252 Ohm times the lead's current; the served peak
+     S3' 0.4240 A a supervisor (record l4reg's section 2)
+   the acceptance: a healthy limiter (0.4702 to 0.5878 A) reads 0.4345 to 0.6326 A over every corner: PASS inside, LIMIT LOW under, LIMIT HIGH over (DRAFTED)
+   a PASS admits IOS 0.4023 to 0.6819 A; the regulator's 125 C current is 0.7399 A, so every limit that passes keeps the regulator at 121.2 C or less (76.0 C/W PRINTED)
+     at the site that is CONDITIONAL on E-17 read at the pass top, the site's theta at most 82.5 C/W (J4; W163-N1, record l9t5 T10 11a (e))
+     the margin: the guarantee holds for B up to 58.5 mA (0.5 mA with the EN diode, 20 mA assumed without it) and for an ADC error up to +-64 mV at
+     the pin (assumed 10 mV)
+     the low side: a pass admits IOS from 0.4023 A, 0.0217 A under the largest served peak 0.4240 A (S3'): such a limit latches its supervisor at that peak in
+     service, a node out that canen restarts and the next test reads LOW only under 0.4023 A: a service residual stated, not a protection one (W146-F8)
+   J0 holds every figure used as a limit is PRINTED: yes
+   J1 holds the demand at the least input 1.0767 A against IOSmax 0.5878 A (R_T 3.142 Ohm at its top, both switches 0.0688
+      Ohm hot INFERRED, the limiter 0.135 Ohm, the others at 0.4240 A each): 1.83 times
+   J2 holds a lost limit draws at most 1.4396 A (the rail's top 4.1174 V on R_T's least 2.860 Ohm, nothing else counted);
+      with all three at 0.4240 A U601 carries 2.7116 A against 3 A PRINTED; each survivor's input 3.5854 V against 3.4555 V
+   J3 holds the healthy test puts at most 1.086 W in R_T for at most 10 ms (rated 1 W at 70 C); a lost limit puts at most
+      4.1174 V across it for at most 0.2 ms (its closer's abort, 3.2 ms by the other peer), inside the series' short-time
+      overload of 2.5 x RCWV = 4.330 V for 5 s (PRINTED)
+   J4 holds a healthy limiter reads 0.4345 to 0.6326 A; a pass admits IOS 0.4023 to 0.6819 A, under the regulator's 125 C
+      current 0.7399 A (76.0 C/W PRINTED, 0.8669 V drop): on the printed theta a lost limit (IOS over it) never passes; at the
+      site CONDITIONAL on E-17 read at the pass top (record l9t5 T10 11a (e), W163-N1): the site's theta at most 82.5 C/W at
+      IGND = 0 (at E-17's limit at IOSmax, 95.7 C/W, a limit passing at 0.6819 A reads 132.8 C); never a tightened reading (a
+      healthy limiter reads up to 0.6326 A)
+   J5 holds the output while a healthy limiter limits is at most 1.8467 V and reads at most 1.8978 V; with the limit lost it
+      is at least 3.3911 V (the least input less the lost current 1.4396 A and the target's 0.4240 A through the limiter's 0.135
+      Ohm) and reads at least 3.3130 V; the abort at 2.5 V lies between them over every corner of the reading
+   J6 holds each half alone for 4.0 ms, under the least deglitch 5.0 ms (PRINTED): a stuck other half loads the rail for at
+      most that and nothing latches
+   J7 holds the reading 1.0 to 4.0 ms after the drop each peer sees, before the least deglitch 5.0 ms; its start 1 ms after
+      the drop is 500 times the TYPICAL 2 us response (ASSUMPTION that the limit has settled)
+   J8 holds the limiter dissipates at most 16.3 mJ in a test (its drop at most 2.7741 V at IOSmax for the 10 ms deglitch),
+      inside W138's 24.2 mJ latch case (an output short)
+   J9 holds the gates at least 2.8141 V (VOH at -8 mA, 1 kOhm and 100 kOhm); the upper switch's VGS at least 2.7150 V with
+      1.4396 A in the lower: over the 2.5 V RDS(on) row; 1.4396 A against ID 4.7 A at 70 C
+   the judge: HOLDS
+     mutated, a TYPICAL deglitch (7.5 ms) taken as the bound:                                        FAILS (J0)
+     mutated, a test that cannot detect a lost limit: R_T 10 Ohm (a healthy limiter never limits):   FAILS (J1, J5)
+     mutated, R_T 1.0 Ohm (a lost limit's current over U601):                                        FAILS (J2, J3)
+     mutated, each half alone for 6 ms (a stuck other half latches the target):                      FAILS (J6)
+     mutated, the reading to 5.5 ms after the drop (past the least deglitch):                        FAILS (J7)
+
+9. THE PROCEDURE (DRAFTED for Layer 5's contract; L4A-61 propagates it) AND ITS TIMING on the printed figures
+   preconditions, each peer on its own observation: all three in the quorum on both fabrics for the last 10 windows, no other HO-D test and no
+   contained node, the target's FAULT high and its output in band; the schedule (DRAFTED, W146-D5): the first round 60 s after the quorum first
+   holds (A, B, C 20 s apart), then each supervisor every 3600 s, the three 1200 s apart; a test whose preconditions fail waits for the next window
+   step 0, the announcement (0.100 s): both peers mark the target under test in their state frames (one window); from here
+      canen's automatic restart and FW-B21's stop do not act on it and the self-test's phases skip by their own precondition
+      (all three functional)
+   step 1, the restore route exercised (2.190 s): both peers assert their restart votes (record l4canen's route); each sees
+      the output under 2.0 V within 1.384 s (the gate over 2.5 V 1.208 s, the limiter's turn-off 3 ms PRINTED, the node and the
+      target's domain (16 uF, ASSUMPTION) on the two dividers alone), releases, and sees it back over 3.3 V within 0.804 s (the
+      gate under its threshold 0.799 s, ton 3 ms and tr 1.5 ms PRINTED); else ABORT, nothing latched
+   step 1s, settle (0.020 s): the output at 3.3 V or more for 20 ms (the target restarting under its limiter)
+   step 2, each half alone (0.012 s): the next controller closes the upper half for 4 ms, then, 6 ms later by its own clock,
+      the one after closes the lower half for 4 ms; both read the output: a drop under 2.5 V is the OTHER half stuck on (SWITCH
+      STUCK ON); under the 5 ms least deglitch, so nothing latches
+   step 3, the load (0.019 s): the upper half closes, then the lower (the load's moment, its closer's clock); the closer
+      checks the output under 2.5 V 0.2 ms after closing, the other peer 3.2 ms after its own, else opens at once (LIMIT NOT
+      SHOWN); each reads the output 1 to 4 ms after the drop it sees (I = V / 3.0 Ohm), FAULT's fall 4.75 to 10.25 ms after it,
+      the output under 0.3 V 1 ms after FAULT (latched); both open 12 ms after the drop at the latest; the output stays under
+      0.3 V for 5 ms with the load open (LATCHED)
+   step 4, the restore (3.604 s): both peers assert their restart votes for 2.0 s (canen's hold), release; the gate under its
+      threshold 0.799 s, ton 3 ms and tr 1.5 ms PRINTED, the output back over 3.3 V and FAULT high (9.3.3: 'de-asserted once ...
+      the enable is toggled'); the target boots and rejoins within 0.800 s (W139: boot 0.5 s ASSUMPTION, 2 windows listening,
+      its slot)
+   any failed check: both peers open their halves, the verdict goes into their state frames and the kit's status path, the target is restored
+     if latched (step 4) or simply readmitted if never latched; that supervisor's tests stop until the next start (DRAFTED, W146-D6); each peer
+     writes the target and the step to its backup registers before step 3 and clears it after step 4, so a peer that boots with a step 3
+     recorded (the survivors reset by the step's transient, W146-F10) takes that test as failed (LIMIT NOT SHOWN) and stops its tests: the
+     transient cannot repeat on every restart (DRAFTED). The record's retention, read (W159 on W157-F6): a BOR reset is a system reset
+     (RM0433 Rev 8 p.329: "A reset from the brownout reset block (pwr_bor_rst)"), and "The backup registers (RTC_BKPxR) are not reset by system reset or when the device wakes up from Standby mode." (p.1919), so a survivor reset by BOR keeps it; but
+     "VSW voltage is outside the operating range. All RTC registers and the RCC_BDCR register are reset to their default values." (p.333), and board B ties each supervisor's VBAT to its own +3V3_IOCx (gen_sch_b.py), so a dip under
+     the power-down threshold may clear it: ASSUMPTION, bounded by V-B25 (each survivor's 3.3 V over 2.37 V, above DS12110's highest falling
+     PDR 1.68 V), with DBP set before each write and clear, tamper erase off, no BDRST at boot (ES0392 2.2.20's workaround not taken)
+   THE INTERVAL THE TARGET IS OUT of the quorum: 5.945 s (the announcement 0.1 s, step 1 2.190 s, settle 0.020 s, step 2 0.012 s, step 3 0.019 s, step 4 3.604 s)
+     (MODEL on PRINTED, DRAFTED and the boot and domain ASSUMPTIONs; record l4canen's recovery 5.603 s is step 4 plus its 2.0 s decision)
+   THE SERVICE LOST: two of three serve for that interval (IOHA row 3: ownership unaffected); the quorum has no spare then (a
+     second supervisor out is row 4's home assignment); 0.50 % of the time at 3600 s a supervisor. The survivors keep their
+     supply on the DC path (J2 and record l4reg's J4 (c)); the transient dip of +5V_IOC at the test's load step (at most 0.5878
+     A with a healthy limit, 1.4396 A with the limit lost, for the closer's 0.2 ms) is NOT bounded on printed figures (U601's
+     load-transient response and the lead's inductance are not printed; the base design's own overload step of up to IOSmax has
+     the same open term, W138's J7 being a DC row): PROVISIONAL, finding W146-F10. The hold-up it would need (MODEL on the
+     drawn capacitors and the printed thresholds): board B's +5V_IOC carries 10.3 uF (C900, C940, C950, C960); from 3.7039 V
+     before the step to the survivors' need 3.5127 V at their limiter's input it carries the lost limit's step 1.37 us, the
+     healthy step 3.35 us; each survivor's own 12.0 uF (B's: C421, C422, C423, C424, C425, C426, C432, C433, C953, C954, C955,
+     C956) then holds its rail from the regulator's least 3.2505 V over VBOR2's highest falling 2.37 V (PRINTED) for 24.9 us at
+     its 0.4240 A peak: the survivors stay out of reset if U601 and the lead carry the step within 26.3 us (12 of U601's
+     switching periods at its printed least 450 kHz); its load-transient response is printed only as TYPICAL figures, so that
+     time is the supplier's pass limit (L4HOD.md section 11, task 2). Their frames hold: the target's transceivers go to the
+     protected mode (bus high impedance) as its rail falls under UV(VCC) 1.65 to 2.50 V (PRINTED), its TXDs rest recessive on
+     canmb's pull-ups, and W139's row R3 (a controller dark, its onset scanned over the window) reads 'a node out and
+     contained' with the survivors' gap 0 windows against the loss count 3: W139's loss count respected; the target itself is
+     lost to the quorum by that count, as planned, and rejoins listening first (W139-D9)
+   W143's self-test skips its phases while the target is out (its own precondition: all three functional): a latent vote-path fault arising in a
+     test is found within 2.60 s + 5.945 s = 8.545 s (finding W146-F2)
+   THE DETECTION INTERVAL of a lost limit (MODEL on the drafted schedule and the printed timing): a limit lost after start-up is found within
+     3600 s + 2.341 s = 3602.341 s of its onset (the period plus the test's verdict, steps 0 to 3); one present at start-up within 102.341 s of the quorum
+     first holding; a test whose preconditions fail waits, so the interval is bounded while the preconditions hold (a node out or a fabric down
+     adds its own repair time, IOHA rows 3 and 7)
+
+10. THE TEST PATH'S OWN FAULTS (per supervisor; continuous checks every window, a fault declared on the second consecutive failure)
+   element | fault | effect | leaves its supervisor off | found by | bound
+   the limiter | its limit lost (no limiting, or IOS over the regulator's 125 C current) | RE-7's bound gone for that
+      supervisor: LATENT, a second fault needed | no | step 3: LIMIT NOT SHOWN or LIMIT HIGH | within the test period
+   the limiter | its limit low (IOS under the pass band) | spurious latches at the served peaks | no | step 3: LIMIT LOW |
+      within the test period
+   the limiter | no latch (a non-latching part fitted) | a held overload keeps limiting; canen's restart premise gone | no |
+      step 3: NO LATCH | within the test period
+   the limiter's FAULT | stuck high (never asserts) | an overcurrent reported by nothing | no | step 3: FAULT NOT SEEN |
+      within the test period
+   the limiter's FAULT | stuck low (asserted without cause) | a false fault report | no | both peers: FAULT low with the
+      output normal | within 0.3 s (continuous)
+   the test load (3.0 Ohm) | open | no test current | no | step 3: LIMIT NOT SHOWN | within the test period
+   the test load (3.0 Ohm) | short | the test loads with the two switches only (limited by the limiter) | no | step 3: LIMIT
+      LOW (the reading near zero) | within the test period
+   the upper switch | drain-source short, or its gate held on | LATENT: the lower half alone would load the rail | no | step
+      2: the lower half alone drops the output | within the test period
+   the upper switch | open, or gate-source short | the test cannot load | no | step 3: LIMIT NOT SHOWN | within the test
+      period
+   the lower switch | drain-source short, or its gate held on | LATENT: the upper half alone would load the rail | no | step
+      2: the upper half alone drops the output | within the test period
+   the lower switch | open, or gate-source short | the test cannot load | no | step 3: LIMIT NOT SHOWN | within the test
+      period
+   a switch | gate-drain short | the gate follows the drain; its peer's pin sees it through 1 kOhm (at most 4.1 mA) | no |
+      step 3: the reading off its band or no drop | within the test period
+   a gate's 1 kOhm | open | that half never closes | no | step 3: LIMIT NOT SHOWN | within the test period
+   a gate's 1 kOhm | short | none alone (it bounds a gate-drain short's current) | no | NOT in service: RESIDUAL | none
+   a gate's 100 kOhm | open | the gate floats only while its peer is dark, when no test runs | no | NOT in service: RESIDUAL
+      | none
+   a gate's 100 kOhm | short | that half never closes | no | step 3: LIMIT NOT SHOWN | within the test period
+   a peer's switch pin or its firmware | stuck high, or closing without cause | as its half held on: LATENT | no | step 2
+      (the other half's single step) | within the test period
+   a peer's switch pin or its firmware | stuck low, or never closing | the test cannot load | no | step 3: LIMIT NOT SHOWN |
+      within the test period
+   a peer's FAULT pull-up (10 kOhm) | open | that peer's pin floats | no | step 3: the two peers disagree on FAULT | within
+      the test period
+   a peer's FAULT pull-up (10 kOhm) | short | that peer reads FAULT high always; FAULT then sinks from its rail through the
+      diode alone | no | step 3: the two peers disagree on FAULT | within the test period
+   a peer's BAT46W | open | that peer never sees FAULT | no | step 3: the two peers disagree on FAULT | within the test
+      period
+   a peer's BAT46W | short | when that peer is dark the other reads FAULT low | no | the other peer: FAULT low with the
+      output normal | at that peer's next dark interval (its own test)
+   a peer's FAULT pin | stuck reading high | that peer misses FAULT | no | step 3: the two peers disagree on FAULT | within
+      the test period
+   a peer's FAULT pin | stuck reading low | that peer reads FAULT always | no | that peer: FAULT low with the output normal |
+      within 0.3 s (continuous)
+   a peer's divider top (10 kOhm) | open | that peer reads 0 V | no | that peer: the output out of its band | within 0.3 s
+      (continuous)
+   a peer's divider top (10 kOhm) | short | that peer's pin carries the output (at most 4.1174 V, inside an FT pin's limit
+      while powered) | no | that peer: the output out of its band | within 0.3 s (continuous)
+   a peer's divider bottom (20 kOhm) | open or short | that peer reads full scale or 0 V | no | that peer: the output out of
+      its band | within 0.3 s (continuous)
+   a peer's 10 nF | short | that peer reads 0 V | no | that peer: the output out of its band | within 0.3 s (continuous)
+   a peer's 10 nF | open | the sample taken from 6.67 kOhm (a long sampling time, DRAFTED) | no | NOT in service: RESIDUAL |
+      none
+   the EN diode (BAT46W) | open | the target's regulator stays on in the load; BOR level 2 holds the target in reset (B at
+      most 20 mA, ASSUMPTION, inside the guarantee's margin) | no | NOT in service: RESIDUAL | none
+   the EN diode (BAT46W) | short | in service none (the load's bottom sits at the output); with the bench jumper fitted the
+      load sits across the output and the limiter latches (bench only) | no | NOT in service: RESIDUAL | none
+   a peer's ADC pin or its reading | stuck inside the band | that peer sees no drop | no | step 3: the two peers disagree
+      (one aborts) | within the test period
+   canen's restore route | cannot pull EN low (six of its seven recovery residuals) | the test would latch the target for
+      good | no | step 1: the output does not fall; ABORT, nothing latched | within the test period
+   canen's restore route | EN stuck low (the FET shorted, the gate's output high, the pull-up open) | the target off: canen's
+      own single faults, found at once | no | canen 8: its frames absent | at once (canen)
+   the limiter | its latch not cleared by EN (against 9.3.1's description) | the test leaves the target latched | YES | step
+      4: the output not back | at once
+   35 rows; 5 residuals, each with no effect alone in service (a gate's 1 kOhm short, a gate's 100 kOhm open, a reading capacitor open, the EN diode open or short); none NOT FOUND
+   the ones that can leave a supervisor unpowered: the limiter, its latch not cleared by EN (against 9.3.1's description)
+     a limiter whose latch EN does not clear (a part fault against 9.3.1's description) leaves it latched exactly as any real overload would; the
+     test reveals it at once (step 4), canen's automatic restart retries every 10 s and RAIL_EN returns it: a stated residual of the part
+   no single fault of the test path can load the rail outside a test (two halves in series, one per peer), hold a load past 4 ms in step 2 or
+     past the abort in step 3 (either peer opens its half), or leave the target latched: the restore route is exercised 2.222 s before the load (step 1)
+   step 1 exercises record l4canen's route end to end every test: of canen's 12 residuals (7 of the recovery only), these become detected within the
+     test period (finding W146-F1): the RC's 100 kOhm open; the RC's 4.7 uF short; the FET's 1 MOhm short; the AO3400A open, or gate-source short; the 470 Ohm open; the EN pull-up (10 kOhm) short
+   double faults, named and bounded (each half of the pair found first within the test period): the test load shorted AND the limit lost: the
+     test then asks up to U601's own current limit for at most the closer's 0.2 ms (3.2 ms by the other peer), so +5V_IOC may sag under all three
+     and the quorum restarts (a transient row 8, every pin analog in reset so both halves open); the first of the two found ends the tests of that
+     supervisor (W146-D6); both halves stuck on: the target latched and held off, a node out (IOHA row 3), its restore failing; a common firmware
+     fault in both peers is outside the single-fault scope, as for every 2-of-2 vote of this plane; a half stuck on AND the limit lost: step
+     2's single closure then loads the rail with the lost limit's current for its 4 ms (inside J2 and J3) and step 3 reads LIMIT NOT SHOWN
+   the FAULT window's lower edge assumes the limiter's die does not reach its thermal shutdown inside the deglitch (no transient thermal
+     impedance is printed; W138 left the same term open for an output short): a trip there asserts FAULT at once (SLVS841F 9.3.3), which the
+     test reads as a failure (FAULT EARLY), never as a pass
+   mutated procedure, a stuck test switch left undetected (step 2 omitted):                            FAIL (3 NOT FOUND; 1 leave a supervisor off)
+   mutated procedure, a stuck lower half left undetected (step 2 checks the upper's partner only):     FAIL (2 NOT FOUND; 1 leave a supervisor off)
+   mutated procedure, the restore route not exercised first (step 1 omitted):                          FAIL (1 NOT FOUND; 2 leave a supervisor off)
+   mutated procedure, one peer alone judging FAULT (no second reader):                                 FAIL (5 NOT FOUND; 1 leave a supervisor off)
+   mutated procedure, no continuous checks (FAULT and the output only at the test):                    FAIL (7 NOT FOUND; 1 leave a supervisor off)
+
+11. SESSION DECISIONS (W146-D1 to D10), FINDINGS (W146-F1 to F9), THE SUPPLIER'S TASKS AND WHAT CLOSES ONCE CHECKED: in L4HOD.md beside this
+   script, with their reasons and reversals; nothing closes here: HO-D under the limiter stays REMAINING ENGINEERING, cx46's items and Layer 4's
+   DESK gate keep their states until row (b)'s independent check (L4A-62) reads this record
+
+12. THE PREDICATES (v2/ecad/tools/tests/test_l4hod.py holds them)
+   the composition: every order of canmb, regstage, canen and this draft composes, every step OK, the netlists identical: yes
+   the parts: this draft adds 54 (the declared ones), removes none, changes the three limiters and the three controllers: yes
+   CON-004 holds, canmb and canen's EN route still read DRAWN on the composed netlist: yes
+   the test path reads DRAWN by pin in every order; each test needs a 2-of-2 of its target's two peers; both peers read its output and FAULT: yes
+   every netlist mutation FAILS (seven), a test a single peer can start and a test that cannot detect a lost limit among them: yes
+   the draft refuses a generator without regstage, a second application and the tree's generator (NOT RELEASED): yes
+   the pin plan: pins 15, 16 and 42 to 45 free before, FT rows of Table 9, the ADC functions read, no debug pin; the count 49 of 100, 14 supplies, 37 unconnected: yes
+   the levels hold on the printed rows (gates, FAULT high and low, the dark peer, the ADC pins, the loads on the rails): yes
+   the judge HOLDS (J0 to J9): the demand forces the limit, a lost limit's current is carried, a pass keeps the regulator under 125 C on the printed theta (at the site CONDITIONAL on E-17 at the pass top): yes
+   every judge mutation FAILS (five), a test that cannot detect a lost limit and a TYPICAL limit among them: yes
+   the interval out, the service lost and the detection interval are bounded on printed and drafted figures: yes
+   every fault of the test path has a row with its detection and bound; no single fault is NOT FOUND; only the part's own latch can leave its supervisor off: yes
+   every procedure mutation FAILS (five), a stuck test switch left undetected among them: yes
+   nothing closes here: yes

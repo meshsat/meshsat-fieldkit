@@ -1,0 +1,1 @@
+inputs/l4ai-register-L4A-58-row.tsv: the header and the row L4A-58 of the coordinator's AI-scope register _runs/l4ai/register.tsv (outside the repository; sha256 c5964984e5d4f19147c2d0465dd14a5ae98b1fa2ada4b2798b0d7122b59dd730 on 7 October 2026), copied byte for byte; this file's sha256 c4084ad21bcc6d2f0b7a4193861e73e51a894111f6a45cd68452707d7ffce37b

@@ -1,0 +1,12 @@
+l4canmb-l9t5_canmb-5d14cc85.out sha256 5d14cc85213ad999efffce52859ead185833b8c000af0ae72a8ed8185c1633a3
+  W137's output v2/docs/records/l9t5/l9t5_canmb.out at fnd/l4canmb 0d079eaf (Layer 4 task L4A-54, method M-B: the buffered TXD
+  observation, the TXD pull-ups, the twelve 2-of-2 SHDN votes, the self-test and its residuals), copied verbatim by W139 (L4A-55,
+  fnd/l4canq) on 7 October 2026 so that l9t5_canq.py reads the draft's figures from its own tree. Unchecked, not applied.
+l4reg-l4reg_compare-9fbda7a6.out sha256 9fbda7a6e79430c2aea3986a3f20b256084b9d5d8f82f65072bf5ce16689ad7a
+  W138's output v2/docs/records/l4reg/l4reg_compare.out at fnd/l4reg 86dbcdff (Layer 4 task L4A-56 re-scoped: the TPS2553-1 limiter at
+  RILIM 49.9 kOhm ahead of a TPS73733DCQRM3, its latch-off after 5 to 10 ms as that record quotes SLVS841F 7.5), copied verbatim by
+  W139 on 7 October 2026 for row 8's latch and the recovery proof. Unchecked, not applied.
+  W167 on W163-N4 (7 October 2026, fnd/l4hod): l9t5_canq.py no longer reads this copy; it reads the tree's own
+  v2/docs/records/l4reg/l4reg_compare.out (the band on W159's envelope, 0.4702 to 0.5878 A). Record l4canen's
+  l4canen.py likewise reads the tree's file since W167 (its band and latch energy, 24.2 mJ at 0.5878 A where the copy gave 23.5 mJ).
+  The copy stays here byte for byte as filed; no generator on this branch reads it.

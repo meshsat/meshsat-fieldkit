@@ -1,0 +1,50 @@
+RM0433                                                              Reset and Clock Control (RCC)
+
+
+8.4.5    Low-power mode security reset (lpwr_rst)
+         To prevent critical applications from mistakenly enter a low-power mode, two low-power
+         mode security resets are available. When enabled through nRST_STOP_D1 option bytes, a
+         system reset is generated if the following conditions are met:
+         •   CPU accidentally enters CStop mode
+             This type of reset is enabled by resetting nRST_STOP_D1 user option byte. In this
+             case, whenever the CPU CStop mode entry sequence is successfully executed, a
+             system reset is generated.
+         •   D1 domain accidentally enters DStandby mode
+             This type of reset is enabled by resetting nRST_STDBY_D1 user option byte. In this
+             case, whenever a D1 domain DStandby mode entry sequence is successfully
+             executed, a system reset is generated.
+         LPWRRSTF bits in RCC reset status register (RCC_RSR) indicates that a low-power mode
+         security reset occurred (see line #12 in Table 56).
+         lpwr_rst is activated when a low-power mode security reset due to D1 or CPU occurred.
+         Refer to Section 4.4: FLASH option bytes for additional information.
+
+8.4.6    Backup domain reset
+         A backup domain reset is generated when one of the following events occurs:
+         •   A software reset, triggered by setting BDRST bit in the RCC backup domain control
+             register (RCC_BDCR). All RTC registers and the RCC_BDCR register are reset to their
+             default values. The backup RAM is not affected.
+         •   VSW voltage is outside the operating range. All RTC registers and the RCC_BDCR
+             register are reset to their default values. In this case the content of the backup RAM is
+             no longer valid.
+         There are two ways to reset the backup RAM:
+         •   through the Flash memory interface by requesting a protection level change from 1 to 0
+         •   when a tamper event occurs.
+         Refer to Section 6.4.4: Backup domain section of PWR block for additional information.
+
+8.4.7    Power-on and wakeup sequences
+         For detailed diagrams refer to Section 6.4.1: System supply startup in the PWR section.
+         The time interval between the event which exits the product from a low-power and the
+         moment where the CPU is able to execute code, depends on the system state and on its
+         configuration. Figure 44 shows the most usual examples.
+
+         Power-on wakeup sequence
+         The power-on wakeup sequence shown in Figure 44 gives the most significant phases of
+         the power-on sequence. It is the longest sequence since the circuit was not powered. Note
+         that this sequence remains unchanged, whatever VBAT was present or not.
+
+
+
+
+                                         RM0433 Rev 8                                        333/3353
+                                                                                                         504
+

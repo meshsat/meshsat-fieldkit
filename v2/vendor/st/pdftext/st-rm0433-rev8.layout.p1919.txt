@@ -1,0 +1,52 @@
+RM0433                                                                           Real-time clock (RTC)
+
+
+           The calendar is saved in the time-stamp registers (RTC_TSSSR, RTC_TSTR, RTC_TSDR)
+           when a time-stamp event is detected on the RTC_TS pin.
+           When ITSE is set:
+           The calendar is saved in the time-stamp registers (RTC_TSSSR, RTC_TSTR, RTC_TSDR)
+           when an internal time-stamp event is detected. The internal timestamp event is generated
+           by the switch to the VBAT supply.
+           When a time-stamp event occurs, due to internal or external event, the time-stamp flag bit
+           (TSF) in RTC_ISR register is set. In case the event is internal, the ITSF flag is also set in
+           RTC_ISR register.
+           By setting the TSIE bit in the RTC_CR register, an interrupt is generated when a time-stamp
+           event occurs.
+           If a new time-stamp event is detected while the time-stamp flag (TSF) is already set, the
+           time-stamp overflow flag (TSOVF) flag is set and the time-stamp registers (RTC_TSTR and
+           RTC_TSDR) maintain the results of the previous event.
+Note:      TSF is set 2 ck_apre cycles after the time-stamp event occurs due to synchronization
+           process.
+           There is no delay in the setting of TSOVF. This means that if two time-stamp events are
+           close together, TSOVF can be seen as '1' while TSF is still '0'. As a consequence, it is
+           recommended to poll TSOVF only after TSF has been set.
+Caution:   If a time-stamp event occurs immediately after the TSF bit is supposed to be cleared, then
+           both TSF and TSOVF bits are set.To avoid masking a time-stamp event occurring at the
+           same moment, the application must not write ‘0’ into TSF bit unless it has already read it to
+           ‘1’.
+           Optionally, a tamper event can cause a time-stamp to be recorded. See the description of
+           the TAMPTS control bit in Section 46.6.16: RTC tamper configuration register
+           (RTC_TAMPCR).
+
+46.3.15    Tamper detection
+           The RTC_TAMPx input events can be configured either for edge detection, or for level
+           detection with filtering.
+           The tamper detection can be configured for the following purposes:
+           •    erase the RTC backup registers and backup SRAM (default configuration)
+           •    generate an interrupt, capable to wake-up from Stop and Standby modes
+           •    generate a hardware trigger for the low-power timers
+
+           RTC backup registers
+           The backup registers (RTC_BKPxR) are not reset by system reset or when the device
+           wakes up from Standby mode.
+           The backup registers are reset when a tamper detection event occurs (see Section 46.6.20:
+           RTC backup registers (RTC_BKPxR) and Tamper detection initialization on page 1920)
+           except if the TAMPxNOERASE bit is set, or if TAMPxMF is set in the RTC_TAMPCR
+           register.
+
+
+
+
+                                            RM0433 Rev 8                                       1919/3353
+                                                                                                           1949
+
