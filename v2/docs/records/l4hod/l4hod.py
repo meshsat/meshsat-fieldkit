@@ -1093,7 +1093,12 @@ def main():
             T_ABORT_CLOSER * 1e3, (T_ABORT_CLOSER + T_STAGGER3 + ALIGN) * 1e3))
         w("     and the quorum restarts (a transient row 8, every pin analog in reset so both halves open); the first of the two found ends the tests of that")
         w("     supervisor (W146-D6); both halves stuck on: the target latched and held off, a node out (IOHA row 3), its restore failing; a common firmware")
-        w("     fault in both peers is outside the single-fault scope, as for every 2-of-2 vote of this plane")
+        w("     fault in both peers is outside the single-fault scope, as for every 2-of-2 vote of this plane; a half stuck on AND the limit lost: step")
+        w("     2's single closure then loads the rail with the lost limit's current for its %.0f ms (inside J2 and J3) and step 3 reads LIMIT NOT SHOWN" % (
+            T_SINGLE * 1e3))
+        w("   the FAULT window's lower edge assumes the limiter's die does not reach its thermal shutdown inside the deglitch (no transient thermal")
+        w("     impedance is printed; W138 left the same term open for an output short): a trip there asserts FAULT at once (SLVS841F 9.3.3), which the")
+        w("     test reads as a failure (FAULT EARLY), never as a pass")
         pm = [("a stuck test switch left undetected (step 2 omitted)", full - {"single_a", "single_b"}),
               ("a stuck lower half left undetected (step 2 checks the upper's partner only)", full - {"single_a"}),
               ("the restore route not exercised first (step 1 omitted)", full - {"pre"}),
