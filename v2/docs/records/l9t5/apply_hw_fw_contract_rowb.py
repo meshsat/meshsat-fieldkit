@@ -17,9 +17,11 @@ the peers' in-service test of each limiter). The edits, all on the state `apply_
   FW-B22  canq's RESTART rule kept as W143 worded it, with the in-service test's exception added (no automatic restart of a peer under
           test: the test restores it itself) and W159's hold-off after 3 failed restarts (W157-F7); W143's DAR = 1 text (ES0392 2.24.5's
           workaround) and the self-test kept word for word;
-  V-B20   restated: the regulator's site read by E-17 (its pass limit), the supply current under the limiter's least;
+  V-B20   restated: the regulator's site read by E-17 (its pass limit, and at FW-B24's pass top, W167 on W163-N1), the supply
+          current under the limiter's least;
   V-B21   restated: the regulator named, its current against the limiter's least;
-  V-B23   restated on the limiter (its band, its latch, the peers' restart); round 6's rail trip and its 0.2 s WITHDRAWN;
+  V-B23   restated on the limiter (its band, its latch, the peers' restart); round 6's rail trip and its 0.2 s WITHDRAWN; the hold-off's
+          vector a short of the 3.3 V output to ground holding the rail under BOR (W167 on W163-N2);
   FW-B24  NEW: the peers' in-service test of each limiter (HO-D under the limiter, record l4hod, W146), its preconditions, schedule, steps,
           thresholds, failure response and continuous checks; V-B25 NEW: its bench rows (record l4hod's supplier tasks).
 FW-B23 and V-B24 are left to HO-E's draft (`apply_hw_fw_contract_hoe.py` on fnd/l4hoe, L4A-59): this script reads them when present and
@@ -89,6 +91,9 @@ B22_NEW = ("at most once in 10 s per peer, never on a message received over a fa
            "latched): after 3 consecutive failed restarts of one peer (it does not rejoin within 0.800 s of its restore) both other controllers "
            "keep their restart votes for it (its limiter's EN low, that peer unpowered) and retry it once every 600 s, a rejoin clearing the "
            "count, the hold-off reported in their state frames and the kit's status path (record l9t5 `l9t5_t10.out` 11a (f) (iii)); the "
+           "hold-off is each peer's own state (its count and its held vote, in RAM, not kept across its own reset; W163-N6): a peer that "
+           "resets drops its vote and the target is powered until that peer has rejoined and, with the other peer's vote still held, "
+           "counted three failed restarts afresh (both hold again 24.8 s after its rejoin, MODEL, 11a (f) (iii)); the "
            "peer's limiter's EN is pulled low only while both other controllers vote.")
 OLD_VB20 = "| V-B20 | FW-B20 | at start, each supervisor's clock tree and voltage scale read over SWD equal the row and its REV_ID reads "
 V_B20 = (
@@ -99,8 +104,9 @@ V_B20 = (
     "`l9t5_t10.out` 11a (e)): on the first-article board B in still air at 76 C, each TPS73733's junction with its input current held at "
     "the limiter's printed maximum 0.5878 A, its input at 4.1174 V and its output in regulation, from its case-top temperature by its "
     "printed psi-JT, its ground current read: at most 125 C, and its rise in 10 ms of 2.420 W at most 35.0 K (or W151-1's exclusion kept); "
-    "this reading decides the condition the sustained bound rests on (the printed theta is a JEDEC best case), the others confirm the "
-    "firmware's implementation |\n")
+    "and, for FW-B24's pass (HO-D, W163-N1), the same junction carried to the in-service test's pass top 0.6819 A (record l4hod `l4hod.out` "
+    "J4) at most 125 C (82.5 C/W at zero ground current); this reading decides the condition the sustained bound and FW-B24's pass rest on "
+    "(the printed theta is a JEDEC best case), the others confirm the firmware's implementation |\n")
 VB21_OLD = "and each AP2112K's output current averaged over 1 s is at or under record l9t5's response figure (`l9t5_t10.out` 10e)"
 VB21_NEW = ("and each TPS73733's output current averaged over 1 s is at or under record l9t5's response figure (`l9t5_t10.out` 10e) and "
             "under the limiter's least 0.4702 A")
@@ -111,8 +117,10 @@ V_B23 = (
     "FAULT low and the limiter latched off 5 to "
     "10 ms after it limits (TI SLVS841F 7.5 and 9.3.1), the supervisor unpowered, and the supervisor restarted by its two peers' 2-of-2 "
     "EN route within record l4canen's recovery bound; at the largest served state (0.4240 A, `l9t5_t10.out` 11a (g)) for 60 s the limiter "
-    "does not limit; one supervisor's 3.3 V output loaded through 10 Ohm (0.33 A, under the limiter's least, never limited): its peers' "
-    "three failed restarts, then its limiter's EN read low between their retries 600 s apart (FW-B22's hold-off, W159-D3); round 6's rail "
+    "does not limit; one supervisor's 3.3 V output shorted to ground, holding its rail under BOR so that it cannot boot whether or not its "
+    "limiter latches (W163-N2: a load its regulator holds in regulation leaves the supervisor running, and no restart is ever asked): its "
+    "peers' restart rule acts (no TXD edge and no state frame for 2 s), three failed restarts, then its limiter's EN read low between their "
+    "retries 600 s apart and the hold-off read in both peers' state frames (FW-B22's hold-off, W159-D3); round 6's rail "
     "trip and its 'within 0.2 s' are WITHDRAWN (the rail trip is removed, W138-2) |\n")
 FW_B24 = (
     "| FW-B24 | the in-service test of each supervisor's TPS2553-1 (U45, U55, U65) by its two peers through the drafted test path (record "
@@ -136,7 +144,7 @@ FW_B24 = (
     "a peer that boots with a step 3 recorded takes that test as failed. CONTINUOUS CHECKS every window: each peer reads both targets' "
     "FAULT and output; FAULT low with the output normal, or the output out of band, is a test-path fault on its second consecutive failure. "
     "BOR at level 2 (FW-B20) | HO-D under the limiter (the ledger's HO-D; record l4hod `L4HOD.md` sections 2 to 6 and `l4hod.out`: the "
-    "test's acceptance on printed figures, a lost limit found within 3602.341 s, 102.341 s for one present at start-up, the target out "
+    "test's acceptance on printed figures, its pass at the site CONDITIONAL on E-17 read at the pass top 0.6819 A (V-B20, W163-N1), a lost limit found within 3602.341 s, 102.341 s for one present at start-up, the target out "
     "of the quorum 5.945 s a test, 0.50 % of the time, 35 fault rows of the test path each found); TI SLVS841F 7.5 (the deglitch 5 to "
     "10 ms), 9.3.1 and 9.3.3 | V-B25 | OWED (DRAFTED, record l4hod; PROVISIONAL: the supply's dip at the load step, W146-F10) |\n")
 V_B25 = (
@@ -158,7 +166,10 @@ CHANGE = ("| 4 (row b) | 7 October 2026 | By record l9t5's round 10, Layer 4 tas
           "V-B23 (the limiter, the rail trip's 0.2 s WITHDRAWN), and the in-service limiter test FW-B24 with V-B25 (record l4hod); "
           "FW-B23 and V-B24 left to HO-E's draft; corrected by round 11 (W159, `records/l9t5/T10-ROUND11.md`, on row (b)'s check L4A-62): "
           "FW-B20 in L9T5-D11's words, the limiter's band 0.4702 to 0.5878 A on TI's Equation 1, FW-B22's hold-off, the rail trip's "
-          "controller-protection role named as HO-E's; OWED (DRAFTED, PROVISIONAL until row (b)'s recheck) |\n")
+          "controller-protection role named as HO-E's; restated by round 12 (W167, `records/l9t5/T10-ROUND12.md`, on row (b)'s targeted "
+          "recheck Q-183): V-B20 reads E-17 also at FW-B24's pass top, V-B23's hold-off vector a short holding the rail under BOR, "
+          "FW-B22's hold-off across a peer's own reset; OWED (DRAFTED, PROVISIONAL: row (b) read SUPPORTED AS CONDITIONAL by Q-183, "
+          "an AI review) |\n")
 
 
 def refuse(msg):

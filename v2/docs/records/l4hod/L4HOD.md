@@ -91,8 +91,11 @@ l4canen's envelope); the ADC +-10 mV at the pin (ASSUMPTION: DS12110 Table 186 p
 output feeds besides the load, 0 to 0.5 mA (the dividers and the EN pull-up, MODEL, and the regulator held off by D406, ASSUMPTION on a
 TYPICAL 20 nA). A healthy limiter (0.4702 to 0.5878 A, the envelope of TI's tested row and its Equation 1, W159 on W157-F2; W146
 wrote 0.5704 A) reads 0.4345 to 0.6326 A: PASS inside (W146's 0.6140 A would fail a healthy part). **A PASS admits IOS 0.4023 to 0.6819
-A, under the regulator's 125 C current 0.7399 A (76.0 C/W PRINTED, 0.8669 V corner): a lost limit never passes, and every limit that
-passes keeps the regulator at 121.2 C or less.** The margin: B up to 58.5 mA (the second barrier, BOR level 2 with D406 open: 20 mA
+A, under the regulator's 125 C current 0.7399 A on the printed theta (76.0 C/W PRINTED, 0.8669 V corner): on that theta a lost limit
+never passes, and every limit that passes keeps the regulator at 121.2 C or less. At the site this is CONDITIONAL on E-17 read at the
+pass top (W167 on W163-N1; record l9t5 `l9t5_t10.out` 11a (e)): the site's theta at most 82.5 C/W at IGND = 0. At E-17's limit at
+IOSmax, 95.7 C/W, a limit passing at 0.6819 A would read 132.8 C. The reading is not tightened instead: a healthy limiter already
+reads up to 0.6326 A.** The margin: B up to 58.5 mA (the second barrier, BOR level 2 with D406 open: 20 mA
 assumed) and an ADC error up to +-64 mV. The low side: a pass admits a limit 0.0217 A under the largest served peak (S3' 0.4240 A), a
 service residual (W146-F8), not a protection one.
 
@@ -102,7 +105,7 @@ service residual (W146-F8), not a protection one.
 | J1 | the demand at the least input 1.0767 A, 1.89 times IOSmax: a healthy limiter always limits |
 | J2 | a lost limit draws at most 1.4396 A; with all three at 0.4240 A U601 carries 2.7116 A against 3 A; the survivors' input 3.5854 V against 3.4555 V |
 | J3 | the load inside UNI-ROYAL's printed short-time overload (2.5 x RCWV = 4.330 V for 5 s) |
-| J4 | the pass band under the regulator's 125 C current |
+| J4 | the pass band under the regulator's 125 C current on the printed theta; at the site CONDITIONAL on E-17 at the pass top (82.5 C/W, W163-N1) |
 | J5 | the output with a healthy limit reads at most 1.8419 V, with the limit lost at least 3.3130 V; the abort at 2.5 V between them |
 | J6 | each half alone 4.0 ms, under the 5.0 ms least deglitch |
 | J7 | the reading 1 to 4 ms, before the least deglitch; its start 500 times the TYPICAL 2 us response (ASSUMPTION that the limit has settled) |
@@ -223,12 +226,16 @@ On the first article of board B (one board, its three supervisors):
    LIMIT LOW; a FAULT read diode opened: the peers disagree; canen's RC capacitor shorted: step 1 aborts with nothing latched;
 4. the output's draw during the reading window with D406 fitted (pass: 0.5 mA or less) and with it removed (pass: 20 mA or less);
 5. each peer's reading against a reference at 1.3 to 1.8 V on its pin's divider (pass: within +-10 mV at the pin);
-6. the limiter's settling after the load's closure (pass: settled within 1 ms).
+6. the limiter's settling after the load's closure (pass: settled within 1 ms);
+7. (W167 on W163-N1) E-17, record l9t5's measurement (`l9t5_t10.out` 11a (e)), read also at this test's pass top: each regulator site's
+   junction carried to an input current of 0.6819 A, pass at most 125 C (82.5 C/W at IGND = 0). The PASS of task 1 rules out a lost
+   limit at the site only together with this reading.
 
 ## 12. What closes once independently checked, and what stays open
 
 Once row (b)'s check (L4A-62) reads this record with L4A-61's propagation, it would answer HO-D under the limiter for the circuit's
-part: a lost limit found within a bounded interval by a test whose own single faults are found. Until then HO-D stays REMAINING
+part: a lost limit found within a bounded interval by a test whose own single faults are found (its pass reading CONDITIONAL on
+E-17 at the pass top, W163-N1). Until then HO-D stays REMAINING
 ENGINEERING, cx46's items NOT CLOSED, Layer 4's DESK gate NOT PASSED, and the transient dip PROVISIONAL (W146-F10). Open beyond that
 check: the firmware (none exists), the contract rows (L4A-61), the supplier's tasks.
 
@@ -237,3 +244,12 @@ check: the firmware (none exists), the contract rows (L4A-61), the supplier's ta
 From the repository root: `python3 v2/docs/records/l4hod/l4hod.py` (about 15 s; it composes board B in temporary directories, never
 the tree); its output through `_bin/regen_out.py`. Texts: `python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4hod`;
 held sheets through the fetch scripts `pdftext.FETCH` names. Tests: `env -C v2/ecad/tools python3 tests/run.py test_l4hod.`.
+
+## 14. W163's targeted recheck and W167's restatement (7 October 2026)
+
+Row (b)'s targeted recheck (Q-183, W163, an AI review) read HO-D SUPPORTED AS CONDITIONAL on W146-F10, F6's assumption under V-B25
+and its finding N1: the pass band's guarantee (a lost limit never passes) rests on the printed JEDEC theta, which record l9t5 itself
+names no bound at the site. W167 restates it, as W163 recommended, CONDITIONAL on E-17 read at the pass top (J4, section 5, task 7 of
+section 11; record l9t5 `l9t5_t10.out` 11a (e), contract row V-B20): the site's theta at most 82.5 C/W at IGND = 0. No figure of the
+test changes and no verdict is raised: HO-D stays REMAINING ENGINEERING, cx46's items NOT CLOSED, Layer 4's DESK gate NOT PASSED.
+Record l9t5's `T10-ROUND12.md` carries the round.

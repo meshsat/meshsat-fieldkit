@@ -328,7 +328,7 @@ def t_the_page_carries_the_outputs_figures():
 
 def t_record_hygiene():
     files = [PAGE, A_ROWB, A_IOHA, A_REM, os.path.abspath(__file__), T10, T10_OUT, CON, CON_OUT, A_CL, A_CANQ,
-             os.path.join(REC, "T10-ROUND11.md")]
+             os.path.join(REC, "T10-ROUND11.md"), os.path.join(REC, "T10-ROUND12.md")]
     for p in files:
         t = _text(p)
         assert chr(0x2014) not in t and chr(0x2013) not in t, "a long dash in %s" % os.path.basename(p)
@@ -460,6 +460,123 @@ def t_the_hold_off_bounds_a_short_under_iosmin():
         assert m.r10_holdoff(pol)[0] == "FAILS", pol
     s = " ".join(_t11a().split())
     assert "Judge HOLDS; mutated, no hold-off (the restart rule alone): FAILS; the hold-off retried at the restart rule's period: FAILS; a hold-off one peer's vote holds: FAILS" in s
+
+
+# ---------------------------------------------------------------------------------------------- round 12 (W167 on W163's recheck Q-183)
+HOD_OUT = os.path.join(ROOT, "v2", "docs", "records", "l4hod", "l4hod.out")
+HOD_PAGE = os.path.join(ROOT, "v2", "docs", "records", "l4hod", "L4HOD.md")
+
+
+def _j4():
+    """record l4hod's J4, parsed: (the healthy reading's band, the pass band) as printed"""
+    h = " ".join(_text(HOD_OUT).split())
+    m = re.search(r"J4 holds a healthy limiter reads ([\d.]+) to ([\d.]+) A; a pass admits IOS ([\d.]+) to ([\d.]+) A", h)
+    assert m, "l4hod.out prints no J4 row"
+    return (m.group(1), m.group(2)), (m.group(3), m.group(4)), h
+
+
+def _hod_rows(page):
+    """the contract page's FW-B24 and V-B25 rows as rowb writes them"""
+    b24 = [l for l in page.splitlines() if l.startswith("| FW-B24 |")]
+    v25 = [l for l in page.splitlines() if l.startswith("| V-B25 |")]
+    assert len(b24) == 1 and len(v25) == 1
+    return b24[0], v25[0]
+
+
+def _hod_band_ok(b24, v25, band):
+    """N3's predicate: FW-B24's PASS band and V-B25's reading band are J4's healthy reading band, figure for figure"""
+    m1 = re.search(r"PASS ([\d.]+) to ([\d.]+) A", b24)
+    m2 = re.search(r"the reading inside ([\d.]+) to ([\d.]+) A", v25)
+    return bool(m1 and m2) and m1.groups() == tuple(band) and m2.groups() == tuple(band)
+
+
+def t_the_contract_hod_band_equals_l4hod_j4():
+    """W163-N3: the contract's HO-D band (FW-B24's PASS and V-B25's reading) equals record l4hod's J4, read from l4hod.out on the page
+    rowb writes; MUTANTS (W163's M3 and M4): V-B25, then FW-B24, back to the old 0.6140 A top, each FAILS the predicate"""
+    band, _pass, _h = _j4()
+    with tempfile.TemporaryDirectory(prefix="t_rowb_n3_") as d:
+        p = _compose_contract(d)
+        assert _run(A_ROWB, p, "--write").returncode == 0
+        b24, v25 = _hod_rows(open(p, encoding="utf-8").read())
+    assert _hod_band_ok(b24, v25, band), (band, b24[:80], v25[:80])
+    old = "%s to 0.6140 A" % band[0]
+    new = "%s to %s A" % band
+    assert new in v25 and new in b24
+    assert not _hod_band_ok(b24, v25.replace(new, old), band), "M3 (V-B25 at 0.6140 A) passes"
+    assert not _hod_band_ok(b24.replace(new, old), v25, band), "M4 (FW-B24 at 0.6140 A) passes"
+
+
+def t_e17_reads_the_hod_pass_top_wherever_it_is_stated():
+    """W163-N1: HO-D's 'a lost limit never passes' is CONDITIONAL on E-17, and E-17 reads the junction at HO-D's pass top (J4's top), pass
+    at most 125 C (the theta re-solved here from T10's air and drop), in T10 11a (e), V-B20, the ledger's restatement, the change-list
+    rows R-248 and R-250, record l4hod's J4 and page and the connected record; the T10 module's carried figure equals J4's; MUTANT: J4's
+    claim without its condition FAILS"""
+    _band, (_plo, top), h = _j4()
+    t10 = _mod(T10, "l9t5_t10_rowb_test")
+    assert "%.4f" % t10.R10_HOD_TOP == top, (t10.R10_HOD_TOP, top)
+    s = " ".join(_t11a().split())
+    m = re.search(r"AND AT HO-D'S PASS TOP \(W163-N1\): .*? ([\d.]+) A \(its J4; .*?PASS LIMIT the junction at most 125 C there, ([\d.]+) C/W at IGND = 0\. "
+                  r"On the ([\d.]+) C/W above, a limit passing at ([\d.]+) A reads ([\d.]+) C", s)
+    assert m, "T10 11a (e)'s E-17 does not read HO-D's pass top"
+    air = _f(r"in still air at ([\d.]+) C", s)
+    drop = _f(r"the drop ([\d.]+) V, [\d.]+ W at IGND = 0", s)
+    th = (125.0 - air) / (drop * float(top))
+    assert m.group(1) == top and m.group(4) == top and abs(float(m.group(2)) - th) < 0.06 and th < float(m.group(3))
+    assert abs(float(m.group(5)) - (air + float(m.group(3)) * drop * float(top))) < 0.1 and float(m.group(5)) > 125.0
+    thp = "%.1f C/W" % th
+    hod_ok = lambda txt: ("CONDITIONAL on E-17 read at the pass top" in txt and thp in txt)   # noqa: E731
+    assert hod_ok(h), "l4hod.out's J4 states its claim unconditionally"
+    j4 = h.split("J4 holds", 1)[1].split("J5 holds", 1)[0]
+    assert hod_ok(j4) and not hod_ok(j4.replace("CONDITIONAL on E-17 read at the pass top", "")), "the mutant (J4 unconditional) passes"
+    assert "CONDITIONAL on E-17" in " ".join(_text(HOD_PAGE).split()) and thp in _text(HOD_PAGE)
+    rowb = _mod(A_ROWB, "rowb_n1")
+    assert "pass top %s A" % top in rowb.V_B20 and thp.replace(" C/W", " C/W at zero ground current") in rowb.V_B20
+    assert "pass top %s A" % top in rowb.FW_B24
+    rem = _text(A_REM)
+    assert "pass top %s A" % top in rem and thp in rem
+    cl = _mod(A_CL, "changelist_n1")
+    for rid in ("R-248", "R-250"):
+        row = [r for r in cl.ROWS if r.startswith("| %s |" % rid)][0]
+        assert "E-17" in row and "%s A" % top in row and thp in row, rid
+    c = " ".join(_c11a().split())
+    assert re.search(r"item +6 \([^)]*\):.*?CONDITIONAL on E-17 at the pass top %s A \(the site's theta at most %s" % (re.escape(top), re.escape(thp)), c)
+
+
+def t_v_b23_hold_off_vector_holds_the_rail_under_bor():
+    """W163-N2: V-B23's hold-off vector is a short of the 3.3 V output to ground holding the rail under BOR (so the supervisor cannot boot
+    and its peers' restarts fail whether or not its limiter latches), expected three failed restarts, then EN low between retries 600 s
+    apart; MUTANT: round 11's 10 Ohm load (0.33 A, the regulator in regulation, the supervisor running) FAILS the predicate"""
+    rowb = _mod(A_ROWB, "rowb_n2")
+    ok = lambda v: ("shorted to ground" in v and "under BOR" in v and "cannot boot" in v and "three failed restarts" in v   # noqa: E731
+                    and "600 s apart" in v and "10 Ohm" not in v and "0.33 A" not in v)
+    assert ok(rowb.V_B23)
+    mut = rowb.V_B23.split("one supervisor's 3.3 V output", 1)[0] + (
+        "one supervisor's 3.3 V output loaded through 10 Ohm (0.33 A, under the limiter's least, never limited): its peers' three failed "
+        "restarts, then its limiter's EN read low between their retries 600 s apart |\n")
+    assert not ok(mut), "the 10 Ohm vector passes"
+
+
+def t_the_hold_off_across_a_peers_reset_is_specified():
+    """W163-N6: FW-B22 states the hold-off's state across a peer's own reset (each peer's own, in RAM, not kept across its reset) and the
+    bound T10 11a (f) (iii) prints, re-added here from T10's drafted cadence"""
+    t10 = _mod(T10, "l9t5_t10_rowb_test")
+    rowb = _mod(A_ROWB, "rowb_n6")
+    want = (t10.R10_LOSS_DECISION + (t10.R10_HOLDOFF["n"] - 1) * t10.R10_RESTART + t10.R10_RESTORE_OFF + t10.R10_REJOIN)
+    s = " ".join(_t11a().split())
+    got = _f(r"ACROSS A PEER'S OWN RESET .*? then both hold again, ([\d.]+) s after its rejoin", s)
+    assert abs(got - want) < 0.06, (got, want)
+    assert "W163-N6" in rowb.B22_NEW and "not kept across its own reset" in rowb.B22_NEW and ("%.1f s after its rejoin" % want) in rowb.B22_NEW
+
+
+def t_the_change_list_class_is_read_against_its_acceptance():
+    """W163-N5: the four rows keep L4-E9's class for a drafted step-B row (test_l9t5's rule once applied), and the draft's page note and
+    docstring read the class against each Acceptance cell (R-248 and R-250 CONDITIONAL on E-17)"""
+    cl = _mod(A_CL, "changelist_n5")
+    assert "W163-N5" in cl.NOTE and "not the acceptance" in cl.NOTE
+    assert "THE CLASS AGAINST THE ACCEPTANCE (W167 on W163-N5" in (cl.__doc__ or "")
+    for rid in ("R-248", "R-250"):
+        row = [r for r in cl.ROWS if r.startswith("| %s |" % rid)][0]
+        assert "CONDITIONAL on E-17" in row.split(" | ")[5], rid
 
 
 # pytest aliases

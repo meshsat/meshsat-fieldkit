@@ -6,22 +6,22 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
 1. INPUTS (sha256/16)
    92e23993ab3f4c42 v2/docs/records/l8p/L8P-BREAKER.md
    1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
-   8861819ad38218cf v2/docs/records/l4canen/l4canen.out
-   3a13d2bac53bbc67 v2/docs/records/l4canen/l4canen.py
+   52009c60e3b0f864 v2/docs/records/l4canen/l4canen.out
+   74ff2f7753360af6 v2/docs/records/l4canen/l4canen.py
    51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
-   1159599b4c589352 v2/docs/records/l9t5/l9t5_canmb.out
-   9dd1fb7819b4bad2 v2/docs/records/l9t5/l9t5_canq.out
+   cfa7ed0220b4f68c v2/docs/records/l9t5/l9t5_canmb.out
+   266f221e85668e80 v2/docs/records/l9t5/l9t5_canq.out
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    89576bfb472d983e v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
-   d6c7e771a97eadb6 v2/docs/records/l4reg/l4reg_compare.out
+   fe5e69e35142a031 v2/docs/records/l4reg/l4reg_compare.out
    c9dec1b3079d2393 v2/docs/records/l4reg/l4reg_compare.py
    7e473e35ac8efde0 v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md
    c4084ad21bcc6d2f v2/docs/records/l4hod/inputs/l4ai-register-L4A-58-row.tsv
    fb40f56837a717cb v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
    37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
-   2b55777bc5d0243d v2/docs/records/l9t5/l9t5_t10.out
+   d2f9cb974c384add v2/docs/records/l9t5/l9t5_t10.out
    be3b47d2770da1c2 v2/vendor/diodes/pdftext/diodes-bat46w.layout.txt
    9e327f9bfd6f5a7c v2/vendor/passives/held/pdftext/uniroyal-series-11cd644d.layout.f4.l7.txt  (held back)
    39f205116896b7e2 v2/vendor/power/pdftext/aos-ao3400a-n-mosfet.layout.txt
@@ -202,6 +202,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
      S3' 0.4240 A a supervisor (record l4reg's section 2)
    the acceptance: a healthy limiter (0.4702 to 0.5878 A) reads 0.4345 to 0.6326 A over every corner: PASS inside, LIMIT LOW under, LIMIT HIGH over (DRAFTED)
    a PASS admits IOS 0.4023 to 0.6819 A; the regulator's 125 C current is 0.7399 A, so every limit that passes keeps the regulator at 121.2 C or less (76.0 C/W PRINTED)
+     at the site that is CONDITIONAL on E-17 read at the pass top, the site's theta at most 82.5 C/W (J4; W163-N1, record l9t5 T10 11a (e))
      the margin: the guarantee holds for B up to 58.5 mA (0.5 mA with the EN diode, 20 mA assumed without it) and for an ADC error up to +-64 mV at
      the pin (assumed 10 mV)
      the low side: a pass admits IOS from 0.4023 A, 0.0217 A under the largest served peak 0.4240 A (S3'): such a limit latches its supervisor at that peak in
@@ -215,7 +216,10 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
       4.1174 V across it for at most 0.2 ms (its closer's abort, 3.2 ms by the other peer), inside the series' short-time
       overload of 2.5 x RCWV = 4.330 V for 5 s (PRINTED)
    J4 holds a healthy limiter reads 0.4345 to 0.6326 A; a pass admits IOS 0.4023 to 0.6819 A, under the regulator's 125 C
-      current 0.7399 A (76.0 C/W PRINTED, 0.8669 V drop): a lost limit (IOS over it) never passes
+      current 0.7399 A (76.0 C/W PRINTED, 0.8669 V drop): on the printed theta a lost limit (IOS over it) never passes; at the
+      site CONDITIONAL on E-17 read at the pass top (record l9t5 T10 11a (e), W163-N1): the site's theta at most 82.5 C/W at
+      IGND = 0 (at E-17's limit at IOSmax, 95.7 C/W, a limit passing at 0.6819 A reads 132.8 C); never a tightened reading (a
+      healthy limiter reads up to 0.6326 A)
    J5 holds the output while a healthy limiter limits is at most 1.8467 V and reads at most 1.8978 V; with the limit lost it
       is at least 3.3911 V (the least input less the lost current 1.4396 A and the target's 0.4240 A through the limiter's 0.135
       Ohm) and reads at least 3.3130 V; the abort at 2.5 V lies between them over every corner of the reading
@@ -396,7 +400,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    the draft refuses a generator without regstage, a second application and the tree's generator (NOT RELEASED): yes
    the pin plan: pins 15, 16 and 42 to 45 free before, FT rows of Table 9, the ADC functions read, no debug pin; the count 49 of 100, 14 supplies, 37 unconnected: yes
    the levels hold on the printed rows (gates, FAULT high and low, the dark peer, the ADC pins, the loads on the rails): yes
-   the judge HOLDS (J0 to J9): the demand forces the limit, a lost limit's current is carried, a pass keeps the regulator under 125 C: yes
+   the judge HOLDS (J0 to J9): the demand forces the limit, a lost limit's current is carried, a pass keeps the regulator under 125 C on the printed theta (at the site CONDITIONAL on E-17 at the pass top): yes
    every judge mutation FAILS (five), a test that cannot detect a lost limit and a TYPICAL limit among them: yes
    the interval out, the service lost and the detection interval are bounded on printed and drafted figures: yes
    every fault of the test path has a row with its detection and bound; no single fault is NOT FOUND; only the part's own latch can leave its supervisor off: yes

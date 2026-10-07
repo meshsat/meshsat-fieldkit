@@ -123,7 +123,9 @@ giving up to 11 windows of such asymmetry in a run (W139-F6): still contained, b
 outcome single-valued.
 
 **Row 8 and W138's latch (R8b).** W138 reads "(f2) 0.5491 A and rev V's held 0.5639 A inside the band (0.4702 to 0.5704 A): a
-supervisor there MAY be limited and latched off after 5 to 10 ms". The held states arise only while both transceivers drive dominant
+supervisor there MAY be limited and latched off after 5 to 10 ms" (W138's band at its tested row; on W159's envelope, 0.4702 to 0.5878
+A, record l4reg's `l4reg_compare.out` in this tree reads the same two held states inside the band, and `l9t5_canq.out` now reads its
+band there: W167 on W163-N4). The held states arise only while both transceivers drive dominant
 into their faults: a healthy controller does that for at most one attempt's bits, and a held TXD is ended by the DTO after at most 3.8
 ms (PRINTED), under the latch's 5 ms minimum. Whether the TPS2553-1's timer restarts when the current falls is the held sheet's
 (SLVS841F, not read here), so R8b takes "MAY latch" as written (SESSION W139-D10): all three latched, quorum lost, which is row 8's

@@ -64,7 +64,7 @@ REC = "v2/docs/records/l9t5"
 DOCS = {"trace": "v2/docs/REQUIREMENTS-TRACE.md", "ioha": "v2/docs/ARCH-PCB-B-IOHA.md", "contract": "v2/docs/HW-FW-CONTRACT.md",
         "contract_t10": REC + "/apply_hw_fw_contract_t10.py", "contract_canq": REC + "/apply_hw_fw_contract_canq.py",
         "t10_out": REC + "/l9t5_t10.out", "t10_page": REC + "/T10-ROUND5.md",
-        "canmb": REC + "/inputs/l4canmb-l9t5_canmb-5d14cc85.out", "l4reg": REC + "/inputs/l4reg-l4reg_compare-9fbda7a6.out",
+        "canmb": REC + "/inputs/l4canmb-l9t5_canmb-5d14cc85.out", "l4reg": "v2/docs/records/l4reg/l4reg_compare.out",   # W167 on W163-N4: the tree's (W159's envelope); was inputs/l4reg-l4reg_compare-9fbda7a6.out
         "sources": REC + "/inputs/SOURCES-canq.txt",
         "ledger": "v2/docs/records/l4close/REMAINING-ENGINEERING.md",
         "cx46": "v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md",
@@ -1341,7 +1341,8 @@ def render(res):
     w("     a dark controller reads RECESSIVE at its readers; one reader cannot frame a healthy controller; silence within %.3f us of the" % P["mb_on_us"])
     w("     second vote, released within %.2f us; the self-test's cycle %.4f s, a latent fault DETECTED WITHIN %.2f s" % (P["mb_off_us"], P["mb_cycle_s"], P["mb_interval_s"]))
     w("     its four residuals: %s" % "; ".join("%s %s" % r for r in P["mb_residuals"]))
-    w("   W138's regulator stage (inputs/l4reg-l4reg_compare-9fbda7a6.out, fnd/l4reg 86dbcdff, unchecked): TPS2553-1, IOS %.4f to %.4f A," % (P["ios_min"], P["ios_max"]))
+    w("   W138's regulator stage (record l4reg's l4reg_compare.out in this tree, the band on W159's envelope; W167 on W163-N4, until then")
+    w("     W138's copy inputs/l4reg-l4reg_compare-9fbda7a6.out at its tested row's 0.5704 A): TPS2553-1, IOS %.4f to %.4f A," % (P["ios_min"], P["ios_max"]))
     w("     latch-off after %.0f to %.0f ms (SLVS841F 7.5, PRINTED as that record quotes it; the held sheet is not read here); 'nothing in" % (P["latch_min_ms"], P["latch_max_ms"]))
     w("     this draft drives EN'; row 8's held states %.4f A ((f2)) and %.4f A (rev V held, t10 10e) lie inside the band" % (P["f2_a"], P["f2v_a"]))
     w("")

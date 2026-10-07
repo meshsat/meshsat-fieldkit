@@ -63,7 +63,9 @@ The sheets: C1, TPS25200 and C2 are held back by their terms (TI: no redistribut
 
 - **The limiter:** C1, TI TPS2553-1 (SLVS841F; DBV), with RILIM 49.9 kOhm. IOS is 0.470 to 0.570 A, and it latches off after 5 to 10 ms. One goes at each supervisor LDO's input.
 - **The regulator:** a part in place of the AP2112K, with these PRINTED figures:
-  - junction-to-ambient at most 98.6 C/W at the 14.0k corner;
+  - junction-to-ambient at most 98.6 C/W at the 14.0k corner (this screen's own rule at the tested row's 0.570 A, kept as W135 computed it
+    by SESSION W159-D4: the current band is record l4reg's envelope, 0.4702 to 0.5878 A, on which the requirement is 95.7 C/W, and at
+    HO-D's pass top 82.5 C/W, W163-N1; the selected TPS73733DCQRM3's printed 76.0 C/W meets all three, and E-17 reads the site);
   - rated output and current limit at least 0.570 A;
   - dropout at 0.570 A at most 0.240 V;
   - input rated to at least 4.12 V;

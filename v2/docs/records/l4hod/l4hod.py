@@ -669,8 +669,16 @@ def judge(S, R, cfg):
     i_lo, i_hi = thresholds(S, rt=(rlo, rhi, 0))
     ios_pmin, ios_pmax = pass_band(S, i_lo, i_hi, rt=(rlo, rhi, 0))
     i125 = R["i125"]
+    # W167 on W163-N1: that reading rests on the printed JEDEC theta, which record l9t5 (T10 11a (e)) names no bound at the site; at the
+    # site it is CONDITIONAL on E-17 read at the pass top: the theta that holds 125 C there, and the pass top's junction at E-17's limit at IOSmax
+    th_top = (125.0 - R["air"]) / (R["drop"] * ios_pmax)
+    th_e17 = (125.0 - R["air"]) / (R["drop"] * hi1)
+    tj_top_e17 = R["air"] + th_e17 * R["drop"] * ios_pmax
     rows.append(("J4", ios_pmax < i125, "a healthy limiter reads %.4f to %.4f A; a pass admits IOS %.4f to %.4f A, under the regulator's 125 C current %.4f A "
-                 "(76.0 C/W PRINTED, %.4f V drop): a lost limit (IOS over it) never passes" % (i_lo, i_hi, ios_pmin, ios_pmax, i125, R["drop"])))
+                 "(76.0 C/W PRINTED, %.4f V drop): on the printed theta a lost limit (IOS over it) never passes; at the site CONDITIONAL on E-17 read at "
+                 "the pass top (record l9t5 T10 11a (e), W163-N1): the site's theta at most %.1f C/W at IGND = 0 (at E-17's limit at IOSmax, %.1f C/W, a "
+                 "limit passing at %.4f A reads %.1f C); never a tightened reading (a healthy limiter reads up to %.4f A)" % (
+                     i_lo, i_hi, ios_pmin, ios_pmax, i125, R["drop"], th_top, th_e17, ios_pmax, tj_top_e17, i_hi)))
     # J5: the abort separates a limit acting from one lost, over every corner
     cs = corners(S, rt=(rlo, rhi, 0))
     v_ok_true = hi1 * rhi
@@ -807,7 +815,7 @@ def main():
     drop = Erows["drop"][0]
     i125 = (125.0 - Erows["air"][0]) / (S["ldo_rja"][0] * drop)
     regd = dict(acc=S["ldo_acc"], vdo1a=S["ldo_vdo"])
-    R = dict(avail=avail, fixed=fixed, r_sup=r_sup, s3=s3, s1=Erows["s1"][0], drop=drop, i125=i125, need=lambda i: REG.need_reg(regd, i))
+    R = dict(avail=avail, fixed=fixed, r_sup=r_sup, s3=s3, s1=Erows["s1"][0], drop=drop, i125=i125, air=Erows["air"][0], need=lambda i: REG.need_reg(regd, i))
     w("l4hod: record l4hod, Layer 4 task L4A-58 (the ledger's HO-D under W138's limiter): the peers' in-service test of each supervisor's")
     w("TPS2553-1 drafted as record l9t5's apply_gen_sch_b_hodtest.py, composed with W137's canmb, W138's regstage and W143's canen in every order")
     w("they admit, its levels, its acceptance, its procedure and detection interval, and its own faults (MESHSAT-1357, W146; a DRAFT, NOT APPLIED;")
@@ -1004,6 +1012,8 @@ def main():
             S["ios"][0], S["ios"][1], i_lo, i_hi))
         w("   a PASS admits IOS %.4f to %.4f A; the regulator's 125 C current is %.4f A, so every limit that passes keeps the regulator at %.1f C or less (76.0 C/W PRINTED)" % (
             pmin, pmax, i125, Erows["air"][0] + S["ldo_rja"][0] * drop * pmax))
+        w("     at the site that is CONDITIONAL on E-17 read at the pass top, the site's theta at most %.1f C/W (J4; W163-N1, record l9t5 T10 11a (e))" % (
+            (125.0 - Erows["air"][0]) / (drop * pmax)))
         b_crit = i125 - (pass_band(S, i_lo, i_hi, bmax=0.0)[1])
         adc_crit = crit_adc(S, i125)
         w("     the margin: the guarantee holds for B up to %.1f mA (%.1f mA with the EN diode, %.0f mA assumed without it) and for an ADC error up to +-%.0f mV at" % (
@@ -1154,7 +1164,7 @@ def main():
         pred["the pin plan: pins 15, 16 and 42 to 45 free before, FT rows of Table 9, the ADC functions read, no debug pin; the count 49 of 100, 14 supplies, 37 unconnected"] = \
             plan_ok and same_cnt and cnt1["A"][:3] == (49, 14, 37) and cnt0["A"][:3] == (43, 14, 43)
         pred["the levels hold on the printed rows (gates, FAULT high and low, the dark peer, the ADC pins, the loads on the rails)"] = lv["ok"]
-        pred["the judge HOLDS (J0 to J9): the demand forces the limit, a lost limit's current is carried, a pass keeps the regulator under 125 C"] = jv == "HOLDS"
+        pred["the judge HOLDS (J0 to J9): the demand forces the limit, a lost limit's current is carried, a pass keeps the regulator under 125 C on the printed theta (at the site CONDITIONAL on E-17 at the pass top)"] = jv == "HOLDS"
         pred["every judge mutation FAILS (five), a test that cannot detect a lost limit and a TYPICAL limit among them"] = \
             all(v.startswith("FAILS") for _l, v in jm) and "J0" in jm[0][1] and "J1" in jm[1][1]
         pred["the interval out, the service lost and the detection interval are bounded on printed and drafted figures"] = \

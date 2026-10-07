@@ -1071,6 +1071,11 @@ def rowb_figures():
     h = text(ROWB_OUTS["hod"])
     F["hod"] = float(need(h, r"only while FAULT is low \(([\d.]+) mA\)", "hodtest's rail figure").group(1)) / 1000
     F["hod_int"] = float(need(h, r"3600 s \+ [\d.]+ s = ([\d.]+) s of its onset", "hodtest's detection interval").group(1))
+    # W167 on W163-N1: the pass top and the site's theta its guarantee needs, read from record l4hod's J4 (this record runs after it)
+    hj = " ".join(h.split())
+    m = need(hj, r"J4 holds a healthy limiter reads [\d.]+ to [\d.]+ A; a pass admits IOS [\d.]+ to ([\d.]+) A, .*? the site's theta at most ([\d.]+) C/W "
+             r"at IGND = 0", "hodtest's J4 (the pass top and the site's theta)")
+    F["hod_top"], F["hod_th"] = float(m.group(1)), float(m.group(2))
     return F
 
 
@@ -1116,7 +1121,8 @@ def rowb_section(w, FC, t14, FR, P):
     w("     (INFERRED: section 10's return effect %+.4f V, taken at its own lead current, carried); PROVISIONAL (L4A-62, E-17, V-T10-DROP)" % ret)
     w("     L4A-57 reads %s in T10 11a" % F["l4a57"])
     restate = {6: "the rail trip is removed by regstage (W138-2); its place the TPS2553-1's printed limit and latch (T10 11a (f)); the limiter's latent "
-                  "loss of its limit found by record l4hod's in-service test within %.3f s (DRAFTED)" % F["hod_int"],
+                  "loss of its limit found by record l4hod's in-service test within %.3f s (DRAFTED), its pass CONDITIONAL on E-17 at the pass top %.4f A "
+                  "(the site's theta at most %.1f C/W, record l4hod J4, W163-N1)" % (F["hod_int"], F["hod_top"], F["hod_th"]),
                7: "bounded at constant maximum dissipation at the limiter's printed maximum, %.1f C on the printed theta, CONDITIONAL on E-17" % F["tj_bound"],
                5: "the peers' buffered TXD reads and 2-of-2 SHDN votes drafted (canmb), the quorum held on rows 3, 5 and 7 and the GPIO-toggled TX "
                   "silenced (canq), its self-test 2.60 s (W143); PROVISIONAL",
