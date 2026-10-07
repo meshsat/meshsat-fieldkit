@@ -5,7 +5,7 @@ R-28, and test_l4e9's reading of LH-12 restated with it. FOR THE INTEGRATOR, on 
 The contradiction (the DESK-gate assessment's K-03, standing on main be07863b): FAN_OK and its three rows are WITHDRAWN,
   be07863b:v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:306 "| WITHDRAWN | 3g |" (R-210; R-211 and R-212 the same at :307, :308),
 and R-28 reads K4's off-list "the fans NOT on it: round 8's fans while keyed WITHDRAWN 5 October 2026 with R-210 to R-212" and
-"LH-12's text is restated by its owner record the same way (set 31, PC-08)" (be07863b:...DOWNSTREAM-REGISTER.md:134), while
+"LH-12's text is restated by its owner record the same way (set 31, PC-08)" (both on the register's line 134), while
   be07863b:v2/docs/records/l4e9/LAYER5-HANDOVER.md:28 still proposes "the outlets, the heater and the fans off while keyed (the
   fans' supplies through FAN_OK, R-210 to R-212)" in state DRAFTED.
 The authoritative value is R-28's (the owner's rejection of FAN_OK, the P0 brief of 5 October 2026). LH-12 keeps its id, its row

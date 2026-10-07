@@ -12,11 +12,11 @@ state words; chosen so the paragraph keeps its four printed lines (the generator
 paragraph's text: 4 lines before, 4 after), so no later line of l4e7_p0sol.out moves for this edit.
 
 K-23, standing on main be07863b in the generator alone:
-  be07863b:v2/docs/records/l4e7/l4e7_p0sol.out:403-404 "Validation: P1-1's S1 (the first two added to its rows)" (printed by
+  be07863b:v2/docs/records/l4e7/l4e7_p0sol.out:403 "Validation: P1-1's S1 (the first two added to its rows)" (printed by
   be07863b:v2/docs/records/l4e7/l4e7_p0sol.py:1353),
-against the pages' reading, be07863b:v2/docs/records/l4e7/B2-PRESENCE.md:186-187 "REMAINING ENGINEERING inside E-1" and
-"P1-1's S1 row (b) is the later validation of that computation, not a substitute for it", and the ledger's HO-F (section 6,
-item E: the narrower reading). The new sentence places both open cases of section 5g inside E-1, S1's rows (a) and (b) their later
+against the pages' reading, be07863b:v2/docs/records/l4e7/B2-PRESENCE.md:184 "REMAINING ENGINEERING inside E-1" and
+be07863b:v2/docs/records/l4e7/B2-PRESENCE.md:185-186 "P1-1's S1 row (b) is the later validation of that computation, not a
+substitute for it", and the ledger's HO-F (section 6, item E: the narrower reading). The new sentence places both open cases of section 5g inside E-1, S1's rows (a) and (b) their later
 validation; 6 printed lines before and after (simulated), so nothing below moves.
 
 Both edits are in place (one source line each, no line of l4e7_p0sol.py moves); the dated attribution is a trailing comment on
