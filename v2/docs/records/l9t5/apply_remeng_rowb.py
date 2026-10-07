@@ -73,7 +73,7 @@ def block():
         refuse("T10's section 11a does not read L4A-57 as DONE AS CONDITIONAL on E-17")
     return (
         "\n" + HEADER + "; DRAFTED, none applied, unchecked until row (b)'s check L4A-62).** Row (b)'s drafts take the place of the "
-        "containment section 4's rows read (record l9t5 `apply_gen_sch_b_canmb.py`, `apply_gen_sch_b_regstage.py`, "
+        "containment that section 4's rows read (record l9t5 `apply_gen_sch_b_canmb.py`, `apply_gen_sch_b_regstage.py`, "
         "`apply_gen_sch_b_canen.py`, `apply_gen_sch_b_hodtest.py`). The rows above stand as the tip `1c6d56f5` read them; each claim row "
         "(b) touches reads as below with the drafts, and no state is raised: RE-5 to RE-8 stay NOT CLOSED as cx46 filed them. The line "
         "numbers below are those of the outputs this table was applied beside.\n\n"
