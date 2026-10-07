@@ -34,7 +34,9 @@ buffer reads recessive), a stuck buffer or a stuck reading input yields no strik
 fabric fault) is left to FW-B21's stop. A reader votes on its OWN strike (k = 1), never on a message received over a fabric, which a
 jammer may deny; the 2-of-2 gate then needs both peers' own strikes. The reader rebuilds the bus from the three TXDs only to find WHO
 deviated first; whether anything happened on the bus it takes from its own FDCAN, so a target it cannot know to be shut (the other
-peer's vote is not visible to it) can at worst appear in the rebuild with no error behind it, and yields no strike.
+peer's vote is not visible to it) can at worst appear in the rebuild with no error behind it, and yields no strike. The comparison has
+ONE time base: the reader's TIM3 time-stamps the peers' TXD edges (W137's capture channels), and with FDCAN_TSCC.TSS = 10 its FDCANs
+take the "External timestamp counter from TIM3" (RM0433 Rev 8 p.2529), captured "on start of frame (both Rx and Tx)" (p.2530).
 
 | Step | 500 kbit/s | 1 Mbit/s | Label |
 |---|---|---|---|
@@ -125,7 +127,8 @@ supervisor there MAY be limited and latched off after 5 to 10 ms". The held stat
 into their faults: a healthy controller does that for at most one attempt's bits, and a held TXD is ended by the DTO after at most 3.8
 ms (PRINTED), under the latch's 5 ms minimum. Whether the TPS2553-1's timer restarts when the current falls is the held sheet's
 (SLVS841F, not read here), so R8b takes "MAY latch" as written (SESSION W139-D10): all three latched, quorum lost, which is row 8's
-accepted outcome ("nothing moves", the voters at the home assignment). Its return is section 6's.
+accepted outcome ("nothing moves", the voters at the home assignment). Its return is section 6's. Row 7's held state (f1), 0.3726 A,
+is under the limiter's least 0.4702 A, so no row 7 case reaches the band.
 
 ## 5. The self-test's interval and the latent faults of the vote path (canq 7)
 
@@ -214,6 +217,7 @@ own-request diode never found), a contract draft lacking a figure (A9).
 | W139-D9 | a returning controller listens in bus monitoring mode for 2 windows and sets its outputs to the read-back first | IOHA A4 ("rejoins without moving anything") | another rejoin rule with its own proof |
 | W139-D10 | R8b takes W138's "MAY latch" as written | the TPS2553 sheet is held back and not read here | the latch timer's behaviour read from SLVS841F |
 | W139-D11 | the evaluation 1 ms (a firmware row) and a 0.5 s boot (ASSUMPTION) | figures the firmware must meet; neither is printed | the firmware's measured figures |
+| W139-D12 | one time base: TIM3 counts the captures and, with FDCAN_TSCC.TSS = 10, the FDCANs' start-of-frame timestamps | RM0433 prints the choice (p.2529); the first-deviation rule compares the peers' TXDs with the reader's own frames | an FDCAN timestamp from its own prescaler, with the two counters correlated by the firmware |
 
 ## 9. Findings for other authors, and the supplier's tasks (amendment 1)
 

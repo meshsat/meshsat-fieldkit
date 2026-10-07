@@ -1,0 +1,60 @@
+Controller area network with flexible data rate (FDCAN)                                                      RM0433
+
+
+56.5.9          FDCAN timestamp counter value register (FDCAN_TSCV)
+                Address offset: 0x0024
+                Reset value: 0x0000 0000
+
+  31     30       29    28     27     26     25       24     23    22     21     20     19     18       17      16
+
+ Res.    Res.    Res.   Res.   Res.   Res.   Res.    Res.   Res.   Res.   Res.   Res.   Res.   Res.    Res.    Res.
+
+
+
+  15     14       13    12      11    10      9       8       7     6      5      4      3      2       1       0
+
+                                                      TSC[15:0]
+
+ rc_w    rc_w    rc_w   rc_w   rc_w   rc_w   rc_w    rc_w   rc_w   rc_w   rc_w   rc_w   rc_w   rc_w    rc_w    rc_w
+
+
+
+ Bits 31:16 Reserved, must be kept at reset value.
+   Bits 15:0 TSC[15:0]: Timestamp counter
+              The internal/external timestamp counter value is captured on start of frame (both Rx and Tx). When
+              FDCAN_TSCC.TSS = 01, the timestamp counter is incremented in multiples of CAN bit times [1 …
+              16] depending on the configuration of FDCAN_TSCC.TCP. A wrap around sets interrupt flag
+              FDCAN_IR.TSW. Write access resets the counter to 0. When FDCAN_TSCC.TSS = 10, TSC
+              reflects the external timestamp counter value. A write access has no impact.
+
+Note:           A “wrap around” is a change of the timestamp counter value from non-0 to 0 not caused by
+                write access to FDCAN_TSCV.
+
+56.5.10         FDCAN timeout counter configuration register (FDCAN_TOCC)
+                Address offset: 0x0028
+                Reset value: 0xFFFF 0000
+
+  31     30       29    28     27     26     25       24     23    22     21     20     19     18       17      16
+
+                                                      TOP[15:0]
+
+  rw      rw      rw    rw     rw      rw     rw      rw     rw    rw     rw      rw     rw    rw       rw      rw
+  15     14       13    12      11    10      9       8       7     6      5      4      3      2       1       0
+
+ Res.    Res.    Res.   Res.   Res.   Res.   Res.    Res.   Res.   Res.   Res.   Res.   Res.     TOS[1:0]      ETOC
+
+                                                                                                rw      rw      rw
+
+
+
+ Bits 31:16 TOP[15:0]: Timeout period
+             Start value of the timeout counter (down-counter). Configures the timeout period.
+             These are write-protected bits, write access is possible only when bit CCE and bit INIT of
+             FDCAN_CCCR register are set to 1.
+   Bits 15:3 Reserved, must be kept at reset value.
+
+
+
+
+2530/3353                                           RM0433 Rev 8
+

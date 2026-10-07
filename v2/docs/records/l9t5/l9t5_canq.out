@@ -7,7 +7,7 @@ until independently checked)
    5d14cc85213ad999 v2/docs/records/l9t5/inputs/l4canmb-l9t5_canmb-5d14cc85.out
    67335ea42747e22f v2/docs/parts/STM32H743-COMPATIBILITY.md
    12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
-   ff6ff2265b8d951c v2/docs/records/l9t5/apply_hw_fw_contract_canq.py
+   ff8e555532a33c70 v2/docs/records/l9t5/apply_hw_fw_contract_canq.py
    efcfdf67f1fcab83 v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
    336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
    69e6ac4fc0417d3c v2/docs/records/l9t5/apply_gen_sch_a_iocbuck.py
@@ -22,6 +22,8 @@ until independently checked)
    9e7f53205453bb22 v2/vendor/st/pdftext/st-es0392-rev15.layout.p48.txt
    bb7ff2f3f5cb2ce8 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2469.txt
    609cb3ecd86269dd v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2470.txt
+   2cba618decea2128 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2529.txt
+   dc9d850e2fef2394 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2530.txt
    c04b2d82e5e4ccac v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2532.txt
    6d1e639ddcc9cdbd v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2533.txt
    e4289fd5af43153c v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2534.txt
@@ -71,6 +73,7 @@ until independently checked)
    tpd A or B to Y at 3.3 V +-0.3 V, 30 or 50 pF: 4.5 ns maximum to 85 C, 6 ns to 125 C (SCES217AA 5.8)
    'In bus monitoring mode (For more details refer to ISO11898-1, 10.12 bus monitoring), the FDCAN is able to receive valid data frames and valid remote frames, but cannot start a transmission. In this mode, it sends only recessive bits on the CAN bus' (RM0433 Rev 8 p.2469)
    'In DAR mode all transmissions are automatically canceled after they started on the CAN bus.' (RM0433 Rev 8 p.2470)
+   FDCAN_TSCC TSS[1:0] = 10: 'External timestamp counter from TIM3 value used (tim3_cnt[0:15])', and 'The internal/external timestamp counter value is captured on start of frame (both Rx and Tx)' (RM0433 Rev 8 pp.2529 and 2530)
    after Bus_Off, once INIT is cleared, 'the device waits for 129 occurrences of bus Idle (129 x 11 consecutive recessive bits)' (RM0433 Rev 8 p.2534)
    FDCAN_IR bit 27 PEA, 'Protocol error in arbitration phase detected (PSR.LEC different from 0,7)' (RM0433 Rev 8 p.2535)
    ES0392 Rev 15 2.24.5: 'In DAR mode, the transmission may fail due to lost arbitration at the first two identifier bits.' Workaround: 'Upon failure, clear the corresponding Tx buffer transmission request bit TRPx of the FDCAN_TXBRP register and set the corresponding cancellation finished bit CFx of the FDCAN_TXBCF register, then restart the transmission.'
@@ -86,6 +89,8 @@ until independently checked)
      V4 a dominant bit where the frame's owner sends recessive, other than the ACK slot, before any other deviation in that frame
         (the FIRST deviation: the flags of the controllers that answer it begin after it and are legal)
      V5 a start of frame outside its own slot, or more frames in a window than its slot allows (1 state and 5 event frames)
+   ONE TIME BASE: the reader's TIM3 time-stamps the peers' TXD edges (W137's capture channels) and, with FDCAN_TSCC.TSS = 10, its own
+     FDCANs' start of every frame sent or received (RM0433 p.2529), so the TXDs and its own frames are compared on one counter
    a STRIKE needs the violation AND the reader's own evidence on that fabric: its FDCAN's protocol error (FDCAN_IR.PEA, PSR.LEC) or its
      own scheduled frame lost, inside the frame the violation hit, explained by the target's deviation; NEVER a TXD reading alone: a
      dark controller (its buffer reads recessive), a stuck buffer or a stuck reading input moves no bus bit and yields no strike;
@@ -105,7 +110,8 @@ until independently checked)
      silenced by the test (W137's draft holds 10 to 90 ms with the state frames at mid-window); both fabrics tested in parallel, fabric B's
      target the next controller; a cycle is 3 targets x 4 phases = 12 windows; the restated V phase runs the attribution path end to
      end (the target's deliberate malformed test frame, struck by both readers, their votes acting to the hold's end)
-   the decision: a peer's state frame for window n taken from EITHER fabric; two copies that differ discard that peer's state for n;
+   the decision: a peer's state frame for window n taken from EITHER fabric, counted only in its sender's slot with its sender's
+     identifier (a frame carrying another controller's identifier is discarded); two copies that differ discard that peer's state for n;
      a peer is lost after 3 consecutive windows with no valid state frame on either fabric; 2 of 3 as drafted
    DAR = 1 kept (L9T5-D2) with ES0392 2.24.5's printed workaround inside the controller's own slot: with slots healthy controllers
      never lose arbitration to each other, so 2.24.5 is met only against a faulty one; the compatibility page's 'firmware does not
@@ -176,7 +182,8 @@ until independently checked)
      moves' holds (the voters at the home assignment), and the return is section 8's; the held states reach the band only while both
      transceivers drive into their faults, which a healthy controller does for at most an attempt's bits; a held TXD is ended by the DTO
      after at most 3.8 ms, under the latch's 5.0 ms minimum: whether the latch timer restarts when the current falls is the held
-     sheet's (SLVS841F) and is NOT read here, so R8b takes W138's 'MAY latch' as written
+     sheet's (SLVS841F) and is NOT read here, so R8b takes W138's 'MAY latch' as written; row 7's held state (f1), 0.3726 A, is under
+     the limiter's least 0.4702 A, so no row 7 case reaches the band
 
 7. THE SELF-TEST'S INTERVAL AND THE LATENT FAULTS OF THE VOTE PATH (onset anywhere in the cycle; a phase judged at its window's end,
    declared on the second consecutive failure, the verdict exchanged in the next window: simulated where a phase finds it)
@@ -259,6 +266,7 @@ until independently checked)
    W139-D9 a returning controller listens in bus monitoring mode for 2 windows and sets its outputs to the read-back first
    W139-D10 row R8b takes W138's 'MAY latch' as written (the TPS2553 sheet is held back and not read here)
    W139-D11 the evaluation time 1 ms (a firmware row) and a 0.5 s boot (ASSUMPTION) in the recovery bounds
+   W139-D12 one time base: TIM3 for the captures and, with FDCAN_TSCC.TSS = 10, for the FDCANs' timestamps (RM0433 p.2529)
    FINDINGS FOR OTHER AUTHORS (T10-CANQ.md section 9)
    W139-F1 (Layer 6, STM32H743-COMPATIBILITY.md's ES0392 2.24.5 row): 'firmware does not use DAR' contradicts FW-B21 and FW-B22
    W139-F2 (L4A-54 and L4A-58 by L4REG-F3; W138; board A): a latched TPS2553-1 has no automatic return; IOC_LIM_EN has no driver

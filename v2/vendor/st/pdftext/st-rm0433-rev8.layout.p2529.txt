@@ -1,0 +1,58 @@
+RM0433                                                Controller area network with flexible data rate (FDCAN)
+
+
+   Bits 15:8 NTSEG1[7:0]: Nominal time segment before sample point
+              Valid values are 0 to 255. The value used by the hardware is the one programmed, incremented by 1
+              (tBS1 = (NTSEG1 + 1) x tq).
+              These are write-protected bits, write access is possible only when bit CCE and bit INIT of
+              FDCAN_CCCR register are set to 1.
+          Bit 7 Reserved, must be kept at reset value.
+       Bits 6:0 NTSEG2[6:0]: Nominal time segment after sample point
+                 Valid values are 0 to 127. The value used by the hardware is the one programmed, incremented by 1
+                 (tBS2 = (NTSEG2 + 1) x tq).
+
+Note:             With a CAN kernel clock of 8 MHz, the reset value of 0x00000A33 configures the FDCAN
+                  for a bitrate of 125 kbit/s.
+
+56.5.8            FDCAN timestamp counter configuration register (FDCAN_TSCC)
+                  Address offset: 0x0020
+                  Reset value: 0x0000 0000
+
+  31        30      29    28     27      26     25       24   23      22     21     20     19      18      17         16
+
+ Res.      Res.    Res.   Res.   Res.   Res.   Res.    Res.   Res.   Res.   Res.   Res.             TCP[3:0]
+
+                                                                                           rw      rw      rw         rw
+  15        14      13    12     11      10     9        8     7      6      5       4      3      2       1          0
+
+ Res.      Res.    Res.   Res.   Res.   Res.   Res.    Res.   Res.   Res.   Res.   Res.   Res.    Res.         TSS[1:0]
+
+                                                                                                           rw         rw
+
+
+
+ Bits 31:20 Reserved, must be kept at reset value.
+ Bits 19:16 TCP[3:0]: Timestamp counter prescaler
+             Configures the timestamp and timeout counters time unit in multiples of CAN bit times [1 … 16].
+             The actual interpretation by the hardware of this value is such that one more than the value
+             programmed here is used.
+             In CAN FD mode the internal timestamp counter TCP does not provide a constant time base due to
+             the different CAN bit times between arbitration phase and data phase. Thus CAN FD requires an
+             external counter for timestamp generation (TSS = 10).
+             These are write-protected bits, write access is possible only when bit CCE and bit INIT of
+             FDCAN_CCCR register are set to 1.
+   Bits 15:2 Reserved, must be kept at reset value.
+       Bits 1:0 TSS[1:0]: Timestamp select
+                 00: Timestamp counter value always 0x0000
+                 01: Timestamp counter value incremented according to TCP
+                 10: External timestamp counter from TIM3 value used (tim3_cnt[0:15])
+                 11: Same as 00.
+                 These are write-protected bits, write access is possible only when bit CCE and bit INIT of
+                 FDCAN_CCCR register are set to 1.
+
+
+
+
+                                                      RM0433 Rev 8                                             2529/3353
+                                                                                                                           2589
+
