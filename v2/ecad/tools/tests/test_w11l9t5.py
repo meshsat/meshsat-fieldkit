@@ -247,8 +247,22 @@ def _gen_ok(src):
     return ok_new and not stale
 
 
+def _without_round10(src):
+    """W151's round 10 (7 October 2026, Layer 4 task L4A-61; record l9t5 T10-ROUND10.md): an additive section 11a after section 11,
+    printed by one call and one appended block of functions, held by its own predicates (test_l9t5_rowb.py). It is taken out here,
+    exactly and once, so this module keeps holding W11's change and nothing else against the base."""
+    call = "        rowb_section(w, FC, t14, FR, P)\n"
+    mark = "\n\n# " + "=" * 134 + "\n# ROUND 10 (7 October 2026, W151"
+    if call not in src and mark not in src:
+        return src
+    assert src.count(call) == 1 and src.count(mark) == 1, "round 10's call or block is not in the generator once"
+    head, tail = src.split(mark, 1)
+    assert "\n\n\nif __name__ == \"__main__\":" in tail, "round 10's block is not the generator's last before its entry point"
+    return head.replace(call, "").rstrip("\n") + "\n\n\nif __name__ == \"__main__\":" + tail.split("\n\n\nif __name__ == \"__main__\":", 1)[1]
+
+
 def t_the_generator_prints_the_restated_rows():
-    src = tree(CONPY)
+    src = _without_round10(tree(CONPY))
     assert _gen_ok(src), "the generator's section 11 lacks a new row or keeps a stale word"
     base = at(BASE, CONPY)
     assert not _gen_ok(base), "the predicate passes the base generator"
