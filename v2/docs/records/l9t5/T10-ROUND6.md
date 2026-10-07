@@ -90,7 +90,7 @@ quorum; the buffer is the correction (SESSION W137-D8). While its controller is 
 controller is defined at its readers. The controller's own rail in the worst serving state: at most 0.1753 A against round 6's 0.1739 A,
 inside C-DEV rev 2's conservative 0.2558 A (a labelled scenario for the coordinator; no case row is changed here).
 
-## 6. The vote path's in-service self-test (canmb 7; drafted as firmware rows, not applied)
+## 6. The vote path's in-service self-test (canmb 7; specified for the firmware stage, its contract rows L4A-61's; nothing applied)
 
 One transceiver at a time, never while a fabric is down, so the quorum keeps its three controllers on the other fabric and two on the
 tested one. Per transceiver four phases, one per 100 ms window of FW-B22 (DRAFTED): S, the target's own SHDN request alone (silenced);

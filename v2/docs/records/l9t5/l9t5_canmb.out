@@ -159,7 +159,7 @@ nothing built or measured)
      per input), all at once: at most 0.1753 A (MODEL; a labelled scenario for the coordinator's C-DEV, no case row changed here)
    all levels hold: yes
 
-7. THE VOTE PATH'S IN-SERVICE SELF-TEST (drafted for the firmware stage as rows of the contract; nothing applied)
+7. THE VOTE PATH'S IN-SERVICE SELF-TEST (specified here for the firmware stage; its contract rows are L4A-61's; nothing applied)
    One transceiver at a time is tested, never while a fabric is down, so the quorum keeps its three controllers on the other fabric
    and two on the tested one. Per transceiver (6) four phases, one per window of FW-B22's 100 ms schedule (DRAFTED), every 1 window(s):
      S  the target's own SHDN request alone      -> the transceiver silenced
@@ -184,8 +184,8 @@ nothing built or measured)
      a reader's copy of a TXD edge rises or falls in about 225 ns (10 to 90 %, 2.2 kOhm against 46 pF: ASSUMPTION, a Layer 10 bound),
        the same on both edges, so a dominant interval keeps its length at the reader to within that time
    THE INTERVAL: one cycle is 6 transceivers x 4 phases x 1 window(s) x 100 ms = 2.4000 s; a latent fault of the vote path is exercised
-     within one cycle, its phase is judged in the next window, and it is declared on its 2. consecutive failure (one corrupted frame
-     never declares one): DETECTED WITHIN 5.00 s of its onset (MODEL on the printed timing above and the DRAFTED 100 ms window)
+     within one cycle, its phase is judged in the next window, and it is declared when 2 consecutive runs of that phase fail (one corrupted
+     frame never declares one): DETECTED WITHIN 5.00 s of its onset (MODEL on the printed timing above and the DRAFTED 100 ms window)
    the self-test's cost: two phases in four silence one transceiver for 80 ms; with DAR = 1 (L9T5-D2) the target's one attempt in such
      a phase raises its transmit error count by 8, 16 a cycle per transceiver, against at least 22 successful frames that lower it by 1
      each: the count stays bounded and error-active (the protocol's fault confinement)
