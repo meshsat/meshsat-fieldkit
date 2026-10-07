@@ -1,0 +1,95 @@
+l4e11_rowc: record l4e11 round 19, Layer 4 register row (c): L4A-67 (section 28 replayed on the corrected circuit) and L4A-68 (20f and
+22 replayed at the guard's restated allowance) (MESHSAT-1357, 7 October 2026). Desk arithmetic on the records' own figures; nothing was
+built, bought or measured. LABELS: RECORD; INFERRED; MODEL; ASSUMED.
+
+0. PINS (sha256/16)
+   36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
+   3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
+   825562517df6374f  v2/docs/records/l8p/l8p_cprot.out
+   e8f1294bb0f76c75  v2/docs/records/l8p/apply_gen_sch_p_breaker.py
+   544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
+   19af759a934be6cc  v2/docs/records/l8p/apply_gen_sch_a_thgfs.py
+   27bf3e410e7a2597  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
+
+1. THE WINDOWS AND THE FIGURES (RECORD)
+   this record's windows (20c, 27a, 20f): held under 0.7755 V; closed over 0.84 V; powered over 1.981 V at most (1.825 V at least);
+     unpowered under 1.789 V; RET/OUT 0.4707 or more for a ramping closed loop; U47's and U48's tSD 2 ms at most; the breaker's start
+     no sooner than the RC hold's least 0.110 s; 22's bleed 1.218 s at the hot bound 434.8 uA, inside the hold's least 1.341 s, the coupled
+     limit 520.7 uA
+   the guard's allowance (record l8p 10c): 40 uA cold, 50 uA tripped; C261 and C268 330 and 330 nF, C262 4.7 uF (the drafts); R106 10 kOhm,
+     R107 22 kOhm, the guard's pair 15 kOhm, board A's 984 kOhm on DOCK_EN_OUT
+   the corrected circuit: record l8p's fail-safe delta (round 9, apply_gen_sch_a_thgfs.py), M-A (round 10) and the held-overcurrent trip
+     (round 11, apply_gen_sch_p_ocheld.py, amended in place by record l8p's round 12 with an on-time bound whose R143 read BRK_PGD,
+     and by its round 13 with R143 from BRK_VIN and Q113's gate the trip's only part on BRK_PGD:
+     a window of 19.96 to 21.52 A on board P; its nets OCH_A, OCH_CD, OCH_CG, OCH_CTS and 11 more; none of the loop's or UVLO's)
+
+2. SECTION 28 REPLAYED ON THE CORRECTED CIRCUIT (L4A-67; INFERRED on 28's own formula)
+   28a. path 1 tripped: the return held at 0.0665 V at most against 0.7755 V: read held; DOCK_EN_OUT with the tripped 50 uA drawn, R106 +1 %,
+     the pair -1 %, board A's divider:
+       BRK_VIN  7.6 V: 4.224 V (section 28 printed 4.224 V) against 1.981 V: read powered
+       BRK_VIN 10.6 V: 5.999 V (section 28 printed 5.999 V) against 1.981 V: read powered
+       BRK_VIN 16.8 V: 9.666 V (section 28 printed 9.666 V) against 1.981 V: read powered
+     so a trip of path 1 is DD-7's trigger, as section 28 found; the held-overcurrent trip adds no sink on the return or DOCK_EN_OUT
+   28b. path 2 tripped: DOCK_EN_OUT 50.8 mV and the return 30.4 mV (record l8p 10c): read dark (an undocked pack): no trigger
+   28c. the window: unchanged; the sinks on the return are 27a's; the trip's nets touch none of DOCK_EN_OUT, DOCK_EN_RET, BRK_UVLO, BRK_H,
+     BRK_HD and BRK_G2 (record l8p round 11, check_l8p_och's APART; its mutation of R140 onto DOCK_EN_OUT reads FAIL)
+   28d. a docking: the rise's time constant 59.5 ms (C261, C268 and C262 at +10 %, R106 +1 %, MODEL); the cold 40 uA lowers DOCK_EN_OUT by
+     at most 0.404 V; the trip on board P is disarmed until the breaker runs (its arming on PGD), so a docking meets it never
+   28 on the corrected circuit: every row holds at the restated allowance; the -1 latched by the trip is the state 20e and 22 already
+     judge (CELL+ dead, the loop powered, the release on CELL+ alive or on DD-7's pulse): no new state for board A
+
+3. 20f AT THE RESTATED ALLOWANCE AGAINST U47'S AND U48'S tSD (L4A-68; INFERRED, the rise on 28d's MODEL)
+   the closed loop's settled DOCK_EN_OUT with the cold 40 uA (R106 +1 %, the pair and R107 -1 %, board A's divider), at the earliest
+     start 0.110 s after the loop closes, and the time the loop first reads powered (1.981 V):
+       BRK_VIN  7.6 V: settled 5.596 V; at 0.110 s 4.713 V; powered from 26.0 ms
+       BRK_VIN 10.6 V: settled 7.928 V; at 0.110 s 6.678 V; powered from 17.1 ms
+       BRK_VIN 16.8 V: settled 12.750 V; at 0.110 s 10.739 V; powered from 10.1 ms
+   the window (27a, 28c): a ramping closed loop's RET/OUT at least 0.4707 with every sink on the return doubled, at DOCK_EN_OUT's 1.825 V;
+     the sinks are 27a's and none is added, so the rise never reads held; the loop's resistive RET/OUT is 0.5946 (R107 over the pair and
+     R107, each at -1 %), information only
+   with no source: board A is unpowered until the breaker's start feeds VBAT, no sooner than 0.110 s after the loop closes; U47 and U48
+     then hold their outputs asserted for tSD (2 ms at most) and read the loop powered and the return closed: the inhibit for tSD at
+     most, no hold armed, as 20f found; with a source present U47 and U48 run through the rise, the loop never reads held (RET/OUT) and
+     reads powered before the earliest start at every corner
+   a hot docking (path 1 already tripped, 50 uA): the return held and the loop powered (2, 28a): DD-7's trigger, the breaker off, as
+     designed
+
+4. 22'S BLEED WITH PATH 2'S VBAT LOAD (L4A-68; RECORD, INFERRED)
+   path 2's switch and regulator draw from VBAT (U62 16 uA, U63 2.25 uA at their printed table maxima, record l8p 10c), not from CELL+:
+     22b's sources into CELL+ (the LM5069's internal 1 MOhm, the battery FETs, the breaker pair) are unchanged, 434.8 uA at the hot bound;
+     with no source VBAT is dark and so is DD-7 (20f); with one, the load is the source's
+   the held-overcurrent trip's crowbar Q111 and R140 sit on PACK_P, the pack terminal that reaches CELL+ through the lead and the dock:
+     its off leakage is a SINK on CELL+, never a source, so it can only shorten the bleed; U106's inputs sit on GND and PACK_N (board
+     P's sense), not on CELL+; no part of the trip pulls DD7_N, so U47's RESET states (22d) are unchanged
+   the bleed 1.218 s against the hold's least 1.341 s: 0.123 s of margin, unchanged; the hot bound 434.8 uA under the coupled limit 520.7 uA: 85.9 uA
+     in hand, unchanged; both rest on record l8p's E-14c (the breaker pair's hot leakage, ASSUMED), as 22e states
+
+5. DISPOSITION (SESSION) AND WHAT STAYS OPEN
+   28e's REMAINING ENGINEERING is executed here: 20f's timing against tSD and 22's bleed with path 2's VBAT load hold at the restated
+     allowance; the allowance's consumers are restated by record l8p's two apply scripts (Layer 5's row in pcb_interfaces.yaml and
+     record l9stk 15.9), DRAFTED, NOT APPLIED: until they are applied every row resting on the allowance stays PROVISIONAL
+   still open: record l8p's L8P-R9-F1 pattern (a latent first failure of the guard, and now of the trip, with no automatic diagnostic);
+     E-14c and E11-45 (f2), (h) for 22; the independent check of rounds 18 and 19 (L4A-69)
+   after the focused check (record l8p round 12, W149): L8P-R11-F1's leakage rule (ASSUMED) also stretches the RC hold to 2.31 s at the
+     76.25 C air (record l8p 4h), against the 0.907 s 20d's DD-7 timeline uses: the input-return restart then ends at most 2.55 s after
+     VIN_RAW passes U34's threshold, not 1.149 s, and never at the 86.25 C site; an affected output of L8P-R11-F1, closed with it (its
+     evidence Q104's and Q105's hot IDSS); the trip's on-time bound read BRK_PGD through R143 only (round 12; since record l8p's round
+     13 through Q113's gate only), so section 28 and 20f are unchanged;
+     the trip's silent failures have no detection interval (L4A-67's latent-failure clause NOT MET, record l8p 16i)
+   outputs named for set 33: l4e11_power.out is not regenerated by this round (its section 28 stays the record's history; this output
+     carries the replay); record l8p's l8p_cprot.out and l8p_rowc.out need the held makers' sheets (OPA187, LM5066I, BUK6Y10-30P, ROHM
+     GMR100) installed on the box that regenerates them
+
+6. PREDICATES
+   28a: path 1 tripped reads held (the return under 0.7755 V)                                                             yes
+   28a: with the 50 uA drawn the loop reads powered at 7.6, 10.6 and 16.8 V (over 1.981 V)                                yes
+   28a replayed equals section 28's printed rows within 1 mV                                                              yes
+   28b: path 2 tripped reads dark (DOCK_EN_OUT under 1.789 V, the return under 0.7755 V)                                  yes
+   28c: the board P trip touches no loop or UVLO net                                                                      yes
+   20f: the closed loop's settled DOCK_EN_OUT with the cold 40 uA reads powered at each corner                            yes
+   20f: DOCK_EN_OUT at the earliest start (0.110 s) reads powered at each corner                                          yes
+   20f: the loop reads powered before the earliest start at each corner                                                   yes
+   20f: the closed loop's RET/OUT is over the window's 0.4707                                                             yes
+   22: the bleed at the hot bound ends inside the hold's least                                                            yes
+   22: the hot bound is under the coupled limit                                                                           yes
+   F8 (record l8p round 12): the hold's stretch is longer than the 0.907 s DD-7's timeline uses                           yes

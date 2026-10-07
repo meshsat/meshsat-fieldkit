@@ -1,0 +1,172 @@
+L4-E11 ROUND FET: L4A-70 (a battery-FET set robust to Q-TI-17) and L4A-71 (row (c)'s selection gate), 7 October 2026
+Desk engineering on printed figures; nothing bought, built, measured or sent. Labels: MAKER, INFERRED, SESSION, READING.
+
+1. INPUTS (read from this tree)
+   E-1's case (record l9stk l9stk_protection.out): the hottest battery FET at most its limit held at 23.93 A from 76.25 C, the band 9.16 K, R17 5 mOhm dissipating 2.863 W (record 2.86 W), its coupling at most 1.0 K/W designed apart (L9-STACKUPS.md); the budget at 150 C 64.59 K for the FETs and R17's coupling (record 64.59 K)
+   the breaker's held 23.93 A (record l8p L8P-BREAKER.md, the same current)
+   E-1's worst-split bar 40.78 K/W per FET for the three (l4e11_power.out 21b), the pair's 20.39 K/W; the RDS(on) allowance 21.136 mOhm at -8.5 V and 150 C (15c, E11-36); the docking pulse 242.9 A peak taken whole in one body diode (16d, E11-30)
+   TI SLUSE65A (MAKER): BATDRV is the 'P-channel battery FET (BATFET) gate driver output' (p.5); VBATDRV_ON 8.5 / 10 / 11.5 V, RBATDRV_ON 3 / 4 / 6 kOhm (p.17); 'the Ciss of P-channel MOSFET should be chosen less than 5 nF' (p.92), no VDS stated
+   reproduced on this round's rules (INFERRED): the three's even split 45.90 K/W (record 45.88), the worst split 40.80 K/W (record 40.78), the pair 20.40 K/W (record 20.39), BUK6Y10-30P's two chords 21.136 mOhm (record 21.136): within 0.1 %, the records' printed figures taken
+   the held makers' sheets (sha256, path; each row read back):
+     ba928dfe6a851344 v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf: 9 rows read on the sheet's text layer
+     88a7b67bfcec9ba7 v2/vendor/nexperia/held/nexperia-pxp9r1-30ql.pdf: 7 rows read on the sheet's text layer
+     1a6460e7c63596ca v2/vendor/power/held/aos-aons21357-rev2.1-2023-11.pdf: 7 rows read on the sheet's text layer
+     6005efe139fc94e3 v2/vendor/power/held/vishay-sqj403ep-67109-reva.pdf: 10 rows read on the sheet's text layer
+     1c1038b032b5bf37 v2/vendor/power/held/vishay-sqj407ep-62806-revb.pdf: 10 rows read on the sheet's text layer
+     6a723edefaa97d20 v2/vendor/power/held/vishay-sqja37ep-75171-revb.pdf: 10 rows read on the sheet's text layer
+     d5dd14f0499cbfb3 v2/vendor/power/held/vishay-sqjq131el-77936-reva.pdf: 10 rows read on the sheet's text layer
+     1970576e979a9455 v2/vendor/power/held/vishay-sqs407enw-76627-reva.pdf: 10 rows read on the sheet's text layer
+     3d777ff9639c8c9e v2/vendor/power/held/vishay-sqs415enw-77427-revc.pdf: 10 rows read on the sheet's text layer
+     385fae910ca444d9 v2/vendor/power/held/vishay-sqs401en-65529-revd.pdf: 11 rows read on the sheet's text layer
+     1e67b3366caacf20 v2/vendor/power/held/infineon-bsz086p03ns3-g-rev2.4-2019-12-03.pdf: 8 rows read on the sheet's text layer
+     8dbb10cfa21baa67 v2/vendor/power/held/infineon-ipd042p03l3-g-rev2.2-2014-05-16.pdf: 11 rows read on the sheet's text layer
+     f391eea4f0ea21cb v2/vendor/power/held/infineon-bso301sp-h-rev1.32-2010-05-12.pdf: 11 rows read on the sheet's text layer
+     a9786bf2b5f65b25 v2/vendor/power/held/infineon-bsc030p03ns3-g-rev2.1-2009-11-16.pdf: 13 rows from the rendered pages [1, 2, 3] (READING, v2/docs/records/l4e11/inputs/fet-search-readings-2026-10-07.json)
+     64c17f6d22bac048 v2/vendor/power/held/infineon-bsc060p03ns3e-g-rev2.1-2009-11-16.pdf: 13 rows from the rendered pages [1, 2, 3] (READING, v2/docs/records/l4e11/inputs/fet-search-readings-2026-10-07.json)
+     78b0ee06750492fe v2/vendor/power/held/infineon-bsc084p03ns3-g-rev2.1-2009-11-16.pdf: 13 rows from the rendered pages [1, 2, 3] (READING, v2/docs/records/l4e11/inputs/fet-search-readings-2026-10-07.json)
+     d6798434aec2a377 v2/vendor/power/held/infineon-bsz120p03ns3-g-rev2.1-2009-11-16.pdf: 13 rows from the rendered pages [1, 2, 3] (READING, v2/docs/records/l4e11/inputs/fet-search-readings-2026-10-07.json)
+     c7882d545da9f2f1 v2/vendor/power/held/infineon-bsz180p03ns3-g-rev2.1-2009-11-16.pdf: 13 rows from the rendered pages [1, 2, 3] (READING, v2/docs/records/l4e11/inputs/fet-search-readings-2026-10-07.json)
+     e41ef289ce1de377 v2/vendor/ti/held/ti-bq25730-sluse65a.pdf: BATDRV pp.5, 17, 92
+
+2. THE SCREEN (SESSION: its scope and readings; INFERRED: its arithmetic)
+   scope: P-channel, |VDS| at least 30 V (VBAT's 29.2 V clamp with the cells' side near 0 V), |VGS| rating at least 11.5 V (BATDRV's printed largest drive), like parts in parallel on one BATDRV node, 1 to 12 of them; makers whose sheets print a Ciss or QG(tot) maximum read in full (seven Vishay automotive SQ parts and eight of the -30 V parts of Infineon's 2023 P-channel selection guide), with the record's three earlier parts (Nexperia, AOS) restated; an N-channel FET is outside the drive the design has (BATDRV pulls the gate 10 V BELOW VSYS, p.5)
+   G, TI's 5 nF on PRINTED maxima: n x Ciss(max) under 5 nF at the maker's own VDS (near 0 V not bounded: Q-TI-17 (e)), or n x QG(tot)(max) at -10 V under 50 nC (the charge 5 nF takes over 10 V; a SESSION reading TI does not state, Q-TI-17 asks); a sheet that prints a typical only gives no G (a typical is never a limit)
+   T, the 40.78 K/W bar: the set's own worst-split bar per FET, (Zself + (n - 1) Zmut) at most B n^2 / (I^2 R F0(n)) with F0 = n^2 / (4 (n - 1)) for n at least 3 and 1 for one or two (21a generalised), at least E-1's 40.78 K/W
+   H, the held 23.93 A on printed figures: the bar is computed at E-1's current with R the ALLOWANCE at -8.5 V and the limit (25 K under the rating) by the two chords of 15c on printed maxima; a sheet with no printed hot maximum gives no allowance, and the screen then uses its -10 V, 25 C maximum, a bound under any hot -8.5 V figure, which can show a FAIL and never a PASS
+   D, information: the docking pulse 242.9 A against the printed body-diode pulse rating, whole in one FET (E11-30's rule)
+
+3. THE CANDIDATES (MAKER rows; INFERRED figures; the best set each part allows under G)
+   BUK6Y10-30P (Nexperia, LFPAK56; Nexperia BUK6Y10-30P product data sheet, 17 April 2020; (i)(a), the three drawn): VDS -30 V, VGS +-20 V, rated 175 C so its limit 150 C; Rth(j-mb) 1.40 K/W max
+     RDS(on) max at -10 V: 10.0 at 25 C, 16.0 at 175 C mOhm; at -4.5 V and 25 C 25.0 mOhm; gate ratio at -8.5 V 1.4091; hot factor to 150 C 1.5000; R 21.136 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 2.360 nF typ, NO MAXIMUM PRINTED at -15 V; QG(tot) 42.5 nC typ, 64.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max NOT SHOWN (no printed maximum), by QG max at -10 V 0
+     T and H: no count meets G on a printed maximum, so no set is formed
+     D: ISM 320 A: MEETS; class figure Ciss(max) x R n/a (no Ciss maximum) nF.mOhm against 52.87 at any count; VERDICT: NO G ON PRINTED MAXIMA
+   PXP9R1-30QL (Nexperia, MLPAK33; Nexperia PXP9R1-30QL product data sheet, 5 January 2021; read in round 16a, restated): VDS -30 V, VGS +-20 V, rated 150 C so its limit 125 C; Rth(j-sp) 2.50 K/W max
+     RDS(on) max at -10 V: 9.1 at 25 C, 15.3 at 150 C mOhm; at -4.5 V and 25 C 12.8 mOhm; gate ratio at -8.5 V 1.1109; hot factor to 125 C 1.5451; R 15.619 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 2.860 nF typ, NO MAXIMUM PRINTED at -15 V; QG(tot) 57.0 nC typ, 86.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max NOT SHOWN (no printed maximum), by QG max at -10 V 0
+     T and H: no count meets G on a printed maximum, so no set is formed
+     D: no body-diode pulse rating printed; class figure Ciss(max) x R n/a (no Ciss maximum) nF.mOhm against 31.45 at any count; VERDICT: NO G ON PRINTED MAXIMA
+   AONS21357 (AOS, DFN 5x6; AOS AONS21357 Rev 2.1, November 2023; read in round 15c, restated): VDS -30 V, VGS +-25 V, rated 150 C so its limit 125 C; RthJC 2.60 K/W max
+     RDS(on) max at -10 V: 7.8 at 25 C, 10.7 at 125 C mOhm; at -4.5 V and 25 C 12.3 mOhm; gate ratio at -8.5 V 1.1573; hot factor to 125 C 1.3718; R 12.384 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 2.830 nF typ, NO MAXIMUM PRINTED at -15 V; QG(tot) 50.0 nC typ, 70.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max NOT SHOWN (no printed maximum), by QG max at -10 V 0
+     T and H: no count meets G on a printed maximum, so no set is formed
+     D: no body-diode pulse rating printed; class figure Ciss(max) x R n/a (no Ciss maximum) nF.mOhm against 31.45 at any count; VERDICT: NO G ON PRINTED MAXIMA
+   SQJ403EP (Vishay, PowerPAK SO-8L; Vishay SQJ403EP, document 67109, S15-2089 Rev. A, 31 August 2015; read in round 15c, restated): VDS -30 V, VGS +-20 V, rated 175 C so its limit 150 C; RthJC 2.20 K/W max
+     RDS(on) max at -10 V: 8.5 at 25 C, 13.0 at 125 C, 15.0 at 175 C mOhm; at -4.5 V and 25 C 20.0 mOhm; gate ratio at -8.5 V 1.3690; hot factor to 150 C 1.6471; R 19.166 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 3.400 nF typ, 4.500 nF MAX at -15 V; QG(tot) 73.0 nC typ, 109.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 1, by QG max at -10 V 0
+     T and H for 1: bar 5.62 K/W against 40.78 (FAILS); held at the 40.78 bar 8.89 A against 23.93 A; the device's own RthJC 2.20 K/W
+     D: ISM 84 A: UNDER the pulse; class figure Ciss(max) x R 86.2 nF.mOhm against 52.87 at any count; VERDICT: FAILS T
+   SQJ407EP (Vishay, PowerPAK SO-8L; Vishay SQJ407EP, document 62806, S22-0224 Rev. B, 7 March 2022; read in round 16a, restated): VDS -30 V, VGS +-20 V, rated 175 C so its limit 150 C; RthJC 2.20 K/W max
+     RDS(on) max at -10 V: 4.4 at 25 C, 6.0 at 125 C, 6.8 at 175 C mOhm; at -4.5 V and 25 C 7.1 mOhm; gate ratio at -8.5 V 1.1674; hot factor to 150 C 1.4545; R 7.471 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 8.200 nF typ, 10.700 nF MAX at -25 V; QG(tot) 169.0 nC typ, 260.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 0, by QG max at -10 V 0
+     T and H: no count meets G on a printed maximum, so no set is formed
+     D: ISM 155 A: UNDER the pulse; class figure Ciss(max) x R 79.9 nF.mOhm against 52.87 at any count; VERDICT: NO G ON PRINTED MAXIMA
+   SQJA37EP (Vishay, PowerPAK SO-8L; Vishay SQJA37EP, document 75171, S22-0224 Rev. B, 7 March 2022; new in this round): VDS -30 V, VGS +-20 V, rated 175 C so its limit 150 C; RthJC 3.30 K/W max
+     RDS(on) max at -10 V: 9.2 at 25 C, 11.2 at 125 C, 12.2 at 175 C mOhm; at -4.5 V and 25 C 14.6 mOhm; gate ratio at -8.5 V 1.1601; hot factor to 150 C 1.2717; R 13.573 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 3.620 nF typ, 4.900 nF MAX at -25 V; QG(tot) 65.0 nC typ, 100.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 1, by QG max at -10 V 0
+     T and H for 1: bar 7.94 K/W against 40.78 (FAILS); held at the 40.78 bar 10.56 A against 23.93 A; the device's own RthJC 3.30 K/W
+     D: ISM 120 A: UNDER the pulse; class figure Ciss(max) x R 66.5 nF.mOhm against 52.87 at any count; VERDICT: FAILS T
+   SQJQ131EL (Vishay, PowerPAK 8x8L; Vishay SQJQ131EL, document 77936, S21-0235 Rev. A, 15 March 2021; new in this round): VDS -30 V, VGS +-20 V, rated 175 C so its limit 150 C; RthJC 0.25 K/W max
+     RDS(on) max at -10 V: 1.4 at 25 C, 1.9 at 125 C, 2.2 at 175 C mOhm; at -4.5 V and 25 C 2.2 mOhm; gate ratio at -8.5 V 1.1558; hot factor to 150 C 1.4643; R 2.369 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 23.588 nF typ, 33.050 nF MAX at -15 V; QG(tot) 487.0 nC typ, 731.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 0, by QG max at -10 V 0
+     T and H: no count meets G on a printed maximum, so no set is formed
+     D: ISM 1100 A: MEETS; class figure Ciss(max) x R 78.3 nF.mOhm against 52.87 at any count; VERDICT: NO G ON PRINTED MAXIMA
+   SQS407ENW (Vishay, PowerPAK 1212-8W; Vishay SQS407ENW, document 76627, S18-0633 Rev. A, 25 June 2018; new in this round): VDS -30 V, VGS +-20 V, rated 175 C so its limit 150 C; RthJC 2.40 K/W max
+     RDS(on) max at -10 V: 10.8 at 25 C, 15.0 at 125 C, 18.0 at 175 C mOhm; at -4.5 V and 25 C 17.0 mOhm; gate ratio at -8.5 V 1.1566; hot factor to 150 C 1.5278; R 19.083 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 3.515 nF typ, 4.572 nF MAX at -20 V; QG(tot) 59.0 nC typ, 77.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 1, by QG max at -10 V 0
+     T and H for 1: bar 5.65 K/W against 40.78 (FAILS); held at the 40.78 bar 8.91 A against 23.93 A; the device's own RthJC 2.40 K/W
+     D: ISM 64 A: UNDER the pulse; class figure Ciss(max) x R 87.2 nF.mOhm against 52.87 at any count; VERDICT: FAILS T
+   SQS415ENW (Vishay, PowerPAK 1212-8W; Vishay SQS415ENW, document 77427, S19-1112 Rev. C, 18 December 2019; new in this round): VDS -40 V, VGS +-20 V, rated 175 C so its limit 150 C; RthJC 2.40 K/W max
+     RDS(on) max at -10 V: 16.1 at 25 C, 24.0 at 125 C, 27.0 at 175 C mOhm; at -4.5 V and 25 C 23.0 mOhm; gate ratio at -8.5 V 1.1169; hot factor to 150 C 1.5839; R 28.481 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 3.710 nF typ, 4.825 nF MAX at -25 V; QG(tot) 63.0 nC typ, 82.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 1, by QG max at -10 V 0
+     T and H for 1: bar 3.78 K/W against 40.78 (FAILS); held at the 40.78 bar 7.29 A against 23.93 A; the device's own RthJC 2.40 K/W
+     D: ISM 64 A: UNDER the pulse; class figure Ciss(max) x R 137.4 nF.mOhm against 52.87 at any count; VERDICT: FAILS T
+   SQS401EN (Vishay, PowerPAK 1212-8; Vishay SQS401EN, document 65529, S21-1246 Rev. D, 10 January 2022; new in this round): VDS -40 V, VGS +-20 V, rated 175 C so its limit 150 C; RthJC 2.40 K/W max
+     RDS(on) max at -10 V: 29.0 at 25 C, 43.0 at 125 C, 51.0 at 175 C mOhm; at -4.5 V and 25 C 47.0 mOhm; gate ratio at -8.5 V 1.1693; hot factor to 150 C 1.6207; R 54.956 mOhm (ALLOWANCE (two chords on printed maxima))
+     Ciss 1.565 nF typ, 1.875 nF MAX at -20 V; QG(tot) 17.7 nC typ, 21.2 nC MAX at -4.5 V
+     G: the largest count under 5 nF by Ciss max 2, by QG max at -10 V NOT SHOWN
+     T and H for 2: bar 7.85 K/W against 40.78 (FAILS); held at the 40.78 bar 10.50 A against 23.93 A; the device's own RthJC 2.40 K/W
+     D: ISM 64 A: UNDER the pulse; class figure Ciss(max) x R 103.0 nF.mOhm against 52.87 at any count; VERDICT: FAILS T
+   BSZ086P03NS3 G (Infineon, PQFN 3.3x3.3; Infineon BSZ086P03NS3 G final data sheet Rev. 2.4, 3 December 2019; new in this round): VDS -30 V, VGS +-25 V, rated 150 C so its limit 125 C; RthJC 1.80 K/W max
+     RDS(on) max at -10 V: 8.6 at 25 C mOhm; at -6 V and 25 C 13.4 mOhm; gate ratio at -8.5 V 1.2093; hot factor to 125 C NOT PRINTED; R 8.600 mOhm (SCREEN BOUND (the -10 V, 25 C maximum; no hot maximum printed))
+     Ciss 3.190 nF typ, 4.785 nF MAX at -15 V; QG(tot) 43.2 nC typ, 57.5 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 1, by QG max at -10 V 0
+     T and H for 1: bar 7.46 K/W against 40.78 (FAILS); held at the 40.78 bar 10.23 A against 23.93 A; the device's own RthJC 1.80 K/W
+     D: ISM 160 A: UNDER the pulse; class figure Ciss(max) x R 41.2 nF.mOhm against 31.45 at any count; VERDICT: FAILS T
+   IPD042P03L3 G (Infineon, DPAK (TO-252); Infineon IPD042P03L3 G Rev. 2.2, 16 May 2014; new in this round): VDS -30 V, VGS +-20 V, rated 175 C so its limit 150 C; RthJC 1.00 K/W max
+     RDS(on) max at -10 V: 4.2 at 25 C mOhm; at -4.5 V and 25 C 6.8 mOhm; gate ratio at -8.5 V 1.1688; hot factor to 150 C NOT PRINTED; R 4.200 mOhm (SCREEN BOUND (the -10 V, 25 C maximum; no hot maximum printed))
+     Ciss 9.290 nF typ, 12.400 nF MAX at -15 V; QG(tot) 131.0 nC typ, 175.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 0, by QG max at -10 V 0
+     T and H: no count meets G on a printed maximum, so no set is formed
+     D: ISM 280 A: MEETS; class figure Ciss(max) x R 52.1 nF.mOhm against 52.87 at any count; VERDICT: NO G ON PRINTED MAXIMA
+   BSO301SP H (Infineon, SO-8; Infineon BSO301SP H Rev. 1.32, 12 May 2010; new in this round): VDS -30 V, VGS +-20 V, rated 150 C so its limit 125 C; RthJS 35.00 K/W max
+     RDS(on) max at -10 V: 8.0 at 25 C mOhm; at -4.5 V and 25 C 12.0 mOhm; gate ratio at -8.5 V 1.1364; hot factor to 125 C NOT PRINTED; R 8.000 mOhm (SCREEN BOUND (the -10 V, 25 C maximum; no hot maximum printed))
+     Ciss 4.430 nF typ, 5.890 nF MAX at -25 V; QG(tot) 102.0 nC typ, 136.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 0, by QG max at -10 V 0
+     T and H: no count meets G on a printed maximum, so no set is formed
+     D: ISM 60 A: UNDER the pulse; class figure Ciss(max) x R 47.1 nF.mOhm against 31.45 at any count; VERDICT: NO G ON PRINTED MAXIMA
+   BSC030P03NS3 G (Infineon, SuperSO8; Infineon BSC030P03NS3 G Rev. 2.1, 16 November 2009; new in this round): VDS -30 V, VGS +-25 V, rated 150 C so its limit 125 C; RthJC 1.00 K/W max
+     RDS(on) max at -10 V: 3.0 at 25 C mOhm; at -6 V and 25 C 4.6 mOhm; gate ratio at -8.5 V 1.2000; hot factor to 125 C NOT PRINTED; R 3.000 mOhm (SCREEN BOUND (the -10 V, 25 C maximum; no hot maximum printed))
+     Ciss 10.500 nF typ, 14.000 nF MAX at -15 V; QG(tot) 140.0 nC typ, 186.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 0, by QG max at -10 V 0
+     T and H: no count meets G on a printed maximum, so no set is formed
+     D: ISM 200 A: UNDER the pulse; class figure Ciss(max) x R 42.0 nF.mOhm against 31.45 at any count; VERDICT: NO G ON PRINTED MAXIMA
+   BSC060P03NS3E G (Infineon, SuperSO8; Infineon BSC060P03NS3E G Rev. 2.1, 16 November 2009; new in this round): VDS -30 V, VGS +-25 V, rated 150 C so its limit 125 C; RthJC 1.50 K/W max
+     RDS(on) max at -10 V: 6.0 at 25 C mOhm; at -6 V and 25 C 9.6 mOhm; gate ratio at -8.5 V 1.2250; hot factor to 125 C NOT PRINTED; R 6.000 mOhm (SCREEN BOUND (the -10 V, 25 C maximum; no hot maximum printed))
+     Ciss 4.530 nF typ, 6.020 nF MAX at -15 V; QG(tot) 61.0 nC typ, 81.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 0, by QG max at -10 V 0
+     T and H: no count meets G on a printed maximum, so no set is formed
+     D: ISM 200 A: UNDER the pulse; class figure Ciss(max) x R 36.1 nF.mOhm against 31.45 at any count; VERDICT: NO G ON PRINTED MAXIMA
+   BSC084P03NS3 G (Infineon, SuperSO8; Infineon BSC084P03NS3 G Rev. 2.1, 16 November 2009; new in this round): VDS -30 V, VGS +-25 V, rated 150 C so its limit 125 C; RthJC 1.80 K/W max
+     RDS(on) max at -10 V: 8.4 at 25 C mOhm; at -6 V and 25 C 14.0 mOhm; gate ratio at -8.5 V 1.2500; hot factor to 125 C NOT PRINTED; R 8.400 mOhm (SCREEN BOUND (the -10 V, 25 C maximum; no hot maximum printed))
+     Ciss 3.190 nF typ, 4.785 nF MAX at -15 V; QG(tot) 43.0 nC typ, 58.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 1, by QG max at -10 V 0
+     T and H for 1: bar 7.64 K/W against 40.78 (FAILS); held at the 40.78 bar 10.35 A against 23.93 A; the device's own RthJC 1.80 K/W
+     D: ISM 200 A: UNDER the pulse; class figure Ciss(max) x R 40.2 nF.mOhm against 31.45 at any count; VERDICT: FAILS T
+   BSZ120P03NS3 G (Infineon, PQFN 3.3x3.3; Infineon BSZ120P03NS3 G Rev. 2.1, 16 November 2009; new in this round): VDS -30 V, VGS +-25 V, rated 150 C so its limit 125 C; RthJC 2.40 K/W max
+     RDS(on) max at -10 V: 12.0 at 25 C mOhm; at -6 V and 25 C 20.0 mOhm; gate ratio at -8.5 V 1.2500; hot factor to 125 C NOT PRINTED; R 12.000 mOhm (SCREEN BOUND (the -10 V, 25 C maximum; no hot maximum printed))
+     Ciss 2.240 nF typ, 3.360 nF MAX at -15 V; QG(tot) 30.0 nC typ, 45.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 1, by QG max at -10 V 1
+     T and H for 1: bar 5.34 K/W against 40.78 (FAILS); held at the 40.78 bar 8.66 A against 23.93 A; the device's own RthJC 2.40 K/W
+     D: ISM 160 A: UNDER the pulse; class figure Ciss(max) x R 40.3 nF.mOhm against 31.45 at any count; VERDICT: FAILS T
+   BSZ180P03NS3 G (Infineon, PQFN 3.3x3.3; Infineon BSZ180P03NS3 G Rev. 2.1, 16 November 2009; new in this round): VDS -30 V, VGS +-25 V, rated 150 C so its limit 125 C; RthJC 3.10 K/W max
+     RDS(on) max at -10 V: 18.0 at 25 C mOhm; at -6 V and 25 C 30.0 mOhm; gate ratio at -8.5 V 1.2500; hot factor to 125 C NOT PRINTED; R 18.000 mOhm (SCREEN BOUND (the -10 V, 25 C maximum; no hot maximum printed))
+     Ciss 1.480 nF typ, 2.220 nF MAX at -15 V; QG(tot) 20.0 nC typ, 30.0 nC MAX at -10 V
+     G: the largest count under 5 nF by Ciss max 2, by QG max at -10 V 1
+     T and H for 2: bar 14.25 K/W against 40.78 (FAILS); held at the 40.78 bar 14.15 A against 23.93 A; the device's own RthJC 3.10 K/W
+     D: ISM 160 A: UNDER the pulse; class figure Ciss(max) x R 40.0 nF.mOhm against 31.45 at any count; VERDICT: FAILS T
+
+4. THE CLASS BOUND (INFERRED)
+   for n like FETs G (by Ciss) and T together need Ciss(max) x R under 5 nF x 4 (n - 1) B / (bar I^2 n), rising with n to 52.87 nF.mOhm for a 175 C part (limit 150 C) and 31.45 for a 150 C part (limit 125 C); by QG the same limit is 528.7 nC.mOhm and 314.5
+   every part read whose own Ciss maximum is under 5 nF sits above its limit (the nearest, BSZ180P03NS3 G, 40.0 nF.mOhm on its screen bound against 31.45), so it makes no set at any count; the parts whose single Ciss maximum is at or over 5 nF (SQJ407EP, SQJQ131EL, IPD042P03L3 G, BSO301SP H, BSC030P03NS3 G, BSC060P03NS3E G) make no set at all; the parts with no printed maximum give no G at any count; so no set of the parts read meets G and T together at ANY count, whatever the count's pour
+   IPD042P03L3 G alone sits under the limit on its favourable bound (52.1 against 52.87 nF.mOhm; no hot maximum printed): the bound would not exclude a smaller die of its technology at a large count; its own die is over 5 nF
+
+5. THE RECORD'S OPTIONS ON THE SAME BASIS (BUK6Y10-30P at the allowance 21.136 mOhm)
+   (i)(a) three BUK6Y10-30P (drawn, SELECTED in round 11): Ciss 7.08 nF typ at -15 V, about 8.61 near 0 V (no maximum: G NOT SHOWN); QG(tot) max 192 nC at -10 V against 50 (OVER); bar 40.78 K/W against 40.78 (MEETS, CONDITIONAL on E11-29 and E11-36); held at the 40.78 bar 23.94 A
+   (ii) the pair, Q42 removed (the fallback): Ciss 4.72 nF typ at -15 V, about 5.74 near 0 V (no maximum: G NOT SHOWN); QG(tot) max 128 nC at -10 V against 50 (OVER); bar 20.39 K/W against 40.78 (FAILS); held at the 40.78 bar 16.93 A
+   (S2) one BUK6Y10-30P, a heat path through the case: Ciss 2.36 nF typ at -15 V, about 2.87 near 0 V (no maximum: G NOT SHOWN); QG(tot) max 64 nC at -10 V against 50 (OVER); bar 5.10 K/W against 40.78 (FAILS); held at the 40.78 bar 8.46 A
+   GUARD: the pair's 4.72 nF is a TYPICAL at -15 V; read as a limit it would pass G; the screen refuses that reading (GuardError: BUK6Y10-30P Ciss: the sheet prints a typical only (2.36e-09); a typical is never a limit)
+
+6. SELECTION (L4A-70; SESSION, on printed figures)
+   sets meeting G, T and H together: NONE among the 18 parts read
+   so (i)(a), the three BUK6Y10-30P, STAYS SELECTED and CONDITIONAL on E-05 (TI's answer to Q-TI-17 stated as a limit, or the bench of block E11-37), with E11-29 and E11-36 as before; E11-37 OPEN
+   the fallback (ii), the pair with Q42 removed, is DRAFTED now: fallback/apply_gen_sch_a_fetpair.py (after the charger draft), read by fallback/check_fetpair_netlist.py; it is itself under 5 nF only on a TYPICAL at -15 V (CONDITIONAL on Q-TI-17 (e)) and needs the pair's 20.39 K/W bar on the coupon (E11-29), so a negative E-05 moves the design to it without new engineering and leaves it conditional
+   the best sets that meet G on printed maxima, each failing T by its bar: 2 x BSZ180P03NS3 G 14.25 K/W (bound); 1 x SQJA37EP 7.94 K/W (allowance); 2 x SQS401EN 7.85 K/W (allowance); 1 x BSC084P03NS3 G 7.64 K/W (bound)
+
+7. THE UDC-1 TABLE (L4A-71; coupling HO-L, RE-10's M-A and E11-29)
+   (i)(a) three BUK6Y10-30P (drawn, SELECTED in round 11) | FETs 3 | R 21.136 mOhm (allowance, E11-36) | gate load G NOT SHOWN (typ 7.08 nF) | bar 40.78 K/W | held at 40.78 23.94 A | HO-L: E-05 | M-A: holds 23.93 A at its bar, CONDITIONAL (E11-29, E11-36) | E11-29: the coupon at 40.78 K/W
+   (ii) the pair, Q42 removed (the fallback) | FETs 2 | R 21.136 mOhm (allowance, E11-36) | gate load G NOT SHOWN (typ 4.72 nF) | bar 20.39 K/W | held at 40.78 16.93 A | HO-L: E-05 | M-A: holds 23.93 A only at 20.39 K/W | E11-29: the coupon at 20.39 K/W
+   (S2) one BUK6Y10-30P, a heat path through the case | FETs 1 | R 21.136 mOhm (allowance, E11-36) | gate load G NOT SHOWN (typ 2.36 nF) | bar 5.10 K/W | held at 40.78 8.46 A | HO-L: E-05 (typical 57 %) | M-A: holds 23.93 A only at 5.10 K/W | E11-29: a junction-to-air path at 5.10 K/W (no pour coupon)
+   2 x BSZ180P03NS3 G | FETs 2 | R 18.000 mOhm (bound) | gate load G MEETS on printed maxima (at its own VDS) | bar 14.25 K/W | held at 40.78 14.15 A | HO-L: Q-TI-17 (e) only | M-A: FAILS (bar) | E11-29: a pour bar 14.25 K/W, tighter than the pair's 20.39; D FAILS (ISM 160 A)
+   1 x SQJA37EP | FETs 1 | R 13.573 mOhm (allowance) | gate load G MEETS on printed maxima (at its own VDS) | bar 7.94 K/W | held at 40.78 10.56 A | HO-L: Q-TI-17 (e) only | M-A: FAILS (bar) | E11-29: a junction-to-air path at 7.94 K/W, (S2)'s class; D FAILS (ISM 120 A)
+   2 x SQS401EN | FETs 2 | R 54.956 mOhm (allowance) | gate load G MEETS on printed maxima (at its own VDS) | bar 7.85 K/W | held at 40.78 10.50 A | HO-L: Q-TI-17 (e) only | M-A: FAILS (bar) | E11-29: a pour bar 7.85 K/W, tighter than the pair's 20.39; D FAILS (ISM 64 A)
+   SESSION SELECTION: M-A first on (i)(a), CONDITIONAL on E-05, E11-29 and E11-36; M-B second, entered only on M-A's end condition (L4E11-ROUND-FET.md section 7, decision L4E11-FET-D2)

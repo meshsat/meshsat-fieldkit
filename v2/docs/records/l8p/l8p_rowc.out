@@ -1,0 +1,193 @@
+l8p_rowc: record l8p round 10, Layer 4 register row (c): L4A-66 (RE-10 and HO-A by M-A) and L4A-65 (HO-B, path 2's retry energy)
+(MESHSAT-1357, 7 October 2026). Desk arithmetic on the makers' printed figures and the records' own; nothing was built, bought or
+measured. LABELS: PRINTED; TYPICAL (never a limit); READING (this record's reading of a maker's drawing from its vector paths);
+INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, read from its file); ASSUMED.
+
+0. PINS (sha256/16)
+   46f3c6cd9ea6b638  v2/docs/records/l9stk/l9stk_protection.out
+   3a23036c57859f1d  v2/docs/records/l9stk/L9-STACKUPS.md
+   36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
+   aa05cdaac67f9fee  v2/docs/records/l4e11/l4e11_fet.out
+   3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
+   c0cdc4c6b46902da  v2/docs/records/l8p/L8P-BREAKER.md
+   6a136feec6c9cf4e  v2/ecad/tools/gen_sch_a.py
+   f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
+   740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
+   0e215988ba2a929b  v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   e8f1294bb0f76c75  v2/docs/records/l8p/apply_gen_sch_p_breaker.py
+   ba928dfe6a851344  v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf
+   3b5ac7258851583c  v2/vendor/passives/held/rohm-gmr100hj-rev006e-2026-03-05.pdf
+   98a7e99bc5bbdf2a  v2/vendor/keystone/littelfuse-297-ficcorp.pdf
+   caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
+   8ef40cd98d95c653  v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf
+   7a11ec390b01e69f  v2/vendor/connectors/millmax-0858-product-page-20260927.html
+   c2cbb5962c1f37da  v2/vendor/battery/amass-xt60-spec-tme.pdf
+   94e4568e3abe8ab5  v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf
+   596555c33dce1fca  v2/vendor/battery/ti-csd17570q5b.pdf
+   cb747de812f66859  v2/vendor/battery/ti-csd18510q5b.pdf
+   3ecc2424acfa1753  v2/vendor/battery/eaton-scf9550-elx1135.pdf
+
+1. THE CASE AND THE ACCEPTANCE (RECORD)
+   the breaker's held 23.93 A from 76.25 C (record l9stk B-P2; record l8p's breaker), the band 9.16 K, R17 5 mOhm (2.863 W nominal) its
+     coupling into a junction at most 1.0 K/W (E-1), the budget 64.59 K for the FETs and R17's coupling (150 C less 76.25 C and 9.16 K)
+   E-1's bar (L4-E11 E11-29): each FET's (Zself + 2 Zmut) at most 40.78 K/W; the worst-split figure's limit 73.75 K over the air; E11-29's
+     design target Zw at most 37.59 K/W with R17's coupling at most 0.29 K/W; record l9stk's even-split bar 45.88 K/W
+   path 2's relaxation (record l8p 10c): the FETs carry current at most 43.8 ms in every 0.154 s or more; the RC hold's least 0.110 s
+   M-A's acceptance (register row L4A-66; decision L4E11-FET-D2): every series part inside its PRINTED limits held indefinitely at 23.93 A
+     from 76.25 C, the battery FETs at most 150 C on the printed Zth and RDS(on) at temperature; a typical FAILS
+
+2. M-A, THE GUARD'S OWN PARTS: Q39, Q40 AND Q42 (BUK6Y10-30P), THEIR POUR AND VIAS, R17
+   2a. the FETs (PRINTED, Nexperia 17 April 2020): RDS(on) max 10 mOhm at -10 V and 25 C (p.6), 16 at 175 C, 25 at -4.5 V and 25 C;
+       Rth(j-mb) 1.1 typ, 1.4 MAX K/W (p.5); Tj 175 C (p.3), its limit here 150 C
+       the allowance at BATDRV's least -8.5 V and 150 C (INFERRED, two chords on printed maxima, E11-36): hot 1.5000 x drive 1.4091: 21.136 mOhm
+       at 23.93 A: 1.3448 W a FET on the even split; 1.5130 W in the hottest on the worst split (one at R/2, 11.96 A, under the 13.5 A row)
+       the hottest junction over its mounting base on the printed Rth(j-mb) MAXIMUM: 2.12 K (record l8p 12m: 2.12 K)
+       the even-split bar on the budget: 45.90 K/W (record 45.88; record l4e11 round FET 45.90), the worst split's 40.80 K/W (record 40.78)
+       the hottest junction held at 23.93 A: at E-1's bar 150.00 C (0.00 K under 150 C, by construction); at E11-29's design target 136.79 C
+         (13.21 K under 150 C); at the design target the three reach 150 C only at 26.41 A held, over the breaker's 23.93 A (INFERRED, the
+         150 C allowance kept at every current)
+       the device's own figures are PRINTED maxima; the installed path (the pour, Zself and Zmut) is no maker's figure: it is E-1's bar,
+         a layout requirement that E11-29's coupon decides (CONDITIONAL), and the allowance at -8.5 V rests on E11-36's chords; the three
+         as a set rest on E-05 (TI's 5 nF, record l4e11 round FET)
+   2b. the printed Zth curve, Fig. 4 (READING of its vector paths; 8 curves, labelled duty 1 to 0.01; no single-pulse curve):
+       duty 1: 1.178 K/W at 10 us, 1.291 at 10 ms, 1.306 at 0.98 s; the largest of any curve 1.360 K/W
+       the curve never reaches the printed Rth(j-mb) maximum 1.4 K/W and sits over its typical 1.1: it is not a maximum; the figure says
+         neither typical nor maximum, so this record classes it TYPICAL (never a limit); a bound on it is refused (section 5)
+   2c. the pour and the vias (MODEL: decision 35's conductor model in record l9stk; the limits are the parts' printed ones):
+       the band carrying 23.93 A: 9.16 K over the air, 85.41 C, against board A's band limit 105 C as fitted (125 C with the blade's
+         silver plating pinned): WITHIN; the barrel field at R17 (16 of 0.4 mm) 0.75 A a barrel, 7.62 K: WITHIN
+       CH_BATQ (R17 to the three) is a one-face hop at the parts' lands, inside E-1's installed path: E11-29's coupon carries the band and
+         R17 in place; the laminate's own limit is NOT HELD (L9-STACKUPS 14.3)
+   2d. R17 (PRINTED, ROHM GMR100 HJ, rev. 006E, 5 March 2026; GMR100HJAAFD5L00 = 5 mOhm, JA, F 1 %; first read by this record):
+       rated 7 W at a terminal temperature Tk of 70 C, derated to 0 at 170 C (Fig. 1), or 5 W at Tk 110 C, derated to 0 at 170 C (Fig. 2);
+       operating -65 to +170 C; TCR 0 to +50 ppm/C, printed for 20 to 60 C only (above 60 C ASSUMED to continue)
+       at 23.93 A on its printed maximum 5.0500 mOhm: 2.892 W at 60 C, 2.902 W at Tk 128.5 C
+       the lower of the two printed derating lines admits it to Tk 128.5 C (Fig. 2 alone would admit 135.2 C): R17's terminals may rise
+         43.1 K over the band's 85.41 C, so its terminal-to-band path at most 14.9 K/W: a LAYOUT condition, read on E11-29's coupon with
+         R17 dissipating in place; at the band's own temperature R17 is at 58 % of its derated power
+       record l9stk's '5 W printed at 25 C, derating NOT HELD (E-6)' is answered by the sheet: E-6 for R17 becomes the terminal reading above
+
+3. M-A, EVERY OTHER SERIES PART OF THE PACK PATH
+   3a. the three 25 A MINI blades (board P's F1, board E's F3, board A's F1; 0297025, silver pinned), Littelfuse 297 (PRINTED):
+       110 % holds 360,000 s at least; 135 % opens in 0.75 to 600 s; 1000 A at 32 V DC; -40 to +125 C (tin -40 to +105 C)
+       the Temperature Rerating Curve (page 2; READING of its line: 109.97 % at -39.85 C to 85.28 % at 123.12 C, 100.14 % at 25 C):
+         at the 76.25 C air 92.38 %: the blade rated 23.10 A; at the band's 85.41 C 90.99 %: 22.75 A
+       23.93 A held is 103.6 % of the rerated current at the air (OVER by 0.83 A, 3.6 %), 105.2 % at the band (OVER by 1.18 A)
+       what the sheet prints for it: no row between 100 % and 110 %; 110 % of the rerated current (25.40 A, INFERRED reading of the table
+         on the rerated basis) holds at least 360,000 s; past that, and for the blade's and its terminals' temperature, NOTHING PRINTED
+       the 18 A service is 77.9 % of the rerated current: WITHIN
+       the Keystone 3568 holders (PRINTED, M65 p.42): UL 30 A at 500 V AC, -50 to +145 C: 79.8 % of their rating: WITHIN on current
+   3b. the blades' corrections compared (constitution section 4: at most three):
+       (a) 30 A MINI blades (0297030, the same holder): rerated 27.71 A at the air, 23.93 A is 86.3 %: WITHIN on their own row; but the
+           blades are the pack conductors' last protection behind a failed breaker, sized with the copper at the 25 A rating (the energy
+           chain's check 3; L9-STACKUPS 14.4): no opening assured would rise from 33.75 A to 40.50 A, a protection lowered: REFUSED
+       (b) the breaker's most limit under the rerated 23.10 A: the LM5069's printed VCL alone spans 0.7886 (48.5 / 61.5 mV); with the
+           record's least limit 18.32 A kept the ratio needed is 0.7932: INFEASIBLE with exact sense resistors; at an 18.00 A least the
+           sense window 2.6629 to 2.6944 mOhm exists only with no margin over the 18 A service, a service at its edge: REFUSED
+       (c) evidence, not a correction: Littelfuse's statement of the 0297025's terminal and body temperature at 104 % of its rerated
+           current in 76.25 C air, or a coupon (three 0297025.WXNV in 3568 holders on board A's band, 23.93 A held from 76.25 C to steady
+           state and for 360,000 s; pass: each holder at most 145 C, each blade body at most 125 C, the band at the holder at most its
+           limit, and either no opening or an opening inside the blade's 1000 A at 32 V DC rating)
+       so the blades are OVER their printed rerated current at the held maximum and no compared correction keeps every protection and the
+         service; the item is a finding for C-PROT rev 1 (register row L4A-67), the evidence (c) the supplier's
+   3c. the dock block's spring pins J_CP1 to J_CP4 and J_CN1 to J_CN4 (Mill-Max 0858, spring 82; PRINTED: 085X family 9 A continuous at a
+       10 C rise in free air, 20 mOhm max and no minimum, -55 to +125 C; the 0858 page: spring 82 '12 Amp', no condition printed):
+       5.98 A a pin on the even split: WITHIN; the split is not bounded by any printed figure: for no pin over 9 A at 23.93 A the lowest
+         pin resistance must be at least 0.553 of the highest (E-4 restated from 25 A's 0.593): CONDITIONAL on E-4; at 9 A the pin
+         reads 95.41 C over the band (the free-air rise taken over the band, ASSUMED), under its 125 C
+   3d. the XT60 J_BATT (PRINTED: 30 A rated, -20 to 120 C; the 2021V1 sheet: 35 A max with 12 AWG at a rise under 85 K, contact 1.0 mOhm
+       max): 79.8 % of 30 A: WITHIN on current; its rise at 23.93 A NOT PRINTED: on the 35 A row scaled by the current squared (INFERRED)
+       under 39.7 K, 116.0 C, 4.0 K under 120 C; 0.57 W a contact at most
+   3e. the 12 AWG pack lead (W_P, W_N to J_BATT) and board E's 12 AWG to the block (P_CP): no maker's sheet is held for the wire: its
+       rating is NOT PRINTED here (the energy chain's 40 A is a convention, PACK_LEAD); a wire's insulation class is Layer 6's
+   3f. board P (the pack), every part in the path at 23.93 A held:
+       Q1, Q2 (and Q109 beside Q1), CSD17570Q5B (PRINTED: 0.69 mOhm max at 10 V and 25 C only; TJ -55 to 150 C; RthJA 50 C/W max on a
+         1 in2 2 oz pad): 0.395 W each at the 25 C maximum; their hot RDS(on) is printed only as a TYPICAL normalized curve, so NOT SHOWN on
+         printed maxima; the 150 C junction admits a hot factor up to 3.73 on its own pad, 1.866 with both losses through one pad (the
+         common drain), against the typical 1.8 record l9stk reads (TJ 147.4 C, RECORD; E-8)
+       Q101, Q102, CSD18510Q5B (PRINTED: 0.96 mOhm max at 10 V and 25 C; RthJA 50 C/W max on 1 in2 2 oz; IF-2: at most 52.5 installed):
+         0.137 W each at the 25 C maximum; NOT SHOWN on printed maxima (the same typical curve); the hot factor admitted 5.37 to 150 C,
+         3.55 to TI's 125 C (record l9stk: 0.247 W, TJ 101.2 C at the typical)
+       R10 (2 mOhm 2512 2 W, no maker's sheet held: E-6), 1.15 W (RECORD); R101 4 mOhm and R102 7.5 mOhm (no part chosen: 2 W each at the
+         band's temperature, Layer 6), 0.97 W and 0.52 W (RECORD): NOT SHOWN, no printed derating
+       F2, Eaton SCF9550-30-05 (PRINTED: 30 A; operating -20 to +60 C): 79.8 % of its rating; its printed range ends 16.25 K under the
+         76.25 C air at any current (record l4e10 section 9, Eaton's questions drafted): the pack's thermal environment, not a held-current row
+       the cells: the breaker's and U-01's (W127's check 1c, finding 5), outside M-A
+
+4. WHICH ROWS THE GUARD EVER PROTECTED (INFERRED)
+   the guard senses only board A's battery-FET pour: no trip under 127.8 C at its die, surely tripped from 132.2 C (record l8p 12m)
+   with the pour at E11-29's design target, at the blades' rerated 23.10 A held the hottest FET reads 132.64 C and its mounting base 130.67 C;
+     the guard's die is no hotter than the copper it sits on (its own heating 0.008 K, record l8p 9 (a)), so its trip is not assured
+     there: a held overload from 23.10 A to the breaker's 23.93 A can persist with the guard intact, and the rows of section 3 read the
+     same with or without it; only section 2's rows (the parts on the pour it senses) depend on it
+   page 12o's exposure, 'the battery FETs reach 150 C held at 20.53 A', is record l9stk's PAIR figure (its section 2: 20.53 A, the pair on
+     the then 33.12 K/W target); for the drawn three at E-1's bar the figure is 23.93 A, the breaker's own most limit
+
+5. L4A-65: PATH 2'S RETRY ENERGY ALONE (path 1 lost; current up to the breaker's 23.93 A; 76.25 C air)
+   the train (RECORD, record l8p 10c): on at most 43.8 ms, off at least 0.110 s, period at least 0.154 s, duty at most 0.284
+   the rise per on-time over the mounting base, hottest FET at 1.5130 W: at most 2.12 K on the printed Rth(j-mb) MAXIMUM (a passive
+     network's transient impedance never exceeds its steady resistance, so Zth(j-mb) at 43.8 ms is at most 1.4 K/W) (INFERRED, PRINTED)
+   Fig. 4 at 43.8 ms (READING): 1.357 K/W on duty 0.30, 1.354 on 0.10, 1.357 at the train's duty: 2.05 K, class TYPICAL:
+     REFUSED as a limit (Fig. 4 at 43.8 ms: a TYPICAL figure is not a limit)
+   the steady periodic peak: any on and off pattern whose current never exceeds 23.93 A heats every junction at most as the same current
+     held does (superposition on a passive thermal network; the RDS(on) at its 150 C allowance at every instant), so the peak is at most
+     the held state: 150.00 C at E-1's bar, 136.79 C at E11-29's design target: BOUNDED against 150 C on printed device maxima, CONDITIONAL
+     on E11-29 (the pour), E11-36 (the allowance), E-05 (the three) and E-9 (the -1's as-built most limit: the train never exceeds
+     it; round 12, the check's F4), as section 2a; bounded on the typical curve instead: FAILS
+   the train's mean loss is at most 0.284 of the held one; no credit is taken for it (the pour's own transient is no maker's figure)
+   currents over 23.93 A are single events outside the train, judged in their records: a fault's onset up to the breaker's 50.59 A for
+     at most 16.5 us, after which the -1 latches off and a restart into the short is power-limited (record l9stk 15.3, its table); the
+     docking pulse, 242.9 A once per docking (L4-E11 16d, E11-30)
+   the breaker's own FETs under the train: each restart is judged under DD-8's restart inhibit (record l8p round 2, l9stk 15.4b),
+     not here; board P's Q1 and Q2 under the train: at most their held row (section 3f), by the same superposition
+
+6. VERDICTS
+   the guard's own parts (section 2): the three FETs HOLD 23.93 A indefinitely at 150.00 C at E-1's bar (136.79 C at the design target),
+     CONDITIONAL on E11-29, E11-36, E-05 and E-9 (round 12: the held current is the -1's as-built most limit, which the window counts
+     at the parts' 1.5 % only; the check's F4); the pour and the vias WITHIN on the model; R17 WITHIN its printed derating while its
+     terminals stay at or under 128.5 C (CONDITIONAL, read on E11-29's coupon)
+   every other series part (section 3): the three 25 A blades OVER their printed rerated current by 3.6 % (0.83 A) at the air;
+     NOT SHOWN on printed maxima: board P's Q1, Q2, Q109, Q101, Q102 (hot RDS(on) typical only), R10, R101 and R102 (no derating held),
+     the wires (no sheet), the pins' split (E-4); WITHIN on printed current: the holders, the XT60 (its rise INFERRED), the pins evenly
+   so M-A's acceptance as the register writes it ('every series part inside its PRINTED limits') is NOT MET on printed figures: the
+     blades by 0.83 A, the rest NOT SHOWN; each of those rows is independent of the guard (section 4), so none is HO-A's consequence
+   L4A-65 (HO-B): BOUNDED on printed device maxima at the held state (150.00 C at the bar); FAILS on the typical curve, as it must
+   what M-A closes once checked (L4A-69): HO-A's consequence for the parts the guard protects ON A BOARD WHOSE INSTALLED PATH MEETS
+     E-1's BAR (the three FETs hold the breaker's most limit there, so a latent guard failure removes no protection they need) and HO-B
+     (no retry exceeds a current they hold); the guard stays as defence in depth; CONDITIONAL on E-05, E11-29 (with R17's terminal
+     reading), E11-36, E-9 (the -1's as-built most limit, round 12, the check's F4) and E11-29u (round 12, the check's F5: a check of
+     EACH BUILT BOARD's path, since E11-29's coupon qualifies the design, not a board with a void or a poor tab joint: at production,
+     an X-ray of the three FETs' tab joints against the voiding E11-29's coupon was built with, and at commissioning a per-unit
+     reading, the three FETs carrying a known current for a known time from a known air with the guard's die (or the pour's NTC)
+     read against E11-29's curve, pass: the bar met within the reading's stated uncertainty; round 13, the recheck's F8: every built
+     board, one reading each, from a known air of 15 to 35 C with a heating of at least 40 K; the unit's limit is E-1's bar itself;
+     pass: the reading plus its expanded uncertainty (k = 2) at most the bar; the uncertainty budgeted at 6.2 % (2.54 K/W at the bar)
+     from two temperature sensors of 1.5 K each (IEC 60584-1 class 1, ASSUMED: the supplier states its instruments) and the heating
+     power within 1 %); on a board that misses the bar the
+     guard is still needed and its silent failures, with no detection interval, stay a residual (REMAINING ENGINEERING, HO-A's pattern)
+   M-B's entry condition (decision L4E11-FET-D2): (1) and (2) not met (E11-29, E11-36 and E-05 unanswered, none refused); (3) not met for
+     the guard's parts; the blades' row is a part over its printed limit, but the guard does not assure its protection, nor would M-B:
+     it enters C-PROT rev 1's re-evaluation (L4A-67), not M-B
+
+7. PREDICATES
+   the allowance reproduces record l4e11's 21.136 mOhm from the printed rows                                              yes
+   the even-split bar reproduces record l9stk's within 0.1 %                                                              yes
+   the worst split's bar reproduces E-1's 40.78 K/W within 0.1 %                                                          yes
+   the three hold the breaker's most limit at or under 150 C at E-1's bar                                                 yes
+   at E11-29's design target the three reach 150 C only above the breaker's most limit                                    yes
+   the junction's lead over its mounting base is 2.12 K on the printed Rth(j-mb) maximum                                  yes
+   Fig. 4's curves never reach the printed Rth(j-mb) maximum (the curve is not a maximum)                                 yes
+   a bound read on Fig. 4 is refused as a limit                                                                           yes
+   R17 is within ROHM's lower derating line at the band's temperature                                                     yes
+   R17's admitted terminal temperature comes from the lower of the two printed lines                                      yes
+   the 25 A blades are over their printed rerated current at the 76.25 C air                                              yes
+   the rerating line passes 100 % within 0.5 % at 25 C                                                                    yes
+   the 18 A service is within the blades' rerated current                                                                 yes
+   a 30 A blade would carry the held current within its rerating                                                          yes
+   the LM5069's printed VCL span cannot fit the 18.32 A least and the blades' rerated most                                yes
+   the pins' split ratio for 9 A at the held current is under 25 A's 0.593                                                yes
+   the XT60 is within its printed 30 A                                                                                    yes
+   at the blades' rerated current the guard's sure trip is not reached on the design target's pour                        yes
+   page 12o's 20.53 A is record l9stk's pair figure                                                                       yes
+   path 2's on-time and the RC hold make its period                                                                       yes
+   the retry train's peak is bounded by the held state on printed device maxima                                           yes
