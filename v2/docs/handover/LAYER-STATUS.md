@@ -358,13 +358,13 @@ The set 31 and set 30 blocks below stand; the notes here name what set 32's reco
 
 - The chain. REVIEWED: `4d0ff8a2`, unchanged: no independent check of the engineering read a later revision. The base: set 31's
   promoted revision `5f25daf3` (the record's BASE row); the lineage starts at main's tip `be07863b`, the chain's base, which descends
-  from it. CANDIDATE: `__CANDIDATE__`, the commit the gated release suite and the promotion gate ran on, to
-  which main was fast-forwarded (written at the adoption). The gate, suite_gate's verdict line over the four pass logs: `__GATE__`.
+  from it. CANDIDATE: `f08e3961`, the commit the gated release suite and the promotion gate ran on, to
+  which main was fast-forwarded (written at the adoption). The gate, suite_gate's verdict line over the four pass logs: `suite_gate: candidate f08e396175dd; totals tests: 2973 passed, 0 failed, 2 skipped + tests: 26 passed, 0 failed, 0 skipped + tests: 253 passed, 0 failed, 0 skipped + tests: 213 passed, 0 failed, 1 skipped; result lines 3468 (3465 PASS, 3 SKIP, 0 FAIL); modules 269 of 269 ran; suite_gate: PASS`.
 - Record l4e7's results cache (WP-B: W61, W67, W71 on fnd/l4e7cache), `ee940742:v2/docs/records/int32/RESULT.md:387` `a change of record l4e7's cache KEY that moves no computed figure`,
   re-keyed ONCE in set 32 (`v2/docs/records/int32/RESULT.md`, sections 2h and 3c). Set 31's known item, record l4e7's paragraph 0a's
-  history sentence (the set 31 block below; `v2/docs/records/int31/RESULT.md`, section 4a), is planned to be corrected by that
-  re-key and the regeneration of its dependents (no set had run it when these rows were written); the regenerated
-  `v2/docs/records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `__GATE__`.
+  history sentence (the set 31 block below; `v2/docs/records/int31/RESULT.md`, section 4a), is corrected by that re-key and the
+  regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were written); the regenerated
+  `v2/docs/records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `its key field is the key of its own parts and no part differs from this tree's`.
 - Unreviewed changes after cx46. Set 32's classification (`v2/docs/records/int32/CLASSIFICATION.md`, section 2) classes the 34
   commits of its five branches, `ee940742:v2/docs/records/int32/CLASSIFICATION.md:269` `12 of the 34 touch a file cx46 read`, 2 of
   them REVIEWED-INPUT CHANGED (W53's attribution and its tests), each UNREVIEWED since cx46 and credited nothing, counted over the
