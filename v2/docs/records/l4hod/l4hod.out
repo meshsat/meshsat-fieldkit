@@ -6,22 +6,22 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
 1. INPUTS (sha256/16)
    92e23993ab3f4c42 v2/docs/records/l8p/L8P-BREAKER.md
    1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
-   e259573c92675988 v2/docs/records/l4canen/l4canen.out
+   8861819ad38218cf v2/docs/records/l4canen/l4canen.out
    3a13d2bac53bbc67 v2/docs/records/l4canen/l4canen.py
    51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
-   438696d9ad02180d v2/docs/records/l9t5/l9t5_canmb.out
-   4708a4a280f2a297 v2/docs/records/l9t5/l9t5_canq.out
+   1159599b4c589352 v2/docs/records/l9t5/l9t5_canmb.out
+   9dd1fb7819b4bad2 v2/docs/records/l9t5/l9t5_canq.out
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    89576bfb472d983e v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
-   4eb5b3e75f76565a v2/docs/records/l4reg/l4reg_compare.out
+   d6c7e771a97eadb6 v2/docs/records/l4reg/l4reg_compare.out
    c9dec1b3079d2393 v2/docs/records/l4reg/l4reg_compare.py
    7e473e35ac8efde0 v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md
    c4084ad21bcc6d2f v2/docs/records/l4hod/inputs/l4ai-register-L4A-58-row.tsv
-   469594bb5b4fa6be v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
+   fb40f56837a717cb v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
    37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
-   83f5e6aaa9e28709 v2/docs/records/l9t5/l9t5_t10.out
+   2b55777bc5d0243d v2/docs/records/l9t5/l9t5_t10.out
    be3b47d2770da1c2 v2/vendor/diodes/pdftext/diodes-bat46w.layout.txt
    9e327f9bfd6f5a7c v2/vendor/passives/held/pdftext/uniroyal-series-11cd644d.layout.f4.l7.txt  (held back)
    39f205116896b7e2 v2/vendor/power/pdftext/aos-ao3400a-n-mosfet.layout.txt

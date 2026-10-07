@@ -4,7 +4,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
 (cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand); the selection is a desk design on printed figures, unchecked
 
 1. INPUTS, pinned by sha256
-   83f5e6aaa9e28709 v2/docs/records/l9t5/l9t5_t10.out
+   2b55777bc5d0243d v2/docs/records/l9t5/l9t5_t10.out
    cfbbd8b0bd74a752 v2/docs/records/l9t5/l9t5_t10.py
    be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
@@ -12,7 +12,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    c9b9215862ab363a v2/ecad/tools/gen_pcb_b3.py
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
-   469594bb5b4fa6be v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
+   fb40f56837a717cb v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
    a45673da359489f8 v2/docs/records/l4reg/inputs/l4lim-L4LIM-SCREEN-a45673da.md  (copy of fnd/l4lim aa6704b2 v2/docs/records/l4lim/L4LIM-SCREEN.md (W135))
    d26c5d674197f246 v2/docs/records/l4reg/inputs/l4lim-l4lim_screen-d26c5d67.out  (copy of fnd/l4lim aa6704b2 v2/docs/records/l4lim/l4lim_screen.out (W135))
    9367f3ab896aac19 v2/docs/records/l4reg/inputs/l9t5-apply_gen_sch_b_canmb-9367f3ab.py  (copy of fnd/l4canmb 31de4bbc v2/docs/records/l9t5/apply_gen_sch_b_canmb.py (W137's checkpoint))

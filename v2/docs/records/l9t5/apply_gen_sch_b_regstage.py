@@ -13,7 +13,7 @@ AP2112K has no window on printed limits: its 125 C current at the 14.0k corner (
 peak (0.4240 A). The selected stage (SESSION W138-1, record l4reg section 7):
   1. THE LIMITER, one per controller (U45, U55, U65 take the INA169s' places): TI TPS2553-1 in SOT-23-6 (SLVS841F, latch-off,
      active-high EN), RILIM 49.9 kOhm 1 % (R601, R621, R641): IOS 0.475 to 0.565 A over -40 to 125 C TJ (7.5, the tested row), 0.4702
-     to 0.5704 A with the resistor's 1 % (MODEL on the maker's equations); latched off after its overcurrent deglitch, 5 to 10 ms,
+     to 0.5878 A with the resistor's 1 % (MODEL: the envelope of the row and Equation 1 at its bounds, W159); latched off after its overcurrent deglitch, 5 to 10 ms,
      until EN or power is cycled (9.3.1, 9.3.3). IN on +5V_IOC with its 100 nF (C940, C950, C960, kept); OUT on IOC{t}_LDO_IN; EN on
      IOC{t}_LIM_EN, pulled up to +5V_IOC by 100 kOhm (R602, R622, R642): the node the peers' restart and the in-service test of
      L4A-54 and L4A-58 would drive; FAULT open (L4A-58 reads it).
@@ -21,7 +21,7 @@ peak (0.4240 A). The selected stage (SESSION W138-1, record l4reg section 7):
      8-1, CSO RFB), SOT-223-6: 1 IN, 2 OUT, 3 GND, 4 NR (open: the noise capacitor is optional, 6.3.1), 5 EN, 6 GND (the tab).
      Printed: R(theta)JA 76.0 C/W (new silicon, DCQ, 5.4), dropout at most 250 mV at 1 A (5.6), output within 1.5 % over line, load
      and temperature (5.6), current limit 1.05 to 2.2 A (5.6), input 2.2 to 5.5 V (5.3), output short-circuit duration indefinite
-     (5.1). At the limiter's maximum 0.5704 A and the 14.0k corner's drop 0.8669 V its junction is 113.8 C at 76.25 C air (MODEL on
+     (5.1). At the limiter's maximum 0.5878 A and the 14.0k corner's drop 0.8669 V its junction is 115.0 C at 76.25 C air (MODEL on
      the PRINTED 76.0 C/W), under 125 C for every waveform under the limit.
   3. ITS EN pulled up by R66, R78, R90 (100 kOhm) from IOC{t}_LDO_IN, its own input (was +5V_IOC): the TPS737 prints EN high from
      1.7 V to VIN (5.6); the bench jumper J_IOCOFF_x still holds it off (IOHA A4 and A6 unchanged).
@@ -53,8 +53,8 @@ _OLD_0 = ('    ic(U_(0), 5, "AP2112K-3.3 LDO: the private 3.3 V of controller %s
           '    r(R_(3), "100k", "+5V_IOC", "IOC%s_LDO_EN" % _tag)\n')
 _NEW_0 = ('    # L4A-56 (record l4reg, W138, 7 October 2026; apply_gen_sch_b_regstage.py, NOT APPLIED): THE REGULATOR. The AP2112K above is\n'
           '    # replaced by a TPS73733DCQRM3 (TI SBVS067W; the M3 suffix ships the new silicon only, Table 8-1), whose printed 76.0 C/W\n'
-          '    # (DCQ, new silicon, 5.4) holds 125 C at the limiter\'s maximum 0.5704 A from the 14.0k corner (113.8 C, MODEL; the AP2112K\n'
-          '    # read 167.2 C there). Its EN (pin 5) is pulled up from its own input, IOC_LDO_IN: the sheet prints EN high from 1.7 V to VIN\n'
+          '    # (DCQ, new silicon, 5.4) holds 125 C at the limiter\'s maximum 0.5878 A from the 14.0k corner (115.0 C, MODEL; the AP2112K\n'
+          '    # read 170.0 C there). Its EN (pin 5) is pulled up from its own input, IOC_LDO_IN: the sheet prints EN high from 1.7 V to VIN\n'
           '    # (5.6) and low under 0.5 V, so the bench jumper still holds it off. The W5 note above gives the AP2112K\'s figures, as history.\n'
           '    ic(U_(0), 6, "TPS73733DCQRM3 1 A LDO, new silicon only (TI SBVS067W): the private 3.3 V of controller %s, its own branch behind its current limiter" % _tag,\n'
           '       "Package_TO_SOT_SMD:SOT-223-6", {"1": "IOC%s_LDO_IN" % _tag, "2": v33, "3": "GND", "4": "NC", "5": "IOC%s_LDO_EN" % _tag, "6": "GND"})\n'
