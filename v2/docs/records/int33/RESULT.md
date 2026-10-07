@@ -316,6 +316,14 @@ qualification (NONE).
   for the r2 targeted log, test group 3 and step r2; its test `<worktrees>/_bin/tests/test_fill_res33.py`, and
   `<worktrees>/_bin/tests/test_fill_res.py.new`, the live test with its one example of an unknown set moved from 33 to 34.
 - **The independent read of set 33's lineage** is a later queue item, after the chain; this record names no finding of it.
+- **Through the fill** (W165's proof, 7 October 2026, about 12:33 CEST; set 32's W80 method): on a sparse scratch clone of fnd/res33
+  `1862e5d9` with stand-in commits for the re-key (holding the four tips), the candidate and the adoption, `fill_res.py.new --set 33`'s
+  template read 79 rows (RESULT.md 64, CLASSIFICATION.md 2, ENTRY-PAGES.patch.md 13, the pages none; GATE 57, REKEY 5, PROMOTED 3,
+  CANDIDATE 11, ADOPTION 3; no KEEP row); its first run applied 60 lines with 3 ADOPTION occurrences deferred, its second 3 lines, a
+  third refused (exit 2); `test_res33` and `test_patch33` read 9 passed and 2 skipped (the runner-only tests) before the fill and after
+  each run. Of the 57 GATE rows, 40 carry a suggestion the adoption script's value rules derive from the logs and 17 need a HAND value
+  (the chain's step lines a2 to e1, d1 to d16 and r1, the base, the converged commit, the read, W163's verdict and the vast log's
+  lines), as set 32's adoption needed its HAND file.
 - **A note for the freeze:** `test_res33`'s predicates that read the coordinator's files (the cited logs and reports, the fill tool, the
   chain) raise Skip where `_runs` is absent, which is every rented box; run them in the runner pass, as set 32's record recommended for
   `test_res32` (taken under the owner's standing rule of 26 September 2026; the coordinator applies or reverses it).
