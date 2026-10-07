@@ -56,6 +56,16 @@ no true re-key meets on the lineage the chain builds (set 31's promoted revision
 adoption, never on main's first-parent line); restated: BASE is an ancestor of the re-key's cache commit and of the chain's base, and
 the chain's base is on the re-key's first-parent line before it (a mutant naming the chain's base itself as the re-key is refused).
 
+W128's restatement (7 October 2026, from 03:44 CEST, on W109's phase 2 finding 4, `<worktrees>/_runs/claude/w109read32/
+REPORT-PHASE2A-AS-RECEIVED.md`, and the coordinator's ruling on W110's N3): the coordinator merged fnd/l3r5keep (W114's restoration of
+test_l3r5.py and the inventory's note) after C1, so the record names commits that are in no history this branch reads until the
+adoption: OUTSIDE declares them (the lineage after the five merges, C1, the two commits and their merge; never C1b, which did not exist
+when the rows were written). The two commits are the integration's rows 31.7.1 and 31.7.2, written in full from git in section 3 under
+their merge's row 31.7 and not in section 1, whose five ranges, counts and the pages' branch-only count (test_patch32) stay as they
+are; p_prepared reads them back as p_columns reads section 1's rows (sha, author date, subject, file count, the fixed classes, the
+branch, UNREVIEWED since cx46 where a file of cx46's delta is touched), checks that they are exactly the commits the merge brings from
+its second parent (git rev-list), and that they follow the merge's row, which names them. No existing predicate changes.
+
 What fails here: a commit of set 32's five branch ranges missing, doubled or out of order; a short sha that is not its full sha's prefix; a
 date, subject or file count that is not git's; a class outside W39's fixed set; a row that touches a file cx46 read without the words
 "UNREVIEWED since cx46"; a REVIEWED-INPUT CHANGED row that touches no file of the reviewed tree (present at 4d0ff8a2), or one that
@@ -122,7 +132,23 @@ OUTSIDE = {"4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31's tip, set 31'
            "ad757edb1be7e0fe3b586f986d2d704c9836fdcf": "main after set 31's adoption (the fill's second run), set 32's integration base",
            # W113 (W109's F4, W110's C1 and B2): the chain's base, main's tip at the run's start (_runs/int32/real-0115.log:1), a
            # descendant of set 31's promoted revision (the record's BASE row): named in RESULT's section 3b and the classification's bounds
-           CHAIN_BASE: "main's tip at set 32's chain's start, the chain's base (W100's S1, W104)"}
+           CHAIN_BASE: "main's tip at set 32's chain's start, the chain's base (W100's S1, W104)",
+           # W128 (W109's phase 2 finding 4): the commits after the chain's stop that the record names, on fnd/int32's lineage and in no
+           # history this branch reads until the adoption merges the candidate (`<worktrees>/_runs/int30/QUEUE.md`, entries "03:23:27
+           # (clock) C1 COMMITTED on fnd/int32" and "03:23:37 (clock) fnd/l3r5keep 5a0aacd9 MERGED into fnd/int32"): the lineage after the
+           # five merges (fnd/l3r5keep's base), C1, fnd/l3r5keep's two commits and the coordinator's merge of them. C1b is not here: it
+           # did not exist when W128 wrote the rows, and the record names it only as a [FILL]
+           "258e9a7d3a5ad95c0130d4ead3aa295ffd694d5a": "fnd/int32 after the five merges (step a3c), fnd/l3r5keep's base",
+           "ed17ac0499269fbe9174ce368fddd66e2ae0daa3": "C1, the chain's converged outputs (CLASSIFICATION row 31.6)",
+           "2dcb41313bbef9b2f76cab344926c81e8d7e23c7": "fnd/l3r5keep, W114: test_l3r5.py at its reviewed content (row 31.7.1)",
+           "5a0aacd968746e18285fb788ae39fcad0ba16599": "fnd/l3r5keep, the coordinator: the inventory's note (row 31.7.2)",
+           "4c8196a00fa5f629a049bb2e803cb47814992e60": "the coordinator's merge of fnd/l3r5keep after C1 (row 31.7)"}
+# W128 (W109's phase 2 finding 4): the integration's rows written in full from git before the adoption, outside the five ranges: the
+# commits fnd/l3r5keep brings at the coordinator's merge after C1 (section 3, under that merge's row 31.7; section 1 once section 3
+# moves there), each (row, commit, the branch cell's start); L3R5_MERGE is the merge whose second parent's commits they are
+PREPARED = (("31.7.1", "2dcb41313bbef9b2f76cab344926c81e8d7e23c7", "fnd/l3r5keep ("),
+            ("31.7.2", "5a0aacd968746e18285fb788ae39fcad0ba16599", "fnd/l3r5keep ("))
+L3R5_MERGE = "4c8196a00fa5f629a049bb2e803cb47814992e60"
 ASSESS = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
 S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
 S30C = "v2/docs/records/int30/CLASSIFICATION.md"
@@ -374,6 +400,70 @@ def p_integration_rows(texts):
                 bad.append("row %s holds %s while RESULT's %s row names %s" % (n, v, role, r.get(role)))
         elif not isinstance(r, dict) or r.get(role, "").startswith("__") or _full(v) is None or _full(v) != _full(r[role]):
             bad.append("row %s names %s, not the commit RESULT's %s row names" % (n, v, role))
+    return bad
+
+
+def _table_rows(text):
+    """W128: every eight-cell row of the file's tables (section 1 and section 3), as cells; row numbers may be dotted or 'prepared'."""
+    rows = []
+    for line in text.split("\n"):
+        if not line.startswith("| ") or line.startswith("| # ") or line.startswith("|---"):
+            continue
+        c = [x.strip() for x in CELL_SPLIT.split(line.strip())[1:-1]]
+        if len(c) == 8 and re.fullmatch(r"\d+(?:\.\d+)*(?: \(prepared\))?", c[0]):
+            rows.append(c)
+    return rows
+
+
+def p_prepared(text):
+    """W128 (W109's phase 2 finding 4): the rows written in full from git outside the five ranges (PREPARED) hold git's sha, author date,
+    subject and file count, a class of the fixed set (no MERGE: each has one parent), their branch, and UNREVIEWED since cx46 with its
+    count where they touch a file of cx46's delta (p_columns' rule for section 1's rows); they are exactly the commits L3R5_MERGE brings
+    (`git rev-list` from its first parent to its second, oldest first) and follow the merge's row 31.7, which names them."""
+    bad = []
+    rows = _table_rows(text)
+    nums = [c[0] for c in rows]
+    by = {c[0]: c for c in rows}
+    for n, full, branch in PREPARED:
+        c = by.get(n)
+        if not c:
+            bad.append("row %s is missing" % n)
+            continue
+        s = _sha_cell(c)
+        if not s or s[1] != full or not full.startswith(s[0]):
+            bad.append("row %s's sha cell is not `%s` / `%s`" % (n, full[:8], full))
+            continue
+        if not _has(full):
+            raise Skip("commit %s is not in this checkout" % full[:8])
+        date, subj = _git("log", "-1", "--date=format-local:%Y-%m-%d %H:%M:%S", "--format=%ad%x09%s", full).rstrip("\n").split("\t", 1)
+        names = _git("show", "--name-only", "--format=", full).split()
+        if c[2] != date:
+            bad.append("row %s: date %r is not git's author date %r" % (n, c[2], date))
+        if c[3].replace("\\|", "|") != subj:
+            bad.append("row %s: the subject is not git's" % n)
+        if not c[4].startswith(branch):
+            bad.append("row %s: the branch cell does not start %r" % (n, branch))
+        m = re.match(r"(\d+):", c[5])
+        if not m or int(m.group(1)) != len(names):
+            bad.append("row %s: file count %r is not git's %d" % (n, c[5][:12], len(names)))
+        cls = _classes(c)
+        if any(k not in FIXED for k in cls) or len(set(cls)) != len(cls) or "MERGE" in cls:
+            bad.append("row %s: a class outside the fixed set, one twice, or MERGE on a one-parent commit: %s" % (n, cls))
+        rv = [x for x in names if x in _reviewed()]
+        if rv and ("UNREVIEWED since cx46" not in c[7] or ("(%d):" % len(rv)) not in c[7]):
+            bad.append("row %s touches %d file(s) of cx46's delta without UNREVIEWED since cx46 and their count" % (n, len(rv)))
+    if _has(L3R5_MERGE):
+        p1, p2 = _git("rev-list", "--parents", "-n1", L3R5_MERGE).split()[1:3]
+        brought = _git("rev-list", "--topo-order", "--reverse", "%s..%s" % (p1, p2)).split()
+        if brought != [p[1] for p in PREPARED]:
+            bad.append("the merge %s brings %s, not the prepared rows' %s" % (L3R5_MERGE[:8], [b[:8] for b in brought],
+                                                                              [p[1][:8] for p in PREPARED]))
+    want = ["31.7"] + [p[0] for p in PREPARED]
+    at = [nums.index(x) if x in nums else -1 for x in want]
+    if -1 in at or at != sorted(at) or at[-1] - at[0] != len(want) - 1:
+        bad.append("rows %s do not follow one another in that order" % want)
+    elif "brings rows 31.7.1 and 31.7.2" not in by["31.7"][7]:
+        bad.append("the merge's row 31.7 does not name the rows it brings")
     return bad
 
 
@@ -1168,6 +1258,25 @@ def t_the_integration_rows_and_the_filled_commits():
         moved("ADOPTION", r["BASE"])           # nor an earlier commit
 
 
+def t_the_rows_written_from_git_after_the_chains_stop_are_gits():
+    """W128 (W109's phase 2 finding 4): fnd/l3r5keep's two commits, merged by the coordinator after C1, are rows 31.7.1 and 31.7.2
+    under their merge's row 31.7, each cell git's; the basis is git itself (the commits and the merge exist on fnd/int32)."""
+    t = _read(CLASS)
+    assert not p_prepared(t), p_prepared(t)
+    r1, r2 = _line(t, "| 31.7.1 |"), _line(t, "| 31.7.2 |")
+    assert p_prepared(_mut(t, r1, r1.replace("| 2026-10-07 01:55:24 |", "| 2026-10-07 02:04:02 |", 1))), \
+        "the committer date in place of the author date passed"
+    assert p_prepared(_mut(t, r2, r2.replace("reversed (W114's 2dcb4131", "reversed (W114's commit", 1))), "a subject that is not git's passed"
+    assert p_prepared(_mut(t, r1, r1.replace("| 2: v2/ecad/tools/ (2) |", "| 3: v2/ecad/tools/ (3) |", 1))), "a wrong file count passed"
+    assert p_prepared(_mut(t, r1, r1.replace("| TEST |", "| MERGE |", 1))), "MERGE on a one-parent commit passed"
+    assert p_prepared(_mut(t, r2, r2.replace("| fnd/l3r5keep (", "| fnd/int32 (", 1))), "a row outside its branch passed"
+    assert p_prepared(t.replace(r2 + "\n", "", 1)), "row 31.7.2 dropped passed"
+    assert p_prepared(_mut(t, r1, r1.replace("2dcb41313bbef9b2f76cab344926c81e8d7e23c7", "2dcb41313bbef9b2f76cab344926c81e8d7e23c8", 1))), \
+        "a full sha that is not the commit passed"
+    assert p_prepared(t.replace(r1 + "\n" + r2, r2 + "\n" + r1, 1)), "the two rows out of git's order passed"
+    assert p_prepared(_mut(t, "brings rows 31.7.1 and 31.7.2", "brings rows 31.7.1")), "a merge row not naming its rows passed"
+
+
 def t_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes():
     order = _order()
     t = _read(CLASS)
@@ -1247,6 +1356,8 @@ def t_every_commit_named_is_in_the_histories_read_or_declared_outside_them():
     _mutant_refused(p_commits_named, texts, RESULT, "`6dc69ad2`", "`6dc69ad3`")
     # W113 (W109's F4): the chain's base is named as itself; a near miss of it is no commit this record may name
     _mutant_refused(p_commits_named, texts, RESULT, "start (`be07863b`, a descendant", "start (`be07863c`, a descendant")
+    # W128 (W109's phase 2 finding 4): the commits after the chain's stop are named as themselves; a near miss is refused
+    _mutant_refused(p_commits_named, texts, CLASS, "by fnd/l3r5keep `2dcb4131` (section 3", "by fnd/l3r5keep `2dcb4132` (section 3")
     if _stage(texts[RESULT]):                  # W80: the commits the fill wrote are accepted only while p_filled accepts them
         base = _line(texts[RESULT], "| BASE ")
         _mutant_refused(p_commits_named, texts, RESULT, base, base.replace("| %s |" % _cell(base), "| `%s` |" % LINEAGE[:8], 1))
@@ -1361,6 +1472,7 @@ test_the_records_carry_no_dash_and_open_with_their_state_lines = _pytest(t_the_r
 test_every_placeholder_is_a_declared_token = _pytest(t_every_placeholder_is_a_declared_token)
 test_the_integration_rows_and_the_filled_commits = _pytest(t_the_integration_rows_and_the_filled_commits)
 test_the_rule_is_set_30s_line_11_verbatim_read_as_ruled = _pytest(t_the_rule_is_set_30s_line_11_verbatim_read_as_ruled)
+test_the_rows_written_from_git_after_the_chains_stop_are_gits = _pytest(t_the_rows_written_from_git_after_the_chains_stop_are_gits)
 test_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes = _pytest(
     t_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes)
 test_the_summary_and_the_bound_statement_are_the_tables = _pytest(t_the_summary_and_the_bound_statement_are_the_tables)
