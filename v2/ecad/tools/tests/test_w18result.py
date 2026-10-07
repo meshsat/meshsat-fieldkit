@@ -238,9 +238,17 @@ def _verified_quotes(text, bad):
             bad.append("_runs/%s has no entry %r" % (rel, entry))
             continue
         if n:
-            lines = body.splitlines()
             k = int(n)
-            if k < 1 or k > len(lines) or _flat(quote) not in _flat(lines[k - 1]):
+            # A coordinator's log that _bin/vast_watchdog.py caps and rotates (LOG_CAP; <log>.1 to <log>.3 kept, owner's rule of 1 Oct
+            # 2026) keeps its lines in the rotated file: the quote must stand on line N of the log or of one file of its rotation chain
+            # (the coordinator, Amendment 8 T1a, 7 Oct 2026: a false positive fixed at its source; never a quote found elsewhere).
+            found = False
+            for body_k in [body] + [b for b in (_run_text("%s.%d" % (rel, i)) for i in (1, 2, 3)) if b is not None]:
+                lines = body_k.splitlines()
+                if 1 <= k <= len(lines) and _flat(quote) in _flat(lines[k - 1]):
+                    found = True
+                    break
+            if not found:
                 bad.append("_runs/%s:%s does not read %r" % (rel, n, quote[:60]))
                 continue
         elif _flat(quote) not in _flat(body):
