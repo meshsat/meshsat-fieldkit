@@ -1,0 +1,52 @@
+RM0433                                                                  General-purpose I/Os (GPIO)
+
+
+11.3.1   General-purpose I/O (GPIO)
+         During and just after reset, the alternate functions are not active and most of the I/O ports
+         are configured in analog mode.
+         The debug pins are in AF pull-up/pull-down after reset:
+         •    PA15: JTDI in pull-up
+         •    PA14: JTCK/SWCLK in pull-down
+         •    PA13: JTMS/SWDAT in pull-up
+         •    PB4: NJTRST in pull-up
+         •    PB3: JTDO in floating state
+         When the pin is configured as output, the value written to the output data register
+         (GPIOx_ODR) is output on the I/O pin. It is possible to use the output driver in push-pull
+         mode or open-drain mode (only the low level is driven, high level is HI-Z).
+         The input data register (GPIOx_IDR) captures the data present on the I/O pin at every AHB
+         clock cycle.
+         All GPIO pins have weak internal pull-up and pull-down resistors, which can be activated or
+         not depending on the value in the GPIOx_PUPDR register.
+
+11.3.2   I/O pin alternate function multiplexer and mapping
+         The device I/O pins are connected to on-board peripherals/modules through a multiplexer
+         that allows only one peripheral alternate function (AF) connected to an I/O pin at a time. In
+         this way, there can be no conflict between peripherals available on the same I/O pin.
+         Each I/O pin has a multiplexer with up to sixteen alternate function inputs (AF0 to AF15) that
+         can be configured through the GPIOx_AFRL (for pin 0 to 7) and GPIOx_AFRH (for pin 8 to
+         15) registers:
+         •    After reset the multiplexer selection is alternate function 0 (AF0). The I/Os are
+              configured in alternate function mode through GPIOx_MODER register.
+         •    The specific alternate function assignments for each pin are detailed in the device
+              datasheet.
+         •    Cortex-M7 with FPU EVENTOUT is mapped on AF15
+         In addition to this flexible I/O multiplexing architecture, each peripheral has alternate
+         functions mapped onto different I/O pins to optimize the number of peripherals available in
+         smaller packages.
+         To use an I/O in a given configuration, the user has to proceed as follows:
+         •    Debug function: after each device reset these pins are assigned as alternate function
+              pins immediately usable by the debugger host
+         •    System function: MCOx pins have to be configured in alternate function mode.
+         •    GPIO: configure the desired I/O as output, input or analog in the GPIOx_MODER
+              register.
+         •    Peripheral alternate function:
+              –    Connect the I/O to the desired AFx in one of the GPIOx_AFRL or GPIOx_AFRH
+                   register.
+              –    Select the type, pull-up/pull-down and output speed via the GPIOx_OTYPER,
+                   GPIOx_PUPDR and GPIOx_OSPEEDER registers, respectively.
+
+
+
+                                            RM0433 Rev 8                                          533/3353
+                                                                                                             547
+
