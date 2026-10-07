@@ -1,0 +1,64 @@
+Electrical characteristics (rev V)                                                     STM32H742xI/G STM32H743xI/G
+
+
+7.3.16      NRST pin characteristics
+            The NRST pin input driver uses CMOS technology. It is connected to a permanent pull-up
+            resistor, RPU (see Table 147: I/O static characteristics).
+            Unless otherwise specified, the parameters given in Table 152 are derived from tests
+            performed under the ambient temperature and VDD supply voltage conditions summarized
+            in Table 112: General operating conditions.
+
+                                                 Table 152. NRST pin characteristics
+                 Symbol                    Parameter                     Conditions             Min       Typ    Max     Unit
+
+                              Weak pull-up equivalent
+                  RPU(2)                                                   VIN = VSS             30        40    50       kΩ
+                              resistor(1)
+                VF(NRST)(2) NRST Input filtered pulse                1.71 V < VDD < 3.6 V         -         -    50
+                                                                     1.71 V < VDD < 3.6 V        300        -     -       ns
+             VNF(NRST)(2) NRST Input not filtered pulse
+                                                                     1.62 V < VDD < 3.6 V       1000        -     -
+            1. The pull-up is designed with a true resistance in series with a switchable PMOS. This PMOS contribution
+               to the series resistance must be minimum (~10% order).
+            2. Guaranteed by design.
+
+
+                                           Figure 74. Recommended NRST pin protection
+
+
+                                                            VDD
+                       External
+                       reset circuit (1)
+                                                               RPU
+                                               NRST (2)                                         Internal Reset
+                                                                                       Filter
+
+                                      0.1 μF
+
+
+                                                                                                        STM32
+
+                                                                                                                       ai14132d
+
+
+            1. The reset network protects the device against parasitic resets.
+            2. The user must ensure that the level on the NRST pin can go below the VIL(NRST) max level specified in
+               Table 147. Otherwise the reset is not taken into account by the device.
+
+
+7.3.17      FMC characteristics
+            Unless otherwise specified, the parameters given in Table 153 to Table 166 for the FMC
+            interface are derived from tests performed under the ambient temperature, fHCLK frequency
+            and VDD supply voltage conditions summarized in Table 112: General operating conditions,
+            with the following configuration:
+            •      Output speed is set to OSPEEDRy[1:0] = 11
+            •      Measurement points are done at CMOS levels: 0.5VDD
+            •      IO Compensation cell activated.
+            •      HSLV activated when VDD ≤ 2.7 V
+            •      VOS level set to VOS1.
+
+
+
+
+248/357                                                   DS12110 Rev 11
+

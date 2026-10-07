@@ -1,0 +1,67 @@
+Power control (PWR)                                                                              RM0433
+
+
+6.3.1      PWR pins and internal signals
+           Table 32 lists the PWR inputs and output signals connected to package pins or balls, while
+           Table 33 shows the internal PWR signals.
+
+                  Table 32. PWR input/output signals connected to package pins or balls
+                                    Signal
+                  Pin name                                           Description
+                                     type
+
+                                    Supply
+                      VDD                  Main I/O and VDD domain supply input
+                                     input
+                                    Supply
+                    VDDA                   External analog power supply for analog peripherals
+                                     input
+                                   Supply
+                VREF+,VREF-         Input/ External reference voltage for ADCs and DAC
+                                   Outputs
+                                    Supply
+                      VBAT                 Backup battery supply input
+                                     input
+                                    Supply
+                   VDDLDO                  Voltage regulator supply input
+                                     input
+                                    Supply
+                      VCAP          Input/ Digital core domain supply
+                                    Output
+                                    Supply
+                  VDD50USB                 USB regulator supply input
+                                     input
+                                    Supply
+                  VDD33USB          Input/ USB regulator supply output
+                                    Output
+                                    Supply
+                      VSS                  Main ground
+                                     input
+                                    Digital
+                      AHB           inputs/ AHB register interface
+                                    outputs
+                                    Digital
+                   PDR_ON                     Power Down Reset enable
+                                    input
+
+
+                                 Table 33. PWR internal input/output signals
+                                          Signal
+                   Signal name                                           Description
+                                           type
+
+                                          Digital
+                  pwr_pvd_wkup                      Programmable voltage detector output
+                                          output
+                                          Digital
+                  pwr_avd_wkup                      Analog voltage detector output
+                                          output
+                                          Digital
+                 pwr_wkupx_wkup                     CPU wakeup signals (x=1 to 6)
+                                          output
+
+
+
+
+256/3353                                      RM0433 Rev 8
+

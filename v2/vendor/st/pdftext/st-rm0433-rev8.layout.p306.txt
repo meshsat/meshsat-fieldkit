@@ -1,0 +1,53 @@
+Power control (PWR)                                                                                        RM0433
+
+
+           Bits 31:24   Reserved, must be kept at reset value.
+               Bit 23 TEMPH: Temperature level monitoring versus high threshold
+                        0: Temperature below high threshold level.
+                        1: Temperature equal or above high threshold level.
+               Bit 22 TEMPL: Temperature level monitoring versus low threshold
+                        0: Temperature above low threshold level.
+                        1: Temperature equal or below low threshold level.
+               Bit 21 VBATH: VBAT level monitoring versus high threshold
+                       0: VBAT level below high threshold level.
+                       1: VBAT level equal or above high threshold level.
+               Bit 20 VBATL: VBAT level monitoring versus low threshold
+                       0: VBAT level above low threshold level.
+                       1: VBAT level equal or below low threshold level.
+           Bits 19:17   Reserved, must be kept at reset value.
+               Bit 16 BRRDY: Backup regulator ready
+                       This bit is set by hardware to indicate that the Backup regulator is ready.
+                       0: Backup regulator not ready.
+                       1: Backup regulator ready.
+            Bits 15:5   Reserved, must be kept at reset value.
+                Bit 4 MONEN: VBAT and temperature monitoring enable
+                       When set, the VBAT supply and temperature monitoring is enabled.
+                       0: VBAT and temperature monitoring disabled.
+                       1: VBAT and temperature monitoring enabled.
+                      Note: VBAT and temperature monitoring are only available when the backup regulator is
+                            enabled (BREN bit set to 1).
+             Bits 3:1   Reserved, must be kept at reset value.
+                Bit 0 BREN: Backup regulator enable
+                       When set, the Backup regulator (used to maintain the backup RAM content in Standby and
+                       VBAT modes) is enabled.
+                       If BREN is reset, the backup regulator is switched off. The backup RAM can still be used in
+                       Run and Stop modes. However, its content will be lost in Standby and VBAT modes.
+                       If BREN is set, the application must wait till the Backup Regulator Ready flag (BRRDY) is set
+                       to indicate that the data written into the SRAM will be maintained in Standby and VBAT
+                       modes.
+                       0: Backup regulator disabled.
+                       1: Backup regulator enabled.
+
+
+6.8.4         PWR control register 3 (PWR_CR3)
+               Address offset: 0x00C
+               Reset value: 0x0000 0006 (rev Y)
+               Reset value: 0x0000 0046 (rev V)
+               This register is reset only by POR. It is not reset by wakeup from Standby mode and by the
+               RESET pad.
+
+
+
+
+306/3353                                           RM0433 Rev 8
+

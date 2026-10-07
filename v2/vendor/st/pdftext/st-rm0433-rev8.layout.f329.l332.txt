@@ -1,0 +1,309 @@
+RM0433                                                                 Reset and Clock Control (RCC)
+
+
+8.4.2    System reset
+         A system reset (nreset) resets all registers to their reset values unless otherwise specified
+         in the register description.
+         A system reset can be generated from one of the following sources:
+         •      A reset from NRST pin (external reset)
+         •      A reset from the power-on/off reset block (pwr_por_rst)
+         •      A reset from the brownout reset block (pwr_bor_rst)
+                Refer to Section 6.5.2: Brownout reset (BOR) for a detailed description of the BOR
+                function.
+         •      A reset from the independent watchdogs (iwdg1_out_rst)
+         •      A software reset from the Cortex®-M7 core
+                It is generated via the SYSRESETREQ signal issued by the Cortex®-M7 core. This
+                signal is also named SFTRESET in this document.
+         •      A reset from the window watchdogs depending on WWDG configuration
+                (wwdg1_out_rst)
+         •      A reset from the low-power mode security reset, depending on option byte
+                configuration (lpwr[2:1]_rst)
+Note:    The SYSRESETREQ bit in Cortex®-M7 Application Interrupt and Reset Control Register
+         must be set to force a software reset on the device. Refer to the Cortex®-M7 with FPU
+         technical reference manual for more details (see http://infocenter.arm.com).
+         As shown in Figure 43, some internal sources (such as pwr_por_rst, pwr_bor_rst,
+         iwdg1_out_rst) perform a system reset of the circuit, which is also propagated to the NRST
+         pin to reset the connected external devices. The pulse generator guarantees a minimum
+         reset pulse duration of 20 μs for each internal reset source. In case of an external reset, the
+         reset pulse is generated while the NRST pin is asserted Low.
+Note:    It is not recommended to let the NRST pin unconnected. When it is not used, connect this
+         pin to ground via a 10 to 100 nFcapacitor (CR in Figure 43).
+
+                                        Figure 43. System reset circuit
+
+
+                                                                                               RCC
+                                       VDD
+                                                              Filter               nreset (System Reset)
+
+                                          RPU
+                                                                            pwr_bor_rst
+                      NRST
+             (External reset)                                               pwr_por_rst
+                                CR                                          iwdg1_out_rst
+                                                  Pulse generator      OR
+                                                    (20 μs min)             wwdg1_out_rst
+                                                                            lpwr_rst
+                                                                            SFTRESET
+
+
+
+                                                                                                MSv41927V2
+
+
+
+
+                                             RM0433 Rev 8                                        329/3353
+                                                                                                             504
+Reset and Clock Control (RCC)                                                                    RM0433
+
+
+8.4.3       Local resets
+            CPU reset
+            The CPU can reset itself by means of the CPURST bit in RCC AHB3 reset register
+            (RCC_AHB3RSTR).
+
+            Domain reset
+            Some resets also dependent on the domain status. For example, when D1 domain exits
+            from DStandby, it is reset (d1_rst). The same mechanism applies to D2.
+            When the system exits from Standby mode, a stby_rst reset is applied. The stby_rst signal
+            generates a reset of the complete VCORE domain as long the VCORE voltage provided by the
+            internal regulator is not valid.
+            Table 55 gives a detailed overview of reset sources and scopes.
+
+                              Table 55. Reset distribution summary
+                          D1 Interconnect
+
+
+
+
+                          D2 Interconnect
+
+
+
+
+                          System Supply
+                          D1 Peripherals
+
+
+
+
+                          D2 Peripherals
+                          D3 Peripherals
+
+
+
+
+                           Backup RAM
+                           RTC domain
+                             D1 Debug
+
+
+
+
+                             NRST pin
+                              WWDG1
+                              D1 CPU
+
+
+
+
+                              FLASH
+                              IWDG1
+
+
+
+
+   Reset
+            Reset name                                                        Comments
+  source
+
+
+
+
+                                                              – Resets D1 and D2 domains, and all their
+                                                                peripherals
+                                                              – Resets D3 domain peripherals
+ Pin       NRST           x x x - x x x x x - - - - x
+                                                              – Resets VDD domain: IWDG1, LDO...
+                                                              – Debug features, Flash memory, RTC and
+                                                                backup RAM are not reset
+                                                              – Same as pin reset. The pin is asserted as
+           pwr_bor_rst    x x x - x x x x x - - - - x
+                                                                well.
+                                                              – Same as pwr_bor_rst reset, plus:
+                                                                Reset of the Flash memory digital block
+           pwr_por_rst    x x x x x x x x x x - - x x
+                                                                (including the option byte loading).
+ PWR                                                            Reset of the debug block
+                                                              – The low-power mode security reset has
+                                                                the same scope than pwr_por_rst. Refer
+           lpwr_rst       x x x - x x x x x - - - - x           to Section 8.4.5: Low-power mode
+                                                                security reset (lpwr_rst) for additional
+                                                                information.
+
+
+
+
+330/3353                                   RM0433 Rev 8
+RM0433                                                           Reset and Clock Control (RCC)
+
+
+                        Table 55. Reset distribution summary (continued)
+
+
+
+
+                         D1 Interconnect
+
+
+
+
+                         D2 Interconnect
+
+
+
+
+                         System Supply
+                         D1 Peripherals
+
+
+
+
+                         D2 Peripherals
+                         D3 Peripherals
+
+
+
+
+                          Backup RAM
+                          RTC domain
+                            D1 Debug
+
+
+
+
+                            NRST pin
+                             WWDG1
+                             D1 CPU
+
+
+
+
+                             FLASH
+                              IWDG1
+  Reset
+           Reset name                                                    Comments
+ source
+
+
+
+
+                                                          – The backup domain reset can be
+                                                            triggered by software. Refer to
+          BDRST          - - - - - - - - - - x - - -
+                                                            Section 8.4.6: Backup domain reset for
+                                                            additional information
+                                                          – Resets D1 domain, and all its
+          d1_rst         x x x x x - - - - - - - - -        peripherals, when the domain exits
+                                                            DStandby mode.
+                                                          – Resets D2 domain, and all its
+          d2_rst         - - - - - x x - - - - - - -        peripherals, when the domain exits
+                                                            DStandby mode.
+RCC
+                                                          – When the device exits Standby mode, a
+                                                            reset of the complete VCORE domain is
+                                                            performed as long the VCORE voltage is
+          stby_rst       x x x x x x x x - - - - - -        not valid. The VCORE is supplied by the
+                                                            internal regulator.
+                                                            NRST signal is not asserted.
+                                                          – This reset is generated by software
+                                                            through the bit located into RCC AHB3
+          CPURST         x - - - x - - - - - - - - -        reset register (RCC_AHB3RSTR).
+                                                          – Resets the CPU, and the WWDG1 block
+                                                          – This reset is generated by software when
+                                                            writing SYSRESETREQ bit located into
+CPU       SFTRESET       x x x - x x x x x - - - - x        AIRCR register of the Cortex®-M7 core.
+                                                          – Same scope as pwr_bor_rst reset.
+                                                          – This reset is generated by the backup
+Backup
+          pwr_vsw_rst    - - - - - - - - - - x - - -        domain when the VSW supply voltage is
+domain
+                                                            outside the operating range.
+IWDG1     iwdg1_out_rst x x x - x x x x x - - - - x       – Same as pwr_bor_rst reset.
+WWDG1     wwdg1_out_rst x x x - x x x x x - - - - x       – Same as pwr_bor_rst reset.
+
+
+
+
+                                         RM0433 Rev 8                                       331/3353
+                                                                                                       504
+Reset and Clock Control (RCC)                                                                                                                               RM0433
+
+
+8.4.4           Reset source identification
+                The CPU can identify the reset source by checking the reset flags in the RCC_RSR (or
+                RCC_C1_RSR) register.
+                The CPU can reset the flags by setting RMVF bit.
+                Table 56 shows how the status bits of RCC_RSR (or RCC_C1_RSR) register behaves,
+                according to the situation that generated the reset. For example when an IWDG1 timeout
+                occurs (line #10), if the CPU is reading the RCC_RSR (or RCC_C1_RSR) register during
+                the boot phase, both PINRSTF and IWDG1RSTF bits are set, indicating that the IWDG1
+                also generated a pin reset.
+
+                               Table 56. Reset source identification (RCC_RSR)(1)
+
+
+
+
+                                                                               WWDG1RSTF
+
+                                                                                           IWDG1RSTF
+                                                                    LPWRRSTF
+
+
+
+
+                                                                                                                                     BORRSTF
+                                                                                                                 PORRSTF
+
+
+
+
+                                                                                                                                                                 CPURSTF
+                                                                                                       SFTRSTF
+
+
+
+                                                                                                                           PINRSTF
+
+
+
+
+                                                                                                                                               D2RSTF
+
+                                                                                                                                                        D1RSTF
+  #                Situations Generating a Reset
+
+
+
+
+ 1     Power-on reset (pwr_por_rst)                                0           0           0           0         1         1         1         1        1        1
+ 2     Pin reset (NRST)                                            0           0           0           0         0         1         0         0        0        1
+ 3     Brownout reset (pwr_bor_rst)                                0           0           0           0         0         1         1         0        0        1
+ 4     System reset generated by CPU (SFTRESET)                    0           0           0           1         0         1         0         0        0        1
+ 5     CPU reset (CPURST)                                          0           0           0           0         0         0         0         0        0        1
+ 6     WWDG1 reset (wwdg1_out_rst)                                 0           1           0           0         0         1         0         0        0        1
+ 8     IWDG1 reset (iwdg1_out_rst)                                 0           0           1           0         0         1         0         0        0        1
+ 10    D1 exits DStandby mode                                      0           0           0           0         0         0         0         0        1        0
+ 11    D2 exits DStandby mode                                      0           0           0           0         0         0         0         1        0        0
+       D1 erroneously enters DStandby mode or
+ 12                                                                1           0           0           0         0         1         0         0        0        1
+       CPU erroneously enters CStop mode
+1. Grayed cells highlight the register bits that are set.
+
+
+
+
+332/3353                                                    RM0433 Rev 8
+

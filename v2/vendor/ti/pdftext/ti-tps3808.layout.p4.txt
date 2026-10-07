@@ -1,0 +1,55 @@
+TPS3808
+SBVS050N – MAY 2004 – REVISED AUGUST 2026                                                                                                         www.ti.com
+
+5 Pin Configuration and Functions
+
+                                                                                                      VDD    1                   6    RESET
+                      RESET       1         6          VDD
+                                                                                                                   THERMAL
+                                                                                                  SENSE      2       PAD         5    GND
+                        GND       2         5          SENSE
+
+                                                       CT                                              CT    3                   4    MR
+                            MR    3         4
+
+
+      Figure 5-1. DBV Package 6-Pin SOT-23 Top View                                Figure 5-2. DRV Package 6-Pin (2.00mm × 2.00mm)
+                                                                                           WSON With Thermal Pad Top View
+
+                                                                 Table 5-1. Pin Functions
+                      PIN
+                                                TYPE(1)                                            DESCRIPTION
+    NAME            SOT-23        WSON
+                                                             Reset period programming pin. Connecting this pin to VDD through a 40kΩ to 200kΩ
+                                                             resistor or leaving it open results in fixed delay times (see Section 6.5). Connecting this
+    CT                  4              3           I
+                                                             pin to a ground referenced capacitor ≥ 100pF gives a user-programmable delay time. See
+                                                             Section 7.3.2 for more information.
+    GND                 2              5          —          Ground
+                                                             Driving the manual reset pin ( MR) low asserts RESET. MR is internally tied to VDD by a
+    MR                  3              4           I
+                                                             90kΩ pull-up resistor.
+                                                             RESET is an open-drain output that is driven to a low-impedance state when RESET is
+                                                             asserted (either the SENSE input is lower than the threshold voltage (VIT) or the MR pin is
+    RESET               1              6          O          set to a logic low). RESET remains low (asserted) for the reset period after both SENSE
+                                                             is above VIT and MR is set to a logic high. A pull-up resistor from 10kΩ to 1MΩ should be
+                                                             used on this pin, and allows the reset pin to attain voltages higher than VDD.
+                                                             This pin is connected to the voltage to be monitored. If the voltage at this terminal drops
+    SENSE               5              2           I
+                                                             below the threshold voltage VIT, then RESET is asserted.
+                                                             Supply voltage. It is good analog design practice to place a 0.1μF ceramic capacitor close
+    VDD                 6              1           I
+                                                             to this pin.
+    Thermal
+                       —              Pad         —          Thermal Pad. Connect to ground plane to enhance thermal performance of package.
+    Pad
+
+(1)       I = input, O = output
+
+
+
+
+4         Submit Document Feedback                                                                               Copyright © 2026 Texas Instruments Incorporated
+
+                                                                 Product Folder Links: TPS3808
+

@@ -116,6 +116,7 @@ FETCH = {
     "v2/vendor/ti/held/ti-tlv755p-c404027.pdf": ("l4e12",),
     "v2/vendor/ti/held/ti-tps1663-slvset9g.pdf": ("l4e11", "l6pwr"),
     "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf": ("l4e7", "l6pwr"),
+    "v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf": ("l9t5hoe",),   # W148: read by l9t5/l9t5_hoe.py (HO-E's hold stage), fetched by l9t5hoe's script
     "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf": ("l4e11", "l4e7", "l6pwr", "l8r2"),
     "v2/vendor/ti/held/ti-tps55340-slvsbd4e.pdf": ("l4e11",),
     "v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf": ("l4e11",),
