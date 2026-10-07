@@ -61,7 +61,9 @@ PDFTEXT = {
                                                        ["-layout", "-f", "344", "-l", "345"]],
     "v2/vendor/st/st-an4938-rev7.pdf": [["-layout", "-f", "10", "-l", "10"], ["-layout", "-f", "19", "-l", "19"]],
     "v2/vendor/ti/ti-tps37-snvsbj1e.pdf": [["-layout"]],
-    "v2/vendor/ti/ti-tps3808.pdf": [["-layout", "-f", "7", "-l", "7"], ["-layout", "-f", "11", "-l", "11"]],
+    "v2/vendor/ti/ti-tps3808.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "4", "-l", "4"], ["-layout", "-f", "6", "-l", "6"], ["-layout", "-f", "7", "-l", "7"],
+                                    ["-layout", "-f", "11", "-l", "11"], ["-layout", "-f", "12", "-l", "12"]],
+    "v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf": [["-layout"]],
 }
 _PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
 PDFT = importlib.util.module_from_spec(_PTS)
@@ -71,6 +73,7 @@ DS = "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf"
 AN = "v2/vendor/st/st-an4938-rev7.pdf"
 TPS = "v2/vendor/ti/ti-tps37-snvsbj1e.pdf"
 TPS38 = "v2/vendor/ti/ti-tps3808.pdf"
+TPS3703 = "v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf"   # W148: held back, fetch_held_back.py
 REC = "v2/docs/records/l9t5"
 DOCS = {"draft": REC + "/apply_gen_sch_b_vcoremon.py", "guard": REC + "/apply_gen_sch_b_iocguard.py", "drafts": REC + "/l9t5_drafts.py",
         "t10out": REC + "/l9t5_t10.out", "t10py": REC + "/l9t5_t10.py", "gen_b": "v2/ecad/tools/gen_sch_b.py",

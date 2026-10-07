@@ -8,6 +8,9 @@ taken from the Internet Archive's copies of the maker's own URLs (served gzip-co
 TI's LMH2110 (SNWS022D) from ti.com. They land in v2/vendor/adi/held/ and v2/vendor/ti/held/, which .gitignore excludes, and are
 checked by sha256; nothing here is committed but this script. l9t5_a1.py reads the printed rows from them and refuses without them.
 
+W148 (7 October 2026, Layer 4 task L4A-59, HO-E): a fifth sheet, TI's TPS3703 (SBVS249B), the reset-loop hold stage l9t5_hoe.py
+compares and selects; held back as the project holds its other TI sheets, fetched from ti.com.
+
 Usage (repository root):  python3 v2/docs/records/l9t5/fetch_held_back.py      exit 0: present and checked; 3: a mismatch."""
 import gzip
 import hashlib
@@ -27,6 +30,8 @@ SHEETS = [
      "cf1382cf45de07bb995dbaeb2940d9af694f25e4482b4b41410c32f583fd1f78"),
     ("v2/vendor/ti/held/ti-lmh2110-snws022d.pdf", "https://www.ti.com/lit/ds/symlink/lmh2110.pdf",
      "b504ef25b74ca6f6a70badc4ce276a0d18cf7d5a098452357f235f1a85a7c6b2"),
+    ("v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf", "https://www.ti.com/lit/ds/symlink/tps3703.pdf",
+     "cc65714774e50c97dca9a1bf094489b17350cc70fa16068880e108e320f8a6ea"),
 ]
 
 

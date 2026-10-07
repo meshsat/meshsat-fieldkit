@@ -1,34 +1,46 @@
 #!/usr/bin/env python3
 """apply_gen_sch_b_vcoremon.py: DRAFT for board B's generator owner (record l9t5, Layer 4 task L4A-59, the ledger's HO-E; MESHSAT-1357,
-W140, 7 October 2026; the CTR1 hold added by W145 the same day on the focused check L4A-100's finding F1). NOT APPLIED to the tree by this record; its author ran it only on scratch copies. It is order-free against the
-other drafts of board B: it touches only each supervisor's reset block and the decoupling class table, which no other pending draft
-edits (record l9t5's iocpre, canshdn, iocset and iocguard, W137's canmb and W138's regstage are read for it in l9t5_hoe.out).
+W140, 7 October 2026; a CTR1 hold added by W145 the same day on the focused check L4A-100's finding F1, and replaced by W148 the same
+day with a hold stage whose printed minimum does not depend on the fault's length, W145's finding W145-F1). NOT APPLIED to the tree by
+this record; its authors ran it only on scratch copies. It is order-free against the other drafts of board B: it touches only each
+supervisor's reset block and the decoupling class table, which no other pending draft edits (record l9t5's iocpre, canshdn, iocset and
+iocguard, W137's canmb and W138's regstage are read for it in l9t5_hoe.out).
 
 The correction (l9t5_hoe.out sections 5 and 8; HO-E-COMPARISON.md): a VCORE monitor per supervisor, independent of its firmware.
 Each STM32H743's core voltage is on its VCAP pins (48 and 73, net IOC{t}_VCAP); ST prints that core voltage per voltage scale
 (DS12110 Rev 11 Table 112, p.209: VOS3 0.95 to 1.05 V, VOS1 1.15 to 1.26 V, VOS0 1.26 to 1.40 V with the LDO on). A TI TPS37 (channel 1
-overvoltage, the adjustable 0.8 V option "01", open-drain active-low, 2 % hysteresis) senses VCAP through a 0.1 % divider and holds
-the supervisor's NRST low whenever VCAP is over a threshold that lies above VOS3's band and below VOS1's, so every entry to VOS1 and
-therefore to VOS0 (RM0433 Rev 8 p.280: "VOS0 can be enabled only when VOS1 is programmed") resets the controller to its reset
-state (RM0433 p.279: "After reset, the system starts on the lowest Run mode voltage scaling (VOS3)"), whatever its firmware does.
+overvoltage, the adjustable 0.8 V option "01", open-drain active-low, 2 % hysteresis) senses VCAP through a 0.1 % divider and pulls
+IOC{t}_MONRST low whenever VCAP is over a threshold that lies above VOS3's band and below VOS1's, so every entry to VOS1 and therefore
+to VOS0 (RM0433 Rev 8 p.280: "VOS0 can be enabled only when VOS1 is programmed") is seen. A TI TPS3703 (SBVS249B; the hold stage,
+W148) reads that line on its manual reset input and drives the controller's NRST: "A logic low on MR causes RESET to assert. After MR
+returns to a logic high and the SENSE pin voltage is within a valid window ..., RESET is deasserted after the reset delay time (tD)."
+(8.3.5, p.16), tD 14 ms minimum with CT pulled to VDD through 10 kOhm (7.6, p.7: TPS3703B, TPS3703F), a factory-programmed delay, for
+any manual-reset pulse of at least tMR_W, 1 us minimum (7.6). The controller is reset to its reset state (RM0433 p.279: "After reset,
+the system starts on the lowest Run mode voltage scaling (VOS3)") and held at least tD after, whatever its firmware does and however
+short the fault: an image that enters VOS1 or VOS0 at every boot spends at most t_resp in it per tD (l9t5_hoe.out 5g).
+The TPS37's RESET1 drives only the TPS3703's MR (W145's finding W145-F1: wired also to NRST, the stage would latch, its RESET holding
+NRST, NRST holding MR through the series resistor); the TPS37's CTR1 is open again (W145's capacitor withdrawn, SESSION W148-1).
 Per supervisor t (k = 0, 1, 2 for A, B, C; designators in the free 810 to 839 range of board B):
   U810+10k  TPS37 in WSON-10 (DSK): 1 VDD on the controller's own +3V3_IOC{t}; 2 SENSE1 on IOC{t}_VMON; 3 SENSE2 on +3V3_IOC{t} (the
-            undervoltage channel held inert); 4 RESET1 on IOC{t}_MONRST; 6 CTR1/MR on IOC{t}_MONCTR (the reset hold, C813+k below);
-            5 RESET2, 7 CTS1 (the shortest sense delay), 8 CTS2, 9 CTR2/MR open (SNVSBJ1E Table 6-1 p.5); 10 GND; 11 the pad on GND
-            (p.5: "can be connected to GND")
+            undervoltage channel held inert); 4 RESET1 on IOC{t}_MONRST; 5 RESET2, 6 CTR1/MR, 7 CTS1 (the shortest sense delay), 8 CTS2,
+            9 CTR2/MR open (SNVSBJ1E Table 6-1 p.5); 10 GND; 11 the pad on GND (p.5: "can be connected to GND")
   R810+10k  the divider's top, VCAP to VMON (TOP below)        R811+10k  its bottom, VMON to GND (BOTTOM below)
-  R812+10k  750 Ohm 1 % from MONRST to IOC{t}_RST_n: it keeps the open drain's current inside the recommended 5 mA while it
-            discharges the reset capacitor (C409, C429, C449, 100 nF, ST's Figure 74) from the rail
   C810+k    100 nF at the TPS37's VDD (Table 6-1, p.5: "Bypass with a 0.1 uF capacitor to GND")
-  C813+k    100 nF from CTR1/MR to GND: the reset hold after VCAP falls back (SNVSBJ1E 8.3.4.1, p.23, Equation 2: tCTR(min) =
-            -ln(0.31) x RCTR(min) x CCTR(min) + tCTR(no cap)(min), RCTR 877 kOhm min, p.8), so an image that enters VOS1 or VOS0 at
-            every boot is held in reset at least that long each time (W144's finding F1, l9t5_hoe.out section 5d's reset-loop row, its
-            full-discharge condition S5); it adds the same hold to every self-test and to the power-up (p.9 note 4)
-The values are the record's selection (l9t5_hoe.out section 5d, SESSION W140-2): the E96 top that keeps the threshold band inside
-(1.05, 1.15) V with the largest least margin; the hold capacitor SESSION W145-1 (100 nF, read at +-20 % as the record reads the
-reset capacitor; Layer 6 names a part that holds that band over its tolerance, temperature and bias). No pin of the controller changes; no other part, net or declaration changes. The land
-id WSON-10 2.5 x 2.5 mm is this draft's ASSUMPTION (the land check runs only where KiCad is; Layer 10). The TPS37's order code and
-LCSC code are owed (Layer 6): TI's section 5 reads "minimum order quantities may apply".
+  U811+10k  TPS3703F6050DSER in WSON-6 (DSE; UV only, 0.50 V nominal at -6 %, delay option F): 1 SENSE and 2 VDD on +3V3_IOC{t} (its
+            undervoltage comparator never trips there: SENSE is over 0.47 V whenever VDD is in its range), 3 CT on IOC{t}_MONCT,
+            4 RESET on IOC{t}_MONOUT, 5 GND, 6 MR on IOC{t}_MONRST (pulled up inside, RMR; SBVS249B pin functions, p.4)
+  R813+10k  10 kOhm 1 % from CT to the rail (7.3 note 1: "CT pin connected to VDD pin requires a pullup resistor; 10 kOhm is
+            recommended"): the factory-programmed 20 ms option (Table 9-1, p.19), 14 to 26 ms (7.6, p.7)
+  R812+10k  390 Ohm 1 % from MONOUT to IOC{t}_RST_n: it keeps the open drain's current inside the recommended 10 mA (7.3) while it
+            discharges the reset capacitor (C409, C429, C449, 100 nF, ST's Figure 74) from the rail
+  C816+k    100 nF at the TPS3703's VDD (pin functions, p.4: "Good analog design practice is to place a 0.1-uF ceramic capacitor close
+            to this pin")
+The values are the record's selection (l9t5_hoe.out sections 5d and 5h, SESSION W140-2 and W148-1): the E96 top that keeps the
+threshold band inside (1.05, 1.15) V with the largest least margin; the hold part and its series resistor (W148-1). No pin of the
+controller changes; no other part, net or declaration changes. The land ids (WSON-10 2.5 x 2.5 mm, WSON-6 1.5 x 1.5 mm) are this
+draft's ASSUMPTION (the land check runs only where KiCad is; Layer 10). The TPS37's order code and both parts' LCSC codes are owed
+(Layer 6): TI's sections 5 read "minimum order quantities may apply" (TPS37) and "minimum order quantities apply" (TPS3703, for
+options other than the orderables its addendum lists; TPS3703F6050DSER is one of those, Active).
 Usage:  apply_gen_sch_b_vcoremon.py TARGET [--check | --write]     (default --check: nothing is written)
 Exit 0: checked (or written); 3: refused (the change is already applied, an old text is missing, a designator the draft adds is
 already drawn, or the repository's own generator is named before RELEASE-T10.md releases it)."""
@@ -42,40 +54,54 @@ NAME = "apply_gen_sch_b_vcoremon"
 BOARD = "b"
 TOP = "39.2k 0.1% 25ppm"       # IOC{t}_VCAP to IOC{t}_VMON
 BOTTOM = "100k 0.1% 25ppm"     # IOC{t}_VMON to GND
-SERIES = "750R 1%"             # IOC{t}_MONRST to IOC{t}_RST_n
-HOLD = "100n"                  # IOC{t}_MONCTR to GND: the TPS37's CTR1 reset hold (W145-1)
+SERIES = "390R 1%"             # IOC{t}_MONOUT to IOC{t}_RST_n (W148-1)
+CT_PULLUP = "10k 1%"           # +3V3_IOC{t} to IOC{t}_MONCT: the TPS3703's factory-programmed delay (W148-1)
+HOLD_PART = "TPS3703F6050DSER" # the hold stage's orderable code (TI SBVS249B package option addendum: Active)
 LAND = "Package_SON:WSON-10-1EP_2.5x2.5mm_P0.5mm_EP1.2x2mm"
+HOLD_LAND = "Package_SON:WSON-6_1.5x1.5mm_P0.5mm"
 MONITOR = "TPS37 OV/UV monitor (CH1 OV adjustable 0.8 V option 01, open-drain active-low, 2 percent hysteresis; order code owed)"
-ADDS = tuple("U%d" % (810 + 10 * k) for k in range(3)) + tuple("R%d" % (810 + 10 * k + n) for k in range(3) for n in range(3)) \
-    + tuple("C%d" % (810 + k) for k in range(3)) + tuple("C%d" % (813 + k) for k in range(3))
+HOLD = ("%s hold stage (UV only 0.50 V -6 percent on its own VDD; CT 10 k to VDD, tD 14 to 26 ms; MR from the TPS37's RESET1)"
+        % HOLD_PART)
+ADDS = tuple("U%d" % (810 + 10 * k + n) for k in range(3) for n in range(2)) \
+    + tuple("R%d" % (810 + 10 * k + n) for k in range(3) for n in range(4)) \
+    + tuple("C%d" % (810 + k) for k in range(3)) + tuple("C%d" % (816 + k) for k in range(3))
 
 _OLD_RST = '    r(R_(0), "10k", "IOC%s_RST_n" % _tag, v33); c(C_(9), "100n", "IOC%s_RST_n" % _tag, "GND")\n'
 _NEW_RST = (_OLD_RST
-            + '    # HO-E (record l9t5, Layer 4 task L4A-59, W140): a VCORE monitor of this controller, on its own rail and its own reset only.\n'
-            + '    # A TPS37 (SNVSBJ1E) senses VCAP through a 0.1 % divider and holds NRST low while VCAP is over the band VOS3 may occupy\n'
-            + '    # (DS12110 Rev 11 Table 112: VOS3 0.95 to 1.05 V, VOS1 from 1.15 V, VOS0 from 1.26 V), so an entry to VOS1 or VOS0 by any\n'
-            + '    # firmware resets the controller to VOS3 (RM0433 Rev 8 p.279); the threshold band and the timing are l9t5_hoe.out section 5d.\n'
-            + '    ic("U%%d" %% (810 + 10 * _k), 11, "%s, controller %%s: holds NRST while VCAP is over the VOS3 band" %% _tag, "%s",\n' % (MONITOR, LAND)
-            + '       {"1": v33, "2": "IOC%s_VMON" % _tag, "3": v33, "4": "IOC%s_MONRST" % _tag, "5": "NC", "6": "IOC%s_MONCTR" % _tag, "7": "NC", "8": "NC",\n'
+            + '    # HO-E (record l9t5, Layer 4 task L4A-59, W140; its hold stage W148): a VCORE monitor of this controller, on its own rail\n'
+            + '    # and its own reset only. A TPS37 (SNVSBJ1E) senses VCAP through a 0.1 % divider and pulls MONRST low while VCAP is over the\n'
+            + '    # band VOS3 may occupy (DS12110 Rev 11 Table 112: VOS3 0.95 to 1.05 V, VOS1 from 1.15 V, VOS0 from 1.26 V); a TPS3703 (SBVS249B)\n'
+            + '    # reads MONRST on its manual reset and holds NRST low then and for its factory-programmed delay after (14 ms minimum), so an\n'
+            + '    # entry to VOS1 or VOS0 by any firmware resets the controller to VOS3 (RM0433 Rev 8 p.279) and holds it, however short the fault;\n'
+            + '    # the threshold band and the timing are l9t5_hoe.out sections 5d, 5g and 5h. RESET1 drives MR alone: on NRST too, it would latch.\n'
+            + '    ic("U%%d" %% (810 + 10 * _k), 11, "%s, controller %%s: pulls MONRST low while VCAP is over the VOS3 band" %% _tag, "%s",\n' % (MONITOR, LAND)
+            + '       {"1": v33, "2": "IOC%s_VMON" % _tag, "3": v33, "4": "IOC%s_MONRST" % _tag, "5": "NC", "6": "NC", "7": "NC", "8": "NC",\n'
             + '        "9": "NC", "10": "GND", "11": "GND"})\n'
             + '    r("R%%d" %% (810 + 10 * _k), "%s", "IOC%%s_VCAP" %% _tag, "IOC%%s_VMON" %% _tag)\n' % TOP
             + '    r("R%%d" %% (811 + 10 * _k), "%s", "IOC%%s_VMON" %% _tag, "GND")\n' % BOTTOM
-            + '    r("R%%d" %% (812 + 10 * _k), "%s", "IOC%%s_MONRST" %% _tag, "IOC%%s_RST_n" %% _tag)\n' % SERIES
             + '    c("C%d" % (810 + _k), "100n", v33, "GND")\n'
-            + '    # the reset hold (W145, L4A-100 finding F1): CTR1 to GND holds RESET1 at least tCTR(min) after VCAP falls back (SNVSBJ1E\n'
-            + '    # Equation 2, p.23), so a firmware that enters VOS1 or VOS0 at every boot spends most of each cycle in reset (l9t5_hoe.out 5d).\n'
-            + '    c("C%%d" %% (813 + _k), "%s", "IOC%%s_MONCTR" %% _tag, "GND")\n' % HOLD
+            + '    ic("U%%d" %% (811 + 10 * _k), 6, "%s, controller %%s: holds NRST while MONRST is low and its delay after" %% _tag, "%s",\n' % (HOLD, HOLD_LAND)
+            + '       {"1": v33, "2": v33, "3": "IOC%s_MONCT" % _tag, "4": "IOC%s_MONOUT" % _tag, "5": "GND", "6": "IOC%s_MONRST" % _tag})\n'
+            + '    r("R%%d" %% (813 + 10 * _k), "%s", v33, "IOC%%s_MONCT" %% _tag)\n' % CT_PULLUP
+            + '    r("R%%d" %% (812 + 10 * _k), "%s", "IOC%%s_MONOUT" %% _tag, "IOC%%s_RST_n" %% _tag)\n' % SERIES
+            + '    c("C%d" % (816 + _k), "100n", v33, "GND")\n'
             + '    _intent.bypass("C%d" % (810 + _k), "U%d" % (810 + 10 * _k), "1", v33)\n'
+            + '    _intent.bypass("C%d" % (816 + _k), "U%d" % (811 + 10 * _k), "2", v33)\n'
             + '    _intent.node("IOC%s_VMON" % _tag, 1.40,\n'
             + '                 "controller %s\'s VCORE monitor sense node: VCAP through the divider, at most VCAP\'s 1.40 V (DS12110 Rev 11 Table 112)" % _tag)\n'
             + '    _intent.node("IOC%s_MONRST" % _tag, _intent.net_volts(v33),\n'
-            + '                 "controller %s\'s VCORE monitor output: an open drain pulled to the controller\'s own 3.3 V through NRST\'s pull-up" % _tag)\n'
-            + '    _intent.node("IOC%s_MONCTR" % _tag, 5.5,\n'
-            + '                 "controller %s\'s VCORE monitor reset-hold capacitor: the TPS37 charges it itself; TI\'s recommended VCTR1 range 0 to 5.5 V (SNVSBJ1E 7.3, p.6)" % _tag)\n')
+            + '                 "controller %s\'s VCORE monitor output: the TPS37\'s open drain into the TPS3703\'s manual reset, pulled up inside it to the controller\'s own 3.3 V" % _tag)\n'
+            + '    _intent.node("IOC%s_MONOUT" % _tag, _intent.net_volts(v33),\n'
+            + '                 "controller %s\'s reset hold output: the TPS3703\'s open drain, pulled up through the series resistor by NRST\'s pull-up" % _tag)\n'
+            + '    _intent.node("IOC%s_MONCT" % _tag, _intent.net_volts(v33),\n'
+            + '                 "controller %s\'s reset hold timing pin: the TPS3703\'s CT pulled to its VDD through 10 k, the factory-programmed delay (SBVS249B 9.1.2.1)" % _tag)\n')
 _OLD_CLASS = '    if pv.startswith("TPS3808"):\n'
 _NEW_CLASS = ('    if pv.startswith("TPS37 "):   # HO-E (record l9t5, L4A-59): the supervisors\' VCORE monitors\n'
               '        return ("D", "TI TPS37 SNVSBJ1E (v2/vendor/ti/ti-tps37-snvsbj1e.pdf) Table 6-1, VDD: \\"Input Supply Voltage: Bypass with a "\n'
               '                     "0.1 uF capacitor to GND.\\" (p.5; the micro sign written u)")\n'
+              '    if pv.startswith("TPS3703"):  # HO-E (record l9t5, L4A-59, W148): the monitors\' hold stages\n'
+              '        return ("D", "TI TPS3703 SBVS249B (v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf, held back) pin functions, VDD: \\"Good "\n'
+              '                     "analog design practice is to place a 0.1-uF ceramic capacitor close to this pin.\\" (p.4; the micro sign written u)")\n'
               + _OLD_CLASS)
 EDITS = [(_OLD_RST, _NEW_RST), (_OLD_CLASS, _NEW_CLASS)]
 
@@ -86,7 +112,7 @@ def refuse(msg):
 
 
 def patched(text):
-    if "_VMON" in text or "_MONRST" in text or "_MONCTR" in text:
+    if any(s in text for s in ("_VMON", "_MONRST", "_MONCT", "_MONOUT")):
         refuse("the change is already applied")
     for ref in ADDS:
         if re.search(r'(?:\br|\bc|\bic|\bpart)\(\s*"%s"' % ref, text):
