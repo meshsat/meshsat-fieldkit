@@ -49,7 +49,7 @@ fd750e4dc429a790 v2/ecad/tools/track_current.py
 d3bcdc7dd4ca44cb v2/vendor/diodes/diodes-ap64500.pdf
 3a8eb81d3f58e0a5 v2/ecad/tools/gen_pcb_e3.py
 b0e303a557e38898 v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
-68d3df24f9e105cd v2/docs/records/l4e12/l4e12_thermal.out
+a784a030eb1be73d v2/docs/records/l4e12/l4e12_thermal.out
 80070fefd8db6e8a v2/vendor/cm5/cm5-datasheet.pdf
 bd97a9e446861123 v2/vendor/cm5/linux-bcm2712-rpi-cm5.dtsi
 fae7e21365939be5 v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf
@@ -101,6 +101,8 @@ c1fa1713c6e5fe29 v2/docs/records/l8p/apply_gen_sch_e_enable.py
 5a7dbdd94339d81b v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0616.pdf (held back by its terms, fetched by fetch_held_back.py)
 cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pdf (held back by its terms, fetched by fetch_held_back.py)
 17e067067bfe798f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0633.pdf (held back by its terms, fetched by fetch_held_back.py)
+429ef814b81dbed7 v2/vendor/cm5/pdftext/cm5-datasheet.layout.txt
+0da9230ae92ea2ca v2/vendor/fans/pdftext/sunon-dc-fan-catalogue-240A-pp18-40-extract.layout.txt
 
    the figures and their classes
    vref         (1.188, 1.212, 1.236)              MAKER      TPS61089 VREF, PWM mode (SLVSD38C 7.5)

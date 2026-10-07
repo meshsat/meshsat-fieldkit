@@ -85,6 +85,18 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    544a462a9031862a v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    710c23941383419c v2/docs/records/l8p/check_l8p_netlist.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
+   b32d1ad9c1100d12 v2/vendor/battery/pdftext/murata-nxrt15xh103fa1b.layout.txt
+   b4335bd9c4282976 v2/vendor/battery/pdftext/murata-prf-series.layout.txt
+   f83f141c39e09df2 v2/vendor/battery/pdftext/ti-bq4050.layout.txt
+   9cf26dd0b17dd0d3 v2/vendor/battery/pdftext/ti-csd17570q5b.layout.txt
+   5ecf7f639ea2bf4c v2/vendor/battery/pdftext/ti-csd18510q5b.layout.txt
+   5e09c90c2ce2c61b v2/vendor/battery/pdftext/ti-sluuaq3a-bq4050-trm.layout.txt
+   6cf7cbd81b4e2df0 v2/vendor/diodes/pdftext/diodes-bzt52c-ds18004.layout.txt
+   8f457be6865e4d72 v2/vendor/power/pdftext/jscj-2n7002-c8545.layout.txt
+   1b0093a4cb0764e4 v2/vendor/power/pdftext/st-semtech-1n4148w-c81598.layout.txt
+   c6c45bc47183d07a v2/vendor/ti/held/pdftext/ti-opa187-sbos807e.layout.txt
+   4fdfb817af936bbf v2/vendor/ti/pdftext/ti-lm5069.layout.txt
+   cfed06255b323b69 v2/vendor/ti/pdftext/ti-lm74700-q1.layout.txt
    record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 17) equal the sha256 SOURCES.txt pins: yes
 
 2. THE VALUES, each found in record l9stk's own text (fnd/l9stk at 0d72880b), and this record's SESSION choices

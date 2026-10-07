@@ -17,6 +17,20 @@ design, desk arithmetic: nothing bought, built, powered or measured; no physical
    smcj       v2/vendor/power/littelfuse-smcj-series-tvs.pdf  sha256 6e610db955ed8763
    vh         v2/vendor/connectors/jst-vh-catalogue.pdf  sha256 d51e669c597988b2
    enh        v2/vendor/solar/irradiance-enhancement-sources-2026-10-02.md  sha256 e33b0a05c27f6763
+   pdftext    v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.p1.txt  sha256 ed8ca38f0700137c
+   pdftext    v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.p2.txt  sha256 a02f02768daed043
+   pdftext    v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.p3.txt  sha256 d9aac8762489e649
+   pdftext    v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.p4.txt  sha256 a707ba98cc6c2a89
+   pdftext    v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.p5.txt  sha256 d9b32cdf44b0e480
+   pdftext    v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.p6.txt  sha256 7fa687969bf36d29
+   pdftext    v2/vendor/power/pdftext/littelfuse-smcj-series-tvs.layout.p1.txt  sha256 6c2ee1dcffb03dbf
+   pdftext    v2/vendor/power/pdftext/littelfuse-smcj-series-tvs.layout.p2.txt  sha256 f551b87f3dd6c30a
+   pdftext    v2/vendor/solar/held/pdftext/solbian-sx-series-datasheet-eng-2023-02.layout.p1.txt  sha256 20829692b5489c04
+   pdftext    v2/vendor/solar/held/pdftext/solbian-sx-series-datasheet-eng-2023-02.layout.p2.txt  sha256 873e50ecc92461a9
+   pdftext    v2/vendor/solar/held/pdftext/sunpower-flex-safety-installation-524958-revf.layout.p2.txt  sha256 cd5d230648f65552
+   pdftext    v2/vendor/solar/held/pdftext/sunpower-flex-safety-installation-524958-revf.layout.p3.txt  sha256 8ab3cc346fe0cafc
+   pdftext    v2/vendor/solar/held/pdftext/sunpower-flex-safety-installation-524958-revf.layout.p4.txt  sha256 f6bb606069cf81b8
+   pdftext    v2/vendor/solar/held/pdftext/sunpower-spr-e-flex-100-datasheet-523809-revd.layout.p1.txt  sha256 2363c533d8fa879c
    l4e_replay.main() in-process, its locals captured, prints l4e_replay.out byte for byte: yes
    this record's trace equals the replay's trace hour for hour on the SunPower panel at its three holds: yes
    the SunPower day (Wh, no limit) against the replay's section 12 (legacy band): 16.695 V 373.5 = 373.5; 17.593 V 350.0 = 350.0; 18.490 V 280.6 = 280.6

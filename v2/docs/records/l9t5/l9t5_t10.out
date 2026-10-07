@@ -11,15 +11,15 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    9ba54135736a47a3 v2/vendor/st/st-rm0433-rev8.pdf
    dbb74b6cdc543135 v2/vendor/ti/held/ti-ina169-sbos181f.pdf
    27c94a6c3a243bf5 v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf
-   f26757c7c5004cdd v2/docs/HW-FW-CONTRACT.md
+   12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
    c4820a453aa7a159 v2/docs/PANEL.md
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
-   68d3df24f9e105cd v2/docs/records/l4e12/l4e12_thermal.out
+   a784a030eb1be73d v2/docs/records/l4e12/l4e12_thermal.out
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
-   24722259a30363c5 v2/docs/records/l8r2/l8r2_gndret.out
-   aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
-   5af41751ab9322a1 v2/docs/records/l9t5/l9t5_drafts.out
+   046e2120dfede901 v2/docs/records/l8r2/l8r2_gndret.out
+   be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
+   850b6eb5ea8f2b87 v2/docs/records/l9t5/l9t5_drafts.out
    8b0aab5cdd912493 v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
    653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
@@ -29,6 +29,37 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    4f8831c8b21e2ca1 v2/docs/records/l9t5/apply_gen_sch_a_iocset.py
    ca218c9ed2f267ed v2/docs/records/l9t5/apply_gen_sch_b_iocset.py
    6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
+   d2eed21ecffdff2b v2/vendor/battery/pdftext/samsung-35e-orbtronic.layout.txt
+   f83f141c39e09df2 v2/vendor/battery/pdftext/ti-bq4050.layout.txt
+   5ecf7f639ea2bf4c v2/vendor/battery/pdftext/ti-csd18510q5b.layout.txt
+   0b5fe9a39d996e7a v2/vendor/coilcraft/pdftext/coilcraft-xal60xx-series.layout.txt
+   9d315dec55a94ab8 v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt
+   6793d4bc0e60cc6d v2/vendor/diodes/pdftext/diodes-ap2112-ldo.layout.txt
+   c59cee8614dfb14b v2/vendor/diodes/pdftext/diodes-ap2112-ldo.plain.l1.txt
+   5b6d73f6d51b2b9f v2/vendor/diodes/pdftext/diodes-ap63200-series-buck.layout.txt
+   86e6d8baf3f2bd0f v2/vendor/diodes/pdftext/diodes-ap63200-series-buck.plain.l1.txt
+   523141f25b1ce791 v2/vendor/diodes/pdftext/diodes-ap64500.plain.l1.txt
+   e1ad9f624efd2d98 v2/vendor/mitsubishi/pdftext/ra30h1317m1-datasheet.layout.txt
+   0645dd67a4e97ebd v2/vendor/power/pdftext/ti-tlv755p-ldo.plain.l1.txt
+   6830354f577b4bad v2/vendor/power/pdftext/tps2596.plain.txt
+   d72c6fc8d3f977aa v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2464.txt
+   609cb3ecd86269dd v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2470.txt
+   c3f16d5193846333 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2527.txt
+   e4289fd5af43153c v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2534.txt
+   c5808370bfd34450 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p279.txt
+   116e7e78e9dd104d v2/vendor/st/pdftext/st-rm0433-rev8.layout.p349.txt
+   8b51c389f0e8ace7 v2/vendor/st/pdftext/st-stm32h743xi-datasheet.layout.txt
+   c0af7c237c60aa9f v2/vendor/ti/held/pdftext/ti-ina169-sbos181f.layout.txt
+   23961b85e31fdbb3 v2/vendor/ti/held/pdftext/ti-ina250-sbos511c.layout.txt
+   c14b11b145fa3215 v2/vendor/ti/held/pdftext/ti-tps3701-sbvs240c.layout.txt
+   6399dcdabf2895da v2/vendor/ti/pdftext/lm5176-datasheet.layout.txt
+   234fbb73ef374502 v2/vendor/ti/pdftext/ti-ina226.layout.txt
+   810dc4dbcf529687 v2/vendor/ti/pdftext/ti-tcan334-can-fd-transceiver.layout.txt
+   da725d6f1fcac1bd v2/vendor/ti/pdftext/ti-tlv758p.layout.txt
+   dae07174ea3a294c v2/vendor/ti/pdftext/ti-tlv9062-op-amp.layout.txt
+   010f30f3bffdad5f v2/vendor/ti/pdftext/ti-tps62933.layout.txt
+   a4965834fb931ea9 v2/vendor/ti/pdftext/ti-tps62933.plain.l1.txt
+   3a3efdb44c14796b v2/vendor/vishay/pdftext/vishay-wsl-power-metal-strip.layout.txt
 
 2. THE APPLICABLE OPERATING STATE OF A SUPERVISOR (U41, U51, U61, STM32H743VIT6), AS THE TREE DEFINES IT
    v2/docs/HW-FW-CONTRACT.md: 11 rows name the supervisors (their I2C target addresses, CAN FD at 1 Mbps or less, the quorum, the vote rate);
@@ -659,7 +690,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      the delta on a generator without record l9t5's drafts: refused; a second time: refused; on the tree's own generator: refused (NOT RELEASED)
      record l9t5's own I-03 check (Slot A's check_l9t5_netlist.py) holds the LDOs' VIN on +5V_IOC: its entry is Slot A's to restate when
      it takes this delta (L9T5-F25)
-   DISPOSITION (10j, after cx46): cx45's Q3 NOT CLOSED. Drafted and reproducible: FW-B22's traffic MODEL and the containment circuits'
+   DISPOSITION (10j, after cx46): Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'. Drafted and reproducible: FW-B22's traffic MODEL and the containment circuits'
      composition (composed, read by pin, mutated). OPEN or PROVISIONAL: CON-004's quorum service (OPEN), FW-B22 (PROVISIONAL), L9T5-F21 (OPEN), the limiter's and
      the rail trip's response times (PROVISIONAL, no printed maximum for the comparator's delay), V-B23's response (WITHDRAWN), the sustained thermal
      bound (WITHDRAWN as a bound, PROVISIONAL), T10-A3 at a peak (PROVISIONAL). REMAINING ENGINEERING, for the receiving company: the

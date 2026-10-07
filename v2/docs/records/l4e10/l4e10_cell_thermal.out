@@ -36,8 +36,15 @@ PROTOTYPE DESIGN, desk arithmetic; nothing bought, built, powered or measured. C
    pin 35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864 v2/ecad/tools/pcb_envelope.yaml
    pin 8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31 v2/ecad/tools/pcb_requirements.yaml
    pin 3ecc2424acfa1753c2aec0b62d5706d4f25b7a08e731795c0d84d59938a3158e v2/vendor/battery/eaton-scf9550-elx1135.pdf
+   pin 36a63e8fe3c5d7b2c17d58e2ab9e188df7d82a7cb29885d737bae44ce47850e6 v2/vendor/battery/heater/pdftext/rs-pro-245-556-heater-mat-sheet.layout.txt
    pin 5c0e331bc0051078cc373f87ed904a2fffaeb26dc1bffd0d79e54c524667fe7f v2/vendor/battery/heater/rs-pro-245-556-heater-mat-sheet.pdf
    pin b135f906d383a964ac7d4585d66acc762145aa739c20d7bfc60269d32d7857e9 v2/vendor/battery/held/lg-inr18650hg2-rev0-2014.pdf
+   pin e7afa69673d765d7b1297b13c31665e386393efc58e6cdd51ffba750783603d1 v2/vendor/battery/held/pdftext/lg-inr18650hg2-rev0-2014.layout.txt
+   pin 5a60a22a0bed7c8af5e42af8becf8c35a03f9ba86774119f574346716bb355a4 v2/vendor/battery/held/pdftext/saft-lsh20-31015-2-0426.layout.txt
+   pin 0d6f8442249ef1977b3900053e271855a09a3a0bf1d756cecc1497d6fd75be0c v2/vendor/battery/held/pdftext/saft-mp176065xtd-31109-2-0625.layout.txt
+   pin 733d6c1b519552055b4cf1aa2abbd590c52fb2326f8c11ef3828a52f016fa8aa v2/vendor/battery/held/pdftext/samsung-inr18650-30q-v1.0-2015.layout.txt
+   pin 8e51c013c30c3f78a0a7c4bd402e97b1aad66f07cdd7569c372f83b6fccaf531 v2/vendor/battery/held/pdftext/samsung-inr18650-30q6-draft-v0.1-2024.layout.txt
+   pin 020dfe070c9d52ec01843c6271377d0072ea689e64e578cfc3e1031a55bf698c v2/vendor/battery/held/pdftext/samsung-inr18650-30q6-v1.0-2020.layout.txt
    pin 79245e64a2c4abb79ad082568ade32357d27f103416dbe899256dfec322e3ecd v2/vendor/battery/held/saft-lsh20-31015-2-0426.pdf
    pin 5befce3a37ab89fad4826488793008f71d5c4ba4a36eacbfadd9dacfa5339d55 v2/vendor/battery/held/saft-lsh20hts-31057-2-0710.pdf
    pin 8ca0a3e09997a4a30567a4313cf83c2b6cf165543baf424e0ff788d5a8d27f8e v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf
@@ -47,8 +54,16 @@ PROTOTYPE DESIGN, desk arithmetic; nothing bought, built, powered or measured. C
    pin acc8f192c54fb287f9ef66d5e26c440601fa795c87f46dba881dce747ef07df3 v2/vendor/battery/held/toshiba-scib-brochure-2020.pdf
    pin f95db57fa9bef536a0abcab0a8a979db8593ebd528736c53590a35eb853f80c0 v2/vendor/battery/held/ultraxel-hl18650t-flyer-2025.pdf
    pin 05db826b40db2106639eb137047ecce6d8e6a1efb57fd57e70dfc01318d471d1 v2/vendor/battery/molicel-inr18650-p28a-v1.pdf
+   pin 1b16c0d47f32340d90c534013d291816f2062c43fb6a99b900ff6a5fe4e5b80b v2/vendor/battery/pcm/pdftext/rubitherm-rt57hc-2026-01-21.layout.txt
    pin fac4909cd4a7f95d6743f31afa92b496163efb33b09b2211dad9c02032c882b2 v2/vendor/battery/pcm/rubitherm-rt55-2026-01-21.pdf
    pin 74a5c20c8cc472d913b7e13865a12ee6aa18b1b065962d3d3527467fc7c2642b v2/vendor/battery/pcm/rubitherm-rt57hc-2026-01-21.pdf
+   pin 2566695d46aee6a9eafaab5afc00b09e3ca1a45597b6738fad5e70386d213c60 v2/vendor/battery/pdftext/eaton-scf9550-elx1135.layout.txt
+   pin f78b191e18095dcdebd287d0b9450bea62bb8f428a1a489b07571b0048d63a4a v2/vendor/battery/pdftext/molicel-inr18650-p28a-v1.layout.txt
+   pin d11f16e414503af8e6ebd8c416640d34c22bebc5467da0ef56dc405f7e6aa119 v2/vendor/battery/pdftext/samsung-35e-akkuzentrum.layout.txt
+   pin d2eed21ecffdff2b7e613f8b2d891737369a18f3447e8317cb4de9b3d295847e v2/vendor/battery/pdftext/samsung-35e-orbtronic.layout.txt
+   pin f83f141c39e09df295b6196c4b02c03f85e49329aad9f763ae65c4aac197fa3f v2/vendor/battery/pdftext/ti-bq4050.layout.txt
+   pin c265abfba80feb1698c97546119b923e0b0bd88a28fe04fc352a3a1ba823f9bf v2/vendor/battery/pdftext/ti-bq77207.layout.txt
+   pin 5e09c90c2ce2c61b3532d9128aff1f98f63f5cc1bf4e8ab4c0f25962c822a215 v2/vendor/battery/pdftext/ti-sluuaq3a-bq4050-trm.layout.txt
    pin d2a7c686941c1f4237240ee140127e6828f6d590170cf5a7f30d945d1aab50a1 v2/vendor/battery/samsung-35e-akkuzentrum.pdf
    pin 5ec577b952b9dc5106593a4e4c3a6e8cea64f6f72b8faaf1bb512155c29dc516 v2/vendor/battery/samsung-35e-orbtronic.pdf
    pin 2664e33fe6d6ebed3a0f58153d8ba8ce66cb84f07741f6708ae11a224f443f5e v2/vendor/battery/ti-bq4050.pdf

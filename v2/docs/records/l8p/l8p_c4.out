@@ -14,11 +14,14 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    0fbd7d137524820f  v2/vendor/diodes/diodes-bzt52c-ds18004.pdf
    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
    544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
-   768836365237c831  v2/docs/records/l8p/l8p_guard.py
+   7cf35666d59a673f  v2/docs/records/l8p/l8p_guard.py
    19af759a934be6cc  v2/docs/records/l8p/apply_gen_sch_a_thgfs.py
    326e861f9d4d36ce  v2/docs/records/l8p/check_l8p_fs.py
    625f5f0065abbba6  v2/docs/records/l4e11/check_dd7_netlist.py
-   98d25d569a6157a7  v2/docs/records/l8p/l8p_c4.py
+   c3b2c86d2fc6786e  v2/docs/records/l8p/l8p_c4.py
+   6cf7cbd81b4e2df0  v2/vendor/diodes/pdftext/diodes-bzt52c-ds18004.layout.txt
+   8f457be6865e4d72  v2/vendor/power/pdftext/jscj-2n7002-c8545.layout.txt
+   d02fa6e1f4d615fa  v2/vendor/ti/held/pdftext/ti-lm26lv-snis144g.layout.txt  (held back, fetch_held_back.py)
 
 1. WHAT RECORD l9stk STATES OF C4 (RECORD: its l9stk_guard.out and page 15.9 at bb6d2c8f, copied; SESSION, unchecked)
    the shunt a 2N7002 at 5.58 uA (86.25 C), the allowance 26.45 uA, the sinks 18.83 (24.33 all doubled) uA, the return at DOCK_EN_OUT 1.825 V 0.908 (0.859) V,
@@ -352,7 +355,7 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
      mutated, path 2's switch on path 1's supply:                            THG FAIL: path 1's supply THG_VDD reaches U62.4: the regulator's output feeds the switch only
      mutated, U61's input as one capacitor (C268 gone):                      THG FAIL: C268 value None does not start '330n 50V' (record l9stk 15.9 round 5, and record l8p's SES
      mutated, path 2's gate capacitor removed:                               THG FAIL: C272 on [], not from Q61's gate 'THG_G2' to the ground
-   DISPOSITION (10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends): V6-m7 and cx45's Q5 NOT CLOSED. Drafted and
+   DISPOSITION (10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends): V6-m7 NOT CLOSED; Q5: cx45 'P0-5: NOT CONFIRMED', cx46's items 9 and 10 'NOT CLOSED'. Drafted and
      reproducible: the two paths (the intact circuit's desk rows hold, the composition reads DRAWN and its mutations FAIL). PROVISIONAL: C-PROT rev 1 for the guard (L8P-R9-F1,
      the retry heating with path 1 lost), the allowances (L8P-R9-F2, unrestated by their owners). REMAINING ENGINEERING: the retry-
      energy analysis, the automatic diagnostic or a fault-tolerant redesign, the allowance rows' restatement; L8P-R9-F3 at release

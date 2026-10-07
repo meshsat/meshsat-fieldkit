@@ -9,11 +9,11 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
    hwfw       7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  1e18a1ca@v2/docs/HW-FW-CONTRACT.md
    panel      3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6  1e18a1ca@v2/docs/PANEL.md
    l4e9md     d8882cd01e9df691591e94c5d5b979f7d16615d3d0f6d7fcfc0841d2fabaedd0  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   l4e9out    fb90083018a9f497884de4ab41e8908241d7c81d6df22cab42e1105b1a7d95fa  v2/docs/records/l4e9/l4e9_power_path.out
+   l4e9out    20e0ba253a15a05bbc3515776e8d2b28fa6aa47db1c20fc94d572a881f1d0a69  v2/docs/records/l4e9/l4e9_power_path.out
    reg        a2e63ac72de835867aa27160dd9dff0bb634da11599745218e91ba99e8376e89  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    hand       2b9e8064e7c8e048d03ac000fb6adbb9fa3d95e0f18b3c05392cc6aa2c2cfe6f  v2/docs/records/l4e9/LAYER5-HANDOVER.md
    l4e11md    101b9896de5195619dda7fb97eafd24fd349abaeb879bb79edc4456ced6bf4b3  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
-   l4e11out   36141414a1b60011353db8749fef37201f12804bf2f38f408360753645d44a10  v2/docs/records/l4e11/l4e11_power.out
+   l4e11out   f4e716036854db03704acb4263cf9f47ae1b0d02ac7ccd6bfc36f7a05c59c744  v2/docs/records/l4e11/l4e11_power.out
    l4e11entry a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
    l4e12md    b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    l4e13md    1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191  v2/docs/records/l4e13/L4E13-PANEL.md
@@ -407,11 +407,11 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
       no longer standing (printed by l4e11md, l4e11out at 2c240414): 0.1486, 9.539, 11.905, 28.6
       why: L4-E11 section 18 put the mixer fans on U22's regulated rail and declared the dock branch afresh (18b), so the drop, VSYS_E at the floor and the contact's share are re-derived (18b restates the floor, not VSYS_MIN's start); and L4-E11 17a, after the recheck, calls the hard short's figure a resistive extrapolation and E11-38's test target, not a bound
       replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
-         v2/docs/records/l4e11/l4e11_power.out:1067: "with U12's 0.8 A: 1.3208 A DECLARED on IF-AE-DOCK pin 1 (was 1.0 A"
-         v2/docs/records/l4e11/l4e11_power.out:1071: "the drop at the floor with 1.3208 A: 0.1795 V, VSYS_E 9.508 V; at U42's least limit 9.494 V"
-         v2/docs/records/l4e11/l4e11_power.out:1069: "the contact at 37.7 % of 3.5 A"
-         v2/docs/records/l4e11/l4e11_power.out:1007: "A resistive EXTRAPOLATION, not a bound (I): 566 A would flow"
-         v2/docs/records/l4e11/l4e11_power.out:1009: "566 A for 4.5 us (1.441 A2s) is E11-38's TEST TARGET for the recorded peak"
+         v2/docs/records/l4e11/l4e11_power.out:1135: "with U12's 0.8 A: 1.3208 A DECLARED on IF-AE-DOCK pin 1 (was 1.0 A"
+         v2/docs/records/l4e11/l4e11_power.out:1139: "the drop at the floor with 1.3208 A: 0.1795 V, VSYS_E 9.508 V; at U42's least limit 9.494 V"
+         v2/docs/records/l4e11/l4e11_power.out:1137: "the contact at 37.7 % of 3.5 A"
+         v2/docs/records/l4e11/l4e11_power.out:1075: "A resistive EXTRAPOLATION, not a bound (I): 566 A would flow"
+         v2/docs/records/l4e11/l4e11_power.out:1077: "566 A for 4.5 us (1.441 A2s) is E11-38's TEST TARGET for the recorded peak"
       figures in the replacing text (parsed): 0.8 A, 1.3208 A, 1.0 A, 0.1795 V, 9.508 V, 9.494 V, 37.7 %, 3.5 A, 566 A, 4.5 us, 1.441 A2s
       contract value: CHANGES: the branch current, the drop, VSYS_E at the floor and the contact's share are 18b's, parsed above; the excerpt, U42's band at R(ILIM), stands (the resistor renamed R228); the hard short's figure keeps its number but is a test target, no longer a ceiling
       mark now: INFERRED from MAKER rows (SLVSET9G), the branch current MODELED (L4-E11 18b); DRAFTED R-157, R-177, R-178, R-181; PROVISIONAL (L4-F03: remedy drafted, qualification open)
@@ -427,9 +427,9 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
       no longer standing (printed by l4e11md, l4e11out at 2c240414): 0.3356, 0.5713, 0.1 A
       why: L4-E11 section 18 withdrew the fans directly on VSYS_E; on U22's regulated rail the start rule in amperes on VSYS_E is superseded (R-179) by the room U42 leaves at the declared branch (18b)
       replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
-         v2/docs/records/l4e11/l4e11_power.out:1048: "no fan read prints a range covering VSYS_E's 9.494 to 17.375 V, so 15a's fans directly on VSYS_E is WITHDRAWN"
+         v2/docs/records/l4e11/l4e11_power.out:1116: "no fan read prints a range covering VSYS_E's 9.494 to 17.375 V, so 15a's fans directly on VSYS_E is WITHDRAWN"
          v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:275: "the supply range question of 15a to 17a (17.375 V at the top, 9.539 V at the bottom, 0.3356 and 0.5713 A on VSYS_E) is superseded by the rail"
-         v2/docs/records/l4e11/l4e11_power.out:1073: "with one fan running and U12 on, U42's room 0.1504 A leaves 1.21 W at the rail for the other fan's start"
+         v2/docs/records/l4e11/l4e11_power.out:1141: "with one fan running and U12 on, U42's room 0.1504 A leaves 1.21 W at the rail for the other fan's start"
       figures in the replacing text (parsed): 9.494, 17.375 V, 9.539 V, 0.3356, 0.5713 A, 0.1504 A, 1.21 W
       contract value: CHANGES: the rule is no longer the both-together and one-at-a-time currents on VSYS_E; it is U42's room at the declared branch, as power at U22's rail for one fan's start, the start current NOT READ (E11-35); VSYS_E at U42's least limit stands
       mark now: INFERRED (L4-E11 18b); DRAFTED R-177, R-181; PROVISIONAL (the start current NOT READ)
@@ -444,7 +444,7 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
       no longer standing (printed by l4e11out, reg at 2c240414): PWM ramp, 0.5713
       why: L4-E11 18c restated the stagger for the fans on U22's rail (E11-39, R-188): the ramp is a PWM-duty ramp into the fan's PWM input, U22's start joins U12's, and the room is U42's at the declared branch (18b), the per-fan start current on VSYS_E superseded (R-179)
       replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
-         v2/docs/records/l4e11/l4e11_power.out:510: "each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts"
+         v2/docs/records/l4e11/l4e11_power.out:578: "each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts"
          v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:284: "U42's room 0.1504 A at the floor"
          v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:284: "the current through J_DOCK pin 1 under 1.4713 A at every start"
       figures in the replacing text (parsed): 1 s, 0.1504 A, 1.4713 A
@@ -480,8 +480,8 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
       no longer standing (printed by l4e11md at 2c240414): 17.375, 9.539
       why: L4-E11 section 18: no named fan's printed range covers VSYS_E, so the fans directly on VSYS_E are withdrawn; they run on U22's regulated rail, whose band sits inside the named fans' range (18a)
       replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
-         v2/docs/records/l4e11/l4e11_power.out:1048: "no fan read prints a range covering VSYS_E's 9.494 to 17.375 V, so 15a's fans directly on VSYS_E is WITHDRAWN"
-         v2/docs/records/l4e11/l4e11_power.out:1060: "the output 12.001 V (11.512 to 12.431 V at FB's limits with the 1 % divider) inside the fans' 10.8 to 13.2 V"
+         v2/docs/records/l4e11/l4e11_power.out:1116: "no fan read prints a range covering VSYS_E's 9.494 to 17.375 V, so 15a's fans directly on VSYS_E is WITHDRAWN"
+         v2/docs/records/l4e11/l4e11_power.out:1128: "the output 12.001 V (11.512 to 12.431 V at FB's limits with the 1 % divider) inside the fans' 10.8 to 13.2 V"
       figures in the replacing text (parsed): 9.494, 17.375 V, 12.001 V, 11.512, 12.431 V, 1 %, 10.8, 13.2 V
       contract value: CHANGES: the fans' supply is U22's +12V_FAN, not VSYS_E; the supply range TBD is closed by the rail (DRAFTED); the start current and the PWM input level stay NOT READ (R-179, F-L7-11)
       mark now: INFERRED (L4-E11 18a); DRAFTED R-177; PROVISIONAL (the start current and the PWM input level NOT READ)

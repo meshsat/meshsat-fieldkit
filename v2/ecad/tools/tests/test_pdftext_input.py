@@ -1449,6 +1449,10 @@ KNOWN_TOOLVIA = {
 KNOWN_RECVIA = {
     ("test_l4e7.py", "l4e7/l4e7_stage_settings.py"): "the l4e7 KEY group, not converted by design (PDFTEXT-INVENTORY.md: its KEY "
                                                       "records the host's pdftotext); the test reads results() in-process",
+    ("test_l4e7_cachekey.py", "l4e7/l4e7_stage_settings.py"): "the l4e7 KEY group, not converted by design (PDFTEXT-INVENTORY.md: "
+                                                               "its KEY records the host's pdftotext); set 32's test_l4e7_cachekey.py "
+                                                               "(fnd/l4e7cache) calls main() in-process on scratch trees, never the "
+                                                               "solver (W100's B4; inserted at chain.sh a6 by hook_a6.sh, W104)",
 }
 
 

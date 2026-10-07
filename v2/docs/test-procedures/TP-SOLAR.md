@@ -307,6 +307,16 @@ The six rows of R-176 as L4-E7 restates them:
 > 6. no short-circuit trip with C126 at 330 pF in operation and under CS116 (R-174).
 <!-- /q -->
 
+**Added 6 October 2026 (set 32, Q-55, quotes only):** the register's R-176 row 3 annotates U5's line with R-240's drafted
+correction (the coordinator's N1a, set 31), and V-E16's row 3 in `v2/docs/HW-FW-CONTRACT.md` carries the same words since
+set 32 (Q-55); L4-E7's list above does not carry them. R-240 is drafted, not applied: row 3 above and the Row 3 line below
+are unchanged.
+
+<!-- q src="v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md" -->
+> U5's CSPIN to CSNIN within +-0.240 V (under R-240, drafted, not applied: under 10 mV in magnitude, a layout check,
+> L4E7-P0SOL.md section 5)
+<!-- /q -->
+
 The lines, with U taken as README section 3 states, for the corrected network at every loop of the set and both fault positions:
 
 - **Row 1:** PASS when the rising threshold less U is at least 28.55 V and plus U at most 31.06 V, and the falling threshold less U is

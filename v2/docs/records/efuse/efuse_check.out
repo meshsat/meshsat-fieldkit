@@ -13,7 +13,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
    3d0a7b1d7d0bd8bf v2/docs/records/l4e11/apply_gen_sch_e_aux.py
    a859aa4a63339f3a v2/docs/records/l4e11/apply_gen_sch_e_entry.py
-   68d3df24f9e105cd v2/docs/records/l4e12/l4e12_thermal.out
+   a784a030eb1be73d v2/docs/records/l4e12/l4e12_thermal.out
    bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
    347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
    7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
@@ -51,7 +51,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
    c81cd7ffa60561fe v2/docs/records/l8r2/apply_gen_sch_b_rt500.py
    858611469545569c v2/docs/records/l8r2/apply_gen_sch_e_packrtn.py
-   d4fa665447fc7a71 v2/docs/records/l9pwr/l9pwr_budget.out
+   91b36292ded256ed v2/docs/records/l9pwr/l9pwr_budget.out
    69e6ac4fc0417d3c v2/docs/records/l9t5/apply_gen_sch_a_iocbuck.py
    8b0aab5cdd912493 v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py
    72c306adf529de13 v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py
@@ -67,6 +67,14 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    447624f4f2f7d37c v2/vendor/connectors/jst-ph-catalogue.pdf
    ea3071ca5ee5a606 v2/vendor/connectors/jst-sh-catalogue.pdf
    d51e669c597988b2 v2/vendor/connectors/jst-vh-catalogue.pdf
+   9553878588234be8 v2/vendor/connectors/pdftext/jst-ph-catalogue.layout.txt
+   baa2cae8a4a97884 v2/vendor/connectors/pdftext/jst-sh-catalogue.layout.txt
+   9d315dec55a94ab8 v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt
+   5e1931d6b56c0b05 v2/vendor/connectors/pdftext/wurth-wr-bhd-idc-socket-61201623021.layout.txt
+   7e2f408892ad65c7 v2/vendor/connectors/pdftext/wurth-wr-bhd-idc-socket-61202623021.layout.txt
+   f26f01c2e181120b v2/vendor/connectors/pdftext/wurth-wr-cab-ribbon-63911615521cab.layout.txt
+   394ad1917142ad01 v2/vendor/connectors/pdftext/wurth-wr-cab-ribbon-63912615521cab.layout.txt
+   827ca0a506202297 v2/vendor/connectors/pdftext/wurth-wr-com-usb3-a-692122030100.layout.txt
    9477ffdc02af6355 v2/vendor/connectors/wurth-wr-bhd-idc-socket-61201623021.pdf
    6f7254b5bcf6f837 v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf
    b076f824f67b9ee7 v2/vendor/connectors/wurth-wr-cab-ribbon-63911615521cab.pdf
@@ -74,11 +82,20 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    df28a01bf0fb46ac v2/vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf
    f1146105a3c09ebc v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html
    87b2e5605196b5c5 v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-user-setup-20260926.html
+   d39df42a2eb3280f v2/vendor/power/pdftext/ti-tps2595-efuse.layout.txt
+   bab7479f34278e35 v2/vendor/power/pdftext/tps2596.layout.txt
    6a8b67ad925b6fa8 v2/vendor/power/ti-tps2595-efuse.pdf
    66f6bae4494f7bfe v2/vendor/power/tps2596.pdf
    d94f62eee7f2de2e v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.txt
+   391047e6ac0ae558 v2/vendor/ti/held/pdftext/ti-tps1663-slvset9g.layout.txt
+   ea265c356c728f9d v2/vendor/ti/held/pdftext/ti-tps4811-q1-slusee5e.layout.txt
    8f91a0db2daf2da3 v2/vendor/ti/held/ti-tps1663-slvset9g.pdf
    3cfe41fef1407b85 v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf
+   4fdfb817af936bbf v2/vendor/ti/pdftext/ti-lm5069.layout.txt
+   b30465f7d3bf7a92 v2/vendor/ti/pdftext/ti-tps2065c-slvsau6i.layout.txt
+   0b02e8bbb48046cd v2/vendor/ti/pdftext/ti-tps22810-load-switch.layout.txt
+   dd372d8a1da5728a v2/vendor/ti/pdftext/ti-tps25740.layout.txt
+   1316100ddc4f18f4 v2/vendor/ti/pdftext/tps23861-datasheet.layout.txt
    d60d8106a6e81139 v2/vendor/ti/ti-lm5069.pdf
    898c093489ac30dd v2/vendor/ti/ti-tps2065c-slvsau6i.pdf
    10450eedecbc4542 v2/vendor/ti/ti-tps22810-load-switch.pdf

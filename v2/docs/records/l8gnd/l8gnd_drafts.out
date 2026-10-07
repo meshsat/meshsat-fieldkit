@@ -8,7 +8,7 @@ prototype design; nothing built, powered or measured; nothing applied to the tre
 14ea032a7fdd86ac v2/ecad/tools/pcb_rules.yaml
 b0ea9ce43308e789 v2/ecad/tools/pcb_interfaces.yaml
 119ca354c7ff83bc v2/docs/GROUNDING-AND-SHIELDS.md
-f26757c7c5004cdd v2/docs/HW-FW-CONTRACT.md
+12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
 c883f948f3221e74 v2/docs/ARCHITECTURE.md
 6cb7b241cb84d729 v2/docs/CONOPS.md
 a7bc3974e9c57998 v2/docs/handover/LAYER-STATUS.md

@@ -221,6 +221,26 @@ def t_nothing_else_moved_and_the_bench_rows_are_still_the_registers():
     need(REG, "the register")
     live = r176_rows(open(REG, encoding="utf-8").read())
     assert live.count(N1A_WORDS) == 1 and live.replace(N1A_WORDS, "") == want, "the live register's R-176 rows 2 and 3 differ from W8's by more than N1a's annotation"
+    # Q-55 (set 32, record s32small, applied by apply_q55_ve16.py): V-E16's row 3 carries N1a's annotation at the place the
+    # register's R-176 row 3 carries it, so V-E16 read from the TREE equals the live register's rows 2 and 3 verbatim; the
+    # fixture form above stays for W8's own change. Basis: the record's own invariant, V-E16 mirrors the register (record
+    # l5pwr's L5-F09 d wrote it so), and the coordinator's decision of 6 October 2026 15:22 CEST (QUEUE line Q-55).
+    ve16 = [cells(ln) for ln in tree(HWFW_REL).split("\n") if ln.startswith("| V-E16 |")]
+    assert len(ve16) == 1, "%d V-E16 rows in the tree" % len(ve16)
+    v = ve16[0][-1]
+    assert v[v.index("(2) "):v.index(" (PROVISIONAL until E-1's correction")] == live, "V-E16's rows 2 and 3 in the tree are not the live register's R-176 rows 2 and 3"
+    # Q-55's change record row (W47, QUEUE line Q-65): one row in the form of W8's (three cells), dated, after W8's row,
+    # carrying N1a's words and the wording before; the assertion on W8's row below reads W8_COMMIT, not the tree. And
+    # TP-SOLAR.md quotes the register's annotated U5 line once as a text quote (tp_check.py's C3 holds it verbatim there).
+    h = tree(HWFW_REL).split("\n")
+    q55 = [k for k, ln in enumerate(h) if ln.startswith("| 2 (Q-55, set 32) |")]
+    w8 = [k for k, ln in enumerate(h) if ln.startswith("| 2 (W8, L5-F14) |")]
+    assert len(q55) == 1 and len(w8) == 1 and q55[0] > w8[0], "Q-55's change record row is not once, after W8's"
+    c = cells(h[q55[0]])
+    assert len(c) == 3 and c[1] == "6 October 2026" and c[2].count(N1A_WORDS.strip()) == 1, "Q-55's row is not in W8's form"
+    assert "\"U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off\"" in c[2], "Q-55's row lacks the wording before"
+    qs = [flat(re.sub(r"(?m)^\s*>", "", b)) for b in re.findall(r'<!-- q src="v2/docs/records/l4e9/DOWNSTREAM-REGISTER\.md" -->\n(.*?)\n<!-- /q -->', tree("v2/docs/test-procedures/TP-SOLAR.md"), re.S)]
+    assert qs.count(flat("U5's CSPIN to CSNIN within +-0.240 V" + N1A_WORDS)) == 1, "TP-SOLAR.md does not quote the register's annotated U5 line once"
     # the change record: one row appended, three cells
     assert l1[-2].startswith("| 2 (W8, L5-F14) |") and len(cells(l1[-2])) == 3 and l1[-1] == ""
 

@@ -51,7 +51,7 @@ PINS = {
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
     "rules": ("v2/ecad/tools/pcb_rules.yaml", "14ea032a7fdd86ac877a51ec7bdc804d95c1c639ddbca4035338da5a09d8b83f"),
     "testplan": ("v2/docs/TEST-PLAN.md", "42a3dff33442c86089a2c6c9dee841e8e2c8b9cbc1222a4adc311902b3c316f7"),
-    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "f26757c7c5004cddc6c725e10c713e2338256fb464cd916b33f579f4771ab49b"),
+    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "12b6ea059a68b5c5f0eb4d67513283af2bd8a011f9e80bea7d047e5955b1e99a"),
     "panel": ("v2/docs/PANEL.md", "c4820a453aa7a159ee2641bd921e39023737c3eefe8dcbe7bfca3bd36420b90d"),
     "assembly": ("v2/docs/ASSEMBLY.md", "29dbe3a0c4938274b3fe780d27c565737adf9dd506b8c8c81e72f3776ef75fed"),
     "gen_a": ("v2/ecad/tools/gen_sch_a.py", "6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b"),
@@ -59,7 +59,7 @@ PINS = {
     "gen_p": ("v2/ecad/tools/gen_sch_p.py", "740817ada5c8e14af8c8e001b775e09cbae94d6a03ad462ee2e1c1755bc935a3"),
     "net_a": ("v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5"),
     # round 17 (the check V6's V6-m2): record l8p's thermal guard, drafted in its round 8 and judged in its rounds 8 and 9
-    "l8p_c4": ("v2/docs/records/l8p/l8p_c4.out", "3dbd9bda6bce760d41ca1e5ba4664c29c6e1ba683156cc6aaa271c7f31b77827"),
+    "l8p_c4": ("v2/docs/records/l8p/l8p_c4.out", "5cc3eedafd987a7474d3be1f9646ffec0928d6dd6e7a9693bf5d97143f1ade89"),
     "l8p_thgfs": ("v2/docs/records/l8p/apply_gen_sch_a_thgfs.py", "19af759a934be6cc07390a43873ce1d1d6ef754a58dcac202c89063974e0d23c"),
     "l8p_thguard": ("v2/docs/records/l8p/apply_gen_sch_a_thguard.py", "544a462a9031862a953748a631023f59491203198aa4810321baed121606ecab"),
     "net_e": ("v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net", "2ed95a0e8069ebf8ad31f4567a14015e863182a83b6de7b3b13218488d8316d4"),

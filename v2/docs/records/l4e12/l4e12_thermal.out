@@ -11,7 +11,7 @@ the Layer 4 review (B3, B4, B7; section 17).
 0b pwr_red2.py re-run in a child: pwr_red2.out byte for byte: yes
 0c pwr_red2.py imported here prints pwr_red2.out byte for byte (its heat() and states are the record's): yes
 0d grade_check.build() (it writes nothing): 150 fitted lines, 19 modules, 10 lines no grade row covers; its own in-use bar 51 C
-0e 69 inputs pinned by sha256 (the list ends this output)
+0e 103 inputs pinned by sha256 (the list ends this output)
 0f The rating categories (1j): the heading each of 22 statements is printed under read before it on its page, with no competing
    heading between (ap2112_tj, ap6320_tj, ap64500_tj, ap64500_tjop, bme_st, csd77_tj, csd78_tj, lv1t08_ta, lvc2g07_ta, pcm_bias,
    pcm_rec, pcm_st, sgp_op, sgp_rec, sgp_rec_st, sgp_st, tlv755_tjabs, tlv755_tjrec, tlv758_tjabs, tlv758_tjrec, tps62933_tj,
@@ -1608,8 +1608,8 @@ Pinned inputs (sha256):
    5790bc7e444bebc4b6b7b6616c4641dfe602185631992d19aeb223eb51e9feec v2/docs/records/hc2/pwr_red2.py
    e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218 v2/docs/records/l3batt/load_trace.out
    59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d v2/docs/records/l4e/l4e_replay.out
-   30228a3a971405b0c120502b528ac63480382f19f56dbebf958db7758f9d8300 v2/docs/records/l4e10/l4e10_cell_thermal.out
-   c6181037bede1fec6b183bcb1d8eab66e0023bc23ae5e5374be4d22eedaf4333 v2/docs/records/l4e8/ripple_dense.out
+   72c0707fea24a2052269bf96378eed9e9b73ec6a0af301af775f77e9ea51131d v2/docs/records/l4e10/l4e10_cell_thermal.out
+   a3784d9b74461fe4000a8d08470a2ab512f8f5ce36d6d46c1abf44b95797aa17 v2/docs/records/l4e8/ripple_dense.out
    5a616902d2ddab82f25d34ab55d848d06011fb6fbe48c147221d6b442783e462 v2/docs/records/rv-pwr/pwr_budget.json
    58e40cf604804cc9d70c7fbeb1012be4552563fcc8ae7ef6755003c33acb902f v2/docs/records/rv-pwr/pwr_budget.out
    469d0820b046ef6ff5aceadf422b4166de3d6a02bc50fa5b0c3644704f0f9556 v2/docs/records/rv-pwr/pwr_budget.py
@@ -1630,32 +1630,64 @@ Pinned inputs (sha256):
    8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31 v2/ecad/tools/pcb_requirements.yaml
    8200c1c6e7c2131ab213dcc8f871b8cb3f9977e9d35bcd0541da1b6617393fbf v2/release/revA/order/JLC-CERTIFIED.tsv
    fce73ae028a985b3265ce3dbc17ab5b7bea1ae31b7ea84c6698c7694083e2478 v2/vendor/bosch/bosch-bme688.pdf
+   17b97295bdeeb79af0f03e6dea289ce718ac2598c23f04c2e76904f7d917f9c7 v2/vendor/bosch/pdftext/bosch-bme688.layout.txt
    bc353c794cafec7a6108fa6e8abdca3bc64d5e3f550d53c4741640e098365dea v2/vendor/bulgin/bulgin-4000-series-sealed-usb-c.pdf
    cce556227a71f8956420e5deb3a72ed99d639d376ac75bd612d36d23fa6d1532 v2/vendor/bulgin/bulgin-pxp4043c-usb-c-rear-panel.pdf
+   bbcd62da269f04a7206c2c503f97fb17efb04132678ab28fa1518da7b46435ce v2/vendor/bulgin/pdftext/bulgin-4000-series-sealed-usb-c.layout.txt
+   07f6b13235498e5692047c7c31f529be9523e997e96f9bda3f71db7bcc5be2ee v2/vendor/bulgin/pdftext/bulgin-pxp4043c-usb-c-rear-panel.layout.txt
    80070fefd8db6e8abc6e146c8b7b5fb318ba129cc1e28826936d547fde79c863 v2/vendor/cm5/cm5-datasheet.pdf
+   429ef814b81dbed7080ed836c1eea541ef25ff94d6d1b3636e282004f0833567 v2/vendor/cm5/pdftext/cm5-datasheet.layout.txt
    ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f v2/vendor/diodes/diodes-ap2112-ldo.pdf
    ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722 v2/vendor/diodes/diodes-ap63200-series-buck.pdf
    d3bcdc7dd4ca44cb36ef893d3dbfabbd1742dfc736557777868f6ead5d0a98e8 v2/vendor/diodes/diodes-ap64500.pdf
+   6793d4bc0e60cc6ddc891b1c50a9699729258834a77778492464c0798945af5b v2/vendor/diodes/pdftext/diodes-ap2112-ldo.layout.txt
+   5b6d73f6d51b2b9faf4951e8aaae4cc3c7b7886f8d1200dbc1345f9aa4bc7da8 v2/vendor/diodes/pdftext/diodes-ap63200-series-buck.layout.txt
+   5c5d608aef7bce2a969ae8ddc9eecd5a279d00fbac1e090fded4873b07a9da57 v2/vendor/diodes/pdftext/diodes-ap64500.layout.txt
+   0da9230ae92ea2cadb79b21a36775ad73bbdcb129fec598e871cc5a1a2014183 v2/vendor/fans/pdftext/sunon-dc-fan-catalogue-240A-pp18-40-extract.layout.txt
    fae7e21365939be5c3bbf156be3522b364037a637590f5079538d63456bca63b v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf
    f1146105a3c09ebcf786d217fbf0053f8e6df3c5192efcf666e731281be4c4f1 v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html
    938ef5ef5007df6bb8a3f2d2eb6878e3eac269e1f327c9a9164406b0f5152be1 v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf
+   3ffee4322c45c4e7c132d34a6df640cdfdffc5d3a8cd5dd5953abef5e729642d v2/vendor/nicerf/pdftext/nicerf-sa868-datasheet-v1.3.layout.txt
    25d2046127b3ffa7e7a2047b7467c67587559e8e05111347260d5a892c0bec57 v2/vendor/omron/omron-g6k-signal-relay.pdf
+   0f588eae6047ebf71cc92ff344c2c9fff84fabe329cfa7e48a2bd4ca45caef6a v2/vendor/omron/pdftext/omron-g6k-signal-relay.layout.txt
+   d54838d4e14170b565fa836b61b7ecdc5827bbc9682a3caf69fb75c0e2e0bdd0 v2/vendor/pdi/pdftext/pdi-e2370ks0c1-flyer.layout.txt
    266e2b62a3c88a08038e27c151982657a8395ef447e15549b5aebcaa2368333d v2/vendor/pdi/pdi-e2370ks0c1-flyer.pdf
+   4d24d898d6c038ede400ec8b2688bde2930e4261c2321447846c557991ed25d2 v2/vendor/pulse/pdftext/pulse-h5007nl.layout.txt
    76b85b47d0bd9f46cfca2281b5e5e31eba1e82f148ffda680472e5a1995c8d65 v2/vendor/pulse/pulse-h5007nl.pdf
+   eb10ff9c371ef15ec745b249b908435c56549fe2aff823ec05a90eb6406f2517 v2/vendor/quectel/pdftext/quectel-rm520n-series-hardware-design-v1.1.layout.txt
    2bae882148b45172e009f88cbea08878f80e284dc6d44e93af5d67f6b9ed030a v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf
    30bad6e0074bea49bad4023b541c7d48c70e5d73e58281e7a9e3ab4d7bddcf84 v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-specification-20260927.html
    d2dc7cd7959cdd076ef6941510c204058235744b2a87402f9746fe94daa8afc2 v2/vendor/seals/floydbell-mc-09-530-q-spec.pdf
    1b5b8003ea7657807cac3880873f364fc09cea2c4d8bea4c60d47954b52ed60d v2/vendor/seals/nkk-ip-rated-switches-accessories.pdf
+   64a23dd3eee88dd7020f4be633d43a41c2211ae25c35a2a69d8b51a1dcffe174 v2/vendor/seals/pdftext/floydbell-mc-09-530-q-spec.layout.txt
+   d57cba8bb49d793c27b9faecedecbf7219b1cb09a34875abcb6061733989618d v2/vendor/seals/pdftext/nkk-ip-rated-switches-accessories.layout.txt
+   143f0715a72f7e45574a47e1a505c62703c58f4a48177040d6519210c5615790 v2/vendor/sensirion/pdftext/sgp41-datasheet.layout.txt
    331f35ed1f027a74ec79b302763f7adb920759bc055b3d2ada17822bb0005bec v2/vendor/sensirion/sgp41-datasheet.pdf
    aab749c1b6d149c8dddedce99fcc0d505339723300df36a62a257b4ace380d80 v2/vendor/standards/mil-std-810h-method-507-6.md
    30b3c59cd3332952f91eb825cd6bb9ebcbea3281fca4bd6a3277ddd03ce032b9 v2/vendor/storage/cervoz-m2-2242-nvme-titan.pdf
+   ec52807329f1dc5687d4c905b687c356ce5d53487bb12393d78427af10db0568 v2/vendor/storage/pdftext/cervoz-m2-2242-nvme-titan.layout.txt
    fce6061e05364e614da1d199b61cdfdc0a5ba50facb215690154710b824bdf11 v2/vendor/switches/ck-atp16-series-datasheet.pdf
    ebf7ad2c6da083b2fd4805248819162cfc3cc8c4df5449901e921bc7621c2154 v2/vendor/switches/ck-atp19-series-datasheet.pdf
+   6e5be4a701e257c177aabea6aac3667e0e1edb2c064baf8b5895f7651b04a7c2 v2/vendor/switches/pdftext/ck-atp16-series-datasheet.layout.txt
+   86c2d3fb7159970ba954571eea893f09137795f6846299f6cf4a09b9c39ea5f3 v2/vendor/switches/pdftext/ck-atp19-series-datasheet.layout.txt
    3e5e927fdf63cf6a2397630987c58e947ebc80d5a1cfc93fb1fb58d98bb58973 v2/vendor/ti/bq25731-datasheet.pdf
+   1a8d1c4962d9dda593fc4b2e53716f30b274fef5526b46308b7c609907bb237d v2/vendor/ti/held/pdftext/ti-csd17577q5a-slps516.layout.txt
+   18ca08cde60f2f86a2f0ffaa5e76ea713aa271eac1080f13804bf65a893b7902 v2/vendor/ti/held/pdftext/ti-csd17578q5a-slps526.layout.txt
+   58887f57eaea7a23f07e89bfac3abdf98a62cc6b6d3cc4b4dad9a8bc9c92266e v2/vendor/ti/held/pdftext/ti-tlv755p-c404027.layout.txt
    c8595fa806a99074f64592d5e36826f7b9c4b007b950344bc013316e7212348d v2/vendor/ti/held/ti-csd17577q5a-slps516.pdf
    f1aad251830260a563a03e367f3db4c12112433fd8dde7b4ee179b22381b7834 v2/vendor/ti/held/ti-csd17578q5a-slps526.pdf
    44ac688d7e51f85259134abcffeed6cd1ae61234dfd2b6dea2b0607d8ad0d015 v2/vendor/ti/held/ti-tlv755p-c404027.pdf
    98191bec36d43771affa3e1540f6e1737347c19a1602747ffb4327509550a820 v2/vendor/ti/lm5176-datasheet.pdf
+   81697733e5e61ffe8744c8c419afe25a6806a4f474b680cb61f3236a7fcdaa19 v2/vendor/ti/pdftext/bq25731-datasheet.layout.txt
+   6399dcdabf2895da31450cb2d6ad52e09835d50d080ef3ebd1fbae3b2d9d1d44 v2/vendor/ti/pdftext/lm5176-datasheet.layout.txt
+   b9a517f9ce233a5ca5bc1b8f728ddebf87856d7e896d20cccb9db185db74efc5 v2/vendor/ti/pdftext/ti-pcm2912a.layout.txt
+   b11ace3954a21357fad5d57edf5a1b222e52f68bd5e961a3fe0993ec08cc78bb v2/vendor/ti/pdftext/ti-sn74lv1t08.layout.txt
+   bd49cd6201688c29efe304a9591884570b0c85e7b4711e3c966e0a2b3f773c4f v2/vendor/ti/pdftext/ti-sn74lvc2g07.layout.txt
+   da725d6f1fcac1bdd225ec8d0e2c1642244105d2e2a1cadf5a7ff4a808f26e5e v2/vendor/ti/pdftext/ti-tlv758p.layout.txt
+   2a64b50b8eed8d404170aa48b0d6da13d544f8ac918ec87e67b4aed4acfc5606 v2/vendor/ti/pdftext/ti-tmp117-temperature.layout.txt
+   010f30f3bffdad5f7a8c4e3c748ee7af92a7337e47662a4d736e402a39210e7b v2/vendor/ti/pdftext/ti-tps62933.layout.txt
+   ad3de438381b789e76ede6cb4f04967e6300aab66059d2cc3dc4541ab61b66a2 v2/vendor/ti/pdftext/ti-tusb2046b.layout.txt
+   d557360fdc73b1c07b4f5454d223d08651edd39c9592259cc1a095dbaa881348 v2/vendor/ti/pdftext/ti-tusb8041.layout.txt
    61d048c255190975933032c6ff712c6b780d8390cbc40821a54fd29b62adbf32 v2/vendor/ti/ti-pcm2912a.pdf
    cb0644caef3b0dedec65c793a2c19707208e377caf39a12098263fe237a49a94 v2/vendor/ti/ti-sn74lv1t08.pdf
    71bbb2fc452e2949b332c030b004b094ba679ac8cce27123f806a0a6b1fde660 v2/vendor/ti/ti-sn74lvc2g07.pdf
@@ -1665,4 +1697,6 @@ Pinned inputs (sha256):
    d02d0b8af5cbdb1b8186f890efdb214cb8edc50d55b9df5eed0650933a08d3db v2/vendor/ti/ti-tusb2046b.pdf
    b715bce72e988310d18dbc8eb041a05b5f15e4a0b690843a873abdc373a1ad87 v2/vendor/ti/ti-tusb8041.pdf
    af1a93ef3b484a3da4354779f0b2a8a2537c94d71025eb68b82a4d4879f8e8db v2/vendor/wifi/asiarf-AW7915-AED_V1.pdf
+   ba22d2178430f4008cf1432871ba086c60e48ab4853661066436d7865a195b2b v2/vendor/wifi/pdftext/asiarf-AW7915-AED_V1.layout.txt
+   f2429e6d57804e5ff0d9a2784a14a408c611464e340328db8bf04290adf1f72b v2/vendor/xenarc/pdftext/xenarc-709gnk-product-manual-v2.layout.txt
    ba3b1474406fdaf5c7cfc87f80f691cf983f44b0e19f8757511df13f5d6241be v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf

@@ -143,7 +143,7 @@ From a full git checkout at `5f25daf3` (section 7, item 2 says why the ZIP alone
 
 1. **The makers' sheets held back by their terms.** A record that reads one fetches it with its own script (`fetch_held_back.py`, or
    a `fetch_*.py`, section 7 item 2), run from the repository root, for example `python3 v2/docs/records/l9t5/fetch_held_back.py` ("exit 0: present and checked; 3: a mismatch",
-   `records/l9t5/fetch_held_back.py:11`); the sheets land in gitignored `held/` folders, are checked by sha256 and are never committed.
+   `records/l9t5/fetch_held_back.py:11`); the sheets land in gitignored `held/` folders, are checked by sha256 and are never committed. Where a record reads a held-back sheet as its extracted text rather than as the PDF, that text is held back with the sheet and is re-taken after the fetch, before the record's script runs; section 7, item 2 gives the command and the tool versions it needs.
 2. **A record's figures.** `python3 v2/docs/records/<record>/<script>.py` prints the output; compare it byte for byte with the committed
    `.out` beside the script. A record's `README.md` states its own commands, and the ledger's section 7, "Reproducing the records",
    gathers the common ones. The P0 cascade's dependency order is the list in `v2/docs/records/l9t5/stability/regen_cascade.sh`

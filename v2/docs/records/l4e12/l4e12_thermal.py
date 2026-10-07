@@ -166,8 +166,8 @@ _PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TO
 PDFT = importlib.util.module_from_spec(_PTS)   # PT names a page here
 _PTS.loader.exec_module(PDFT)
 PINS = {
-    L4E8_OUT: "c6181037bede1fec6b183bcb1d8eab66e0023bc23ae5e5374be4d22eedaf4333",
-    L4E10_OUT: "30228a3a971405b0c120502b528ac63480382f19f56dbebf958db7758f9d8300",
+    L4E8_OUT: "a3784d9b74461fe4000a8d08470a2ab512f8f5ce36d6d46c1abf44b95797aa17",
+    L4E10_OUT: "72c0707fea24a2052269bf96378eed9e9b73ec6a0af301af775f77e9ea51131d",
     M507: "aab749c1b6d149c8dddedce99fcc0d505339723300df36a62a257b4ace380d80",
     TRACE: "e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218",
     REPLAY: "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d",
