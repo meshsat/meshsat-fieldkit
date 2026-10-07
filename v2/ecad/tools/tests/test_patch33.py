@@ -4,8 +4,9 @@ exact rows (S-nn for START-HERE.md, U-nn for SUPPLIER-HANDOVER.md, L-nn for LAYE
 its page, its line, one line of old text (or a part of one), the new text and its basis, in set 32's form
 (`records/int32/ENTRY-PAGES.patch.md`, W95 and W102; its test `test_patch32.py`).
 
-The pages the rows are written for are set 32's adoption's (fnd/adopt32 AT, cb78bc49, after its second fill run), read through git;
-none of set 33's branches changes them. Which pages are read besides is decided by the tree's own START-HERE.md, its line 3, when the
+The pages the rows are written for are set 32's adoption's on main (AT, 46d4fe58, main after set 32's adoption and its dependency
+pass; W170, queue item Q-192, moved AT from fnd/adopt32's cb78bc49, against which W165 wrote the rows: the four pages are the same bytes
+at both, `git diff --stat cb78bc49 46d4fe58` naming none of them), read through git; none of set 33's branches changes them. Which pages are read besides is decided by the tree's own START-HERE.md, its line 3, when the
 tree holds AT: "Current revision: set 32" the tree's own pages before the rows (every row must hold there too); "Current revision:
 set 33" the rows applied (every row's new text must stand on its page, a token or the value filled). Where AT is absent (a host
 without the adoption branch's objects), Skip with that reason.
@@ -25,7 +26,8 @@ from harness import Skip
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 PATCH = "v2/docs/records/int33/ENTRY-PAGES.patch.md"
-AT = "cb78bc49b799097df0fe158754d73c2bb72f9e5a"      # fnd/adopt32 after set 32's second fill run: the pages the rows are read against
+AT = "46d4fe58a233f1417f28e5932b862e884940cd62"      # main after set 32's adoption (W170; was fnd/adopt32's cb78bc49, the same four pages)
+AT32 = "cb78bc49b799097df0fe158754d73c2bb72f9e5a"    # fnd/adopt32 after set 32's second fill run: W165's reading, held equal to AT's pages
 PAGES = {"S": "v2/docs/handover/START-HERE.md", "U": "v2/docs/handover/supplier/SUPPLIER-HANDOVER.md",
          "L": "v2/docs/handover/LAYER-STATUS.md", "P": "v2/docs/EXECUTION-PLAN.md"}
 COUNTS = {"S": 8, "U": 6, "L": 2, "P": 1}
@@ -155,7 +157,7 @@ def p_applied(rows, pages):
 
 def _at_pages():
     if not _has(AT):
-        raise Skip("%s (fnd/adopt32, set 32's adoption) is not in this repository" % AT[:8])
+        raise Skip("%s (main after set 32's adoption) is not in this repository" % AT[:8])
     return {p: _git("show", "%s:%s" % (AT, p)).split("\n") for p in PAGES.values()}
 
 
@@ -188,6 +190,8 @@ def t_every_row_holds_on_set_32s_adopted_pages():
     assert not p_pages(rows, pages), p_pages(rows, pages)
     applied = _apply(rows, pages)
     assert not p_applied(rows, applied), p_applied(rows, applied)
+    if _has(AT32):   # W170's basis for moving AT: the four pages are the same bytes at cb78bc49 and at main 46d4fe58
+        assert {p: _git("show", "%s:%s" % (AT32, p)).split("\n") for p in PAGES.values()} == pages, "the pages moved between cb78bc49 and AT"
     bad = [dict(r) for r in rows]
     bad[0]["line"] += 1
     assert p_pages(bad, pages), "p_pages passed a row moved one line"
