@@ -31,6 +31,7 @@ printed thermal resistances, never a measured temperature
    83afa06e5d67b1bf v2/vendor/st/pdftext/st-rm0433-rev8.layout.f262.l264.txt
    f4190c5b80dedafc v2/vendor/st/pdftext/st-rm0433-rev8.layout.f279.l280.txt
    9f5d20b27d35986f v2/vendor/st/pdftext/st-rm0433-rev8.layout.f307.l309.txt
+   3d93fb62233e99ca v2/vendor/st/pdftext/st-rm0433-rev8.layout.f449.l450.txt
    7335d8c4f0c8e0e9 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p1896.txt
    5b9234079e915cbb v2/vendor/st/pdftext/st-rm0433-rev8.layout.p260.txt
    c549b896ed5fd25e v2/vendor/st/pdftext/st-rm0433-rev8.layout.p560.txt
@@ -110,7 +111,8 @@ printed thermal resistances, never a measured temperature
      TFBGA240+25    ThetaJA  36.6   ThetaJB  24.3   ThetaJC   7.4 C/W
    the least ThetaJA of any package is TFBGA240+25's 36.6 C/W, 2.3x the need; the fitted LQFP100 reads 45.0 C/W
    a heat path through the case top: ThetaJC 11.5 C/W leaves 4.34 C/W for the interface and a heat sink to the 76.25 C air inside the
-     sealed case; no heat sink or interface material is held in v2/vendor/ and none prints a figure for board B's pockets
+     sealed case; no heat sink or interface material for an LQFP100 is held in v2/vendor/ (the one cooler held is the CM5's), and none
+     prints a figure for board B's pockets
    the air at which VOS0's enabled maximum holds 105 C on the printed 45.0 C/W: 23.3 C, against the case's 76.25 C
    the regulator's own theta (W138's TPS73733DCQRM3, 76.0 C/W PRINTED, record l4reg) moves the REGULATOR's junction; the controller's
      105 C current, (105 - air) / (theta x VDD) = 0.1936 A, does not depend on it: no regulator part acts on HO-E
@@ -158,20 +160,21 @@ printed thermal resistances, never a measured temperature
            VOS0's bottom 1.26 V is 11.5 % over the trip's top, VOS1's 1.15 V is 1.7 %: under 20 %, so the printed maximum does NOT cover
            these entries (supplier task S2); 17 us is carried below as the figure S2 must confirm, never as a bound
          NRST pulled from the rail to VIL 0.3 x VDD (Table 147, p.241: '0.3VDD', NRST with the I/O rows) through 750R 1% and the open drain
-           (VOL 300 mV at 5 mA, p.7: at most 60 Ohm, MODEL) against NRST's 10 k (+-5 %, ASSUMPTION) and RPU 30 to 50 kOhm (Table 152, p.248)
-           and the 100 nF reset capacitor (+-20 %, ASSUMPTION): at most 130.2 us (MODEL); the peak sink 4.52 mA under the recommended 5 mA
+           (at most VOL 300 mV while it sinks 5 mA or less, p.7; ASSUMPTION: its current rises with its voltage) against NRST's 10 k
+           (+-5 %, ASSUMPTION) and RPU 30 to 50 kOhm (Table 152, p.248), every corner of the rail and the pull-ups
+           and the 100 nF reset capacitor (+-20 %, ASSUMPTION): at most 157.4 us (MODEL); the peak sink 4.52 mA under the recommended 5 mA
            (7.3, p.6) and the absolute 10 mA (7.1, p.6)
          NRST's 'Input not filtered pulse' at least 300 ns (Table 152 and its note 2, p.248)
-         t_resp = 17 + 130.2 + 0.3 us = 147.5 us (CONDITIONAL on S2's sense delay)
+         t_resp = 17 + 157.4 + 0.3 us = 174.7 us (CONDITIONAL on S2's sense delay)
        power-up: 'When the voltage on VDD is less than the UVLO voltage, but greater than the power-on reset voltage (VPOR), the output pins will be in reset, regardless of the voltage at SENSE pins.' (8.3.1.1, p.18), VPOR 1.4 V; the H743 leaves its own BOR0 reset from 1.62 to 1.71 V rising (Table 116, p.212), so
          NRST is held until the TPS37's VDD reaches its 2.7 V minimum; then 'During the power-on sequence, VDD must be at or above VDD (MIN) for at least tSD before the output is in the correct state based on VSENSE.' (7.6 note 4, p.9), tSD 2 ms (p.9);
          Figure 7-3 (p.12) marks the first release at 'tSD + tCTRx' (DIAGRAM): no unmonitored start if the drawing holds (supplier task S4)
        the rails: the TPS37 runs from 2.7 V (7.3, p.6) on a rail of 3.2422 to 3.3577 V; its IDD at most 2.6 uA (p.7); the divider loads VCAP
          with at most 10.1 uA: ST prints no figure for a load on VCAP (ASSUMPTION, supplier task S3); no case row changes
    5e. ITS OWN FAULTS AND THEIR SELF-TEST (SESSION W140-3, the firmware rows for L4A-61, nothing applied): at every start and then once
-       every 3600 s, at HCLK at most 144 MHz, the controller writes VOS = Scale 1, waits for VOSRDY at most 1.0 ms (RM0433 p.309: '1: Ready,
-       voltage level at or above VOS selected level'), then at most 2.0 ms for its own reset; a return is MONITOR FAILED (Scale 3
-       restored, reported in its state frame); after the reset, RCC_RSR's pin-reset flag with a marker kept over reset reads PASSED.
+       every 3600 s, at HCLK at most 144 MHz, the controller writes VOS = Scale 1, waits for VOSRDY at most 1.0 ms (RM0433 p.309: "1: Ready, voltage level at or above VOS selected level."),
+       then at most 2.0 ms for its own reset; a return is MONITOR FAILED (Scale 3 restored, reported in its state frame); after the
+       reset, RCC_RSR's "Bit 22 PINRSTF: Pin reset flag (NRST) (1)", "Set by hardware when a reset from pin occurs." (RM0433 8.7.39, p.450), with a marker kept over reset, reads PASSED.
        Scale 1 (VCAP 1.15 V and up) is over the trip's top by 1.7 %: the test drives the whole real path, VCAP to divider to SENSE1 to
        RESET1 to NRST. One supervisor tests at a time and only while the other two serve (IOHA row 3); the peers flag a supervisor
        whose test counter has not moved for 2 x 3600 s (FW-B22's state frame).
@@ -191,8 +194,8 @@ printed thermal resistances, never a measured temperature
          the self-test with a dead monitor holds Scale 1 for at most 3.0 ms (5e); VOS1's enabled maximum at 125 C, 0.536 A (Table 119, a
          bound for any VOS1 clock and peripheral set, ASSUMPTION: monotonic), adds at most 1.273 W; inside VOS1's 125 C (25.4 K): at most
          19.96 K/W at 3.0 ms
-         for scale only (ASSUMPTION, a handbook figure, credited nothing): 1.63 J/(cm3 K) of silicon makes 5.4 K in 147.5 us at 1.320 W need
-         0.0221 mm3 of silicon heated adiabatically; ST prints no die size
+         for scale only (ASSUMPTION, a handbook figure, credited nothing): 1.63 J/(cm3 K) of silicon makes 5.4 K in 174.7 us at 1.320 W need
+         0.0262 mm3 of silicon heated adiabatically; ST prints no die size
    VERDICT H-2: NOT SUPPORTED ON PRINTED FIGURES AS A PROOF: the register's end condition ('no printed timing bounds the entry-to-reset
    interval, or the thermal time cannot be bounded on printed figures') is met, since neither the sense delay at VOS0's overdrive (S2)
    nor the controller's transient impedance (S1) is printed. It STANDS as the one drafted design that ends every VOS1 and VOS0 entry
@@ -203,7 +206,7 @@ printed thermal resistances, never a measured temperature
    VOS0's limit, 125 C VOS1 to VOS3's, Table 113; every figure MODEL on PRINTED unless marked)
    S-a  the bounded served state (FW-B20, FW-B21, rev V)         105 C     99.6 C (T10 10c)                                                   HOLDS
    S-b  VOS3 at its printed maximum (200 MHz, all peripherals)   125 C     119.4 C (T10 section 4)                                            HOLDS
-   S-c  a VOS0 entry by any firmware                             105 C     ended within t_resp 147.5 us; needs ZthJA(t_resp) <= 4.09 K/W      CONDITIONAL (S1, S2)
+   S-c  a VOS0 entry by any firmware                             105 C     ended within t_resp 174.7 us; needs ZthJA(t_resp) <= 4.09 K/W      CONDITIONAL (S1, S2)
    S-d  a VOS1 entry by any firmware, the self-test included     125 C     ended within t_resp; needs ZthJA(t_resp) <= 19.96 K/W              CONDITIONAL (S1, S2)
    S-e  the self-test with a dead monitor                        125 C     at most 3.0 ms (firmware); needs ZthJA(3.0 ms) <= 19.96 K/W        CONDITIONAL (S1)
    S-f  VOS2 with VCAP under the trip's top (1.05 to 1.1303 V)   125 C     not surely ended by the monitor                                    OPEN (FW-B20's verification; L4REG-F7)
@@ -286,10 +289,13 @@ printed thermal resistances, never a measured temperature
      S-g): they rest on FW-B20's verification
    W140-F5 (the register, L4A-100): the check reads this comparison and the draft; H-1's reading and H-3's arithmetic are on the pages
      quoted in sections 3 and 4
+   W140-F6 (board B's generator owner): the comment over the supervisors' loop reads 'Watchdog and brownout are the H743's own IWDG and BOR. That is deliberate: ...'; it
+     argues against a supervisor chip for output correctness, which the voters carry; the drafted monitor is for the controller's own
+     VOS0 thermal limit, a different purpose; the draft does not edit the comment; when the draft is taken the comment is restated
    S1: the controller's junction-to-ambient transient impedance on board B, three first-article supervisors, a junction step at
-     1.320 W: pass at most 4.09 K/W at 147.5 us and 19.96 K/W at 3.0 ms (or ST's transient thermal data for the LQFP100 with board B's copper)
+     1.320 W: pass at most 4.09 K/W at 174.7 us and 19.96 K/W at 3.0 ms (or ST's transient thermal data for the LQFP100 with board B's copper)
    S2: the monitor's entry-to-NRST interval at a VOS0 entry and at the self-test's Scale 1 entry, three supervisors, the chamber at
-     76 C: pass at most 147.5 us, and PWR_CSR1's ACTVOS reading Scale 3 at the restart
+     76 C: pass at most 174.7 us, and PWR_CSR1's ACTVOS reading Scale 3 at the restart
    S3: VCAP in VOS3 with the divider fitted, under the controller's load steps: inside 0.95 to 1.05 V and under the trip's least 1.0969 V
    S4: NRST held low from the TPS37's VPOR through tSD + tCTR at power-up (scope, ten power cycles each supervisor)
 

@@ -45,8 +45,8 @@ CHK = D.CHK
 PDFTEXT = {
     "v2/vendor/st/st-rm0433-rev8.pdf": [["-layout", "-f", "215", "-l", "216"], ["-layout", "-f", "260", "-l", "260"],
                                         ["-layout", "-f", "262", "-l", "264"], ["-layout", "-f", "279", "-l", "280"],
-                                        ["-layout", "-f", "307", "-l", "309"], ["-layout", "-f", "560", "-l", "560"],
-                                        ["-layout", "-f", "1896", "-l", "1896"]],
+                                        ["-layout", "-f", "307", "-l", "309"], ["-layout", "-f", "449", "-l", "450"],
+                                        ["-layout", "-f", "560", "-l", "560"], ["-layout", "-f", "1896", "-l", "1896"]],
     "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf": [["-layout", "-f", "29", "-l", "29"], ["-layout", "-f", "208", "-l", "210"],
                                                        ["-layout", "-f", "212", "-l", "212"], ["-layout", "-f", "215", "-l", "215"],
                                                        ["-layout", "-f", "241", "-l", "241"], ["-layout", "-f", "248", "-l", "248"],
@@ -452,7 +452,8 @@ def main():
     w("   the least ThetaJA of any package is %s's %.1f C/W, %.1fx the need; the fitted LQFP100 reads %.1f C/W" % (best, F["ja"][best], F["ja"][best] / need_en, F["ja"]["LQFP100"]))
     w("   a heat path through the case top: ThetaJC %.1f C/W leaves %.2f C/W for the interface and a heat sink to the %.2f C air inside the" % (
         F["jc"]["LQFP100"], need_en - F["jc"]["LQFP100"], air))
-    w("     sealed case; no heat sink or interface material is held in v2/vendor/ and none prints a figure for board B's pockets")
+    w("     sealed case; no heat sink or interface material for an LQFP100 is held in v2/vendor/ (the one cooler held is the CM5's), and none")
+    w("     prints a figure for board B's pockets")
     w("   the air at which VOS0's enabled maximum holds 105 C on the printed %.1f C/W: %.1f C, against the case's %.2f C" % (th, 105.0 - th * vdd * F["vos0_en"][3], air))
     w("   the regulator's own theta (W138's TPS73733DCQRM3, 76.0 C/W PRINTED, record l4reg) moves the REGULATOR's junction; the controller's")
     w("     105 C current, (105 - air) / (theta x VDD) = %.4f A, does not depend on it: no regulator part acts on HO-E" % i105)
@@ -513,15 +514,18 @@ def main():
     # timing
     rail = (3.2422, 3.3577)                  # W137's rail band (canmb section 6, the AP2112K); W138's TPS73733 band 3.2505 to 3.3495 lies inside it
     need(r6, r"Each rail 3\.2422 to 3\.3577 V", "W137's rail band")
-    r_on = F["vol"] / F["vol_i"]
     rs = ohms(dm.SERIES)
-    i_pk = rail[1] / (rs * (1 - tol(dm.SERIES)))
-    r_low = rs * (1 + tol(dm.SERIES)) + r_on
-    r_up_max = 1.0 / (1.0 / (10e3 * (1 + TOL_PLAIN)) + 1.0 / F["rpu"][2])
+    i_pk = rail[1] / (rs * (1 - tol(dm.SERIES)))                    # the drain at 0 V: the largest current it can sink through the series resistor
+    r_low = rs * (1 + tol(dm.SERIES))
     c_rst = 100e-9 * (1 + C_RST_TOL)
-    a = r_low / (r_low + r_up_max)
-    tau = c_rst * (r_low * r_up_max / (r_low + r_up_max))
-    t_fall = tau * math.log((1 - a) / (F["vil_k"] - a))
+    # the open drain holds at most VOL (300 mV) whenever it sinks 5 mA or less (p.7; ASSUMPTION: its current rises with its voltage), so
+    # the node falls through r_low toward at most 300 mV, against the pull-ups; every corner of the rail and the pull-ups, the slowest kept
+    t_fall = 0.0
+    for v33 in rail:
+        for r_up in (1.0 / (1.0 / (10e3 * (1 - TOL_PLAIN)) + 1.0 / F["rpu"][0]), 1.0 / (1.0 / (10e3 * (1 + TOL_PLAIN)) + 1.0 / F["rpu"][2])):
+            a = (F["vol"] / v33 * r_up + r_low) / (r_low + r_up)
+            tau = c_rst * (r_low * r_up / (r_low + r_up))
+            t_fall = max(t_fall, tau * math.log((1 - a) / (F["vil_k"] - a)))
     t_resp = F["tcts"][1] + t_fall + F["vnf"]
     w("       the ending's timing, VCAP over the trip to the controller in reset:")
     w("         TPS37 sense delay tCTS %.0f us typ, %.0f us max at VIT 800 mV with CTS open, '20%% Overdrive from VIT' (7.6, p.9, PRINTED);" % (
@@ -530,8 +534,8 @@ def main():
         vc["VOS0"][0], od0 * 100, vc["VOS1"][0], od1 * 100))
     w("           these entries (supplier task S2); 17 us is carried below as the figure S2 must confirm, never as a bound")
     w("         NRST pulled from the rail to VIL %.1f x VDD (Table 147, p.241: '%.1fVDD', NRST with the I/O rows) through %s and the open drain" % (F["vil_k"], F["vil_k"], dm.SERIES))
-    w("           (VOL %.0f mV at 5 mA, p.7: at most %.0f Ohm, MODEL) against NRST's 10 k (+-5 %%, ASSUMPTION) and RPU %.0f to %.0f kOhm (Table 152, p.248)" % (
-        F["vol"] * 1e3, r_on, F["rpu"][0] / 1e3, F["rpu"][2] / 1e3))
+    w("           (at most VOL %.0f mV while it sinks 5 mA or less, p.7; ASSUMPTION: its current rises with its voltage) against NRST's 10 k" % (F["vol"] * 1e3))
+    w("           (+-5 %%, ASSUMPTION) and RPU %.0f to %.0f kOhm (Table 152, p.248), every corner of the rail and the pull-ups" % (F["rpu"][0] / 1e3, F["rpu"][2] / 1e3))
     w("           and the 100 nF reset capacitor (+-20 %%, ASSUMPTION): at most %.1f us (MODEL); the peak sink %.2f mA under the recommended %.0f mA" % (
         t_fall * 1e6, i_pk * 1e3, F["ireset_rec"] * 1e3))
     w("           (7.3, p.6) and the absolute %.0f mA (7.1, p.6)" % (F["ireset_abs"] * 1e3))
@@ -546,10 +550,16 @@ def main():
     w("         with at most %.1f uA: ST prints no figure for a load on VCAP (ASSUMPTION, supplier task S3); no case row changes" % (
         vc["VOS0"][2] / ((ohms(dm.TOP) + ohms(dm.BOTTOM)) * (1 - 0.001 - 25e-6 * TEMPCO_K)) * 1e6))
     # 5e own faults
+    q_rdy = quote(t307, "1: Ready, voltage level at or above VOS selected level.", "RM0433 p.309 VOSRDY")
+    t449 = page(RM, 449, 450)
+    q_pin = quote(t449, "Bit 22 PINRSTF: Pin reset flag (NRST) (1)", "RM0433 p.450 PINRSTF")
+    q_pin2 = quote(t449, "Set by hardware when a reset from pin occurs.", "RM0433 p.450 PINRSTF set")
+    need(t449, r"8\.7\.39\s+RCC reset status register \(RCC_RSR\)", "RM0433 8.7.39 RCC_RSR")
     w("   5e. ITS OWN FAULTS AND THEIR SELF-TEST (SESSION W140-3, the firmware rows for L4A-61, nothing applied): at every start and then once")
-    w("       every %.0f s, at HCLK at most 144 MHz, the controller writes VOS = Scale 1, waits for VOSRDY at most %.1f ms (RM0433 p.309: '1: Ready," % (T_TEST_S, T_VOSRDY_MS))
-    w("       voltage level at or above VOS selected level'), then at most %.1f ms for its own reset; a return is MONITOR FAILED (Scale 3" % T_WAIT_MS)
-    w("       restored, reported in its state frame); after the reset, RCC_RSR's pin-reset flag with a marker kept over reset reads PASSED.")
+    w("       every %.0f s, at HCLK at most 144 MHz, the controller writes VOS = Scale 1, waits for VOSRDY at most %.1f ms (RM0433 p.309: \"%s\")," % (
+        T_TEST_S, T_VOSRDY_MS, q_rdy))
+    w("       then at most %.1f ms for its own reset; a return is MONITOR FAILED (Scale 3 restored, reported in its state frame); after the" % T_WAIT_MS)
+    w("       reset, RCC_RSR's \"%s\", \"%s\" (RM0433 8.7.39, p.450), with a marker kept over reset, reads PASSED." % (q_pin, q_pin2))
     w("       Scale 1 (VCAP %.2f V and up) is over the trip's top by %.1f %%: the test drives the whole real path, VCAP to divider to SENSE1 to" % (vc["VOS1"][0], od1 * 100))
     w("       RESET1 to NRST. One supervisor tests at a time and only while the other two serve (IOHA row 3); the peers flag a supervisor")
     w("       whose test counter has not moved for 2 x %.0f s (FW-B22's state frame)." % T_TEST_S)
@@ -721,6 +731,10 @@ def main():
     w("     S-g): they rest on FW-B20's verification")
     w("   W140-F5 (the register, L4A-100): the check reads this comparison and the draft; H-1's reading and H-3's arithmetic are on the pages")
     w("     quoted in sections 3 and 4")
+    gc = need(text(DOCS["gen_b"]), r"# (Watchdog and brownout are the H743's own IWDG and BOR\. That is deliberate): an internal watchdog cannot save a core", "gen_sch_b.py's supervisors' comment")
+    w("   W140-F6 (board B's generator owner): the comment over the supervisors' loop reads '%s: ...'; it" % gc.group(1))
+    w("     argues against a supervisor chip for output correctness, which the voters carry; the drafted monitor is for the controller's own")
+    w("     VOS0 thermal limit, a different purpose; the draft does not edit the comment; when the draft is taken the comment is restated")
     w("   S1: the controller's junction-to-ambient transient impedance on board B, three first-article supervisors, a junction step at")
     w("     %.3f W: pass at most %.2f K/W at %.1f us and %.2f K/W at %.1f ms (or ST's transient thermal data for the LQFP100 with board B's copper)" % (
         p_ex, z_need, t_resp * 1e6, z_need1, t_dead * 1e3))

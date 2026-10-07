@@ -1,0 +1,152 @@
+RM0433                                                                                                                 Reset and Clock Control (RCC)
+
+
+8.7.39               RCC reset status register (RCC_RSR)
+                     This register can be accessed via two different offset address.
+
+                                                    Table 65. RCC_RSR address offset and reset value
+                                           Register Name                                        Address Offset                              Reset Value
+
+                                             RCC_RSR                                                  0x0D0
+                                                                                                                                           0x00FE 0000 (1)
+                                           RCC_C1_RSR                                                  0x130
+                     1. Reset by power-on reset only
+
+
+                     Access: 0 ≤ wait state ≤ 7, word, half-word and byte access. Wait states are inserted in case
+                     of successive accesses to this register.
+
+ 31       30           29      28            27        26          25       24        23           22        21          20       19          18     17            16
+                               WWDG1RSTF
+          LPWRRSTF
+
+
+
+
+                                                       IWDG1RSTF
+
+
+
+
+                                                                                      PORRSTF
+
+
+
+
+                                                                                                             BORRSTF
+
+
+
+
+                                                                                                                                                     CPURSTF
+                                                                            SFTRSTF
+
+
+
+
+                                                                                                   PINRSTF
+
+
+
+
+                                                                                                                         D2RSTF
+
+
+
+                                                                                                                                  D1RSTF
+
+
+
+
+                                                                                                                                                                   RMVF
+ Res.                 Res.                   Res.                  Res.                                                                      Res.
+
+
+
+             r                    r                       r                   r         r            r         r           r        r                  r           rw
+ 15       14           13      12             11       10           9        8         7            6          5          4        3          2       1             0
+ Res.    Res.         Res.    Res.           Res.     Res.         Res.    Res.       Res.        Res.       Res.        Res.     Res.       Res.   Res.          Res.
+
+
+
+
+        Bit 31 Reserved, must be kept at reset value.
+        Bit 30 LPWRRSTF: Reset due to illegal D1 DStandby or CPU CStop flag (1)
+                Reset by software by writing the RMVF bit.
+                Set by hardware when D1 domain goes erroneously in DStandby or when CPU goes erroneously in
+                CStop.
+                0: No illegal reset occurred (default after power-on reset)
+                1: Illegal D1 DStandby or CPU CStop reset occurred
+        Bit 29 Reserved, must be kept at reset value.
+        Bit 28 WWDG1RSTF: Window Watchdog reset flag (1)
+                Reset by software by writing the RMVF bit.
+                Set by hardware when a window watchdog reset occurs.
+                0: No window watchdog reset occurred from WWDG1 (default after power-on reset)
+                1: window watchdog reset occurred from WWDG1
+        Bit 27 Reserved, must be kept at reset value.
+        Bit 26 IWDG1RSTF: Independent Watchdog reset flag (1)
+                 Reset by software by writing the RMVF bit.
+                 Set by hardware when an independent watchdog reset occurs.
+                 0: No independent watchdog reset occurred (default after power-on reset)
+                 1: Independent watchdog reset occurred
+        Bit 25 Reserved, must be kept at reset value.
+
+
+
+
+                                                                          RM0433 Rev 8                                                                         449/3353
+                                                                                                                                                                          504
+Reset and Clock Control (RCC)                                                                         RM0433
+
+
+        Bit 24 SFTRSTF: System reset from CPU reset flag (1)
+                Reset by software by writing the RMVF bit.
+                Set by hardware when the system reset is due to CPU.The CPU can generate a system reset by
+                writing SYSRESETREQ bit of AIRCR register of the CM7.
+                0: No CPU software reset occurred (default after power-on reset)
+                1: A system reset has been generated by the CPU
+        Bit 23 PORRSTF: POR/PDR reset flag (1)
+                Reset by software by writing the RMVF bit.
+                Set by hardware when a POR/PDR reset occurs.
+                0: No POR/PDR reset occurred
+                1: POR/PDR reset occurred (default after power-on reset)
+        Bit 22 PINRSTF: Pin reset flag (NRST) (1)
+                 Reset by software by writing the RMVF bit.
+                 Set by hardware when a reset from pin occurs.
+                 0: No reset from pin occurred
+                 1: Reset from pin occurred (default after power-on reset)
+        Bit 21 BORRSTF: BOR reset flag (1)
+                Reset by software by writing the RMVF bit.
+                Set by hardware when a BOR reset occurs (pwr_bor_rst).
+                0: No BOR reset occurred
+                1: BOR reset occurred (default after power-on reset)
+        Bit 20 D2RSTF: D2 domain power switch reset flag (1)
+                Reset by software by writing the RMVF bit.
+                Set by hardware when a D2 domain exits from DStandby or after of power-on reset. Refer to
+                Table 56 for details.
+                0: No D2 domain power switch reset occurred
+                1: A D2 domain power switch (ePOD2) reset occurred (default after power-on reset)
+        Bit 19 D1RSTF: D1 domain power switch reset flag (1)
+                Reset by software by writing the RMVF bit.
+                Set by hardware when a D1 domain exits from DStandby or after of power-on reset. Refer to
+                Table 56 for details.
+                0: No D1 domain power switch reset occurred
+                1: A D1 domain power switch (ePOD1) reset occurred (default after power-on reset)
+        Bit 18 Reserved, must be kept at reset value.
+        Bit 17 CPURSTF: CPU reset flag (1)
+                Reset by software by writing the RMVF bit.
+                Set by hardware every time a CPU reset occurs.
+                0: No CPU reset occurred
+                1: A CPU reset occurred (default after power-on reset)
+        Bit 16 RMVF: Remove reset flag
+                Set and reset by software to reset the value of the reset flags.
+                0: Reset of the reset flags not activated (default after power-on reset)
+                1: Reset the value of the reset flags
+    Bits 15:0 Reserved, must be kept at reset value.
+1. Refer to Table 56: Reset source identification (RCC_RSR) for details on flag behavior.
+
+
+
+
+450/3353                                                RM0433 Rev 8
+
