@@ -109,7 +109,7 @@ PINS = {
     "l8p_breaker": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-6eeb6cfe.txt", "e8f1294bb0f76c75d146332e41d3783256474804905faa296bcdca8bc0cf2693"),
     "l8p_enable": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-69b8c3bb.txt", "c1fa1713c6e5fe291984e8f31e8a47eff447743c38dfc364d05b9e80dcfe5912"),
     "l8p_ptc": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-8e6a938c.txt", "cedae4eb4572a6a5b137dfc151b07d96ac9004e332317dba1c6d703941ce95c0"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "72c0707fea24a2052269bf96378eed9e9b73ec6a0af301af775f77e9ea51131d"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "0da5839e5b806211067861b6fb9b074990de2f07f66bcedf66a8c0f8ed927244"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -119,10 +119,10 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "f4e716036854db03704acb4263cf9f47ae1b0d02ac7ccd6bfc36f7a05c59c744"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "cb09152d6f8e796bf94c7b2c72d6b0c6bae605f137c47f71c1c814b0afa80f40"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "101b9896de5195619dda7fb97eafd24fd349abaeb879bb79edc4456ced6bf4b3"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "a784a030eb1be73db0fb1abefb4cead4bb26557d683568fe9ee56b9e8786f410"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "e307beba45d9120fd5703066efd69bc2638ef04759ea61e0c548dcd241eff08d"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),

@@ -13,7 +13,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
    3d0a7b1d7d0bd8bf v2/docs/records/l4e11/apply_gen_sch_e_aux.py
    a859aa4a63339f3a v2/docs/records/l4e11/apply_gen_sch_e_entry.py
-   a784a030eb1be73d v2/docs/records/l4e12/l4e12_thermal.out
+   e307beba45d9120f v2/docs/records/l4e12/l4e12_thermal.out
    bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
    347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
    7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
@@ -51,7 +51,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
    c81cd7ffa60561fe v2/docs/records/l8r2/apply_gen_sch_b_rt500.py
    858611469545569c v2/docs/records/l8r2/apply_gen_sch_e_packrtn.py
-   91b36292ded256ed v2/docs/records/l9pwr/l9pwr_budget.out
+   a4ea167cb0585283 v2/docs/records/l9pwr/l9pwr_budget.out
    69e6ac4fc0417d3c v2/docs/records/l9t5/apply_gen_sch_a_iocbuck.py
    8b0aab5cdd912493 v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py
    72c306adf529de13 v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py

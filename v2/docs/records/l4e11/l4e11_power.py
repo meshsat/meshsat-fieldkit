@@ -117,7 +117,7 @@ PINS = {
     "spra953": ("v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf", "8ab81b5a351132ae8ab049d984e7cc72f1eb3dd3e4d9d8e063be6fcd841080a9"),
     "an11158": ("v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf", "9e3211549d0bcd774b265d0598588b3b221b13b9c528b7374445fd0f21d47aec"),
     "gen_b": ("v2/ecad/tools/gen_sch_b.py", "3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8"),
-    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "d8882cd01e9df691591e94c5d5b979f7d16615d3d0f6d7fcfc0841d2fabaedd0"),
+    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "0081f048d4d0f72c44308d6e3994409ff6f8a0e7c6b2e3c64d850fc4f67d8c94"),
     # round 9 (4 October 2026, section 19): R19's maker sheet (held back), the VSYS hold's parts, RAIL_EN's controller and buck
     "hollr2512": ("v2/vendor/passives/held/moolee-hollr2512-ho-a0-2022-01-06.pdf", "5dac9ede82062791abe6128aa7cad87c1422993820fbd21efa33dbea2ce04005"),
     "tps37": ("v2/vendor/ti/ti-tps37-snvsbj1e.pdf", "d6aed9d98fbf7f16f4dea2d6edf7c889e5fd3fa862f4072da656fb3fe7cef545"),

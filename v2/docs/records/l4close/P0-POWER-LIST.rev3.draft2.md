@@ -88,7 +88,7 @@ disposition (`6b768b1e`): "no single failure removes the trip AT ONCE. PROVISION
 1 lost "the protection under those retries is NOT shown (cx46 10): the bounded retry-energy analysis is REMAINING ENGINEERING"
 (`:285-286`); REMAINING ENGINEERING also "an AUTOMATIC diagnostic ... or a fault-tolerant redesign" (`:338-341`); the record's
 "DISPOSITION (10c, after the recheck cx46 ...): V6-m7 and cx45's Q5 NOT CLOSED" (`:355-358`); `v2/docs/records/l8p/L8P-BREAKER.md:1398-1400`.
-Propagation: L4-E11 section 28 executes both allowance cases on the intact circuit, "PROVISIONAL, not closed" (`v2/docs/records/l4e11/l4e11_power.out:2134-2138`).
+Propagation: L4-E11 section 28 executes both allowance cases on the intact circuit, "PROVISIONAL, not closed" (`v2/docs/records/l4e11/l4e11_power.out:2066-2070`).
 Revision 2's "SESSION L8P-D9 tolerates the three as latent" (`v2/docs/records/l4close/P0-POWER-LIST.md:22`) is the passage cx46 finding
 1 calls "withdrawn L8P-D9 latent-fault tolerance" (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:81`); the record reads "that label is WITHDRAWN: no requirement permits it" (`v2/docs/records/l8p/l8p_c4.out:200`); the
 owner's part 24 superseded the latent-guard owner question (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:768`).
@@ -119,7 +119,7 @@ section 5, item 1 (L4-E9's files cleared by `6fe398e9`: "UNSELECTED and WITHDRAW
 item", `6fe398e9:v2/docs/records/l4e9/l4e9_power_path.out:600`, the data at `6fe398e9:v2/docs/records/l4e9/l4e9_power_path.py:4243-4244`); R-240's "item S1" for D-10 became E-1 in `7070f106` (item 2).
 
 **P0-8.** Unchanged since revision 2: "E11-37 STAYS OPEN: no printed figure decides a three-device gate load against TI's 5 nF; Q-TI-17"
-(`v2/docs/records/l4e11/l4e11_power.out:1527`); Ciss 7.08 nF typical, 1.42 times TI's 5 nF (`:1496`). No commit after `4d0ff8a2` changed
+(`v2/docs/records/l4e11/l4e11_power.out:1459`); Ciss 7.08 nF typical, 1.42 times TI's 5 nF (`:1428`). No commit after `4d0ff8a2` changed
 these lines (`v2/docs/records/int30/RESULT.draft2.md` section 2, row 8: L4-E11's changes are in its section 28; commit 2b moves two digest lines of that output).
 
 **U-01, U-02, U-04 and E11-29**, as the annex has them (no commit after `4d0ff8a2` up to `6fe398e9` touches the annex):

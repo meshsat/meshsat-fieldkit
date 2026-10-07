@@ -14,23 +14,23 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    gen_b       v2/ecad/tools/gen_sch_b.py  sha256 3698cc04d8eaf75b
    gen_e       v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
    pack        v2/ecad/tools/pcb_pack_protection.yaml  sha256 ab1dbc3f3f69aa46
-   l4e9        v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 d8882cd01e9df691
-   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 f4e716036854db03
+   l4e9        v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 0081f048d4d0f72c
+   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 cb09152d6f8e796b
    l4e11_aux   v2/docs/records/l4e11/apply_gen_sch_e_aux.py  sha256 3d0a7b1d7d0bd8bf
    l4e11_chg   v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 0e215988ba2a929b
-   l4e12_out   v2/docs/records/l4e12/l4e12_thermal.out  sha256 a784a030eb1be73d
+   l4e12_out   v2/docs/records/l4e12/l4e12_thermal.out  sha256 e307beba45d9120f
    review      v2/docs/records/l4close/REVIEW-PROVISIONAL-FIXES-AS-RECEIVED.md  sha256 1f8508302012673f
-   l7_out      v2/docs/records/l7pwr/l7pwr_fans_th1.out  sha256 efb560dba32ab06e
+   l7_out      v2/docs/records/l7pwr/l7pwr_fans_th1.out  sha256 fa8ca1d9326c525b
    l8r2_out    v2/docs/records/l9pwr/inputs/l8r2-l8r2_drafts-89924e40.txt  sha256 7b0ff84375825913
    l8r2_fans   v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_b_fans12-89924e40.txt  sha256 cb03ff040b0ef784
    l8r2_pnl    v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py  sha256 3d2750a188913fef
    l8r2_slotlm v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_a_slotlm-89924e40.txt  sha256 fc487ab269d2f758
    l8r2_rt500  v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_b_rt500-89924e40.txt  sha256 c81cd7ffa60561fe
    l8r2_fb01   v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_a_fb01-89924e40.txt  sha256 ea95bd293e44676a
-   l9stk_prot  v2/docs/records/l9stk/l9stk_protection.out  sha256 bf82ef7f90e134ed
+   l9stk_prot  v2/docs/records/l9stk/l9stk_protection.out  sha256 33c6c695367f40de
    l4e9r7      v2/docs/records/l9pwr/inputs/l4e9-l4e9_power_path-section30-3737df82.txt  sha256 76c17d1cc02c0fd2
    sources     v2/docs/records/l9pwr/inputs/SOURCES.txt  sha256 2a98e4ac0e307637
-   l8gnd_out   v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 8c96acc5331c8111
+   l8gnd_out   v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 04e8454415d7a19a
    ap64500     v2/vendor/diodes/diodes-ap64500.pdf  sha256 d3bcdc7dd4ca44cb
    ap632       v2/vendor/diodes/diodes-ap63200-series-buck.pdf  sha256 ef99daa3789d835b
    tps62933    v2/vendor/ti/ti-tps62933.pdf  sha256 16ec2eac43c7374e

@@ -15,11 +15,11 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    c4820a453aa7a159 v2/docs/PANEL.md
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
-   a784a030eb1be73d v2/docs/records/l4e12/l4e12_thermal.out
+   e307beba45d9120f v2/docs/records/l4e12/l4e12_thermal.out
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
-   046e2120dfede901 v2/docs/records/l8r2/l8r2_gndret.out
+   29f313c17d6f8283 v2/docs/records/l8r2/l8r2_gndret.out
    be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
-   850b6eb5ea8f2b87 v2/docs/records/l9t5/l9t5_drafts.out
+   bd120fa8ed0157de v2/docs/records/l9t5/l9t5_drafts.out
    8b0aab5cdd912493 v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
    653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
