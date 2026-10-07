@@ -177,6 +177,8 @@ def figures():
     sw = need(g, r"5\.6 Switching Characteristics, CL = 15pF.*?VCC = 1\.8V\s+VCC = 2\.5V\s+VCC = 3\.3V\s+VCC = 5V.*?tpd\s+A or B\s+Y\s+"
                  r"([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+ns", "SN74LVC1G08 tpd", re.S)
     F["g_tpd"] = float(sw.group(6)) * 1e-9                        # VCC = 3.3 V +- 0.3 V, -40 to 85 C, MAX
+    F["g_icc"] = float(need(g, r"ICC\s+VI = 5\.5V or GND,\s+IO = 0\s+1\.65V to 5\.5V\s+(\d+)\s+(\d+)\s+%sA" % MU, "SN74LVC1G08 ICC").group(1)) * 1e-6
+    F["g_dicc"] = float(need(g, r"One input at VCC %s 0\.6V,\s*\n\s*%sICC\s+3V to 5\.5V\s+(\d+)\s+(\d+)\s+%sA" % (EN, chr(0x394), MU), "SN74LVC1G08 delta ICC").group(1)) * 1e-6
     F["g_ci"] = float(need(g, r"Ci\s+VI = VCC or GND\s+3\.3V\s+(\d+)\s+(\d+)\s+pF", "SN74LVC1G08 Ci").group(1)) * 1e-12
     a = pdf("ap2112")
     sec = need(a, r"AP2112-3\.3 Electrical Characteristics.*?ISHORT\s+Short Current Limit", "the AP2112-3.3 table", re.S).group(0)
@@ -200,9 +202,13 @@ def figures():
     F["i_rail"] = float(m.group(2))                                 # the rail's declared peak
     c = text(DOCS["compat"])
     F["xtal_ppm"] = float(need(c, r"ESR 30, \+-10/\+-(\d+) ppm: meets", "the fitted crystal's tolerance as the compatibility page reads it").group(1)) * 1e-6
+    F["dar_compat"] = need(c, r"^\| 2\.24\.5 DAR mode transmission failure due to lost arbitration \|.*\| (firmware does not use DAR) \|$",
+                           "the compatibility page's ES0392 2.24.5 row").group(1)
+    F["dar_contract"] = need(text(DOCS["contract"]), r"(FDCAN_CCCR\.DAR = 1) on both fabrics", "the contract draft's DAR row").group(1)
     o = text(DOCS["t10out"])
     F["queue"] = float(need(o, r"a state frame waits at most ([\d.]+) ms behind every other frame of its window", "FW-B22's queue wait").group(1)) * 1e-3
     F["window"] = float(need(o, r"in every (\d+) ms window, one state\s*\n?\s*frame", "FW-B22's window").group(1)) * 1e-3
+    F["i_r6"] = float(need(o, r"the bounded state with the limiters' pull-ups\s+([\d.]+) A", "round 6's bounded state").group(1))
     F["share_bits"] = int(need(o, r"(\d+) bit-times against FW-B21's (\d+)", "FW-B22's dominant bound").group(1))
     return F
 
@@ -591,6 +597,17 @@ def main():
     w("     unpowered FT pin (DS12110 Rev 10 prints none; Table 120's note 3 says only that no positive injection occurs under the maximum),")
     w("     so a dark target's TXD is UNDEFINED at its readers")
     w("     and the attribution must never act on a TXD reading alone (a condition for L4A-55). A dark VOTER's input reads low through 10 kOhm")
+    i_lim = 2 * vdd_hi / (10e3 * 0.99)                 # the two limiters' 10 kOhm 1 % pull-ups, removed (round 6 counted them at OUTB low)
+    i_rpu = vdd_hi / (riso_lo + F["rpu"][0])           # one reading pin's pull-up while the TXD it reads is dominant
+    L["rail"] = F["i_r6"] - i_lim + 2 * F["g_icc"] + 4 * i_rpu + max(2 * L["vote_i"], 2 * F["g_dicc"])
+    w("   the controller's own rail: round 6's bounded state %.4f A less its limiters' pull-ups %.3f mA, plus its two gates' ICC %.0f uA each" % (
+        F["i_r6"], i_lim * 1e3, F["g_icc"] * 1e6))
+    w("     (PRINTED), its four readings' pull-ups %.3f mA each while dominant, and the larger of two of its votes asserted at %.3f mA each (one" % (
+        i_rpu * 1e3, L["vote_i"] * 1e3))
+    w("     peer contained on both fabrics) and its own gate's two inputs high from the peers' lower rails (the self-test's V phase on it:")
+    w("     delta ICC %.0f uA an input at VCC - 0.6 V, PRINTED, taken per input), all at once: at most %.4f A (MODEL; a labelled scenario for" % (
+        F["g_dicc"] * 1e6, L["rail"]))
+    w("     the coordinator's C-DEV, no case row changed here)")
     w("   all levels hold: %s" % ("yes" if lv_ok else "NO"))
     w("")
     # ---------------------------------------------------------------- 7. the self-test
@@ -648,6 +665,10 @@ def main():
     w("   the self-test's cost: two phases in four silence one transceiver for %.0f ms; with DAR = 1 (L9T5-D2) the target's one attempt in such" % (held * 1e3))
     w("     a phase raises its transmit error count by 8, %d a cycle per transceiver, against at least %d successful frames that lower it by 1" % (tec_up, tec_down))
     w("     each: the count stays bounded and error-active (the protocol's fault confinement)")
+    w("   the target's probe and that bound rest on DAR = 1, and the records disagree (finding W137-F1, for L4A-55 and Layer 5): the")
+    w("     contract draft reads \"%s\" and the compatibility page's ES0392 2.24.5 row \"%s\". With DAR = 0" % (F["dar_contract"], F["dar_compat"]))
+    w("     the target sends nothing on the tested fabric in its silenced phases (an automatic retry would raise its count by 8 at every")
+    w("     attempt), so the silence rests on two readings, not three (no frame of it, its receiver hearing neither peer), same interval")
     w("   timing and cost hold: %s" % ("yes" if st_ok else "NO"))
     # the self-test's own faults, element by element, and its coverage of the netlist
     rows = [("a vote output, its line or its gate input", "stuck low or open", "the target cannot be silenced by the vote", "V fails", "T"),
