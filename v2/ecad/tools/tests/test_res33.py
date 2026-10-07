@@ -248,8 +248,6 @@ def p_placeholders(texts):
         for m in PH.finditer(t):
             if m.group(0) not in DECLARED:
                 bad.append("%s carries an undeclared token %s" % (name, m.group(0)))
-        if name == PATCH and PH.search(t):
-            bad.append("the patch file carries a token although it holds no rows")
         for ln in t.split("\n"):
             if "__PROMOTED__" in ln and "| BASE (the REVIEWED role" in ln:
                 bad.append("%s gives PROMOTED a BASE row (adopt33.sh's rule would fill set 32's revision there)" % name)
@@ -607,7 +605,7 @@ def t_every_placeholder_is_a_declared_token_and_the_stage_holds():
     texts = _texts()
     assert not p_placeholders(texts), p_placeholders(texts)
     _mutant_refused(p_placeholders, texts, RESULT, "| The chain's base: set 32's adopted tip on main |", "| The chain's base: set 32's adopted tip on main | `__BASE__` |")
-    _mutant_refused(p_placeholders, texts, PATCH, "**Why no rows yet**", "**Why no rows yet** `__GATE__`")
+    _mutant_refused(p_placeholders, texts, PATCH, "**The revision rows, as set 30's pages define them.**", "**The revision rows, as set 30's pages define them.** `__REVISION__`")
     _mutant_refused(p_placeholders, texts, RESULT, "| Set 32's promoted revision (the REVIEWED role of the brief's form) |",
                     "| BASE (the REVIEWED role of the brief's form) | `__PROMOTED__` |")
     _mutant_refused(p_placeholders, texts, RESULT, "| ADOPTED: the commit that adopts this record |", "| ADOPTED: the commit that adopts this record | `deadbeef`")

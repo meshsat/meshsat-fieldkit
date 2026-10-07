@@ -5,7 +5,8 @@ folded: what set 33 adopts and from whom (75 commits, `CLASSIFICATION.md`), each
 HO-E, the limiter screen, the K table; AI reviews, never upgraded), the apply list set 33 runs and the drafts it does NOT apply (Layer
 8's A), the ONE re-key set 33 is planned to carry and why, W160's dry run as logged, the freeze kit's expectations, the three claims as
 the assessment gives them, the classification bound, its integration rows prepared in W113's form (`CLASSIFICATION.md` section 3), and
-the statement on the four adoption pages (`ENTRY-PAGES.patch.md`). **NOT DONE:** everything the integration will give: the chain's
+the 17 rows that bring the four adoption pages to set 33 (`ENTRY-PAGES.patch.md`, held by `test_patch33.py` against set 32's
+adopted pages). **NOT DONE:** everything the integration will give: the chain's
 base, the chain's counts and lines, the converged commit, the independent read of the lineage, the re-key's cache commit, the
 candidate, the freeze's and the gate's lines, the promotion and the adoption commit, each a placeholder the coordinator's fill tool
 fills (the paragraph "Placeholders" below); row (b)'s targeted recheck W163, running while this was written, whose verdict is a
@@ -289,7 +290,7 @@ qualification (NONE).
 | Record | Path | State |
 |---|---|---|
 | The classification of set 33 | `v2/docs/records/int33/CLASSIFICATION.md` | 75 branch commits classified; 11 REVIEWED-INPUT CHANGED; 14 UNREVIEWED since cx46; three placeholder rows and section 3's prepared rows for the integration's commits |
-| The adoption pages' statement | `v2/docs/records/int33/ENTRY-PAGES.patch.md` | set 33 changes the four adoption pages at its adoption; the rows are owed against set 32's adopted pages (its paragraph "Why no rows yet") |
+| The rows for the four adoption pages | `v2/docs/records/int33/ENTRY-PAGES.patch.md` | 17 rows (START-HERE.md 8, SUPPLIER-HANDOVER.md 6, LAYER-STATUS.md 2, EXECUTION-PLAN.md 1), written against the pages as set 32's adoption left them (fnd/adopt32 `cb78bc49`); applied at set 33's adoption; the fill tool fills its tokens because this file names it; `test_patch33.py` holds the rows |
 | Record l4k | `v2/docs/records/l4k/` on fnd/l4k | in the tree from the merge |
 | HO-E | `v2/docs/records/l9t5/HO-E-COMPARISON.md` and `HO-E-REGISTER-ROWS.md` on fnd/l4hoe | in the tree from the merge |
 | Row (b) | record l9t5's `T10-ROUND6.md` to `T10-ROUND11.md`, `T10-CANQ.md`; records l4canen, l4reg, l4hod, l4small and l4lim on fnd/l4hod | in the tree from the merge |
@@ -306,11 +307,13 @@ qualification (NONE).
   SRC_L4SMALL, SRC_L4LIM and SRC_L4ROWC and no fnd/res33 (its group 1 runs `test_res33` only when present); set 32's chain merged
   fnd/res32 at a3b. Either the coordinator adds a pin for fnd/res33 or the record is adopted from fnd/adopt33 (the freeze plan's
   alternative); the classification's row 64.5 is prepared for both.
-- **The four adoption pages** (START-HERE, SUPPLIER-HANDOVER, LAYER-STATUS, EXECUTION-PLAN): set 33 changes them at its adoption, but
-  their set 32 text is final only when set 32's adoption has pushed main; `ENTRY-PAGES.patch.md` states the rows owed and against what.
+- **The four adoption pages** (START-HERE, SUPPLIER-HANDOVER, LAYER-STATUS, EXECUTION-PLAN): the rows are written against set 32's
+  adoption branch (`cb78bc49`) before main holds it, so they are re-read on main before they are applied (`ENTRY-PAGES.patch.md`, its
+  paragraph "What the rows are read against"); the page tests they break are not measured here.
 - **The fill tool for set 33** is `SETS["33"]` in `<worktrees>/_bin/fill_res.py.new` (this record's author; the coordinator swaps it in
   before the adoption script's step pre, which refuses without it), with set 32's suggestion texts moved by one set and set 33's rules
-  for the r2 targeted log, test group 3 and step r2.
+  for the r2 targeted log, test group 3 and step r2; its test `<worktrees>/_bin/tests/test_fill_res33.py`, and
+  `<worktrees>/_bin/tests/test_fill_res.py.new`, the live test with its one example of an unknown set moved from 33 to 34.
 - **The independent read of set 33's lineage** is a later queue item, after the chain; this record names no finding of it.
 - **A note for the freeze:** `test_res33`'s predicates that read the coordinator's files (the cited logs and reports, the fill tool, the
   chain) raise Skip where `_runs` is absent, which is every rented box; run them in the runner pass, as set 32's record recommended for
