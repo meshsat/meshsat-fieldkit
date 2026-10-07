@@ -3,7 +3,7 @@
 
 L4A-70 (HO-L, E11-37): search the makers' sheets for a battery-FET set whose gate load is under TI's 5 nF on PRINTED maxima (Ciss or
 QG(tot)) and that meets E-1's 40.78 K/W bar at the breaker's held 23.93 A; if none does, (i)(a) stays CONDITIONAL on E-05 and the fallback
-(ii) (the pair, Q42 removed) is drafted now (apply_gen_sch_a_fetpair.py, check_fetpair_netlist.py). L4A-71: the UDC-1 table that couples
+(ii) (the pair, Q42 removed) is drafted now (fallback/apply_gen_sch_a_fetpair.py, fallback/check_fetpair_netlist.py). L4A-71: the UDC-1 table that couples
 HO-L, RE-10's M-A and E11-29, from the same figures. The page is L4E11-ROUND-FET.md; this script prints every figure the page quotes.
 
 Inputs, all read from this tree (a record reads its inputs from its own tree):
@@ -515,8 +515,8 @@ def report(R):
     w("   sets meeting G, T and H together: %s" % (", ".join(meets) if meets else "NONE among the %d parts read" % len(res)))
     w("   so (i)(a), the three BUK6Y10-30P, STAYS SELECTED and CONDITIONAL on E-05 (TI's answer to Q-TI-17 stated as a limit, or the bench of "
       "block E11-37), with E11-29 and E11-36 as before; E11-37 OPEN")
-    w("   the fallback (ii), the pair with Q42 removed, is DRAFTED now: apply_gen_sch_a_fetpair.py (after the charger draft), read by "
-      "check_fetpair_netlist.py; it is itself under 5 nF only on a TYPICAL at -15 V (CONDITIONAL on Q-TI-17 (e)) and needs the pair's "
+    w("   the fallback (ii), the pair with Q42 removed, is DRAFTED now: fallback/apply_gen_sch_a_fetpair.py (after the charger draft), read by "
+      "fallback/check_fetpair_netlist.py; it is itself under 5 nF only on a TYPICAL at -15 V (CONDITIONAL on Q-TI-17 (e)) and needs the pair's "
       "%s K/W bar on the coupon (E11-29), so a negative E-05 moves the design to it without new engineering and leaves it conditional" % fmt(E["bar_pair"]))
     best = sorted([(P, S) for P, S in res if S["G"]], key=lambda ps: -ps[1]["bar"])
     w("   the best sets that meet G on printed maxima, each failing T by its bar: " +
@@ -537,7 +537,7 @@ def report(R):
            ("a pour bar %s K/W, tighter than the pair's %s" % (fmt(S["bar"]), fmt(E["bar_pair"]))) if S["n"] >= 2 else "a junction-to-air path at %s K/W, (S2)'s class" % fmt(S["bar"]),
            "MEETS" if S["dock"] else "FAILS (ISM %s A)" % fmt(P["ism"], 0)))
     w("   SESSION SELECTION: M-A first on (i)(a), CONDITIONAL on E-05, E11-29 and E11-36; M-B second, entered only on M-A's end condition "
-      "(the page, section 5)")
+      "(L4E11-ROUND-FET.md section 7, decision L4E11-FET-D2)")
     return "\n".join(o) + "\n"
 
 
