@@ -3,7 +3,7 @@ v2/docs/records/l4reg/): the supervisors' regulator stage compared over three ap
 v2/docs/records/l9t5/apply_gen_sch_b_regstage.py. A desk design on printed figures; nothing here is a measurement or an acceptance.
 
 The predicates: the committed .out is what the script prints (where the held-back sheets' texts are present); the acceptance judge
-holds on the selected stage and REFUSES a TYPICAL figure used as a limit, FAILS the AP2112K at the new current, the order code without
+holds on the selected stage and FAILS (refusing it at J0) a TYPICAL figure used as a limit, the AP2112K at the new current, the order code without
 M3 and a thermal resistance one step over the requirement; the limiter's band and the regulator's requirement reproduce W135's
 figures; the draft composes after record l9t5's iocguard and reads DRAWN by pin and value, while the state before it and every
 mutation FAIL; it composes with W137's canmb in either order to the same netlist; it refuses a generator without iocguard, a second
@@ -108,7 +108,8 @@ def t_the_judge_holds_and_its_mutations_refuse_or_fail():
     for k, val in (("ios_hi", (S["ios49"][0][1], "TYPICAL", "7.5")), ("vdo1a", S["vdo_new_typ"]), ("rja", (60.0, "TYPICAL", "x"))):
         bad = dict(st)
         bad[k] = val
-        assert m.judge(bad, R)[0] == "REFUSED", k
+        v, rr = m.judge(bad, R)
+        assert v == "FAILS" and rr[0][0] == "J0" and not rr[0][1] and "REFUSED" in rr[0][2], (k, rr)
     # the old AP2112K at the new current fails its junction
     ap = dict(st)
     ap["rja"] = (P["theta_ldo"], "PRINTED", "DS39724 p.3")

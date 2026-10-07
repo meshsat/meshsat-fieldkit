@@ -273,6 +273,8 @@ def sheets():
     S["acc_head"] = F(0.5, "PRINTED", "SBVS067W 5.6 p.%d (the accuracy row's condition VIN >= VOUT + 0.5 V)" % page(t, m))
     m = need(t, r"ICL\s+Output current limit\s+VOUT = 0\.9 × VOUT\(nom\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+A", "the current limit (5.6)")
     S["icl"] = F(tuple(float(x) for x in m.groups()), "PRINTED", "SBVS067W 5.6 p.%d (min / typ / max)" % page(t, m))
+    m = need(t, r"IGND\s+Ground pin current\s+IOUT = 1A, new silicon\s+(\d+)\s+µA", "the ground current at 1 A (5.6)")
+    S["ignd"] = F(float(m.group(1)) * 1e-6, "TYPICAL", "SBVS067W 5.6 p.%d (typical only, new silicon, 1 A)" % page(t, m))
     m = need(t, r"ISC\s+Short-circuit current\s+VOUT = 0V, new silicon\s+(\d+)\s+mA", "the short-circuit current (5.6)")
     S["isc"] = F(float(m.group(1)) / 1000, "TYPICAL", "SBVS067W 5.6 p.%d (typical only, new silicon)" % page(t, m))
     m = need(t, r"VIN\s+Input supply voltage\s+([\d.]+)\s+([\d.]+)\s+V", "the input range (5.3)")
@@ -392,7 +394,8 @@ def need_reg(reg, i):
 # ----------------------------------------------------------------------------------------------------- 8. the acceptance judge
 def judge(st, R):
     """The selected stage's electrical acceptance on its rows. st: {name: (value, label, where)}; a figure used as a LIMIT must carry an
-    admitted label (ADMIT), the dropout's scaling the only declared INFERRED step. Returns (verdict, [(criterion, holds, text)]).
+    admitted label (ADMIT), the dropout's scaling the only declared INFERRED step; one that does not FAILS the judge at J0 (the figure
+    is refused, whatever its value). Returns (verdict, [(criterion, holds, text)]).
     Criteria: J1 no served state limited (IOSmin over every served peak); J2 the regulator at 125 C or less at the limiter's maximum
     from the corner; J3 the limiter's own junction in service at its maximum; J4 T10-A3 at the limiter's maximum on all three; J5 the
     regulator rated for the limiter's maximum (output, current limit, input); J6 the output short bounded (a printed timer and latch,
@@ -400,7 +403,7 @@ def judge(st, R):
     bad = [k for k in ("ios_lo", "ios_hi", "rja", "vdo1a", "acc", "iout", "icl_min", "vin_max", "t_latch", "lim_rja", "ron")
            if st[k][1] not in ADMIT]
     if bad:
-        return "REFUSED", [("labels", False, "a limit carried a non-admitted label: %s" % ", ".join(
+        return "FAILS", [("J0", False, "REFUSED: a limit carried a non-admitted label: %s" % ", ".join(
             "%s %s (%s)" % (k, st[k][0], st[k][1]) for k in bad))]
     lo, hi = st["ios_lo"][0], st["ios_hi"][0]
     res = []
@@ -576,7 +579,7 @@ def main():
     for k in ("ios49", "ios_eq", "ron", "tlatch", "lim_rja", "lim_iout", "tr", "tios", "dbv_body"):
         v, lab, where = S[k]
         w("   TPS2553-1 %-9s %-38s %-8s %s" % (k, str(v)[:38], lab, where))
-    for k in ("rja_new", "rja_leg", "vdo_new", "vdo_new_typ", "vdo_leg", "acc_new", "acc_leg", "acc_head", "icl", "isc", "vin", "iout", "tj_op",
+    for k in ("rja_new", "rja_leg", "vdo_new", "vdo_new_typ", "vdo_leg", "acc_new", "acc_leg", "acc_head", "icl", "isc", "ignd", "vin", "iout", "tj_op",
               "short_dur", "ven_hi", "ven_lo", "dcq_size"):
         v, lab, where = S[k]
         w("   TPS737    %-11s %-36s %-8s %s" % (k, str(v)[:36], lab, where))
@@ -662,6 +665,9 @@ def main():
         E["s1"][0], air + REG["rja"][0] * drop * E["s1"][0]))
     w("       printed figure on board B's copper is a Layer 10 means (JEDEC 2s2p, %s vias under the tab): read at E-17's coupon, never assumed" % S["dcq_vias"][0])
     tjl = air + S["lim_rja"][0] * S["ron"][0] * hi1 ** 2
+    w("       its ground current (%.0f uA TYPICAL at 1 A, no maximum printed) is outside the bound: %.1f mW at the top input, %.2f K on the printed" % (
+        S["ignd"][0] * 1e6, hi14 * S["ignd"][0] * 1e3, REG["rja"][0] * hi14 * S["ignd"][0]))
+    w("       theta (MODEL on a TYPICAL), against the %.1f K margin" % (tjg - sel[1]))
     w("       the limiter's own junction in service at %.4f A: %.1f C (%.3f ohm, %.1f C/W, PRINTED); its continuous rating %.1f A to 125 C TJ PRINTED" % (
         hi1, tjl, S["ron"][0], S["lim_rja"][0], S["lim_iout"][0]))
     e_short = hi14 * hi1 * S["tlatch"][0][2]
@@ -711,7 +717,9 @@ def main():
     w("       supervisor in place of round 6's two ICs and six passives; order codes owed (finding L4REG-F4)")
     w("   (6) HO-E: unchanged by A. The H743's VOS0 105 C current %.4f A and its 125 C current %.3f A depend on its own %.0f C/W and the air, not" % (
         E["vos0"][0], E["mcu125"][0], P["theta_mcu"]))
-    w("       on the regulator; IOSmin %.4f A sits over both, so no current limit of this stage holds the controller (W127 finding 2, L4A-59)" % lo1)
+    w("       on the regulator; IOSmin %.4f A sits over both, so no current limit of this stage holds the controller (W127 finding 2, L4A-59):" % lo1)
+    w("       the largest served S1 %.4f A against VOS0's %.4f A is a %.1f %% band no limiter's printed tolerance reaches; A neither narrows nor widens it" % (
+        E["s1"][0], E["vos0"][0], 100 * (E["vos0"][0] / E["s1"][0] - 1)))
     w("   (7) NEW FAILURE MODES: a latched limiter (row 8, or any overload over IOSmin for 5 ms) leaves its supervisor dark until EN or power is")
     w("       cycled (nothing in this draft drives EN: the peers' restart is L4A-54's or L4A-58's, finding L4REG-F3); the limiter's latent loss of")
     w("       its limit (HO-D, L4A-58: FAULT asserts only while limiting); the legacy silicon fitted under a code without M3 (T10-A3 then fails at")
@@ -911,6 +919,8 @@ def main():
     w("     watchdog proof should cover every state outside FW-B20, not VOS0 alone")
     w("   L4REG-F8 (the coordinator): pdftext.FETCH lists the TPS2553 sheet for record l4reg; when record l4lim (fnd/l4lim) is merged its fetch")
     w("     script lists it too, and the entry becomes ('l4lim', 'l4reg') (test_pdftext_input's W37 map)")
+    w("   L4REG-F9 (the coordinator, L4-E9's change list): apply_gen_sch_b_regstage.py needs its row on board B after record l9t5's iocguard")
+    w("     (and W137's canmb, either order), as V6-m11 asked of canshdn; the register's rows L4A-56 and L4A-57 read this record's selection")
     w("")
 
     # ---------------------------------------------------------------------------------------------------------------- 11
@@ -924,7 +934,7 @@ def main():
         ("K1's input is under its recommended range at 14.0k; its loss has no printed bound", fixed < k1_vmin and S["k1_rhs"][1] == "TYPICAL"),
         ("the regulator's own limit (C) passes 150 C at its printed maximum", tjc > 150.0),
         ("the judge holds on the selected stage", vA == "HOLDS"),
-        ("each mutation of the judge reads REFUSED or FAILS (a typical as a limit, the AP2112K, no M3, theta over)", all(v in ("REFUSED", "FAILS") for _l, v in mres)),
+        ("each mutation of the judge FAILS (a typical as a limit refused at J0, the AP2112K, no M3, theta over)", all(v == "FAILS" for _l, v in mres)),
         ("the draft composes after iocguard, reads DRAWN by pin and value, and the state before it FAILS", v_reg == "DRAWN" and v_old == "FAIL"),
         ("every netlist and value mutation FAILS", all(v == "FAIL" for _l, v in vm)),
         ("with canmb in either order the draft reads DRAWN, the netlists are identical; no part, signal net or controller pin is shared",
