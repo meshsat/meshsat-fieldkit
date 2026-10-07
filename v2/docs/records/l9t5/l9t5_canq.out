@@ -1,0 +1,283 @@
+l9t5_canq: T10 round 8, Layer 4 task L4A-55 (the ledger's RE-5 and HO-C by method M-B): the quorum service of the three I/O
+supervisors under every fault row, the vote path's latent faults, the recovery proof and FW-B22 restated on the two fabrics
+(MESHSAT-1357; desk analysis on printed figures; prototype design, nothing built, bought, powered or measured; it closes nothing
+until independently checked)
+
+1. INPUTS (sha256/16)
+   5d14cc85213ad999 v2/docs/records/l9t5/inputs/l4canmb-l9t5_canmb-5d14cc85.out
+   67335ea42747e22f v2/docs/parts/STM32H743-COMPATIBILITY.md
+   12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
+   ff8e555532a33c70 v2/docs/records/l9t5/apply_hw_fw_contract_canq.py
+   efcfdf67f1fcab83 v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
+   336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
+   69e6ac4fc0417d3c v2/docs/records/l9t5/apply_gen_sch_a_iocbuck.py
+   3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+   55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
+   9fbda7a6e79430c2 v2/docs/records/l9t5/inputs/l4reg-l4reg_compare-9fbda7a6.out
+   37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
+   92faa0f3b780b518 v2/docs/records/l9t5/inputs/SOURCES-canq.txt
+   3ebf58a134fe046c v2/docs/records/l9t5/l9t5_t10.out
+   74753bb1e2860bff v2/docs/records/l9t5/T10-ROUND5.md
+   653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
+   9e7f53205453bb22 v2/vendor/st/pdftext/st-es0392-rev15.layout.p48.txt
+   bb7ff2f3f5cb2ce8 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2469.txt
+   609cb3ecd86269dd v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2470.txt
+   2cba618decea2128 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2529.txt
+   dc9d850e2fef2394 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2530.txt
+   c04b2d82e5e4ccac v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2532.txt
+   6d1e639ddcc9cdbd v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2533.txt
+   e4289fd5af43153c v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2534.txt
+   e4025c715deaeb8f v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2535.txt
+   227510d881e3f97a v2/vendor/st/pdftext/st-rm0433-rev8.layout.p533.txt
+   8b51c389f0e8ace7 v2/vendor/st/pdftext/st-stm32h743xi-datasheet.layout.txt
+   a84c416119cebf38 v2/vendor/ti/pdftext/ti-sn74lvc1g08.layout.txt
+   810dc4dbcf529687 v2/vendor/ti/pdftext/ti-tcan334-can-fd-transceiver.layout.txt
+   effe23b2b79ec4ee v2/vendor/st/st-es0392-rev15.pdf
+   30b963cc44233cf3 v2/vendor/ti/ti-sn74lvc1g08.pdf
+   9b27d1d993a8bc5b v2/vendor/st/st-stm32h743xi-datasheet.pdf
+   9ba54135736a47a3 v2/vendor/st/st-rm0433-rev8.pdf
+   bb89f067e6a79028 v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf
+
+2. THE FIXED INTERFACE (read where it is written; restated, never amended)
+   CON-004 (REQUIREMENTS-TRACE.md, constraint): "Each I/O supervisor has its own regulator branch, reset supervisor, watchdog, crystal and SWD pads, and the three talk over two independent CAN-FD fabrics with separate transceivers and termination."
+     accepted when: "Netlist shows three independent supply branches and two fabrics; A7 (either fabric cut, the quorum holds) passes."
+     fabrics it names: 2; this round keeps both, adds none and removes none
+   IOHA row 3: "One I/O supervisor dies or is unpowered" -> "the other two are a majority and ownership is unaffected" (detected by: its heartbeat stops on both fabrics; its status LED is dark)
+   IOHA row 4: "Two supervisors die" -> "no majority; every voted bit reads its pull-down and the fabric rests on the home assignment, which is the board's behaviour before this work" (detected by: heartbeat)
+   IOHA row 5: "A supervisor wedges with its outputs stuck" -> "outvoted 2 of 3; it cannot move a single bit" (detected by: the other two see its heartbeat stop or its votes disagree with quorum)
+   IOHA row 6: "A voter output stuck at one value" -> "that bank cannot move, or is stuck on the failover host" (detected by: **each controller reads the four voted bits back**, so a vote that does not match quorum is visible)
+   IOHA row 7: "One CAN fabric breaks or a transceiver fails dominant" -> "quorum continues on the other fabric" (detected by: bus-off and error counters on the broken fabric)
+   IOHA row 8: "Both CAN fabrics break" -> "no controller can form a majority; firmware rule is that a controller without quorum does not act, so the voters hold the home assignment" (detected by: each controller sees both fabrics silent)
+   IOHA test A7: "cut fabric A, then fabric B, one at a time" -> "quorum survives each; the broken fabric reports bus-off; with both broken nothing moves"
+     as drawn (gen_sch_b.py): controller A sits alone on its segment behind each fabric's break links (R508/R509, R511/R512), so A7's
+     cut separates A from B and C, who keep that fabric; with both links out only A is cut off (row R8c below, finding W139-F4)
+   FW-B22 as drafted (apply_hw_fw_contract_t10.py, unapplied): "In every 100 ms window each supervisor sends on each fabric one state frame (its view of the assignment, its health, a sequence count) and at most five event frames, classic frames of at most 8 data bytes; a larger change spreads over windows; the 2-of-3 decision reads the three state frames of one window"
+   the compatibility page's DAR row: "| 2.24.5 DAR mode transmission failure due to lost arbitration | A / A / A | only in DAR (no automatic retransmission) mode | firmware does not use DAR |"
+   M-B as drafted by W137 (inputs/l4canmb-l9t5_canmb-5d14cc85.out, fnd/l4canmb 0d079eaf, unchecked): each TXD buffered (74LVC1G34 on
+     its own rail) to its two peers' TIM3 captures through 2.2 kOhm; each TXD held recessive in reset by 10 kOhm; twelve votes, one per
+     transceiver per peer, into an SN74LVC1G08 2-of-2 gate on the target's rail lifting SHDN through a diode; the share limiter removed;
+     a dark controller reads RECESSIVE at its readers; one reader cannot frame a healthy controller; silence within 10.020 us of the
+     second vote, released within 13.01 us; the self-test's cycle 2.4000 s, a latent fault DETECTED WITHIN 5.00 s
+     its four residuals: a vote pull-down (10 kOhm) open; SD's 100 kOhm open; an isolation resistor short; a TXD pull-up (10 kOhm) open
+   W138's regulator stage (inputs/l4reg-l4reg_compare-9fbda7a6.out, fnd/l4reg 86dbcdff, unchecked): TPS2553-1, IOS 0.4702 to 0.5704 A,
+     latch-off after 5 to 10 ms (SLVS841F 7.5, PRINTED as that record quotes it; the held sheet is not read here); 'nothing in
+     this draft drives EN'; row 8's held states 0.5491 A ((f2)) and 0.5639 A (rev V held, t10 10e) lie inside the band
+
+3. THE PRINTED FIGURES THE TIMING RESTS ON
+   tTXD_DTO, driver dominant time out: 1.2 ms minimum, 3.8 ms maximum (SLLSEQ7F 5.6)
+   tMODE, mode change time: 10 us maximum (SLLSEQ7F 5.6)
+   'The CAN protocol allows a maximum of eleven successive dominant bits (on TXD) for the worst case, where five successive dominant bits are followed immediately by an error frame' (SLLSEQ7F 5.6, note 1)
+   Table 6-5: SHDN HIGH, driver Disabled (OFF), receiver Disabled (OFF), RXD High (Recessive)
+   unpowered: 'Bus and logic pins are high impedance (no load to operating bus or application)' (SLLSEQ7F 1)
+   Table 160 (HSLV OFF), speed 00, tr/tf at 50 pF and 2.7 to 3.6 V: 16.6 ns maximum (DS12110 Rev 10)
+   tpd A or B to Y at 3.3 V +-0.3 V, 30 or 50 pF: 4.5 ns maximum to 85 C, 6 ns to 125 C (SCES217AA 5.8)
+   'In bus monitoring mode (For more details refer to ISO11898-1, 10.12 bus monitoring), the FDCAN is able to receive valid data frames and valid remote frames, but cannot start a transmission. In this mode, it sends only recessive bits on the CAN bus' (RM0433 Rev 8 p.2469)
+   'In DAR mode all transmissions are automatically canceled after they started on the CAN bus.' (RM0433 Rev 8 p.2470)
+   FDCAN_TSCC TSS[1:0] = 10: 'External timestamp counter from TIM3 value used (tim3_cnt[0:15])', and 'The internal/external timestamp counter value is captured on start of frame (both Rx and Tx)' (RM0433 Rev 8 pp.2529 and 2530)
+   after Bus_Off, once INIT is cleared, 'the device waits for 129 occurrences of bus Idle (129 x 11 consecutive recessive bits)' (RM0433 Rev 8 p.2534)
+   FDCAN_IR bit 27 PEA, 'Protocol error in arbitration phase detected (PSR.LEC different from 0,7)' (RM0433 Rev 8 p.2535)
+   ES0392 Rev 15 2.24.5: 'In DAR mode, the transmission may fail due to lost arbitration at the first two identifier bits.' Workaround: 'Upon failure, clear the corresponding Tx buffer transmission request bit TRPx of the FDCAN_TXBRP register and set the corresponding cancellation finished bit CFx of the FDCAN_TXBCF register, then restart the transmission.'
+   RM0433 Rev 8 pp.2532 and 2533: error passive at 128, Error_Warning at 96, TEC 0 to 255 (PRINTED); the increments (+8 a failed
+     transmission, -1 a success) are ISO 11898-1's, which is not held: ASSUMPTION
+
+4. THE ATTRIBUTION RULE AND THE CONTAINMENT CHAIN (DRAFTED for FW-B22 restated; the hardware figures PRINTED)
+   each controller reads both other controllers' TXDs on both fabrics (its own it knows), so it sees every transmitter's intent;
+   a target's TXD activity is OUT OF CONTRACT (a violation) when, on one fabric, it shows:
+     V1 a dominant run longer than 11 bit-times plus 0.25 us (TI: the protocol allows at most eleven successive dominant bits on TXD)
+     V2 edges closer than half a bit-time (faster than any CAN bit stream)
+     V3 a malformed stream where the target owns the frame (stuffing, a fixed field, its CRC, decoded from its TXD)
+     V4 a dominant bit where the frame's owner sends recessive, other than the ACK slot, before any other deviation in that frame
+        (the FIRST deviation: the flags of the controllers that answer it begin after it and are legal)
+     V5 a start of frame outside its own slot, or more frames in a window than its slot allows (1 state and 5 event frames)
+   ONE TIME BASE: the reader's TIM3 time-stamps the peers' TXD edges (W137's capture channels) and, with FDCAN_TSCC.TSS = 10, its own
+     FDCANs' start of every frame sent or received (RM0433 p.2529), so the TXDs and its own frames are compared on one counter
+   a STRIKE needs the violation AND the reader's own evidence on that fabric: its FDCAN's protocol error (FDCAN_IR.PEA, PSR.LEC) or its
+     own scheduled frame lost, inside the frame the violation hit, explained by the target's deviation; NEVER a TXD reading alone: a
+     dark controller (its buffer reads recessive), a stuck buffer or a stuck reading input moves no bus bit and yields no strike;
+     an error nobody's TXD explains (a physical fabric fault) yields no strike: FW-B21's stop handles it
+   a reader votes on its own strike (k = 1), never on a message received over a fabric (a jammer may deny both); the 2-of-2 gate needs
+     both peers' own strikes, so no single faulty controller silences a healthy one
+   the chain at 500 kbit/s: evidence 300.0 us (the frame's end, 150 bit-times, MODEL) + evaluation 1.000 ms (DRAFTED) + the vote's edge 16.6 ns
+     (PRINTED) + the gate 6.0 ns (PRINTED, to 125 C) + tMODE 10 us (PRINTED) = 1.310 ms from a deviation to the target's driver off;
+     a held TXD: 1.034 ms (V1 at 12 bit-times); at 1 Mbit/s 1.160 ms and 1.022 ms; the TCAN334's own DTO frees a held bus after 1.2 to 3.8 ms
+   the vote is held 1.000 s, doubled for each strike within 10.000 s of a release, at most 64.000 s; a healthy controller's error counter: each
+     lost own frame +8 (ASSUMPTION), so the containment acts long before FW-B21's stop or error passive (128, PRINTED)
+
+5. FW-B22 RESTATED ON THE TWO FABRICS (DRAFTED, apply_hw_fw_contract_canq.py; CON-004 restated, not amended)
+   the window 100.000 ms on each fabric: guard 0 to 10 ms; state slots A 10.000 ms, B 20.000 ms, C 30.000 ms, each 10.000 ms, a controller's frames only in its own
+     slot (1 state frame and at most 5 event frames, as drafted), so healthy controllers never arbitrate against each other
+   the self-test's hold 52.000 ms to 88.000 ms in its own segment with one test frame per controller at 60.000 ms, 70.000 ms and 80.000 ms: no state frame is ever
+     silenced by the test (W137's draft holds 10 to 90 ms with the state frames at mid-window); both fabrics tested in parallel, fabric B's
+     target the next controller; a cycle is 3 targets x 4 phases = 12 windows; the restated V phase runs the attribution path end to
+     end (the target's deliberate malformed test frame, struck by both readers, their votes acting to the hold's end)
+   the decision: a peer's state frame for window n taken from EITHER fabric, counted only in its sender's slot with its sender's
+     identifier (a frame carrying another controller's identifier is discarded); two copies that differ discard that peer's state for n;
+     a peer is lost after 3 consecutive windows with no valid state frame on either fabric; 2 of 3 as drafted
+   DAR = 1 kept (L9T5-D2) with ES0392 2.24.5's printed workaround inside the controller's own slot: with slots healthy controllers
+     never lose arbitration to each other, so 2.24.5 is met only against a faulty one; the compatibility page's 'firmware does not
+     use DAR' is to be restated (W137-F1; finding W139-F1); row F1 below shows why DAR = 0 does not serve the self-test
+   FW-B21's stop RESTATED at the loss count: 'no valid frame for more than 3 windows' in place of the drafted 'for 100 ms', which is one
+     window of this schedule: one lost state frame then stopped a fabric for a second and the GPIO jammer of M1c took the quorum (row
+     F2); the stop's delay moves no thermal figure, because "each window carries at most 2 ms of own dominant drive by the schedule, so a fault's current is averaged over the window whatever the detection time" (t10 10h (3))
+   a returning controller (a reset, a latch released, power back) listens in bus monitoring mode (MON) for 2 windows, takes the epoch
+     and the window's timing from the state frames, sets its votes and voted outputs to the read-back, and only then sends: it moves nothing
+
+6. THE FAULT TABLE: each row run with its onset at 9 positions in the window and 12 positions in the self-test cycle (108 runs a row
+   and schedule; MODEL on the printed timing above and the DRAFTED rows); the worst of each figure; gap = the longest run of windows a
+   healthy controller missed a healthy peer (the loss count is 3); contain = a deviation to the jammer's driver off on its last fabric;
+   tec = a healthy controller's largest error counter (ASSUMPTION increments) against 96 (warning) and 128 (passive)
+   row  IOHA        restated: outcome             W137's schedule: outcome      req  gap  contain (r/W137)      tec out   title
+   R3   row 3       a node out and contained      a node out and contained      1    0/0  -/-                   18 C     controller C unpowered (dark)
+   R4   row 4       quorum lost                   quorum lost                   0    0/0  -/-                   59 A,B,C controllers B and C unpowered (reference)
+   R5a  row 5       a node out and contained      a node out and contained      1    0/0  -/-                   18 C     controller C wedged, its TXDs recessive on their pull-ups, its votes low
+   R5b  row 5       a node out and contained      a node out and contained      1    1/0  1.034 ms/1.034 ms     27 C     controller C wedged with both TX pins driven dominant (held)
+   R5c  row 5       a node out and contained      a node out and contained      1    0/0  -/-                   18 C     controller C wedged with its four vote outputs stuck asserted
+   R7a  row 7, A7   quorum held                   quorum held                   2    0/1  -/-                   69 -     A7 as written: fabric A cut at its break links (controller A alone on its segment)
+   R7b  row 7, A7   quorum held                   quorum held                   2    0/1  -/-                   69 -     A7 as written: fabric B cut at its break links
+   R7c  row 7       quorum held                   quorum held                   2    0/1  -/-                   66 -     fabric A shorted so no bit reads dominant (B1 CANH-GND, B2 CANH-CANL, B5 CANL-rail)
+   R7d  row 7       quorum held                   quorum held                   2    0/0  -/-                   14 -     fabric A shorted with the bus still working (B3 CANL-GND, B4 CANH-rail)
+   R7e  row 7       quorum held                   quorum held                   2    0/1  -/-                   66 -     controller B's fabric A transceiver failed dominant, its time-out and SHDN dead (B7b)
+   R7f  row 7       quorum held                   quorum held                   2    0/1  1.034 ms/1.034 ms     20 -     controller B's fabric A TXD held low by a pin fault (B7a)
+   R7g  row 7       quorum held                   quorum held                   2    0/1  -/-                   66 -     fabric A open between every controller (B6)
+   R8a  row 8       quorum lost                   quorum lost                   0    29/29 -/-                   66 A,B,C both fabrics shorted so no bit reads dominant
+   R8b  row 8       quorum lost                   quorum lost                   0    29/29 -/-                   19 A,B,C row 8 with W138's TPS2553-1 latched off on all three (the (f2) state inside its band; nothing drives EN)
+   R8c  row 8, A7   a node out and contained      a node out and contained      0    0/0  -/-                   69 A     A7 as written on both fabrics: both break-link pairs out (controller A alone on both)
+   M1a  -           quorum held                   quorum held                   1    0/1  1.310 ms/101.310 ms   33 -     GPIO-toggled TX: controller A's fabric A TX pin toggled as a GPIO, one deviation a window into B's state frame
+   M1b  -           a node out and contained      a node out and contained      1    1/1  1.310 ms/101.310 ms   33 A     GPIO-toggled TX on both fabrics, B's state frames hit
+   M1c  -           a node out and contained      a node out and contained      1    1/1  1.310 ms/101.310 ms   33 A     GPIO-toggled TX on both fabrics, B's and C's state frames hit
+   M1d  -           a node out and contained      a node out and contained      1    0/0  34.310 ms/76.310 ms   18 A     GPIO-toggled TX on both fabrics at the bit rate, every frame hit
+   M1e  -           a node out and contained      a node out and contained      1    0/0  34.310 ms/76.310 ms   18 A     GPIO-toggled TX on both fabrics faster than a bit
+   M1f  -           a node out and contained      a node out and contained      1    0/1  1.034 ms/1.034 ms     18 A     TX pins held low as GPIOs on both fabrics
+   M2a  -           a node out and contained      a node out and contained      1    1/1  51.280 ms/101.280 ms  33 A     a babbler: controller A's FDCANs send frames over the schedule at a winning priority on both fabrics
+   M2b  -           quorum held                   quorum held                   1    0/0  -/-                   14 -     a babbler at a losing priority on both fabrics
+   M3a  -           quorum held                   quorum held                   2    0/0  -/-                   26 -     a stuck vote output: B's vote on A's fabric A transceiver stuck high
+   M3b  -           quorum held                   quorum held                   2    0/0  -/-                   14 -     a stuck vote output: B's vote on A's fabric A transceiver stuck low
+   M3c  -           quorum held                   quorum held                   1    0/0  -/-                   26 -     controller B's firmware asserts all four of its votes (its bus behaviour conforms)
+   M3d  -           quorum held                   quorum held                   2    0/0  -/-                   48 -     the 2-of-2 gate of A's fabric A transceiver, output stuck high
+   M3e  -           quorum held                   quorum held                   2    0/0  -/-                   14 -     the 2-of-2 gate of A's fabric A transceiver, output stuck low
+   M4a  -           a node out and contained      a node out and contained      1    0/0  -/-                   14 A     a two-faced controller: A's state frames differ between the fabrics (each fabric's frame common to its receivers)
+   M5a  row 7       quorum held                   quorum held                   2    0/1  -/-                   66 -     the self-test silences a fabric A transceiver while fabric B shorts (no dominant)
+   M5b  row 7, A7   quorum held                   quorum held                   2    0/1  -/-                   69 -     the self-test silences a fabric A transceiver while fabric B is cut (A7)
+   M5c  -           quorum held                   quorum held                   1    0/1  1.310 ms/101.310 ms   33 -     the self-test silences a fabric A transceiver while A toggles its fabric B TX into B's frames
+   M5d  -           quorum held                   quorum held                   1    0/1  34.310 ms/76.310 ms   18 -     the self-test silences a fabric A transceiver while A jams fabric B at the bit rate
+   M5e  row 3       a node out and contained      a node out and contained      1    0/0  -/-                   18 C     the self-test silences a fabric A transceiver while controller C goes dark
+   Q1   row 3       a node out and contained      a node out and contained      1    0/0  -/-                   27 C     W137 residual: an open vote pull-down (C's vote on A, fabric A) floating high while C is dark
+   Q2   -           quorum held                   quorum held                   1    0/0  -/-                   15 -     W137 residual: a shorted isolation resistor with its reader B driving its input (B's firmware), C's copy of A moved
+   Q3   -           quorum held                   quorum held                   2    0/0  -/-                   48 -     W137 residual: an open SD resistor, A's fabric A SHDN floating high
+   Q4   -           a node out and contained      a node out and contained      1    1/0  1.034 ms/1.034 ms     27 C     W137 residual: an open TXD pull-up while controller C resets for 50 ms, its TXDs floating dominant
+   O1   -           quorum held                   quorum held                   2    0/0  -/-                   14 -     the observation: A's fabric A TXD buffer output stuck dominant (both readers see it; the bus is fine)
+   O2   -           quorum held                   quorum held                   2    0/0  -/-                   14 -     the observation: B's reading of A's fabric A TXD open
+   F1   -           a node out and contained      quorum held                   -    0/0  -/-                  256 B,C   W137-F1: DAR = 0 (the compatibility page's row), no other fault: the self-test's silenced attempts retried
+   F2   -           quorum lost                   quorum lost                   -    21/22 1.310 ms/801.580 ms   90 A,B,C FW-B21's stop as drafted (no valid frame for 100 ms, one window) under M1c's GPIO-toggled TX
+   D1   -           quorum held                   quorum held                   -    0/1  34.310 ms/76.310 ms  256 -     DOUBLE: B's vote on A's fabric A stuck low (latent), then A jams fabric A at the bit rate
+   D2   -           quorum lost                   quorum lost                   -    29/29 -/-                  256 A,B,C DOUBLE: B's attribution path dead (latent), then A jams both fabrics at the bit rate
+   D3   row 3       quorum lost                   quorum lost                   -    0/0  -/-                  240 A,B,C DOUBLE: controller C dark (row 3), then A jams both fabrics at the bit rate
+   D4   -           quorum held                   quorum held                   -    0/1  -/-                  256 -     DOUBLE: B's reading of A on fabric A open (latent), then A jams fabric A at the bit rate
+   D5   row 7, A7   a node out and contained      a node out and contained      -    0/0  34.310 ms/1.310 ms    18 A     DOUBLE: fabric A cut (A7), then A jams fabric B at the bit rate
+   required: 2 quorum held, 1 a node out and contained (or better), 0 quorum lost accepted (rows 4 and 8); DOUBLE rows print their
+   outcome and are never in the acceptance set
+   the two-faced controller: windows in which one healthy controller took its single copy while the other discarded both: restated 0,
+     W137's schedule 11 (its S and V phases silence a receiver's state frames on the tested fabric)
+   row 8 with W138's limiter (R8b): if the TPS2553-1 latches all three, every supervisor is dark until EN or power is cycled: 'nothing
+     moves' holds (the voters at the home assignment), and the return is section 8's; the held states reach the band only while both
+     transceivers drive into their faults, which a healthy controller does for at most an attempt's bits; a held TXD is ended by the DTO
+     after at most 3.8 ms, under the latch's 5.0 ms minimum: whether the latch timer restarts when the current falls is the held
+     sheet's (SLVS841F) and is NOT read here, so R8b takes W138's 'MAY latch' as written; row 7's held state (f1), 0.3726 A, is under
+     the limiter's least 0.4702 A, so no row 7 case reaches the band
+
+7. THE SELF-TEST'S INTERVAL AND THE LATENT FAULTS OF THE VOTE PATH (onset anywhere in the cycle; a phase judged at its window's end,
+   declared on the second consecutive failure, the verdict exchanged in the next window: simulated where a phase finds it)
+   element                                       fault                   found by                                    restated   W137's
+   a vote output, its line or its gate input     stuck low or open       V fails                                     2.51 s     4.90 s
+   a vote output, its line or its gate input     stuck high              the other peer's P fails                    2.51 s     4.95 s
+   a vote pull-down (10 kOhm)                    short                   V fails                                     2.51 s     4.90 s
+   a vote pull-down (10 kOhm)                    open                    RESIDUAL (W137)                             residual   residual
+   the 2-of-2 gate                               output stuck low        V fails                                     2.51 s     4.90 s
+   the 2-of-2 gate                               output stuck high       its frames absent: at once                  0.20 s     0.20 s
+   the vote diode                                open                    V fails                                     2.51 s     4.90 s
+   the own-request diode                         open                    S fails                                     2.51 s     4.95 s
+   SD's 100 kOhm                                 open                    RESIDUAL (W137)                             residual   residual
+   the transceiver's SHDN input                  ignored                 S and V fail                                2.21 s     4.60 s
+   a reader's attribution path (capture, classif dead                    V fails (restated: V runs the attribution p 1.71 s     NOT FOUND
+   an isolation resistor or a reading input      open or stuck           continuous reading                          0.30 s     0.30 s
+   a TXD buffer                                  stuck or open           continuous reading                          0.30 s     0.30 s
+   an isolation resistor                         short                   RESIDUAL (W137)                             residual   residual
+   a TXD pull-up (10 kOhm)                       open                    RESIDUAL (W137)                             residual   residual
+   a node's self-test schedule                   stalled or out of turn  the published phase counter                 0.20 s     0.20 s
+   a node's test verdict                         wrong                   the confirmation                            phase      phase
+   the cycle: restated 12 windows (1.200 s), both fabrics in parallel; W137's 24 windows (2.4000 s, inputs/); the interval: restated
+     2.51 s (simulated), W137's 4.95 s simulated against its own 5.00 s; DEGRADED (fabric A down at every controller, a fabric B vote
+     stuck low): restated 2.51 s (the test runs on the fabric that is up, no state frame silenced), W137's NOT FOUND (its precondition needs
+     both fabrics: while one fabric is down its latent faults have no bound)
+   W137's precondition read LITERALLY ('in the previous window every controller heard every other on both fabrics'): its own S and V
+     phases silence the target's state frame on the tested fabric, so the phase after each is skipped and no S phase ever runs: an
+     open own-request diode is then found in NOT FOUND (finding W139-F5; the table above reads the precondition as W137 meant it)
+   with DAR = 0 (W137-F1) a silenced attempt is retried to Bus_Off in 1.152 ms (32 attempts of 18 bit-times, MODEL) and FW-B21 keeps the
+     fabric stopped for at least 1 s: a fabric A vote stuck low then found in NOT FOUND (restated schedule)
+   the residuals (W137's four), each needing further faults: rows Q1 to Q4 above run each with the fault that makes it act
+
+8. THE RECOVERY PROOF (simulated on the restated schedule; bounds on printed timing and the drafted rows)
+   a controller silenced by votes on a fabric: released 1.000 s after its silence (no strike can arrive while it is silenced), SHDN low
+     within 13.01 us (W137); its own FW-B21 has meanwhile stopped that fabric (no valid frame for 3 windows) and probes it once a second;
+     a Bus_Off it reached is left in 2.838 ms (129 x 11 bit-times, PRINTED); bound: hold + probe period + probe + Bus_Off + a window = 2.203 s
+   a dark or reset controller: boot 500.000 ms (ASSUMPTION) + MON 2 windows + its slot: 800.000 ms; no vote stands against it (a dark controller
+     makes no strike), and it sets its outputs to the read-back before it sends: it moves nothing (IOHA A4)
+   a fabric repaired: each controller's next FW-B21 probe: 1.200 s
+   case  return (both peers)  on both fabrics   title
+   RC1   1.095 s              1.095 s           a transient jammer: A toggles both fabrics at the bit rate for 0.3 s, then conforms
+   RC2   715.000 ms           715.000 ms        a dark controller: C unpowered for 2 s, then powered (boot, then bus monitoring for 2 windows)
+   RC3   395.000 ms           395.000 ms        a fabric repaired: fabric A open between every controller for 2 s
+   RC5   95.000 ms            95.000 ms         a two-faced controller: A's copies differ for 1 s, then agree
+   RC6   1.765 s              1.765 s           W137's TXD pull-up residual: C resets for 50 ms with its TXDs floating dominant
+   RC4   holds 1, 2, 4, 8, 16, 32, 64 s on fabric A; 6 releases in 70 s; the surviving pair's gap 1 windows; state frames lost 2: a persistent jammer: A toggles both fabrics at the bit rate for 70 s
+   a supervisor LATCHED by W138's TPS2553-1 (row 8, R8b): W138's draft drives no EN, so it returns only when +5V_IOC or its EN is
+     cycled; +5V_IOC is U601's, enabled by RAIL_EN, the kit's own power: no automatic return, an operator's power cycle (finding W139-F2)
+
+9. ACCEPTANCE (it FAILS on any row that needs a third fabric or a removed fabric)
+   A1 the design has exactly CON-004's two fabrics: none removed, no third                                             yes
+   A2 every single-fault row, on both schedules, reaches at least its required outcome                                 yes
+   A3 no row relies on a fabric outside CON-004's two                                                                  yes
+   A4 no single fault silences a healthy controller on both fabrics at once                                            yes
+   A5 no single fault gets a controller whose bus behaviour conforms voted off                                         yes
+   A6 no single fault of a row that requires a quorum takes the surviving pair to the loss count                       yes
+   A7 every latent fault of the vote path is found within a bound on the restated schedule, or is a named residual     yes
+   A8 every contained state returns within a bound once its cause ends (RC1 to RC3, RC5, RC6)                          yes
+   A9 the contract draft carries this record's figures, composes after t10's, refuses twice and refuses the tree       yes
+   A10 CON-004 read as written: restated, not amended                                                                  yes
+   the contract draft's FW-B22 and FW-B21 carry: every figure
+     this draft on the page without t10's rows                      exit 3
+     t10's draft written                                            exit 0
+     this draft checked                                             exit 0
+     this draft written                                             exit 0
+     a second application                                           exit 3
+     the written page carries the restated FW-B22 and FW-B21        exit 0
+     this draft on the tree's page                                  exit 3
+     the tree's page untouched                                      exit 0
+
+10. SESSION DECISIONS (under the owner's standing rule of 26 September 2026; reasons and reversals in T10-CANQ.md section 8)
+   W139-D1 the restated window: a 10 ms slot per controller for all its frames and the self-test in its own segment (hold 52 to 88 ms)
+   W139-D2 both fabrics tested in parallel, fabric B's target the next controller: a 12-window cycle
+   W139-D3 the V phase runs the attribution path end to end (the target's deliberate malformed test frame)
+   W139-D4 the attribution rule V1 to V5, a strike only with the reader's own bus evidence, a vote on its own strike (k = 1)
+   W139-D5 a vote held 1 s, doubled for each strike within 10 s of a release, at most 64 s
+   W139-D6 the loss count 3 windows; a peer's state from either fabric; two copies that differ discarded
+   W139-D7 FW-B21's stop at the loss count (V-B21's stop time 400 ms) in place of the drafted 100 ms (row F2)
+   W139-D8 DAR = 1 kept with ES0392 2.24.5's printed workaround inside the controller's own slot (W137-F1)
+   W139-D9 a returning controller listens in bus monitoring mode for 2 windows and sets its outputs to the read-back first
+   W139-D10 row R8b takes W138's 'MAY latch' as written (the TPS2553 sheet is held back and not read here)
+   W139-D11 the evaluation time 1 ms (a firmware row) and a 0.5 s boot (ASSUMPTION) in the recovery bounds
+   W139-D12 one time base: TIM3 for the captures and, with FDCAN_TSCC.TSS = 10, for the FDCANs' timestamps (RM0433 p.2529)
+   FINDINGS FOR OTHER AUTHORS (T10-CANQ.md section 9)
+   W139-F1 (Layer 6, STM32H743-COMPATIBILITY.md's ES0392 2.24.5 row): 'firmware does not use DAR' contradicts FW-B21 and FW-B22
+   W139-F2 (L4A-54 and L4A-58 by L4REG-F3; W138; board A): a latched TPS2553-1 has no automatic return; IOC_LIM_EN has no driver
+   W139-F3 (L4A-61, FW-B21's owner): FW-B21's drafted 100 ms stop is one window of FW-B22; restated in this round's draft
+   W139-F4 (IOHA A7's owner, Layer 12): A7's break links cut only controller A off; with both out B and C keep a quorum, not row 8
+   W139-F5 (W137, L4A-61): W137's self-test precondition read literally skips the phase after every S or V phase
+   W139-F6 (L4A-61): under W137's schedule a two-faced controller meets windows where one receiver takes a single copy
+   W139-F7 (L4A-61, IOHA section 12's owner): no FMEA row for the babbler, the GPIO-toggled TX, the two-faced controller, the vote path
+   W139-F8 (W137, L4A-61): W137's V phase commands the votes, so the attribution path itself is never exercised in service
+   WHAT THIS ROUND CLOSES ONCE INDEPENDENTLY CHECKED: CON-004's quorum service under every row above (OPEN until then), FW-B22
+     (PROVISIONAL until then; restated here), L9T5-F21's babbler row (the table is the text for IOHA section 12, L4A-61); with W137's
+     circuit, HO-C. cx46's item 5 stays NOT CLOSED and the ledger's RE-5 REMAINING ENGINEERING until an independent check reads it
+
+l9t5_canq: done

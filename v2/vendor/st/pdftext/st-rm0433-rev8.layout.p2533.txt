@@ -1,0 +1,50 @@
+RM0433                                          Controller area network with flexible data rate (FDCAN)
+
+
+    Bit 15 Reserved, must be kept at reset value.
+    Bit 14 PXE: Protocol exception event
+            0: No protocol exception event occurred since last read access
+            1: Protocol exception event occurred
+    Bit 13 REDL: Received FDCAN message
+            This bit is set independent of acceptance filtering.
+            0: Since this bit was reset by the CPU, no FDCAN message has been received
+            1: Message in FDCAN format with EDL flag set has been received
+            Access type is RX: reset on read.
+    Bit 12 RBRS: BRS flag of last received FDCAN message
+            This bit is set together with REDL, independent of acceptance filtering.
+            0: Last received FDCAN message did not have its BRS flag set
+            1: Last received FDCAN message had its BRS flag set
+            Access type is RX: reset on read.
+     Bit 11 RESI: ESI flag of last received FDCAN message
+             This bit is set together with REDL, independent of acceptance filtering.
+             0: Last received FDCAN message did not ha ve its ESI flag set
+             1: Last received FDCAN message had its ESI flag set
+             Access type is RX: reset on read.
+  Bits 10:8 DLEC[2:0]: Data last error code
+             Type of last error that occurred in the data phase of a FDCAN format frame with its BRS flag set.
+             Coding is the same as for LEC. This field is cleared to 0 when a FDCAN format frame with its BRS
+             flag set has been transferred (reception or transmission) without error.
+             Access type is RS: set on read.
+      Bit 7 BO: Bus_Off status
+             0: The FDCAN is not Bus_Off
+             1: The FDCAN is in Bus_Off state
+      Bit 6 EW: Warning status
+             0: Both error counters are below the Error_Warning limit of 96
+             1: At least one of error counter has reached the Error_Warning limit of 96
+      Bit 5 EP: Error passive
+             0: The FDCAN is in the Error_Active state. It normally takes part in bus communication and sends an
+             active error flag when an error has been detected
+             1: The FDCAN is in the Error_Passive state
+   Bits 4:3 ACT[1:0]: Activity
+             Monitors the module CAN communication state.
+             00: Synchronizing: node is synchronizing on CAN communication
+             01: Idle: node is neither receiver nor transmitter
+             10: Receiver: node is operating as receiver
+             11: Transmitter: node is operating as transmitter
+
+
+
+
+                                                RM0433 Rev 8                                          2533/3353
+                                                                                                                   2589
+

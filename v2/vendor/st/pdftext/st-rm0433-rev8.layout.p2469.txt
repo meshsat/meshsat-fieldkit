@@ -1,0 +1,50 @@
+RM0433                                     Controller area network with flexible data rate (FDCAN)
+
+
+         programming FDCAN_TDCR.TDCF. This defines a minimum value for the SSP position.
+         Dominant edges on FDCANx_RX, that would result in an earlier SSP position are ignored
+         for transmitter delay measurement. The measurement is stopped when the SSP position is
+         at least FDCAN_TDCR.TDCF and FDCAN_RX is low.
+
+         Restricted operation mode
+         In restricted operation mode the node is able to receive data and remote frames and to give
+         acknowledge to valid frames, but it does not send data frames, remote frames, active error
+         frames, or overload frames. In case of an error condition or overload condition, it does not
+         send dominant bits, instead it waits for the occurrence of bus idle condition to resynchronize
+         itself to the CAN communication. The error counters (FDCAN_ECR.REC,
+         FDCAN_ECR.TEC) are frozen while error logging (FDCAN_ECR.CEL) is active. The
+         software can set the FDCAN into restricted operation mode by setting bit
+         FDCAN_CCCR.ASM. The bit can only be set by software when both FDCAN_CCCR.CCE
+         and FDCAN_CCCR.INIT are set to 1. The bit can be cleared by software at any time.
+         Restricted operation mode is automatically entered when the Tx handler was not able to
+         read data from the message RAM in time. To leave restricted operation mode, the software
+         has to reset FDCAN_CCCR.ASM.
+         The restricted operation mode can be used in applications that adapt themselves to different
+         CAN bitrates. In this case the application tests different bitrates and leaves the restricted
+         operation mode after it has received a valid frame.
+         FDCAN_CCCR.ASM is also controlled by the clock calibration unit. Wen the clock
+         calibration process is enabled, the restricted operation mode is entered and the
+         FDCAN_CCR.ASM bit is set. Once the calibration is completed, FDCAN_CCR.ASM bit is
+         cleared.
+Note:    The restricted operation mode must not be combined with the loop back mode (internal or
+         external).
+
+         Bus monitoring mode
+         The FDCAN is set in bus monitoring mode by setting FDCAN_CCCR.MON bit or when error
+         level S3 (FDCAN_TTOST.EL = 11) is entered. In bus monitoring mode (For more details
+         refer to ISO11898-1, 10.12 bus monitoring), the FDCAN is able to receive valid data frames
+         and valid remote frames, but cannot start a transmission. In this mode, it sends only
+         recessive bits on the CAN bus, if the FDCAN is required to send a dominant bit (ACK bit,
+         overload flag, active error flag), the bit is rerouted internally so that the FDCAN monitors this
+         dominant bit, although the CAN bus may remain in recessive state. In bus monitoring mode
+         register FDCAN_TXBRP is held in reset state.
+         The bus monitoring mode can be used to analyze the traffic on a CAN bus without affecting
+         it by the transmission of dominant bits. Figure 735 shows the connection of FDCAN_TX and
+         FDCAN_RX signals to the FDCAN in bus monitoring mode.
+
+
+
+
+                                           RM0433 Rev 8                                         2469/3353
+                                                                                                             2589
+
