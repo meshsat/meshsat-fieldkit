@@ -76,7 +76,7 @@ DEFER value). INTEGRATED is a role name here (section 1), never a token, as in s
 | The re-key's cache commit | `d9ab5070` | record l4e7's results cache re-keyed ONCE on a fresh debian:12 box after the converged commit and its independent read (section 3c) | the coordinator's commit on set 33's integration branch |
 | INTEGRATED = CANDIDATE: the candidate commit | `b5b4b2a0` | no independent check of its engineering | the coordinator's commit on set 33's integration branch |
 | PROMOTED: main after the fast-forward, set 33's promotion | `b5b4b2a0` | a DESK candidate, not an accepted power design (section 6) | the promotion's log |
-| ADOPTED: the commit that adopts this record | `__ADOPTION__` | named in the fill tool's second run, after it exists | git, after the adoption |
+| ADOPTED: the commit that adopts this record | `1936e548` | named in the fill tool's second run, after it exists | git, after the adoption |
 
 ## 2. What changes (each branch, the Layer 4 items and their verdicts as received)
 
