@@ -118,6 +118,8 @@ def edges():
     get("foldback", r"foldback short current (\d+) mA \(TYPICAL\)", "the foldback's typical (section 7)")
     need(t, r"the foldback \(the output short's behaviour\) acts in no row", "T10's sentence on the foldback (section 8)")
     E["foldback_none"] = (1.0, line(t, need(t, r"the foldback \(the output short's behaviour\) acts in no row", "the foldback sentence")))
+    m = need(t, r"against U601's (\d+) A \(PRINTED\) and the VH's (\d+) A", "U601's and the lead's ratings (section 9 (2))")
+    E["u601"], E["vh"] = (float(m.group(1)), line(t, m)), (float(m.group(2)), line(t, m))
     get("share", r"the two transceivers at FW-B21's share \(10d\): ([\d.]+) A each", "the transceivers' share average (10c)")
     get("f1", r"\(f1\) one fabric faulted.*?: ([\d.]+) A, junction", "row (f1) (section 8)", flags=re.S)
     get("f2", r"\(f2\) both fabrics faulted, both transceivers driving into their faults: ([\d.]+) A", "row (f2) (section 8)")
@@ -487,12 +489,14 @@ def main():
         E["foldback"][0], E["foldback"][1], E["foldback_none"][1]))
     e_c1 = hi14 * hi1 * cands["C1 TPS2553-1"]["tl"][2]
     e_c2 = hi14 * comp["C2 AP22653A"][1] * cands["C2 AP22653A"]["tl"][2]
-    w("   (i) the short draws at least IOSmin through the LDO: the limiter limits and latches off within the PRINTED timer: the event's energy")
+    w("   (i) the short draws the limiter's own limit through the LDO (the LDO fully on): the limiter limits and latches off within its")
+    w("       PRINTED timer: the event's energy")
     w("       at most %.4f V x %.4f A x %.0f ms = %.1f mJ (C1 companion) or %.1f mJ (C2, 20 ms); with M-A at 184 C/W, %.1f mJ (C1 at %.1f kOhm)" % (
         hi14, hi1, cands["C1 TPS2553-1"]["tl"][2] * 1e3, e_c1 * 1e3, e_c2 * 1e3, hi14 * r184["C1 TPS2553-1"][2] * cands["C1 TPS2553-1"]["tl"][2] * 1e3, r184["C1 TPS2553-1"][0]))
     w("       (MODEL, the whole input across whichever part holds the drop); BOUNDED on printed limits")
     p_fb = hi14 * P["ishort"]
-    w("   (ii) the LDO folds back under IOSmin (its %.0f mA is TYPICAL; no maximum is printed): the limiter does not act; the LDO holds the" % (P["ishort"] * 1e3))
+    w("   (ii) the LDO holds its own short current under the limiter's limit (the AP2112's foldback %.0f mA is TYPICAL, no maximum printed; a" % (P["ishort"] * 1e3))
+    w("       companion part's own limit and foldback are likewise its own): the limiter does not act; the LDO holds the")
     w("       whole input at its own short current for as long as the short lasts (%.3f W at the typical, %.1f C at 184 C/W: a TYPICAL reading," % (
         p_fb, air + P["theta_ldo"] * p_fb))
     w("       never a bound). EXCLUDED from the LDO-junction criterion, with the reason (SESSION): a supervisor on a shorted rail is already")
@@ -560,8 +564,12 @@ def main():
     w("   (c) the other two while one sits at the companion's IOSmax: lead %.4f A, each other LDO at S1 %.4f A: %.4f V against %.4f V: %+.4f V, %s" % (
         hi1 + 2 * E["s1"][0], E["s1"][0], at_o, need_at(P, E["s1"][0]), at_o - need_at(P, E["s1"][0]),
         "holds" if at_o >= need_at(P, E["s1"][0]) else "FAILS"))
+    w("   (d) the connected path upstream: three limiters at their maximum draw %.4f A from U601 and the lead's pin 1, against U601's %.0f A and" % (
+        3 * hi1, E["u601"][0]))
+    w("       the VH's %.0f A (PRINTED, T10 line %d): %s; a shorted branch takes at most IOSmax from them, so the other two keep their supply" % (
+        E["vh"][0], E["u601"][1], "holds" if 3 * hi1 <= E["u601"][0] else "FAILS"))
     at_p = avail(s3p, 3 * s3p, c["ron"])
-    w("   (d) S3' on all three in one bit (error flags overlap): %.4f V against %.4f V on the AP2112's rows: %+.4f V (a bit-time peak; the LDO's" % (
+    w("   (e) S3' on all three in one bit (error flags overlap): %.4f V against %.4f V on the AP2112's rows: %+.4f V (a bit-time peak; the LDO's" % (
         at_p, need_at(P, s3p), at_p - need_at(P, s3p)))
     w("       input capacitance carries it; shown, not judged)")
     w("")
@@ -579,9 +587,9 @@ def main():
         w("   COMPANION (SESSION, W135-1): C1, TI TPS2553-1 (SLVS841F; DBV), RILIM 49.9 kOhm, IOS %.3f to %.3f A, latch-off after %.0f to %.0f ms," % (
             lo1, hi1, S["ti_tlatch"][0][0] * 1e3, S["ti_tlatch"][0][2] * 1e3))
         w("   at each supervisor LDO's input, AND a regulator part in place of the AP2112K with, PRINTED: junction-to-ambient at most %.1f C/W at" % comp["C1 TPS2553-1"][2])
-        w("   the 14.0k corner, rated output at least %.3f A, dropout at %.3f A at most %.3f V, input to at least %.2f V. Second source: C2," % (
+        w("   the 14.0k corner, rated output and current limit at least %.3f A, dropout at %.3f A at most %.3f V, input to at least %.2f V." % (
             hi1, hi1, at_c - vout_part, hi14))
-        w("   Diodes AP22653A (DS41186), RLIM 49.9 kOhm, IOS %.3f to %.3f A, theta at most %.1f C/W, latch after %.0f to %.0f ms" % (
+        w("   Second source: C2, Diodes AP22653A (DS41186), RLIM 49.9 kOhm, IOS %.3f to %.3f A, theta at most %.1f C/W, latch after %.0f to %.0f ms" % (
             comp["C2 AP22653A"][0], comp["C2 AP22653A"][1], comp["C2 AP22653A"][2], S["ap_tlatch"][0][0] * 1e3, S["ap_tlatch"][0][2] * 1e3))
         w("   WHY the companion and not K1: it keeps the drafted structure (pre-regulator, a private LDO a supervisor, CON-004's own branch) and")
         w("   its acceptance (T10-A2, T10-A3) and adds one SOT-23-6 and a resistor a supervisor; no served row is limited, so nothing rests on a")
@@ -601,6 +609,7 @@ def main():
     pred["at 49.9 kOhm both candidates' minimum is over every served peak (S3') and no AP2112 package holds 125 C at their maximum"] = all(
         comp[n][0] > s3p and all(tj_at(th, comp[n][1]) > tj for th in pk[0].values()) for n in cands)
     pred["the limiter's resistance in place of the 0.3 ohm sense keeps T10-A3 at T10's own point"] = all(v >= 0 for v in a3.values())
+    pred["three companion limiters at their maximum stay inside U601's and the lead's printed ratings"] = 3 * hi1 <= min(E["u601"][0], E["vh"][0])
     pred["the AP2112's typical foldback is under every IOSmin, so the output short under the limit is excluded with a reason, not bounded"] = (
         P["ishort"] < min(r184[n][1] for n in cands))
     w("9. THE PREDICATES")
