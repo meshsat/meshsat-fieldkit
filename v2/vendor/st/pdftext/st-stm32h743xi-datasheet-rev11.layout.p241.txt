@@ -1,0 +1,66 @@
+STM32H742xI/G STM32H743xI/G                                                   Electrical characteristics (rev V)
+
+
+7.3.15        I/O port characteristics
+               General input/output characteristics
+               Unless otherwise specified, the parameters given in Table 147: I/O static characteristics are
+               derived from tests performed under the conditions summarized in Table 112: General
+               operating conditions. All I/Os are CMOS and TTL compliant (except for BOOT0).
+               For information on GPIO configuration, refer to the application note AN4899 “STM32 GPIO
+               configuration for hardware settings and low-power consumption” available from the ST
+               website www.st.com.
+
+                                       Table 147. I/O static characteristics
+ Symbol                Parameter                         Condition               Min       Typ     Max        Unit
+
+            I/O input low level voltage except
+                                                                                  -         -    0.3VDD(1)
+            BOOT0
+            I/O input low level voltage except                                                   0.4VDD−0.
+   VIL                                               1.62 V< VDD <3.6 V           -         -                  V
+            BOOT0                                                                                   1(2)
+                                                                                                 0.19VDD+
+            BOOT0 I/O input low level voltage                                     -         -
+                                                                                                   0.1(2)
+            I/O input high level voltage except
+                                                                              0.7VDD(1)     -        -
+            BOOT0
+            I/O input high level voltage except                               0.47VDD+0.
+   VIH                                               1.62 V< VDD <3.6 V                     -        -         V
+            BOOT0                                                                25(2)
+            BOOT0 I/O input high level                                        0.17VDD+0.
+                                                                                            -        -
+            voltage                                                               6(2)
+            TT_xx, FT_xxx and NRST I/O
+                                                                                  -        250       -
+ VHYS(2)    input hysteresis                         1.62 V< VDD <3.6 V                                       mV
+            BOOT0 I/O input hysteresis                                            -        200       -
+                                                   0< VIN ≤ Max(VDDXXX)(8)        -         -     +/-250
+            FT_xx Input leakage current(2)        Max(VDDXXX) < VIN ≤ 5.5 V
+                                                           (4)(5)(8)              -         -      1500
+
+                                                   0< VIN ≤ Max(VDDXXX)(8)        -         -     +/- 350
+  Ilkg(3)   FT_u IO                               Max(VDDXXX) < VIN ≤ 5.5 V                                    nA
+                                                           (4)(5)(8)              -         -     5000(6)
+
+            TT_xx Input leakage current            0< VIN ≤ Max(VDDXXX) (8)       -         -     +/-250
+                                                        0< VIN ≤ VDD              -         -       15
+            VPP (BOOT0 alternate function)
+                                                       VDD < VIN ≤ 9 V                              35
+            Weak pull-up equivalent
+   RPU                                                    VIN=VSS                30        40       50
+            resistor(7)
+                                                                                                               kΩ
+            Weak pull-down equivalent                              (8)
+   RPD                                                   VIN=VDD                 30        40       50
+            resistor(7)
+   CIO      I/O pin capacitance                                -                  -         5        -         pF
+1. Compliant with CMOS requirements.
+2. Guaranteed by design.
+
+
+
+
+                                                    DS12110 Rev 11                                          241/357
+                                                                                                                      316
+

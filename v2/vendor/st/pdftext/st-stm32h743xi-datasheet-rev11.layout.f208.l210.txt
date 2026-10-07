@@ -1,0 +1,182 @@
+Electrical characteristics (rev V)                                                  STM32H742xI/G STM32H743xI/G
+
+
+            1. All main power (VDD, VDDA, VDD33USB, VBAT) and ground (VSS, VSSA) pins must always be connected to
+               the external power supply, in the permitted range.
+            2. VIN maximum must always be respected. Refer to Table 146: I/O current injection susceptibility for the
+               maximum allowed injected current values.
+            3. This formula has to be applied on power supplies related to the IO structure described by the pin definition
+               table.
+            4. To sustain a voltage higher than 4V the internal pull-up/pull-down resistors must be disabled.
+            5. When an FT_a pin is used by an analog peripheral such as an ADC, the maximum VIN is 4 V.
+
+
+                                               Table 110. Current characteristics
+              Symbols                                        Ratings                                         Max        Unit
+
+                ΣIVDD          Total current into sum of all VDD power lines (source)(1)                     620
+                ΣIVSS          Total current out of sum of all VSS   ground lines (sink)(1)                  620
+                 IVDD          Maximum current into each VDD power pin (source)(1)                           100
+                 IVSS          Maximum current out of each VSS ground pin (sink)(1)                          100
+                               Output current sunk by any I/O and control pin, except Px_C                      20
+                  IIO
+                               Output current sunk by Px_C pins                                                 1
+                                                                                                                         mA
+                               Total output current sunk by sum of all I/Os and control pins(2)              140
+                ΣI(PIN)
+                               Total output current sourced by sum of all I/Os and control pins(2)           140
+                             Injected current on FT_xxx, TT_xx, RST and B pins except PA4,
+                                                                                                            −5/+0
+             IINJ(PIN)(3)(4) PA5
+                               Injected current on PA4, PA5                                                  −0/0
+              ΣIINJ(PIN)       Total injected current (sum of all I/Os and control pins)(5)                  ±25
+            1. All main power (VDD, VDDA, VDD33USB) and ground (VSS, VSSA) pins must always be connected to the
+               external power supplies, in the permitted range.
+            2. This current consumption must be correctly distributed over all I/Os and control pins. The total output
+               current must not be sunk/sourced between two consecutive power supply pins referring to high pin count
+               QFP packages.
+            3. Positive injection is not possible on these I/Os and does not occur for input voltages lower than the
+               specified maximum value.
+            4. A positive injection is induced by VIN>VDD while a negative injection is induced by VIN<VSS. IINJ(PIN) must
+               never be exceeded. Refer also to Table 109: Voltage characteristics for the maximum allowed input voltage
+               values.
+            5. When several inputs are submitted to a current injection, the maximum ∑IINJ(PIN) is the absolute sum of the
+               positive and negative injected currents (instantaneous values).
+
+
+
+                                               Table 111. Thermal characteristics
+                    Symbol                                Ratings                                Value                 Unit
+
+                        TSTG            Storage temperature range                             -65 to +150
+                                                                                                                        °C
+                         TJ             Maximum junction temperature                              125
+
+
+
+
+208/357                                             DS12110 Rev 11
+STM32H742xI/G STM32H743xI/G                                                 Electrical characteristics (rev V)
+
+
+7.3         Operating conditions
+
+7.3.1       General operating conditions
+
+                                Table 112. General operating conditions
+                                                        Operating
+Symbol                  Parameter                                           Min      Typ         Max         Unit
+                                                        conditions
+
+  VDD           Standard operating voltage         -                       1.62(1)    -
+                                                                                                 3.6          V
+               Supply voltage for the internal
+ VDDLDO                                            VDDLDO ≤ VDD            1.62(1)    -          3.6          V
+                         regulator
+
+             Standard operating voltage, USB       USB used                 3.0       -          3.6
+VDD33USB                                                                                                      V
+                        domain                     USB not used              0        -          3.6
+                                                   ADC or COMP used         1.62      -
+                                                   DAC used                 1.8       -
+                                                   OPAMP used               2.0       -
+  VDDA           Analog operating voltage                                                        3.6          V
+                                                   VREFBUF used             1.8       -
+                                                   ADC, DAC, OPAMP,
+                                                   COMP, VREFBUF not         0        -
+                                                   used
+                                                   TT_xx I/O                −0.3      -        VDD+0.3
+                                                   BOOT0                     0        -           9
+  VIN                I/O Input voltage                                                      Min(VDD, VDDA,    V
+                                                   All I/O except BOOT0                       VDD33USB)
+                                                                            −0.3      -
+                                                   and TT_xx                                   +3.6V <
+                                                                                               5.5V(2)(3)
+                                                   VOS3 (max frequency
+                                                                            0.95     1.0         1.05
+                                                   200 MHz)
+                                                   VOS2 (max frequency
+                                                                            1.05     1.10        1.15
+                                                   300 MHz)
+                Internal regulator ON (LDO)
+                                                   VOS1 (max frequency
+                                                                            1.15     1.20        1.26
+                                                   400 MHz)
+                                                   VOS0(4) (max
+                                                                            1.26     1.35        1.40
+                                                   frequency 480 MHz)(5)
+                                                   VOS3 (max frequency
+                                                                            0.98     1.03        1.08
+                                                   200 MHz)
+                                                  VOS2 (max frequency
+ VCORE         Regulator OFF: external VCORE                                1.08     1.13        1.17         V
+                                                  300 MHz)
+           voltage must be supplied from external
+                 regulator on two VCAP pins       VOS1 (max frequency
+                                                                            1.17     1.23        1.26
+                                                  400 MHz)
+                                                   VOS0 (max frequency
+                                                                            1.37     1.38        1.40
+                                                   480 MHz)
+
+
+
+
+                                                 DS12110 Rev 11                                          209/357
+                                                                                                                    316
+Electrical characteristics (rev V)                                                       STM32H742xI/G STM32H743xI/G
+
+
+                               Table 112. General operating conditions (continued)
+                                                                  Operating
+  Symbol                      Parameter                                                  Min         Typ        Max             Unit
+                                                                  conditions
+
+                                                            VOS3                           -          -          200
+                                                            VOS2                           -          -          300
+    fCPU         Arm® Cortex®-M7 clock frequency                                                                                MHz
+                                                            VOS1                           -          -          400
+                                                            VOS0                           -          -          480
+                                                            VOS3                           -          -          100
+                                                            VOS2                           -          -          150
+   fHCLK                AHB clock frequency                                                                                     MHz
+                                                            VOS1                           -          -          200
+                                                            VOS0                           -          -         240(5)
+                                                            VOS3                           -          -         50(6)
+                                                            VOS2                           -          -          75
+   fPCLK                APB clock frequency                                                                                     MHz
+                                                            VOS1                           -          -          100
+                                                            VOS0                           -          -         120(5)
+
+              Ambient temperature for the suffix 6          Maximum power dissipation                –40          85
+              version                                       Low-power dissipation(7)                 –40         105
+     TA                                                                                                                         °C
+              Ambient temperature for the suffix 3          Maximum power dissipation                –40         125
+              version                                       Low-power dissipation(7)                 –40         130
+     TJ       Junction temperature range                    Suffix 6 version                         –40         125            °C
+1. When RESET is released functionality is guaranteed down to VBOR0 min
+2. This formula has to be applied on power supplies related to the IO structure described by the pin definition table.
+3. For operation with voltage higher than Min (VDD, VDDA, VDD33USB) +0.3V, the internal Pull-up and Pull-Down resistors must
+   be disabled.
+4. VOS0 is available only when the LDO regulator is ON.
+5. TJMax = 105 °C.
+6. Maximum APB clock frequency when at least one peripheral is enabled.
+7. In low-power dissipation state, TA can be extended to this range as long as TJ does not exceed TJmax (see Section 8.10:
+   Thermal characteristics).
+
+
+                              Table 113. Supply voltage and maximum frequency configuration
+                     Power scale          VCORE source           Max TJ (°C)      Max frequency (MHz)          Min VDDLDO (V)
+
+                        VOS0                    LDO                   105                      480                       1.7
+                        VOS1                    LDO                   125                      400                       1.62
+                        VOS2                    LDO                   125                      300                       1.62
+                        VOS3                    LDO                   125                      200                       1.62
+                       SVOS4                    LDO                   105                      N/A                       1.62
+                       SVOS5                    LDO                   105                      N/A                       1.62
+
+
+
+
+210/357                                                  DS12110 Rev 11
+

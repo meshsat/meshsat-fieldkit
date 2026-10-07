@@ -1,0 +1,51 @@
+Independent watchdog (IWDG)                                                                        RM0433
+
+
+            Configuring the IWDG when the window option is enabled
+            1.   Enable the IWDG by writing 0x0000 CCCC in the IWDG key register (IWDG_KR).
+            2.   Enable register access by writing 0x0000 5555 in the IWDG key register (IWDG_KR).
+            3.   Write the IWDG prescaler by programming IWDG prescaler register (IWDG_PR) from
+                 0 to 7.
+            4.   Write the IWDG reload register (IWDG_RLR).
+            5.   Wait for the registers to be updated (IWDG_SR = 0x0000 0000).
+            6.   Write to the IWDG window register (IWDG_WINR). This automatically refreshes the
+                 counter value in the IWDG reload register (IWDG_RLR).
+Note:       Writing the window value allows the counter value to be refreshed by the RLR when IWDG
+            status register (IWDG_SR) is set to 0x0000 0000.
+
+            Configuring the IWDG when the window option is disabled
+            When the window option it is not used, the IWDG can be configured as follows:
+            1.   Enable the IWDG by writing 0x0000 CCCC in the IWDG key register (IWDG_KR).
+            2.   Enable register access by writing 0x0000 5555 in the IWDG key register (IWDG_KR).
+            3.   Write the prescaler by programming the IWDG prescaler register (IWDG_PR) from 0 to
+                 7.
+            4.   Write the IWDG reload register (IWDG_RLR).
+            5.   Wait for the registers to be updated (IWDG_SR = 0x0000 0000).
+            6.   Refresh the counter value with IWDG_RLR (IWDG_KR = 0x0000 AAAA).
+
+45.3.4      Hardware watchdog
+            If the “Hardware watchdog” feature is enabled through the device option bits, the watchdog
+            is automatically enabled at power-on, and generates a reset unless the IWDG key register
+            (IWDG_KR) is written by the software before the counter reaches end of count or if the
+            downcounter is reloaded inside the window.
+
+45.3.5      Low-power freeze
+            Depending on the IWDG_FZ_STOP and IWDG_FZ_STBY options configuration, the IWDG
+            can continue counting or not during the Stop mode and the Standby mode, respectively. If
+            the IWDG is kept running during Stop or Standby modes, it can wake up the device from this
+            mode. Refer to Section 4.4.5: Description of user and system option bytes for more details.
+
+45.3.6      Register access protection
+            Write access to IWDG prescaler register (IWDG_PR), IWDG reload register (IWDG_RLR)
+            and IWDG window register (IWDG_WINR) is protected. To modify them, the user must first
+            write the code 0x0000 5555 in the IWDG key register (IWDG_KR). A write access to this
+            register with a different value breaks the sequence and register access is protected again.
+            This is the case of the reload operation (writing 0x0000 AAAA).
+            A status register is available to indicate that an update of the prescaler or of the
+            downcounter reload value or of the window value is ongoing.
+
+
+
+
+1896/3353                                     RM0433 Rev 8
+

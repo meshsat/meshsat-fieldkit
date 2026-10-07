@@ -1,0 +1,57 @@
+AN4938                                                                                                         Power supplies
+
+
+                                             Figure 8. NRST circuitry timing example
+
+              VDD
+                                                      VDD during operation kept above 1.7V
+                     supervisor
+                     high trip point
+              1.7V
+                     supervisor
+                     low trip point
+
+
+
+
+                                       Power-On phase                          Operation        Power-Down phase                    time
+
+
+            NRST                                                Tsupervisor > TRSTTEMPO
+             VDD
+                                                                                     Reset by
+                                                                                     internal
+                                                                                     sources
+                                                Tsupervisor
+
+                                              TRSTTEMPO
+
+
+                       Tsupervisor < TRSTTEMPO
+                                                                                                                                    time
+                                 NRST Kept low by       NRST Kept low by                              NRST forced low by external
+                                 internal circuitry     external supervisor                           supervisor
+                                                                                                                            MS33893V2
+
+
+
+
+2.3.7    Bypass mode
+         The power management unit can be bypassed. This feature can be configured by software.
+         When bypassed, the core power supply must be provided through VCAPx pins connected to
+         each other.
+         In Bypass mode, the internal voltage scaling is not managed internally, and the external
+         voltage value must be consistent with the targeted maximum frequency (see datasheet for
+         the actual VOS level).
+         In Standby mode, the external source will be switched off and the VCORE domains powered
+         down. The external source is switched on when exiting Standby mode.
+         In Bypass mode, the external voltage must be present before or at the same time as
+         VDDLDO. To avoid conflict with the LDO, the external voltage must be kept above 1.15 V until
+         the LDO is disabled by software.
+
+
+
+
+                                                          AN4938 Rev 7                                                              19/46
+                                                                                                                                            45
+
