@@ -23,10 +23,11 @@ printed thermal resistances, never a measured temperature
    336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
    3b6eb8be505a5c85 v2/docs/records/l9t5/inputs/l4reg-L4REG-3b6eb8be.md
    9fbda7a6e79430c2 v2/docs/records/l9t5/inputs/l4reg-l4reg_compare-9fbda7a6.out
+   d6c7e771a97eadb6 v2/docs/records/l9t5/inputs/l4reg-l4reg_compare-d6c7e771.out
    469594bb5b4fa6be v2/docs/records/l9t5/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py
    0a94dd2c444e2b89 v2/docs/records/l9t5/inputs/l4canmb-T10-ROUND6-0a94dd2c.md
    8fb8815ac815d870 v2/docs/records/l9t5/inputs/l4canmb-apply_gen_sch_b_canmb-8fb8815a.py
-   5e745a70a8b946ba v2/docs/records/l9t5/inputs/SOURCES-HOE.txt
+   81657a67b93a75ec v2/docs/records/l9t5/inputs/SOURCES-HOE.txt
    cf216d4c1162798b v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py
    ea3b0cb6d96b12b9 v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py
    12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
@@ -69,7 +70,7 @@ printed thermal resistances, never a measured temperature
    4c9a07501b42a9ed v2/vendor/ti/pdftext/ti-tps3808.layout.p5.txt
    0a34041bf660fdb6 v2/vendor/ti/pdftext/ti-tps3808.layout.p6.txt
    82f01e2e0086cce5 v2/vendor/ti/pdftext/ti-tps3808.layout.p7.txt
-   the five copies from W137's and W138's branches equal the sha256 inputs/SOURCES-HOE.txt names: yes
+   the six copies from W137's, W138's and row (b)'s branches equal the sha256 inputs/SOURCES-HOE.txt names: yes
 
 2. THE FAILED CASE, REPRODUCED, AND WHAT THE PROTECTION NOW ADMITS
    T10 10j (c) and (e) (record l9t5, l9t5_t10.out): 'VOS0 under the trip takes the controller past its own 105 C VOS0 limit from 0.1936 A',
@@ -85,8 +86,9 @@ printed thermal resistances, never a measured temperature
      peripherals disabled: none at or under 105 C (the least excess over the column's own TJ +29.2 K; 134.2 C at the 105 C column)
      peripherals enabled:  none at or under 105 C (the least excess +52.9 K; 157.9 C at the 105 C column)
    the protection now: W138's selection (record l4reg, SESSION W138-1, filed in inputs/) puts a TPS2553-1 ahead of each supervisor's
-     regulator with IOS 0.4702 to 0.5704 A and removes round 6's rail trip (W138-2); its finding L4REG-F7 hands the controller's protection
-     to this task. At 0.5704 A (all of it in the controller, the brief's convention) the junction would read 161.0 C; the controller's own
+     regulator with IOS 0.4702 to 0.5878 A (W159's envelope of TI's tested row and its Equation 1, record l4reg at fnd/l4hod 23384006, filed
+     in inputs/; W138's tested row gave 0.4702 to 0.5704 A; W167 on W163-N4) and removes round 6's rail trip (W138-2); its finding L4REG-F7 hands the controller's protection
+     to this task. At 0.5878 A (all of it in the controller, the brief's convention) the junction would read 163.5 C; the controller's own
      VOS0 maximum at 105 C, 0.550 A, lies inside the limiter's band, so whether the limiter ever acts on a VOS0 state is not printed,
      and from 0.1936 A to the band's bottom it never does
    so HO-E is not a current limit's problem: no printed VOS0 row has an operating point inside 105 C at this air, at any current a
@@ -131,7 +133,7 @@ printed thermal resistances, never a measured temperature
 4. H-3, A THERMAL-HEADROOM PART OR HEAT PATH: the junction-to-ambient VOS0 would need at 76.25 C air (MODEL on PRINTED)
    VOS0 480 MHz, all peripherals enabled, 0.550 A at 105 C:  at most 15.84 C/W
    VOS0 480 MHz, all peripherals disabled, 0.390 A at 105 C: at most 22.34 C/W
-   the protection's largest admitted current, 0.5704 A (the brief's convention, all in the controller): at most 15.27 C/W
+   the protection's largest admitted current, 0.5878 A (the brief's convention, all in the controller): at most 14.82 C/W
    printed (DS12110 Rev 11 Table 222, p.344 to 345; JESD51-2 still air, its reference 8.10.1):
      LQFP100        ThetaJA  45.0   ThetaJB  36.3   ThetaJC  11.5 C/W
      TFBGA100       ThetaJA  39.3   ThetaJB  21.1   ThetaJC  17.1 C/W
@@ -399,7 +401,7 @@ printed thermal resistances, never a measured temperature
    S-k  the reset loop: every excursion the monitor registers, at every boot 105 C     duty <= 0.876 %, rise <= 0.806 K, any fault length; ZthJA(t_resp) <= 3.05 K/W    CONDITIONAL (S1, S2; C2, C3)
    S-l  a latent hold fault (CT's pull-up lost), then the reset loop 105 C     a double fault; W148-3's hold timing (W152-1), window at most 3600 s             RESIDUAL (single-fault)
    S-m  the self-reset loop: an image resetting itself before the monitor registers (W148-F4) 105 C     no printed cadence; S-k's if every excursion registers (5i: S2 extended)         CONDITIONAL (S2 extended, S1; C2, C3; row R-4)
-   S-j  any current up to the limiter's 0.5704 A                     as above  a VOS3 state is S-a, S-b or S-g; a VOS1 or VOS0 state S-c, S-d, S-k or S-m       no state outside S-a to S-m
+   S-j  any current up to the limiter's 0.5878 A                     as above  a VOS3 state is S-a, S-b or S-g; a VOS1 or VOS0 state S-c, S-d, S-k or S-m       no state outside S-a to S-m
    THE CONDITIONS OF THE FOCUSED CHECK (W144, L4A-100), RESTATED:
      C1 (F1): the reset hold drafted, composed, read and mutated, with the reset-loop row: W145's CTR1 hold (CONDITIONAL on S5) replaced
         by the hold stage (SESSION W148-1: 5d, 5g, 5h, section 8), whose printed minimum bounds the loop for any fault length of every
@@ -621,7 +623,7 @@ printed thermal resistances, never a measured temperature
      the implementation (pass at least 14 ms), which closes nothing by itself and gates nothing here
 
 10. THE PREDICATES
-   the five filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it)           yes
+   the six filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it)            yes
    every quoted sentence of H-1 is in its pinned text, with its page                                                                yes
    no option-byte field of FLASH_OPTSR_PRG and no PWR pin of Table 32 selects a voltage scale or the supply configuration           yes
    T10's 0.1936 A and 112.7 C are reproduced from T10's own air and theta                                                           yes
