@@ -4,8 +4,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
 (cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand); the selection is a desk design on printed figures, unchecked
 
 1. INPUTS, pinned by sha256
-   e33a9e7f0e9f49e0 v2/docs/records/l9t5/l9t5_t10.out
-   cb42415cc62be51c v2/docs/records/l9t5/l9t5_t10.py
+   83f5e6aaa9e28709 v2/docs/records/l9t5/l9t5_t10.out
+   cfbbd8b0bd74a752 v2/docs/records/l9t5/l9t5_t10.py
    be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
    37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
@@ -48,6 +48,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    W135's figures reproduced from record l9t5's modules and the makers' rows (its output copied, v2/docs/records/l4reg/inputs/l4lim-l4lim_screen-d26c5d67.out):
      the AP2112K's 125 C current 0.3056 A; S3' largest 0.4240 A; TPS2553-1 at 49.9 kOhm IOS 0.4702 to 0.5704 A; theta at most 98.6 C/W; T10-A3 3.6082 V
      against 3.7486 V on the AP2112's rows: EQUAL to W135's printed figures
+     W159 on W157-F2: the band this record uses is the envelope of that rule and TI's Equation 1 at the 1 % resistor's bounds (SLVS841F
+     10.2.1.2.3 and Table 2): IOS 0.4702 to 0.5878 A, so the theta that holds 125 C at IOSmax is 95.7 C/W (every figure below is on it)
 
 3. THE MAKERS' ROWS READ (each with its label, page and table)
    TPS2553-1 ios49     (0.475, 0.52, 0.565)                   PRINTED  SLVS841F 7.5 p.7 (min / typ / max, -40 to 125 C TJ)
@@ -99,37 +101,37 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    the AP2112K (record l9t5, DS39724 Rev. 2-2): 184 C/W SOT25 'no heat sink' PRINTED; dropout 200 / 400 mV at 300 / 600 mA PRINTED; output +-1.5 %
 
 4. APPROACH A: THE LIMITER W135 SELECTED WITH A REPLACEMENT REGULATOR FOUND ON PRINTED FIGURES
-   the limiter: TI TPS2553-1 (DBV), RILIM 49.9 kOhm 1 %: IOS 0.4702 to 0.5704 A (MODEL: the PRINTED row 0.475 to 0.565 A, the resistor's 1 % through
+   the limiter: TI TPS2553-1 (DBV), RILIM 49.9 kOhm 1 %: IOS 0.4702 to 0.5878 A (MODEL: the PRINTED row 0.475 to 0.565 A, the resistor's 1 % through
      the equations' exponents, W135's band); latch-off after 5 to 10 ms (PRINTED); response 2 us TYPICAL only (never used as a limit)
-   the regulator's requirements at the 14.0k corner (W135's, reproduced): junction-to-ambient at most 98.6 C/W; output and current limit
-     at least 0.5704 A; input to at least 4.1174 V; dropout at 0.5704 A that keeps T10-A3 with its own output band (below)
-   the regulators read, each at the limiter's maximum 0.5704 A from the corner (MODEL on the PRINTED rows; the dropout INFERRED linear from 1 A):
+   the regulator's requirements at the 14.0k corner (W135's method on W159's envelope): junction-to-ambient at most 95.7 C/W; output and current limit
+     at least 0.5878 A; input to at least 4.1174 V; dropout at 0.5878 A that keeps T10-A3 with its own output band (below)
+   the regulators read, each at the limiter's maximum 0.5878 A from the corner (MODEL on the PRINTED rows; the dropout INFERRED linear from 1 A):
      part                                           C/W    TJ (C)   VDO (V)    A3 need  A3 margin  verdict
-     AP2112K-3.3 (SOT25), as drawn                184.0     167.2    0.3802     3.7486    -0.1404  FAILS
-     TPS73733DCQRM3 (SOT-223, new silicon)         76.0     113.8    0.1426     3.4921    +0.1161  QUALIFIES
-     TPS73733DCQR (no M3: legacy may ship)         76.0     113.8    0.2852     3.6842    -0.0760  FAILS
-     TPS73701DRBRM3 (VSON-8, adjustable, M3)       49.4     100.7    0.1426     3.4987    +0.1095  QUALIFIES
-     TLV75733PDYDR (SOT-23-5 DYD)                  92.5     122.0    0.2852     3.6347    -0.0265  FAILS
-     TLV75733PDRVR (WSON-6 DRV)                   100.2     125.8    0.2709     3.6204    -0.0122  FAILS
-     TPS7A3701DRVR (WSON-6, adjustable)            67.2     109.5    0.1141     3.4537    +0.1545  QUALIFIES
-     (the supply at the LDO's input at 0.5704 A on all three: 3.6082 V, record l9t5's path with the limiter's 0.135 ohm PRINTED; the adjustable parts carry
+     AP2112K-3.3 (SOT25), as drawn                184.0     170.0    0.3919     3.7608    -0.1572  FAILS
+     TPS73733DCQRM3 (SOT-223, new silicon)         76.0     115.0    0.1470     3.4965    +0.1072  QUALIFIES
+     TPS73733DCQR (no M3: legacy may ship)         76.0     115.0    0.2939     3.6929    -0.0893  FAILS
+     TPS73701DRBRM3 (VSON-8, adjustable, M3)       49.4     101.4    0.1470     3.5031    +0.1006  QUALIFIES
+     TLV75733PDYDR (SOT-23-5 DYD)                  92.5     123.4    0.2939     3.6434    -0.0398  FAILS
+     TLV75733PDRVR (WSON-6 DRV)                   100.2     127.3    0.2792     3.6287    -0.0251  FAILS
+     TPS7A3701DRVR (WSON-6, adjustable)            67.2     110.5    0.1176     3.4572    +0.1464  QUALIFIES
+     (the supply at the LDO's input at 0.5878 A on all three: 3.6036 V, record l9t5's path with the limiter's 0.135 ohm PRINTED; the adjustable parts carry
      a 0.1 % divider's 0.2 % beside the maker's band, an ASSUMPTION: their sheets exclude the resistors; TLV757P's band is printed at 1 mA only)
-   SELECTED within A: TPS73733DCQRM3. Its junction at the limiter's maximum 113.8 C (11.2 K under 125 C; it holds to 98.6 C/W, 30 % over the
+   SELECTED within A: TPS73733DCQRM3. Its junction at the limiter's maximum 115.0 C (10.0 K under 125 C; it holds to 95.7 C/W, 26 % over the
      printed 76.0 C/W); the M3 order code fixes the new silicon, whose dropout and band qualify where the legacy silicon's do not
      the alternate within A: TPS73701DRBRM3 (VSON-8 3 x 3 mm, 49.4 C/W) with a 0.1 % divider, if board B's pocket refuses the SOT-223
    A, row by row (the selected pair; MODEL on PRINTED unless labelled):
    (1) THE WINDOW: IOSmin 0.4702 A over every served state (largest S3' 0.4240 A: +0.0462 A; (f1) 0.3726 A: +0.0976 A; S2 0.2839 A; S1 0.1855 A): no served
        state is limited, so no bridging capacitance and no timer restart is relied on; the TCAN334's 180 mA row is inside (f1). Row 8's
-       (f2) 0.5491 A and rev V's held 0.5639 A lie inside the band (0.4702 to 0.5704 A): a supervisor there MAY be limited and latched off after
+       (f2) 0.5491 A and rev V's held 0.5639 A lie inside the band (0.4702 to 0.5878 A): a supervisor there MAY be limited and latched off after
        5 to 10 ms, before FW-B21's 100 ms response; row 8's accepted outcome ('nothing moves', the voters at the home assignment) is
        the same with it, and the supervisor returns only when EN or power is cycled (a new failure mode, (7))
-   (2) THE REGULATOR'S JUNCTION at 76.25 C air on its PRINTED 76.0 C/W: at the limiter's maximum 0.5704 A, 113.8 C (holds 125 C for every waveform
+   (2) THE REGULATOR'S JUNCTION at 76.25 C air on its PRINTED 76.0 C/W: at the limiter's maximum 0.5878 A, 115.0 C (holds 125 C for every waveform
        under the limit: a constant-power bound, the cx46 countermodel's periodic peaks included); at S1 0.1855 A, 88.5 C; the realisation of the
        printed figure on board B's copper is a Layer 10 means (JEDEC 2s2p, 3×2 vias under the tab): read at E-17's coupon, never assumed
        its ground current (880 uA TYPICAL at 1 A, no maximum printed) is outside the bound: 3.6 mW at the top input, 0.28 K on the printed
-       theta (MODEL on a TYPICAL), against the 11.2 K margin
-       the limiter's own junction in service at 0.5704 A: 84.3 C (0.135 ohm, 182.6 C/W, PRINTED); its continuous rating 1.2 A to 125 C TJ PRINTED
-   (3) THE OUTPUT SHORT: (i) a short above the regulator's foldback draws the limit and latches within 10 ms (PRINTED): at most 23.5 mJ (MODEL);
+       theta (MODEL on a TYPICAL), against the 10.0 K margin
+       the limiter's own junction in service at 0.5878 A: 84.8 C (0.135 ohm, 182.6 C/W, PRINTED); its continuous rating 1.2 A to 125 C TJ PRINTED
+   (3) THE OUTPUT SHORT: (i) a short above the regulator's foldback draws the limit and latches within 10 ms (PRINTED): at most 24.2 mJ (MODEL);
        (ii) a hard short folds the TPS737 back to its own short-circuit current, 0.510 A TYPICAL only, which may sit under IOSmin: the limiter
        may not act; W135-2's exclusion carried (SESSION W138-3): the supervisor on a shorted rail is lost (IOHA row 3), the other two keep
        their supply (each branch at most IOSmax), and the regulator's survival rests on its PRINTED 'Output short-circuit duration: Indefinite'
@@ -138,11 +140,11 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
        IOSmin (the drop then exceeds the corner's): (2)'s bound is stated for the output in regulation, every served state's case
    (4) T10-A3 with the limiter's 0.135 ohm and the TPS737's PRINTED band (+1.5 %) and dropout (0.250 V at 1 A, INFERRED linear):
        (a) at T10's point 0.2452 A on all three               3.6936 V against 3.4108 V: +0.2828 V, holds
-       (b) at the limiter's maximum 0.5704 A on all three     3.6082 V against 3.4921 V: +0.1161 V, holds
-       (c) S1 0.1855 A at the other two, one at the limiter's maximum 3.6929 V against 3.3959 V: +0.2970 V, holds
+       (b) at the limiter's maximum 0.5878 A on all three     3.6036 V against 3.4965 V: +0.1072 V, holds
+       (c) S1 0.1855 A at the other two, one at the limiter's maximum 3.6921 V against 3.3959 V: +0.2963 V, holds
        (e) S3' 0.4240 A on all three in one bit               3.6466 V against 3.4555 V: +0.1911 V, holds
-       (f) with round 6's 0.3 ohm sense (+1 %) kept in series, at the limiter's maximum: 3.4354 V against 3.4921 V: -0.0567 V, FAILS (SESSION W138-2)
-       (d) U601 and the lead's pin 1 at three maxima: 1.7111 A against 3 A and 10 A (PRINTED, T10 line 272): holds
+       (f) with round 6's 0.3 ohm sense (+1 %) kept in series, at the limiter's maximum: 3.4255 V against 3.4965 V: -0.0710 V, FAILS (SESSION W138-2)
+       (d) U601 and the lead's pin 1 at three maxima: 1.7634 A against 3 A and 10 A (PRINTED, T10 line 272): holds
        the band's own condition: the TPS737's +-1.5 % is PRINTED for VIN >= VOUT + 0.5 V (5.6); the input here is 3.6466 to 3.7579 V at the served
        currents, under 3.8495 V: the band between VOUT + VDO and VOUT + 0.5 V is INFERRED (the AP2112's was tested at 4.3 V, T10's same gap):
        V-T10-DROP extended (finding L4REG-F2)
@@ -194,9 +196,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
 7. THE COMPARISON AND THE SELECTION
    row                       A (TPS2553-1 + TPS73733DCQRM3)         B (K1, AP63203 per supervisor)        C (the LDO's own limit)
    window, served rows       none limited (IOSmin +0.0462 A)          none limited                          none limited
-   regulator junction        113.8 C at the limit, PRINTED theta      no printed bound (TYPICAL efficiency)  221.2 C at its limit: FAILS
+   regulator junction        115.0 C at the limit, PRINTED theta      no printed bound (TYPICAL efficiency)  221.2 C at its limit: FAILS
    output short              latch 10 ms PRINTED; (ii) W138-3      hiccup DESCRIBED; no branch limit      foldback TYPICAL: FAILS
-   T10-A3                    +0.1161 V at the limit (INFERRED VDO)    FAILS at 14.0k (input range)           as A's regulator
+   T10-A3                    +0.1072 V at the limit (INFERRED VDO)    FAILS at 14.0k (input range)           as A's regulator
    area a supervisor         +49.7 mm2 (tree), +24.6 mm2 (round 6)    +23.5 mm2 (tree)                       +37.8 mm2 (tree)
    board A                   unchanged (R602 14.0k kept)              R602 back to 10.7 k                    unchanged
    HO-E                      not covered (L4A-59)                     not covered                            not covered
@@ -207,23 +209,23 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
        session (one option stands after the measurement: B and C fail on printed figures)
      ruled_by: W138 (Claude), MESHSAT-1357; ruled_on: 7 October 2026; reversed_by: none
      to reverse: take the alternate within A (TPS73701DRBRM3 with a 0.1 % divider), or B at R602 10.7 k, or W135's second-source limiter
-     END CONDITION: the method ends if E-17's coupon (or the first article) reads the regulator's junction-to-ambient over 98.6 C/W at a
+     END CONDITION: the method ends if E-17's coupon (or the first article) reads the regulator's junction-to-ambient over 95.7 C/W at a
        U40, U50 or U60 site in still air at 76.25 C; or V-T10-DROP reads its output outside 3.0 to 3.6 V between VOUT + VDO and VOUT + 0.5 V
-       at up to 0.5704 A; or two negative independent checks of this selection
+       at up to 0.5878 A; or two negative independent checks of this selection
 
 8. THE ACCEPTANCE JUDGE ON THE SELECTED STAGE, AND ITS FAILING MUTATIONS
    J1 holds IOSmin 0.4702 A against the largest served peak 0.4240 A (S3' B5 with the healthy fabric's bit): +0.0462 A
-   J2 holds regulator junction 113.8 C at 0.5704 A on 76.0 C/W (PRINTED) from the corner drop 0.8669 V, output in regulation, against 125 C
-   J3 holds limiter junction 84.3 C at 0.5704 A (0.135 ohm, 182.6 C/W) in service
-   J4 holds T10-A3 at 0.5704 A on all three: 3.6082 V against 3.4921 V (output 3.3495 V PRINTED, dropout 0.1426 V INFERRED from 0.250 V at 1 A): +0.1161 V
-   J5 holds rated output 1.00 A, current limit at least 1.05 A, input to 5.50 V, against 0.5704 A and the pre-regulator's top 4.1174 V
-   J6 holds a short drawing the limit latches within 10 ms (23.5 mJ at most, MODEL); the regulator's output short-circuit duration Indefinite (PRINTED)
-   J7 holds three limiters at their maximum 1.7111 A against U601's 3 A and the lead's 10 A
+   J2 holds regulator junction 115.0 C at 0.5878 A on 76.0 C/W (PRINTED) from the corner drop 0.8669 V, output in regulation, against 125 C
+   J3 holds limiter junction 84.8 C at 0.5878 A (0.135 ohm, 182.6 C/W) in service
+   J4 holds T10-A3 at 0.5878 A on all three: 3.6036 V against 3.4965 V (output 3.3495 V PRINTED, dropout 0.1470 V INFERRED from 0.250 V at 1 A): +0.1072 V
+   J5 holds rated output 1.00 A, current limit at least 1.05 A, input to 5.50 V, against 0.5878 A and the pre-regulator's top 4.1174 V
+   J6 holds a short drawing the limit latches within 10 ms (24.2 mJ at most, MODEL); the regulator's output short-circuit duration Indefinite (PRINTED)
+   J7 holds three limiters at their maximum 1.7634 A against U601's 3 A and the lead's 10 A
    mutated, the limiter's maximum taken at its TYPICAL 0.520 A:                        FAILS (J0)
    mutated, the regulator's dropout taken at its TYPICAL 0.122 V at 1 A:               FAILS (J0)
    mutated, the AP2112K (SOT25, 184 C/W PRINTED, its rows) at the new current:         FAILS (J2, J4)
    mutated, the code without M3 (legacy silicon may ship: 0.500 V at 1 A, +-3 %):      FAILS (J4)
-   mutated, the regulator's junction-to-ambient one step over the requirement, 98.7 C/W: FAILS (J2)
+   mutated, the regulator's junction-to-ambient one step over the requirement, 95.8 C/W: FAILS (J2)
 
 9. THE DRAFT COMPOSED (apply_gen_sch_b_regstage.py; release-guarded by record l9t5's RELEASE-T10.md; None is APPLIED)
    board B composed in L4-E9's order with record l9t5's iocbuck, iocpre, canshdn, iocset and iocguard, then this draft (17 drafts): every
@@ -249,7 +251,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      +5V_IOC; with this delta the LDO's input is joined to +5V_IOC by the limiter U45 (IN pin 1, OUT pin 6), EN is pin 5 and R66 runs from
      IOC_LDO_IN: to restate when the delta is taken (as L9T5-F25 did for round 6)
    L4REG-F2 (Layer 5 V rows and the receiving company; V-T10-DROP extended): the TPS73733DCQRM3's output between VOUT + VDO and VOUT + 0.5 V
-     at 0.01 to 0.5704 A and -40 to 125 C TJ (the band's printed condition is VIN >= VOUT + 0.5 V); its start-up into the controller in reset
+     at 0.01 to 0.5878 A and -40 to 125 C TJ (the band's printed condition is VIN >= VOUT + 0.5 V); its start-up into the controller in reset
      (foldback) and its power-up overshoot with EN from its input: specimen three first-article board B supervisors, pass limit 3.0 to 3.6 V
    L4REG-F3 (L4A-54, L4A-58): each limiter's EN (IOC_LIM_EN, 100 kOhm to +5V_IOC) is the node for the peers' restart of a latched
      supervisor and the in-service over-limit test; FAULT (pin 4) is open for L4A-58 to read; a restart must bound its own rate (W135 row 3)

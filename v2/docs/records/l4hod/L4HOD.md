@@ -54,8 +54,12 @@ B, C 20 s apart), then each supervisor every 3600 s, the three 1200 s apart.
 Any failure: both peers open their halves, report the verdict (state frames, the kit's status path), restore the target if latched,
 and stop that supervisor's tests until the next start (W146-D6). Each peer records the target and the step in its backup registers
 before step 3 and clears it after step 4, so a peer that boots with a step 3 recorded (the survivors reset by the step's transient,
-W146-F10) takes that test as failed and stops its tests (DRAFTED; the registers' retention through a brown-out reset is an ASSUMPTION,
-RM0433's backup domain not read here). Continuous checks every window (a fault on the second consecutive
+W146-F10) takes that test as failed and stops its tests (DRAFTED). The retention, read by W159 (W157-F6; `l4hod.out` section 7): a BOR
+reset is a system reset (RM0433 Rev 8 p.329) and the backup registers are not reset by a system reset (p.1919), so a survivor reset by
+BOR keeps the record; the backup domain is reset when VSW leaves its range (p.333), and board B ties each supervisor's VBAT to its own
++3V3_IOCx, so a dip under the power-down threshold may clear it: an ASSUMPTION bounded by V-B25 (each survivor's 3.3 V over VBOR2's
+2.37 V, above DS12110's highest falling PDR 1.68 V), with DBP set before each write and clear, tamper erase off and no BDRST at boot
+(ES0392 2.2.20's workaround not taken). Continuous checks every window (a fault on the second consecutive
 failure, within 0.3 s): each peer reads both targets' FAULT and output; FAULT low with the output normal, or an output out of its band,
 is a test-path fault. The FAULT window 4.75 to 10.25 ms is the printed deglitch widened by 0.25 ms for the 50 us sampling and the
 divider's 66.7 us time constant (MODEL).
@@ -69,7 +73,7 @@ divider's 66.7 us time constant (MODEL).
   protected mode as its rail falls under UV(VCC) (SLLSEQ7F 6.3.4, PRINTED 1.65 to 2.50 V), its TXDs rest recessive on canmb's
   pull-ups, and W139's row R3 reads "a node out and contained" with the survivors' gap 0 against the loss count 3: W139's loss count
   respected. The survivors' supply holds on the DC path (J2: 3.5854 V against 3.4555 V with the limit lost); the transient dip of
-  +5V_IOC at the load step (0.5704 A with a healthy limit, 1.4396 A with the limit lost, for the closer's 0.2 ms) is NOT bounded on
+  +5V_IOC at the load step (0.5878 A with a healthy limit, 1.4396 A with the limit lost, for the closer's 0.2 ms) is NOT bounded on
   printed figures: PROVISIONAL (W146-F10). The hold-up it would need (MODEL on the drawn capacitors and printed thresholds): board B's
   10.3 uF on +5V_IOC carries the lost limit's step 1.37 us before the survivors' limiter inputs reach their need (3.5127 V), and each
   survivor's own 12.0 uF holds its rail from 3.2505 V over VBOR2's highest falling 2.37 V for 24.9 us at 0.4240 A: the survivors stay
@@ -85,10 +89,11 @@ The reading (each peer, its own): I = V / 3.0 Ohm. Its error terms, every corner
 51 K PRINTED, the load life's 1 % + 0.05 Ohm as ageing); the divider 0.1 %, 25 ppm/C; the peer's own rail 3.2422 to 3.3577 V (record
 l4canen's envelope); the ADC +-10 mV at the pin (ASSUMPTION: DS12110 Table 186 prints a TYPICAL only, characterised on BGA); what the
 output feeds besides the load, 0 to 0.5 mA (the dividers and the EN pull-up, MODEL, and the regulator held off by D406, ASSUMPTION on a
-TYPICAL 20 nA). A healthy limiter (0.4702 to 0.5704 A) reads 0.4345 to 0.6140 A: PASS inside. **A PASS admits IOS 0.4023 to 0.6620
+TYPICAL 20 nA). A healthy limiter (0.4702 to 0.5878 A, the envelope of TI's tested row and its Equation 1, W159 on W157-F2; W146
+wrote 0.5704 A) reads 0.4345 to 0.6326 A: PASS inside (W146's 0.6140 A would fail a healthy part). **A PASS admits IOS 0.4023 to 0.6819
 A, under the regulator's 125 C current 0.7399 A (76.0 C/W PRINTED, 0.8669 V corner): a lost limit never passes, and every limit that
-passes keeps the regulator at 119.9 C or less.** The margin: B up to 78.4 mA (the second barrier, BOR level 2 with D406 open: 20 mA
-assumed) and an ADC error up to +-83 mV. The low side: a pass admits a limit 0.0217 A under the largest served peak (S3' 0.4240 A), a
+passes keeps the regulator at 121.2 C or less.** The margin: B up to 58.5 mA (the second barrier, BOR level 2 with D406 open: 20 mA
+assumed) and an ADC error up to +-64 mV. The low side: a pass admits a limit 0.0217 A under the largest served peak (S3' 0.4240 A), a
 service residual (W146-F8), not a protection one.
 
 | Row | What holds (hod 8) |
@@ -174,7 +179,7 @@ The tests, as run.py printed them (7 October 2026, this branch, the held sheets 
 | W146-D5 | the schedule: first round 60 s after the quorum first holds, then 3600 s a supervisor, staggered 1200 s | 0.50 % of the time without a spare against an hourly detection; the mission's 48 to 72 h carries 48 or more tests a supervisor | another period with hod 9 re-solved |
 | W146-D6 | a failed test is reported; that supervisor keeps serving; its tests stop until the next start | a lost limit is a latent loss of RE-7's bound, not an active state; repeating a failed test adds no evidence and could repeat a double-fault step | hold it off by a 2-of-2 EN hold (a new rule in canen's contract) |
 | W146-D7 | the pins 15, 16, 42 to 45 | free FT pins with the ADC functions read in Table 9; no debug pin | other free pins with hod 6 re-read |
-| W146-D8 | the thresholds: PASS 0.4345 to 0.6140 A; the abort at 2.5 V, 0.2 ms after the closer's closure | taken from every corner of the reading so a healthy limiter always passes and a lost one never does | other thresholds with hod 8 re-solved |
+| W146-D8 | the thresholds: PASS 0.4345 to 0.6326 A (restated by W159 on the envelope, W157-F2; 0.6140 A as W146 wrote it); the abort at 2.5 V, 0.2 ms after the closer's closure | taken from every corner of the reading so a healthy limiter always passes and a lost one never does | other thresholds with hod 8 re-solved |
 | W146-D9 | BOR at level 2 (DRAFTED) | the second barrier on the target's draw if D406 is open | another level with the barrier re-read |
 | W146-D10 | the test suspends canen's automatic restart for its target; the self-test skips by its own precondition | the test's restore is its own step 4; no double votes | the automatic rule kept active (its 2 s decision then adds to the interval) |
 | W146-D11 | the load switches without a slow gate ramp; the transient dip left PROVISIONAL with the supplier's measurement | a gate ramp's benefit rests on TYPICAL transfer curves too; the base design's own IOSmax step has the same open term | a gate capacitor on the lower half (a load ramp of about a millisecond) |
@@ -199,7 +204,7 @@ The tests, as run.py printed them (7 October 2026, this branch, the held sheets 
   while that peer is dark: a double-condition residual; and regstage's comment "FAULT is left open (L4A-58 reads it)" is stale once
   this draft is taken.
 - **W146-F10 (L4A-57; W138; the coordinator):** the transient dip of +5V_IOC at a load step is not bounded on printed figures: the
-  test's 1.4396 A step with a lost limit, and the base design's own step of up to IOSmax 0.5704 A at any supervisor's overload (W138's
+  test's 1.4396 A step with a lost limit, and the base design's own step of up to IOSmax 0.5878 A at any supervisor's overload (W138's
   J7 is a DC row). PROVISIONAL; the hold-up a step needs is 26.3 us (section 4, MODEL), which U601's printed figures do not bound
   (its load-transient response is printed only as TYPICAL curves); a desk transient model of U601 and the lead, or the supplier's
   measurement of section 11, task 2. Were the survivors reset by it, the quorum would be lost for their boot and rejoin (IOHA row 4: every
@@ -209,7 +214,7 @@ The tests, as run.py printed them (7 October 2026, this branch, the held sheets 
 ## 11. The supplier's tasks (amendment 1; none a gate of this desk round)
 
 On the first article of board B (one board, its three supervisors):
-1. the test run on each supervisor: PASS, the reading inside 0.4345 to 0.6140 A, FAULT 4.75 to 10.25 ms after the drop, LATCHED,
+1. the test run on each supervisor: PASS, the reading inside 0.4345 to 0.6326 A, FAULT 4.75 to 10.25 ms after the drop, LATCHED,
    restored within 5.945 s;
 2. a lost limit injected on one supervisor (RILIM shorted): LIMIT NOT SHOWN or LIMIT HIGH at its next test; the two survivors' +3V3
    rails, reset flags and board B's +5V_IOC recorded through the step: pass, no survivor resets, each survivor's +3V3 stays over 2.37 V,

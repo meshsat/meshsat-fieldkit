@@ -793,26 +793,26 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      ignd      0.00088                                TYPICAL   SBVS067W 5.6 p.6 (typical column only, new silicon, 1 A: no maximum printed)
      isc       0.51                                   TYPICAL   SBVS067W 5.6 p.6 (typical only, new silicon)
      fig79     RthJA against board size               GUIDELINE SBVS067W Figure 7-9 p.24 ('intended only as a guideline')
-     with RILIM's 1 % through the equations' exponents (W135's rule, MODEL on PRINTED): IOS 0.4702 to 0.5704 A
+     with RILIM's 1 %, the envelope of W135's exponent rule and TI's Equation 1 at the resistor's bounds (10.2.1.2.3, Table 2; W159 on W157-F2; MODEL on PRINTED): IOS 0.4702 to 0.5878 A
      TI on a JEDEC theta (SPRA953D, held, p.2, 1.1): 'This is a misapplication of the RθJA thermal parameter because RθJA is a variable function
        of not just the package'; (p.3, 1.2) the 2s2p board 'gives a best case performance estimate assuming a sparsely populated, high-trace-
        density board design with buried power and ground planes'; (p.5, 1.7) at very low power the note finds RθJA two to three times higher
    (d) RE-7, THE SUSTAINED BOUND AT CONSTANT MAXIMUM DISSIPATION (L4A-57). After the limiter acts, everything the LDO's input takes is
-     at most IOSmax 0.5704 A (PRINTED over -40 to 125 C TJ, the resistor's 1 % counted). With its output in regulation the LDO dissipates
-     P = VIN x I_IN - VOUT x IOUT = (VIN - VOUT) x IOUT + VOUT x IGND, so at most (VIN_max - VOUT_min) x IOSmax + VOUT_min x IGND: VIN_max the
+     at most IOSmax 0.5878 A (PRINTED over -40 to 125 C TJ, the resistor's 1 % counted). With its output in regulation the LDO dissipates
+     P = VIN x I_IN - VOUT x IOUT = (VIN - VOUT) x I_IN + VOUT x IGND, so at most (VIN_max - VOUT_min) x IOSmax + VOUT_min x IGND: VIN_max the
      pre-regulator's top 4.1174 V (no drop counted ahead of the LDO), VOUT_min 3.2505 V (-1.5 %, PRINTED where VIN >= VOUT + 0.5 V; below that
-     the band is V-T10-DROP's, L4REG-F2): the drop 0.8669 V, 0.4944 W at IGND = 0
+     the band is V-T10-DROP's, L4REG-F2): the drop 0.8669 V, 0.5095 W at IGND = 0
      WHY IT BOUNDS EVERY WAVEFORM UNDER THE LIMIT: the junction's rise is the input power convolved with the rise per unit step, which for a
      passive conduction network climbs monotonically to its steady theta; for any power p(t) at most P_max the junction never exceeds the air
      plus theta x P_max (MODEL: superposition on a linear passive network, a property of the network, not a typical curve). cx46's
      countermodel (0.50 A for 0.40 s every 1.50 s) lies under IOSmax, so inside the bound; a specimen whose limit is under 0.50 A limits it
      and latches within the printed deglitch (K3)
      IGND: TI prints the ground current as TYPICAL only (880 uA at 1 A, new silicon; no maximum). It is not used as a bound: the result
-     is stated as a function of it. On the printed 76.0 C/W: the junction 113.8 C at IGND = 0, +0.247 K per mA of IGND; 125 C holds for
-     every IGND up to 45.2 mA (51 times the TYPICAL, which would read 114.0 C: shown, not a bound). CONDITIONAL: E-17 reads the junction
+     is stated as a function of it. On the printed 76.0 C/W: the junction 115.0 C at IGND = 0, +0.247 K per mA of IGND; 125 C holds for
+     every IGND up to 40.6 mA (46 times the TYPICAL, which would read 115.2 C: shown, not a bound). CONDITIONAL: E-17 reads the junction
      with IGND inside it (below)
-     the regulator's 125 C current at this corner on the printed theta 0.7400 A, over IOSmax by 0.1696 A; the theta that holds 125 C at IOSmax
-     with IGND = 0: 98.6 C/W (W135's and W138's figure reproduced)
+     the regulator's 125 C current at this corner on the printed theta 0.7400 A, over IOSmax by 0.1522 A; the theta that holds 125 C at IOSmax
+     with IGND = 0: 95.7 C/W (98.6 C/W at the tested row's 0.5704 A, W135's and W138's figure, reproduced; W159's envelope moves it)
    (e) THE THETA ON BOARD B'S COPPER: NOT BOUNDED AT THE DESK. The printed 76.0 C/W is TI's JEDEC 2s2p figure for a single device, which
      TI itself calls a best case and a misapplication when carried to a system board (c). Board B (pcb_board_facts.yaml): six layers, outer
      1 oz, inner 0.5 oz, In1 the ground plane; no P0 draft part is placed (L4REG-F6), so the tab's land, its vias and the neighbours are not
@@ -824,23 +824,23 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
        h  5.0 W/m2 K, a 3.0 mm: RθJA(screen)  69.6 C/W; the controller adds 13.6 K at 10 mm, 7.1 K at 20 mm
        h 10.0 W/m2 K, a 2.0 mm: RθJA(screen)  70.8 C/W; the controller adds 10.2 K at 10 mm, 4.5 K at 20 mm
        h 10.0 W/m2 K, a 3.0 mm: RθJA(screen)  62.7 C/W; the controller adds 10.2 K at 10 mm, 4.5 K at 20 mm
-     on the screen's worst row the LDO at IOSmax reads 128.4 C with the controller 10 mm away: the screen does not establish the site; it
+     on the screen's worst row the LDO at IOSmax reads 129.5 C with the controller 10 mm away: the screen does not establish the site; it
      shows the outcome rests on the tab's copper and on the distance from the controller (Layer 10 means: the LDO's tab on In1 through its
      vias, and away from its controller), which only a laid-out board settles
      E-17 (THE RECEIVING COMPANY'S MEASUREMENT, named here; nothing sent): SPECIMEN the first-article board B (or a coupon of its six-layer
        stack with the U40, U50 and U60 sites as Layer 10 lays them out, their controllers and limiters powered at their bounded state), three
-       sites; QUANTITY each LDO's junction with its input current held at the limiter's printed maximum 0.5704 A, its input at 4.1174 V and its
+       sites; QUANTITY each LDO's junction with its input current held at the limiter's printed maximum 0.5878 A, its input at 4.1174 V and its
        output in regulation, from its case-top temperature by ψJT 8.6 C/W (PRINTED), in still air at 76.25 C, its IGND read as input less
-       output current; PASS LIMIT the junction at most 125 C (equivalently RθJA(effective) at most 48.75 K over the measured power; 98.6 C/W
-       at IGND = 0); and for the latched transient, the junction's rise in 10 ms of 2.348 W at most 36.2 K from the steady bound, Zth(10 ms) at
-       most 15.4 C/W, which would remove W151-1's exclusion (f)
+       output current; PASS LIMIT the junction at most 125 C (equivalently RθJA(effective) at most 48.75 K over the measured power; 95.7 C/W
+       at IGND = 0); and for the latched transient, the junction's rise in 10 ms of 2.420 W at most 35.0 K from the steady bound, Zth(10 ms) at
+       most 14.5 C/W, which would remove W151-1's exclusion (f)
    (f) RE-6, THE RESPONSE ON PRINTED TIMING, AND THE OUTPUT SHORT. No response time is needed for the sustained bound: the limit is a
      DC limit (IOS, PRINTED), and every state with the output in regulation is inside (d) whatever its waveform. A demand over IOS is a
      fault (no served state reaches IOSmin, (g)): the limiter holds IOS and latches off at most 10 ms after the limit acts (PRINTED deglitch,
      9.3.1 DESCRIBED), then stays off until its EN is toggled: the peers' 2-of-2 route (record l4canen) at most once in 10 s. The limit's
      onset tIOS (2 us) is TYPICAL only and is not used: the microseconds before it are part of the fault state (below). V-B23's round 6
      0.2 s stays WITHDRAWN (the rail trip it tested is gone, W138-2); V-B23 is restated on the limiter (record l9t5 apply_hw_fw_contract_rowb.py)
-     the output out of regulation, (i) at or over IOS: latched within 10 ms, at most 23.5 mJ (4.1174 V x 0.5704 A x 10 ms, MODEL on PRINTED);
+     the output out of regulation, (i) at or over IOS: latched within 10 ms, at most 24.2 mJ (4.1174 V x 0.5878 A x 10 ms, MODEL on PRINTED);
      (ii) under IOSmin (a hard short in foldback, ISC 510 mA TYPICAL; a partial short): not limited. SESSION W151-1, extending W138-3: the
      LDO's junction in a state whose OUTPUT IS OUT OF REGULATION is excluded from the 125 C and 150 C criterion, in both (i) and (ii).
      Why: that supervisor is lost (IOHA row 3: the other two are a majority), the containment of the other two holds on the limiter's
@@ -850,6 +850,11 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      short-circuit duration 'Indefinite' (SBVS067W 5.1 p.4 (Absolute Maximum Ratings)). Reverse it: E-17's Zth(10 ms) limit read, or a regulator printing its short-circuit current with a
      maximum under IOSmin. authority SESSION (the owner's standing rule of 26 September 2026 and ruling of 21 September 2026), ruled_by W151,
      ruled_on 7 October 2026, reversed_by none
+     (iii) W159 on W157-F7: under (ii) the target never rejoins, and the peers' restart rule (once in 10 s, 2.0 s off) would power its
+     regulator into the short 80 % of the mission (its thermal shutdown TYPICAL only, no printed limit). DRAFTED HOLD-OFF (FW-B22, SESSION
+     W159-D3): after 3 consecutive failed restarts both peers keep their restart votes (the limiter's EN low, the target unpowered) and retry
+     once every 600 s, a rejoin clearing the count: powered 1.33 % of the time in the hold-off; a single latch still restarts in 5.603 s.
+     Judge HOLDS; mutated, no hold-off (the restart rule alone): FAILS; the hold-off retried at the restart rule's period: FAILS; a hold-off one peer's vote holds: FAILS
    (g) W135's FOUR SCREEN ROWS ON THE SELECTED PARTS, AND THE SERVICE WINDOW AGAINST C-DEV REV 2 (the case row's T10 figures, revision V;
      conditional on FW-B20 and FW-B21 as the row states)
      served  S1 the largest sustained served (10j (e))                0.1855 A  not limited
@@ -858,33 +863,33 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      served  S3' row 7 with the healthy fabric's bit (B5, 10e)        0.4239 A  not limited
      row 8   (f2) both fabrics on the 180 mA row (section 8)          0.5491 A  may latch a supervisor off (row 8 accepts it; the peers' route restarts it)
      row 8   both fabrics held, revision V (10e)                      0.5639 A  may latch a supervisor off (row 8 accepts it; the peers' route restarts it)
-     (1) the bus-fault rows served: IOSmin 0.4702 A over the largest served 0.4239 A by 0.0463 A, no served state limited, no bridging capacitance
-       needed; the 180 mA a transceiver (PRINTED) enters (f1), (f2) and S3' above. THE WINDOW: 0.0463 A between the largest served state and
-       the limiter's least, and 0.1696 A between its most and the regulator's 125 C current on the printed theta (zero at E-17's pass limit by
+     (1) the bus-fault rows served: IOSmin 0.4702 A over the largest served 0.4239 A by 0.0462 A, no served state limited, no bridging capacitance
+       needed; the 180 mA a transceiver (PRINTED) enters (f1), (f2) and S3' above. THE WINDOW: 0.0462 A between the largest served state and
+       the limiter's least, and 0.1522 A between its most and the regulator's 125 C current on the printed theta (zero at E-17's pass limit by
        construction). ROW (b)'s ENABLED SET (FW-B20 restated: TIM3 for canmb's captures, an ADC of ADC1/ADC2 for hodtest's reads, neither in
        10c's set): TIM3 2.7 + ADC12 registers 3.3 + ADC12 kernel 0.6 uA/MHz (TYPICAL, Table 137, VOS3) at 144 MHz times 3.103 (10c's ratio at 125 C) = 0.0029 A, MODEL; and the ADC's
        analog current on VDDA, 1.44 mA at 16 bits and 25 MHz (TYPICAL only, Table 184), taken at 3 times (ASSUMPTION): at most 0.0073 A
        on a controller's rail; the window after it 0.0390 A. The drafts' own rail additions (the buffers, gates, pull-ups and votes of
        canmb, canen and hodtest) are their records' figures, read against this window in the connected record (l9t5_connected.out 11a)
      (2) the output short: (f) (i) latched within 10 ms, (ii) excluded with its reason (W151-1, W138-3, W135-2)
-     (3) the limiter's own dissipation: 24.3 mW at S3' (80.7 C on 182.6 C/W) and 43.9 mW at IOSmax in regulation; it holds 125 C to 1110 C/W, so
-       no measurement decides it; limiting into a short at most 2.348 W for at most 10 ms (its junction then not computed: no Zth printed;
+     (3) the limiter's own dissipation: 24.3 mW at S3' (80.7 C on 182.6 C/W) and 46.6 mW at IOSmax in regulation; it holds 125 C to 1045 C/W, so
+       no measurement decides it; limiting into a short at most 2.420 W for at most 10 ms (its junction then not computed: no Zth printed;
        its shutdown in current limit printed as a minimum 135 C only, no protection limit); no automatic restart (latch-off, DESCRIBED); the
-       peers' restart at most once in 10 s keeps a latched event's average at most 2.35 mW
-     (4) T10-A3 with the limiter's 0.135 ohm in place of the 0.3 ohm sense, at IOSmax on all three: 3.6082 V against 3.5995 V on the 1 A row
-       taken as the bound (the dropout rises with current as the pass device's linear-region resistance, DESCRIBED) +0.0087 V, and against
-       3.4921 V on the INFERRED linear dropout +0.1161 V; the other two at the largest served while one sits at IOSmax: 3.6404 V against 3.5995 V
-       (+0.0409 V); U601 and the lead at three limiters' maxima 1.7111 A against 3 A and 10 A (PRINTED)
+       peers' restart at most once in 10 s keeps a latched event's average at most 2.42 mW
+     (4) T10-A3 with the limiter's 0.135 ohm in place of the 0.3 ohm sense, at IOSmax on all three: 3.6036 V against 3.5995 V on the 1 A row
+       taken as the bound (the dropout rises with current as the pass device's linear-region resistance, DESCRIBED) +0.0041 V, and against
+       3.4965 V on the INFERRED linear dropout +0.1072 V; the other two at the largest served while one sits at IOSmax: 3.6397 V against 3.5995 V
+       (+0.0402 V); U601 and the lead at three limiters' maxima 1.7634 A against 3 A and 10 A (PRINTED)
    (h) L4A-57's ACCEPTANCE (K0 to K9, every limit PRINTED; the judge refuses a TYPICAL or a guideline used as a bound): HOLDS on the printed theta
      K0  holds every figure used as a limit is PRINTED; IGND, tIOS and Figure 7-9 enter as named terms, never as bounds
-     K1  holds no served state limited: IOSmin 0.4702 A against the largest served 0.4239 A (S3' row 7 with the healthy fabric's bit (B5, 10e)): +0.0463 A
-     K2  holds the regulator's junction at constant maximum dissipation 113.8 C (0.4944 W at 0.5704 A, the drop 0.8669 V, 76.0 C/W PRINTED) against 125 C; IGND admitted up to 45.2 mA
-     K3  holds cx46's countermodel current 0.50 A under the limiter's maximum 0.5704 A: inside the bound (or limited and latched where a specimen limits under it)
-     K4  holds an output short at or over IOS latched within 10 ms (23.5 mJ at most); under IOSmin excluded with its reason; the regulator's short-circuit duration Indefinite
-     K5  holds the limiter in service at its maximum 43.9 mW, 84.3 C on 182.6 C/W; no automatic restart (latch-off); the peers' restart at most once in 10 s, 2.35 mW on average
-     K6  holds T10-A3 at 0.5704 A on all three with 0.135 ohm: 3.6082 V against 3.5995 V on the 1 A row as the bound (+0.0087 V) and 3.4921 V on the INFERRED linear dropout (+0.1161 V)
-     K7  holds three limiters at their maximum 1.7111 A against U601's 3 A and the lead's 10 A
-     K8  holds rated 1.0 A, current limit at least 1.05 A, input to 5.5 V, against 0.5704 A and 4.1174 V
+     K1  holds no served state limited: IOSmin 0.4702 A against the largest served 0.4239 A (S3' row 7 with the healthy fabric's bit (B5, 10e)): +0.0462 A
+     K2  holds the regulator's junction at constant maximum dissipation 115.0 C (0.5095 W at 0.5878 A, the drop 0.8669 V, 76.0 C/W PRINTED) against 125 C; IGND admitted up to 40.6 mA
+     K3  holds cx46's countermodel current 0.50 A under the limiter's maximum 0.5878 A: inside the bound (or limited and latched where a specimen limits under it)
+     K4  holds an output short at or over IOS latched within 10 ms (24.2 mJ at most); under IOSmin excluded with its reason; the regulator's short-circuit duration Indefinite
+     K5  holds the limiter in service at its maximum 46.6 mW, 84.8 C on 182.6 C/W; no automatic restart (latch-off); the peers' restart at most once in 10 s, 2.42 mW on average
+     K6  holds T10-A3 at 0.5878 A on all three with 0.135 ohm: 3.6036 V against 3.5995 V on the 1 A row as the bound (+0.0041 V) and 3.4965 V on the INFERRED linear dropout (+0.1072 V)
+     K7  holds three limiters at their maximum 1.7634 A against U601's 3 A and the lead's 10 A
+     K8  holds rated 1.0 A, current limit at least 1.05 A, input to 5.5 V, against 0.5878 A and 4.1174 V
      K9  holds every limiting event ends at the latch, at most 10 ms after the limit acts (PRINTED); the limit's onset tIOS is not used as a bound
      mutated, a TYPICAL response time (tIOS) used as the response bound:   FAILS
      mutated, the TYPICAL ground current used as its maximum:              FAILS
@@ -895,20 +900,20 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      no bound on board B's copper, so RE-7's sustained bound and RE-6's response read SUPPORTED ON PRINTED FIGURES, CONDITIONAL on E-17's
      theta and IGND at the site, PROVISIONAL until row (b)'s check (L4A-62); RE-6 and RE-7 stay NOT CLOSED (cx46), REMAINING ENGINEERING
      until that check and E-17. HO-D (the limiter's latent loss of its limit) is record l4hod's in-service test (a lost limit found within
-     3602.341 s, DRAFTED); HO-E is unchanged by the limiter (IOSmin over VOS0's 0.1936 A and the H743's 125 C current) and is L4A-59's
+     3602.341 s, DRAFTED); HO-E is not bounded by the limiter (IOSmin is over VOS0's 0.1936 A and the H743's 125 C current), and the rail trip's controller-protection role (each controller's average under its 125 C current) moves to HO-E (L4REG-F7, W159 on W157-F4), L4A-59's
    (j) THE T10 ROWS ROW (b)'S DRAFTS CHANGE, RESTATED (L4A-61; each row's old text, at the line named, is history from here on)
      line  223  T10-A2 on the AP2112K's 184 C/W                                    -> the regulator replaced (regstage): the bounded state rev V 0.1732 A reads 87.7 C on the TPS73733's printed 76.0 C/W, CONDITIONAL on E-17
-     line  563  T10-A3 as round 4 and L9T5-D8 wrote it                             -> restated at the limiter's maximum on all three: +0.0087 V (1 A row as bound), +0.1161 V (INFERRED); V-T10-DROP extended (L4REG-F2)
+     line  563  T10-A3 as round 4 and L9T5-D8 wrote it                             -> restated at the limiter's maximum on all three: +0.0041 V (1 A row as bound), +0.1072 V (INFERRED); V-T10-DROP extended (L4REG-F2)
      line  229  T10-A5, the AP2112K's case in a 76 C chamber                       -> restated: E-17 on the TPS73733 sites ((e)); V-B20 restated by apply_hw_fw_contract_rowb.py
      line  599  10j (b) 1, the transmit-share limiter                              -> REMOVED by canmb (W137): the peers' buffered TXD reads and 2-of-2 SHDN votes, attribution and self-test (canq, W143: 2.60 s); PROVISIONAL
-     line  609  10j (b) 2, the rail trip and its average bound                     -> REMOVED by regstage (W138-2): the TPS2553-1 latch-off limiter, IOS 0.4702 to 0.5704 A, latched within 10 ms ((f)); PROVISIONAL
+     line  609  10j (b) 2, the rail trip and its average bound                     -> REMOVED by regstage (W138-2): the TPS2553-1 latch-off limiter, IOS 0.4702 to 0.5878 A, latched within 10 ms ((f)); PROVISIONAL
      line  615  10j (b) V-B23's 0.2 s                                              -> stays WITHDRAWN; V-B23 restated on the limiter's band and latch (apply_hw_fw_contract_rowb.py)
      line  618  10j (c) the quorum per fault on the limiters                       -> restated by canq (W139): quorum held on rows 3, 5 and 7, the GPIO-toggled TX silenced in 1.310 ms, lost only with both fabrics (row 8); PROVISIONAL
      line  633  10j (c) the peers' observation and vote NOT DRAFTED                -> DRAFTED (canmb, canq, canen; W137, W139, W143); the comparators gone; latent faults found by the self-test (2.60 s; 8.545 s in an HO-D test)
-     line  642  10j (d) T10-A3 at the trip's average maximum                       -> restated at IOSmax 0.5704 A with 0.135 ohm ((g) (4)); the other two +0.0409 V while one sits at IOSmax
-     line  651  10j (e) the sustained bound WITHDRAWN, the countermodel over 125 C -> restated: constant maximum dissipation at IOSmax, 113.8 C on the printed theta, the countermodel inside it; CONDITIONAL on E-17
-     line  669  10j (e) the qualification limits (229 C/W, 105 C/W at 181 ms, the INA169) -> superseded by E-17 ((e): the junction at IOSmax at most 125 C; Zth(10 ms) at most 15.4 C/W or W151-1's exclusion kept)
-     line  674  10j (e) VOS0 under the trip                                        -> unchanged by the limiter (IOSmin over VOS0's current): HO-E, L4A-59 and its check L4A-100 (fnd/l4hoe, not in this tree)
+     line  642  10j (d) T10-A3 at the trip's average maximum                       -> restated at IOSmax 0.5878 A with 0.135 ohm ((g) (4)); the other two +0.0402 V while one sits at IOSmax
+     line  651  10j (e) the sustained bound WITHDRAWN, the countermodel over 125 C -> restated: constant maximum dissipation at IOSmax, 115.0 C on the printed theta, the countermodel inside it; CONDITIONAL on E-17
+     line  669  10j (e) the qualification limits (229 C/W, 105 C/W at 181 ms, the INA169) -> superseded by E-17 ((e): the junction at IOSmax at most 125 C; Zth(10 ms) at most 14.5 C/W or W151-1's exclusion kept)
+     line  674  10j (e) VOS0 under the trip                                        -> not bounded by the limiter (IOSmin over VOS0's current); the rail trip's controller-protection role moves to HO-E (L4REG-F7): L4A-59 and its check L4A-100 (fnd/l4hoe, not in this tree)
      line  712  L9T5-F13, bounded only on its average                              -> restated: a firmware outside the row is bounded by the limiter's printed maximum at constant maximum dissipation ((d)), CONDITIONAL on E-17
      line  716  L9T5-F16, a latent share comparator                                -> restated: no share comparator; the vote path's latent faults found by the self-test within 2.60 s (W143)
      line  720  the babbling row, bounded only on its average                      -> restated: silenced by the peers' vote (canq) and its regulator inside (d); its quorum effect PROVISIONAL (L4A-62)
@@ -955,5 +960,6 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    round 10 (L4A-57): the judge holds on its rows and each mutation FAILS (a TYPICAL or a guideline used as a bound refused at K0)        yes
    round 10 (L4A-57): the printed theta is TI's best case, not a site bound: DONE AS CONDITIONAL on E-17, its limits named                yes
    round 10 (L4A-61): every T10 row the drafts change is restated, its anchor found in this output                                        yes
+   round 11 (W159, W157-F7): the peers' hold-off bounds a short under IOSmin, both peers hold it, each mutation FAILS                     yes
 
 l9t5_t10: done

@@ -129,8 +129,12 @@ def patched(text):
     vb22 = [l for l in text.splitlines(True) if l.startswith(OLD_VB22_START)]
     if len(b22) != 1 or len(vb22) != 1:
         refuse("apply_hw_fw_contract_t10.py's FW-B22 and V-B22 are not each in the file once (apply it first)")
-    if not text.endswith("\n") or not text.rstrip("\n").splitlines()[-1].startswith("| 2 (T10, P0) "):
-        refuse("t10's change record is not the file's last row")
+    # W159 on W151-F3 (W157-F8): HO-E's apply_hw_fw_contract_hoe.py (fnd/l4hoe, L4A-59) also refuses unless t10's change record is
+    # the page's last row and appends its own; this script now takes either as the last row, so the two apply in the order t10, hoe,
+    # canq (hoe's own guard cannot take canq's row after t10's: that order is the only one both admit; test_l9t5_rowb)
+    if not text.endswith("\n") or not text.rstrip("\n").splitlines()[-1].startswith(("| 2 (T10, P0) ", "| 2 (HO-E, P0) |")):
+        refuse("neither t10's nor HO-E's change record is the file's last row")
+    hoe = "| FW-B23 |" in text
     new = text
     for old, rep in ((b22[0], FW_B22_CANQ), (vb22[0], V_B22_CANQ), (FW_B21_OLD, FW_B21_NEW), (VB21_OLD, VB21_NEW)):
         if rep == old or new.count(old) != 1:
@@ -139,8 +143,8 @@ def patched(text):
     new = new + CHANGE
     if new == text:
         refuse("the result does not differ")
-    if rows(new, "| FW-B", 6) != ["FW-B%02d" % i for i in range(1, 23)]:
-        refuse("the FW-B rows do not read FW-B01 to FW-B22 in order")
+    if rows(new, "| FW-B", 6) != ["FW-B%02d" % i for i in range(1, 24 if hoe else 23)]:
+        refuse("the FW-B rows do not read FW-B01 to FW-B22 (FW-B23 with HO-E's) in order")
     if rows(new, "| V-B", 3) != rows(text, "| V-B", 3):
         refuse("the V-B rows changed in number or order")
     if rows(new, "| 3 (L4A-55) |", 3) != ["3 (L4A-55)"]:
@@ -166,7 +170,7 @@ def main(argv):
         return 0
     open(target, "w", encoding="utf-8").write(new)
     back = open(target, encoding="utf-8").read()
-    if back != new or rows(back, "| FW-B", 6)[-1] != "FW-B22" or FW_B22_CANQ.strip() not in back:
+    if back != new or rows(back, "| FW-B", 6)[-1] not in ("FW-B22", "FW-B23") or FW_B22_CANQ.strip() not in back:
         refuse("the written file does not read back as the patched text")
     print("%s: WRITTEN, 5 edit(s)" % NAME)
     return 0

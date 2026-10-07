@@ -3,12 +3,12 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
 cx46 item, accepts nothing and moves no state (cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand)
 
 1. INPUTS, pinned by sha256
-   39a6e0cc37d960f4 v2/docs/records/l9t5/l9t5_t10.out
+   83f5e6aaa9e28709 v2/docs/records/l9t5/l9t5_t10.out
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
-   a56d47ce21f73211 v2/docs/records/l4close/REMAINING-ENGINEERING.md
-   e91265091bfd67b0 v2/docs/records/l9t5/l9t5_t10.py
-   aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
-   24722259a30363c5 v2/docs/records/l8r2/l8r2_gndret.out
+   37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
+   cfbbd8b0bd74a752 v2/docs/records/l9t5/l9t5_t10.py
+   be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
+   29f313c17d6f8283 v2/docs/records/l8r2/l8r2_gndret.out
    ef8d376f2ec356e2 v2/vendor/diodes/diodes-ap2112-ldo.pdf
    bb89f067e6a79028 v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf
    88e453700cea2b26 v2/vendor/ti/held/ti-tps2553-slvs841f.pdf  (held back; v2/docs/records/l4lim/fetch_held_back.py)
@@ -16,12 +16,18 @@ cx46 item, accepts nothing and moves no state (cx46 CORRECTIONS NOT CLOSED and L
    fafdb867c456a2b2 v2/vendor/ti/held/ti-tps25200-slvscj0f.pdf  (held back; v2/docs/records/l4lim/fetch_held_back.py)
    66f6bae4494f7bfe v2/vendor/power/tps2596.pdf
    b7e93824efe7733b v2/docs/records/l4lim/fetch_held_back.py
+   a737ea8a783ecd5a v2/vendor/diodes/held/pdftext/diodes-ap22652-53-ds41186.layout.txt  (held back with its sheet)
+   6793d4bc0e60cc6d v2/vendor/diodes/pdftext/diodes-ap2112-ldo.layout.txt
+   bab7479f34278e35 v2/vendor/power/pdftext/tps2596.layout.txt
+   4ee97572b97ed7d2 v2/vendor/ti/held/pdftext/ti-tps25200-slvscj0f.layout.txt  (held back with its sheet)
+   9a90d9411907d535 v2/vendor/ti/held/pdftext/ti-tps2553-slvs841f.layout.txt  (held back with its sheet)
+   810dc4dbcf529687 v2/vendor/ti/pdftext/ti-tcan334-can-fd-transceiver.layout.txt
    not read: ADI's MAX4995A (latch-off, 50 to 600 mA class): analog.com refused this host and the Internet Archive answered
    'Temporarily Offline' on 7 October 2026; nothing is claimed from it
 
 2. THE WINDOW'S EDGES, from record l9t5's T10 output (v2/docs/records/l9t5/l9t5_t10.out, parsed; line numbers of that file), revision V (fitted, L9T5-D7), 14.0k
-   the corner: inside air 76.25 C (line 69); the pre-regulator 3.9063 to 4.1174 V, the LDO's least output 3.2505 V, so its drop 0.8669 V and
-     159.5 K/A on the AP2112K's 184 C/W (line 500; PRINTED, no heat sink, DS39724 p.3); criterion 125 C for every sustained state (SESSION,
+   the corner: inside air 76.25 C (line 100); the pre-regulator 3.9063 to 4.1174 V, the LDO's least output 3.2505 V, so its drop 0.8669 V and
+     159.5 K/A on the AP2112K's 184 C/W (line 531; PRINTED, no heat sink, DS39724 p.3); criterion 125 C for every sustained state (SESSION,
      the owner's part 22), 150 C the absolute maximum, never an operating target
    UPPER EDGE, the LDO's 125 C current at the corner, I125 = (125 - 76.25) / (theta x 0.8669 V) (MODEL on PRINTED theta):
      SOT25 (AP2112K)      theta 184.0 C/W  I125 0.3056 A
@@ -30,30 +36,30 @@ cx46 item, accepts nothing and moves no state (cx46 CORRECTIONS NOT CLOSED and L
      (the three are DS39724's own rows, p.3, 'No Heatsink'; the board is not printed: realising any of them on board B's copper is a
      Layer 10 means, as T10 already says of the 184 C/W)
    LOWER EDGES, the currents the design must serve (each regulator's total: controller, auxiliaries, both transceivers):
-     S1 the largest SUSTAINED served state (an average over FW-B21's window): 0.1855 A, line 622 (MODEL; 'a babbler, the limiters bounding it')
-     S2 the normal-service PEAK, both transceivers dominant at once (a frame on each fabric): 0.2839 A, line 515 (MODEL: 10i's
+     S1 the largest SUSTAINED served state (an average over FW-B21's window): 0.1855 A, line 653 (MODEL; 'a babbler, the limiters bounding it')
+     S2 the normal-service PEAK, both transceivers dominant at once (a frame on each fabric): 0.2839 A, line 546 (MODEL: 10i's
         babbling row has exactly this composition, the bounded controller, the circuit's auxiliaries and both transceivers at the
         60 mA dominant row, PRINTED; in normal traffic it lasts bit times, not a sustained state)
      S3 IOHA row 7's fault rows, held (the faulted transceiver dominant into the fault, the other at its share), rev V (10e):
-        B1   0.3486 A, line 361
-        B2   0.3486 A, line 362
-        B3   0.2495 A, line 363
-        B4   0.2846 A, line 364
-        B5   0.3686 A, line 365
-        B6   0.2236 A, line 366
-        B7a  0.2286 A, line 367
-        B7b  0.2286 A, line 368
-        and the brief's (f1) 0.3726 A (line 160; round 4's controller figure, rev Y at 144 MHz: a cover, larger than rev V's B1)
+        B1   0.3486 A, line 392
+        B2   0.3486 A, line 393
+        B3   0.2495 A, line 394
+        B4   0.2846 A, line 395
+        B5   0.3686 A, line 396
+        B6   0.2236 A, line 397
+        B7a  0.2286 A, line 398
+        B7b  0.2286 A, line 399
+        and the brief's (f1) 0.3726 A (line 191; round 4's controller figure, rev Y at 144 MHz: a cover, larger than rev V's B1)
      S3' the same rows with the healthy fabric's transceiver dominant in the same bit (MODEL: held - 0.0046 A share + 0.060 A dominant):
         B1   0.4040 A
         B2   0.4040 A
         B3   0.3049 A
         B4   0.3400 A
         B5   0.4240 A
-        largest 0.4240 A (B5: I_f 0.200 A ASSUMED by T10, IOS(DOM)'s printed 200 mA, line 343); row 7 'quorum continues on the other fabric' (IOHA line 244) makes
+        largest 0.4240 A (B5: I_f 0.200 A ASSUMED by T10, IOS(DOM)'s printed 200 mA, line 374); row 7 'quorum continues on the other fabric' (IOHA line 244) makes
         the healthy fabric's frames part of the served state, so S3' is the row's instantaneous peak
-     S4 IOHA row 8 (both fabrics faulted, survive, 'nothing moves'): (f2) 0.5491 A (line 172); rev V held 0.5639 A (line 375)
-     HO-E for reference: VOS0's 105 C limit from 0.1936 A (line 605), 4.4 % over S1's 0.1855 A: no current limit both serves S1 and holds it
+     S4 IOHA row 8 (both fabrics faulted, survive, 'nothing moves'): (f2) 0.5491 A (line 203); rev V held 0.5639 A (line 406)
+     HO-E for reference: VOS0's 105 C limit from 0.1936 A (line 636), 4.4 % over S1's 0.1855 A: no current limit both serves S1 and holds it
         (W127 finding 2; HO-E is its own comparison, L4A-59)
 
 3. THE CANDIDATES: integrated current-limited switches with a PRINTED limit near 0.2 to 0.6 A and a PRINTED fault timer with latch-off
@@ -136,11 +142,11 @@ cx46 item, accepts nothing and moves no state (cx46 CORRECTIONS NOT CLOSED and L
        line 245: 'no controller can form a majority; firmware rule is that a controller without quorum does not act, so the voters hold the home assignment');
        a limiter that latches leaves its supervisor off until EN or power is cycled: the home assignment holds either way; the
        recovery after the repair is a restart (the peers' EN, section 6)
-     what the companion gives up: its IOSmin (0.4702 A) is over the H743's own 125 C current 0.328 A (line 70), so a firmware fault outside
+     what the companion gives up: its IOSmin (0.4702 A) is over the H743's own 125 C current 0.328 A (line 101), so a firmware fault outside
        FW-B20 can still take the controller past its rating (T10 10h (3): a systematic firmware defect, not a protective mechanism); M-A
        at 184 C/W (IOSmax 0.3002 A) would have held it, had it a window; HO-E (VOS0 from 0.1936 A) is under every IOSmin either way (L4A-59)
 
-5. ROW 2: THE LDO OUTPUT SHORT (AP2112 'foldback short current 50 mA (TYPICAL)', T10 line 113; 'acts in no row', line 179)
+5. ROW 2: THE LDO OUTPUT SHORT (AP2112 'foldback short current 50 mA (TYPICAL)', T10 line 144; 'acts in no row', line 210)
    (i) the short draws the limiter's own limit through the LDO (the LDO fully on): the limiter limits and latches off within its
        PRINTED timer: the event's energy
        at most 4.1174 V x 0.5704 A x 10 ms = 23.5 mJ (C1 companion) or 44.8 mJ (C2, 20 ms); with M-A at 184 C/W, 12.4 mJ (C1 at 102.0 kOhm)
@@ -177,7 +183,7 @@ cx46 item, accepts nothing and moves no state (cx46 CORRECTIONS NOT CLOSED and L
 
 7. ROW 4: T10-A3'S HEADROOM WITH THE LIMITER'S RESISTANCE IN PLACE OF THE 0.3 OHM SENSE (the supply path exactly as T10 computes it:
    the pre-regulator's least 3.9063 V, the rail's 2 % budget, the lead and contacts 0.04252 ohm at the total current, the return's shift 0.0681 V)
-   reproduced first: at 0.2452 A with 0.3 ohm at +1 %: 3.6524 V against 3.5213 V (T10 line 612 prints 3.6524 against 3.5213): EQUAL
+   reproduced first: at 0.2452 A with 0.3 ohm at +1 %: 3.6524 V against 3.5213 V (T10 line 643 prints 3.6524 against 3.5213): EQUAL
    (a) C1 TPS2553-1's 0.135 ohm at T10's point, 0.2452 A on all three: 3.6936 V against 3.5213 V: +0.1723 V, holds
    (a) C2 AP22653A's 0.135 ohm at T10's point, 0.2452 A on all three: 3.6936 V against 3.5213 V: +0.1723 V, holds
    (b) at each design's largest sustained current, IOSmax on all three (the AP2112's dropout rows, INFERRED between 300 and 600 mA as T10):
@@ -187,7 +193,7 @@ cx46 item, accepts nothing and moves no state (cx46 CORRECTIONS NOT CLOSED and L
        load regulation; its own rows replace them)
    (c) the other two while one sits at the companion's IOSmax: lead 0.9414 A, each other LDO at S1 0.1855 A: 3.6929 V against 3.4798 V: +0.2131 V, holds
    (d) the connected path upstream: three limiters at their maximum draw 1.7111 A from U601 and the lead's pin 1, against U601's 3 A and
-       the VH's 10 A (PRINTED, T10 line 241): holds; a shorted branch takes at most IOSmax from them, so the other two keep their supply
+       the VH's 10 A (PRINTED, T10 line 272): holds; a shorted branch takes at most IOSmax from them, so the other two keep their supply
    (e) S3' on all three in one bit (error flags overlap): 3.6466 V against 3.6462 V on the AP2112's rows: +0.0005 V (a bit-time peak; the LDO's
        input capacitance carries it; shown, not judged)
 

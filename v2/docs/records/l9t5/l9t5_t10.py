@@ -1932,6 +1932,7 @@ R10_RESTART = 10.0            # s: the peers' restart of one supervisor at most 
 R10_ENABLED = ("TIM3", "ADC12 registers", "ADC12 kernel")   # row (b)'s additions to FW-B20's enabled set: canmb's TXD captures (TIM3, W137),
                               # hodtest's output reads (PC0, PC1 on ADC123_INP10 and INP11, an ADC of ADC1/ADC2, W146-D7)
 R10_ADC_X = 3.0               # ASSUMPTION: the ADC's analog current on VDDA taken at three times ST's TYPICAL (no maximum printed)
+R10_RILIM = 49.9              # kOhm, 1 %: the limiter's RILIM (regstage, W138); TI's Equation 1 at its bounds (W159, W157-F2)
 
 
 def pdf10(key):
@@ -2099,6 +2100,25 @@ def r10_stage_check(nl):
     return ("FAIL" if why else "DRAWN"), why
 
 
+R10_HOLDOFF = {"n": 3, "retry": 600.0, "holders": 2}   # SESSION W159-D3 (W157-F7): the peers' hold-off after 3 failed restarts, 600 s retries
+R10_RESTORE_OFF = 2.0         # s: the restart's off time, both votes held (record l4canen, FW-B22's restart rule, W143-D5)
+
+
+def r10_holdoff(pol, period=R10_RESTART, off=R10_RESTORE_OFF):
+    """W159 on W157-F7: an output short drawing under IOSmin is never limited and never latched, so the target never rejoins and the
+    peers' restart rule powers its regulator into the short for (period - off) of every period, for the mission (its typical thermal
+    shutdown cycling: no printed limit). pol: {"n": failed restarts before the hold-off (None: no hold-off), "retry": s between retries
+    in the hold-off, "holders": peers whose votes hold the target's limiter's EN low (canen's 2-of-2 route)}. HOLDS when a hold-off
+    exists, it is held by both peers' votes (one peer can neither hold a healthy supervisor off nor be needed alone: canen's AND), and
+    the powered fraction in it is at most a tenth of the restart rule's. Returns (verdict, powered fraction before, in the hold-off)."""
+    base = (period - off) / period
+    if pol.get("n") is None or pol.get("retry") is None:
+        return "FAILS", base, base
+    held = (period - off) / pol["retry"]
+    ok = pol["n"] >= 1 and pol["holders"] == 2 and pol["retry"] >= period and held * 10 <= base
+    return ("HOLDS" if ok else "FAILS"), base, held
+
+
 def r10_set_value(path, d, tag, ref, value):
     raw = open(path, encoding="utf-8").read()
     m = re.search(r'\(comp \(ref "%s"\) \(value "([^"]*)"\)' % re.escape(ref), raw)
@@ -2117,8 +2137,13 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
     vout_lo, vout_hi = 3.3 * (1 - acc), 3.3 * (1 + acc)
     drop = hi14 - vout_lo
     eq = S["ios_eq"][0]
-    ios_lo = S["ios49"][0][0] * (1 + R_TOL) ** -eq["min"][1]
-    ios_hi = S["ios49"][0][2] * (1 - R_TOL) ** -eq["max"][1]
+    # W159 on W157's F2: the envelope of W135's rule (the tested row through the exponents) and TI's procedure (Equation 1 at the 1 %
+    # resistor's bounds, SLVS841F 10.2.1.2.3, Table 2): the lower least and the larger most (record l4reg's band_env, re-read here)
+    ios_lo_r = S["ios49"][0][0] * (1 + R_TOL) ** -eq["min"][1]
+    ios_hi_r = S["ios49"][0][2] * (1 - R_TOL) ** -eq["max"][1]
+    ios_lo_e = eq["min"][0] / (R10_RILIM * (1 + R_TOL)) ** eq["min"][1] / 1000.0
+    ios_hi_e = eq["max"][0] / (R10_RILIM * (1 - R_TOL)) ** eq["max"][1] / 1000.0
+    ios_lo, ios_hi = min(ios_lo_r, ios_lo_e), max(ios_hi_r, ios_hi_e)
     G = D.gndret()
     r_sup = G["rhot"] + 2 * DP["vh_r"][1]
     fixed = lo14 - D.RAIL_BUDGET * nom14 - G["shift_drawn_ub"]
@@ -2185,7 +2210,8 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
         v, lab, where = S[k]
         vs = ("%g" % v) if isinstance(v, float) else (" / ".join("%g" % x for x in v) if isinstance(v, tuple) else str(v))
         w("     %-9s %-38s %-9s %s" % (k, vs[:38], lab, where))
-    w("     with RILIM's 1 %% through the equations' exponents (W135's rule, MODEL on PRINTED): IOS %.4f to %.4f A" % (ios_lo, ios_hi))
+    w("     with RILIM's 1 %%, the envelope of W135's exponent rule and TI's Equation 1 at the resistor's bounds (10.2.1.2.3, Table 2; W159 on W157-F2;"
+      " MODEL on PRINTED): IOS %.4f to %.4f A" % (ios_lo, ios_hi))
     w("     TI on a JEDEC theta (SPRA953D, held, p.%d, 1.1): 'This is a misapplication of the RθJA thermal parameter because RθJA is a variable function" % S["mis_p"])
     w("       of not just the package'; (p.%d, 1.2) the 2s2p board 'gives a best case performance estimate assuming a sparsely populated, high-trace-" % S["best_p"])
     w("       density board design with buried power and ground planes'; (p.%d, 1.7) at very low power the note finds RθJA two to three times higher" % S["low_p"])
@@ -2197,7 +2223,7 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
     rja_need = (TJ_GOAL - air) / p0
     w("   (d) RE-7, THE SUSTAINED BOUND AT CONSTANT MAXIMUM DISSIPATION (L4A-57). After the limiter acts, everything the LDO's input takes is")
     w("     at most IOSmax %.4f A (PRINTED over -40 to 125 C TJ, the resistor's 1 %% counted). With its output in regulation the LDO dissipates" % ios_hi)
-    w("     P = VIN x I_IN - VOUT x IOUT = (VIN - VOUT) x IOUT + VOUT x IGND, so at most (VIN_max - VOUT_min) x IOSmax + VOUT_min x IGND: VIN_max the")
+    w("     P = VIN x I_IN - VOUT x IOUT = (VIN - VOUT) x I_IN + VOUT x IGND, so at most (VIN_max - VOUT_min) x IOSmax + VOUT_min x IGND: VIN_max the")
     w("     pre-regulator's top %.4f V (no drop counted ahead of the LDO), VOUT_min %.4f V (-%.1f %%, PRINTED where VIN >= VOUT + 0.5 V; below that" % (hi14, vout_lo, acc * 100))
     w("     the band is V-T10-DROP's, L4REG-F2): the drop %.4f V, %.4f W at IGND = 0" % (drop, p0))
     w("     WHY IT BOUNDS EVERY WAVEFORM UNDER THE LIMIT: the junction's rise is the input power convolved with the rise per unit step, which for a")
@@ -2212,7 +2238,8 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
         g_star * 1e3, g_star / S["ignd"][0], tj_typ))
     w("     with IGND inside it (below)")
     w("     the regulator's 125 C current at this corner on the printed theta %.4f A, over IOSmax by %.4f A; the theta that holds 125 C at IOSmax" % (i125, i125 - ios_hi))
-    w("     with IGND = 0: %.1f C/W (W135's and W138's figure reproduced)" % rja_need)
+    w("     with IGND = 0: %.1f C/W (%.1f C/W at the tested row's %.4f A, W135's and W138's figure, reproduced; W159's envelope moves it)" % (
+        rja_need, (TJ_GOAL - air) / (drop * ios_hi_r), ios_hi_r))
     # (e) theta on board B's copper
     w("   (e) THE THETA ON BOARD B'S COPPER: NOT BOUNDED AT THE DESK. The printed %.1f C/W is TI's JEDEC 2s2p figure for a single device, which" % S["rja"][0])
     w("     TI itself calls a best case and a misapplication when carried to a system board (c). Board B (pcb_board_facts.yaml): six layers, outer")
@@ -2269,6 +2296,15 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
         S["short"][0], S["short"][2], S["tlatch"][0][2] * 1e3))
     w("     maximum under IOSmin. authority SESSION (the owner's standing rule of 26 September 2026 and ruling of 21 September 2026), ruled_by W151,")
     w("     ruled_on 7 October 2026, reversed_by none")
+    hv, h_base, h_held = r10_holdoff(R10_HOLDOFF)
+    hm = (("no hold-off (the restart rule alone)", dict(R10_HOLDOFF, n=None)), ("the hold-off retried at the restart rule's period", dict(R10_HOLDOFF, retry=R10_RESTART)),
+          ("a hold-off one peer's vote holds", dict(R10_HOLDOFF, holders=1)))
+    hvm = [(lab, r10_holdoff(pol)[0]) for lab, pol in hm]
+    w("     (iii) W159 on W157-F7: under (ii) the target never rejoins, and the peers' restart rule (once in %.0f s, %.1f s off) would power its" % (R10_RESTART, R10_RESTORE_OFF))
+    w("     regulator into the short %.0f %% of the mission (its thermal shutdown TYPICAL only, no printed limit). DRAFTED HOLD-OFF (FW-B22, SESSION" % (h_base * 100))
+    w("     W159-D3): after %d consecutive failed restarts both peers keep their restart votes (the limiter's EN low, the target unpowered) and retry" % R10_HOLDOFF["n"])
+    w("     once every %.0f s, a rejoin clearing the count: powered %.2f %% of the time in the hold-off; a single latch still restarts in 5.603 s." % (R10_HOLDOFF["retry"], h_held * 100))
+    w("     Judge %s; mutated, %s" % (hv, "; ".join("%s: %s" % (lab, v) for lab, v in hvm)))
     # (g) W135's four rows held on the selected parts and the service window against C-DEV rev 2
     tj_lim_s3 = air + S["lim_rja"][0] * S["ron"][0] * s3p[s3_key] ** 2
     p_lim_hi = S["ron"][0] * ios_hi ** 2
@@ -2334,7 +2370,8 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
     w("     no bound on board B's copper, so RE-7's sustained bound and RE-6's response read SUPPORTED ON PRINTED FIGURES, CONDITIONAL on E-17's")
     w("     theta and IGND at the site, PROVISIONAL until row (b)'s check (L4A-62); RE-6 and RE-7 stay NOT CLOSED (cx46), REMAINING ENGINEERING")
     w("     until that check and E-17. HO-D (the limiter's latent loss of its limit) is record l4hod's in-service test (a lost limit found within")
-    w("     3602.341 s, DRAFTED); HO-E is unchanged by the limiter (IOSmin over VOS0's %.4f A and the H743's 125 C current) and is L4A-59's" % 0.1936)
+    w("     3602.341 s, DRAFTED); HO-E is not bounded by the limiter (IOSmin is over VOS0's %.4f A and the H743's 125 C current), and"
+      " the rail trip's controller-protection role (each controller's average under its 125 C current) moves to HO-E (L4REG-F7, W159 on W157-F4), L4A-59's" % 0.1936)
     # (j) the T10 rows restated (L4A-61)
     text_ = "\n".join(out)
 
@@ -2368,7 +2405,7 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
         ("10j (e) the qualification limits (229 C/W, 105 C/W at 181 ms, the INA169)", "the qualification limits below are measurements to take",
          "superseded by E-17 ((e): the junction at IOSmax at most %.0f C; Zth(%.0f ms) at most %.1f C/W or W151-1's exclusion kept)" % (TJ_GOAL, S["tlatch"][0][2] * 1e3, zth_10)),
         ("10j (e) VOS0 under the trip", "residual handed over: VOS0 at a current under the trip",
-         "unchanged by the limiter (IOSmin over VOS0's current): HO-E, L4A-59 and its check L4A-100 (fnd/l4hoe, not in this tree)"),
+         "not bounded by the limiter (IOSmin over VOS0's current); the rail trip's controller-protection role moves to HO-E (L4REG-F7): L4A-59 and its check L4A-100 (fnd/l4hoe, not in this tree)"),
         ("L9T5-F13, bounded only on its average", "PROVISIONAL after cx46: a firmware outside the row is bounded only on its AVERAGE",
          "restated: a firmware outside the row is bounded by the limiter's printed maximum at constant maximum dissipation ((d)), CONDITIONAL on E-17"),
         ("L9T5-F16, a latent share comparator", "PROVISIONAL: a latent share comparator weakens",
@@ -2401,6 +2438,8 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
     pred["round 10 (L4A-57): the printed theta is TI's best case, not a site bound: DONE AS CONDITIONAL on E-17, its limits named"] = (
         done and rja_need > S["rja"][0] and zth_10 > 0)
     pred["round 10 (L4A-61): every T10 row the drafts change is restated, its anchor found in this output"] = len(RS) == 17
+    pred["round 11 (W159, W157-F7): the peers' hold-off bounds a short under IOSmin, both peers hold it, each mutation FAILS"] = (
+        hv == "HOLDS" and all(v == "FAILS" for _l, v in hvm))
     return {"pred": pred, "tj0": tj0, "ios": (ios_lo, ios_hi), "served_max": served_max, "window": ios_lo - served_max - en_add, "a3": (at, nd_bnd, nd_inf),
             "g_star": g_star, "rja_need": rja_need, "zth_10": zth_10, "verdict": verdict, "done": done}
 
