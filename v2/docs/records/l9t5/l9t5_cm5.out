@@ -6,7 +6,7 @@ prototype design; nothing built, bought, powered or measured; a case row's chang
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
    9b251b7d3be2aca7 v2/docs/records/l9pwr/l9pwr_budget.py
-   91b36292ded256ed v2/docs/records/l9pwr/l9pwr_budget.out
+   a4ea167cb0585283 v2/docs/records/l9pwr/l9pwr_budget.out
    0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
    429ef814b81dbed7 v2/vendor/cm5/pdftext/cm5-datasheet.layout.txt
    c59cee8614dfb14b v2/vendor/diodes/pdftext/diodes-ap2112-ldo.plain.l1.txt

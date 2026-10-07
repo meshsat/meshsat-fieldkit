@@ -194,7 +194,7 @@ the pours 0.1 mOhm." (`v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10
 - New:
 
 ```text
-the pours 0.1 mOhm" (`v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:103-105`); R17's 0.294 K/W is record l4e11's three-place print (`v2/docs/records/l4e11/l4e11_power.out:1990`) of the one computed target its row E11-29 prints as 0.29 K/W (`:568`)
+the pours 0.1 mOhm" (`v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:103-105`); R17's 0.294 K/W is record l4e11's three-place print (`v2/docs/records/l4e11/l4e11_power.out:1922`) of the one computed target its row E11-29 prints as 0.29 K/W (`:500`)
 ```
 
 ### R-09. Revision 2's lines cited by path once revision 3 replaces the file (sixteen citations)
