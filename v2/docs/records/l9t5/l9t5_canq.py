@@ -64,6 +64,7 @@ DOCS = {"trace": "v2/docs/REQUIREMENTS-TRACE.md", "ioha": "v2/docs/ARCH-PCB-B-IO
         "contract_t10": REC + "/apply_hw_fw_contract_t10.py", "contract_canq": REC + "/apply_hw_fw_contract_canq.py",
         "t10_out": REC + "/l9t5_t10.out", "t10_page": REC + "/T10-ROUND5.md",
         "canmb": REC + "/inputs/l4canmb-l9t5_canmb-5d14cc85.out", "l4reg": REC + "/inputs/l4reg-l4reg_compare-9fbda7a6.out",
+        "sources": REC + "/inputs/SOURCES-canq.txt",
         "ledger": "v2/docs/records/l4close/REMAINING-ENGINEERING.md",
         "cx46": "v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md",
         "compat": "v2/docs/parts/STM32H743-COMPATIBILITY.md", "gen_b": "v2/ecad/tools/gen_sch_b.py",
@@ -361,6 +362,7 @@ class Sim:
         self.now = 0.0
         self.releases = []
         self.holds = []
+        self.strikes = []                    # (t, reader, target, fabric): the explained strikes
         self.faulty = sc.faulty()
         self.wrongly = []                    # (t, node, fabric): a conforming controller silenced by attribution votes
 
@@ -650,6 +652,11 @@ class Sim:
             if readers is None and self.cfg["evidence"]:
                 if not (self.hears(r, f, t) and self.same_seg(f, t, j, r) and not self.blocked(f, t)):
                     continue
+            self.strikes.append((t, r, j, f))
+            if self.cfg["k"] > 1:
+                n_k = sum(1 for (ts, rr, jj, ff) in self.strikes if (rr, jj, ff) == (r, j, f) and t - ts < self.cfg["n_loss"] * self.W)
+                if n_k < self.cfg["k"]:
+                    continue                 # k strikes within the loss count before a vote
             on = t + ev_delay + self.cfg["t_eval_us"] + self.ch["path"]
             if any(b > t for a, b in self.votes[(r, j, f)]):
                 continue
@@ -1195,8 +1202,8 @@ def contract_check():
     return row, vrow, missing, steps
 
 
-def analyse(cfg=None, scan=None, only=None):
-    """everything section 6 to 9 prints, as data (the tests call this with mutated configurations)."""
+def analyse(cfg=None, scan=None, only=None, latent=True, recover=True):
+    """everything sections 2 to 9 print, as data (the tests call this with mutated configurations, a quicker scan and fewer parts)."""
     cfg = dict(CFG, **(cfg or {}))
     P, Q = figures()
     I = interface()
@@ -1207,12 +1214,14 @@ def analyse(cfg=None, scan=None, only=None):
             if only and rid not in only:
                 continue
             res["rows"][(variant, rid)] = run_row(b, c, P, scan)
-    res["latent"] = {v: latent_table(dict(cfg, variant=v), P, scan) for v in ("restated", "w137")}
-    res["latent_dar0"] = detect({"vote_fault": {("B", "A", "A"): "low"}}, dict(cfg, variant="restated", dar=0), P, scan)
-    res["latent_degraded"] = {v: detect({"vote_fault": {("B", "A", "B"): "low"}, "phys": {"A": {"kind": "stuck_rec", "t0": 0.0}}},
-                                        dict(cfg, variant=v), P, scan) for v in ("restated", "w137")}
-    res["latent_literal"] = detect({"own_dead": {("A", "A")}}, dict(cfg, variant="w137", w137_literal=True), P, scan)
-    res["recovery"] = recovery(dict(cfg, variant="restated"), P)
+    if latent:
+        res["latent"] = {v: latent_table(dict(cfg, variant=v), P, scan) for v in ("restated", "w137")}
+        res["latent_dar0"] = detect({"vote_fault": {("B", "A", "A"): "low"}}, dict(cfg, variant="restated", dar=0), P, scan)
+        res["latent_degraded"] = {v: detect({"vote_fault": {("B", "A", "B"): "low"}, "phys": {"A": {"kind": "stuck_rec", "t0": 0.0}}},
+                                            dict(cfg, variant=v), P, scan) for v in ("restated", "w137")}
+        res["latent_literal"] = detect({"own_dead": {("A", "A")}}, dict(cfg, variant="w137", w137_literal=True), P, scan)
+    if recover:
+        res["recovery"] = recovery(dict(cfg, variant="restated"), P)
     res["bounds"] = bounds(cfg, P)
     res["contract"] = contract_check()
     res["acceptance"] = acceptance(res)
@@ -1235,16 +1244,42 @@ def acceptance(res):
     gaps = [(v, rid, r["gap"]) for (v, rid), r in res["rows"].items()
             if not (r["sc"].double or r["sc"].info) and r["sc"].required >= 1 and r["gap"] >= cfg["n_loss"]]
     A.append(("A6 no single fault of a row that requires a quorum takes the surviving pair to the loss count", not gaps))
-    lat = [x for x in res["latent"]["restated"] if x[4] is None]
-    A.append(("A7 every latent fault of the vote path is found within a bound on the restated schedule, or is a named residual", not lat))
-    rec = [r for r in res["recovery"] if r[0] not in ("RC4",) and r[2] is None]
-    A.append(("A8 every contained state returns within a bound once its cause ends (RC1 to RC3, RC5, RC6)", not rec))
+    lat = [x for x in res["latent"]["restated"] if x[4] is None] if "latent" in res else None
+    A.append(("A7 every latent fault of the vote path is found within a bound on the restated schedule, or is a named residual",
+              None if lat is None else not lat))
+    rec = [r for r in res["recovery"] if r[0] not in ("RC4",) and r[2] is None] if "recovery" in res else None
+    A.append(("A8 every contained state returns within a bound once its cause ends (RC1 to RC3, RC5, RC6)", None if rec is None else not rec))
     want = [3, 0, 0, 0, 3, 0, 3, 0]
     A.append(("A9 the contract draft carries this record's figures, composes after t10's, refuses twice and refuses the tree",
               not res["contract"][2] and [c for _, c in res["contract"][3]] == want))
     A.append(("A10 CON-004 read as written: restated, not amended",
               "two independent CAN-FD fabrics with separate transceivers and termination" in I["con004"]))
     return A, bad
+
+
+DECISIONS = (
+    "W139-D1 the restated window: a 10 ms slot per controller for all its frames and the self-test in its own segment (hold 52 to 88 ms)",
+    "W139-D2 both fabrics tested in parallel, fabric B's target the next controller: a 12-window cycle",
+    "W139-D3 the V phase runs the attribution path end to end (the target's deliberate malformed test frame)",
+    "W139-D4 the attribution rule V1 to V5, a strike only with the reader's own bus evidence, a vote on its own strike (k = 1)",
+    "W139-D5 a vote held 1 s, doubled for each strike within 10 s of a release, at most 64 s",
+    "W139-D6 the loss count 3 windows; a peer's state from either fabric; two copies that differ discarded",
+    "W139-D7 FW-B21's stop at the loss count (V-B21's stop time 400 ms) in place of the drafted 100 ms (row F2)",
+    "W139-D8 DAR = 1 kept with ES0392 2.24.5's printed workaround inside the controller's own slot (W137-F1)",
+    "W139-D9 a returning controller listens in bus monitoring mode for 2 windows and sets its outputs to the read-back first",
+    "W139-D10 row R8b takes W138's 'MAY latch' as written (the TPS2553 sheet is held back and not read here)",
+    "W139-D11 the evaluation time 1 ms (a firmware row) and a 0.5 s boot (ASSUMPTION) in the recovery bounds",
+)
+FINDINGS = (
+    "W139-F1 (Layer 6, STM32H743-COMPATIBILITY.md's ES0392 2.24.5 row): 'firmware does not use DAR' contradicts FW-B21 and FW-B22",
+    "W139-F2 (L4A-54 and L4A-58 by L4REG-F3; W138; board A): a latched TPS2553-1 has no automatic return; IOC_LIM_EN has no driver",
+    "W139-F3 (L4A-61, FW-B21's owner): FW-B21's drafted 100 ms stop is one window of FW-B22; restated in this round's draft",
+    "W139-F4 (IOHA A7's owner, Layer 12): A7's break links cut only controller A off; with both out B and C keep a quorum, not row 8",
+    "W139-F5 (W137, L4A-61): W137's self-test precondition read literally skips the phase after every S or V phase",
+    "W139-F6 (L4A-61): under W137's schedule a two-faced controller meets windows where one receiver takes a single copy",
+    "W139-F7 (L4A-61, IOHA section 12's owner): no FMEA row for the babbler, the GPIO-toggled TX, the two-faced controller, the vote path",
+    "W139-F8 (W137, L4A-61): W137's V phase commands the votes, so the attribution path itself is never exercised in service",
+)
 
 
 # ----------------------------------------------------------------------------------------------------------------------- printing
@@ -1259,7 +1294,10 @@ def fmt_t(us):
 
 
 def main():
-    res = analyse()
+    render(analyse())
+
+
+def render(res):
     P, Q, I, cfg = res["P"], res["Q"], res["I"], res["cfg"]
     out = []
     w = out.append
@@ -1441,6 +1479,16 @@ def main():
     w("   the contract draft's FW-B22 and FW-B21 carry: %s" % ("every figure" if not missing else "MISSING " + ", ".join(missing)))
     for name, code in steps:
         w("     %-62s exit %d" % (name, code))
+    w("")
+    w("10. SESSION DECISIONS (under the owner's standing rule of 26 September 2026; reasons and reversals in T10-CANQ.md section 8)")
+    for d in DECISIONS:
+        w("   " + d)
+    w("   FINDINGS FOR OTHER AUTHORS (T10-CANQ.md section 9)")
+    for f in FINDINGS:
+        w("   " + f)
+    w("   WHAT THIS ROUND CLOSES ONCE INDEPENDENTLY CHECKED: CON-004's quorum service under every row above (OPEN until then), FW-B22")
+    w("     (PROVISIONAL until then; restated here), L9T5-F21's babbler row (the table is the text for IOHA section 12, L4A-61); with W137's")
+    w("     circuit, HO-C. cx46's item 5 stays NOT CLOSED and the ledger's RE-5 REMAINING ENGINEERING until an independent check reads it")
     w("")
     w("l9t5_canq: done")
     sys.stdout.write("\n".join(out) + "\n")
