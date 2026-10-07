@@ -11,9 +11,10 @@ WHAT IT DOES, for SESSION decision L4E7-D1 (record l4e7, `B2-PRESENCE.md` sectio
                                baseline drafts (the C2 sense, R-240) would otherwise also have released this withdrawn draft. The
                                separate check (l4e7_p0sol.py ORDER_E_B2) composes it on scratch copies only, which this never gates.
                                Docstring and header comment restated to match (same line count).
-  apply_l4e9_changelist_p0.py  its docstring's "route B2 an unapproved PARTIAL proposal" (record l9t5's applied change-list draft,
-                               flagged by the DESK gate assessment's A1.5) is labelled as the words of 5 October 2026 with the
-                               current state; the payload PY_EDITS is the text set 30 applied at 7070f106 and stays as history.
+  NOT here: the docstring sentence of record l9t5's applied change-list draft apply_l4e9_changelist_p0.py ("route B2 an
+                               unapproved PARTIAL proposal", the DESK gate assessment's A1.5 and K-24) is record l4k's K-24
+                               (fnd/l4k, records/l4k/apply_l4k_changelist.py), which marks it as the text of 7070f106; this
+                               stream does not edit it a second time (the two edits would refuse each other).
 No circuit, net, part or figure changes; no draft is applied. Nothing in this kit has been built, bought, powered or measured.
 Engine and its checks E1 to E6: v2/docs/records/l4small/l4small_edit.py.
 Usage:  apply_l4small_b2.py [ROOT] [--check | --write]   (default ROOT: this tree; default --check: nothing is written)
@@ -27,7 +28,6 @@ import l4small_edit as E  # noqa: E402
 
 NAME = "apply_l4small_b2"
 B2D = "v2/docs/records/l4e7/apply_gen_sch_e_p0sol_b2.py"
-CLP = "v2/docs/records/l9t5/apply_l4e9_changelist_p0.py"
 D = "SESSION L4E7-D1"
 
 OLD_RELEASED = '''def released():
@@ -74,10 +74,6 @@ EDITS = [
           "# whatever record l4e7's RELEASE.md says (it releases the record's other drafts). A copy elsewhere may be written (the "
           "tests do).\n" % D, False),
     (B2D, OLD_RELEASED, NEW_RELEASED, False),
-    (CLP, "route B2 an unapproved PARTIAL proposal that does not resolve it;",
-          "route B2 an unapproved PARTIAL proposal that does not resolve it [the words of 5 October 2026; route B2 is since "
-          "UNSELECTED and WITHDRAWN AS DRAFTED with no owner item (set 31's PC-12 restated L4-E9's data) and %s, 7 October 2026, "
-          "takes up no presence-pair route: PY_EDITS below is the text applied at 7070f106, history];" % D, True),
 ]
 
 if __name__ == "__main__":

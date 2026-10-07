@@ -11,7 +11,17 @@ name revision V only. This restates them:
                                             narrowed, and the lot's revision named as not read (no query sent);
   v2/ecad/tools/pcb_requirements.yaml       CON-017's evidence pin of the page rebound to the patched page's sha256/16, with one
   v2/docs/REQUIREMENTS-TRACE.md             sentence in its evidence item (3) saying why; the trace page, which rules_render.py
-                                            generates from the registry, gets the same two changes (its --check is the integrator's).
+                                            generates from the registry, gets the same two changes (its --check is the integrator's);
+  v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md  its header's registry digest only (render_l3r2.py renders exactly that one
+                                            line differently from the patched registry, checked on fnd/l4small); no Layer 3
+                                            statement, acceptance or decision changes.
+COST, measured on fnd/l4small (7 October 2026): `pcb_requirements.yaml` is a whole-file input of record l4e7's cache KEY
+(l4e7_stage_settings.results.json, parts.files; set 32's typed boundary covers l4e11_power.out only), so applying this script moves
+the KEY and owes the L4-E7 cache recompute (the box's: with the registry applied, test_l4e7 began recomputing on the runner and was
+stopped after 12 minutes), and eight outputs pin the registry (l4e9_power_path, l4e10_cell_thermal, l4e11_power, l4e12_thermal,
+l4e13_panel, l7pwr_fans_th1, l9pwr_budget, l9t5_case: each generator refuses until re-pinned). Apply it in the set that re-keys anyway,
+or after the cache boundary is extended to the registry entries the solver reads (a tooling item, constitution section 8); the other
+five scripts of stream l4small do not touch the KEY.
 CON-017's statement and acceptance are NOT changed: clause (5), revision V or X, is the erratum's bound, which revision V meets.
 No part, net, value, land or order code changes; nothing is bought or asked of a supplier. Nothing in this kit has been built,
 bought, powered or measured. Engine and its checks E1 to E6: v2/docs/records/l4small/l4small_edit.py.
@@ -30,6 +40,7 @@ CMP = "v2/docs/parts/STM32H743-COMPATIBILITY.md"
 PRC = "v2/docs/parts/PROCUREMENT.md"
 REQ = "v2/ecad/tools/pcb_requirements.yaml"
 TRC = "v2/docs/REQUIREMENTS-TRACE.md"
+L3P = "v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md"
 D = "SESSION L9T5-D11"
 FIT = " [revision V only is fitted: %s, record l9t5]" % D
 
@@ -76,7 +87,12 @@ def rebind(before, after):
     for rel in (REQ, TRC):
         if after[rel].count(old) != 1:
             raise E.Refused("%s does not pin the unpatched %s once (%s)" % (rel, CMP, old))
-    return [(REQ, old, new, False), (TRC, old, new, False)]
+    # the Layer 3 issue page prints the registry's sha256/16 in its header (render_l3r2.py; test_l3r2 refuses a stale copy): the
+    # registry's final text is the patched one with the pin swapped, so its digest is computed after that swap
+    reg_final = after[REQ].replace(old, new)
+    l3_old = "`v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `%s`," % E.sha16(before[REQ])
+    l3_new = "`v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `%s`," % E.sha16(reg_final)
+    return [(REQ, old, new, False), (TRC, old, new, False), (L3P, l3_old, l3_new, False)]
 
 
 if __name__ == "__main__":

@@ -59,8 +59,8 @@ B2_BAD = ("waits on the owner", "waits on an owner", "Decision asked", "decision
 B2_BAD_ANY_CASE = ("partial proposal", "unapproved partial")
 B2_FILES = ("v2/docs/records/l4e7/B2-PRESENCE.md", "v2/docs/records/l4e7/L4E7-P0SOL.md", "v2/docs/records/l4e7/SUPPLIER-P1-1-P0SOL.md",
             "v2/docs/records/l4e7/l4e7_p0sol.out", "v2/docs/records/l4e7/apply_gen_sch_e_p0sol_b2.py", "v2/docs/records/l4e7/README.md",
-            "v2/docs/records/l4close/REMAINING-ENGINEERING.md", "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md",
-            "v2/docs/records/l9t5/apply_l4e9_changelist_p0.py")
+            "v2/docs/records/l4close/REMAINING-ENGINEERING.md", "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md")
+# not here: record l9t5's apply_l4e9_changelist_p0.py, whose docstring sentence on route B2 is record l4k's K-24 (fnd/l4k)
 
 
 def _mod(rel, name):
@@ -76,6 +76,8 @@ def _files(m):
     rels = [e[0] for e in edits] + [a[0] for a in getattr(m, "APPENDS", ())]
     if m.NAME == "apply_l4small_register":
         rels += [m.L8P, m.CON]
+    if m.NAME == "apply_l4small_layer6":
+        rels += [m.L3P]
     return sorted(set(rels))
 
 
@@ -171,8 +173,6 @@ def _b2_violations(texts):
     out = []
     for rel in B2_FILES:
         tx = _tree_or_applied(rel, texts)
-        if rel.endswith("apply_l4e9_changelist_p0.py"):   # the payload applied at 7070f106 is history; its docstring carries the label
-            tx = tx.split("PY_EDITS = ", 1)[0]
         whole = rel.endswith(("B2-PRESENCE.md", "apply_gen_sch_e_p0sol_b2.py"))   # pages whose whole subject is route B2
         near_b2 = None if whole else (lambda t, i, j: "B2" not in t[max(0, i - 300):j + 300])
         out += [(rel, b) for b in _unlabelled(tx, B2_BAD, DB, near_b2)]
@@ -265,6 +265,8 @@ def t_con017_is_rebound_to_the_patched_page_and_its_clause_5_is_unchanged():
     texts = _all_applied()
     page = texts["v2/docs/parts/STM32H743-COMPATIBILITY.md"]
     pin = "v2/docs/parts/STM32H743-COMPATIBILITY.md@%s" % hashlib.sha256(page.encode("utf-8")).hexdigest()[:16]
+    reg = hashlib.sha256(texts["v2/ecad/tools/pcb_requirements.yaml"].encode("utf-8")).hexdigest()[:16]
+    assert "`v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `%s`," % reg in texts["v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md"]
     for rel in ("v2/ecad/tools/pcb_requirements.yaml", "v2/docs/REQUIREMENTS-TRACE.md"):
         assert texts[rel].count(pin) == 1, (rel, pin)
         assert "(5) the fitted supervisors are" in texts[rel] and "silicon revision V or X (marking V or X; DBGMCU_IDC REV_ID 0x2003 or 0x2001" \
@@ -332,7 +334,8 @@ def t_r208_names_both_readings_at_their_lines():
     con = open(os.path.join(REC, "l9t5", "l9t5_connected.out"), encoding="utf-8").read().splitlines()
     assert "(R264, C264)" in l8p[int(m.group(1)) - 1] and "apply_gen_sch_a_mainpb" in l8p[int(m.group(1)) - 1]
     assert "R603, C607 on MAIN_PB" in con[int(m.group(2)) - 1]
-    assert "on the tree's order with the guard, R-222, before it" not in row[0]
+    # inserted after set 31's applied row WP-22 (its new text must stand once, test_w24l4e9), labelled, never inside it
+    assert "its section 5 at `515f6cf2`) [restated 7 October 2026 by W130's correction 2, records/l4small: " + m.group(0) + "]" in row[0]
     oldrow = [l for l in open(os.path.join(ROOT, "v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md"), encoding="utf-8").read().splitlines()
               if l.startswith("| R-208 |")]
     if _state("l4small/apply_l4small_register.py") == "old":
