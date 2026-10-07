@@ -15,7 +15,17 @@ R135's drawn values and the delays from C117's, C119's and C120's, so R10 at 1 m
 the on-time bound (D106, R143, C120 at 22 nF) is read and its removal FAILS (F2); a source's share is bounded on voltage over the
 bounded on-time and R140's restated pulse is the largest case (F1); the RC hold's stretch is printed (F8). The arming's least delay
 now counts from the trip's assertion and must cover the gate, the clearing and 0.5 ms (round 11 asked 1 ms after PGD's fall: the
-basis changed with the circuit, L8P-BREAKER.md 16i, because the same delay now bounds R140's pulse)."""
+basis changed with the circuit, L8P-BREAKER.md 16i, because the same delay now bounds R140's pulse).
+
+Round 13 (W156, 7 October 2026, after the targeted recheck L4A-69, W153's F1, F2, F3, F7, F8): the reader computes OCH_S2's level while
+PGD is low with every leakage that can reach it at the record's 86.25 C site, so round 12's drawing (R143 2.2 MOhm from BRK_PGD) FAILS
+and round 13's (R143 330 kOhm from BRK_VIN, Q114 holding OCH_S2 low through PGD inverted by Q113, R144 and D107) reads DRAWN; five
+mutations are added (round 12's drawing, Q114 removed, R144 at 1 MOhm, a shorted D106, a resistor on BRK_PGD) and each FAILS on its
+electrical predicate. Changed expectations and their basis (constitution section 8): round 12's level test took R143 2.2 MOhm from
+BRK_PGD; R143 now sits on BRK_VIN, so the same three requirements (OCH_S2 under the threshold while the trip asserts, BRK_PGD over
+Q106's threshold, OCH_S2 armed over the release) are asserted on round 13's values, and R143 at 100 kOhm now fails on D106's current
+past its printed 0.1 mA VF row rather than on BRK_PGD, which it no longer touches; E-6b is stated on one basis (the recheck's F3), so
+R140's pulse is the voltage-bound case, larger than round 12's split case."""
 import importlib.util
 import os
 import re
@@ -232,7 +242,8 @@ def t_no_dashes_and_no_claim_words():
 
 def t_round12_the_reader_reads_the_drawn_delays_and_the_bound_and_fails_on_them():
     O = _O()
-    base = {"R135": "1k", "C117": "10n 50V C0G (SENSE1's filter)", "C119": "4.7n 50V C0G 5%", "C120": "22n 50V C0G 5%", "R143": "2.2M 1%"}
+    base = {"R135": "1k", "C117": "10n 50V C0G (SENSE1's filter)", "C119": "4.7n 50V C0G 5%", "C120": "22n 50V C0G 5%", "R143": "330k 1%",
+            "R144": "200k 1%"}   # round 13's values (module docstring)
     nl = lambda **kw: {"comps": {k: {"value": kw.get(k, v)} for k, v in base.items()}, "pins": {}, "on": {}}
     d = O.delays(nl())
     assert abs(d["filter"] - 10e-6) < 1e-12 and 0.45e-3 < d["cts1"][0] < d["cts1"][1] < 0.86e-3
@@ -242,7 +253,12 @@ def t_round12_the_reader_reads_the_drawn_delays_and_the_bound_and_fails_on_them(
     assert O.delays(nl(C120="15n"))["cts2"][0] < O.T_GATE + O.CLEAR + O.ARM_MARGIN      # too short to let the -1 latch first
     b = O.bound_levels(nl())
     assert b["low"] < O.VITP[0] and b["pgd"] > O.VTH_Q106 and b["armed"] > O.REL_MAX, b
-    assert O.bound_levels(nl(R143="100k"))["pgd"] < O.VTH_Q106                           # BRK_PGD under Q106's threshold
+    assert O.bound_levels(nl(R143="100k"))["low"] >= O.VITP[0]                           # round 13: D106 past its 0.1 mA VF row
+    assert b["pgd_low"] < O.VITP[0] and b["gate"] >= O.VGS_RDS, b                        # round 13: PGD low, every leakage at the site
+    assert O.bound_levels(nl(R144="1M"))["pgd_low"] >= O.VITP[0]                         # Q114's gate under 5 V with the leakage
+    r12 = {"comps": {"R143": {"value": "2.2M 1%"}}, "pins": {"R143": {"1": "BRK_PGD", "2": "OCH_S2"}}, "on": {"BRK_PGD": {"R143"}}}
+    b12 = O.bound_levels(r12)                                                             # round 12's drawing: lifted by leakage
+    assert b12["on_pgd"] and b12["pgd_low"] >= O.VITP[0] and b12["pgd_other"] == ["R143"], b12
     assert O.bound_levels(nl(R143="10M"))["armed"] < O.REL_MAX                           # the bound never re-arms
     assert abs(O.ohms("2m 2512 2W (sense)") - 2e-3) < 1e-12 and O.ohms("0.39R 1%") == 0.39 and abs(O.farads("4.7n 50V") - 4.7e-9) < 1e-18
 
@@ -256,13 +272,13 @@ def t_round12_the_on_time_bound_ends_the_band_and_its_mutations_fail():
     names = " ".join(n for n, _v, _w in K["muts"])
     for s_ in ("R10 at 1 mOhm", "R135 at 1 MOhm", "C117 at 100 nF", "C120 at 47 nF", "D106 removed", "R143 at 100 kOhm", "SENSE2 back on BRK_PGD"):
         assert s_ in names, s_
-    assert all(v == "FAIL" for _n, v, _w in K["muts"]) and len(K["muts"]) == 16
+    assert all(v == "FAIL" for _n, v, _w in K["muts"]) and len(K["muts"]) == 21          # round 13 adds five (module docstring)
     assert K["delays"] is not None and K["levels"]["low"] < 0.792
 
 
 def t_round12_a_sources_share_is_bounded_on_voltage_and_r140s_pulse_restated():
     R, _K = _R()
-    assert R["e_r140"] == max(R["e_n"], R["e_s"], R["e_w"]) == R["e_w"] and R["e_n_src"] < R["e_w"]
+    assert R["e_r140"] == max(R["e_n"], R["e_s"], R["e_w"], R["e_v"]) == R["e_v"] and R["e_n_src"] < R["e_w"] < R["e_v"]   # round 13: one basis
     assert abs(R["e_n"] - 0.399) < 0.002                         # round 11's figure reproduces
     assert R["p_on"] < R["p_after"] and abs(R["vsys_max"] - 17.375) < 1e-9 and abs(R["p_src"] - 118.0) < 1e-9
     assert R["inh_v"] < R["v_settled"] < R["vsys_max"]          # L8P-R12-F1: the DD-7 inhibit does not set on the settled source
@@ -290,3 +306,53 @@ def t_round12_the_hold_stretch_and_the_page_section():
         for k in ("id", "title", "authority", "authority_why", "ruled_by", "ruled_on", "reversed_by", "outcome"):
             assert k in dct and str(dct[k]).strip(), (dct.get("id"), k)
         assert dct["authority"] == "SESSION"
+
+
+def t_round13_the_pgd_low_disarm_holds_under_leakage_and_its_mutations_fail():
+    R, K = _R()
+    O = _O()
+    # round 12's drawing, shown first: the leakage that reaches OCH_S2 lifts it over VITN while PGD is low
+    assert R["q112_site"] > R["r12_lift"][1] > R["r12_lift"][0] and 0.3e-6 > R["r12_lift"][0]
+    assert 40.0 < R["r12_t"][0] < R["r12_t"][1] < 60.0, R["r12_t"]
+    # the two compared corrections fail on printed figures; the selection's levels hold on the composed netlist
+    assert R["a1_arm"] < O.REL_MAX and R["a2"][2] < 5.0e-6 < R["q112_site"] + 5.0e-6
+    L = K["levels"]
+    assert L["pgd_low"] < 0.792 and L["gate"] >= O.VGS_RDS and L["armed"] > O.REL_MAX and L["low"] < O.VITP[0], L
+    assert L["pgd"] > O.VTH_Q106 and not L["pgd_other"] and not L["on_pgd"], L
+    # the start, the band's edge with the loop, E-6b on one basis, the cycling load
+    assert R["start_i"] < R["win"][0] and R["t_disarm_start"] < R["ins_least"]
+    assert R["v_force"] < R["edge"][0] < R["edge"][1] < 10.6 and 9.5 < R["edge"][0] and R["edge"][1] < 9.7, R["edge"]
+    assert R["share_worst"] < R["crcw"]["w"][2] and 76.25 < R["t_nine"] < 85.0
+    assert R["train_need"] > R["train_tmin"] and abs(R["cont_w100"] - 1.5) < 0.05
+    want = {"round 12's drawing": "while PGD is low", "Q114 removed (round 13": "while PGD is low", "R144 at 1 MOhm": "while PGD is low",
+            "D106 shorted (round 13": "RESET1's node", "R143 on BRK_PGD at 330 kOhm": "OCH_S2 at"}
+    for key, why_part in want.items():
+        hit = [(v, w_) for n_, v, w_ in K["muts"] if key in n_]
+        assert len(hit) == 1 and hit[0][0] == "FAIL" and why_part in hit[0][1], (key, hit)
+    out = open(OUT, encoding="utf-8").read()
+    for s_ in ("4j. THE PGD-LOW DISARM ON LEAKAGE", "L8P-R13-D1", "THE START SERVICE SHOWN", "NOT BOUNDED", "ON ONE BASIS",
+               "THE BAND'S UPPER EDGE WITH THE LOOP", "THE COUNT'S BASIS", "SNVSBJ1E 8.3.5.1", "E-12s's specimens", "L8P-R12-F1 (4g"):
+        assert s_ in out, s_
+    draft = open(DRAFT, encoding="utf-8").read()
+    assert 'r("R143", "330k 1%", "BRK_VIN", "OCH_S2")' in draft and '"BRK_PGD", "OCH_S2"' not in draft
+
+
+def t_round13_the_page_section_and_the_readme():
+    page = open(PAGE, encoding="utf-8").read()
+    assert "#### 16j. Round 13" in page
+    sec = page.split("#### 16j. Round 13")[1]
+    for s_ in ("0.29", "0.69", "5.58 uA", "43.5", "56.1", "3.02 uA", "5.06 V", "1.27 mV", "4.97 V", "0.64 V", "3.72 V", "10.16 V",
+               "4.06 ms", "4.23 ms", "9.54", "9.61", "3.51 J", "77.7 C", "79.6 ms", "L8P-R13-D1", "L8P-R12-F1", "UNVERIFIED"):
+        assert s_ in sec, s_
+    docs = yaml.safe_load(re.search(r"```yaml\n(.*?)```", sec, re.S).group(1))
+    assert isinstance(docs, list) and len(docs) >= 1
+    for dct in docs:
+        for k in ("id", "title", "authority", "authority_why", "ruled_by", "ruled_on", "reversed_by", "outcome"):
+            assert k in dct and str(dct[k]).strip(), (dct.get("id"), k)
+        assert dct["authority"] == "SESSION"
+    paras = open(README, encoding="utf-8").read().split("\n\n")
+    heads = [q for q in paras if q.startswith("**ROUND 1")]
+    r12 = [q for q in heads if q.startswith("**ROUND 12")]
+    r13 = [q for q in heads if q.startswith("**ROUND 13")]
+    assert r12 and r13 and paras.index(r13[0]) == paras.index(r12[0]) + 1
+    assert all(w in r13[0] for w in ("DONE", "NOT DONE", "NEXT"))
