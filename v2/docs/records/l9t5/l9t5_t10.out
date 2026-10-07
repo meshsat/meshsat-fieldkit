@@ -752,7 +752,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    old text above is history, not an instruction
    (a) THE INPUTS OF THIS SECTION, pinned by sha256 (section 1's list unchanged)
    51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
-   469594bb5b4fa6be v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
+   fb40f56837a717cb v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
    1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
    89576bfb472d983e v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
    07af4d0f2b166694 v2/ecad/tools/pcb_board_facts.yaml

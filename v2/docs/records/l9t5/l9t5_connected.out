@@ -17,7 +17,7 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    cc9c9eefdd674fd5 v2/docs/records/efuse/efuse_check.out
    33c6c695367f40de v2/docs/records/l9stk/l9stk_protection.out
    5cc3eedafd987a74 v2/docs/records/l8p/l8p_c4.out
-   83f5e6aaa9e28709 v2/docs/records/l9t5/l9t5_t10.out
+   2b55777bc5d0243d v2/docs/records/l9t5/l9t5_t10.out
    4dc36af23b2a2522 v2/docs/records/l9t5/l9t5_f01.out
    ada2070a1c808ae1 v2/docs/records/l8r2/l8r2_p0.out
    3acf4672e3c85c03 v2/docs/records/l4e7/l4e7_p0sol.out
@@ -368,9 +368,9 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    W151-F1). Sections 0 to 11 stand as written for the candidate composed there; this section restates the rows row (b) changes. Nothing
    here closes an item: cx46's states stand, row (b)'s check is L4A-62, and the connected verdict stays as section 11 reads it
    (a) PINS of this section (sha256/16 path)
-   438696d9ad02180d v2/docs/records/l9t5/l9t5_canmb.out
-   e259573c92675988 v2/docs/records/l4canen/l4canen.out
-   a9c83f703c26e257 v2/docs/records/l4hod/l4hod.out
+   1159599b4c589352 v2/docs/records/l9t5/l9t5_canmb.out
+   8861819ad38218cf v2/docs/records/l4canen/l4canen.out
+   c22b01bd5250b513 v2/docs/records/l4hod/l4hod.out
    (b) THE SERVICE WINDOW ON THE COMPOSED CANDIDATE (C-DEV rev 2, conditional on FW-B20 and FW-B21): T10 11a reads IOSmin 0.4702 A over the
      largest served 0.4239 A by 0.0462 A, and 0.0390 A after row (b)'s enabled set (0.0073 A, TIM3 and an ADC, FW-B20 restated); the drafts add on
      a controller's own rail at most 0.0041 A (record l4canen 0.1770 A with canmb's 0.1753 A in

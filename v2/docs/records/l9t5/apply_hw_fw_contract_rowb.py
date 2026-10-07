@@ -156,7 +156,9 @@ CHANGE = ("| 4 (row b) | 7 October 2026 | By record l9t5's round 10, Layer 4 tas
           "its limiter, the rail trip gone, TIM3 and an ADC enabled, BOR level 2), FW-B21 (SHDN OR'd with the peers' 2-of-2 vote, the "
           "share limiter gone), FW-B22's restart rule (no automatic restart of a peer under test), V-B20 (E-17's site reading), V-B21, "
           "V-B23 (the limiter, the rail trip's 0.2 s WITHDRAWN), and the in-service limiter test FW-B24 with V-B25 (record l4hod); "
-          "FW-B23 and V-B24 left to HO-E's draft; OWED (DRAFTED, PROVISIONAL until row (b)'s check L4A-62) |\n")
+          "FW-B23 and V-B24 left to HO-E's draft; corrected by round 11 (W159, `records/l9t5/T10-ROUND11.md`, on row (b)'s check L4A-62): "
+          "FW-B20 in L9T5-D11's words, the limiter's band 0.4702 to 0.5878 A on TI's Equation 1, FW-B22's hold-off, the rail trip's "
+          "controller-protection role named as HO-E's; OWED (DRAFTED, PROVISIONAL until row (b)'s recheck) |\n")
 
 
 def refuse(msg):

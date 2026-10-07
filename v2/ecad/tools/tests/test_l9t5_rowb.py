@@ -327,7 +327,8 @@ def t_the_page_carries_the_outputs_figures():
 
 
 def t_record_hygiene():
-    files = [PAGE, A_ROWB, A_IOHA, A_REM, os.path.abspath(__file__), T10, T10_OUT, CON, CON_OUT]
+    files = [PAGE, A_ROWB, A_IOHA, A_REM, os.path.abspath(__file__), T10, T10_OUT, CON, CON_OUT, A_CL, A_CANQ,
+             os.path.join(REC, "T10-ROUND11.md")]
     for p in files:
         t = _text(p)
         assert chr(0x2014) not in t and chr(0x2013) not in t, "a long dash in %s" % os.path.basename(p)
