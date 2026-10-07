@@ -210,8 +210,10 @@ def counts_fails(led, anx):
     fails = []
     # Restated by W41 (6 October 2026; basis: W38's F1): the coordinator's merge d5d9c252 brought main's adoption 836f711b, which put
     # three lines into the ledger (746 to 749 on main), so the ledger is its base plus those three; the annex keeps its count.
-    if led.count("\n") != bl.count("\n") + 3:
-        fails.append("the ledger has %d lines, the base %d plus 836f711b's three" % (led.count("\n"), bl.count("\n")))
+    # Restated by the coordinator (7 October 2026; basis: set 33's chain applied L4K-4, L4S-3 and ROWB-1 to the ledger under the
+    # coordinator's APPLY rulings, 750 to 761 lines at C1 9df37826): plus those eleven.
+    if led.count("\n") != bl.count("\n") + 3 + 11:
+        fails.append("the ledger has %d lines, the base %d plus 836f711b's three and set 33's eleven" % (led.count("\n"), bl.count("\n")))
     if anx.count("\n") != ba.count("\n"):
         fails.append("the annex has %d lines, the base %d" % (anx.count("\n"), ba.count("\n")))
     return fails

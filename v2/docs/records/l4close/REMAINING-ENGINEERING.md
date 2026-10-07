@@ -341,21 +341,21 @@ as filed.
   l9stk's allowance remain unrestated. Smallest correction: state the changed circuit/case explicitly, reconcile the allowance
   consumers and regenerate affected startup/protection rows. Until then this propagation is REMAINING ENGINEERING."
 - **Failed case.** The guard's draw on DOCK_EN_OUT rises from 18.25 uA to at most 36.00 uA cold and 47.02 uA tripped (PRINTED maxima,
-  the worst single fault) against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2) ([BRK:1407-1409]); cx46's DC check at
+  the worst single fault) against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2) ([BRK:1413-1415]); cx46's DC check at
   180 uA gives about 3.447 V on DOCK_EN_OUT at the low-source corner, MODEL ([CX46:92]).
 - **Attempted correction and the disposition.** L4-E11 section 28 states the changed circuit and executes both allowance cases, 40
   and 50 uA and the first form's 50 and 180 uA ([E11:2104-2122]); its disposition: "these rows hold on the delta's intact circuit at
   both allowance cases; PROVISIONAL, not closed" ([E11:2134-2139]); the consumers drafted for their owners, not applied
-  ([BRK:1409-1413]).
+  ([BRK:1415-1419]).
 - **Unresolved.** The owners' restatement of the allowance (Layer 5's row, record l9stk 15.9: still 30 uA, [E11:2111-2112]) and "the
   replay of the dependent start-up and protection rows (20f's timing against U47's and U48's tSD at the owners' restated allowance,
   22's bleed with path 2's VBAT load)" ([E11:2136-2139]).
-- **Affected provisional outputs.** Every row resting on the allowance ([BRK:1413-1414]); the connected guard row ([CON:201-203]).
+- **Affected provisional outputs.** Every row resting on the allowance ([BRK:1419-1420]); the connected guard row ([CON:201-203]).
 - **Receiving company's task.** The replay named above, against L4-E11's own windows (the held reading under 0.7755 V, the powered
   reading at most 1.981 V, RET/OUT at 0.4707 or more, the breaker's start no sooner than the RC hold's least 0.110 s)
   ([E11:2114-2133]).
 - **Reproduce.** `python3 v2/docs/records/l4e11/l4e11_power.py` (section 28) and `python3 v2/docs/records/l8p/l8p_c4.py` (10c).
-- **State on this tip.** NOT CLOSED: L8P-R9-F2 OPEN ([BRK:1407], [BRK:1420-1422]).
+- **State on this tip.** NOT CLOSED: L8P-R9-F2 OPEN ([BRK:1413], [BRK:1426-1428]).
 
 ### RE-10 (cx46 item 10): the guard's common-path faults and an automatic diagnostic (L8P-R9-F1, the retry heating)
 
@@ -366,28 +366,28 @@ as filed.
   v2/docs/records/l8p/L8P-BREAKER.md:1350-1375: single-path retry heating is unbounded and the latent double failure removes the
   trip, despite broad positive C-PROT language. Smallest correction: qualify every such verdict as OPEN/PROVISIONAL and transfer
   bounded retry-energy analysis plus automatic diagnostic or fault-tolerant redesign as REMAINING ENGINEERING."
-- **Failed cases.** The three latent single failures of round 8's guard with UNBOUNDED intervals ([BRK:1350-1355]); the exposure
+- **Failed cases.** The three latent single failures of round 8's guard with UNBOUNDED intervals ([BRK:1356-1361]); the exposure
   while the guard is lost: the battery FETs reach 150 C held at 20.53 A from the 76.25 C air (DERIVED), a held current from 20.53 A
-  to the breaker's limit puts a series part over its limit below the trip ([BRK:1345-1349]); with path 1 lost, path 2's relaxation
+  to the breaker's limit puts a series part over its limit below the trip ([BRK:1351-1355]); with path 1 lost, path 2's relaxation
   lets the FETs carry current at most 43.8 ms in every 0.154 s or more, "the junction's rise in each on-time NOT BOUNDED here"
   ([C4:283-286]); a latent first failure followed by a second removes the trip ([C4:332-338]).
 - **Attempted correction.** `v2/docs/records/l8p/apply_gen_sch_a_thgfs.py`, two guard paths sharing only the pour and the loop (Slot
-  C's `f04aa0b4`, merged at `64a65943`; change-list row R-244), composed (731 parts), seven mutations FAIL ([BRK:1356-1367],
-  [C4:342-354], [T5R:172]); SESSION L8P-D10 ([BRK:1391-1395]).
+  C's `f04aa0b4`, merged at `64a65943`; change-list row R-244), composed (731 parts), seven mutations FAIL ([BRK:1362-1373],
+  [C4:342-354], [T5R:172]); SESSION L8P-D10 ([BRK:1397-1401]).
 - **What the recheck said does not stand.** Protection after a latent first failure and under path 2's retries ([CX46:93]).
 - **Unresolved fact or design decision.** "the bounded retry-energy analysis of path 2 alone after path 1 is lost, and an AUTOMATIC
   diagnostic with a bounded detection and response interval covering faults after start-up and faults of the diagnostic itself (the
-  owner's part 24), or a fault-tolerant redesign" ([BRK:1402-1406]); why no diagnostic is drafted: "one that tests a shunt opens the
+  owner's part 24), or a fault-tolerant redesign" ([BRK:1408-1412]); why no diagnostic is drafted: "one that tests a shunt opens the
   breaker in service, and a cross-check of the two VTEMP outputs sees the switches, not the gate networks or the shunts"
-  ([BRK:1400-1402]).
+  ([BRK:1406-1408]).
 - **Affected provisional outputs.** "C-PROT rev 1 for the guard is PROVISIONAL at every claim that rests on this" ([C4:274-275]);
-  "L8P-R9-F1 weakens every C-PROT claim for the guard" ([BRK:1406]); L4-E11 section 28 ([E11:2134-2136]); the connected guard row
-  ([CON:194-203], [CON:326-327]); E-13b (e) ([BRK:1417-1419]).
-- **Receiving company's task.** As stated above ([BRK:1402-1406]); acceptance: C-PROT rev 1, every series part within its limits below
-  and above the trip ([BRK:1343-1344]), the FETs' 150 C behind the guard ([CON:199]).
+  "L8P-R9-F1 weakens every C-PROT claim for the guard" ([BRK:1412]); L4-E11 section 28 ([E11:2134-2136]); the connected guard row
+  ([CON:194-203], [CON:326-327]); E-13b (e) ([BRK:1423-1425]).
+- **Receiving company's task.** As stated above ([BRK:1408-1412]); acceptance: C-PROT rev 1, every series part within its limits below
+  and above the trip ([BRK:1349-1350]), the FETs' 150 C behind the guard ([CON:199]).
 - **Reproduce.** `python3 v2/docs/records/l8p/l8p_c4.py` (sections 10b, 10c; output [C4]); `v2/docs/records/l8p/check_l8p_fs.py`
   reads the composed delta ([C4:345-347]).
-- **State on this tip.** NOT CLOSED: "C-PROT rev 1 for the guard PROVISIONAL; L8P-R9-F1, F2 and F3 OPEN" ([BRK:1420-1422]).
+- **State on this tip.** NOT CLOSED: "C-PROT rev 1 for the guard PROVISIONAL; L8P-R9-F1, F2 and F3 OPEN" ([BRK:1426-1428]).
 
 ### RE-13 (cx46 item 13): the connected coordination and service claims
 
@@ -418,7 +418,7 @@ as filed.
   ([CX46:108]) and ([CX46:109]), quoted under RE-10 and RE-13.
 - **Failed cases.** The handed-over cases HO-A to HO-E (section 2), with cx46's statement of their effects ([CX46:97]).
 - **Attempted correction and the disposition.** The effects written at each claim: [CON:320-335], [T10:662-667], [C4:355-358],
-  [BRK:1369-1422], [E11:2134-2139]; section 4 of this ledger lists each claim with the row that names it.
+  [BRK:1375-1428], [E11:2134-2139]; section 4 of this ledger lists each claim with the row that names it.
 - **Unresolved, of substance.** The cases themselves (HO-A to HO-E).
 - **Affected provisional outputs.** Section 4.
 - **Receiving company's task.** Those of HO-A to HO-E.
@@ -452,21 +452,21 @@ as filed.
 ### HO-A: L8P-R9-F1, the guard's latent first failure followed by a second (REMAINING ENGINEERING; inside RE-10)
 
 - **Failed case.** "a first failure that silently removes ONE path is found only by E-13b, each path on its own, and no service
-  interval bounds that; a second failure in the other path before it is found removes the trip" ([BRK:1398-1401]); no approved
-  requirement permits a latent state ([BRK:1339-1344]).
-- **Attempted correction.** The two-path delta (RE-10): "this delta (single failures survived at once)" ([BRK:1402]).
-- **Unresolved.** An automatic diagnostic with a bounded interval, or a fault-tolerant redesign ([BRK:1403-1406]).
-- **Affected outputs.** "10c's disposition, C-PROT rev 1 for the guard (every claim), L4-E11 section 28" ([BRK:1402-1403]).
+  interval bounds that; a second failure in the other path before it is found removes the trip" ([BRK:1404-1407]); no approved
+  requirement permits a latent state ([BRK:1345-1350]).
+- **Attempted correction.** The two-path delta (RE-10): "this delta (single failures survived at once)" ([BRK:1408]).
+- **Unresolved.** An automatic diagnostic with a bounded interval, or a fault-tolerant redesign ([BRK:1409-1412]).
+- **Affected outputs.** "10c's disposition, C-PROT rev 1 for the guard (every claim), L4-E11 section 28" ([BRK:1408-1409]).
 - **Task and acceptance.** As RE-10. **Reproduce.** As RE-10.
 
 ### HO-B: the single-path retry heating after path 1 is lost (REMAINING ENGINEERING; inside RE-10)
 
 - **Failed case.** With path 1 lost, path 2 relaxes: the FETs carry current at most 43.8 ms in every 0.154 s or more (DERIVED), the
   junction's rise per on-time NOT BOUNDED ([C4:281-286]); "with path 1 lost the protection under those retries is NOT shown (cx46 item
-  10, the retry-energy analysis REMAINING ENGINEERING)" ([BRK:1381-1384]).
+  10, the retry-energy analysis REMAINING ENGINEERING)" ([BRK:1387-1390]).
 - **Unresolved.** "the bounded retry-energy analysis of path 2 alone" ([C4:339]).
 - **Affected outputs.** "every claim resting on path 2 alone is PROVISIONAL" ([C4:285-286]).
-- **Task and acceptance.** The analysis, against C-PROT rev 1 and the FETs' 150 C ([BRK:1343-1344], [CON:199]). **Reproduce.** As RE-10.
+- **Task and acceptance.** The analysis, against C-PROT rev 1 and the FETs' 150 C ([BRK:1349-1350], [CON:199]). **Reproduce.** As RE-10.
 
 ### HO-C: L9T5-F21, a TX pin toggled as a GPIO under the limiter's share (REMAINING ENGINEERING; inside RE-5)
 
@@ -653,7 +653,7 @@ as filed.
 
 | Claim | Where the candidate states it | Weakened by | State it reads (cited) |
 |---|---|---|---|
-| The thermal guard's C-PROT rev 1 verdict | [CON:194-203]; [C4:271-275] | HO-A, HO-B (RE-10); L8P-R9-F2 (RE-9) | PROVISIONAL: "C-PROT rev 1 for the guard PROVISIONAL" ([BRK:1420-1422]); the connected row "reads REMAINING ENGINEERING" ([CON:199-200]) |
+| The thermal guard's C-PROT rev 1 verdict | [CON:194-203]; [C4:271-275] | HO-A, HO-B (RE-10); L8P-R9-F2 (RE-9) | PROVISIONAL: "C-PROT rev 1 for the guard PROVISIONAL" ([BRK:1426-1428]); the connected row "reads REMAINING ENGINEERING" ([CON:199-200]) |
 | The supervisors' LDOs' 125 C sustained bound (rev V, R602 14.0 k) | [CON:213-216]; [CON:293-317]; [T10:614-633] | RE-7 (the periodic peak); RE-6 and HO-D (the latent rail trip) | the universal sustained bound WITHDRAWN, PROVISIONAL ([T10:620], [T10:664-665]); the worst-case margin row PROVISIONAL/OPEN ([CON:314-317]) |
 | CON-004's quorum service | [T10:587-606]; [CON:130-139] | HO-C, HO-D (RE-5) | OPEN ([T10:603], [T10R:221]) |
 | FW-B22, the quorum's schedule | [HWFW:76-82]; [T10:554-561] | HO-C, HO-D; HO-E (service) | PROVISIONAL, a traffic MODEL ([T10:560-561], [HWFW:11]) |

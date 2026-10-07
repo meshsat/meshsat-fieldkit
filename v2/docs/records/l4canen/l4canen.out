@@ -6,9 +6,9 @@ a DRAFT, NOT APPLIED; prototype design, nothing built or measured)
 1. INPUTS (sha256/16)
    1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
    51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
-   4f0c77610cc9e3a3 v2/docs/records/l9t5/l9t5_canmb.out
+   fdaa13e008c50a82 v2/docs/records/l9t5/l9t5_canmb.out
    babc11a248760e82 v2/docs/records/l9t5/l9t5_canmb.py
-   82994457f2f5f6f5 v2/docs/records/l9t5/l9t5_canq.out
+   708f0a2eba190f8f v2/docs/records/l9t5/l9t5_canq.out
    4a5b8c86981d97f3 v2/docs/records/l9t5/T10-CANQ.md
    a69deb9776af483e v2/docs/records/l9t5/l9t5_canq.py
    12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
@@ -20,7 +20,7 @@ a DRAFT, NOT APPLIED; prototype design, nothing built or measured)
    6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
    4f8831c8b21e2ca1 v2/docs/records/l9t5/apply_gen_sch_a_iocset.py
-   4ae2e514201032f2 v2/docs/records/l4reg/l4reg_compare.out
+   a5adb715883d8bdb v2/docs/records/l4reg/l4reg_compare.out
    469594bb5b4fa6be v2/docs/records/l4canen/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py
    f3a39bd6d9e90711 v2/docs/records/l4canen/inputs/SOURCES.txt
    45ee58fa2d170d1c v2/docs/REQUIREMENTS-TRACE.md

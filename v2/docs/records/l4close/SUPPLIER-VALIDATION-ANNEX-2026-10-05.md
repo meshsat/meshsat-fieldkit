@@ -167,7 +167,7 @@ candidate's checks cx45 and cx46. Since then, on the set 30 candidate that the c
 - the P0 candidate was checked twice and the method ended: cx45, "P0 CANDIDATE: NOT CONFIRMED." [CX45:10]; cx46, "P0 RECHECK:
   CORRECTIONS NOT CLOSED." [CX46:10], filed as "the second negative on the method, which ends it" (the filing's head, [CX46:3]);
 - the remaining-engineering ledger carries this annex's four items as HO-H to HO-K [REM:552-584] and counts "qualification 1;
-  external architecture fact 3" [REM:672]; its amendment of 6 October 2026 adds E11-37 as HO-L and the back-feed's reading to HO-F
+  external architecture fact 3" [REM:683]; its amendment of 6 October 2026 adds E11-37 as HO-L and the back-feed's reading to HO-F
   (REM-M lines 584-636 and 522-535, text only);
 - set 31 restated R-159 "from E11-29's row word for word (in its Acceptance)" [SET31:44] (section 6.3);
 - the DESK-gate draft named E11-37 and the back-feed as unplaced (DGA lines 258-263, its A4.4 and A4.5) and listed K-06, K-09, K-12
