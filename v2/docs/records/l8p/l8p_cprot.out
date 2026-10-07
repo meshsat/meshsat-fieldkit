@@ -4,10 +4,10 @@ printed figures and the records' own; nothing was built, bought or measured. LAB
 INFERRED; MODEL; RECORD; ASSUMED.
 
 0. PINS (sha256/16)
-   287b128fa71f7687  v2/docs/records/l8p/l8p_rowc.out
-   36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
-   3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
-   46f3c6cd9ea6b638  v2/docs/records/l9stk/l9stk_protection.out
+   504db20d16332844  v2/docs/records/l8p/l8p_rowc.out
+   e742b1eb590e408a  v2/docs/records/l4e11/l4e11_power.out
+   5cc3eedafd987a74  v2/docs/records/l8p/l8p_c4.out
+   9e0683f55447e150  v2/docs/records/l9stk/l9stk_protection.out
    3a23036c57859f1d  v2/docs/records/l9stk/L9-STACKUPS.md
    27bf3e410e7a2597  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
    e8f1294bb0f76c75  v2/docs/records/l8p/apply_gen_sch_p_breaker.py
@@ -17,7 +17,7 @@ INFERRED; MODEL; RECORD; ASSUMED.
    08a656ab0230986d  v2/docs/records/l8p/inputs/l9stk-section15.9-bb6d2c8f.md
    b8fe467eb18e7135  v2/docs/records/l8p/apply_pcb_interfaces_guard_allowance.py
    40f19805a32f9a71  v2/docs/records/l8p/apply_l9stk_guard_allowance.py
-   d8882cd01e9df691  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   8890e94fdb94ffef  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    d6aed9d98fbf7f16  v2/vendor/ti/ti-tps37-snvsbj1e.pdf
    62bd7b5285171597  v2/vendor/ti/held/ti-opa187-sbos807e.pdf
    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf

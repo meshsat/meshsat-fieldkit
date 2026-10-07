@@ -26,7 +26,7 @@ PROTOTYPE DESIGN, desk arithmetic; nothing bought, built, powered or measured. C
    pin eac0fc1807e7e4989801aa3448c13f4b2870de06f23cb1084059aae518b2c7f0 v2/docs/records/l4e10/inputs/prices-2026-10-02.json
    pin cc5ad871143dda6c90b07f9ddf6334301dc4c1001bd80783dbf53d5a328a7a68 v2/docs/records/l4e10/inputs/saft-lsh20-curves-read-2026-10-01.json
    pin 7d62d6be4368e92f5444a22c9978e32261ec761b695125edbc8124bb06e489f3 v2/docs/records/l4e10/inputs/topwell-hl18650v-page-2026-10-01.json
-   pin 0081f048d4d0f72c44308d6e3994409ff6f8a0e7c6b2e3c64d850fc4f67d8c94 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   pin 8890e94fdb94ffef0e7eeb7c840039a0ec055a27f82938c296d0ed9d2c6f28bc v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    pin 5a616902d2ddab82f25d34ab55d848d06011fb6fbe48c147221d6b442783e462 v2/docs/records/rv-pwr/pwr_budget.json
    pin 58e40cf604804cc9d70c7fbeb1012be4552563fcc8ae7ef6755003c33acb902f v2/docs/records/rv-pwr/pwr_budget.out
    pin 469d0820b046ef6ff5aceadf422b4166de3d6a02bc50fa5b0c3644704f0f9556 v2/docs/records/rv-pwr/pwr_budget.py
@@ -34,7 +34,7 @@ PROTOTYPE DESIGN, desk arithmetic; nothing bought, built, powered or measured. C
    pin 44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
    pin 0d4d60f03260f004cd7af9d738e41bbdb5f5a1d4818fa33775328d0d264d41ec v2/docs/review-packets/battery/THERMAL-COORDINATION.md
    pin 35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864 v2/ecad/tools/pcb_envelope.yaml
-   pin 8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31 v2/ecad/tools/pcb_requirements.yaml
+   pin c8956b14b0e78aa43c47ddb835514a4cb92ec16f334f9b3ef8bbef76986b394c v2/ecad/tools/pcb_requirements.yaml
    pin 3ecc2424acfa1753c2aec0b62d5706d4f25b7a08e731795c0d84d59938a3158e v2/vendor/battery/eaton-scf9550-elx1135.pdf
    pin 36a63e8fe3c5d7b2c17d58e2ab9e188df7d82a7cb29885d737bae44ce47850e6 v2/vendor/battery/heater/pdftext/rs-pro-245-556-heater-mat-sheet.layout.txt
    pin 5c0e331bc0051078cc373f87ed904a2fffaeb26dc1bffd0d79e54c524667fe7f v2/vendor/battery/heater/rs-pro-245-556-heater-mat-sheet.pdf

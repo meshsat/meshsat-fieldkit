@@ -6470,7 +6470,7 @@ records:
           secure access mode, RSS and the secure-only flash area as not available on the STM32H743 and no requirement,
           generator line or feasibility page uses one. The pin map was checked against the committed netlist when this
           reading was bound (U41, U51 and U61, pin numbers and functions). Clause (5) is ASSEMBLY's and clause (4) the
-          firmware stage's (final_phase), so they do not decide this SCHEMATIC reading
+          firmware stage's (final_phase), so they do not decide this SCHEMATIC reading. Rebound on 7 October 2026 (W133, records/l9t5/apply_l4small_layer6.py): the page's F1, its matrix rows naming revision V or X and HC6-SC-1 now add that the fitted revision is V only (SESSION L9T5-D11, record l9t5); clause (5)'s bound and every reading of (1) to (3) unchanged
       - >-
           (1) and (2) hold: v2/ecad/tools/gen_sch_b.py:281-289 and :1145-1146 read at eadbe571 name STM32H743VIT6
           (JLCPCB C114409) with the pin table checked again for both parts, the committed netlist
@@ -6630,7 +6630,7 @@ records:
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
-      - "v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f"
+      - "v2/docs/parts/STM32H743-COMPATIBILITY.md@43b57022e32a0ce0"
       - "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4"
       - "v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3"
       - "v2/vendor/st/st-es0392-rev15.pdf@effe23b2b79ec4ee"

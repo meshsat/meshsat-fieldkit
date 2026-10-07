@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """apply_gen_sch_e_p0sol_b2.py: DRAFT for board E's generator owner (task P0-7 of MESHSAT-1357, 5 October 2026, route B2 for D-10's
 port-level residual, B2-PRESENCE.md). UNSELECTED and WITHDRAWN AS DRAFTED (Astra's cx45 and cx46, Q6; the owner's reviews,
-parts 24 and 25): kept as the record of the route and for its separate check only. No owner item rests on it; the approved
+parts 24 and 25): kept as the record of the route and for its separate check only (SESSION L4E7-D1, 7 October 2026: no presence-pair route is taken up, so the tree's generator is refused whatever RELEASE.md says). No owner item rests on it; the approved
 interface stands (the panel on the shore plug's second pair, no presence pair). NOT APPLIED to the tree; its author ran it only on
 scratch copies (the tests also write scratch copies).
 
@@ -29,7 +29,7 @@ C80, which no later draft takes, and adds no capacitor above C148).
 Usage:  apply_gen_sch_e_p0sol_b2.py TARGET [--check | --write]     (default --check: nothing is written)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; the result must parse.
 Exit 0: checked (or written); 3: refused (the target is not the expected text, the change is already applied, a draft it follows
-is not applied yet, or the repository's own generator is named before RELEASE.md releases it)."""
+is not applied yet, or the repository's own generator is named, which is refused always since SESSION L4E7-D1)."""
 import ast
 import difflib
 import os
@@ -107,8 +107,8 @@ def patched(text):
 
 
 # NOT RELEASED: a WITHDRAWN draft of task P0-7 (route B2, unselected), never applied by its author. Writing the repository's own
-# gen_sch_e.py is refused until RELEASE.md beside this script reads "released: yes" on its first line and names an accepted check
-# ("check: <repository path whose first line is 'accepted: yes'>"). A copy elsewhere may be written (the tests do).
+# gen_sch_e.py is refused ALWAYS (SESSION L4E7-D1, 7 October 2026, B2-PRESENCE.md section 8: no presence-pair route is taken up),
+# whatever record l4e7's RELEASE.md says (it releases the record's other drafts). A copy elsewhere may be written (the tests do).
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(HERE))))
 TREE_GEN = os.path.join(REPO, "v2", "ecad", "tools", "gen_sch_e.py")
@@ -116,19 +116,19 @@ RELEASE = os.path.join(HERE, "RELEASE.md")
 
 
 def released():
-    if not os.path.isfile(RELEASE):
-        refuse("NOT RELEASED: no RELEASE.md; P0-7's route B2 waits on the owner's ruling and an accepted check")
-    lines = [l.rstrip("\n") for l in open(RELEASE, encoding="utf-8")]
-    if not lines or lines[0] != "released: yes":
-        refuse("NOT RELEASED: RELEASE.md's first line is not 'released: yes'")
-    rec = [l.split(":", 1)[1].strip() for l in lines if l.startswith("check:")]
-    if len(rec) != 1:
-        refuse("NOT RELEASED: RELEASE.md names no single check")
-    path = os.path.join(REPO, rec[0])
-    if ".." in rec[0].split("/") or not os.path.isfile(path):
-        refuse("NOT RELEASED: check %s is not in this tree" % rec[0])
-    if open(path, encoding="utf-8").readline().rstrip("\n") != "accepted: yes":
-        refuse("NOT RELEASED: check %s is not accepted" % rec[0])
+    """SESSION L4E7-D1 (7 October 2026, B2-PRESENCE.md section 8): no presence-pair route is taken up, so this WITHDRAWN draft is
+    never released onto the repository's own generator. Record l4e7's RELEASE.md releases the record's other drafts and is not
+    read here: before L4E7-D1 a RELEASE.md written for the baseline's C2 sense (R-240) would have released this draft too.
+    The separate check composes the draft on scratch copies only (l4e7_p0sol.py ORDER_E_B2), which this function never gates.
+    Before L4E7-D1 this function read RELEASE.md's first line ("released: yes") and one accepted check named in it; that guard is
+    kept in the history of this file (its commit before stream l4small's apply script), not as a route. To reverse: reverse
+    L4E7-D1 first (a presence-pair route taken up as a new route with its own check, B2-PRESENCE.md section 5b's detection and
+    INP protection drafted, composed and mutated), then restore the RELEASE.md guard from this file's history; until then every
+    call of this function on the repository's own generator ends the run with exit 3 and the message below, so no route B2
+    edit can reach gen_sch_e.py through this script.
+    """
+    refuse("NOT RELEASED: route B2 is UNSELECTED and WITHDRAWN AS DRAFTED and no presence-pair route is taken up "
+           "(SESSION L4E7-D1, B2-PRESENCE.md section 8): no RELEASE.md releases this draft onto the tree's generator")
 
 
 def main(argv):

@@ -4,24 +4,24 @@ they admit, its levels, its acceptance, its procedure and detection interval, an
 prototype design, nothing built or measured; it closes no cx46 item and moves no state)
 
 1. INPUTS (sha256/16)
-   92e23993ab3f4c42 v2/docs/records/l8p/L8P-BREAKER.md
+   c0cdc4c6b46902da v2/docs/records/l8p/L8P-BREAKER.md
    1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
-   52009c60e3b0f864 v2/docs/records/l4canen/l4canen.out
+   44dcea7790d51c54 v2/docs/records/l4canen/l4canen.out
    74ff2f7753360af6 v2/docs/records/l4canen/l4canen.py
    51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
-   cfa7ed0220b4f68c v2/docs/records/l9t5/l9t5_canmb.out
-   266f221e85668e80 v2/docs/records/l9t5/l9t5_canq.out
+   4f0c77610cc9e3a3 v2/docs/records/l9t5/l9t5_canmb.out
+   82994457f2f5f6f5 v2/docs/records/l9t5/l9t5_canq.out
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    89576bfb472d983e v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
-   fe5e69e35142a031 v2/docs/records/l4reg/l4reg_compare.out
+   4ae2e514201032f2 v2/docs/records/l4reg/l4reg_compare.out
    c9dec1b3079d2393 v2/docs/records/l4reg/l4reg_compare.py
    7e473e35ac8efde0 v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md
    c4084ad21bcc6d2f v2/docs/records/l4hod/inputs/l4ai-register-L4A-58-row.tsv
    fb40f56837a717cb v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
-   37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
-   d2f9cb974c384add v2/docs/records/l9t5/l9t5_t10.out
+   94e561ae771c7cdd v2/docs/records/l4close/REMAINING-ENGINEERING.md
+   e106c880d49ceaea v2/docs/records/l9t5/l9t5_t10.out
    be3b47d2770da1c2 v2/vendor/diodes/pdftext/diodes-bat46w.layout.txt
    9e327f9bfd6f5a7c v2/vendor/passives/held/pdftext/uniroyal-series-11cd644d.layout.f4.l7.txt  (held back)
    39f205116896b7e2 v2/vendor/power/pdftext/aos-ao3400a-n-mosfet.layout.txt

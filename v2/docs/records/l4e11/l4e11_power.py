@@ -48,7 +48,7 @@ TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_
 REC = "v2/docs/records/l4e11"
 
 PINS = {
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "c8956b14b0e78aa43c47ddb835514a4cb92ec16f334f9b3ef8bbef76986b394c"),
     "rules": ("v2/ecad/tools/pcb_rules.yaml", "14ea032a7fdd86ac877a51ec7bdc804d95c1c639ddbca4035338da5a09d8b83f"),
     "testplan": ("v2/docs/TEST-PLAN.md", "42a3dff33442c86089a2c6c9dee841e8e2c8b9cbc1222a4adc311902b3c316f7"),
     "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "12b6ea059a68b5c5f0eb4d67513283af2bd8a011f9e80bea7d047e5955b1e99a"),
@@ -117,7 +117,7 @@ PINS = {
     "spra953": ("v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf", "8ab81b5a351132ae8ab049d984e7cc72f1eb3dd3e4d9d8e063be6fcd841080a9"),
     "an11158": ("v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf", "9e3211549d0bcd774b265d0598588b3b221b13b9c528b7374445fd0f21d47aec"),
     "gen_b": ("v2/ecad/tools/gen_sch_b.py", "3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8"),
-    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "0081f048d4d0f72c44308d6e3994409ff6f8a0e7c6b2e3c64d850fc4f67d8c94"),
+    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "8890e94fdb94ffef0e7eeb7c840039a0ec055a27f82938c296d0ed9d2c6f28bc"),
     # round 9 (4 October 2026, section 19): R19's maker sheet (held back), the VSYS hold's parts, RAIL_EN's controller and buck
     "hollr2512": ("v2/vendor/passives/held/moolee-hollr2512-ho-a0-2022-01-06.pdf", "5dac9ede82062791abe6128aa7cad87c1422993820fbd21efa33dbea2ce04005"),
     "tps37": ("v2/vendor/ti/ti-tps37-snvsbj1e.pdf", "d6aed9d98fbf7f16f4dea2d6edf7c889e5fd3fa862f4072da656fb3fe7cef545"),

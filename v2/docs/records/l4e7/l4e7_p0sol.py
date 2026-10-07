@@ -1287,7 +1287,7 @@ def render(O, K, R, b6, r3, K2):
          "resistances only. S1 and S2 then qualify the correction; M2 and M3 are re-run wherever it changes the port.")
     wrap("    (d) ", "        ", "PROVISIONAL until then: IF-01's D-10 protection claim, R-173 as a protection, R-176 rows 2 and 3, "
          "R-180, the port's parts and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows. "
-         "Completed independently on the present port network: D-16's correction (section 2), the regulation and "
+         "Independent of E-1, ADDRESSED IN DRAFTS and PROVISIONAL: D-16's correction (section 2), the regulation and "  # K-13, record l4k, 7 October 2026: the pages' reading since set 31 (SUPPLIER-P1-1-P0SOL.md E-1 (d)), in place of round 3's wording
          "its correlated margin, the 100 W bound re-run, M2 with the selected sensing (re-run only if the correction changes the "
          "port), INP's divider ratio.")
     P("")
@@ -1415,7 +1415,7 @@ def render(O, K, R, b6, r3, K2):
          "loop closed (a parallel connection behind the plug) steps onto the port with the guard on, exactly section 2b's case; a "
          "stiff source BELOW the stage's voltage arriving after a withdrawal draws the stage's charge back through Q12's body diode "
          "(PV_P back-feeds PV_F through it while the guard is off), the reverse of the step, not computed here; the timing proof (5e) "
-         "and the pair's fault detection and INP's protection (5f). Validation: P1-1's S1 (the first two added to its rows); the "
+         "and the pair's fault detection and INP's protection (5f). Validation: P1-1's S1 rows (a) and (b), after the first two are computed as REMAINING ENGINEERING inside E-1; the "  # K-23, record l4k, 7 October 2026: B2-PRESENCE.md section 7 since set 31, in place of the validation-only reading; the words the annex quotes at this line, Validation: P1-1's S1, stay where they were
          "last two are REMAINING ENGINEERING outside the baseline, not validation.")
     return lines
 

@@ -4,11 +4,11 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
 (cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand); the selection is a desk design on printed figures, unchecked
 
 1. INPUTS, pinned by sha256
-   d2f9cb974c384add v2/docs/records/l9t5/l9t5_t10.out
-   62abfcde748c4d73 v2/docs/records/l9t5/l9t5_t10.py
+   e106c880d49ceaea v2/docs/records/l9t5/l9t5_t10.out
+   ab704cf00122b8bb v2/docs/records/l9t5/l9t5_t10.py
    be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
-   37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
+   94e561ae771c7cdd v2/docs/records/l4close/REMAINING-ENGINEERING.md
    c9b9215862ab363a v2/ecad/tools/gen_pcb_b3.py
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py

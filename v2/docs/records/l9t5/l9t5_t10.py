@@ -438,7 +438,7 @@ def round5(w, P, DP, air, hi3, d_bound):
     w("   CON-004. A7 as written CUTS a fabric (the 0 Ohm break links R508 to R513): it exercises an open, not a shorted bus, and not the")
     w("   TCAN334's %.0f mA bus-fault row (TXD 0 V, CANH -12 V, RL open); the shorted-bus variants are analysed in 10e and named in V-B21" % (P["can_fault"] * 1000))
     w("   CON-017: '%s'; '%s' (V6-m9). So L9T5-F14's two revisions are" % (Q["c17_5"], Q["c17_4"]))
-    w("     settled at assembly: the fitted part is V or X. DS12110 Rev 10 prints rev Y (section 6) and rev V (section 7) only, no rev X")
+    w("     settled at assembly: the fitted part is V or X [CON-017 (5)'s bound; the fitted part is revision V only, SESSION L9T5-D11, 7 October 2026]. DS12110 Rev 10 prints rev Y (section 6) and rev V (section 7) only, no rev X")
     w("     section; T10 keeps rev Y's larger rows as the cover for a rev X part (CONSERVATIVE for rev V by construction, an ASSUMPTION for")
     w("     rev X), and rev V's rows as the fitted revision's own figures")
     w("")
@@ -834,7 +834,7 @@ def round5_answers(w, P, DP, air, hi3, Q, tj_l, out):
     w("     THE CONTROLLER FIGURE A FITTED PART MUST MEET for the worst state (both fabrics faulted, responded) to hold 125 C at this corner: at most")
     w("     %.4f A at its own operating point at %.2f C air (rev V's rows: %.4f A; rev Y's: %.4f A). PROVISIONAL CHOICE (SESSION L9T5-D7): the" % (
         i_cap, air, out["B"][("V", air)][1], out["B"][("Y", air)][1]))
-    w("     supervisors are fitted in revision V (inside CON-017 (5), which admits V or X), the revision whose printed rows hold; a rev X part is")
+    w("     supervisors are fitted in revision V (inside CON-017 (5), which admits V or X), the revision whose printed rows hold; [SUPERSEDED 7 October 2026 by SESSION L9T5-D11: revision X NOT ADMITTED; round 5's words kept as history:] a rev X part is")
     w("     accepted only after the supplier's V-B20 reads its supply current at the bound, at a junction of 105 C or more, at most that figure")
     w("     (specimen: three rev X STM32H743VIT6 on the first-article board B; quantity: each supervisor's supply current at FW-B20's bound and")
     w("     FW-B21's share, at its operating junction; pass limit: at most %.4f A); the inside air at the pockets is U-02's (the T-H1 mock-up)" % i_cap)
@@ -1009,7 +1009,7 @@ def round5_part22(w, P, DP, air, hi3, Q, tj_l, out):
         FITTED_REV, TJ_GOAL, bab[FITTED_REV][0], "holds" if fit14 else "does NOT hold", TJ_GOAL))
     w("     babbler %.1f C). On rev Y's rows, the cover for rev X, the babbler stays over 125 C at 14.0k (%.1f C): a rev X part is still" % (
         bab[FITTED_REV][1], bab[COVER_REV][1]))
-    w("     admitted only by V-B20 (10h (1)); the proof above is revision V's and is never applied to revisions X or Y")
+    w("     admitted only by V-B20 (10h (1)) [as written at round 5; SUPERSEDED by SESSION L9T5-D11: revision X NOT ADMITTED]; the proof above is revision V's and is never applied to revisions X or Y")
     # T10-A3 restated at the record's largest current, and the composition of the delta
     G = D.gndret()
     r_sup = G["rhot"] + 2 * DP["vh_r"][1]
@@ -1342,7 +1342,7 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
     w("   (f) THE ROWS MADE TO AGREE: every procurement, contract and inspection instruction points to revision V (L9T5-D7), the final set point")
     w("     R602 14.0k (4.0114 V nominal) and 125 C for every sustained state; revision X is HELD with no admission route (round 5's V-B20 route")
     w("     at 0.2318 A and L9T5-F22's 'admits any revision' are SUPERSEDED); a rev X part's admission, its own qualification, and the sustained")
-    w("     thermal acceptance it would rest on are REMAINING ENGINEERING ((e)); the rail trip's least %.4f A is a drafted circuit's figure," % i_min)
+    w("     thermal acceptance it would rest on are REMAINING ENGINEERING ((e)) [the rev X part's admission and qualification: an UNSELECTED OPTION since 7 October 2026, SESSION L9T5-D11, not remaining engineering]; the rail trip's least %.4f A is a drafted circuit's figure," % i_min)
     w("     not a qualification limit")
     with tempfile.TemporaryDirectory(prefix="l9t5_t10r6_") as d:
         seq = D.seq_of("b", "slot")
@@ -1390,7 +1390,7 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
     w("     the rail trip's response times (PROVISIONAL, no printed maximum for the comparator's delay), V-B23's response (WITHDRAWN), the sustained thermal")
     w("     bound (WITHDRAWN as a bound, PROVISIONAL), T10-A3 at a peak (PROVISIONAL). REMAINING ENGINEERING, for the receiving company: the")
     w("     peer-silence or diagnostic circuit with the recovery proof; the corrected rail-trip response and its network calculation; peak-")
-    w("     current containment or the periodic electrothermal solution; a rev X part's qualification; VOS0 under the trip")
+    w("     current containment or the periodic electrothermal solution; a rev X part's qualification [an UNSELECTED OPTION since 7 October 2026, SESSION L9T5-D11]; VOS0 under the trip")
     w("")
     out["r6"] = R6
     return out
@@ -1848,7 +1848,7 @@ def main():
     w("     is in no FMEA row; round 6 (10j) bounds a babbler through its FDCAN in hardware (the transmit-share limiters, 0.23 s); OPEN for a TX")
     w("     pin toggled as a GPIO under the limiter's least share (the peers' TXD observation and 2-of-2 vote, not drafted) and the FMEA row")
     w("   L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): DRAFTED in part 22 (apply_gen_sch_?_iocset.py, R602 14.0k, taken);")
-    w("     revision X stays HELD until its own qualification (10j (f))")
+    w("     revision X stays HELD until its own qualification (10j (f)) [superseded 7 October 2026 by SESSION L9T5-D11: NOT ADMITTED; its qualification an UNSELECTED OPTION]")
     w("   L9T5-F25 (Slot A, record l9t5's I-03 check): check_l9t5_netlist.py reads the LDOs' VIN on +5V_IOC; with the containment delta")
     w("     (apply_gen_sch_b_iocguard.py, round 6) each sits behind its sense resistor on IOC{t}_LDO_IN: to restate when the delta is taken")
     w("   L9T5-F24 (Slot A, record l9t5's pre-regulator check): check_l9t5_netlist.py's 't10' divider (13.3k) is to be restated to 14.0k when")
@@ -1880,7 +1880,7 @@ def main():
     pred["round 5: the reset state the reference manual prints (HSI at 64 MHz, VOS3) is inside the bound"] = Q["hsi"] <= BOUND[1] and BOUND[0] == "VOS3"
     pred["round 5: at the drop's worst corner the bounded state holds 125 C at the case's air on rev V's rows (fitted, L9T5-D7)"] = f13_ok
     pred["round 5: with the response every credible single fabric fault holds 125 C on rev V's rows and both fabrics hold 150 C on both"] = f16_ok and f17_ok
-    pred["round 5 (part 21, (1)): rev Y's rows, the cover for a rev X part, do not hold 125 C at that corner (a rev X part waits on V-B20)"] = cover_fails
+    pred["round 5 (part 21, (1)): rev Y's rows, the cover for a rev X part, do not hold 125 C at that corner (a rev X part waits on V-B20 [as at round 5; SESSION L9T5-D11: NOT ADMITTED])"] = cover_fails
     pred["round 5: without a row the held bus-fault rows still FAIL (the response, not the parts, closes them)"] = all(
         tj_l(h, air) > TJ_GOAL for rev in "YV" for fid, h, _d, _r in R5["fault_rows"][rev] if fid in ("B1", "B2", "B5"))
     pred["round 5: the SHDN draft composes and reads DRAWN; the state before it and both mutations FAIL; the contract draft applies once"] = drafted_ok and R5["ok5"]

@@ -91,6 +91,16 @@ W20_LITS = [
      "     sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: %s over (%s): revision X stays HELD with no"
      " admission route (round 5's V-B20 route SUPERSEDED, 10j (f))"),
 ]
+# W133's three insertions (7 October 2026, record l9t5's apply_l4small_revx.py; basis: SESSION L9T5-D11, record l9t5's
+# T10-ROUND5.md section W133): section 10's revision X lines of the connected generator carry the decision, nothing else moves
+W133_LITS = [
+    ('in its bounded state (V-B20, 10j (f)), and a draw over"',
+     'in its bounded state (V-B20, 10j (f)) [revision X NOT ADMITTED since 7 October 2026, SESSION L9T5-D11], and a draw over"'),
+    ('current, so revision X stays HELD on V-B20 (Slot C, 10j (f));")',
+     'current, so revision X stays HELD on V-B20 (Slot C, 10j (f)) [superseded: NOT ADMITTED, SESSION L9T5-D11];")'),
+    ("(its bounded state over the trip's least; HELD on V-B20); the LDO input headroom",
+     "(its bounded state over the trip's least; HELD on V-B20 [superseded: NOT ADMITTED, SESSION L9T5-D11]); the LDO input headroom"),
+]
 # W11's tip: the W11 section of the README says its line numbers are this branch's (restated by W41, see t_every_cited_source_line_holds)
 W11_TIP = "85b6f25836f8a4e8312181efbad89976f212672c"
 STALE_CON = ("rev X on V-B20", "CORRECTED IN", "own output refuses on this tree", "applied by the integrator with the re-takes")
@@ -277,6 +287,11 @@ def t_the_generator_prints_the_restated_rows():
     for o, n in W20_LITS:
         assert swapped.count('w("%s"' % o) == 1, o[:40]
         swapped = swapped.replace('w("%s"' % o, 'w("%s"' % n)
+    # restated by W133 (7 October 2026; basis: SESSION L9T5-D11, record l9t5's T10-ROUND5.md section W133): the three insertions of
+    # record l9t5's apply_l4small_revx.py are swapped in too, by exact literal; any other difference still fails below
+    for o, n in W133_LITS:
+        assert swapped.count(o) == 1, o[:40]
+        swapped = swapped.replace(o, n)
     assert swapped == src, "the generator differs from the base in more than the two rows' literals and W20's three"
     ast.parse(src)
     assert not CLAIM.search("\n".join(NEW_T10 + NEW_CL)) and not any(d in "".join(NEW_T10 + NEW_CL) for d in DASHES)

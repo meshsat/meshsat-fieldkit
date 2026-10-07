@@ -6,24 +6,24 @@ a DRAFT, NOT APPLIED; prototype design, nothing built or measured)
 1. INPUTS (sha256/16)
    1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
    51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
-   cfa7ed0220b4f68c v2/docs/records/l9t5/l9t5_canmb.out
+   4f0c77610cc9e3a3 v2/docs/records/l9t5/l9t5_canmb.out
    babc11a248760e82 v2/docs/records/l9t5/l9t5_canmb.py
-   266f221e85668e80 v2/docs/records/l9t5/l9t5_canq.out
+   82994457f2f5f6f5 v2/docs/records/l9t5/l9t5_canq.out
    4a5b8c86981d97f3 v2/docs/records/l9t5/T10-CANQ.md
    a69deb9776af483e v2/docs/records/l9t5/l9t5_canq.py
    12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
    20fdb1cd9e1c1e29 v2/docs/records/l9t5/apply_hw_fw_contract_canq.py
-   efcfdf67f1fcab83 v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
+   b986d78249aeb7bb v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
    be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
    4f8831c8b21e2ca1 v2/docs/records/l9t5/apply_gen_sch_a_iocset.py
-   fe5e69e35142a031 v2/docs/records/l4reg/l4reg_compare.out
+   4ae2e514201032f2 v2/docs/records/l4reg/l4reg_compare.out
    469594bb5b4fa6be v2/docs/records/l4canen/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py
    f3a39bd6d9e90711 v2/docs/records/l4canen/inputs/SOURCES.txt
-   653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
+   45ee58fa2d170d1c v2/docs/REQUIREMENTS-TRACE.md
    39f205116896b7e2 v2/vendor/power/pdftext/aos-ao3400a-n-mosfet.layout.txt
    9e7f53205453bb22 v2/vendor/st/pdftext/st-es0392-rev15.layout.p48.txt
    227510d881e3f97a v2/vendor/st/pdftext/st-rm0433-rev8.layout.p533.txt

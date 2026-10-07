@@ -18,7 +18,7 @@ CLOSED, the second negative; the method ends and T10's Q3 is carried as REMAININ
 limiter's share, a latent stuck comparator); the response times PROVISIONAL (no printed maximum for the comparator's delay) and V-B23's 0.2 s
 WITHDRAWN; the universal sustained thermal bound WITHDRAWN (cx46's periodic countermodel, reproduced: 127.54 C with its filtered current
 under the trip; a latent rail trip removes even the average bound); T10-A3 at a peak PROVISIONAL. The rows agree on revision V only
-(revision X HELD with no admission route: round 5's V-B20 route at 0.2318 A and L9T5-F22's shortcut SUPERSEDED), R602 14.0 k and 125 C
+(revision X HELD with no admission route: round 5's V-B20 route at 0.2318 A and L9T5-F22's shortcut SUPERSEDED; since 7 October 2026 revision X NOT ADMITTED, SESSION L9T5-D11, `T10-ROUND5.md` section W133), R602 14.0 k and 125 C
 for every sustained state. No case row is changed here; for the coordinator: the limiters' two pull-up currents raise each supervisor's
 bounded state to 0.1739 A on revision V (against C-DEV rev 2's 0.1732 A; inside its conservative 0.2558 A).
 
@@ -86,7 +86,7 @@ unapplied); each transceiver's SHDN is drafted onto its controller (`apply_gen_s
 the enabled peripherals bounded, the share and the response, at the LDO's worst drop corner and the case's 76.25 C air, the regulator
 holds 125 C on revision V's rows in the bounded state and in every credible single fabric fault, and 150 C with both fabrics faulted;
 rev Y's rows, the cover for a rev X part, miss 125 C by 0.2 to 1.5 K, so the supervisors are fitted in revision V (SESSION L9T5-D7)
-and a rev X part waits on V-B20, unless the set point moves (L9T5-F22, R602 14.0 k, Slot A's draft). F13, F16 and F17 are DRAFTED
+and a rev X part waits on V-B20, unless the set point moves (L9T5-F22, R602 14.0 k, Slot A's draft) [as written at round 5; both routes superseded: revision X NOT ADMITTED since 7 October 2026, SESSION L9T5-D11]. F13, F16 and F17 are DRAFTED
 CORRECTIONS whose desk acceptance their author met on rev V; they stay OPEN in the register until an independent check reads them
 and Layer 5 applies the rows. The owner's four questions of part 21 are answered in `T10-ROUND5.md` section 3. No case row is changed here: C-DEV's revised supervisor figure is the coordinator's (t10 10g).
 
