@@ -1,4 +1,4 @@
-**ROUND 19 (W142, branch `fnd/l4rowc`, 7 October 2026): DONE on the desk: L4A-67's replay of section 28 on the corrected circuit (record l8p's fail-safe delta, M-A and round 11's held-overcurrent trip) and L4A-68's replay of 20f against U47's and U48's tSD and of 22's bleed with path 2's VBAT load, at the guard's allowance restated by record l8p (40 uA cold, 50 uA tripped): every row holds against this record's own windows. NOT DONE: the allowance's consumers are restated as drafts, not applied; no independent check (L4A-69). NEXT: the focused check of this round with record l8p's round 11.**
+**ROUND 19 (W142, branch `fnd/l4rowc`, 7 October 2026; amended by W149 the same day after the focused check L4A-69, with record l8p's round 12): DONE on the desk: L4A-67's replay of section 28 on the corrected circuit (record l8p's fail-safe delta, M-A and round 11's held-overcurrent trip, with round 12's on-time bound, which reads BRK_PGD only) and L4A-68's replay of 20f against U47's and U48's tSD and of 22's bleed with path 2's VBAT load, at the guard's restated allowance (40 uA cold, 50 uA tripped): every row holds against this record's own windows; after the check (section 5): DD-7's restart timeline stretched by L8P-R11-F1's rule to 2.55 s (an affected output), the fallback's composition read from L4-E9's change list (F9), the pair's conditions kept (F10). NOT DONE: the allowance's consumers are restated as drafts, not applied; the trip's silent failures have no detection interval (L4A-67's latent-failure clause NOT MET, record l8p 16i); no targeted recheck yet. NEXT: the targeted recheck of this round with record l8p's rounds 11 and 12 (L4A-69).**
 
 # L4-E11 round 19: section 28, 20f and 22 replayed at the guard's restated allowance on the corrected circuit (L4A-67, L4A-68) (MESHSAT-1357)
 
@@ -69,3 +69,27 @@ U47's RESET states (22d) are unchanged. Both figures still rest on record l8p's 
 Nothing here is verified, built or measured; the tests establish this record's own behaviour only. Acknowledgement: the execution
 constitution (sections 3 to 5 and 8) was read and applied: the replay is on the corrected circuit's connected path, at the restated
 figures, against the record's own windows, with tests that fail when a row no longer holds.
+
+## 5. After the focused check L4A-69 (W149, 7 October 2026, with record l8p's round 12; [ROWC 1] and [ROWC 5])
+
+The check (W147, an AI review, `_runs/claude/w147chkrowc/REPORT-FULL-AS-RECEIVED.md`) read this round as SUPPORTED AS CONDITIONAL and
+its replay as reproduced. What it found that reaches this record:
+
+- **F8 (DD-7's timeline).** Record l8p's L8P-R11-F1 rule (the inverters' off leakage doubling every 10 K, ASSUMED) also stretches the
+  RC hold: at the 76.25 C air BRK_H settles at 3.41 V against the 3.265 V the release needs, so the hold takes 2.31 s (R104 +1 %,
+  C103 +10 %; `l8p_cprot.out` 4h), against the 0.907 s 20d uses. The input-return restart then ends at most **2.55 s** after VIN_RAW
+  passes U34's threshold, not 1.149 s, and never at the 86.25 C site. An affected output of L8P-R11-F1, closed with it (its evidence:
+  Q104's and Q105's hot IDSS on board P's specimen). The pulse and the inhibit are unchanged: the hold only delays the restart.
+- **The trip's on-time bound (record l8p 16i, F2).** It adds R143 from BRK_PGD and D106 to RESET1, and moves U107's SENSE2: nothing on
+  DOCK_EN_OUT, DOCK_EN_RET, BRK_UVLO, BRK_H, BRK_HD or BRK_G2 (`check_l8p_och.py`'s APART), so section 28 and 20f are unchanged; the
+  trip's nets are fourteen ([ROWC 1]).
+- **F6.** The trip's silent failures have no detection interval: L4A-67's acceptance reads NOT MET on its latent-failure clause
+  (REMAINING ENGINEERING, record l8p 16i); section 4's "still open" carries it.
+- **F9 (round FET's fallback test).** `test_l4e11_fet.py` now composes board A in L4-E9's change-list order read from section 3 of
+  `L4-POWER-ARCHITECTURE.md` (every board A row whose draft the list names, 25 drafts, then Layer 6's table), not a hand-typed partial
+  order; the pair still composes one part fewer than the three and reads DRAWN, and its mutations FAIL.
+- **F10 (the pair).** Nothing beyond the stated conditions: the pair is under 5 nF only on a TYPICAL figure at -15 V (5.74 nF near
+  0 V) and needs a 20.39 K/W installed bar per FET whose buildability is not shown; it serves one shape of TI's answer to Q-TI-17, and
+  option (S2) stays visible (round FET).
+
+Nothing here is verified, built or measured; UNVERIFIED until the targeted recheck (L4A-69).

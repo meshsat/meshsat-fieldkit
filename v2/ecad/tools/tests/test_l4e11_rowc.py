@@ -52,7 +52,8 @@ def t_the_committed_output_is_what_the_script_prints():
     assert r.returncode == 0, r.stderr.decode()[-400:]
     assert r.stdout.decode("utf-8") == open(OUT, encoding="utf-8").read(), "l4e11_rowc.out is stale: regenerate with _bin/regen_out.py"
     preds = r.stdout.decode().split("6. PREDICATES")[1].strip().splitlines()
-    assert len(preds) == 11 and all(l.rstrip().endswith("yes") for l in preds), preds
+    # 12 since record l8p's round 12 (the focused check's F8: the hold's stretch read from record l8p, DD-7's timeline an affected output)
+    assert len(preds) == 12 and all(l.rstrip().endswith("yes") for l in preds), preds
 
 
 def t_28a_reproduces_section_28s_rows_and_the_allowance_is_10cs():

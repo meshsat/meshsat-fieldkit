@@ -41,11 +41,14 @@ PRINTED CURRENT-LIMIT AND FAULT-TIMER LATCH, so the recovery is the -1's own (re
   intent  the nodes OCH_N, OCH_P, OCH_A, OCH_S, OCH_R, OCH_EG, OCH_X, OCH_PG, OCH_GD, OCH_CG, OCH_CD, OCH_CTS, OCH_CTS2, OCH_S2; the
           decoupling entries C116 (U106) and C118 (U107); one schematic section.
 Nothing of the drawn loop, its inverters, UVLO, the hold or DOCK_EN_OUT and DOCK_EN_RET is touched: the trip adds no sink on the
-loop and none on UVLO, so L4-E11 20c's window, its readings and the RC hold's 0.110 to 0.907 s stand as drawn.
+loop and none on UVLO, so L4-E11 20c's window, its readings and the RC hold's 0.110 to 0.907 s stand as drawn. Round 12's R143 loads
+BRK_PGD (Q106's gate, the restart inhibit's gating) with 2.2 MOhm: BRK_PGD stays at 3.20 V or more at BRK_VIN 7.6 V while D106 pulls,
+over Q106's 2.5 V threshold maximum, so the inhibit stays gated during the event.
 SESSION choices (under the owner's standing rule of 26 September 2026; L8P-BREAKER.md section 16g, decision L8P-R11-D1): the
 arrangement (a precise held-current window ending in the -1's own latch, not a second current limit in series), the sense (R10,
 low side, an OPA187 the kit carries), the parts (every type already in the kit), the values, the designators (the 100 block, after
-rounds 3 and 4) and the net names.
+rounds 3 and 4) and the net names; round 12 (decision L8P-R12-D1, section 16i): the on-time bound through channel 2 (D106 a BAT46W,
+board A's part C83152; R143; C120 at 22 nF) over R140 lowered or the trip armed only over 9.43 V.
 
 ORDER: AFTER this record's apply_gen_sch_p_breaker.py and apply_gen_sch_p_idealdiode.py (it reads the breaker's BRK_PGD, BRK_VIN
 and PACK_P and takes the 100 block after round 4's designators; it refuses a target without them), released with them: its own

@@ -13,7 +13,9 @@ charger draft, a second application and the tree's own generator, composes after
 this record's DD-7, record l8p's thermal guard and its fail-safe delta included), the composed generator runs to its end, the pair
 reads DRAWN in check_fetpair_netlist.py and DD-7's check reads DRAWN on the pair, and five mutations fail (the three left drawn, a
 third gate on BATDRV, a FET reversed, a gate off BATDRV, CH_BATQ's intent still naming Q42); the page carries the output's numbers
-and the SESSION decision with its five fields; no em or en dash and no claim word in the round's files."""
+and the SESSION decision with its five fields; no em or en dash and no claim word in the round's files.
+Round 12 of record l8p (W149, 7 October 2026; the focused check L4A-69's F9): the fallback's composition reads board A's order
+from L4-E9's change list (section 3 of L4-POWER-ARCHITECTURE.md), every board A row whose draft it names, then Layer 6's table."""
 import copy
 import hashlib
 import importlib.util
@@ -179,26 +181,41 @@ def _pair_mod():
     return m
 
 
-_ORDER_A = [("l4e6", "r12"), ("l4e11", "guard"), ("l4e11", "charger"), ("l4e4", "r11"), ("l4e8", "bank"), ("l4e4", "r138"), ("l4e9", "u17"),
-            ("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("d8dec31", "mainpb"), ("l6r2", "lcsc")]
-_BEFORE_MAINPB = (("l8p", "apply_gen_sch_a_ptc.py"), ("l4e11", "apply_gen_sch_a_dd7.py"), ("l8p", "apply_gen_sch_a_thguard.py"),
-                  ("l8p", "apply_gen_sch_a_thgfs.py"))
+ARCH = os.path.join(ROOT, "v2", "docs", "records", "l4e9", "L4-POWER-ARCHITECTURE.md")
+
+
+def _order_a():
+    """Board A's drafts in L4-E9's change-list order, read from its section 3 table (record l8p round 12, the focused check L4A-69's F9:
+    the composition is taken from the list, never typed by hand), each found in the one record folder that holds it; Layer 6's
+    order-independent table draft (l6r2's lcsc) after the list, as record l8p's l8p_drafts.py composes it."""
+    need(ARCH, "L4-E9's change list")
+    page = open(ARCH, encoding="utf-8").read()
+    sec = page.split("## 3. The circuit-change list")[1].split("\n## 4. ")[0]
+    names = []
+    for line in sec.splitlines():
+        if not re.match(r"\| \d+ \| ", line):
+            continue
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if cells[3].startswith("board A, gen_sch_a.py"):
+            names += [n for n in re.findall(r"apply_gen_sch_a_(\w+)\.py", cells[4]) if n not in names]
+    rec = os.path.join(ROOT, "v2", "docs", "records")
+    out = []
+    for n in names + ["lcsc"]:
+        hits = [r_ for r_ in sorted(os.listdir(rec)) if os.path.isfile(os.path.join(rec, r_, "apply_gen_sch_a_%s.py" % n))]
+        assert len(hits) == 1, "board A's draft %s is held by %s, not by one record" % (n, hits)
+        out.append((hits[0], n))
+    return out
 
 
 def _compose(d):
-    """Board A in main's L4-E9 order with record l8p's PTC, this record's DD-7, record l8p's guard and its delta before mainpb."""
+    """Board A in L4-E9's change-list order (every board A row whose draft the list names), then Layer 6's table."""
     g = os.path.join(d, "gen_sch_a.py")
     shutil.copy(GEN_A, g)
     rec = os.path.join(ROOT, "v2", "docs", "records")
-    for r_, name in _ORDER_A:
-        if (r_, name) == ("d8dec31", "mainpb"):
-            for rr, s in _BEFORE_MAINPB:
-                p = os.path.join(rec, rr, s)
-                need(p, "board A's draft %s/%s" % (rr, s))
-                r = _run([p, g, "--write"])
-                assert r.returncode == 0, "%s: %s" % (s, r.stderr.decode()[-300:])
+    order = _order_a()
+    assert [n for _r, n in order][:3] == ["r12", "guard", "charger"] and ("d8dec31", "mainpb") in order and len(order) >= 20, order
+    for r_, name in order:
         s = os.path.join(rec, r_, "apply_gen_sch_a_%s.py" % name)
-        need(s, "board A's draft %s/%s" % (r_, name))
         r = _run([s, g, NET_A] if r_ == "d8dec31" else [s, g, "--write"])
         assert r.returncode == 0, "%s/%s refused: %s" % (r_, name, r.stderr.decode()[-300:])
     return g

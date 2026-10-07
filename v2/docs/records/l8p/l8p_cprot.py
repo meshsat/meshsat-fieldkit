@@ -24,7 +24,8 @@ This script prints:
      (C) a controller with a tighter printed current-limit spread;
   3. the selection (SESSION) and its end condition;
   4. the selected trip on printed figures: its window, its delays, the crowbar into the -1's latch, the arming on PGD, the parts'
-     ratings and leakages, power-up and the start, its standing current, its own single failures;
+     ratings and leakages, power-up and the start, its standing current, its own single failures; round 12 adds 4c' (a source's
+     share, R140's restated pulse with a read candidate part, Q111's row) and 4i (the BRK_VIN range, the band, the on-time bound);
   5. the draft composed in L4-E9's order, read by check_l8p_netlist.py and check_l8p_och.py, and its mutations;
   6. L4A-67: C-PROT rev 1 for the guard on the corrected circuit, part by part, with the trip intact and with it latently failed;
   7. L4A-68: the guard's allowance as its consumers are to restate it (the texts of the two apply scripts);
@@ -94,9 +95,11 @@ DOCS = {
     "lf297": ("v2/vendor/keystone/littelfuse-297-ficcorp.pdf", "Littelfuse MINI 297"),
     "bq25730": ("v2/vendor/ti/held/ti-bq25730-sluse65a.pdf", "TI BQ25730, SLUSE65A (held back, record l4e11's fetch_held_back.py)"),
     "bat46w": ("v2/vendor/diodes/diodes-bat46w.pdf", "Diodes BAT46W, DS30044 Rev. 20-2"),
+    "crcwhp": ("v2/vendor/passives/held/vishay-crcw-hp-e3-20043-2026-03-17.pdf", "Vishay CRCW-HP e3, 20043 (17-Mar-2026; held back, fetch_held_back_rowc.py)"),
 }
 PIN = {"lm5066i": "a759a5d04fe5b81577af575153fd528f0f03f147c892040eac6c51e400693628",
-       "bq25730": "e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f"}
+       "bq25730": "e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f",
+       "crcwhp": "86a39a559a7be1ff772c95fd77ce386dad5a7744e848bab9eb27af55362df1a1"}
 
 # ---------------------------------------------------------------- the trip as drawn (read back from the draft below)
 G_RIN, G_RF = 1.00e3, 19.3e3
@@ -159,6 +162,75 @@ def need(text, pat, what, flags=re.S):
 
 def flat(s):
     return re.sub(r"\s+", " ", s)
+
+
+def crcw2512_single_pulse():
+    """READING of Vishay's CRCW-HP e3 single-pulse chart (document 20043, page 5, the upper chart 'Single Pulse') from its vector paths
+    (pdftocairo -svg): the frame is the 0.96 pt rectangle; the time axis runs 1 us to 100 s over its width (the printed labels
+    0.000001 to 100, eight decades), the power axis 0.01 W to 10 000 W over its height (the left labels, six decades; the right
+    labels '10' to '10000' belong to a template's secondary axis titled 'Axis Title', and on it the 2512's line would read 122 W at
+    100 s against its printed 1.5 W rating: the left axis is the one whose long-pulse end meets the printed P70 rows); the 2512's line
+    is the 1.44 pt curve whose colour the legend's first sample carries (the legend's first text is CRCW2512-HP). Returns a function
+    of the pulse duration in seconds, and the long-pulse reading at 100 s."""
+    page = flat(pdftext("crcwhp", 5, 5))
+    need(page, r"Single Pulse Axis Title 10 000 10000 CRCW2512-HP CRCW1218-HP 1000 CRCW2010-HP CRCW1210-HP CRCW1206-HP", "the single-pulse chart's legend order")
+    need(page, r"0\.000001 0\.00001 0\.0001 0\.001 0\.01 0\.1 1 10 100 ti - Pulse Duration \(s\)", "the time axis labels")
+    need(page, r"Maximum pulse load, single pulse; applicable if P \u2192 0 and n < 1000 and \u00db \u2264 \u00dbmax", "the curve's conditions")
+    t1 = flat(pdftext("crcwhp", 1, 1))
+    need(t1, r"Rated dissipation, P70 \(1\) 0\.2 W \(2\) 0\.33 W 0\.5 W 0\.75 W \(3\) 0\.75 W 1\.5 W 1\.0 W 1\.5 W", "the P70 row (2512: 1.5 W)")
+    need(t1, r"Resistance range 1 [\u2126\u03a9] to 1 M[\u2126\u03a9]", "the resistance range")
+    with tempfile.TemporaryDirectory() as td:
+        out = os.path.join(td, "p.svg")
+        r = subprocess.run(["pdftocairo", "-svg", "-f", "5", "-l", "5", doc("crcwhp"), out], capture_output=True)
+        if r.returncode != 0:
+            refuse("pdftocairo failed on the CRCW-HP sheet")
+        svg = open(out, encoding="utf-8").read()
+    frames, legend, curves = [], [], []
+    for el in re.findall(r"<path[^>]*/>", svg):
+        mcol = re.search(r"stroke:(rgb\([^)]*\))", el)
+        mw = re.search(r"stroke-width:([\d.]+)", el)
+        mt = re.search(r'transform="matrix\(([^)]*)\)"', el)
+        md = re.search(r' d="([^"]*)"', el)
+        if not (mcol and mw and md):
+            continue
+        a, b, c, dd, e, f = [float(x) for x in mt.group(1).split(",")] if mt else (1, 0, 0, 1, 0, 0)
+        nums = [float(x) for x in re.findall(r"-?[\d.]+", md.group(1))]
+        pts = [(a * x + c * y + e, 792 - (b * x + dd * y + f)) for x, y in zip(nums[0::2], nums[1::2])]
+        if mcol.group(1) == "rgb(0%,0%,0%)" and mw.group(1) == "0.96":
+            frames.append(pts)
+        elif mw.group(1) == "1":
+            legend.append((mcol.group(1), pts[0]))
+        elif mw.group(1) == "1.44":
+            curves.append((mcol.group(1), pts))
+    if not frames:
+        refuse("the CRCW-HP chart's frame was not found")
+    top = max(frames, key=lambda q: max(y for _x, y in q))
+    x0, x1 = min(x for x, _y in top), max(x for x, _y in top)
+    y0, y1 = min(y for _x, y in top), max(y for _x, y in top)
+    leg = [(col, pt) for col, pt in legend if y0 < pt[1] < y1]
+    if len(leg) != 8:
+        refuse("the single-pulse chart's legend does not read eight lines")
+    col2512 = max(leg, key=lambda q: q[1][1])[0]
+    pts = [p_ for col, p_ in curves if col == col2512 and y0 - 1 < p_[0][1] < y1 + 1]
+    if len(pts) != 1 or len(pts[0]) != 25:
+        refuse("the 2512's single-pulse line was not read")
+    P = pts[0]
+    dx, dy = (x1 - x0) / 8.0, (y1 - y0) / 6.0
+
+    def watts(t):
+        x = x0 + dx * math.log10(t / 1e-6)
+        for k in range(0, len(P) - 1, 3):
+            p0, p1, p2, p3 = P[k:k + 4]
+            if p0[0] - 1e-6 <= x <= p3[0] + 1e-6:
+                lo, hi = 0.0, 1.0
+                for _ in range(60):
+                    u = (lo + hi) / 2
+                    xu = (1 - u) ** 3 * p0[0] + 3 * (1 - u) ** 2 * u * p1[0] + 3 * (1 - u) * u ** 2 * p2[0] + u ** 3 * p3[0]
+                    lo, hi = (u, hi) if xu < x else (lo, u)
+                y = (1 - u) ** 3 * p0[1] + 3 * (1 - u) ** 2 * u * p1[1] + 3 * (1 - u) * u ** 2 * p2[1] + u ** 3 * p3[1]
+                return 0.01 * 10 ** ((y - y0) / dy)
+        refuse("a pulse duration outside the chart: %g s" % t)
+    return watts, watts(100.0)
 
 
 # ---------------------------------------------------------------- the computation
@@ -348,6 +420,14 @@ def compute():
              p_q111_off=vsys_max ** 2 / (4 * r_lo), p_q111_off_settled=p_src * r_hi / (4 * r_lo),
              p_q111_off_nosrc=v_force ** 2 / (4 * r_lo), t_q111_off=5 * R138 * 1.01 * CISS_Q111_MAX)
     R["e_r140"] = max(R["e_n"], R["e_s"], R["e_w"])
+    # the named part (round 12; READING of Vishay's single-pulse line for the 2512 size): each of n equal parts in parallel carries 1/n
+    # of R140's power; the most power of each case over its duration against the line at that duration
+    watts, w100 = crcw2512_single_pulse()
+    cases = (("n", R["p_lim"], t_gate + CLEAR + TCL_RECORD), ("nsrc", p_after, t_gate + CLEAR + TCL_RECORD + t_off),
+             ("s", p_stall, t2[1] + t_off), ("w", p_after, t2[1] + t_off), ("peak", CLAMP ** 2 / r_lo, 16.5e-6))
+    R["crcw"] = {k: (pw, t_, watts(t_), math.ceil(pw / watts(t_))) for k, pw, t_ in cases}
+    R["crcw_w100"] = w100
+    R["crcw_n"] = max(v[3] for v in R["crcw"].values())
     need(dr, r"single pulse of at least %s J in %s ms with %s kW for 16\.5 us" % (re.escape(fmt(R["e_r140"], 2)), re.escape(fmt(R["t_on_max"] * 1e3, 2)),
          re.escape(fmt(R["p_peak"] / 1e3, 2))), "the draft's R140 stating this round's pulse")
     # D106's low level and R143's levels (check_l8p_och's own arithmetic on the drawn values)
@@ -616,8 +696,18 @@ def render(R, K):
     w("       a source present, the -1 held out of its limit, ended by the on-time bound    %s J in %s ms" % (fmt(R["e_w"], 3), fmt(R["t_on_max"] * 1e3, 3)))
     w("       E-6b RESTATED: a part whose maker prints a single pulse of at least %s J in %s ms (%s W held, %s W for 16.5 us at the clamp);" % (
         fmt(R["e_r140"], 2), fmt(R["t_on_max"] * 1e3, 2), fmt(R["p_after"], 0), fmt(R["p_peak"], 0)))
-    w("       round 11's 0.40 J in 1.4 ms is withdrawn. No 2512 sheet this record holds prints it: a larger part (Layer 6's selection,")
-    w("       with its maker's pulse curve read at %s ms; a power package or parallel pulse-rated chips on the PACK_P band) (CONDITIONAL)" % fmt(R["t_on_max"] * 1e3, 2))
+    w("       round 11's 0.40 J in 1.4 ms is withdrawn. A NAMED PART (Layer 6 selects): Vishay's CRCW2512-HP e3 pulse proof chip (1 Ohm")
+    w("       to 1 MOhm, P70 1.5 W), its single-pulse line READ from its vector path (document 20043, page 5; the curve's own conditions: no")
+    w("       preload, under 1000 pulses, the pulse voltage under its limit; its long-pulse end %s W at 100 s meets the printed 1.5 W row);" % fmt(R["crcw_w100"], 2))
+    w("       n equal parts in parallel each carry 1/n of R140's power:")
+    for k, lab in (("n", "no source, the -1 latched"), ("nsrc", "a source present, the -1 latched"), ("s", "no source, the band of 4i"),
+                   ("w", "a source present, the -1 held out of its limit"), ("peak", "the onset at the clamp")):
+        pw, t_, rd, n_ = R["crcw"][k]
+        w("         %-48s %6s W for %8s ms against the line's %7s W: %d part%s" % (lab, fmt(pw, 0), fmt(t_ * 1e3, 4), fmt(rd, 1), n_, "" if n_ == 1 else "s"))
+    w("       so the restated pulse needs %d of them in parallel (each %s Ohm for %s Ohm), a power package whose maker prints the pulse, or" % (
+        R["crcw_n"], fmt(R140 * R["crcw_n"], 2), fmt(R140, 2)))
+    w("       E-12s's reading of a source's settling narrowing the bound (the chart states no ambient: the line's temperature basis at")
+    w("       the 76.25 C air is Layer 6's question to Vishay); until Layer 6 selects, R140 stays CONDITIONAL on E-6b")
     w("     Q111 (CSD18510Q5B, PRINTED): IDM 400 A against %s A at the onset and %s A held with a source; VDS 40 V against PACK_P's %s V" % (
         fmt(R["peak_clamp"], 1), fmt(R["i_q111_src"], 1), fmt(CLAMP, 1)))
     w("       clamp; VGS 20 V against D105's 12.7 V; its own turn-off crosses at most V^2/4R: %s W without a source (at %s V), WITHIN the" % (

@@ -126,12 +126,19 @@ def compute():
     need(cp, r"check_l8p_och\.py on it: OCH DRAWN", "the trip read DRAWN (l8p_cprot 5)")
     m = need(cp, r"the held current is ended from ([\d.]+) A at the least to ([\d.]+) A at the most", "the trip's window")
     WIN = (float(m.group(1)), float(m.group(2)))
+    # record l8p round 12 (the focused check's F8): L8P-R11-F1's leakage rule also stretches the RC hold this record's DD-7 timeline uses
+    m = need(cp, r"so the hold takes ([\d.]+) s \(R104 \+1 %, C103 \+10 %\), against the ([\d.]+) s the record's sink-only figure", "the hold's stretch (l8p_cprot 4h)")
+    HOLD_HOT, HOLD_REC = float(m.group(1)), float(m.group(2))
+    m = need(e, r"from VIN_RAW passing U34's threshold to the restart's end at most ([\d.]+) s \(the pulse ([\d.]+) ms, the hold ([\d.]+) s, the start ([\d.]+) ms\)",
+             "DD-7's restart timeline (20d)")
+    DD7 = tuple(float(m.group(k)) for k in (1, 2, 3, 4))
     och = read(RECS["och"])
     OCH_NETS = set(re.findall(r'"(OCH_[A-Z0-9]+)"', och))
     LOOP = {"DOCK_EN_OUT", "DOCK_EN_RET", "BRK_UVLO", "BRK_H", "BRK_HD", "BRK_G2"}
     touched = sorted(n for n in LOOP if re.search(r'(?<![A-Z_])"%s"' % n, "\n".join(l.split("#")[0] for l in och.splitlines() if l.lstrip().startswith(("'", '"')))))
     R.update(BLEED=BLEED, HOT=HOT, HOLD=HOLD, COUPLED=COUPLED, HELD=HELD, DARK=DARK, R_OLOAD=R_OLOAD, R28=R28, COLD=COLD, TRIP=TRIP,
-             RF=RF, R107=R107, PAIR=PAIR, C262=C262, C261=C261, C268=C268, WIN=WIN, OCH_NETS=sorted(OCH_NETS), touched=touched)
+             RF=RF, R107=R107, PAIR=PAIR, C262=C262, C261=C261, C268=C268, WIN=WIN, OCH_NETS=sorted(OCH_NETS), touched=touched,
+             HOLD_HOT=HOLD_HOT, HOLD_REC=HOLD_REC, DD7=DD7, DD7_HOT=DD7[1] * 1e-3 + HOLD_HOT + DD7[3] * 1e-3)
 
     # 2. 28a replayed: the pulled loop's DOCK_EN_OUT with path 1 tripped and the tripped allowance (the record's own formula, 28a)
     rf, rp = RF * (1 + R_TOL), PAIR * (1 - R_TOL)
@@ -162,6 +169,7 @@ def compute():
         ("20f: the closed loop's RET/OUT is over the window's 0.4707", R["ratio_closed"] >= 0.4707),
         ("22: the bleed at the hot bound ends inside the hold's least", BLEED < HOLD),
         ("22: the hot bound is under the coupled limit", HOT < COUPLED),
+        ("F8 (record l8p round 12): the hold's stretch is longer than the 0.907 s DD-7's timeline uses", R["HOLD_HOT"] > R["DD7"][2] == R["HOLD_REC"]),
     ]
     return R
 
@@ -187,8 +195,9 @@ def render(R):
         fmt(R["COLD"] * 1e6, 0), fmt(R["TRIP"] * 1e6, 0), fmt(R["C261"] * 1e9, 0), fmt(R["C268"] * 1e9, 0), fmt(R["C262"] * 1e6, 1), fmt(R["RF"] / 1e3, 0)))
     w("     R107 %s kOhm, the guard's pair %s kOhm, board A's %s kOhm on DOCK_EN_OUT" % (fmt(R["R107"] / 1e3, 0), fmt(R["PAIR"] / 1e3, 0), fmt(R["R_OLOAD"] / 1e3, 0)))
     w("   the corrected circuit: record l8p's fail-safe delta (round 9, apply_gen_sch_a_thgfs.py), M-A (round 10) and the held-overcurrent trip")
-    w("     (round 11, apply_gen_sch_p_ocheld.py: a window of %s to %s A on board P; its nets %s; none of the loop's or UVLO's)" % (
-        fmt(R["WIN"][0], 2), fmt(R["WIN"][1], 2), ", ".join(R["OCH_NETS"][:4]) + " and nine more"))
+    w("     (round 11, apply_gen_sch_p_ocheld.py, amended in place by record l8p's round 12 with an on-time bound whose R143 reads BRK_PGD:")
+    w("     a window of %s to %s A on board P; its nets %s and %d more; none of the loop's or UVLO's)" % (
+        fmt(R["WIN"][0], 2), fmt(R["WIN"][1], 2), ", ".join(R["OCH_NETS"][:4]), len(R["OCH_NETS"]) - 4))
     w("")
     w("2. SECTION 28 REPLAYED ON THE CORRECTED CIRCUIT (L4A-67; INFERRED on 28's own formula)")
     w("   28a. path 1 tripped: the return held at %s V at most against 0.7755 V: read held; DOCK_EN_OUT with the tripped %s uA drawn, R106 +1 %%," % (
@@ -241,6 +250,12 @@ def render(R):
     w("     record l9stk 15.9), DRAFTED, NOT APPLIED: until they are applied every row resting on the allowance stays PROVISIONAL")
     w("   still open: record l8p's L8P-R9-F1 pattern (a latent first failure of the guard, and now of the trip, with no automatic diagnostic);")
     w("     E-14c and E11-45 (f2), (h) for 22; the independent check of rounds 18 and 19 (L4A-69)")
+    w("   after the focused check (record l8p round 12, W149): L8P-R11-F1's leakage rule (ASSUMED) also stretches the RC hold to %s s at the" % fmt(R["HOLD_HOT"], 2))
+    w("     76.25 C air (record l8p 4h), against the %s s 20d's DD-7 timeline uses: the input-return restart then ends at most %s s after" % (
+        fmt(R["DD7"][2], 3), fmt(R["DD7_HOT"], 2)))
+    w("     VIN_RAW passes U34's threshold, not %s s, and never at the 86.25 C site; an affected output of L8P-R11-F1, closed with it (its" % fmt(R["DD7"][0], 3))
+    w("     evidence Q104's and Q105's hot IDSS); the trip's on-time bound reads BRK_PGD through R143 only, so section 28 and 20f are unchanged;")
+    w("     the trip's silent failures have no detection interval (L4A-67's latent-failure clause NOT MET, record l8p 16i)")
     w("   outputs named for set 33: l4e11_power.out is not regenerated by this round (its section 28 stays the record's history; this output")
     w("     carries the replay); record l8p's l8p_cprot.out and l8p_rowc.out need the held makers' sheets (OPA187, LM5066I, BUK6Y10-30P, ROHM")
     w("     GMR100) installed on the box that regenerates them")
