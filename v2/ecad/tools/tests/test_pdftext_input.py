@@ -1431,6 +1431,12 @@ KNOWN_DIRECT = {
                                 "reader; it moves with the tools layer's own conversion (KNOWN_TOOLVIA)"),
     "test_rails_census.py": (1, "TOOL LAYER: the rails census reads intent_checks.PIN_ROLES' documents (-layout), as edge_length.py and "
                                 "pack_protection.py read theirs; it moves with the tools layer's own conversion"),
+    "test_l3r5.py": (1, "LAYER 3 AMENDMENT, BOUND: test_l3r5.py is a file of l3amlib.AMENDMENT_FILES, which "
+                        "apply_l3am_findings_closed.py verifies byte for byte at the amendment's reviewed revision 8146b4cc (test_l3am); "
+                        "its read of the two committed Samsung 35E sheets (v2/vendor/battery/samsung-35e-orbtronic.pdf and "
+                        "samsung-35e-akkuzentrum.pdf, -layout, a skip without pdftotext) stays as reviewed: W81's move of it to l4e10's "
+                        "declared texts (877d81c5) returned by W114 under the coordinator's ruling of 7 October 2026 on W110's N3; it "
+                        "moves only with a new independent check of the amendment"),
 }
 # test modules calling a v2/ecad/tools module's function that runs a tool itself (the tools layer: outside W34's conversion of the
 # records, PDFTEXT-INVENTORY.md section 1 covers v2/docs/records only)
@@ -1889,7 +1895,9 @@ def t_every_extraction_a_test_reaches_is_declared():
     readers = w.readers()
     asked = {(tm, line) for tm, line, r, f in w.calls if (r, f) in readers}
     assert len(asked) >= 50, "%d test calls of a reader function (54 on 6 October 2026)" % len(asked)
-    assert len(w.sites) >= 41, "%d sites read (41 on 6 October 2026: section 8's 37 and the four test-side reads)" % len(w.sites)
+    # 40 since 7 October 2026 (W114, W110's N3): test_l3r5's read went back to its reviewed direct pdftotext call (KNOWN_DIRECT)
+    assert len(w.sites) >= 40, "%d sites read (41 on 6 October 2026: section 8's 37 and the four test-side reads; 40 since test_l3r5's " \
+                               "read returned to its reviewed direct call, W114)" % len(w.sites)
     fan = {pair for (r, _l), rec_ in w.sites.items() if r == TPFX + "test_l8r2.py" and rec_["table"] == "l8r2/l8r2_pdftext.py"
            for pair in rec_["pairs"] if "/held/sanyo-denki-san-ace-" in pair[0]}
     assert len(fan) == 4, "test_l8r2's four San Ace pages are not read through l8r2_pdftext.py's table: %s" % sorted(fan)

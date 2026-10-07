@@ -386,7 +386,7 @@ not read it. Section 8's static check walked the 37 extraction sites of the gene
 W81's changes).** (1) Calls of a records reader: the walk of section 8 with each test module as a caller (a test's name standing for
 a records script through its own loaders, its arguments carried into the wrappers, each pair kept with the test line that asked):
 54 test calls of a reader function (main and compute among them) in 15 test modules, reaching 27 of section 8's 37 sites; every pair
-a test asks for was declared but TDK's at test_l8p.py:665. With W81's changes the walk reads 41 sites: the 37 and the four test-side
+a test asks for was declared but TDK's at test_l8p.py:665. With W81's changes the walk reads 41 sites (40 since test_l3r5's part was reversed, D-W81-2 below): the 37 and the four test-side
 reads W81 wrote (test_l3r5.py:481, test_l5r4.py:131, test_l8p.py:667, test_l8r2.py:457), each against the table it names. (2) The tests' own process calls of pdftotext: test_l3r5.py:475 (two Samsung 35E sheets,
 -layout), test_l5r4.py:126 (five RP2040 datasheet pages, plain mode, one page each), test_l8r2.py:454 (four held San Ace pages,
 -layout), test_energy_chain.py:256 and test_rails_census.py:98 (the tools layer), and three in test_pdftext_input.py (its own
@@ -409,7 +409,11 @@ pinned pdftocairo sites (test_l4e9, test_l4e11) and the l4e7 KEY group's `l4e7_s
 - *D-W81-2, the tests' own pdftotext reads of the records.* test_l8r2's four pages and test_l5r4's five pages read their committed
   extractions through the new tables; test_l3r5 reads the two Samsung 35E texts record l4e10 already declares (`l4e10_cell_thermal.py`,
   no new text); none of the three skips for a missing pdftotext any more. Reason: the same host dependence W34 corrected in the
-  generators. Reversal: the subprocess lines as at `b397aada`.
+  generators. Reversal: the subprocess lines as at `b397aada`. **Reversed for test_l3r5 alone at set 32's integration** (7 October 2026, the coordinator's SESSION ruling on W110's N3; fnd/l3r5keep
+  `2dcb4131`, W114): test_l3r5.py is a file of `v2/docs/records/l3am/l3amlib.py`'s AMENDMENT_FILES, which the closed Layer 3 amendment
+  check binds byte for byte at its reviewed revision 8146b4cc, so test_l3r5.py is back at that content: it runs pdftotext itself again
+  (test_pdftext_input's KNOWN_DIRECT, one call, with its reason) and skips when pdftotext is absent, and the walk reads 40 sites. test_l5r4
+  and test_l8r2 keep W81's route.
 - *D-W81-3, left as KNOWN with their reasons (test_pdftext_input's KNOWN_DIRECT, KNOWN_TOOLVIA, KNOWN_RECVIA).* The tools layer
   (v2/ecad/tools: energy_chain's ATOF guard, the rails census, edge_length, part_identities, pack_protection) runs pdftotext in its own
   code; it has no PDFTEXT table and this helper is the records' reader, so its conversion is a tooling task of its own, not widened into
