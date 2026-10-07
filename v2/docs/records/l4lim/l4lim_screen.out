@@ -1,0 +1,225 @@
+l4lim_screen: Layer 4 task L4A-101, the limiter window screen before L4A-56 and L4A-57 (W127's finding 3; MESHSAT-1357)
+prototype design; nothing built, bought, powered or measured; nothing applied to the tree; a SCREEN, not an acceptance: it closes no
+cx46 item, accepts nothing and moves no state (cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand)
+
+1. INPUTS, pinned by sha256
+   d2f9cb974c384add v2/docs/records/l9t5/l9t5_t10.out
+   55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
+   37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
+   62abfcde748c4d73 v2/docs/records/l9t5/l9t5_t10.py
+   be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
+   29f313c17d6f8283 v2/docs/records/l8r2/l8r2_gndret.out
+   ef8d376f2ec356e2 v2/vendor/diodes/diodes-ap2112-ldo.pdf
+   bb89f067e6a79028 v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf
+   88e453700cea2b26 v2/vendor/ti/held/ti-tps2553-slvs841f.pdf  (held back; v2/docs/records/l4lim/fetch_held_back.py)
+   972b6c1b8673f7a1 v2/vendor/diodes/held/diodes-ap22652-53-ds41186.pdf  (held back; v2/docs/records/l4lim/fetch_held_back.py)
+   fafdb867c456a2b2 v2/vendor/ti/held/ti-tps25200-slvscj0f.pdf  (held back; v2/docs/records/l4lim/fetch_held_back.py)
+   66f6bae4494f7bfe v2/vendor/power/tps2596.pdf
+   b7e93824efe7733b v2/docs/records/l4lim/fetch_held_back.py
+   a737ea8a783ecd5a v2/vendor/diodes/held/pdftext/diodes-ap22652-53-ds41186.layout.txt  (held back with its sheet)
+   6793d4bc0e60cc6d v2/vendor/diodes/pdftext/diodes-ap2112-ldo.layout.txt
+   bab7479f34278e35 v2/vendor/power/pdftext/tps2596.layout.txt
+   4ee97572b97ed7d2 v2/vendor/ti/held/pdftext/ti-tps25200-slvscj0f.layout.txt  (held back with its sheet)
+   9a90d9411907d535 v2/vendor/ti/held/pdftext/ti-tps2553-slvs841f.layout.txt  (held back with its sheet)
+   810dc4dbcf529687 v2/vendor/ti/pdftext/ti-tcan334-can-fd-transceiver.layout.txt
+   not read: ADI's MAX4995A (latch-off, 50 to 600 mA class): analog.com refused this host and the Internet Archive answered
+   'Temporarily Offline' on 7 October 2026; nothing is claimed from it
+
+2. THE WINDOW'S EDGES, from record l9t5's T10 output (v2/docs/records/l9t5/l9t5_t10.out, parsed; line numbers of that file), revision V (fitted, L9T5-D7), 14.0k
+   the corner: inside air 76.25 C (line 100); the pre-regulator 3.9063 to 4.1174 V, the LDO's least output 3.2505 V, so its drop 0.8669 V and
+     159.5 K/A on the AP2112K's 184 C/W (line 531; PRINTED, no heat sink, DS39724 p.3); criterion 125 C for every sustained state (SESSION,
+     the owner's part 22), 150 C the absolute maximum, never an operating target
+   UPPER EDGE, the LDO's 125 C current at the corner, I125 = (125 - 76.25) / (theta x 0.8669 V) (MODEL on PRINTED theta):
+     SOT25 (AP2112K)      theta 184.0 C/W  I125 0.3056 A
+     SO-8 (AP2112M)       theta 114.0 C/W  I125 0.4933 A
+     SOT89-5 (AP2112R5)   theta 120.0 C/W  I125 0.4686 A
+     (the three are DS39724's own rows, p.3, 'No Heatsink'; the board is not printed: realising any of them on board B's copper is a
+     Layer 10 means, as T10 already says of the 184 C/W)
+   LOWER EDGES, the currents the design must serve (each regulator's total: controller, auxiliaries, both transceivers):
+     S1 the largest SUSTAINED served state (an average over FW-B21's window): 0.1855 A, line 653 (MODEL; 'a babbler, the limiters bounding it')
+     S2 the normal-service PEAK, both transceivers dominant at once (a frame on each fabric): 0.2839 A, line 546 (MODEL: 10i's
+        babbling row has exactly this composition, the bounded controller, the circuit's auxiliaries and both transceivers at the
+        60 mA dominant row, PRINTED; in normal traffic it lasts bit times, not a sustained state)
+     S3 IOHA row 7's fault rows, held (the faulted transceiver dominant into the fault, the other at its share), rev V (10e):
+        B1   0.3486 A, line 392
+        B2   0.3486 A, line 393
+        B3   0.2495 A, line 394
+        B4   0.2846 A, line 395
+        B5   0.3686 A, line 396
+        B6   0.2236 A, line 397
+        B7a  0.2286 A, line 398
+        B7b  0.2286 A, line 399
+        and the brief's (f1) 0.3726 A (line 191; round 4's controller figure, rev Y at 144 MHz: a cover, larger than rev V's B1)
+     S3' the same rows with the healthy fabric's transceiver dominant in the same bit (MODEL: held - 0.0046 A share + 0.060 A dominant):
+        B1   0.4040 A
+        B2   0.4040 A
+        B3   0.3049 A
+        B4   0.3400 A
+        B5   0.4240 A
+        largest 0.4240 A (B5: I_f 0.200 A ASSUMED by T10, IOS(DOM)'s printed 200 mA, line 374); row 7 'quorum continues on the other fabric' (IOHA line 244) makes
+        the healthy fabric's frames part of the served state, so S3' is the row's instantaneous peak
+     S4 IOHA row 8 (both fabrics faulted, survive, 'nothing moves'): (f2) 0.5491 A (line 203); rev V held 0.5639 A (line 406)
+     HO-E for reference: VOS0's 105 C limit from 0.1936 A (line 636), 4.4 % over S1's 0.1855 A: no current limit both serves S1 and holds it
+        (W127 finding 2; HO-E is its own comparison, L4A-59)
+
+3. THE CANDIDATES: integrated current-limited switches with a PRINTED limit near 0.2 to 0.6 A and a PRINTED fault timer with latch-off
+   C1 TI SLVS841F (TPS2552, TPS2553, TPS2552-1, TPS2553-1; November 2008, revised August 2016)
+      TPS2553-1 (latch-off, active-high EN; TPS2552-1 the active-low twin), SOT-23-6 (DBV) or WSON-6 (DRV); VIN 2.5 to 6.5 V (7.3)
+      IOS PRINTED rows (7.5, p.7): RILIM 49.9 kOhm, -40 C <= TJ <= 125 C: 0.475 / 0.520 / 0.565 A; RILIM 210 kOhm: 0.110 / 0.130 / 0.150 A
+      the maker's equations (9.5.1, p.15; include temperature and process, not the resistor): IOSmin = 25230 / R^1.016, IOSmax = 22980 / R^0.94 mA,
+        R in kOhm, 15 to 232 kOhm
+      rDS(on) DBV at most 0.135 ohm, -40 C <= TJ <= 125 C (p.7); RthJA DBV 182.6, DRV 72.0 C/W (7.4, p.6)
+      FAULT TIMER: the overcurrent deglitch 5 / 7.5 / 10 ms (min / typ / max, PRINTED, p.7); LATCH-OFF: '...limits the current to
+        IOS until the overload condition is removed or the internal deglitch time is reached and the device is latched off' (9.3.1,
+        p.14); off 'until power is cycled or the device enable is toggled' (p.13); turnoff time at most 3 ms (p.7)
+      NOT PRINTED: whether the deglitch restarts when an overload clears for a moment; the sheet says only 'The deglitch circuitry
+        delays entering and leaving fault conditions' (9.3.3, p.14). The response is 2 us TYPICAL only
+   C2 Diodes DS41186 Rev. 5 - 2 (AP22652, AP22653, AP22652A, AP22653A; March 2026)
+      AP22653A (latch-off, active-high EN; AP22652A active-low), SOT26 or W-DFN2020-6; VIN 3.0 to 5.5 V
+      ILIMIT PRINTED rows (p.5): RLIM 49.9 kOhm, -40 C <= TA <= +85 C: 0.441 / 0.490 / 0.539 A; RLIM 210 kOhm at TA 25 C only: 0.095 / 0.125 / 0.155 A
+      the maker's best-fit equations (p.10; temperature and process, not the resistor): ILIMIT_Min = 28955 / R^1.075, ILIMIT_Max = 31033 / R^1.031 mA
+      RDS(ON) SOT26 at most 0.135 ohm, -40 C <= TA <= +85 C (p.5); theta JA SOT26 120 C/W on a JEDEC high-K board (p.4)
+      FAULT TIMER: tBLANK 2 / 6 / 20 ms (PRINTED, p.6); LATCH-OFF: the A versions are 'turned off' when 'the internal deglitch time
+        (6ms typical) is reached' and 'remain latched off until power is cycled or the device enable is toggled' (p.9); that this
+        deglitch is the tBLANK row is INFERRED (the row names the FAULT flag); its restart on a momentary clearing is NOT PRINTED
+   considered and not taken:
+      TI TPS2596 (SLVSET8A, in the tree): its latch-off variants latch only at thermal shutdown (TSD 157 C, p.7, a TYPICAL figure)
+        and it 'exits current limiting when the load current falls below ILIM' (p.22): no printed fault timer
+      TI TPS25200 (SLVSCJ0F): constant current until 'the device begins to thermal cycle' (p.12): no latch-off, a periodic waveform
+      ADI MAX4995A: not read (section 1)
+
+4. ROW 1: THE WINDOW AGAINST THE ROWS THE DESIGN MUST SERVE (IOHA row 7, line 244: 'quorum continues on the other fabric')
+   W1, no served state limited: IOSmin >= the served peak and IOSmax <= I125. W2, served peaks limited and bridged by local capacitance:
+   IOSmin >= S1, IOSmax <= I125, the bridging capacitance <= what the latch-off limiter can start into, AND a latch timer that restarts
+   between limited intervals (printed by neither candidate: W2 can never be shown on printed limits)
+   (a) M-A as registered: the limiter ahead of the AP2112K (SOT25, 184 C/W): I125 0.3056 A
+     W1 against S2 alone needs IOSmax / IOSmin <= 0.3056 / 0.2839 = 1.077 (a +-3.7 % band); against S3' (0.4240 A) the edges cross: CLOSED
+     C1 TPS2553-1: the highest band under I125 at an E96 resistor (1 %): 102.0 kOhm, IOS 0.2274 to 0.3002 A (ratio 1.320; MODEL on the maker's equations)
+     C2 AP22653A: the highest band under I125 at an E96 resistor (1 %): 90.9 kOhm, IOS 0.2247 to 0.2999 A (ratio 1.335; MODEL on the maker's equations)
+     so W1 is CLOSED at 184 C/W for both candidates: normal service (S2) and every row-7 fault above IOSmin would be limited
+     W2, the capacitance (MODEL): a limited interval t at a peak I needs C = (I - IOSmin) x t / dV on the supervisor's 3.3 V rail, dV =
+       the LDO's least output 3.2505 V less the TCAN334's least supply 3.0 V (PRINTED, SLLSEQ7F 5.3, p.5) = 0.2505 V; the latch-off limiter
+       starts into at most C = (IOSmin - S1) x t_latch(min) / 3.3495 V (the rail charged at its least limit while the supervisor draws S1;
+       the soft start not credited)
+       intervals: a frame on record l9t5's frame model, 135 bit-times at 500 kbit/s (FW-B21's least rate) = 270 us (ASSUMPTION, T10's);
+       a run of 11 successive dominant bits on TXD, TI's printed protocol worst case (SLLSEQ7F 5.7 note 1, p.9) = 22 us; a held TXD
+       ended by the driver time-out, 3.8 ms (PRINTED maximum)
+     C1 TPS2553-1 at 102.0 kOhm (IOSmin 0.2274 A, latch at least 5 ms): it can start into at most 62.5 uF
+       S2 normal frames, both transceivers dominant   0.2839 A for   270.0 us: bridging   60.9 uF  fits
+       B3 frames (the bus still works), S3'           0.3049 A for   270.0 us: bridging   83.5 uF  OVER the start limit
+       B4 frames (the bus still works), S3'           0.3400 A for   270.0 us: bridging  121.4 uF  OVER the start limit
+       B1/B2 error runs (bits read wrong), S3'        0.4040 A for    22.0 us: bridging   15.5 uF  fits
+       B5 error runs (bits read wrong), S3'           0.4240 A for    22.0 us: bridging   17.3 uF  fits
+       B7a a held TXD into the healthy bus, held      0.2286 A for  3800.0 us: bridging   18.2 uF  fits
+     C2 AP22653A at 90.9 kOhm (IOSmin 0.2247 A, latch at least 2 ms): it can start into at most 23.4 uF
+       S2 normal frames, both transceivers dominant   0.2839 A for   270.0 us: bridging   63.8 uF  OVER the start limit
+       B3 frames (the bus still works), S3'           0.3049 A for   270.0 us: bridging   86.4 uF  OVER the start limit
+       B4 frames (the bus still works), S3'           0.3400 A for   270.0 us: bridging  124.3 uF  OVER the start limit
+       B1/B2 error runs (bits read wrong), S3'        0.4040 A for    22.0 us: bridging   15.7 uF  fits
+       B5 error runs (bits read wrong), S3'           0.4240 A for    22.0 us: bridging   17.5 uF  fits
+       B7a a held TXD into the healthy bus, held      0.2286 A for  3800.0 us: bridging   59.0 uF  OVER the start limit
+     so on the record's own frame model W2 conflicts for both candidates (B4's limited frame needs more capacitance than the latch-off
+     limiter can start into), and on any interval model it rests on a latch timer whose restart is not printed: M-A at 184 C/W has NO
+     WINDOW ON PRINTED LIMITS for the rows the design must serve
+   (b) THE THERMAL-HEADROOM COMPANION: the limit raised over every served peak, the LDO's junction-to-ambient lowered to hold it
+     C1 TPS2553-1 at 49.9 kOhm: the PRINTED row 0.475 to 0.565 A with the resistor's 1 % through the exponents: IOS 0.4702 to 0.5704 A (MODEL);
+       IOSmin over S3' by +0.0462 A, over S1 by +0.2847 A: W1 holds on the served side; the LDO must hold 125 C at 0.5704 A: theta at most 98.6 C/W
+       (the tested row governs; the maker's design equation at 49.9 kOhm reads 0.4702 to 0.5878 A with the 1 %, theta at most 95.7 C/W if taken)
+       SOT25 (AP2112K)      184.0 C/W: junction 167.2 C at 0.5704 A  FAILS
+       SO-8 (AP2112M)       114.0 C/W: junction 132.6 C at 0.5704 A  FAILS
+       SOT89-5 (AP2112R5)   120.0 C/W: junction 135.6 C at 0.5704 A  FAILS
+     C2 AP22653A at 49.9 kOhm: the PRINTED row 0.441 to 0.539 A with the resistor's 1 % through the exponents: IOS 0.4363 to 0.5446 A (MODEL);
+       IOSmin over S3' by +0.0123 A, over S1 by +0.2508 A: W1 holds on the served side; the LDO must hold 125 C at 0.5446 A: theta at most 103.3 C/W
+       (the tested row governs; the maker's design equation at 49.9 kOhm reads 0.4282 to 0.5566 A with the 1 %, theta at most 101.0 C/W if taken)
+       SOT25 (AP2112K)      184.0 C/W: junction 163.1 C at 0.5446 A  FAILS
+       SO-8 (AP2112M)       114.0 C/W: junction 130.1 C at 0.5446 A  FAILS
+       SOT89-5 (AP2112R5)   120.0 C/W: junction 132.9 C at 0.5446 A  FAILS
+     so no AP2112 package holds the companion's maximum: the companion is a different regulator part with a PRINTED junction-to-ambient
+     at most 98.6 C/W (C1) or 103.3 C/W (C2) at this corner, rated at least the limiter's maximum (section 8)
+     no capacitance is needed to bridge a served frame (none is limited); the latch-off limiter starts into at most 425 uF (C1, 5 ms)
+     or 150 uF (C2, 2 ms) on the rail, the decoupling's ceiling (MODEL)
+     row 8 (S4, survive only): (f2) 0.5491 A and rev V's 0.5639 A against IOS 0.4702 to 0.5704 A: may be limited (no service is owed; IOHA
+       line 245: 'no controller can form a majority; firmware rule is that a controller without quorum does not act, so the voters hold the home assignment');
+       a limiter that latches leaves its supervisor off until EN or power is cycled: the home assignment holds either way; the
+       recovery after the repair is a restart (the peers' EN, section 6)
+     what the companion gives up: its IOSmin (0.4702 A) is over the H743's own 125 C current 0.328 A (line 101), so a firmware fault outside
+       FW-B20 can still take the controller past its rating (T10 10h (3): a systematic firmware defect, not a protective mechanism); M-A
+       at 184 C/W (IOSmax 0.3002 A) would have held it, had it a window; HO-E (VOS0 from 0.1936 A) is under every IOSmin either way (L4A-59)
+
+5. ROW 2: THE LDO OUTPUT SHORT (AP2112 'foldback short current 50 mA (TYPICAL)', T10 line 144; 'acts in no row', line 210)
+   (i) the short draws the limiter's own limit through the LDO (the LDO fully on): the limiter limits and latches off within its
+       PRINTED timer: the event's energy
+       at most 4.1174 V x 0.5704 A x 10 ms = 23.5 mJ (C1 companion) or 44.8 mJ (C2, 20 ms); with M-A at 184 C/W, 12.4 mJ (C1 at 102.0 kOhm)
+       (MODEL, the whole input across whichever part holds the drop); BOUNDED on printed limits
+   (ii) the LDO holds its own short current under the limiter's limit (the AP2112's foldback 50 mA is TYPICAL, no maximum printed; a
+       companion part's own limit and foldback are likewise its own): the limiter does not act; the LDO holds the
+       whole input at its own short current for as long as the short lasts (0.206 W at the typical, 114.1 C at 184 C/W: a TYPICAL reading,
+       never a bound). EXCLUDED from the LDO-junction criterion, with the reason (SESSION): a supervisor on a shorted rail is already
+       lost, which IOHA row 3 (line 240) carries: 'the other two are a majority and ownership is unaffected'; the containment that row needs is held on PRINTED
+       limits whatever the LDO does: +5V_IOC and the other two branches see at most IOSmax from it, and an LDO that fails shorted
+       input to output becomes case (i), which latches. The bounded-interval disconnection of a dead branch is the peers' vote on its
+       limiter's EN (L4A-54's M-B vote outputs; turnoff at most 3 ms PRINTED): a finding for L4A-54 and L4A-56, not a printed timer
+   result: a PRINTED fault timer with latch-off on both candidates (C1 5 to 10 ms, C2 2 to 20 ms); the sub-case under the
+   limit is excluded with its reason, not bounded
+
+6. ROW 3: THE LIMITER'S OWN DISSIPATION WHILE LIMITING, AND ITS RESTART WAVEFORM
+   C1 TPS2553-1 companion: in service at S3' 0.4240 A, 24.3 mW (rDS(on) 0.135 ohm PRINTED): junction 80.7 C at 182.6 C/W (MODEL); limiting into a
+     shorted output at most 4.1174 V x 0.5704 A = 2.348 W for at most 10 ms (the timer's PRINTED maximum), 23.5 mJ; its junction in that
+     time is NOT computed (no transient thermal impedance printed): surviving it is the part's stated function (both sheets: short
+     circuits), backed by its own thermal protection
+   C2 AP22653A companion: in service at S3' 0.4240 A, 24.3 mW (rDS(on) 0.135 ohm PRINTED): junction 79.2 C at 120.0 C/W (MODEL); limiting into a
+     shorted output at most 4.1174 V x 0.5446 A = 2.242 W for at most 20 ms (the timer's PRINTED maximum), 44.8 mJ; its junction in that
+     time is NOT computed (no transient thermal impedance printed): surviving it is the part's stated function (both sheets: short
+     circuits), backed by its own thermal protection
+   C1's thermal sensor in current limit acts from 135 C (minimum, 9.3.6, p.14); C2's at approximately 145 C (p.10, no limit printed)
+   RESTART: the latch-off versions do not restart by themselves (C1 p.13, C2 p.9): no periodic waveform of their own. Two exceptions:
+     a hard short at the limiter's own output may thermal-cycle it inside the timer (whether the deglitch completes across a thermal
+     cycle is NOT PRINTED): a periodic waveform in the limiter alone, its current at most IOSmax (PRINTED), so the containment holds and
+     the LDO is not in that path; and a restart the peers command through EN (L4A-54, L4A-58) must bound its own rate: at most one
+     attempt per T_r keeps the average at most 23.5 mJ / T_r (2.3 mW at 10 s)
+   the reverse-voltage latch (C1: VOUT - VIN 95 to 190 mV held 3 to 7 ms, PRINTED, p.7) needs the LDO's input capacitance to
+     stay above a falling +5V_IOC for 3 ms against the supervisor's own draw (10 uF at 10 mA falls 1 V a ms): not a credible trip in
+     service (MODEL); at power-down it latches nothing that a power cycle does not clear
+
+7. ROW 4: T10-A3'S HEADROOM WITH THE LIMITER'S RESISTANCE IN PLACE OF THE 0.3 OHM SENSE (the supply path exactly as T10 computes it:
+   the pre-regulator's least 3.9063 V, the rail's 2 % budget, the lead and contacts 0.04252 ohm at the total current, the return's shift 0.0681 V)
+   reproduced first: at 0.2452 A with 0.3 ohm at +1 %: 3.6524 V against 3.5213 V (T10 line 643 prints 3.6524 against 3.5213): EQUAL
+   (a) C1 TPS2553-1's 0.135 ohm at T10's point, 0.2452 A on all three: 3.6936 V against 3.5213 V: +0.1723 V, holds
+   (a) C2 AP22653A's 0.135 ohm at T10's point, 0.2452 A on all three: 3.6936 V against 3.5213 V: +0.1723 V, holds
+   (b) at each design's largest sustained current, IOSmax on all three (the AP2112's dropout rows, INFERRED between 300 and 600 mA as T10):
+       M-A at 184 C/W, C1 at 102.0 kOhm   0.3002 A: 3.6791 V against 3.5595 V: +0.1196 V, holds
+       companion, C1 at 49.9 kOhm         0.5704 A: 3.6082 V against 3.7486 V: -0.1404 V, FAILS on the AP2112's rows
+       so the companion regulator's PRINTED dropout at 0.5704 A must be at most 3.6082 - 3.3683 = 0.2399 V (with the AP2112's output band and
+       load regulation; its own rows replace them)
+   (c) the other two while one sits at the companion's IOSmax: lead 0.9414 A, each other LDO at S1 0.1855 A: 3.6929 V against 3.4798 V: +0.2131 V, holds
+   (d) the connected path upstream: three limiters at their maximum draw 1.7111 A from U601 and the lead's pin 1, against U601's 3 A and
+       the VH's 10 A (PRINTED, T10 line 272): holds; a shorted branch takes at most IOSmax from them, so the other two keep their supply
+   (e) S3' on all three in one bit (error flags overlap): 3.6466 V against 3.6462 V on the AP2112's rows: +0.0005 V (a bit-time peak; the LDO's
+       input capacitance carries it; shown, not judged)
+
+8. THE LINE FOR L4A-56
+   CHANGE-METHOD: M-A as registered (a limiter ahead of the AP2112K at 184 C/W) has no window on printed limits: its 125 C current
+   0.3056 A sits 7.7 % over normal service's own peak (S2 0.2839 A) and under row 7's (S3' 0.4240 A); serving them through limiting needs
+   more capacitance than the latch-off limiter can start into and a latch timer neither maker prints. TAKE THE THERMAL-HEADROOM
+   COMPANION (SESSION, W135-1): C1, TI TPS2553-1 (SLVS841F; DBV), RILIM 49.9 kOhm, IOS 0.470 to 0.570 A, latch-off after 5 to 10 ms,
+   at each supervisor LDO's input, AND a regulator part in place of the AP2112K with, PRINTED: junction-to-ambient at most 98.6 C/W at
+   the 14.0k corner, rated output and current limit at least 0.570 A, dropout at 0.570 A at most 0.240 V, input to at least 4.12 V.
+   Second source: C2, Diodes AP22653A (DS41186), RLIM 49.9 kOhm, IOS 0.436 to 0.545 A, theta at most 103.3 C/W, latch after 2 to 20 ms
+   WHY the companion and not K1: it keeps the drafted structure (pre-regulator, a private LDO a supervisor, CON-004's own branch) and
+   its acceptance (T10-A2, T10-A3) and adds one SOT-23-6 and a resistor a supervisor; no served row is limited, so nothing rests on a
+   timer's unprinted restart, the protocol or the firmware. K1 (a buck a supervisor, U25's AP63203) is the FALLBACK if no regulator
+   with those printed figures fits board B's pockets: it was set aside for area and switching ripple on VDD and VDDA, not because it
+   failed (T10 section 8). To reverse W135-1: take K1, or a limiter class that prints a band of +-3.7 % at 0.29 A (none of the four
+   sheets read does)
+
+9. THE PREDICATES
+   T10-A3's printed figure reproduces from record l9t5's modules before the limiter's resistance replaces the sense           yes
+   no candidate's band fits under the AP2112K's 125 C current with its minimum at row 7's peak (W1 closed at 184 C/W)         yes
+   W2 at 184 C/W: a row-7 frame needs more bridging capacitance than the latch-off limiter starts into, for both candidates   yes
+   both candidates print a fault timer (minimum and maximum) and a latch-off that only EN or power clears                     yes
+   at 49.9 kOhm both candidates' minimum is over every served peak (S3') and no AP2112 package holds 125 C at their maximum   yes
+   the limiter's resistance in place of the 0.3 ohm sense keeps T10-A3 at T10's own point                                     yes
+   three companion limiters at their maximum stay inside U601's and the lead's printed ratings                                yes
+   the AP2112's typical foldback is under every IOSmin, so the output short under the limit is excluded with a reason, not bounded yes
+
+l4lim_screen: done

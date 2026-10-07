@@ -1,0 +1,999 @@
+                                                                                                                                               74LVC1G34
+                                                                                                                                SINGLE BUFFER GATE
+
+
+Description                                                                       Pin Assignments
+The 74LVC1G34 is a single buffer gate with a standard push-pull
+output. The device is designed for operation with a power supply                                    ( Top View )                      ( Top View )
+
+range of 1.65V to 5.5V. The inputs are tolerant to 5.5V allowing this                                                           NC 1                    5 Vcc
+                                                                                          NC 1                         5 Vcc
+device to be used in a mixed voltage environment. The device is fully
+                                                                                                                                  A 2
+specified for partial power down applications using IOFF. The IOFF
+                                                                                            A 2
+circuitry disables the output preventing damaging current backflow                                                             GND 3                    4 Y
+when the device is powered down.
+                                                                                        GND 3                          4 Y               SOT553
+                                                                                                                                        (Top View )
+The gate performs the positive Boolean function:                                                  SOT25 / SOT353                  NC       1     6     Vcc
+                                                                                                                                   A       2     5     NC
+Y=A                                                                                                 ( Top View )                 GND     3   4 Y
+
+                                                                                                  NC     1   8   Vcc                 X1-DFN1010-6
+                                                                                                                                       (Type B)
+                                                                                                   A     2   5   NC
+                                                                                                                                         (Top View )
+                                                                                                GND      3   4   Y                 NC      1   Vcc6
+
+                                                                                                   X2-DFN1410-6                     A      2   NC 5
+
+                                                                                                                                  GND    3   4 Y
+                                                                                                    ( Bottom View )                  X2-DFN1010-6
+                                                                                                GND 3            4Y                     (Top View)
+                                                                                                    A2           5 NC            NC 1                  5 Vcc
+                                                                                                                                            3
+                                                                                                  NC 1           6 Vcc                     GND
+                                                                                                    X2-DFN1409-6                   A 2                 4 Y
+                                                                                                     Chip Scale
+                                                                                                     Alternative                    X2-DFN0808-4
+                                                                                                                                     Packages not to scale
+
+
+
+
+Features                                                                          Applications
+•   Wide Supply Voltage Range from 1.65V to 5.5V                                  •     Voltage Level Shifting
+•   ±24mA Output Drive at 3.3V                                                    •     General Purpose Logic
+•   CMOS Low Power Consumption                                                    •     Power Down Signal Isolation
+•   IOFF Supports Partial-Power-Down Mode Operation                               •     Wide Array of Products such as:
+•   Inputs Accept Up to 5.5V                                                                PCs, Networking, Notebooks, Netbooks, PDAs
+•   ESD Protection Tested per JESD 22                                                       Tablet Computers, E-Readers
+        Exceeds 2000-V Human Body Model (A114)                                             Computer Peripherals, Hard Drives, CD/DVD ROMs
+        Exceeds 1000-V Charged Device Model (C101)                                         TVs, DVDs, DVRs, Set-Top Boxes
+•   Latch-Up Exceeds 100mA per JESD 78, Class I                                             Cell Phones, Personal Navigation / GPS
+•   Range of Package Options                                                                MP3 Players, Cameras, Video Recorders
+•   Direct Interface with TTL Levels
+•   Totally Lead-Free & Fully RoHS Compliant (Notes 1 & 2)
+•   Halogen and Antimony Free. “Green” Device (Note 3)
+•   For automotive applications requiring specific change
+    control (i.e. parts qualified to AEC-Q100/101/200, PPAP
+    capable, and manufactured in IATF 16949 certified facilities),
+    please contact us or your local Diodes representative.
+    https://www.diodes.com/quality/product-definitions/
+•   An Automotive-Compliant Part is Available Under Separate
+    Datasheet (74LVC1G34Q)
+
+Notes:    1. No purposely added lead. Fully EU Directive 2002/95/EC (RoHS), 2011/65/EU (RoHS 2) & 2015/863/EU (RoHS 3) compliant.
+          2. See https://www.diodes.com/quality/lead-free/ for more information about Diodes Incorporated’s definitions of Halogen- and Antimony-free, "Green" and
+             Lead-free.
+          3. Halogen- and Antimony-free "Green” products are defined as those which contain <900ppm bromine, <900ppm chlorine (<1500ppm total Br + Cl) and
+             <1000ppm antimony compounds.
+
+74LVC1G34                                                                 1 of 17                                                                             April 2021
+Document number: DS36108 Rev. 10 - 2                                  www.diodes.com                                                                 © Diodes Incorporated
+                                                                                                                                           74LVC1G34
+
+
+Pin Descriptions                                                                  Logic Diagram
+            Pin Name                            Description
+                  NC                           No Connection
+                   A                             Data Input
+                                                                                         2                                    4
+                                                                                    A                                               Y
+                 GND                              Ground
+                   Y                            Data Output
+                 VCC                           Supply Voltage
+
+
+
+
+Function Table
+                 Input                              Output
+                   A                                  Y
+                    H                                  H
+                    L                                  L
+
+
+
+
+Absolute Maximum Ratings (Notes 4 & 5) (@ TA = +25°C, unless otherwise specified.)
+          Symbol                                     Parameter                                                              Rating                       Unit
+         ESD HBM         Human Body Model ESD Protection                                                                      2                           kV
+         ESD CDM         Charged Device Model ESD Protection                                                                  1                           kV
+           VCC           Supply Voltage Range                                                                              -0.5 to 6.5                     V
+           VI            Input Voltage Range                                                                               -0.5 to 6.5                     V
+           VO            Voltage Applied to Output in High Impedance or IOFF State                                         -0.5 to 6.5                     V
+           VO            Voltage Applied to Output in High or Low State                                                -0.5 to VCC + 0.5                   V
+           IIK           Input Clamp Current VI < 0                                                                           -50                        mA
+           IOK           Output Clamp Current                                                                                 -50                        mA
+           IO            Continuous Output Current                                                                            ±50                        mA
+         ICC, IGN        Continuous Current Through VCC or GND                                                               ±100                         mA
+           TJ            Operating Junction Temperature                                                                   -40 to +150                     °C
+          TSTG           Storage Temperature                                                                              -65 to +150                     °C
+
+
+Notes:     4. Stresses beyond the absolute maximum can result in immediate failure or reduced reliability. These are stress values and device operation should be
+              within recommend values.
+           5. Forcing the maximum allowed voltage could cause a condition exceeding the maximum current or conversely forcing the maximum current could cause
+              a condition exceeding the maximum voltage. The ratings of both current and voltage must be maintained within the controlled range.
+
+
+
+
+74LVC1G34                                                                  2 of 17                                                                      April 2021
+Document number: DS36108 Rev. 10 - 2                                   www.diodes.com                                                           © Diodes Incorporated
+                                                                                                                    74LVC1G34
+
+
+Recommended Operating Conditions (Note 6) (@ TA = +25°C, unless otherwise specified.)
+   Symbol                                               Parameter                                Min         Max               Unit
+                                                            Operating                           1.65          5.5                V
+        VCC        Operating Voltage
+                                                            Data Retention Only                 1.5           —                  V
+                                                            VCC = 1.65V to 1.95V              0.65 × VCC      —
+                                                            VCC = 2.3V to 2.7V                   1.7          —
+        VIH        High-Level Input Voltage                                                                                      V
+                                                            VCC = 3V to 3.6V                      2           —
+                                                            VCC = 4.5V to 5.5V                0.7 × VCC       —
+                                                            VCC = 1.65V to 1.95V                 —         0.35 × VCC
+                                                            VCC = 2.3V to 2.7V                   —            0.7
+        VIL        Low-Level Input Voltage                                                                                       V
+                                                            VCC = 3V to 3.6V                     —            0.8
+                                                            VCC = 4.5V to 5.5V                   —         0.3 × VCC
+        VI         Input Voltage                                                                  0           5.5                V
+        VO         Output Voltage                                                                 0           VCC                V
+                                                            VCC = 1.65V                          —             -4
+                                                            VCC = 2.3V                           —             -8
+                                                            VCC = 2.7V                           —            -12
+        IOH        High-Level Output Current                                                                                    mA
+                                                                                                 —            -16
+                                                            VCC = 3V
+                                                                                                 —            -24
+                                                            VCC = 4.5V                           —            -32
+                                                            VCC = 1.65V                          —             4
+                                                            VCC = 2.3V                           —             8
+                                                            VCC = 2.7V                           —            -12
+        IOL        Low-Level Output Current                                                                                     mA
+                                                                                                 —            16
+                                                            VCC = 3V
+                                                                                                 —            24
+                                                            VCC = 4.5V                           —            32
+                                                            VCC = 1.8V ± 0.15V, 2.5V ± 0.2V      —            20
+    Δt/ΔV          Input Transition Rise or Fall Rate       VCC = 3.3V ± 0.3V                    —            10               ns/V
+                                                            VCC = 5V ± 0.5V                      —             5
+        TA         Operating Free-Air Temperature           —                                    -40         +125               °C
+Note:         6. Unused inputs should be held at VCC or Ground.
+
+
+
+
+74LVC1G34                                                                    3 of 17                                            April 2021
+Document number: DS36108 Rev. 10 - 2                                     www.diodes.com                                 © Diodes Incorporated
+                                                                                                                                             74LVC1G34
+
+
+Electrical Characteristics (All typical values are at VCC = 3.3V, TA = +25°C.)
+                                                                                                  -40°C to +85°C                   -40°C to +125°C
+ Symbol              Parameter             Test Conditions                VCC                                                                                Unit
+                                                                                           Min         Typ            Max          Min        Max
+                                       IOH = -100μA                  1.65V to 5.5V      VCC – 0.1        —             —         VCC – 0.1        —
+                                       IOH = -4mA                        1.65V             1.2           —             —           0.95           —
+                                       IOH = -8mA                         2.3V             1.9           —             —            1.7           —
+               High Level Output
+   VOH                                 IOH = -12mA                        2.7V             2.2           —             —            1.9           —             V
+               Voltage
+                                       IOH = -16mA                                         2.4           —             —            2.2           —
+                                                                           3V
+                                       IOH = -24mA                                         2.3           —             —            2.0           —
+                                       IOH = -32mA                        4.5V             3.8           —             —            3.4           —
+                                       IOL = 100μA                   1.65V to 5.5V          —            —             0.1          —            0.1
+                                       IOL = 4mA                         1.65V              —            —            0.45          —            0.7
+                                       IOL = 8mA                          2.3V              —            —             0.3          —            0.45
+               Low Level Output
+   VOL                                 IOL = 12mA                         2.7V              —            —             0.4          —            0.6            V
+               Voltage
+                                       IOL = 16mA                                           —            —             0.4          —            0.6
+                                                                           3V
+                                       IOL = 24mA                                           —            —            0.55          —            0.8
+                                       IOL = 32mA                         4.5V              —            —            0.55          —            0.8
+    II         Input Current           VI = 5.5V or GND                0V to 5.5V           —            ±0.1          ±1           —             ±2          μA
+               Power Down
+   IOFF                                VI or VO = 5.5V                     0V               —            —            ±10           —            ±10          μA
+               Leakage Current
+                                       VI = 5.5V or GND,
+   ICC         Supply Current                                             5.5V              —            0.1            1           —             10          μA
+                                       IO = 0
+               Additional Supply
+   ΔICC                                Input at VCC – 0.6V             3V to 5.5V           —            —            500           —            500          μA
+               Current
+    CI         Input Capacitance       VI = VCC or GND                    3.3V              —             5            —            —             —             pF
+
+
+
+
+Package Characteristics
+    Symbol                      Parameter                    Test Conditions                     VCC                 Min           Typ         Max          Unit
+                                                                SOT25                                                 —            204          —
+                                                                SOT353                                                —            371          —
+                                                                SOT553                                                —            231          —
+                           Thermal Resistance                X2-DFN0808-4                                             —            400          —
+         θJA                                                                                  (Note 7)                                                     °C/W
+                           Junction-to-Ambient           X1-DFN1010-6 (Type B)                                        —            435          —
+                                                             X2-DFN1010-6                                             —            445          —
+                                                             X2-DFN1409-6                                             —            470          —
+                                                             X2-DFN1410-6                                             —            460          —
+                                                                SOT25                                                 —             52          —
+                                                                SOT353                                                —            143          —
+                                                                SOT553                                                —            105          —
+                           Thermal Resistance                X2-DFN0808-4                                             —            225          —
+         θJC                                                                                  (Note 7)                                                     °C/W
+                            Junction-to-Case             X1-DFN1010-6 (Type B)                                        —            250          —
+                                                             X2-DFN1010-6                                             —            250          —
+                                                             X2-DFN1409-6                                             —            275          —
+                                                             X2-DFN1410-6                                             —            265          —
+Note:          7. Test condition for each of the 8 package types: Device mounted on FR-4 substrate PC board, 2oz copper, with minimum recommended pad layout.
+
+
+
+
+74LVC1G34                                                                    4 of 17                                                                    April 2021
+Document number: DS36108 Rev. 10 - 2                                     www.diodes.com                                                         © Diodes Incorporated
+                                                                                                               74LVC1G34
+
+
+Switching Characteristics (Figure 1, Typical Values at TA = +25°C and Nominal Voltages 1.8V, 2.5V, 3.3V, and 5.0V.)
+                  From        To                                TA = -40°C to +85°C              TA = -40°C to +125°C
+ Parameter                                 VCC                                                                                  Unit
+                  Input      Output                      Min           Typ            Max           Min         Max
+                                       1.8V ± 0.15V      1.0           3.0            7.5           1.0         9.5
+                                       2.5V ± 0.2V       0.5           2.0            5.0           0.5         6.5
+      tPD        A or B         Y          2.7V          0.5           2.3            5.2           0.5         7.0              ns
+                                        3.3V ± 0.3V      0.5           2.0            4.2           0.5         5.5
+                                        5.0V ± 0.5V      0.5           1.6            3.7           0.5         5.0
+
+
+
+
+Operating Characteristics (All typical values are at VCC = 3.3V, TA = +25°C.)
+                                         Test          VCC = 1.8V        VCC = 2.5V         VCC = 3.3V      VCC = 5V
+               Parameter                                                                                                        Unit
+                                       Conditions         Typ                Typ               Typ             Typ
+                  Power Dissipation
+    CPD                                 f = 10MHz         16                 16                16              16                pF
+                    Capacitance
+
+
+
+
+74LVC1G34                                                  5 of 17                                                           April 2021
+Document number: DS36108 Rev. 10 - 2                   www.diodes.com                                                © Diodes Incorporated
+                                                                                                                                      74LVC1G34
+
+
+Parameter Measurement Information
+
+
+                                                                From Output
+                                                                Under Test
+
+                                                                                   C  L                RL
+                                                                           (see Note A)
+
+
+
+
+                                               Inputs
+         VCC                                                                              VM                      CL                          RL
+                                     VI                       tR/tF
+    1.8V ± 0.15V                   VCC                        ≤2ns                     VCC/2                      30pF                       1kΩ
+     2.5V ± 0.2V                   VCC                        ≤2ns                     VCC/2                      30pF                      500Ω
+         2.7V                      VCC                     ≤2.5ns                      1.5V                       50pF                      500Ω
+     3.3V ± 0.3V                   3.0V                    ≤2.5ns                      1.5V                       50pF                      500Ω
+     5.0V ± 0.5V                   VCC                     ≤2.5ns                      VCC/2                      50pF                      500Ω
+
+
+
+
+                                     tW
+                                                                                                                                      Vl
+                                                                      Vl            Input             VM                 VM
+    Input                VM                              VM                                                                           0V
+                                                                      0V                       tPLH                            tPHL
+                Voltage Waveform Pulse Duration                                                                                       VOH
+                                                                                  Output                     VM               VM
+                                                                                                                                      VOL
+
+                                                                                               tPHL                            tPLH
+                                                                                                                                      VOH
+                                                                                  Output                    VM                VM
+                                                                                                                                      VOL
+                                                                                          Voltage Waveform Propagation Delay Times
+                                                                                              Inverting and Non Inverting Outputs
+
+
+
+
+                                                   Figure 1. Load Circuit and Voltage Waveforms
+
+
+
+
+Notes:      A. Includes test lead and test apparatus capacitance.
+            B. All pulses are supplied at pulse repetition rate ≤ 10MHz.
+            C. tPLH and tPHL are the same as tPD.
+
+
+
+
+74LVC1G34                                                                      6 of 17                                                             April 2021
+Document number: DS36108 Rev. 10 - 2                                       www.diodes.com                                                  © Diodes Incorporated
+                                                                                                                                         74LVC1G34
+
+
+Ordering Information (Note 8)
+                                                                  74 LVC 1G 34 XXX - 7
+
+
+            Logic Device                              Function                                 Package                               Packing
+           74 : Logic Prefix               34 :     1-Input                            W5 : SOT25               7 : 7” Tape & Reel
+         LVC : 1.65V to 5.5V                        Buffer Gate                        SE : SOT353
+                Logic Family                                                            Z : SOT553
+          1G : One Gate                                                               FS3 : X2-DFN0808-4
+                                                                                      FW5 : X1-DFN1010-6 (Type B)
+                                                                                      FW4 : X2-DFN1010-6
+                                                                                      FX4 : X2- DFN1409-6
+                                                                                      FZ4 : X2- DFN1410-6
+
+
+                                                                                                                     7” Tape and Reel
+                                                                                Package
+               Part Number                      Package Code                                                                       Part Number
+                                                                              (Notes 9 & 10)                     Quantity
+                                                                                                                                      Suffix
+             74LVC1G34W5-7                            W5                        SOT25                       3,000/Tape & Reel                     -7
+             74LVC1G34SE-7                            SE                        SOT353                      3,000/Tape & Reel                     -7
+              74LVC1G34Z-7                             Z                        SOT553                      4,000/Tape & Reel                     -7
+            74LVC1G34FS3-7                           FS3                     X2-DFN0808-4                   5,000/Tape & Reel                     -7
+            74LVC1G34FW5-7                           FW5                 X1-DFN1010-6 (Type B)              5,000/Tape & Reel                    -7
+            74LVC1G34FW4-7                           FW4                     X2-DFN1010-6                   5,000/Tape & Reel                    -7
+                                                                             X2-DFN1409-6
+            74LVC1G34FX4-7                            FX4                                                   5,000/Tape & Reel                    -7
+                                                                        (Chip Scale Alternative)
+             74LVC1G34FZ4-7                           FZ4                     X2-DFN1410-6                  5,000/Tape & Reel                    -7
+Notes:     8. For packaging details, go to our website at https://www.diodes.com/design/support/packaging/diodes-packaging/.
+           9. Pad layout as shown in Diodes Incorporated’s package outline PDFs, which can be found on our website at http://www.diodes.com/package-outlines.html.
+           10. The taping orientation is located on our website at https://www.diodes.com/assets/Packaging-Support-Docs/ap02007.pdf.
+
+
+
+
+74LVC1G34                                                                 7 of 17                                                                      April 2021
+Document number: DS36108 Rev. 10 - 2                                  www.diodes.com                                                          © Diodes Incorporated
+                                                                                                                    74LVC1G34
+
+
+Marking Information
+(1)   SOT25, SOT353 and SOT553
+
+                                                  (Top Views)
+                                          5           4    5             4      XX : Identification Code
+
+
+
+
+                                                                         7
+                                                     7
+                                                                                Y : Year 0~9
+                                                                                W : Week : A~Z : 1~26 week;
+                                          XXYWX             XXYWX                     a~z : 27~52 week;
+                                                                                     z represents 52 and 53 week
+                                          1   2       3    1     2       3      X : A~Z : Internal Code
+
+                                          SOT25/353            SOT553
+
+
+                                       Part Number                    Package                 Identification Code
+                                   74LVC1G34W5-7                       SOT25                           UK
+                                   74LVC1G34SE-7                      SOT353                           UK
+                                       74LVC1G34Z-7                   SOT553                           UK
+
+
+
+
+(2)   DFN Packages
+
+                                                   (Top View) XX : Identification Code
+                                                                     Y : Year 0~9
+                                                       XX            W : Week : A~Z : 1~26 week;
+                                                                         a~z : 27~52 week;
+                                                      YWX                z represents 52 and 53 week
+                                                                     X : A~Z : Internal Code
+
+
+
+                                       Part Number                    Package                 Identification Code
+                                   74LVC1G34FS3-7                X2-DFN0808-4                          YV
+                                  74LVC1G34FW5-7            X1-DFN1010-6 (Type B)                      VW
+                                  74LVC1G34FW4-7                 X2-DFN1010-6                          UK
+                                   74LVC1G34FX4-7                X2-DFN1409-6                          MK
+                                   74LVC1G34FZ4-7                X2-DFN1410-6                          UK
+
+
+
+
+74LVC1G34                                                           8 of 17                                                   April 2021
+Document number: DS36108 Rev. 10 - 2                            www.diodes.com                                        © Diodes Incorporated
+                                                                                                               74LVC1G34
+
+
+Package Outline Dimensions
+Please see http://www.diodes.com/package-outlines.html for the latest version.
+
+(1)   Package Type: SOT25
+
+
+
+                            A                                                                  SOT25
+                                                                                      Dim Min Max Typ
+                                                                                       A    0.35 0.50 0.38
+                                                                                       B    1.50 1.70 1.60
+                                        B C                                            C    2.70 3.00 2.80
+                                                                                       D       -    -   0.95
+                                                                                       H    2.90 3.10 3.00
+                                                                                       J    0.013 0.10 0.05
+                           H                                                           K    1.00 1.30 1.10
+                                                                                       L    0.35 0.55 0.40
+                 K                                      M
+                                                                                       M    0.10 0.20 0.15
+                                         N
+                                                                                       N    0.70 0.80 0.75
+                                                                                       α      0°   8°     -
+                 J
+                                D             L                                       All Dimensions in mm
+
+
+
+
+(2)   Package Type: SOT353
+
+
+
+
+                                                                                              SOT353
+        E                                         E1                                 Dim Min Max        Typ
+                                                                                     A1 0.00 0.10       0.05
+                                                                                     A2 0.90 1.00       0.95
+                                                                                      b    0.10 0.30    0.25
+                                                                                      c    0.10 0.22    0.11
+                                                                                      D    1.80 2.20    2.15
+                F                   b                                                 E    2.00 2.20    2.10
+                                                                                     E1 1.15 1.35       1.30
+                           D                                                          e        0.650 BSC
+                                                                                      F    0.40 0.45 0.425
+                                                                                      L    0.25 0.40    0.30
+                                                                                      a     0°    8°     --
+       A2                                                                             All Dimensions in mm
+
+
+                                                  c                              a
+                                e                                       L
+               A1
+
+
+
+
+74LVC1G34                                                          9 of 17                                               April 2021
+Document number: DS36108 Rev. 10 - 2                           www.diodes.com                                    © Diodes Incorporated
+                                                                                                                 74LVC1G34
+
+
+Package Outline Dimensions (continued)
+Please see http://www.diodes.com/package-outlines.html for the latest version.
+
+(3)   Package Type: SOT553
+
+
+                                  D
+                                  e1
+
+
+                                                                                                    SOT553
+                              e
+                                                                                             Dim Min Max Typ
+                                                    E/2
+               E1/2                                                                           A    0.55 0.62 0.60
+                                                                                              b    0.15 0.30 0.20
+          E1                                                 E
+                                                                                               c   0.10 0.18 0.15
+                                                                                              D    1.50 1.70 1.60
+                                                                                              E    1.55 1.70 1.60
+                                                                                 L (5x)      E1 1.10 1.25 1.20
+                              F                     b (5x)           c                         e       0.50 BSC
+                                                                                              e1       1.00 BSC
+                  R0.1 MAX.                                                                   F    0.00 0.10 ––
+                     TYP.                           a
+                                                                                              L    0.10 0.30 0.20
+                                                                                               a    6°     8°   7°
+                                                                                             All Dimensions in mm
+                                                        A
+                                                    7°
+
+
+
+
+                                                    TYP.
+
+
+
+
+(4)   Package Type: X2-DFN0808-4
+
+
+
+                                                                  A3
+
+          A        A1
+                                                                                                     X2-DFN0808-4
+                                                                                           Dim        Min    Max     Typ
+                                                                 Seating Plane
+                                                                                            A        0.25    0.35    0.30
+                                                                                           A1          0     0.04    0.02
+                                                                                           A3          -       -     0.13
+                                       D                                                    b        0.17    0.27    0.22
+       Pin #1 ID
+                                       e                                                    D        0.75    0.85    0.80
+          R0.05 TYP
+                                                                                           D2        0.15    0.35    0.25
+                                                                                            E        0.75    0.85    0.80
+                                                                                           E2        0.15    0.35    0.25
+                                           k
+                                                                                            e          -       -     0.48
+                                                                                            k        0.20      -       -
+                                                                                            L        0.17    0.27    0.22
+      E                                                                                     L1       0.02    0.12    0.07
+                                                                  L1                         z         -       -     0.05
+                              E2               D2                                                All Dimensions in mm
+                  L
+
+
+              Z                                     b
+
+
+
+
+74LVC1G34                                                                    10 of 17                                        April 2021
+Document number: DS36108 Rev. 10 - 2                                      www.diodes.com                             © Diodes Incorporated
+                                                                                                         74LVC1G34
+
+
+Package Outline Dimensions (continued)
+Please see http://www.diodes.com/package-outlines.html for the latest version.
+
+(5)   Package Type: X1-DFN1010-6 (Type B)
+
+
+
+                       A1
+            A
+                                                         Seating Plane                  X1-DFN1010-6
+                                                                                            (Type B)
+                                                                                  Dim Min Max          Typ
+                                       D                                           A       -    0.50   0.39
+                                                                                  A1       -    0.04     -
+                 L3a              e                                                b     0.12 0.20     0.15
+                                                       L3( 5x)
+                                                                                   D     0.95 1.050 1.00
+                                                                                   E     0.95 1.050 1.00
+                                                                                    e          0.35 BSC
+                                                                                   e1          0.55 BSC
+            E                                          e1                          L3 0.27 0.30        0.30
+                ( Pin #1 ID)                                                      L3a 0.32 0.40        0.35
+                                                                                    All Dimensions in mm
+
+
+
+                                                   b
+
+
+
+
+(6)   Package Type: X2-DFN1010-6
+
+
+
+                                                                                           X2-DFN1010-6
+                                                                                 Dim        Min     Max      Typ
+                                                                                  A          —      0.40    0.39
+                                                                                 A1         0.00    0.05    0.02
+                                                                                 A3          —       —      0.13
+                                                                                  b         0.14    0.20    0.17
+                                                                                  b1        0.05    0.15    0.10
+                                                                                  D         0.95    1.05    1.00
+                                                                                  E         0.95    1.05    1.00
+                                                                                  e          —       —      0.35
+                                                                                  L         0.35    0.45    0.40
+                                                                                  K         0.15     —        —
+                                                                                  Z          —       —      0.065
+                                                                                       All Dimensions in mm
+
+
+
+
+74LVC1G34                                                         11 of 17                                            April 2021
+Document number: DS36108 Rev. 10 - 2                           www.diodes.com                                 © Diodes Incorporated
+                                                                                                                      74LVC1G34
+
+
+Package Outline Dimensions (continued)
+Please see http://www.diodes.com/package-outlines.html for the latest version.
+
+(7)   Package Type: X2-DFN1409-6
+
+
+                                                                       A3
+                                                            A1
+                     A
+                                                                                                    X2-DFN1409-6
+                                                                    Seating Plane
+                                                                                              Dim Min Max          Typ
+                                                                                               A       -   0.40   0.39
+                                           D                                                  A1       0   0.05   0.02
+                                                                                              A3       -     -    0.13
+                                      e1                     Ø( 6x)                            Ø     0.20 0.30    0.25
+               ( Pin #1 ID)
+
+                                                             e2
+                                                                                               D     1.35 1.45    1.40
+                                                                                               E     0.85 0.95    0.90
+                                                                                               e1      -     -    0.50
+                E
+                                                                                               e2      -     -    0.50
+                                                                                               Z1      -     -    0.075
+                                                                                               Z2      -     -    0.075
+                                                                                                All Dimensions in mm
+                                      Z1( 4x)     Z2( 4x)
+
+
+
+
+(8)   Package Type: X2-DFN1410-6
+
+
+
+                                                                  A3
+                                                        A1                                           X2-DFN1410-6
+                 A                                                                            Dim      Min   Max    Typ
+                                                                                               A        ––   0.40   0.39
+                                                                  Seating Plane
+                                                                                              A1       0.00  0.05   0.02
+                                                                                              A3        ––    ––    0.13
+                                           D
+               (Pin #1 ID)                                                                     b       0.15  0.25   0.20
+                                      e                                                        D       1.35  1.45   1.40
+                                                                                               E       0.95  1.05   1.00
+                                                            L(6x)                               e       ––    ––    0.50
+                                                                                               L       0.25  0.35   0.30
+                E
+                                                                                               Z        ––    ––    0.10
+                                                                                               Z1     0.045 0.105 0.075
+                                                                 Z1(4x)                          All Dimensions in mm
+
+
+                              Z(4x)             b(6x)
+
+
+
+
+74LVC1G34                                                                       12 of 17                                           April 2021
+Document number: DS36108 Rev. 10 - 2                                         www.diodes.com                                © Diodes Incorporated
+                                                                                                                     74LVC1G34
+
+
+Suggested Pad Layout
+Please see http://www.diodes.com/package-outlines.html for the latest version.
+
+(1)   Package Type: SOT25
+
+
+
+                                                  C2        C2
+                                                                                              Dimensions    Value
+                                                                                                  Z          3.20
+                                                                                                  G          1.60
+                                                                                                  X          0.55
+                                  G                               C1
+                          Z                                                                       Y          0.80
+                                                                                                  C1         2.40
+                                                                                                  C2         0.95
+                                  Y
+
+                                          X
+
+
+
+
+(2)   Package Type: SOT353
+
+
+                                                       X1
+                                                                                                            Value
+                                                                                              Dimensions
+                                                                                                           (in mm)
+                                                                                                  C          0.650
+                                                                                                  C1         1.900
+                                                                                                  G          1.300
+                                                                                                  X          0.420
+                                                                                                  X1         1.720
+            Y1        G                                                C1                         Y          0.600
+                                                                                                  Y1         2.500
+
+
+
+                  Y
+
+
+
+                                          X                       C
+
+
+
+
+(3)   Package Type: SOT553
+
+
+
+                                                   C2        C2
+
+                                                                                             Dimensions    Value
+                                                                                                 Z          2.2
+                                                                                                 G          1.2
+                                      G                               C1                         X         0.375
+                              Z                                                                  Y          0.5
+                                                                                                 C1         1.7
+                                      Y                                                          C2         0.5
+
+                                              X
+
+
+
+
+74LVC1G34                                                                      13 of 17                                        April 2021
+Document number: DS36108 Rev. 10 - 2                                        www.diodes.com                             © Diodes Incorporated
+                                                                                                            74LVC1G34
+
+
+Suggested Pad Layout (continued)
+Please see http://www.diodes.com/package-outlines.html for the latest version.
+
+(4)   Package Type: X2-DFN0808-4
+
+                                           X3
+                                           C
+                                                Y2
+                                                                                         Dimensions     Value
+                                                                                             C          0.480
+                                                                                             X          0.320
+                                                                                             X1         0.300
+                                                                                             X2         0.106
+                                                                                             X3         0.800
+                 X2
+                                                         Y1
+
+                                                                   Y3                        Y          0.320
+                                                                                             Y1         0.300
+                                                                                             Y2         0.106
+                       Y                                                                     Y3         0.900
+                                           X1
+
+
+
+
+                                X
+
+
+
+(5)   Package Type: X1-DFN1010-6 (Type B)
+
+                                           X1
+                                       C
+                                                               Y( 4x)
+                                                                                                        Value
+                                                                                          Dimensions
+                                                                                                       (in mm)
+                           Y2                                                                 C          0.350
+                                                                                              G          0.150
+                                                                  Y3                          G1         0.150
+                                                                                              X          0.200
+                   G                                                                          X1         0.900
+                           Y1                             G1
+                                                                                              Y          0.500
+                                                                                              Y1         0.525
+                                Pin1                                                          Y2         0.475
+                                                     X                                        Y3         1.150
+
+
+
+(6)   Package Type: X2-DFN1010-6
+
+
+
+
+                                                                                                        Value
+                                                                                         Dimensions
+                                                                                                       (in mm)
+                                                                                             C          0.350
+                                                                                             G          0.150
+                                                                                             X          0.200
+                                                                                             X1         0.900
+                                                                                             Y          0.550
+                                                                                             Y1         1.250
+
+
+
+
+74LVC1G34                                                                  14 of 17                                      April 2021
+Document number: DS36108 Rev. 10 - 2                                    www.diodes.com                           © Diodes Incorporated
+                                                                                                            74LVC1G34
+
+
+Suggested Pad Layout (continued)
+Please see http://www.diodes.com/package-outlines.html for the latest version.
+
+(7)   Package Type: X2-DFN1409-6
+
+
+                                       C
+                                                                                                    Value
+                                                          D ( 6x)                    Dimensions
+                                                                                                  (in mm)
+                                                                                         C          1.000
+                        Y                                                                C1         0.500
+                 C1
+                                                                                         D          0.300
+                                                                                         G          0.200
+                                                            G1                           G1         0.200
+                            Pin1
+                                                                                         X          0.400
+                                   X              G
+                                                                                         Y          0.150
+
+
+
+(8)   Package Type: X2-DFN1410-6
+
+
+                                       X1
+                                   C
+
+
+                                                                                                   Value
+                                                      Y                              Dimensions
+                                                                                                  (in mm)
+                                                                                        C           0.500
+                      Y1                                                                G           0.250
+                                                                                        X           0.250
+                                                                                        X1          1.250
+                                                                                        Y           0.525
+                                                                                        Y1          1.250
+                               1
+                                            G         X
+
+
+
+
+74LVC1G34                                                              15 of 17                                       April 2021
+Document number: DS36108 Rev. 10 - 2                                www.diodes.com                            © Diodes Incorporated
+                                                                                                74LVC1G34
+
+
+Mechanical Data
+SOT25
+•    Moisture Sensitivity: Level 1 per J-STD-020
+•    Terminals: Finish - Mate Tin Plated Leads, Solderable per MIL-STD-202, Method 208
+•    Weight: 0.016 grams (Approximate)
+
+SOT353
+•    Moisture Sensitivity: Level 1 per J-STD-020
+•    Terminals: Finish - Mate Tin Plated Leads, Solderable per MIL-STD-202, Method 208
+•    Weight: 0.006 grams (Approximate)
+
+SOT553
+•    Moisture Sensitivity: Level 1 per J-STD-020
+•    Terminals: Finish - Mate Tin Plated Leads, Solderable per MIL-STD-202, Method 208
+•    Weight: 0.003 grams (Approximate)
+
+X2-DFN0808-4
+•    Moisture Sensitivity: Level 1 per J-STD-020
+•    Terminals: Finish - NiPdAu Nickel Palladium Gold, Solderable per MIL-STD-202, Method 208
+•    Weight: 0.001 grams (Approximate)
+
+X1-DFN1010-6 (Type B)
+•    Moisture Sensitivity: Level 1 per J-STD-020
+•    Terminals: Finish - NiPdAu Nickel Palladium Gold, Solderable per MIL-STD-202, Method 208
+•    Weight: 0.001 grams (Approximate)
+
+X2-DFN1010-6
+•    Moisture Sensitivity: Level 1 per J-STD-020
+•    Terminals: Finish - NiPdAu Nickel Palladium Gold, Solderable per MIL-STD-202, Method 208
+•    Weight: 0.001 grams (Approximate)
+
+X2-DFN1409-6
+•    Moisture Sensitivity: Level 1 per J-STD-020
+•    Terminals: Finish - NiPdAu Nickel Palladium Gold, Solderable per MIL-STD-202, Method 208
+•    Weight: 0.002 grams (Approximate)
+
+X2-DFN1410-6
+•    Moisture Sensitivity: Level 1 per J-STD-020
+•    Terminals: Finish - NiPdAu Nickel Palladium Gold, Solderable per MIL-STD-202, Method 208
+•    Weight: 0.002 grams (Approximate)
+
+
+
+
+74LVC1G34                                                       16 of 17                                  April 2021
+Document number: DS36108 Rev. 10 - 2                         www.diodes.com                       © Diodes Incorporated
+                                                                                                                               74LVC1G34
+
+
+
+                                                              IMPORTANT NOTICE
+
+1.      DIODES INCORPORATED AND ITS SUBSIDIARIES (“DIODES”) MAKE NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+WITH REGARDS TO ANY INFORMATION CONTAINED IN THIS DOCUMENT, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD PARTY
+INTELLECTUAL PROPERTY RIGHTS (AND THEIR EQUIVALENTS UNDER THE LAWS OF ANY JURISDICTION).
+
+2.         The Information contained herein is for informational purpose only and is provided only to illustrate the operation of Diodes products
+described herein and application examples. Diodes does not assume any liability arising out of the application or use of this document or any
+product described herein. This document is intended for skilled and technically trained engineering customers and users who design with Diodes
+products. Diodes products may be used to facilitate safety-related applications; however, in all instances customers and users are responsible for
+(a) selecting the appropriate Diodes products for their applications, (b) evaluating the suitability of the Diodes products for their intended
+applications, (c) ensuring their applications, which incorporate Diodes products, comply the applicable legal and regulatory requirements as well
+as safety and functional-safety related standards, and (d) ensuring they design with appropriate safeguards (including testing, validation, quality
+control techniques, redundancy, malfunction prevention, and appropriate treatment for aging degradation) to minimize the risks associated with
+their applications.
+
+3.           Diodes assumes no liability for any application-related information, support, assistance or feedback that may be provided by Diodes
+from time to time. Any customer or user of this document or products described herein will assume all risks and liabilities associated with such use,
+and will hold Diodes and all companies whose products are represented herein or on Diodes’ websites, harmless against all damages and
+liabilities.
+
+4.         Products described herein may be covered by one or more United States, international or foreign patents and pending patent
+applications. Product names and markings noted herein may also be covered by one or more United States, international or foreign trademarks
+and trademark applications. Diodes does not convey any license under any of its intellectual property rights or the rights of any third parties
+(including third parties whose products and services may be described in this document or on Diodes’ website) under this document.
+
+5.         Diodes    products    are     provided    subject    to    Diodes’     Standard      Terms      and     Conditions    of    Sale
+(https://www.diodes.com/about/company/terms-and-conditions/terms-and-conditions-of-sales/) or other applicable terms. This document does not
+alter or expand the applicable warranties provided by Diodes. Diodes does not warrant or accept any liability whatsoever in respect of any
+products purchased through unauthorized sales channel.
+
+6.        Diodes products and technology may not be used for or incorporated into any products or systems whose manufacture, use or sale is
+prohibited under any applicable laws and regulations. Should customers or users use Diodes products in contravention of any applicable laws or
+regulations, or for any unintended or unauthorized application, customers and users will (a) be solely responsible for any damages, losses or
+penalties arising in connection therewith or as a result thereof, and (b) indemnify and hold Diodes and its representatives and agents harmless
+against any and all claims, damages, expenses, and attorney fees arising out of, directly or indirectly, any claim relating to any noncompliance with
+the applicable laws and regulations, as well as any unintended or unauthorized application.
+
+7.          While efforts have been made to ensure the information contained in this document is accurate, complete and current, it may contain
+technical inaccuracies, omissions and typographical errors. Diodes does not warrant that information contained in this document is error-free and
+Diodes is under no obligation to update or otherwise correct this information. Notwithstanding the foregoing, Diodes reserves the right to make
+modifications, enhancements, improvements, corrections or other changes without further notice to this document and any product described
+herein. This document is written in English but may be translated into multiple languages for reference. Only the English version of this document
+is the final and determinative format released by Diodes.
+
+8.        Any unauthorized copying, modification, distribution, transmission, display or other use of this document (or any portion hereof) is
+prohibited. Diodes assumes no responsibility for any losses incurred by the customers or users or any third parties arising from any such
+unauthorized use.
+
+Copyright © 2021 Diodes Incorporated
+
+www.diodes.com
+
+
+
+
+74LVC1G34                                                           17 of 17                                                               April 2021
+Document number: DS36108 Rev. 10 - 2                             www.diodes.com                                                    © Diodes Incorporated
+

@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/diodes/diodes-bat46w.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/diodes/diodes-bat46w.pdf",
+ "pdf_sha256": "3bc31f4a5302521c7e298f95aef7e3425ea68ae287bd28a6cfa8d0689fcbe56b",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/diodes/pdftext/diodes-bat46w.layout.txt",
+ "text_bytes": 30483,
+ "text_sha256": "be3b47d2770da1c2544fcb8ed973818ec5e185a167a13a183471b12449d7c268"
+}

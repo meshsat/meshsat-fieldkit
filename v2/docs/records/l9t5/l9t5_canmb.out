@@ -1,0 +1,286 @@
+l9t5_canmb: T10 round 7, Layer 4 task L4A-54 (the ledger's RE-5 and HO-C by method M-B): the peers' TXD observation and 2-of-2
+SHDN vote on both fabrics, the pin plan and the vote path's in-service self-test (MESHSAT-1357; a DRAFT, NOT APPLIED; prototype design,
+nothing built or measured)
+
+1. INPUTS (sha256/16)
+   a69deb9776af483e v2/docs/records/l9t5/l9t5_canq.py
+   266f221e85668e80 v2/docs/records/l9t5/l9t5_canq.out
+   0081f048d4d0f72c v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   b320ec96d2bfabcd v2/docs/records/l9t5/check_l9t5_netlist.py
+   67335ea42747e22f v2/docs/parts/STM32H743-COMPATIBILITY.md
+   efcfdf67f1fcab83 v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
+   51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
+   be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
+   3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+   f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
+   6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
+   55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
+   37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
+   72c306adf529de13 v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py
+   d2f9cb974c384add v2/docs/records/l9t5/l9t5_t10.out
+   653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
+   cf216d4c1162798b v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py
+   ea3b0cb6d96b12b9 v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py
+   0ca12c5500692868 v2/vendor/diodes/pdftext/diodes-74lvc1g34.layout.txt
+   6793d4bc0e60cc6d v2/vendor/diodes/pdftext/diodes-ap2112-ldo.layout.txt
+   1b0093a4cb0764e4 v2/vendor/power/pdftext/st-semtech-1n4148w-c81598.layout.txt
+   9e7f53205453bb22 v2/vendor/st/pdftext/st-es0392-rev15.layout.p48.txt
+   1c481f41d0c8352d v2/vendor/st/pdftext/st-rm0433-rev8.layout.f694.l696.txt
+   227510d881e3f97a v2/vendor/st/pdftext/st-rm0433-rev8.layout.p533.txt
+   8b51c389f0e8ace7 v2/vendor/st/pdftext/st-stm32h743xi-datasheet.layout.txt
+   a84c416119cebf38 v2/vendor/ti/pdftext/ti-sn74lvc1g08.layout.txt
+   810dc4dbcf529687 v2/vendor/ti/pdftext/ti-tcan334-can-fd-transceiver.layout.txt
+   ef8d376f2ec356e2 v2/vendor/diodes/diodes-ap2112-ldo.pdf
+   54de8e4089bb8221 v2/vendor/power/st-semtech-1n4148w-c81598.pdf
+   30b963cc44233cf3 v2/vendor/ti/ti-sn74lvc1g08.pdf
+   efd2d7978bb880b7 v2/vendor/diodes/diodes-74lvc1g34.pdf
+   9b27d1d993a8bc5b v2/vendor/st/st-stm32h743xi-datasheet.pdf
+   bb89f067e6a79028 v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf
+   9ba54135736a47a3 v2/vendor/st/st-rm0433-rev8.pdf
+
+2. THE FIXED INTERFACE M-B KEEPS (Layer 3, accepted; read from the trace and the IOHA page, never amended here)
+   CON-004 (constraint, core, BLOCKER): "Each I/O supervisor has its own regulator branch, reset supervisor, watchdog, crystal and SWD pads, and the three talk over two independent CAN-FD fabrics with separate transceivers and termination."
+     accepted when: "Netlist shows three independent supply branches and two fabrics; A7 (either fabric cut, the quorum holds) passes."
+   IOHA row 7: "One CAN fabric breaks or a transceiver fails dominant" -> "quorum continues on the other fabric"; test A7: "cut fabric A, then fabric B, one at a time" -> "quorum survives each"
+   CON-017's evidence counts "30 of 100; 14 supplies, 56 unconnected" (the tree's board B, before any draft): restated in section 5
+
+3. THE COMPOSITION: board B's drafts in L4-E9's change-list order, apply_gen_sch_b_canmb.py straight after iocguard (R-245), the efuse
+   record's R-236 and R-237 after it, Layer 6's three last; the generator run to its end through record l8p's gen_netlist.py
+     l8gnd/apply_gen_sch_b_gnd002.py              OK
+     l8r2/apply_gen_sch_b_fans12.py               OK
+     l8r2/apply_gen_sch_b_fandec.py               OK
+     l8r2/apply_gen_sch_b_panel5v.py              OK
+     l8r2/apply_gen_sch_b_ph4.py                  OK
+     l8r2/apply_gen_sch_b_rt500.py                OK
+     l8r2/apply_gen_sch_b_gndret.py               OK
+     l8r2/apply_gen_sch_b_gndrtn.py               OK
+     l9t5/apply_gen_sch_b_iocbuck.py              OK
+     l9t5/apply_gen_sch_b_iocpre.py               OK
+     l9t5/apply_gen_sch_b_canshdn.py              OK
+     l9t5/apply_gen_sch_b_iocset.py               OK
+     l9t5/apply_gen_sch_b_iocguard.py             OK
+     l9t5/apply_gen_sch_b_canmb.py                OK
+     efuse/apply_gen_sch_b_u23ilm.py              OK
+     efuse/apply_gen_sch_b_u24ilm.py              OK
+     l6r2/apply_gen_sch_b_xal_land.py             OK
+     l6r2/apply_gen_sch_b_lcsc.py                 OK
+     l6r2/apply_gen_sch_b_intent.py               OK
+   19 drafts: every step OK; the netlist regenerated: 1533 parts and 1111 nets with canmb, 1515 and 1087 without it (iocguard's state)
+   added 18: R611, R612, R613, R614, R631, R632, R633, R634, R651, R652, R653, R654, U580, U581, U582, U583, U584, U585
+   removed 0: 
+   kept with a new value or new nets 45: C943, C944, C945, C946, C953, C954, C955, C956, C963, C964, C965, C966, D401, D403, D411, D413, D421, D423, R604, R605, R606, R608, R609, R610, R624, R625, R626, R628, R629, R630, R644, R645, R646, R648, R649, R650, U41, U47, U48, U51, U57, U58, U61, U67, U68
+   CON-004 read on the regenerated netlist (three supply branches, two fabrics, one transceiver of each controller on each, split
+   termination at both ends of each, the A7 break links, no part joining the fabrics): HOLDS (before canmb: HOLDS)
+   the draft read by pin (each TXD on its controller, its transceiver, its 10 kOhm pull-up and its buffer's input only; each buffer's
+   output through two isolation resistors to the planned reading pins of the other two, traced back to never its own TXD; each SD
+   lifted only by its own request's diode and its 2-of-2 gate's diode; each gate on its target's rail with the other two controllers'
+   planned votes, each held low by 10 kOhm; no TPS3701 left but the rail trips, which stay): DRAWN
+
+4. THE MUTATIONS (each must FAIL) AND THE REFUSALS
+   mutated, a draft that removes fabric B (every transceiver on fabric A):                           FAIL (CON-004)
+   mutated, a vote that does not reach its SHDN (A's fabric A vote diode on fabric B's SD):          FAIL (the draft's reading)
+   mutated, an observation reading the node's own TXD (B's reader of A on B's own buffered TXD):     FAIL (the draft's reading)
+   mutated, a 1-of-1 vote (both of A's fabric A gate inputs from B):                                 FAIL (the draft's reading)
+   mutated, the gate on a peer's rail (U47 on +3V3_IOCB):                                            FAIL (the draft's reading)
+   mutated, an observation without its isolation (B's pin 65 on A's buffered TXD directly):          FAIL (the draft's reading)
+   mutated, an observation without its buffer (B's resistor on A's TXD itself):                      FAIL (the draft's reading)
+   the draft on a generator without iocguard: refused; a second time: refused; on the tree's own generator: refused (NOT RELEASED)
+
+5. THE PIN PLAN on the composed candidate, read against DS12110 Rev 10 (Table 9 the pin and its I/O structure, Table 12 the
+   alternate function) and RM0433 Rev 8 (p.533 the reset state; Tables 122 and 123 the DMA requests)
+   controller A (U41):
+     pin 55 PD8   FT_h   votes to silence B on fabric A                   GPIO output, I/O                   net IOCB_CAN1_VOTEA    free before: yes
+     pin 56 PD9   FT_h   votes to silence B on fabric B                   GPIO output, I/O                   net IOCB_CAN2_VOTEA    free before: yes
+     pin 57 PD10  FT_h   votes to silence C on fabric A                   GPIO output, I/O                   net IOCC_CAN1_VOTEA    free before: yes
+     pin 58 PD11  FT_h   votes to silence C on fabric B                   GPIO output, I/O                   net IOCC_CAN2_VOTEA    free before: yes
+     pin 63 PC6   FT_h   reads B's TXD on fabric A                        TIM3_CH1 AF2 (Table 12)            net IOCB_CAN1_OBSA     free before: yes
+     pin 64 PC7   FT_h   reads B's TXD on fabric B                        TIM3_CH2 AF2 (Table 12)            net IOCB_CAN2_OBSA     free before: yes
+     pin 65 PC8   FT_h   reads C's TXD on fabric A                        TIM3_CH3 AF2 (Table 12)            net IOCC_CAN1_OBSA     free before: yes
+     pin 66 PC9   FT_fh  reads C's TXD on fabric B                        TIM3_CH4 AF2 (Table 12)            net IOCC_CAN2_OBSA     free before: yes
+   controller B (U51):
+     pin 55 PD8   FT_h   votes to silence C on fabric A                   GPIO output, I/O                   net IOCC_CAN1_VOTEB    free before: yes
+     pin 56 PD9   FT_h   votes to silence C on fabric B                   GPIO output, I/O                   net IOCC_CAN2_VOTEB    free before: yes
+     pin 57 PD10  FT_h   votes to silence A on fabric A                   GPIO output, I/O                   net IOCA_CAN1_VOTEB    free before: yes
+     pin 58 PD11  FT_h   votes to silence A on fabric B                   GPIO output, I/O                   net IOCA_CAN2_VOTEB    free before: yes
+     pin 63 PC6   FT_h   reads C's TXD on fabric A                        TIM3_CH1 AF2 (Table 12)            net IOCC_CAN1_OBSB     free before: yes
+     pin 64 PC7   FT_h   reads C's TXD on fabric B                        TIM3_CH2 AF2 (Table 12)            net IOCC_CAN2_OBSB     free before: yes
+     pin 65 PC8   FT_h   reads A's TXD on fabric A                        TIM3_CH3 AF2 (Table 12)            net IOCA_CAN1_OBSB     free before: yes
+     pin 66 PC9   FT_fh  reads A's TXD on fabric B                        TIM3_CH4 AF2 (Table 12)            net IOCA_CAN2_OBSB     free before: yes
+   controller C (U61):
+     pin 55 PD8   FT_h   votes to silence A on fabric A                   GPIO output, I/O                   net IOCA_CAN1_VOTEC    free before: yes
+     pin 56 PD9   FT_h   votes to silence A on fabric B                   GPIO output, I/O                   net IOCA_CAN2_VOTEC    free before: yes
+     pin 57 PD10  FT_h   votes to silence B on fabric A                   GPIO output, I/O                   net IOCB_CAN1_VOTEC    free before: yes
+     pin 58 PD11  FT_h   votes to silence B on fabric B                   GPIO output, I/O                   net IOCB_CAN2_VOTEC    free before: yes
+     pin 63 PC6   FT_h   reads A's TXD on fabric A                        TIM3_CH1 AF2 (Table 12)            net IOCA_CAN1_OBSC     free before: yes
+     pin 64 PC7   FT_h   reads A's TXD on fabric B                        TIM3_CH2 AF2 (Table 12)            net IOCA_CAN2_OBSC     free before: yes
+     pin 65 PC8   FT_h   reads B's TXD on fabric A                        TIM3_CH3 AF2 (Table 12)            net IOCB_CAN1_OBSC     free before: yes
+     pin 66 PC9   FT_fh  reads B's TXD on fabric B                        TIM3_CH4 AF2 (Table 12)            net IOCB_CAN2_OBSC     free before: yes
+   every pin: the generator's port name, a Table 9 row with I/O, free on the candidate before canmb, no debug pin (RM0433 p.533 names
+   PA15, PA14, PA13, PB4, PB3), each reading pin's timer channel in Table 12 at AF2: yes
+   the reading pins' timer: TIM3_CH1 to TIM3_CH4 each carry a DMA request in RM0433's Tables 122 and 123 (inputs CH1 23; CH2 24; CH3 25; CH4 26): yes; so each
+   reader can time-stamp every edge of the four TXDs it reads on one counter without a processor step per edge (the attribution
+   firmware is L4A-55's and Layer 5's); the votes are plain outputs, analog (high impedance) during and just after reset (p.533), so
+   the 10 kOhm holds each gate input low then
+   THE COUNT (CON-017's convention: signal pins with the two VCAP pins, supplies apart, the rest unconnected), per controller:
+     the tree's board B (U41, committed netlist)              30 of 100; 14 supplies, 56 unconnected
+     the candidate with every draft before canmb (iocguard's)  32 of 100; 14 supplies, 54 unconnected
+     the candidate with canmb                                  40 of 100; 14 supplies, 46 unconnected (the same for B and C: yes)
+   CON-017 restated (for its owner; this record changes no registry text): "40 of 100; 14 supplies, 46 unconnected" on the composed
+   candidate, the 8 new pins of each controller (4 readings, 4 votes) among them; the tree's count reproduces the evidence's: yes
+
+6. THE LOGIC LEVELS on the makers' printed rows (MODEL from PRINTED figures; each controller's rail from its AP2112K-3.3: 98.5 % to
+   101.5 % PRINTED with the load regulation -1 to +1 %/A PRINTED at the rail's declared 0.25 A: 3.2422 V to 3.3577 V, inside the gate's 1.65 to
+   5.5 V row; a resistor that names no tolerance at +-5 % (ASSUMPTION))
+   the vote: a voter's high at least 2.8422 V (VDD - 0.4 V at 8 mA, DS12110 Table 158) against the SN74LVC1G08's VIH 2.0 V; a voter in reset
+     or dark: its input at most 0.0551 V (II 5 uA and the pin's 250 nA into 10.5 kOhm) against VIL 0.8 V; the voter's output current at
+     most 0.353 mA (inside Table 158's 8 mA)
+   SHDN lifted by the vote: at least 2.3773 V (the gate's VCC - 0.15 V at -100 uA, -40 to 125 C, less the 1N4148W's 0.715 V at 1 mA, both
+     PRINTED; the diode's figure is printed at 25 C and the diode carries at most 45.3 uA here, so the 1 mA maximum is taken as its bound
+     at the kit's -20 C floor too: ASSUMPTION, margin 0.377 V) against the TCAN334's VIH 2.0 V; the gate's load 45.3 uA, inside its 100 uA row
+   SHDN at rest: at most 0.420 V (the pin's 4 uA out, IIL PRINTED, into 105 kOhm) against VIL 0.8 V (round 6's figure, unchanged)
+   the observation (the reader's own pull-up enabled, RPU 30 to 50 kOhm PRINTED, a firmware row): the buffer's high reads at least 3.1422 V
+     (VCC - 0.1 V at -100 uA, 74LVC1G34 PRINTED) against 0.7 VDD = 2.3504 V at the reader's highest rail; its low at most 0.6040 V (VOL 0.4 V
+     at 16 mA, VCC 3 V, PRINTED, plus the divider of 2222 Ohm against RPU's least) against 0.3 VDD = 0.9727 V at the reader's lowest rail
+     (DS12110 Table 157, CMOS levels, tested)
+   a FAULTY READER driving its input (an output where an input belongs) reaches only the buffer's output, through its 2178 Ohm: at most
+     1.646 mA with the other reader's pull-up, inside the 16 mA at which the buffer holds at least 2.4 V high and at most 0.4 V low (VCC 3 V,
+     -40 to 85 C, PRINTED): the other reader still reads 2.4 V against its 2.3504 V (margin 0.050 V, on the 16 mA row for at most 1.65 mA) and
+     0.6040 V against its 0.9727 V; and the TXD and the transceiver's input are never reached (the buffer's input draws at most 1 uA, PRINTED),
+     so one reader cannot frame a healthy controller, in service or while that controller is in reset with its TX pin undriven
+   the TXD itself: held at least 3.2018 V while its controller is in reset (10 kOhm 1 % against the TCAN334's IIH 3 uA and the buffer's
+     II 1 uA, both PRINTED; TI prints no minimum for its own pull-up) against VIH 2.0 V of both; driven dominant, the controller sinks
+     0.339 mA more and stays under 0.4 V (Table 158) against VIL 0.8 V of both
+   the dark cases: a dark TARGET's gate takes at most 10 uA per input from a voter (Ioff PRINTED, 5.5 V), its transceiver's TXD at most
+     2.5 uA (ILKG(OFF) PRINTED), and it cannot drive its fabric (its transceiver's VCC is its own rail); its unpowered buffer's output
+     takes at most 10 uA (IOFF PRINTED), so its readers read at least 2.7200 V, RECESSIVE (0.7 VDD = 2.2696 V at their lowest rail): a dark
+     controller is defined at its readers. A dark VOTER's input reads low through 10 kOhm; a dark READER's pin sees at most 3.3577 V,
+     inside the FT pins' unpowered 4.0 V (STM32H743-COMPATIBILITY.md section 4, DS12110's absolute maximum and Table 120's note 3)
+   the controller's own rail: round 6's bounded state 0.1739 A less its limiters' pull-ups 0.678 mA, plus its two gates' and two buffers' ICC
+     (10 uA and 1 uA each, PRINTED), its two TXD pull-ups 0.339 mA each while dominant, its four readings' pull-ups 0.104 mA each while
+     dominant, and the larger of two of its votes asserted at 0.353 mA each (one peer contained on both fabrics) and its own gate's two
+     inputs high from the peers' lower rails (the self-test's V phase on it: delta ICC 500 uA an input at VCC - 0.6 V, PRINTED, taken
+     per input), all at once: at most 0.1753 A (MODEL; a labelled scenario for the coordinator's C-DEV, no case row changed here)
+   all levels hold: yes
+
+7. THE VOTE PATH'S IN-SERVICE SELF-TEST, RESTATED IN ROUND 9 (W143, on W139's analysis in T10-CANQ.md; specified for the firmware stage,
+   its contract text in apply_hw_fw_contract_canq.py; nothing applied). Round 7's schedule is SUPERSEDED: its precondition read as worded
+   never runs an S phase (W139-F5), its V phase commands the votes so the attribution path is never exercised (W139-F8), and it stops
+   testing whenever one fabric is down. The restated schedule is W139's (W139-D1 to D3), with its words made exact here:
+   THE WINDOW (100 ms on each fabric, FW-B22 restated): the state slots A 10, B 20 and C 30 ms, 10 ms each, are never touched by the test;
+     the test acts only in its own segment, the hold 52 to 88 ms, where each controller sends one test frame (A at 60, B at 70, C at 80 ms)
+   THE CYCLE (12 windows): in window n the target on fabric A is A, B or C by (n mod 12) div 4 and on fabric B the next controller, and
+     the phase is S, P1, P2 or V by n mod 4; both fabrics are tested at once, so each of the six transceivers meets each phase once a cycle:
+     S  its own SHDN request over the hold: its test frame received by no peer, and it hears no peer's -> silenced
+     P1 the next controller's vote alone over the hold (commanded): every test frame received both ways -> not
+        silenced
+     P2 the one after's vote alone over the hold (commanded): every test frame received both ways -> not silenced
+     V  its ONE malformed test frame (12 dominant bit-times, V1) at the hold's start, struck by both readers through
+        their attribution paths; their votes act to the hold's end and it hears no peer's test frame -> silenced
+   THE PRECONDITION, per fabric (as worded, and run here literally): in the previous window every controller received every other
+     controller's STATE frame on that fabric, no controller has stopped it (FW-B21), no vote on it is asserted outside the test, and
+     all three controllers are functional; else that fabric's phase is skipped and every controller's published phase counter shows the
+     skip. The state frames lie outside the hold, so no phase can fail the next window's precondition: the S phase runs as worded
+   THE PHASES RUN, fault-free, over 2 cycles (per transceiver and phase; MODEL of the schedule, no figure from a sheet):
+     restated schedule, precondition as worded:            every phase of every transceiver 2 times: yes
+     round 7's schedule, its precondition as W137 meant it: every phase 2 times: yes
+     round 7's schedule, its precondition as worded:       S phases run 0 times (the window after its V phase fails it): MUTANT, FAILS
+     DEGRADED, fabric A down at every controller: the restated schedule runs every fabric B phase 2 times and no fabric A phase: yes;
+       round 7's runs 0 phases (its precondition needs both fabrics)
+   TIMING on printed figures and the drafted rows (each margin less the window clocks' alignment 1.0 ms, DRAFTED, and two crystals'
+     drift over a window 4.0 us):
+     the hold opens after the last state slot closes                                                                   10.996 ms
+     V's votes act before the first peer test frame (the strike chain from the malformed frame at the hold's start)     5.686 ms
+     S's own request acts before the first peer test frame                                                              6.986 ms
+     the last test frame ends before the hold closes                                                                    6.713 ms
+     the release is complete before the next window's first state slot                                                 20.983 ms
+     silence takes effect within 10.020 us of the second vote or the own request: the GPIO edge 16.6 ns (speed 00 at 50 pF, DS12110 Table 160
+       PRINTED) + the gate's 3.6 ns (tpd at 3.3 V +- 0.3 V, -40 to 85 C, PRINTED) + tMODE 10 us (PRINTED maximum); it ends within 13.01 us
+       of the release: SD's 105 kOhm against 20 pF (ASSUMPTION: TI prints no SHDN capacitance; the two diodes' CT 2 pF each PRINTED)
+       down to VIL, + tMODE; V's strike: 1.310 ms from the malformed frame to the target's driver off (l9t5_canq.out section 4, MODEL on
+       PRINTED parts); the vote line's edge 6.18 ns/V against the gate's 10 ns/V limit at 50 pF (C_VOTE 50 pF, a Layer 10 bound: Ci 4 pF
+       and CIO 5 pF PRINTED); a reader's copy of a TXD edge in about 225 ns (2.2 kOhm against 46 pF: ASSUMPTION, a Layer 10 bound)
+   THE INTERVAL: one cycle is 12 windows x 100 ms = 1.2000 s; a latent fault of the vote path is exercised within one cycle, judged at its
+     window's end, declared when 2 consecutive runs of that phase fail (one corrupted frame never declares one), the verdict exchanged in
+     the next window: DETECTED WITHIN 2.60 s of its onset (MODEL on the printed timing and the DRAFTED 100 ms window; round 7's 5.00 s)
+     W139's event model of this schedule finds the latest declaration at 2.51 s and, DEGRADED, a fabric B vote stuck low at 2.51 s, both
+     within it (l9t5_canq.out section 7); a dead attribution path at 1.71 s (round 7's: NOT FOUND); round 7's precondition as worded: an open
+     own-request diode NOT FOUND
+   DEGRADED: with one fabric down its phases wait (they need its state frames) and the other fabric's run at the same interval, so every
+     element of the surviving fabric keeps the 2.60 s bound; the down fabric's elements are tested again within 2.60 s of its return to
+     service, which FW-B21's probe brings within 1.200 s of a repair (l9t5_canq.out section 8); while a controller is out the test waits
+     (V needs both peers) and the bound restarts when the quorum is whole
+   THE ERROR COUNT: per cycle and fabric a target loses two frames, +16 (S: its test frame; V: its malformed frame, its only frame in that
+     hold), against at least 22 successes (its 12 state frames and its test frame in the other 10 windows): bounded and error-active
+     (+8 and -1 are ISO 11898-1's, which is not held: ASSUMPTION). Read with its test frame also sent in V, round 8's wording gives +24
+     against the same 22 and the count rises a cycle (finding W143-F1): the V phase's malformed frame is the target's only frame there
+   DAR = 1 (L9T5-D2, W139-D8), so each failed attempt is one +8, with ES0392 Rev 15 2.24.5's printed workaround (page 48/73):
+     "Upon failure, clear the corresponding Tx buffer transmission request bit TRPx of the FDCAN_TXBRP register and set the
+     corresponding cancellation finished bit CFx of the FDCAN_TXBCF register, then restart the transmission."
+     (W137-F1 answered; the compatibility page's row "firmware does not use DAR" is Layer 6's to restate, W139-F1)
+   THE RESTART ROUTE'S PHASES (record l4canen, apply_gen_sch_b_canen.py): in the windows of the fabric A target X, P1 and P2 pulse one
+     peer's restart vote on X for 4 ms and V both peers', X reading its restart gate's output; they need only one fabric for the verdict,
+     so they keep this interval with either fabric down
+   timing and cost hold: yes
+   THE SELF-TEST'S OWN FAULTS, element by element (per transceiver; the residuals are named, none defeats the containment alone):
+     a vote output, its line or its gate input  stuck low or open              the target cannot be silenced by the vote                      V fails                        within 2.60 s
+     a vote output, its line or its gate input  stuck high                     the other peer alone silences the target                       the other peer's P fails       within 2.60 s
+     a vote pull-down (10 kOhm)                 short                          as its vote stuck low                                          V fails                        within 2.60 s
+     a vote pull-down (10 kOhm)                 open                           the input floats only while its voter is in reset or dark      NOT in service: RESIDUAL       none
+     the 2-of-2 gate                            output stuck low               the target cannot be silenced by the vote                      V fails                        within 2.60 s
+     the 2-of-2 gate                            output stuck high              the target silenced on that fabric at once (IOHA row 7)        its frames absent              within one window (100 ms)
+     the gate's 100 nF                          short                          the target's own rail shorted: the target dark (IOHA row 3)    its frames absent              within one window (100 ms)
+     the vote diode                             open                           the target cannot be silenced by the vote                      V fails                        within 2.60 s
+     the vote diode                             short                          the gate's low holds SD: the target's own request fails        S fails                        within 2.60 s
+     the own-request diode                      open                           the target's own request fails                                 S fails                        within 2.60 s
+     the own-request diode                      short                          the request pin's low holds SD: the vote fails                 V fails                        within 2.60 s
+     SD's 100 kOhm                              open                           SD rests on the pin's internal pull-down (TI: a fall-back)     NOT in service: RESIDUAL       none
+     the transceiver's SHDN input               ignored                        neither the request nor the vote silences                      S and V fail                   within 2.60 s
+     a reader's attribution path                dead                           it never strikes the target, so no vote follows a deviation    V fails (V runs it end to end) within 2.60 s
+     an isolation resistor                      open                           its reader sees no TXD edge while the frames arrive            continuous reading             within 3 windows (300 ms): every window carries a frame of each controller on each fabric
+     an isolation resistor                      short                          a faulty reader could move the buffer's output (not the TXD)   NOT in service: RESIDUAL       none
+     a reading pin or its input stage           stuck                          the two readers of one TXD disagree                            continuous reading             within 3 windows (300 ms): every window carries a frame of each controller on each fabric
+     a TXD buffer                               stuck or open                  its readers see no edge while its frames arrive                continuous reading             within 3 windows (300 ms): every window carries a frame of each controller on each fabric
+     the buffer's 100 nF                        short                          the target's own rail shorted: the target dark (IOHA row 3)    its frames absent              within one window (100 ms)
+     a TXD pull-up (10 kOhm)                    short                          the TXD held recessive: no frame on that fabric (IOHA row 7)   its frames absent              within one window (100 ms)
+     a TXD pull-up (10 kOhm)                    open                           the TXD on TI's own pull-up only while its controller resets   NOT in service: RESIDUAL       none
+     a node's test schedule                     stalled or out of turn         phases fail or counters disagree                               the published phase counter    within one window (100 ms)
+     a node's verdict                           wrong (two-faced or corrupted) outvoted: verdicts are taken 2 of 3                            the confirmation               within 2.60 s
+   coverage: every one of the 72 parts of the six vote and six observation paths (gates, pull-downs, both diodes, SD's resistor, buffers,
+     TXD pull-ups, isolation resistors, the capacitors) is the subject of a row, and every part canmb adds or re-uses is among them: yes;
+     the attribution path is a row and the V phase runs it: yes
+   the residuals, each needing further faults (W139's rows Q1 to Q4 run each with the fault that makes it act): an open vote pull-down
+     acts only while its voter is in reset or dark AND the other peer votes wrongly; a shorted isolation resistor matters only when its
+     reader also drives its input, and then reaches the buffer's output, never the TXD; an open SD resistor leaves the transceiver on TI's
+     internal pull-down; an open TXD pull-up leaves the TXD on TI's own pull-up only while its controller resets, and a resetting
+     controller that drives dominant is then contained by the vote; a voter that resets while asserting gives the gate a slow edge (10
+     kOhm against the line) outside the gate's 10 ns/V limit: the output may chatter for that edge, and only while the other peer
+     asserts, so it can only end a silence early
+
+8. WHAT THESE ROUNDS CLOSE ONCE INDEPENDENTLY CHECKED, AND WHAT STAYS OPEN (a draft: nothing is closed by its author)
+   L4A-54 (round 7, W137): the circuit of M-B drafted and composed (section 3), read by pin with failing mutations (section 4), the pin
+     plan recounted and read against the makers' tables (section 5), the levels on printed rows (section 6). Round 9 (W143, on W139's
+     L4A-55): the self-test restated (section 7: every phase runs as worded, the attribution path tested, the surviving fabric tested
+     with one down, interval 2.60 s); FW-B21's stop at the loss count and FW-B22's text in apply_hw_fw_contract_canq.py; the latched
+     supervisor's EN route and the composition with W138's regulator stage in record l4canen. CON-004, IOHA row 7 and test A7 are kept
+     as accepted: yes
+   once independently checked it would answer, for the circuit's part: HO-C's undrafted "2-of-2 peer observation and vote" and the
+     share half of HO-D (the limiter, and so its latent stuck comparator, is removed; the vote path's latent faults carry the interval
+     above). The limiter's half of HO-D, RE-6, RE-7 and HO-E stay with L4A-56 to L4A-59 (W138's stage; record l4canen reads its EN route)
+   OPEN: the independent check of M-B with W139's analysis and these corrections (L4A-62); FW-B20 to FW-B22, V-B20 to V-B23 and IOHA
+     section 12 restated (L4A-61); the compatibility page's DAR row (W139-F1, Layer 6). cx46's item 5 stays NOT CLOSED, CON-004's quorum
+     service OPEN, FW-B22 PROVISIONAL and L9T5-F21 OPEN until that check reads them
+
+9. THE PREDICATES (v2/ecad/tools/tests/test_l9t5_canmb.py holds them)
+   the composition: every draft of board B's change list applies in order with canmb after iocguard and the generator runs to its end: yes
+   CON-004 holds on the regenerated netlist with canmb (three supply branches, two fabrics, termination, A7's links), as before it: yes
+   the draft reads DRAWN by pin (observations, votes, gates on the targets' rails, the limiter gone, the rail trips kept): yes
+   every mutation FAILS: a removed fabric, a vote off its SHDN, a reader of its own TXD, a 1-of-1 vote, a gate on a peer's rail, no isolation, no buffer: yes
+   the draft refuses a generator without iocguard, a second application and the tree's generator (NOT RELEASED): yes
+   the pin plan: each new pin free before, a Table 9 I/O row, the reading pins TIM3_CH1 to CH4 at AF2 with DMA requests, no debug pin: yes
+   the count: the tree reproduces CON-017's 30/14/56; with canmb 40 of 100, 14 supplies, 46 unconnected on each controller: yes
+   the parts: eighteen added (twelve isolation resistors, six buffers), none removed, the limiter's 42 places re-used, the three controllers' new pins: yes
+   the levels hold on the printed rows (the vote, SHDN, the observation, a faulty reader, the rails inside the gate's row): yes
+   the self-test RESTATED (round 9): every phase of every transceiver runs once a cycle as worded, the margins hold, the edge rate, the error count bounded: yes
+   the self-test's interval bounded under 10 s (W139's simulation within it), every part of the vote paths has a fault row, the attribution path tested, the residuals named: yes
+   the mutant FAILS: round 7's schedule with its precondition as worded runs no S phase; with fabric A down it runs no phase at all: yes
+   nothing closes here: cx46's item 5, CON-004's quorum service, FW-B22 and L9T5-F21 keep their states for the check: yes

@@ -82,6 +82,7 @@ FETCH = {
     "v2/vendor/battery/held/samsung-inr18650-30q6-draft-v0.1-2024.pdf": ("l4e10",),
     "v2/vendor/battery/held/samsung-inr18650-30q6-v1.0-2020.pdf": ("l4e10",),
     "v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf": ("l8p",),   # W81: l8p_pdftext.py's table (test_l8p's read)
+    "v2/vendor/diodes/held/diodes-ap22652-53-ds41186.pdf": ("l4lim",),   # W159 (W157-F3): record l4lim's limiter screen (W135, L4A-101)
     "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0362.pdf": ("l8r2",),   # W81: l8r2_pdftext.py's table (test_l8r2's reads)
     "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0616.pdf": ("l8r2",),
     "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pdf": ("l8r2",),
@@ -114,13 +115,18 @@ FETCH = {
     "v2/vendor/ti/held/ti-slva673a.pdf": ("l9stk",),
     "v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf": ("l4e11",),
     "v2/vendor/ti/held/ti-tlv755p-c404027.pdf": ("l4e12",),
+    "v2/vendor/ti/held/ti-tlv757p-sbvs322c.pdf": ("l4reg",),   # W138 (L4A-56): record l4reg's screened regulators
     "v2/vendor/ti/held/ti-tps1663-slvset9g.pdf": ("l4e11", "l6pwr"),
+    "v2/vendor/ti/held/ti-tps25200-slvscj0f.pdf": ("l4lim",),   # W159 (W157-F3): record l4lim's limiter screen (W135, L4A-101)
+    "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf": ("l4canen", "l4lim", "l4reg"),   # W159 (W157-F3): record l4lim's fetch lists it and its screen reads it through this helper; W143 (L4A-54 round 9): the limiter whose EN the restart route drives; W138 (L4A-56): the limiter (record l4lim's fetch lists it too, unread here); the union of fnd/l4canmb 664d4019 and fnd/l4reg 86dbcdff (W146's merge, W143-F2)
     "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf": ("l4e7", "l6pwr"),
     "v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf": ("l9t5hoe",),   # W148: read by l9t5/l9t5_hoe.py (HO-E's hold stage), fetched by l9t5hoe's script
     "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf": ("l4e11", "l4e7", "l6pwr", "l8r2"),
     "v2/vendor/ti/held/ti-tps55340-slvsbd4e.pdf": ("l4e11",),
     "v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf": ("l4e11",),
     "v2/vendor/ti/held/ti-tps709-sbvs186h.pdf": ("l8p",),
+    "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf": ("l4canen", "l4reg"),   # W143 (L4A-54 round 9): the regulator behind it; W138 (L4A-56): the selected regulator; the union (W146's merge, W143-F2)
+    "v2/vendor/ti/held/ti-tps7a37-sbvs220b.pdf": ("l4reg",),   # W138 (L4A-56): the adjustable alternate
 }
 
 
