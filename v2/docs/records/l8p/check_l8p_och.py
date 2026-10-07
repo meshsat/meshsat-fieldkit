@@ -7,6 +7,9 @@ recheck L4A-69, W153's F1): OCH_S2's level while PGD is LOW is computed with eve
 site (round 12's R143 2.2 MOhm from BRK_PGD let D106's and Q112's leakage lift it over SENSE2's threshold), so round 12's drawing
 FAILS and round 13's (R143 330 kOhm from BRK_VIN, Q114 holding OCH_S2 low while PGD is low, its gate PGD inverted by Q113 with R144
 and the zener D107) reads DRAWN; BRK_PGD may carry no resistor or diode of the trip; RESET1's node may not be the pull-down's node.
+ROUND 14 (Q-179, W158's F5; no circuit changed): Q114's own gate leakage (IGSS 80 nA, PRINTED) is counted in its gate level beside
+Q113's off leakage and D107's reverse current (round 13 left it out: 5.062 V, now 5.046 V at the site); the 12.7 V cap on that level
+stays D107's 25 C row, the conservative side for the PGD-low level (its site bound, 13.31 V, is a rating figure in l8p_cprot.py).
 
 check_l8p_netlist.py (whose digest other records print) is left as it is; this module reads a board P that carries the trip, using
 that reader's netlist parser and helpers:
@@ -26,7 +29,8 @@ that reader's netlist parser and helpers:
          2 uA through it; BRK_PGD carries only gates (Q106's and Q113's), over Q106's 2.5 V threshold maximum at BRK_VIN 7.6 V;
   PGDLOW (round 13) OCH_S2 while PGD is low, at BRK_VIN 7.6 V and every leakage at the 86.25 C site: a 2N7002 from OCH_S2 to PACK_N
          whose gate is PGD inverted (a 2N7002 from BRK_PGD) and pulled up from BRK_VIN, at least 5 V with the inverter's and the
-         zener's leakage (where its 7 Ohm is printed), holds OCH_S2 at its drop; without it, the leakage into OCH_S2 through D106
+         zener's leakage and (round 14) its own IGSS (where its 7 Ohm is printed), holds OCH_S2 at its drop; without it, the leakage
+         into OCH_S2 through D106
          (BAT46W's printed 60 C row doubled to the site) through R143 sets the level;
   ARM    Q112 (2N7002) with its gate on OCH_EG (R139 from BRK_VIN, R141 to PACK_N), its source on RESET1, its drain on R137;
          Q110 (AO3401A) with its source on BRK_VIN and its gate on R136 from BRK_VIN over R137;
@@ -207,7 +211,8 @@ def bound_levels(nl):
             except (ValueError, KeyError):
                 rg = None
             if rg:
-                gate = min(BRK_LEAST - rg * (1 + R_TOL) * (tp["gate_fets"] * IDSS_HOT + tp["gate_zeners"] * IR_ZENER_HOT),
+                # round 14 (Q-179's F5): the pull-down's own gate leakage (IGSS, PRINTED) loads its gate node too
+                gate = min(BRK_LEAST - rg * (1 + R_TOL) * (tp["gate_fets"] * IDSS_HOT + tp["gate_zeners"] * IR_ZENER_HOT + IGSS),
                            12.7 if tp["gate_zeners"] else CLAMP)
         if gate is not None and gate >= VGS_RDS:
             # the pull-down conducts on its printed 7 Ohm: R143's current at the clamp and D106's leakage at the site through it
