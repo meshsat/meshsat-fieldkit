@@ -439,6 +439,7 @@ printed thermal resistances, never a measured temperature
    TI's full-discharge condition is not shown for a reset loop (its fault floor under 5 % of the delay): S-k stays CONDITIONAL on S5 yes
    RM0433 Table 56's pin-reset row is PINRSTF and CPURSTF set, every other flag clear, and six other rows set PINRSTF               yes
    every TPS37 page quoted is the page its text sits on (form feeds counted)                                                        yes
+   every RM0433 sentence quoted from pages 329 to 332 sits on the page named (form feeds counted)                                   yes
    the trip window rests on DS12110's revision V pages, and rev Y's Table 14 prints no core voltage per scale                       yes
    the bounded state reaches 105 C at a local air between the case's air and the exhaust air (C2)                                   yes
    the firmware row applies after T10's draft only, once, and leaves the tree's contract unchanged                                  yes

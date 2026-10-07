@@ -1138,6 +1138,10 @@ def main():
     w("")
     # ---------------------------------------------------------------- 10. predicates
     w("10. THE PREDICATES")
+    rm_pages = {s: 328 + t329.count("\x0c", 0, t329.index(s)) + 1 == pg for s, pg in (
+        ("A system reset (nreset) resets", 329), ("A reset from NRST pin", 329), ("In case of an external reset", 329),
+        ("Resets VDD domain: IWDG1, LDO...", 330), ("Debug features, Flash memory, RTC and", 330),
+        ("The CPU can reset the flags by setting RMVF bit.", 332), ("Table 56. Reset source identification (RCC_RSR)", 332))}
     want2 = {"LPWRRSTF": 0, "WWDG1RSTF": 0, "IWDG1RSTF": 0, "SFTRSTF": 0, "PORRSTF": 0, "PINRSTF": 1, "BORRSTF": 0, "D2RSTF": 0, "D1RSTF": 0, "CPURSTF": 1}
     sk = [r for r in S if r[0] == "S-k"][0]
     P = [("the five filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it)", copies_ok),
@@ -1163,6 +1167,7 @@ def main():
          ("RM0433 Table 56's pin-reset row is PINRSTF and CPURSTF set, every other flag clear, and six other rows set PINRSTF",
           pat2 == want2 and len(pin_too) == 6),
          ("every TPS37 page quoted is the page its text sits on (form feeds counted)", all(F["tps_pages"][k] == int(k.split("p.")[1]) for k in F["tps_pages"])),
+         ("every RM0433 sentence quoted from pages 329 to 332 sits on the page named (form feeds counted)", all(rm_pages.values())),
          ("the trip window rests on DS12110's revision V pages, and rev Y's Table 14 prints no core voltage per scale",
           F["revv_hdr"] >= 2 and F["revy_hdr"] and not F["revy_vos"]),
          ("the bounded state reaches 105 C at a local air between the case's air and the exhaust air (C2)", air < air105_c < PT10["air_exhaust"]),

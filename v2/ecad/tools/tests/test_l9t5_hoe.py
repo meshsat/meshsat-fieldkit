@@ -93,7 +93,7 @@ def t_output_reproduced_and_every_input_pinned():
 def t_every_predicate_holds():
     text_ = _out()
     rows = [l for l in text_.split("10. THE PREDICATES")[1].split("l9t5_hoe: done")[0].splitlines()[1:] if l.strip()]
-    assert len(rows) == 23, rows
+    assert len(rows) == 24, rows
     assert all(l.rstrip().endswith(" yes") for l in rows), [l for l in rows if not l.rstrip().endswith(" yes")]
 
 
