@@ -97,7 +97,7 @@ with it (W75's N3).
 | The re-key's cache commit | `a598ada0` | record l4e7's results cache re-keyed ONCE on a fresh debian:12 box at the lineage tip that holds `5ee1e66e`, after the converged commit and its independent read (section 3c) | the coordinator's commit on set 32's integration branch |
 | INTEGRATED = CANDIDATE: the candidate commit | `f08e3961` | no independent check of its engineering | the coordinator's commit on set 32's integration branch |
 | PROMOTED: main after the fast-forward, set 32's promotion | `f08e3961` | a DESK candidate, not an accepted power design (section 6) | the promotion's log |
-| ADOPTED: the commit that adopts this record | `__ADOPTION__` | named in the fill tool's second run, after it exists | git, after the adoption |
+| ADOPTED: the commit that adopts this record | `9a0a0f6a` | named in the fill tool's second run, after it exists | git, after the adoption |
 
 ## 2. What changes (each branch, its finding, the independent reads, the coordinator's decisions)
 
