@@ -30,4 +30,5 @@ fetched: v2/vendor/ti/ti-tps3808.pdf | https://www.ti.com/lit/ds/symlink/tps3808
   tree has committed since 26 September 2026 (v2/vendor/SOURCES.yaml, supervisor-tps3808g30); its committed status is not changed here
 fetched: v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf | https://www.ti.com/lit/ds/symlink/tps3703.pdf | 2026-10-07 HTTP 200 application/pdf
   2644509 bytes | sha256 cc65714774e50c97dca9a1bf094489b17350cc70fa16068880e108e320f8a6ea | TI SBVS249B, revised November 2020: held
-  back as the project holds its other TI sheets (no redistribution grant read); fetch_held_back.py beside the record fetches and checks it
+  back as the project holds its other TI sheets (no redistribution grant read); v2/docs/records/l9t5hoe/fetch_held_back.py fetches and
+  checks it (a folder of its own: l9t5's fetch script is pinned by l9t5_a1.py and l9t5_f01.py, SESSION W148-4)

@@ -74,7 +74,7 @@ DS = "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf"
 AN = "v2/vendor/st/st-an4938-rev7.pdf"
 TPS = "v2/vendor/ti/ti-tps37-snvsbj1e.pdf"
 TPS38 = "v2/vendor/ti/ti-tps3808.pdf"
-TPS3703 = "v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf"   # W148: held back, fetch_held_back.py
+TPS3703 = "v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf"   # W148: held back, v2/docs/records/l9t5hoe/fetch_held_back.py
 REC = "v2/docs/records/l9t5"
 DOCS = {"draft": REC + "/apply_gen_sch_b_vcoremon.py", "guard": REC + "/apply_gen_sch_b_iocguard.py", "drafts": REC + "/l9t5_drafts.py",
         "t10out": REC + "/l9t5_t10.out", "t10py": REC + "/l9t5_t10.py", "gen_b": "v2/ecad/tools/gen_sch_b.py",
@@ -340,7 +340,7 @@ def figures():
         ("note 4, p.9", "Capaicitor in CCTR1"), ("Figure 7-3, p.12", "Figure 7-3. SENSEx Overvoltage"),
         ("8.3.1.1, p.18", "the output pins will be in reset"), ("Equation 2, p.23", "tCTRx (min) = -ln (0.31)"),
         ("full discharge, p.23", "To ensure the capacitor is fully discharged"))}
-    # W148: the hold stage's sheets. TI TPS3703 (SBVS249B, November 2020; held back, fetch_held_back.py) and TI TPS3808 (SBVS050N,
+    # W148: the hold stage's sheets. TI TPS3703 (SBVS249B, November 2020; held back, l9t5hoe/fetch_held_back.py) and TI TPS3808 (SBVS050N,
     # August 2026, committed): the printed delays, the manual reset's pulse and levels, the drive, the options and the orderables
     t = PDFT.pdf_text(ROOT, TPS3703, ["-layout"], PDFTEXT, REC)
     need(t, r"SBVS249B %s MAY 2020 %s REVISED NOVEMBER 2020" % (EN, EN), "the TPS3703 sheet's revision")
@@ -403,6 +403,8 @@ def figures():
         "unlatch": quote(t, "To unlatch the device provide a voltage to the CT pin that is greater than the CT pin comparator threshold voltage, V CT.",
                          "TPS3703 9.1.3"),
         "moq": quote(t, "minimum order quantities apply.", "TPS3703 section 5"),
+        "reeval": quote(t, "The configuration of the CT pin is re-evaluated by the device every time the voltage on the SENSE line enters the "
+                           "valid window", "TPS3703 8.3.4"),
         "uvlo": quote(t, "When the voltage on V DD is less than the device UVLO voltage but greater than the power-on reset voltage (V POR), the "
                          "RESET pin will be held low , regardless of the voltage on SENSE pin.", "TPS3703 8.4.2"),
         "note4": quote(t, "During the power-on sequence, VDD must be at or above VDD (MIN) for at least tSD + tD before the output is in the correct state.",
@@ -416,7 +418,7 @@ def figures():
         ("7.6, p.7", "MR pin pulse width duration to assert RESET"), ("8.3.5, p.16", "A logic low on MR"),
         ("Figure 8-2 notes, p.16", "MR is ignored during output RESET low event"), ("8.4.2, p.17", "RESET pin will be held low"),
         ("9.1.2.1, p.19", "To use the factory-programmed timing options"), ("9.1.3, p.20", "In latch mode, if the RESET pin"),
-        ("section 5, p.3", "minimum order quantities apply."))}
+        ("section 5, p.3", "minimum order quantities apply."), ("8.3.4, p.15", "The configuration of the CT pin is re-evaluated"))}
     F["t3_orderable"] = sorted(set((m.group(1), m.group(2), int(m.group(3)), int(m.group(4)) / 100.0) for m in re.finditer(
         r"^\s+(TPS3703([A-H])(\d)(\d{3})DSER)\s+Active\s", t, re.M)))
     nom_codes = [int(c_) / 100.0 for c_, v_ in re.findall(r"(?:^|\s)(\d{3})\s+(\d\.\d{2}) V\s*$", t, re.M) if abs(int(c_) / 100.0 - float(v_)) < 1e-9]
@@ -625,7 +627,7 @@ def main():
     w("")
     # ---------------------------------------------------------------- 1. inputs
     w("1. INPUTS, pinned by sha256")
-    pins = [RM, DS, AN, TPS, TPS38] + [DOCS[k] for k in ("draft", "guard", "drafts", "t10out", "t10py", "gen_b", "gennet", "ledger", "cx46", "l4reg",
+    pins = [RM, DS, AN, TPS, TPS38, TPS3703, "v2/docs/records/l9t5hoe/fetch_held_back.py"] + [DOCS[k] for k in ("draft", "guard", "drafts", "t10out", "t10py", "gen_b", "gennet", "ledger", "cx46", "l4reg",
                                                          "l4regout", "regstage", "round6", "canmb", "sources", "u23", "u24", "contract",
                                                          "cdraft", "ct10")]
     for rel in pins:
@@ -939,7 +941,9 @@ def main():
     w("         %.0f ms (7.6, p.%d, PRINTED), after '%s ... %s' (8.3.5, p.16; Figure 8-2's note B: '%s'; note C: '%s')." % (
         hold[2] * 1e3, F["t3_td_page"], F["t3_q"]["mr2"], F["t3_q"]["mr3"], F["t3_q"]["noteB"], F["t3_q"]["noteC"]))
     w("         TI prints no condition on the fault's length beyond tMR_W: the hold is a timer, not a capacitor's discharge (9.1.2.1 against")
-    w("         9.1.2.2's capacitor option, which this draft does not use). In a loop the MR pulse lasts at least NRST's fastest fall, %.1f us" % (t_fall_min * 1e6))
+    w("         9.1.2.2's capacitor option, which this draft does not use). Its SENSE sits on its own VDD, so '%s' (8.3.4, p.15) happens at" % F["t3_q"]["reeval"])
+    w("         the part's own start and SENSE never leaves the window after; a CT option misread there would show as a short hold, which")
+    w("         W148-3's timing reads at the start's own test (5e). In a loop the MR pulse lasts at least NRST's fastest fall, %.1f us" % (t_fall_min * 1e6))
     w("         (MODEL: %.0f nF, %.1f Ohm, the pull-ups at their weakest, an ideal drain; tCTS's minimum is not printed, taken 0): the controller" % (
         c_lo * 1e9, r_lo))
     w("         holds VCAP up until it is reset, and only the hold stage's RESET resets it, so the pulse is %.0fx tMR_W" % (t_fall_min / (F["t3_tmrw"][0] * 1e-6)))
@@ -1198,13 +1202,13 @@ def main():
           "CONDITIONAL (S4)"),
          ("S-i", "a latent monitor fault, then a firmware VOS0 entry", "105 C", "a double fault; window at most %.0f s" % T_TEST_S, "RESIDUAL (single-fault)"),
          ("S-k", "the reset loop: an image entering VOS1 or VOS0 at every boot", "105 C",
-          "duty <= %.3f %%, rise <= %.3f K, any fault length; needs ZthJA(t_resp) <= %.2f K/W" % (duty * 100, rise, z_loop), "CONDITIONAL (S1, S2)"),
+          "duty <= %.3f %%, rise <= %.3f K, any fault length; ZthJA(t_resp) <= %.2f K/W" % (duty * 100, rise, z_loop), "CONDITIONAL (S1, S2)"),
          ("S-l", "a latent hold fault (CT's pull-up lost), then the reset loop", "105 C", "a double fault; W148-3's hold timing, window at most %.0f s" % T_TEST_S,
           "RESIDUAL (single-fault)"),
          ("S-j", "any current up to the limiter's %.4f A" % ios[1], "as above", "a VOS3 state is S-a, S-b or S-g; a VOS1 or VOS0 state S-c, S-d or S-k",
           "no state outside S-a to S-l")]
     for row in S:
-        w("   %-4s %-60s %-9s %-66s %s" % row)
+        w("   %-4s %-60s %-9s %-80s %s" % row)
     w("   THE CONDITIONS OF THE FOCUSED CHECK (W144, L4A-100), RESTATED:")
     w("     C1 (F1): the reset hold drafted, composed, read and mutated, with the reset-loop row: W145's CTR1 hold (CONDITIONAL on S5) replaced")
     w("        by the hold stage (SESSION W148-1: 5d, 5g, 5h, section 8), whose printed minimum bounds the loop for any fault length: S5 retired")
@@ -1273,7 +1277,11 @@ def main():
               ("W148-3", "FW-B23 times the hold: PASSED also needs the RTC's time from the Scale 1 write to the restart at least %.0f ms" % (T_HOLD_CHECK_S * 1e3), "",
                "a lost CT pull-up (the hold at %.1f to %.1f ms) is found by the next test on an RTC clock within +-%.0f %%, so S-l is a double fault" % (
                    F["t3_td"][(dm.HOLD_PART[7], "open")][0] * 1e3, F["t3_td"][(dm.HOLD_PART[7], "open")][2] * 1e3, RTC_TOL * 100),
-               "bounded by the test interval, not a latent single fault", "drop the check; S-l back to inspection", "")]
+               "bounded by the test interval, not a latent single fault", "drop the check; S-l back to inspection", ""),
+              ("W148-4", "the TPS3703 sheet's fetch line in v2/docs/records/l9t5hoe/fetch_held_back.py, a folder of its own", "",
+               "record l9t5's own fetch script is pinned by sha256 in l9t5_a1.py and l9t5_f01.py, whose outputs other records and pages pin;",
+               "an entry there would move them all, outside this task", "move the entry into l9t5's script in a set whose dependency pass",
+               "re-pins l9t5_a1.out and its dependants")]
     for d_ in dec148:
         w("     %-7s %s" % d_[:2])
         if d_[2]:
@@ -1339,8 +1347,7 @@ def main():
                 ("SENSE1 and SENSE2 exchanged (the overvoltage channel on the rail)", [(("U810", "2"), ("U810", "3"))]),
                 ("the monitor on a peer's rail", [(("U810", "1"), ("U820", "1"))]),
                 ("RESET1 on ground and the ground pin on the output (pins 4 and 10 exchanged)", [(("U810", "4"), ("U810", "10"))])]
-        w("   the mutations (each must FAIL the reading; W140's six, W145's seventh on its successor (the hold taken out), and W148's two: the")
-        w("   hold stage bypassed, and a hold shorter than its printed minimum):")
+        w("   the mutations (each must FAIL the reading; W140's six, W145's seventh on the hold that replaced its capacitor, W148's two):")
         mres = []
         for i, (lab, sw) in enumerate(muts):
             q = D.mutate(net1, d, "hoem%d" % i, sw)
@@ -1430,7 +1437,7 @@ def main():
         F["vdd_min"], hold[2] * 1e3))
     w("     serve) covers the test")
     w("   W148-F1 (Layer 6): %s's LCSC code and stock line are owed; TI lists it Active (SBVS249B package option addendum); its land" % dm.HOLD_PART)
-    w("     WSON-6 1.5 x 1.5 mm is this draft's ASSUMPTION (Layer 10); R813's 10 k and R812's 390 Ohm at 1 %% are ordinary parts")
+    w("     WSON-6 1.5 x 1.5 mm is this draft's ASSUMPTION (Layer 10); R813's 10 k and R812's 390 Ohm at 1 % are ordinary parts")
     w("   W148-F2 (Layer 10): the hold stage sits by its TPS37 in the controller's own pocket; CT's pull-up at its pin; R812 at the NRST end")
     w("   W148-F3 (the targeted recheck, C1 to C3): read 5d's new chain (t_resp %.1f us, one TYPICAL term, tPD(MR) %.0f ns), 5g's duty on" % (
         t_resp * 1e6, F["t3_tpdmr"][0]))
