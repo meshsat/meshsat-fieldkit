@@ -40,6 +40,7 @@ CHK = D.CHK
 # verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its PDF; _lib/pdftext.py returns it byte
 # for byte and refuses when it is absent. Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9t5
 PDFTEXT = {
+    "v2/vendor/diodes/diodes-74lvc1g34.pdf": [["-layout"]],
     "v2/vendor/diodes/diodes-ap2112-ldo.pdf": [["-layout"]],
     "v2/vendor/power/st-semtech-1n4148w-c81598.pdf": [["-layout"]],
     "v2/vendor/st/st-rm0433-rev8.pdf": [["-layout", "-f", "533", "-l", "533"], ["-layout", "-f", "694", "-l", "696"]],
@@ -52,7 +53,7 @@ PDFT = importlib.util.module_from_spec(_PTS)
 _PTS.loader.exec_module(PDFT)
 SHEETS = {"h743": "v2/vendor/st/st-stm32h743xi-datasheet.pdf", "tcan": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf",
           "g08": "v2/vendor/ti/ti-sn74lvc1g08.pdf", "ap2112": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
-          "d4148": "v2/vendor/power/st-semtech-1n4148w-c81598.pdf"}
+          "d4148": "v2/vendor/power/st-semtech-1n4148w-c81598.pdf", "g34": "v2/vendor/diodes/diodes-74lvc1g34.pdf"}
 RM = "v2/vendor/st/st-rm0433-rev8.pdf"
 REC = "v2/docs/records/l9t5"
 DOCS = {"draft": REC + "/apply_gen_sch_b_canmb.py", "guard": REC + "/apply_gen_sch_b_iocguard.py", "shdn": REC + "/apply_gen_sch_b_canshdn.py",
@@ -63,6 +64,7 @@ DOCS = {"draft": REC + "/apply_gen_sch_b_canmb.py", "guard": REC + "/apply_gen_s
         "u23": "v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py", "u24": "v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py"}
 EN = chr(0x2013)       # the sheets' minus sign and dash, written by its code point (no long dash in this file)
 MINUS = chr(0x2212)    # ST's minus sign
+EM = chr(0x2014)       # the empty cell of Diodes' tables
 LE = chr(0x2264)       # the less-or-equal sign in ST's tables
 MU = "[%s%s]" % (chr(0xB5), chr(0x3BC))
 TAGS = "ABC"
@@ -160,6 +162,7 @@ def figures():
     x = t[t.index("TXD Terminal (CAN Transmit Data Input)"):]
     F["tx_vih"] = float(need(x, r"VIH\s+HIGH level input voltage\s+(\d+(?:\.\d+)?)\s+V", "TXD VIH").group(1))
     F["tx_vil"] = float(need(x, r"VIL\s+LOW level input voltage\s+(\d+(?:\.\d+)?)\s+V", "TXD VIL").group(1))
+    F["tx_iih"] = float(need(x, r"IIH\s+HIGH level input leakage current\s+TXD = VCC = 3\.6V\s+%s[\d.]+\s+0\s+([\d.]+)" % EN, "TXD IIH").group(1)) * 1e-6
     F["tx_off"] = float(need(x, r"ILKG\(OFF\)\s+Unpowered leakage current\s+TXD = 3\.6V, VCC = 0V\s+%s(\d+)\s+0\s+([\d.]+)" % EN, "TXD ILKG(OFF)").group(2)) * 1e-6
     need(t, r"Table 6-5\. CAN Transceivers with Shutdown Mode.*?HIGH\s+Lowest Current\s+Disabled \(OFF\)\(2\)\s+Disabled \(OFF\)\s+High \(Recessive\)",
          "TCAN334 Table 6-5 (SHDN high: driver off, receiver off, RXD high)", re.S)
@@ -180,6 +183,16 @@ def figures():
     F["g_icc"] = float(need(g, r"ICC\s+VI = 5\.5V or GND,\s+IO = 0\s+1\.65V to 5\.5V\s+(\d+)\s+(\d+)\s+%sA" % MU, "SN74LVC1G08 ICC").group(1)) * 1e-6
     F["g_dicc"] = float(need(g, r"One input at VCC %s 0\.6V,\s*\n\s*%sICC\s+3V to 5\.5V\s+(\d+)\s+(\d+)\s+%sA" % (EN, chr(0x394), MU), "SN74LVC1G08 delta ICC").group(1)) * 1e-6
     F["g_ci"] = float(need(g, r"Ci\s+VI = VCC or GND\s+3\.3V\s+(\d+)\s+(\d+)\s+pF", "SN74LVC1G08 Ci").group(1)) * 1e-12
+    b = pdf("g34")
+    need(b, r"Document number: DS36108 Rev\. 10 - 2", "the 74LVC1G34 sheet's revision")
+    F["b_vih"] = float(need(b, r"VCC = 3V to 3\.6V\s+(\d+)\s+%s\s*\n\s+VCC = 4\.5V to 5\.5V\s+0\.7 \S VCC" % EM, "74LVC1G34 VIH").group(1))
+    F["b_vil"] = float(need(b, r"VCC = 3V to 3\.6V\s+%s\s+([\d.]+)\s*\n\s+VCC = 4\.5V to 5\.5V\s+%s\s+0\.3 \S VCC" % (EM, EM), "74LVC1G34 VIL").group(1))
+    F["b_voh100"] = float(need(b, r"IOH = -100%sA\s+1\.65V to 5\.5V\s+VCC %s ([\d.]+)" % (MU, EN), "74LVC1G34 VOH at -100 uA").group(1))
+    F["b_voh16"] = float(need(b, r"IOH = -16mA\s+([\d.]+)\s+%s\s+%s\s+([\d.]+)" % (EM, EM), "74LVC1G34 VOH at -16 mA").group(1))   # -40 to 85 C, VCC 3 V
+    F["b_vol16"] = float(need(b, r"IOL = 16mA\s+%s\s+%s\s+([\d.]+)\s+%s\s+([\d.]+)" % (EM, EM, EM), "74LVC1G34 VOL at 16 mA").group(1))
+    F["b_ii"] = float(need(b, r"II\s+Input Current\s+VI = 5\.5V or GND\s+0V to 5\.5V\s+%s\s+\S0\.1\s+\S(\d+)" % EM, "74LVC1G34 II").group(1)) * 1e-6
+    F["b_ioff"] = float(need(b, r"IOFF\s+VI or VO = 5\.5V\s+0V\s+%s\s+%s\s+\S(\d+)" % (EM, EM), "74LVC1G34 IOFF").group(1)) * 1e-6
+    F["b_icc"] = float(need(b, r"ICC\s+Supply Current\s+5\.5V\s+%s\s+0\.1\s+(\d+)" % EM, "74LVC1G34 ICC").group(1)) * 1e-6
     a = pdf("ap2112")
     sec = need(a, r"AP2112-3\.3 Electrical Characteristics.*?ISHORT\s+Short Current Limit", "the AP2112-3.3 table", re.S).group(0)
     m = need(sec, r"VOUT\s+VOUT\s*\n.*?\n.*?\*([\d.]+)%\s+\*([\d.]+)%", "the AP2112-3.3 VOUT band", re.S)
@@ -286,10 +299,11 @@ def con004(nl):
 
 
 def mb_check(nl, M):
-    """the draft read on a netlist by pin: for each controller X and fabric n, X's TXD reaches the other two through its own isolation resistor and
-    nothing else; each reader's input is its planned pin; X's SD is lifted only by X's own request diode and the 2-of-2 gate's diode;
-    the gate sits on X's own rail and its two inputs are the two OTHER controllers' planned vote pins, each held low by 10 kOhm; the
-    limiter's parts are gone and the rail trip stays"""
+    """the draft read on a netlist by pin: for each controller X and fabric n, X's TXD reaches only its controller, its transceiver, its
+    10 kOhm pull-up to X's own rail and the input of its buffer on X's own rail; the buffer's output reaches the other two through their
+    own isolation resistors and nothing else; each reader's input is its planned pin; X's SD is lifted only by X's own request diode and
+    the 2-of-2 gate's diode; the gate sits on X's own rail and its two inputs are the two OTHER controllers' planned vote pins, each held
+    low by 10 kOhm; no TPS3701 but the rail trips remains, and the rail trips stay"""
     why = []
     obs_of = {(d_, f): p for p, (_port, d_, f, _af, _n) in M.OBS_PINS.items()}
     vote_of = {(d_, f): p for p, (_port, d_, f) in M.VOTE_PINS.items()}
@@ -297,22 +311,26 @@ def mb_check(nl, M):
         v33 = "+3V3_IOC%s" % t
         for j, f in enumerate("AB"):
             n = j + 1
-            tx, sd, mbn = "IOC%s_CAN%d_TX" % (t, n), "IOC%s_CAN%d_SD" % (t, n), "IOC%s_CAN%d_MB" % (t, n)
-            gate, xcvr = "U%d" % (47 + j + 10 * k), "U%d" % (43 + j + 10 * k)
+            tx, sd, mbn, txb = ("IOC%s_CAN%d_%s" % (t, n, x) for x in ("TX", "SD", "MB", "TXB"))
+            gate, xcvr, buf = "U%d" % (47 + j + 10 * k), "U%d" % (43 + j + 10 * k), "U%d" % (580 + 2 * k + j)
             d_own, d_vote = "D%d" % (400 + 10 * k + 2 * j), "D%d" % (401 + 10 * k + 2 * j)
-            r_sd = "R%d" % (603 + 20 * k + 4 * j)
+            r_sd, pu = "R%d" % (603 + 20 * k + 4 * j), "R%d" % (606 + 20 * k + 4 * j)
             pds = ("R%d" % (604 + 20 * k + 4 * j), "R%d" % (605 + 20 * k + 4 * j))
             isos = ("R%d" % (611 + 20 * k + 2 * j), "R%d" % (612 + 20 * k + 2 * j))
-            cdec = "C%d" % (944 + 10 * k + 2 * j)
+            cdec, cbuf = "C%d" % (944 + 10 * k + 2 * j), "C%d" % (943 + 10 * k + 2 * j)
             peers = (TAGS[(k + 1) % 3], TAGS[(k + 2) % 3])
             if sorted(CHK.members(nl, sd)) != sorted(["%s.5" % xcvr, "%s.1" % d_own, "%s.1" % d_vote, "%s.1" % r_sd]):
                 why.append("%s reaches %s" % (sd, CHK.members(nl, sd)))
             why += CHK.rows(nl, [(d_own, "2", "IOC%s_CAN%d_SHDN" % (t, n)), (d_vote, "2", mbn), (r_sd, "2", "GND"),
-                                 (gate, "3", "GND"), (gate, "4", mbn), (gate, "5", v33), (cdec, "1", v33), (cdec, "2", "GND")])
+                                 (gate, "3", "GND"), (gate, "4", mbn), (gate, "5", v33), (cdec, "1", v33), (cdec, "2", "GND"),
+                                 (buf, "2", tx), (buf, "3", "GND"), (buf, "4", txb), (buf, "5", v33), (cbuf, "1", v33), (cbuf, "2", "GND"),
+                                 (pu, "1", v33), (pu, "2", tx)])
             if sorted(CHK.members(nl, mbn)) != sorted(["%s.4" % gate, "%s.2" % d_vote]):
                 why.append("%s reaches %s, not the gate's output and the vote diode alone" % (mbn, CHK.members(nl, mbn)))
             if not CHK.value(nl, gate).startswith(M.GATE) or nl["comps"].get(gate, {}).get("lcsc", M.GATE_LCSC) not in (M.GATE_LCSC, ""):
                 why.append("%s is %r, not the %s" % (gate, CHK.value(nl, gate)[:24], M.GATE))
+            if not CHK.value(nl, buf).startswith(M.BUF) or CHK.value(nl, pu) != M.R_TXPU:
+                why.append("%s is %r and %s %r, not the %s and the %s TXD pull-up" % (buf, CHK.value(nl, buf)[:20], pu, CHK.value(nl, pu), M.BUF, M.R_TXPU))
             ins = [CHK.pin(nl, gate, "1"), CHK.pin(nl, gate, "2")]
             want = ["IOC%s_CAN%d_VOTE%s" % (t, n, p) for p in peers]
             if sorted(ins) != sorted(want) or len(set(ins)) != 2:
@@ -326,25 +344,29 @@ def mb_check(nl, M):
                     why.append("%s reaches %s, not %s's planned vote pin %d, the gate and its pull-down" % (vnet, CHK.members(nl, vnet), mcu(kp), vote_of[(dist, f)]))
                 if CHK.pin(nl, pd, "2") != "GND" or CHK.value(nl, pd) != M.R_VOTE:
                     why.append("%s is not the %s pull-down of %s" % (pd, M.R_VOTE, vnet))
-                if CHK.pin(nl, iso, "1") != tx or CHK.pin(nl, iso, "2") != onet or CHK.value(nl, iso) != M.R_ISO:
-                    why.append("%s is not the %s from %s to %s" % (iso, M.R_ISO, tx, onet))
+                if CHK.pin(nl, iso, "1") != txb or CHK.pin(nl, iso, "2") != onet or CHK.value(nl, iso) != M.R_ISO:
+                    why.append("%s is not the %s from %s to %s" % (iso, M.R_ISO, txb, onet))
                 if sorted(CHK.members(nl, onet)) != sorted(["%s.2" % iso, "%s.%d" % (mcu(kp), obs_of[(dist, f)])]):
                     why.append("%s reaches %s, not %s's planned reading pin %d behind %s" % (onet, CHK.members(nl, onet), mcu(kp), obs_of[(dist, f)], iso))
-            if sorted(CHK.members(nl, tx)) != sorted(["%s.%d" % (mcu(k), 82 if n == 1 else 52), "%s.1" % xcvr] + ["%s.1" % r for r in isos]):
-                why.append("%s reaches %s, not the controller, its transceiver and the two isolation resistors" % (tx, CHK.members(nl, tx)))
-    # who each reading pin reads: never its own controller's TXD (derived from the netlist, not from the names)
+            if sorted(CHK.members(nl, tx)) != sorted(["%s.%d" % (mcu(k), 82 if n == 1 else 52), "%s.1" % xcvr, "%s.2" % buf, "%s.2" % pu]):
+                why.append("%s reaches %s, not the controller, its transceiver, its buffer's input and its pull-up" % (tx, CHK.members(nl, tx)))
+            if sorted(CHK.members(nl, txb)) != sorted(["%s.4" % buf] + ["%s.1" % r for r in isos]):
+                why.append("%s reaches %s, not the buffer's output and the two isolation resistors" % (txb, CHK.members(nl, txb)))
+    # whose TXD each reading pin reads, traced through the netlist (the resistor, then the buffer to its input), never from the names:
+    # never its own controller's
     for k, t in enumerate(TAGS):
         for p in M.OBS_PINS:
             net = CHK.pin(nl, mcu(k), str(p))
             rs = [m.split(".")[0] for m in CHK.members(nl, net or "") if m.startswith("R")]
-            src = {CHK.pin(nl, r, "1") for r in rs} | {CHK.pin(nl, r, "2") for r in rs}
-            if net is None or "IOC%s_CAN1_TX" % t in src or "IOC%s_CAN2_TX" % t in src or (net or "").startswith("IOC%s_CAN" % t):
-                why.append("%s pin %d reads %r, its own controller's TXD or nothing" % (mcu(k), p, net))
-            if not any(s and re.fullmatch(r"IOC[ABC]_CAN[12]_TX", s) for s in src):
-                why.append("%s pin %d reads no controller's TXD through a resistor" % (mcu(k), p))
-    gone = [r for r in M.REMOVES if r in nl["comps"]]
-    if gone:
-        why.append("the limiter's parts %s are still drawn" % gone)
+            far = {CHK.pin(nl, r, q) for r in rs for q in ("1", "2")} - {net}
+            src = set()
+            for fn in far:
+                bufs = [m.split(".")[0] for m in CHK.members(nl, fn or "") if m.endswith(".4") and CHK.value(nl, m.split(".")[0]).startswith(M.BUF)]
+                src |= {CHK.pin(nl, b_, "2") for b_ in bufs} | ({fn} if fn and re.fullmatch(r"IOC[ABC]_CAN[12]_TX", fn) else set())
+            if net is None or "IOC%s_CAN1_TX" % t in src or "IOC%s_CAN2_TX" % t in src:
+                why.append("%s pin %d reads %r: its own controller's TXD, or nothing" % (mcu(k), p, net))
+            if len(src) != 1 or not re.fullmatch(r"IOC[ABC]_CAN[12]_TX", next(iter(src), "") or ""):
+                why.append("%s pin %d reads %s, not one other controller's TXD through a resistor and a buffer" % (mcu(k), p, sorted(x or "?" for x in src)))
     lim = [r for r, c in nl["comps"].items() if c.get("value", "").startswith("TPS3701") and r not in ("U46", "U56", "U66")]
     if lim:
         why.append("a TPS3701 other than the rail trips remains: %s" % lim)
@@ -446,20 +468,22 @@ def main():
             len(nl0["comps"]), len({n for p in nl0["pins"].values() for n in p.values() if n != "NC"})))
         added = sorted(set(nl1["comps"]) - set(nl0["comps"]), key=lambda r: (r[0], int(re.sub(r"\D", "", r) or 0)))
         removed = sorted(set(nl0["comps"]) - set(nl1["comps"]), key=lambda r: (r[0], int(re.sub(r"\D", "", r) or 0)))
-        retyped = sorted([r for r in set(nl0["comps"]) & set(nl1["comps"]) if nl0["comps"][r].get("value") != nl1["comps"][r].get("value")],
+        retyped = sorted([r for r in set(nl0["comps"]) & set(nl1["comps"]) if nl0["comps"][r].get("value") != nl1["comps"][r].get("value")
+                          or nl0["pins"].get(r) != nl1["pins"].get(r)],
                          key=lambda r: (r[0], int(re.sub(r"\D", "", r) or 0)))
         w("   added %d: %s" % (len(added), ", ".join(added)))
         w("   removed %d: %s" % (len(removed), ", ".join(removed)))
-        w("   re-used with a new value %d: %s" % (len(retyped), ", ".join(retyped)))
+        w("   kept with a new value or new nets %d: %s" % (len(retyped), ", ".join(retyped)))
         cv, cw = con004(nl1)
         cv0, _cw0 = con004(nl0)
         mv, mw = mb_check(nl1, M)
         w("   CON-004 read on the regenerated netlist (three supply branches, two fabrics, one transceiver of each controller on each, split")
         w("   termination at both ends of each, the A7 break links, no part joining the fabrics): %s%s (before canmb: %s)" % (
             cv, (": " + "; ".join(cw[:3])) if cw else "", cv0))
-        w("   the draft read by pin (each TXD's two isolation resistors to the planned reading pins of the other two; each SD lifted only by its")
-        w("   own request's diode and its 2-of-2 gate's diode; each gate on its target's rail with the other two controllers' planned votes, each")
-        w("   held low by 10 kOhm; the limiter's parts gone; the rail trips in place): %s%s" % (mv, (": " + "; ".join(mw[:3])) if mw else ""))
+        w("   the draft read by pin (each TXD on its controller, its transceiver, its 10 kOhm pull-up and its buffer's input only; each buffer's")
+        w("   output through two isolation resistors to the planned reading pins of the other two, traced back to never its own TXD; each SD")
+        w("   lifted only by its own request's diode and its 2-of-2 gate's diode; each gate on its target's rail with the other two controllers'")
+        w("   planned votes, each held low by 10 kOhm; no TPS3701 left but the rail trips, which stay): %s%s" % (mv, (": " + "; ".join(mw[:3])) if mw else ""))
         w("")
         # ------------------------------------------------------------ 4. mutations and refusals
         w("4. THE MUTATIONS (each must FAIL) AND THE REFUSALS")
@@ -468,10 +492,11 @@ def main():
                                                          '"6": "CANL_A%s" % _seg, "7": "CANH_A%s" % _seg'))
         muts.append(("a draft that removes fabric B (every transceiver on fabric A)", con004(nlf)[0] if okf and nlf else "REFUSED", "CON-004"))
         swaps = (("a vote that does not reach its SHDN (A's fabric A vote diode on fabric B's SD)", [(("D401", "1"), ("D403", "1"))]),
-                 ("an observation reading the node's own TXD (B's reader of A on B's own TXD)", [(("R611", "1"), ("R631", "1"))]),
+                 ("an observation reading the node's own TXD (B's reader of A on B's own buffered TXD)", [(("R611", "1"), ("R631", "1"))]),
                  ("a 1-of-1 vote (both of A's fabric A gate inputs from B)", [(("U47", "2"), ("R604", "1"))]),
                  ("the gate on a peer's rail (U47 on +3V3_IOCB)", [(("U47", "5"), ("U57", "5"))]),
-                 ("an observation without its isolation (B's pin 65 on A's TXD directly)", [(("U51", "65"), ("R611", "1"))]))
+                 ("an observation without its isolation (B's pin 65 on A's buffered TXD directly)", [(("U51", "65"), ("R611", "1"))]),
+                 ("an observation without its buffer (B's resistor on A's TXD itself)", [(("R611", "1"), ("U580", "2"))]))
         for i, (lab, sw) in enumerate(swaps):
             q = D.mutate(net1, d, "mbm%d" % i, sw)
             muts.append((lab, mb_check(CHK.read(open(q, "rb").read()), M)[0], "the draft's reading"))
@@ -550,15 +575,19 @@ def main():
     L["sd_i"] = vdd_hi / rsd_lo + F["sd_iih"]
     L["sd_hi"] = vdd_lo - F["g_voh_drop"][1] - F["vf"]
     L["sd_lo"] = F["sd_iil"] * rsd_hi
-    L["obs_hi"] = vdd_lo - F["voh_drop"]
+    rpu_hi = 10e3 * 1.01                               # the TXD pull-up, 10 kOhm 1 %
+    L["obs_hi"] = vdd_lo - F["b_voh100"]               # the buffer's high at its own rail; its load a few uA (the readers' pull-ups)
     L["obs_vih"] = F["vih_k"] * vdd_hi
-    L["obs_lo"] = F["vol"] + (vdd_hi - F["vol"]) * riso_hi / (riso_hi + F["rpu"][0])
+    L["obs_lo"] = F["b_vol16"] + (vdd_hi - F["b_vol16"]) * riso_hi / (riso_hi + F["rpu"][0])
     L["obs_vil"] = F["vil_k"] * vdd_lo
     L["fault_i"] = vdd_hi / riso_lo + vdd_hi / (riso_lo + F["rpu"][0])
-    L["dark_i"] = (vdd_lo - L["obs_vih"]) / (riso_hi + F["rpu"][2])
+    L["tx_reset"] = vdd_lo - (F["tx_iih"] + F["b_ii"]) * rpu_hi
+    L["tx_pu_i"] = vdd_hi / (10e3 * 0.99)
+    L["dark_read"] = vdd_lo - F["b_ioff"] * (riso_hi + F["rpu"][2])
     lv_ok = (L["vote_hi"] > F["g_vih"] and L["vote_lo"] < F["g_vil"] and L["vote_i"] < F["iio"] and F["g_vcc"][0] <= vdd_lo and vdd_hi <= 3.6
              and L["sd_i"] < 100e-6 and L["sd_hi"] > F["sd_vih"] and L["sd_lo"] < F["sd_vil"] and L["obs_hi"] > L["obs_vih"]
-             and L["obs_lo"] < L["obs_vil"] and L["fault_i"] < F["iio"] and L["obs_hi"] > F["tx_vih"] and F["vol"] < F["tx_vil"])
+             and L["obs_lo"] < L["obs_vil"] and L["fault_i"] < 16e-3 and F["b_voh16"] > L["obs_vih"] and L["tx_reset"] > max(F["tx_vih"], F["b_vih"])
+             and F["vol"] < min(F["tx_vil"], F["b_vil"]) and L["tx_pu_i"] < F["iio"] and L["dark_read"] > F["vih_k"] * vdd_lo)
     w("6. THE LOGIC LEVELS on the makers' printed rows (MODEL from PRINTED figures; each controller's rail from its AP2112K-3.3: %.1f %% to" % (100 * F["vout"][0]))
     w("   %.1f %% PRINTED with the load regulation %+.0f to %+.0f %%/A PRINTED at the rail's declared %.2f A: %.4f V to %.4f V, inside the gate's %.2f to" % (
         100 * F["vout"][1], 100 * F["loadreg"][0], 100 * F["loadreg"][1], i_r, vdd_lo, vdd_hi, F["g_vcc"][0]))
@@ -576,38 +605,46 @@ def main():
         L["sd_hi"] - F["sd_vih"], F["sd_vih"], L["sd_i"] * 1e6))
     w("   SHDN at rest: at most %.3f V (the pin's %.0f uA out, IIL PRINTED, into %.0f kOhm) against VIL %.1f V (round 6's figure, unchanged)" % (
         L["sd_lo"], F["sd_iil"] * 1e6, rsd_hi / 1e3, F["sd_vil"]))
-    w("   the observation (the reader's own pull-up enabled, RPU %.0f to %.0f kOhm PRINTED, a firmware row): TXD high reads at least %.4f V" % (
+    w("   the observation (the reader's own pull-up enabled, RPU %.0f to %.0f kOhm PRINTED, a firmware row): the buffer's high reads at least %.4f V" % (
         F["rpu"][0] / 1e3, F["rpu"][2] / 1e3, L["obs_hi"]))
-    w("     against 0.7 VDD = %.4f V at the reader's highest rail; TXD low reads at most %.4f V (VOL %.1f V plus the divider of %.0f Ohm against" % (
-        L["obs_vih"], L["obs_lo"], F["vol"], riso_hi))
-    w("     RPU's least) against 0.3 VDD = %.4f V at the reader's lowest rail (DS12110 Table 157, CMOS levels, tested)" % L["obs_vil"])
-    w("   a FAULTY READER driving its input (an output where an input belongs): at most %.3f mA through its %.0f Ohm (with the other reader's" % (
-        L["fault_i"] * 1e3, riso_lo))
-    w("     pull-up), inside the 8 mA at which Table 158 holds TXD at VDD - %.1f V or %.1f V: the TXD stays at least %.4f V high (TCAN334 TXD VIH" % (
-        F["voh_drop"], F["vol"], L["obs_hi"]))
-    w("     %.1f V; the other reader's VIH %.4f V) or at most %.1f V low (TCAN334 VIL %.1f V): one reader can neither move the transceiver's input" % (
-        F["tx_vih"], L["obs_vih"], F["vol"], F["tx_vil"]))
-    w("     nor what the other reader sees, so it cannot frame a healthy controller (the vote still needs the other reader's agreement)")
-    w("   the dark cases: a dark TARGET's gate takes at most %.0f uA per input from a voter (Ioff PRINTED, 5.5 V) and its transceiver's TXD at most" % (
+    w("     (VCC - %.1f V at -100 uA, 74LVC1G34 PRINTED) against 0.7 VDD = %.4f V at the reader's highest rail; its low at most %.4f V (VOL %.1f V" % (
+        F["b_voh100"], L["obs_vih"], L["obs_lo"], F["b_vol16"]))
+    w("     at 16 mA, VCC 3 V, PRINTED, plus the divider of %.0f Ohm against RPU's least) against 0.3 VDD = %.4f V at the reader's lowest rail" % (
+        riso_hi, L["obs_vil"]))
+    w("     (DS12110 Table 157, CMOS levels, tested)")
+    w("   a FAULTY READER driving its input (an output where an input belongs) reaches only the buffer's output, through its %.0f Ohm: at most" % riso_lo)
+    w("     %.3f mA with the other reader's pull-up, inside the 16 mA at which the buffer holds at least %.1f V high and at most %.1f V low (VCC 3 V," % (
+        L["fault_i"] * 1e3, F["b_voh16"], F["b_vol16"]))
+    w("     -40 to 85 C, PRINTED): the other reader still reads %.1f V against its %.4f V (margin %.3f V, on the 16 mA row for at most %.2f mA) and" % (
+        F["b_voh16"], L["obs_vih"], F["b_voh16"] - L["obs_vih"], L["fault_i"] * 1e3))
+    w("     %.4f V against its %.4f V; and the TXD and the transceiver's input are never reached (the buffer's input draws at most %.0f uA, PRINTED)," % (
+        L["obs_lo"], L["obs_vil"], F["b_ii"] * 1e6))
+    w("     so one reader cannot frame a healthy controller, in service or while that controller is in reset with its TX pin undriven")
+    w("   the TXD itself: held at least %.4f V while its controller is in reset (10 kOhm 1 %% against the TCAN334's IIH %.0f uA and the buffer's" % (
+        L["tx_reset"], F["tx_iih"] * 1e6))
+    w("     II %.0f uA, both PRINTED; TI prints no minimum for its own pull-up) against VIH %.1f V of both; driven dominant, the controller sinks" % (
+        F["b_ii"] * 1e6, F["tx_vih"]))
+    w("     %.3f mA more and stays under %.1f V (Table 158) against VIL %.1f V of both" % (L["tx_pu_i"] * 1e3, F["vol"], F["tx_vil"]))
+    w("   the dark cases: a dark TARGET's gate takes at most %.0f uA per input from a voter (Ioff PRINTED, 5.5 V), its transceiver's TXD at most" % (
         F["g_ioff"] * 1e6))
-    w("     %.1f uA (ILKG(OFF) PRINTED); a dark target cannot drive its fabric (its transceiver's VCC is its own rail). A dark target's TXD reads" % (
+    w("     %.1f uA (ILKG(OFF) PRINTED), and it cannot drive its fabric (its transceiver's VCC is its own rail); its unpowered buffer's output" % (
         F["tx_off"] * 1e6))
-    w("     recessive at a reader while its unpowered pins sink less than %.1f uA (the reader's RPU against its VIH): ST prints no leakage for an" % (
-        L["dark_i"] * 1e6))
-    w("     unpowered FT pin (DS12110 Rev 10 prints none; Table 120's note 3 says only that no positive injection occurs under the maximum),")
-    w("     so a dark target's TXD is UNDEFINED at its readers")
-    w("     and the attribution must never act on a TXD reading alone (a condition for L4A-55). A dark VOTER's input reads low through 10 kOhm")
+    w("     takes at most %.0f uA (IOFF PRINTED), so its readers read at least %.4f V, RECESSIVE (0.7 VDD = %.4f V at their lowest rail): a dark" % (
+        F["b_ioff"] * 1e6, L["dark_read"], F["vih_k"] * vdd_lo))
+    w("     controller is defined at its readers. A dark VOTER's input reads low through 10 kOhm; a dark READER's pin sees at most %.4f V," % vdd_hi)
+    w("     inside the FT pins' unpowered 4.0 V (STM32H743-COMPATIBILITY.md section 4, DS12110's absolute maximum and Table 120's note 3)")
     i_lim = 2 * vdd_hi / (10e3 * 0.99)                 # the two limiters' 10 kOhm 1 % pull-ups, removed (round 6 counted them at OUTB low)
     i_rpu = vdd_hi / (riso_lo + F["rpu"][0])           # one reading pin's pull-up while the TXD it reads is dominant
-    L["rail"] = F["i_r6"] - i_lim + 2 * F["g_icc"] + 4 * i_rpu + max(2 * L["vote_i"], 2 * F["g_dicc"])
-    w("   the controller's own rail: round 6's bounded state %.4f A less its limiters' pull-ups %.3f mA, plus its two gates' ICC %.0f uA each" % (
-        F["i_r6"], i_lim * 1e3, F["g_icc"] * 1e6))
-    w("     (PRINTED), its four readings' pull-ups %.3f mA each while dominant, and the larger of two of its votes asserted at %.3f mA each (one" % (
-        i_rpu * 1e3, L["vote_i"] * 1e3))
-    w("     peer contained on both fabrics) and its own gate's two inputs high from the peers' lower rails (the self-test's V phase on it:")
-    w("     delta ICC %.0f uA an input at VCC - 0.6 V, PRINTED, taken per input), all at once: at most %.4f A (MODEL; a labelled scenario for" % (
-        F["g_dicc"] * 1e6, L["rail"]))
-    w("     the coordinator's C-DEV, no case row changed here)")
+    L["rail"] = F["i_r6"] - i_lim + 2 * F["g_icc"] + 2 * F["b_icc"] + 2 * L["tx_pu_i"] + 4 * i_rpu + max(2 * L["vote_i"], 2 * F["g_dicc"])
+    w("   the controller's own rail: round 6's bounded state %.4f A less its limiters' pull-ups %.3f mA, plus its two gates' and two buffers' ICC" % (
+        F["i_r6"], i_lim * 1e3))
+    w("     (%.0f uA and %.0f uA each, PRINTED), its two TXD pull-ups %.3f mA each while dominant, its four readings' pull-ups %.3f mA each while" % (
+        F["g_icc"] * 1e6, F["b_icc"] * 1e6, L["tx_pu_i"] * 1e3, i_rpu * 1e3))
+    w("     dominant, and the larger of two of its votes asserted at %.3f mA each (one peer contained on both fabrics) and its own gate's two" % (
+        L["vote_i"] * 1e3))
+    w("     inputs high from the peers' lower rails (the self-test's V phase on it: delta ICC %.0f uA an input at VCC - 0.6 V, PRINTED, taken" % (
+        F["g_dicc"] * 1e6))
+    w("     per input), all at once: at most %.4f A (MODEL; a labelled scenario for the coordinator's C-DEV, no case row changed here)" % L["rail"])
     w("   all levels hold: %s" % ("yes" if lv_ok else "NO"))
     w("")
     # ---------------------------------------------------------------- 7. the self-test
@@ -685,8 +722,12 @@ def main():
             ("SD's 100 kOhm", "open", "SD rests on the pin's internal pull-down (TI: a fall-back)", "NOT in service: RESIDUAL", "-"),
             ("the transceiver's SHDN input", "ignored", "neither the request nor the vote silences", "S and V fail", "T"),
             ("an isolation resistor", "open", "its reader sees no TXD edge while the frames arrive", "continuous reading", "C"),
-            ("an isolation resistor", "short", "isolation lost: a faulty reader could then move the TXD", "NOT in service: RESIDUAL", "-"),
+            ("an isolation resistor", "short", "a faulty reader could move the buffer's output (not the TXD)", "NOT in service: RESIDUAL", "-"),
             ("a reading pin or its input stage", "stuck", "the two readers of one TXD disagree", "continuous reading", "C"),
+            ("a TXD buffer", "stuck or open", "its readers see no edge while its frames arrive", "continuous reading", "C"),
+            ("the buffer's 100 nF", "short", "the target's own rail shorted: the target dark (IOHA row 3)", "its frames absent", "W"),
+            ("a TXD pull-up (10 kOhm)", "short", "the TXD held recessive: no frame on that fabric (IOHA row 7)", "its frames absent", "W"),
+            ("a TXD pull-up (10 kOhm)", "open", "the TXD on TI's own pull-up only while its controller resets", "NOT in service: RESIDUAL", "-"),
             ("a node's test schedule", "stalled or out of turn", "phases fail or counters disagree", "the published phase counter", "W"),
             ("a node's verdict", "wrong (two-faced or corrupted)", "outvoted: verdicts are taken 2 of 3", "the confirmation", "T")]
     when = {"T": "within %.2f s" % t_det, "W": "within one window (%.0f ms)" % (T_W * 1e3),
@@ -697,24 +738,28 @@ def main():
     # coverage: every part the draft draws or re-uses in the vote and observation paths is the subject of a row above
     nl1 = R["nl1"]
     kinds = {"gate": ("U", "SN74LVC1G08"), "pd": ("R", "10k"), "iso": ("R", M.R_ISO), "vdiode": ("D", "1N4148W: the peers'"),
-             "odiode": ("D", "1N4148W: controller"), "sdpd": ("R", "100k"), "cdec": ("C", "100n")}
+             "odiode": ("D", "1N4148W: controller"), "sdpd": ("R", "100k"), "cdec": ("C", "100n"), "buf": ("U", M.BUF), "cbuf": ("C", "100n"),
+             "txpu": ("R", M.R_TXPU)}
     covered = {"gate": "the 2-of-2 gate", "pd": "a vote pull-down (10 kOhm)", "iso": "an isolation resistor", "vdiode": "the vote diode",
-               "odiode": "the own-request diode", "sdpd": "SD's 100 kOhm", "cdec": "the gate's 100 nF"}
+               "odiode": "the own-request diode", "sdpd": "SD's 100 kOhm", "cdec": "the gate's 100 nF", "buf": "a TXD buffer",
+               "cbuf": "the buffer's 100 nF", "txpu": "a TXD pull-up (10 kOhm)"}
     path = []
     for k, t in enumerate(TAGS):
         for j in range(2):
             path += [("U%d" % (47 + j + 10 * k), "gate"), ("R%d" % (604 + 20 * k + 4 * j), "pd"), ("R%d" % (605 + 20 * k + 4 * j), "pd"),
                      ("R%d" % (611 + 20 * k + 2 * j), "iso"), ("R%d" % (612 + 20 * k + 2 * j), "iso"), ("D%d" % (401 + 10 * k + 2 * j), "vdiode"),
-                     ("D%d" % (400 + 10 * k + 2 * j), "odiode"), ("R%d" % (603 + 20 * k + 4 * j), "sdpd"), ("C%d" % (944 + 10 * k + 2 * j), "cdec")]
+                     ("D%d" % (400 + 10 * k + 2 * j), "odiode"), ("R%d" % (603 + 20 * k + 4 * j), "sdpd"), ("C%d" % (944 + 10 * k + 2 * j), "cdec"),
+                     ("U%d" % (580 + 2 * k + j), "buf"), ("C%d" % (943 + 10 * k + 2 * j), "cbuf"), ("R%d" % (606 + 20 * k + 4 * j), "txpu")]
     cov_ok = all(nl1["comps"].get(r, {}).get("value", "").startswith(kinds[kd][1]) and any(row[0] == covered[kd] for row in rows) for r, kd in path)
-    cov_ok &= set(r for r, _k in path if r[0] != "C") >= set(R["added"]) and set(R["retyped"]) <= set(r for r, _k in path)
-    w("   coverage: every one of the %d parts of the six vote and twelve observation paths (gates, pull-downs, isolation resistors, both" % len(path))
-    w("     diodes, SD's resistor, the gates' capacitors) is the subject of a row, and every part canmb adds or re-uses is among them: %s" % (
+    cov_ok &= set(r for r, _k in path) >= set(R["added"]) and set(R["retyped"]) - {mcu(k) for k in range(3)} <= set(r for r, _k in path)
+    w("   coverage: every one of the %d parts of the six vote and six observation paths (gates, pull-downs, both diodes, SD's resistor, buffers," % len(path))
+    w("     TXD pull-ups, isolation resistors, the capacitors) is the subject of a row, and every part canmb adds or re-uses is among them: %s" % (
         "yes" if cov_ok else "NO"))
     w("   the residuals, each needing further faults: an open vote pull-down acts only while its voter is in reset or dark AND the other peer")
-    w("     votes wrongly; a shorted isolation resistor matters only when its reader also drives its input (and then both readers see the moved")
-    w("     line, which the 2-of-2 vote then silences: the bus is freed, the target loses one fabric); an open SD resistor leaves the transceiver")
-    w("     on TI's internal pull-down; a voter that resets while asserting gives the gate a slow edge (10 kOhm against the line) outside the")
+    w("     votes wrongly; a shorted isolation resistor matters only when its reader also drives its input, and then reaches the buffer's")
+    w("     output, never the TXD; an open SD resistor leaves the transceiver on TI's internal pull-down; an open TXD pull-up leaves the TXD on")
+    w("     TI's own pull-up only while its controller resets, and a resetting controller that drives dominant is then contained by the vote;")
+    w("     a voter that resets while asserting gives the gate a slow edge (10 kOhm against the line) outside the")
     w("     gate's %.0f ns/V limit: the output may chatter for that edge, and only while the other peer asserts, so it can only end a silence early" % (
         F["g_slew"] * 1e9))
     w("")
@@ -727,7 +772,7 @@ def main():
     w("     share half of HO-D (the limiter, and so its latent stuck comparator, is removed; the vote path's latent faults carry the interval")
     w("     above). The rail trip's half of HO-D and RE-6, RE-7 and HO-E stay with L4A-56 to L4A-59 (the trips are unchanged here)")
     w("   OPEN, L4A-55's: CON-004's quorum SERVICE under every fault-table row (IOHA rows 3, 5, 7 and 8) with this circuit: the attribution")
-    w("     rule (which TXD activity is out of contract; never on a TXD reading alone, section 6), the GPIO-toggled TX, a babbler, a stuck")
+    w("     rule (which TXD activity is out of contract, read against the frames received), the GPIO-toggled TX, a babbler, a stuck")
     w("     vote output, a two-faced controller on the common frame, the recovery proof, FW-B22 restated on the two fabrics with the test")
     w("     windows (a state frame taken from either fabric), and FW-B20 to FW-B22 with V-B20 to V-B23 restated (L4A-61). cx46's item 5 stays")
     w("     NOT CLOSED, CON-004's quorum service OPEN, FW-B22 PROVISIONAL and L9T5-F21 OPEN until those and an independent check exist")
@@ -736,15 +781,17 @@ def main():
     pred["the composition: every draft of board B's change list applies in order with canmb after iocguard and the generator runs to its end"] = R["ok1"] and R["n_seq"] == 19
     pred["CON-004 holds on the regenerated netlist with canmb (three supply branches, two fabrics, termination, A7's links), as before it"] = R["cv"] == "HOLDS" and R["cv0"] == "HOLDS"
     pred["the draft reads DRAWN by pin (observations, votes, gates on the targets' rails, the limiter gone, the rail trips kept)"] = R["mv"] == "DRAWN"
-    pred["every mutation FAILS: a removed fabric, a vote off its SHDN, a reader of its own TXD, a 1-of-1 vote, a gate on a peer's rail, no isolation"] = (
-        len(R["muts"]) == 6 and all(v == "FAIL" for _l, v, _b in R["muts"]))
+    pred["every mutation FAILS: a removed fabric, a vote off its SHDN, a reader of its own TXD, a 1-of-1 vote, a gate on a peer's rail, no isolation, no buffer"] = (
+        len(R["muts"]) == 7 and all(v == "FAIL" for _l, v, _b in R["muts"]))
     pred["the draft refuses a generator without iocguard, a second application and the tree's generator (NOT RELEASED)"] = all(R["refused"])
     pred["the pin plan: each new pin free before, a Table 9 I/O row, the reading pins TIM3_CH1 to CH4 at AF2 with DMA requests, no debug pin"] = R["plan_ok"] and R["tim3"]
     pred["the count: the tree reproduces CON-017's 30/14/56; with canmb 40 of 100, 14 supplies, 46 unconnected on each controller"] = (
         R["cnt_t"][:3] == tuple(int(x) for x in c17.groups()) and all(R["cnt1"][t][:3] == (R["cnt0"][t][0] + 8, 14, R["cnt0"][t][2] - 8) for t in TAGS)
         and R["cnt1"]["A"][:3] == (40, 14, 46))
-    pred["the parts: twelve isolation resistors added, twelve limiter parts removed, the gates, pull-downs and vote diodes in the limiter's places"] = (
-        len(R["added"]) == 12 and len(R["removed"]) == 12 and len([r for r in R["retyped"] if r[0] == "U"]) == 6)
+    want_kept = {r for k in range(3) for j in range(2) for r in ("U%d" % (47 + j + 10 * k), "D%d" % (401 + 10 * k + 2 * j), "R%d" % (604 + 20 * k + 4 * j),
+                 "R%d" % (605 + 20 * k + 4 * j), "R%d" % (606 + 20 * k + 4 * j), "C%d" % (943 + 10 * k + 2 * j), "C%d" % (944 + 10 * k + 2 * j))} | {mcu(k) for k in range(3)}
+    pred["the parts: eighteen added (twelve isolation resistors, six buffers), none removed, the limiter's 42 places re-used, the three controllers' new pins"] = (
+        len(R["added"]) == 18 and not R["removed"] and set(R["retyped"]) == want_kept)
     pred["the levels hold on the printed rows (the vote, SHDN, the observation, a faulty reader, the rails inside the gate's row)"] = lv_ok
     pred["the self-test's timing holds (guard over queue, drift and the printed hardware times; the edge rate; the error count bounded)"] = st_ok
     pred["the self-test's interval is bounded and under 10 s, every part of the vote paths has a fault row, the residuals are named"] = cov_ok and t_det < 10.0

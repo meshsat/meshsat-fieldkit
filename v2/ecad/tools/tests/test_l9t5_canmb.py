@@ -3,7 +3,7 @@ M-B, the peers' TXD observation and 2-of-2 SHDN vote on both fabrics (apply_gen_
 l9t5_canmb.py computes and on the files of the round.
 
 The predicates: the committed l9t5_canmb.out is what the script prints and every input it pins is present at the sha256 it names;
-every predicate the script states reads yes (twelve); its six mutations read FAIL, the three the brief names among them, and CON-004
+every predicate the script states reads yes (twelve); its seven mutations read FAIL, the three the brief names among them, and CON-004
 reads HOLDS with and without the draft; the draft refuses the tree's generator, a target without iocguard and a second application,
 and leaves the tree byte for byte; its pin plan covers each (peer, fabric) once with pins the tree's controller map leaves free; the
 levels, the interval and the controller's rail figure are re-solved here from the makers' printed values the output prints; the
@@ -77,16 +77,16 @@ def t_every_predicate_holds():
 
 def t_the_mutations_fail_and_con004_holds():
     """the brief's three mutations (a draft that removes a fabric, a vote output not reaching its SHDN, an observation reading the
-    node's own TXD) and three more each read FAIL; CON-004 reads HOLDS on the candidate with and without the draft"""
+    node's own TXD) and four more each read FAIL; CON-004 reads HOLDS on the candidate with and without the draft"""
     text_ = _out()
     muts = re.findall(r"^   mutated, (.*?):\s+(FAIL|DRAWN|HOLDS|REFUSED) \((.*?)\)$", text_, re.M)
-    assert len(muts) == 6 and all(v == "FAIL" for _l, v, _b in muts), muts
+    assert len(muts) == 7 and all(v == "FAIL" for _l, v, _b in muts), muts
     labs = " | ".join(l for l, _v, _b in muts)
     for s_ in ("a draft that removes fabric B", "a vote that does not reach its SHDN", "an observation reading the node's own TXD",
-               "a 1-of-1 vote", "the gate on a peer's rail", "an observation without its isolation"):
+               "a 1-of-1 vote", "the gate on a peer's rail", "an observation without its isolation", "an observation without its buffer"):
         assert s_ in labs, s_
     assert re.search(r"no part joining the fabrics\): HOLDS \(before canmb: HOLDS\)", text_)
-    assert "the limiter's parts gone; the rail trips in place): DRAWN" in text_
+    assert "no TPS3701 left but the rail trips, which stay): DRAWN" in text_
     assert "the draft on a generator without iocguard: refused; a second time: refused; on the tree's own generator: refused (NOT RELEASED)" in text_
 
 
@@ -104,7 +104,8 @@ def t_the_pin_plan_covers_each_peer_and_fabric_on_free_pins():
     assert sorted((d, f) for _p, (_port, d, f, _af, _n) in m.OBS_PINS.items()) == [(1, "A"), (1, "B"), (2, "A"), (2, "B")]
     assert sorted((d, f) for _p, (_port, d, f) in m.VOTE_PINS.items()) == [(1, "A"), (1, "B"), (2, "A"), (2, "B")]
     assert all(af == 2 and func.startswith("TIM3_CH") for _p, (_port, _d, _f, func, af) in m.OBS_PINS.items())
-    assert len(set(m.ADDS)) == 12 and len(set(m.REMOVES)) == 12 and not set(m.ADDS) & set(m.REMOVES)
+    assert len(set(m.ADDS)) == 18 and len([r for r in m.ADDS if r.startswith("U")]) == 6 and m.REMOVES == ()
+    assert m.R_TXPU == "10k 1%" and m.BUF == "74LVC1G34" and m.GATE.startswith("SN74LVC1G08")
     # the tree's controller map (read with ast) and canshdn's two SHDN pins leave every planned pin free
     tree = ast.parse(open(GEN_B, encoding="utf-8").read())
     h743 = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign) and getattr(n.targets[0], "id", "") == "H743")
@@ -122,20 +123,25 @@ def t_the_pin_plan_covers_each_peer_and_fabric_on_free_pins():
 
 def t_the_levels_and_the_rail_are_re_solved():
     """re-solved here from the printed values the output names: the AP2112K-3.3 band 98.5 to 101.5 % with -1 to +1 %/A at 0.25 A; the
-    H743's VOH VDD - 0.4 V and VOL 0.4 V at 8 mA, VIL 0.3 VDD, VIH 0.7 VDD, RPU at least 30 kOhm; the SN74LVC1G08's VCC - 0.15 V at
-    -100 uA and the 1N4148W's 0.715 V; the TCAN334's SHDN VIH 2 V and IIL 4 uA"""
+    H743's VOH VDD - 0.4 V and VOL 0.4 V at 8 mA, VIL 0.3 VDD, VIH 0.7 VDD, RPU 30 to 50 kOhm; the 74LVC1G34's VCC - 0.1 V at -100 uA,
+    2.4 V and 0.4 V at 16 mA, II 1 uA and IOFF 10 uA; the SN74LVC1G08's VCC - 0.15 V at -100 uA and the 1N4148W's 0.715 V; the
+    TCAN334's SHDN VIH 2 V and IIL 4 uA and its TXD IIH 3 uA"""
     text_ = _out()
     m = _draft()
     lo, hi = 3.3 * (0.985 - 0.01 * 0.25), 3.3 * (1.015 + 0.01 * 0.25)
     riso = float(re.match(r"([\d.]+)k", m.R_ISO).group(1)) * 1e3
     assert abs(_num(r"0\.25 A: ([\d.]+) V to", text_) - round(lo, 4)) < 1e-4 and abs(_num(r"V to ([\d.]+) V, inside the gate", text_) - round(hi, 4)) < 1e-4
+    assert abs(_num(r"the buffer's high reads at least ([\d.]+) V", text_) - round(lo - 0.1, 4)) < 1e-4 and lo - 0.1 > 0.7 * hi
     obs_lo = 0.4 + (hi - 0.4) * riso * 1.01 / (riso * 1.01 + 30e3)
-    assert abs(_num(r"TXD low reads at most ([\d.]+) V", text_) - round(obs_lo, 4)) < 1e-4 and obs_lo < 0.3 * lo
+    assert abs(_num(r"its low at most ([\d.]+) V \(VOL", text_) - round(obs_lo, 4)) < 1e-4 and obs_lo < 0.3 * lo
     assert abs(_num(r"SHDN lifted by the vote: at least ([\d.]+) V", text_) - round(lo - 0.15 - 0.715, 4)) < 1e-4 and lo - 0.15 - 0.715 > 2.0
     fault = hi / (riso * 0.99) + hi / (riso * 0.99 + 30e3)
-    assert abs(_num(r"at most ([\d.]+) mA through its", text_) - round(fault * 1e3, 3)) < 1e-3 and fault < 8e-3
+    assert abs(_num(r"Ohm: at most\s+([\d.]+) mA with the other reader's pull-up", text_) - round(fault * 1e3, 3)) < 1e-3 and fault < 16e-3 and 2.4 > 0.7 * hi
+    assert abs(_num(r"held at least ([\d.]+) V while its controller is in reset", text_) - round(lo - 4e-6 * 10.1e3, 4)) < 1e-4
+    dark = lo - 10e-6 * (riso * 1.01 + 50e3)
+    assert abs(_num(r"so its readers read at least ([\d.]+) V, RECESSIVE", text_) - round(dark, 4)) < 1e-4 and dark > 0.7 * lo
     assert 4e-6 * 105e3 < 0.8 and lo - 0.4 > 2.0 and lo - 0.4 > 0.7 * hi
-    rail = 0.1739 - 2 * hi / 9.9e3 + 2 * 10e-6 + 4 * hi / (riso * 0.99 + 30e3) + max(2 * hi / 9.5e3, 2 * 500e-6)
+    rail = 0.1739 - 2 * hi / 9.9e3 + 2 * 10e-6 + 2 * 1e-6 + 2 * hi / 9.9e3 + 4 * hi / (riso * 0.99 + 30e3) + max(2 * hi / 9.5e3, 2 * 500e-6)
     assert abs(_num(r"all at once: at most ([\d.]+) A", text_) - round(rail, 4)) < 1e-4 and rail < 0.2558
 
 
@@ -153,7 +159,7 @@ def t_the_self_test_interval_is_re_solved():
     assert abs(_num(r"it ends within ([\d.]+) us of the release", text_) - round(t_off * 1e6, 2)) < 1e-2
     assert abs(_num(r"margin ([\d.]+) ms", text_) - round((10e-3 - (4.6e-3 + 2 * 20e-6 * 0.1 + t_off)) * 1e3, 3)) < 1e-3
     sec = text_.split("THE SELF-TEST'S OWN FAULTS")[1].split("   coverage:")[0]
-    assert sec.count("RESIDUAL") == 3 and sec.count("within 5.00 s") >= 10
+    assert sec.count("RESIDUAL") == 4 and sec.count("within 5.00 s") >= 10
     assert "every part canmb adds or re-uses is among them: yes" in text_
     assert "finding W137-F1" in text_ and "firmware does not use DAR" in text_
 
@@ -162,7 +168,8 @@ def t_the_round_page_states_the_disposition():
     page = open(need(PAGE, "the round page"), encoding="utf-8").read()
     first = page.splitlines()[0]
     assert first.startswith("**ROUND 7") and "DONE:" in first and "NOT DONE:" in first and "NEXT:" in first, first[:200]
-    for s_ in ("CON-004", "IOHA row 7", "A7", "L4A-55", "W137-D1", "W137-D2", "W137-F1", "NOT CLOSED", "REMAINING ENGINEERING",
+    for s_ in ("CON-004", "IOHA row 7", "A7", "L4A-55", "W137-D1", "W137-D2", "W137-D8", "W137-D9", "W137-F1", "W137-F8", "NOT CLOSED",
+               "REMAINING ENGINEERING", "1533 parts against 1515",
                "40 of 100; 14 supplies, 46 unconnected", "5.00 s", "apply_gen_sch_b_canmb.py", "None is APPLIED"):
         assert s_ in page, s_
     for bad in ("CORRECTED IN DRAFT", "cx46's item 5 CLOSED", "quorum service HOLDS", "desk acceptance MET"):
