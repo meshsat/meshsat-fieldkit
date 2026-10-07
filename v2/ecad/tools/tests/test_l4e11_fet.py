@@ -4,7 +4,7 @@ fallback/apply_check_dd7_fetpair.py).
 
 The predicates: the committed .out is what the script prints; the screen reproduces the records' own figures (the 21.136 mOhm
 allowance, the three's 40.78 K/W worst-split bar, the pair's 20.39 K/W, round 15c's and 16a's allowances of the earlier parts); the
-worst-split factor F0 = n^2 / (4 (n - 1)) is the largest of a brute-force search over the split and the coupling; no set of the 16
+worst-split factor F0 = n^2 / (4 (n - 1)) is the largest of a brute-force search over the split and the coupling; no set of the 18
 parts read meets TI's 5 nF on printed maxima, the 40.78 K/W bar and the held 23.93 A together, and every part with a printed Ciss
 maximum sits above the class bound; a typical used as a limit is refused by the screen (a mutated table that relabels the
 BUK6Y10-30P's typical Ciss as a maximum flips the pair to a pass, which this test's predicate catches) and by the fallback draft's
@@ -112,14 +112,17 @@ def t_the_worst_split_factor_is_the_largest_of_a_search_over_split_and_coupling(
 def t_no_set_meets_the_three_limits_and_the_class_bound_holds():
     m, R = _M(), _R()
     E = R["E"]
-    assert len(R["res"]) == 16 and not any(S["meets_all"] for _P, S in R["res"])
+    assert len(R["res"]) == 18 and not any(S["meets_all"] for _P, S in R["res"])
     for P, S in R["res"]:
         assert S["vds_ok"] and S["vgs_ok"], P["part"]
         if P["ciss"][1] is None:
             assert S["nc"] is None, "%s: a count under 5 nF without a printed Ciss maximum" % P["part"]
         else:
             assert S["nc"] * P["ciss"][1] < m.TI_CISS and (S["nc"] + 1) * P["ciss"][1] >= m.TI_CISS
-            assert S["fom"] > S["fom_lim"], "%s sits under the class bound" % P["part"]
+            if P["ciss"][1] < m.TI_CISS:
+                assert S["fom"] > S["fom_lim"], "%s can form a set and sits under the class bound" % P["part"]
+            else:
+                assert S["nc"] == 0 and S["bar"] is None, P["part"]
         if S["n"]:
             assert S["bar"] < E["bar"], P["part"]
             # an independent recomputation of the bar from the case
@@ -135,7 +138,7 @@ def t_no_set_meets_the_three_limits_and_the_class_bound_holds():
         for n in (2, 3, 5, 12, 1000):
             assert m.TI_CISS * 1e9 * 4 * (n - 1) * B / (E["bar"] * E["i"] ** 2 * n) * 1e3 < lim
     out = open(OUT, encoding="utf-8").read()
-    assert "sets meeting G, T and H together: NONE among the 16 parts read" in out
+    assert "sets meeting G, T and H together: NONE among the 18 parts read" in out
     assert "STAYS SELECTED and CONDITIONAL on E-05" in out
 
 

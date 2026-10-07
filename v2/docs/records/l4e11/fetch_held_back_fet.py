@@ -2,10 +2,10 @@
 """fetch_held_back_fet.py: fetch the makers' sheets record l4e11's round FET read but did not file (task L4A-70, MESHSAT-1357,
 7 October 2026).
 
-The round searched P-channel MOSFET sheets that print a Ciss or QG(tot) maximum (l4e11_fet.py, page L4E11-ROUND-FET.md). Eleven sheets
+The round searched P-channel MOSFET sheets that print a Ciss or QG(tot) maximum (l4e11_fet.py, page L4E11-ROUND-FET.md). Thirteen sheets
 are new to the tree: five Vishay automotive sheets (SQJA37EP, SQJQ131EL, SQS407ENW, SQS415ENW, SQS401EN), fetched from vishay.com, and
-six Infineon OptiMOS P3 sheets (BSC030P03NS3 G, BSC060P03NS3E G, BSC084P03NS3 G, BSZ086P03NS3 G, BSZ120P03NS3 G, BSZ180P03NS3 G),
-fetched from infineon.com's product pages. Each carries its maker's copyright and no grant to redistribute (Vishay's legal disclaimer,
+eight Infineon sheets of its 2023 P-channel selection guide's -30 V row (BSC030P03NS3 G, BSC060P03NS3E G, BSC084P03NS3 G, BSZ086P03NS3 G,
+BSZ120P03NS3 G, BSZ180P03NS3 G, IPD042P03L3 G, BSO301SP H), fetched from infineon.com's product pages. Each carries its maker's copyright and no grant to redistribute (Vishay's legal disclaimer,
 document 91000; Infineon's important notice), so they are held back from the public tree as the tree's other Vishay and Infineon
 sheets are (v2/vendor/power/held/, gitignored): this script downloads each into that folder, checks the sha256 l4e11_fet.py pins, and
 refuses to keep a file that differs (a maker may serve a later revision at the same address: the refusal says so). The other held
@@ -33,6 +33,10 @@ DOCS = [
      "3d777ff9639c8c9efd8b4f2b98c0feb00289da487d20e4f5d4323dd4a797731b"),
     ("v2/vendor/power/held/vishay-sqs401en-65529-revd.pdf", "https://www.vishay.com/docs/65529/sqs401en.pdf",
      "385fae910ca444d9d219eeeebe52b11e94d5c3e66e303f1c432e6004c4fafa6f"),
+    ("v2/vendor/power/held/infineon-ipd042p03l3-g-rev2.2-2014-05-16.pdf", IFX + "infineon-ipd042p03l3-g-datasheet-en.pdf",
+     "8dbb10cfa21baa671bc6b86e8718bc2c40606504fca7d24e8a21ac11a8d414d1"),
+    ("v2/vendor/power/held/infineon-bso301sp-h-rev1.32-2010-05-12.pdf", IFX + "infineon-bso301sp-h-datasheet-en.pdf",
+     "f391eea4f0ea21cb1c2970fc544a1a5fdd7ea8b4fae35e3b2193c1a4f49044dc"),
     ("v2/vendor/power/held/infineon-bsc030p03ns3-g-rev2.1-2009-11-16.pdf", IFX + "infineon-bsc030p03ns3-g-datasheet-en.pdf",
      "a9786bf2b5f65b25742d95d5f4f5c4c76f758bf3f8f8e5b9076c9e97c6edda19"),
     ("v2/vendor/power/held/infineon-bsc060p03ns3e-g-rev2.1-2009-11-16.pdf", IFX + "infineon-bsc060p03ns3e-g-datasheet-en.pdf",

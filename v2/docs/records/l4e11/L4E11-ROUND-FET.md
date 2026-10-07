@@ -1,4 +1,4 @@
-**ROUND FET (W136, branch `fnd/l4fet` from main `be07863b`, 7 October 2026): DONE on the desk. DONE: L4A-70, the search of 16 makers' sheets on printed maxima (none meets TI's 5 nF, the 40.78 K/W bar and the held 23.93 A together, at any count), (i)(a) kept CONDITIONAL on E-05, the fallback (ii) DRAFTED (`fallback/apply_gen_sch_a_fetpair.py`, `fallback/check_fetpair_netlist.py`, `fallback/apply_check_dd7_fetpair.py`), composed with board A's drafts, five mutations FAIL; L4A-71, the UDC-1 table and the SESSION selection (M-A first, M-B second, each with its end condition). NOT DONE: no independent check of this round; E-05 itself (vendor or bench); TP-E11-29's design target at the pair's bar. NEXT: one focused check (L4A-69's slot); L4A-66 released for M-A by decision L4E11-FET-D2.**
+**ROUND FET (W136, branch `fnd/l4fet` from main `be07863b`, 7 October 2026): DONE on the desk. DONE: L4A-70, the search of 18 makers' sheets on printed maxima (none meets TI's 5 nF, the 40.78 K/W bar and the held 23.93 A together, at any count), (i)(a) kept CONDITIONAL on E-05, the fallback (ii) DRAFTED (`fallback/apply_gen_sch_a_fetpair.py`, `fallback/check_fetpair_netlist.py`, `fallback/apply_check_dd7_fetpair.py`), composed with board A's drafts, five mutations FAIL; L4A-71, the UDC-1 table and the SESSION selection (M-A first, M-B second, each with its end condition). NOT DONE: no independent check of this round; E-05 itself (vendor or bench); TP-E11-29's design target at the pair's bar. NEXT: one focused check (L4A-69's slot); L4A-66 released for M-A by decision L4E11-FET-D2.**
 
 # L4-E11 round FET: a battery-FET set robust to Q-TI-17 (L4A-70) and row (c)'s selection gate (L4A-71) (MESHSAT-1357)
 
@@ -38,11 +38,12 @@ closure. Checkpoint: one focused independent check.
 ## 2. The screen (SESSION: scope and readings; INFERRED: arithmetic) ([OUT 2])
 
 - **Scope (SESSION).** P-channel parts, |VDS| at least 30 V (VBAT's SMCJ18A clamp at 29.2 V with the cells' side near 0 V, 20g),
-  |VGS| rating at least 11.5 V (BATDRV's largest printed drive), like parts in parallel on one BATDRV node. Read in full: the makers whose
-  sheets print a Ciss or QG(tot) maximum, Vishay's automotive SQ P-channel range (SQJ403EP, SQJ407EP, SQJA37EP, SQJQ131EL, SQS407ENW,
-  SQS415ENW, SQS401EN) and Infineon's -30 V OptiMOS P3 range as its 2023 P-channel selection guide lists it (BSC030P03NS3 G,
-  BSC060P03NS3E G, BSC084P03NS3 G, BSZ086P03NS3 G, BSZ120P03NS3 G, BSZ180P03NS3 G); the record's earlier parts restated (Nexperia
-  BUK6Y10-30P and PXP9R1-30QL, AOS AONS21357). Sixteen parts. **An N-channel FET is outside the drive the design has**: BATDRV pulls the
+  |VGS| rating at least 11.5 V (BATDRV's largest printed drive), like parts in parallel on one BATDRV node. Read: makers whose sheets print a
+  Ciss or QG(tot) maximum, seven Vishay automotive SQ P-channel parts (SQJ403EP, SQJ407EP, SQJA37EP, SQJQ131EL, SQS407ENW,
+  SQS415ENW, SQS401EN; a sample of the range from its own product pages) and eight parts of the -30 V row of Infineon's 2023 P-channel
+  selection guide (BSC030P03NS3 G, BSC060P03NS3E G, BSC084P03NS3 G, BSZ086P03NS3 G, BSZ120P03NS3 G, BSZ180P03NS3 G, IPD042P03L3 G,
+  BSO301SP H); the record's earlier parts restated (Nexperia BUK6Y10-30P and PXP9R1-30QL, AOS AONS21357). Eighteen parts. The guide's
+  other -30 V parts (SPD50P03L G, the IR HEXFET parts IRF9310, IRFH9310, IRF9317, IRF9321, IRF9388 and the duals) were not read. **An N-channel FET is outside the drive the design has**: BATDRV pulls the
   gate 10 V below VSYS (p.5), a high-side N-channel part needs a gate above its source, and TI's BATDRV loops are P-channel loops.
   Not read: makers whose sheets print typical capacitances only (the class's usual practice; a typical gives no limit), and TI's own
   P-channel NexFET range, which this round did not open (a search line for the supplier's phase 1).
@@ -84,6 +85,8 @@ sha256). The eleven sheets new to the tree are held back by their terms (`fetch_
 | BSC084P03NS3 G (Infineon, Rev 2.1 2009) | 150 C, 125 C | 8.4 bound | 3.19 / 4.79 at -15 V; 58 nC | 1; 0 | 7.64 (bound) | 10.35 A | 1.8 K/W; 200 A | FAILS T |
 | BSZ120P03NS3 G (Infineon, Rev 2.1 2009) | 150 C, 125 C | 12.0 bound | 2.24 / 3.36 at -15 V; 45 nC | 1; 1 | 5.34 (bound) | 8.66 A | 2.4 K/W; 160 A | FAILS T |
 | BSZ180P03NS3 G (Infineon, Rev 2.1 2009) | 150 C, 125 C | 18.0 bound | 1.48 / **2.22** at -15 V; 30 nC | **2**; 1 | **14.25** (bound) | 14.15 A | 3.1 K/W; 160 A | FAILS T |
+| IPD042P03L3 G (Infineon, Rev 2.2 2014; DPAK) | 175 C, 150 C | 4.2 bound | 9.29 / 12.40 at -15 V; 175 nC | 0; 0 | no set | | 1.0 K/W; 280 A | no G |
+| BSO301SP H (Infineon, Rev 1.32 2010; SO-8) | 150 C, 125 C | 8.0 bound | 4.43 / 5.89 at -25 V; 136 nC | 0; 0 | no set | | RthJS 35 K/W; 60 A | no G |
 
 "Bound" is the favourable -10 V, 25 C maximum: an upper bound on the bar, so each such FAIL holds at any hot figure. Every printed ISM above is
 under the 242.9 A docking pulse except the BUK6Y10-30P's 320 A and the SQJQ131EL's 1100 A; the PXP9R1-30QL and the AONS21357 print
@@ -93,11 +96,16 @@ none (D, information).
 
 For n like FETs, G by Ciss and T together need Ciss(max) x R under 5 nF x 4 (n - 1) B / (bar I^2 n), which rises with n towards
 **52.87 nF.mOhm** for a part rated 175 C (limit 150 C) and **31.45 nF.mOhm** for a part rated 150 C (limit 125 C); by QG the same limit is
-528.7 and 314.5 nC.mOhm. Every part read with a printed Ciss maximum sits above its own limit (from 36.1 nF.mOhm, the BSC060P03NS3E G on
-its favourable bound against 31.45, to 137.4, the SQS415ENW on its allowance against 52.87), and the parts with no printed maximum give no
-G at all. So **no set of the parts read meets G and T together at any count**, whatever pour the count is given. The reason is physical
-and general: a lower gate load means a smaller die and a higher RDS(on), and the product of the two printed maxima, not either alone,
-decides; no P-channel technology read reaches the product the case needs.
+528.7 and 314.5 nC.mOhm. A part above its limit makes no set at any count. Every part read whose own Ciss maximum is under 5 nF sits
+above its limit (the nearest, the BSZ180P03NS3 G at 40.0 nF.mOhm on its favourable bound against 31.45; the SQJA37EP at 66.5 on its
+allowance against 52.87); the six whose single Ciss maximum is at or over 5 nF (SQJ407EP, SQJQ131EL, BSC030P03NS3 G, BSC060P03NS3E G,
+IPD042P03L3 G, BSO301SP H) make no set at all; the three with no printed maximum give no G at any count. So **no set of the parts read
+meets G and T together at any count**, whatever pour the count is given; the direct screen shows it too, since a set's bar rises with
+its count and each part's largest G count already fails. One limit of the bound is stated: the IPD042P03L3 G sits under the 175 C
+limit on its favourable 25 C bound (52.1 against 52.87; no hot maximum printed), so the bound would not exclude a smaller die of that
+technology at a large count on that reading; its own die is over 5 nF. The reason the search ends is physical: a lower gate load means
+a smaller die and a higher RDS(on), and the product of the two printed maxima, not either alone, decides; no part read reaches the
+product the case needs on its printed figures.
 
 ## 5. L4A-70: the selection, and the fallback drafted ([OUT 5], [OUT 6])
 
@@ -173,7 +181,7 @@ removed by a named measurement or vendor statement (E-05, E11-29, E11-36).
   ruled_by: "SESSION (W136) under the owner's rulings of 21 and 26 September 2026"
   ruled_on: 2026-10-07
   reversed_by: "a printed Ciss or QG(tot) maximum, on a sheet this round did not read, that puts a set of P-channel parts under 5 nF with its own worst-split bar at or above 40.78 K/W at the breaker's held 23.93 A on printed RDS(on) maxima (l4e11_fet.py's screen reads it MEETS ALL THREE); or a negative E-05, which applies fallback/apply_gen_sch_a_fetpair.py and fallback/apply_check_dd7_fetpair.py through RELEASE.md"
-  outcome: "No set of the 16 parts read meets TI's 5 nF on printed maxima, the 40.78 K/W bar and the held 23.93 A together, at any count (the class bound: Ciss max x R above 52.87 nF.mOhm for 175 C parts and 31.45 for 150 C parts). (i)(a), the three BUK6Y10-30P, stays selected and CONDITIONAL on E-05, E11-29 and E11-36; E11-37 OPEN. The fallback (ii), the pair with Q42 removed, is drafted, composed and mutated, and stays conditional on Q-TI-17 (e) and on its 20.39 K/W bar."
+  outcome: "No set of the 18 parts read meets TI's 5 nF on printed maxima, the 40.78 K/W bar and the held 23.93 A together, at any count (the direct screen; the class bound, Ciss max x R against 52.87 nF.mOhm for 175 C parts and 31.45 for 150 C parts, holds for every part whose own Ciss maximum is under 5 nF). (i)(a), the three BUK6Y10-30P, stays selected and CONDITIONAL on E-05, E11-29 and E11-36; E11-37 OPEN. The fallback (ii), the pair with Q42 removed, is drafted, composed and mutated, and stays conditional on Q-TI-17 (e) and on its 20.39 K/W bar."
 - id: L4E11-FET-D2
   title: "L4A-71: row (c)'s selection gate between RE-10's M-A and M-B, coupled with HO-L and E11-29"
   authority: SESSION
@@ -195,10 +203,11 @@ removed by a named measurement or vendor statement (E-05, E11-29, E11-36).
   (L4E11-FET-D2): M-A first, CONDITIONAL on E-05, E11-29 and E11-36; M-B on M-A's end condition". L4A-70 reads DONE AS CONDITIONAL on
   E-05 (register section 1, the case it names).
 - **For L4-E9's UDC-1 row (record l4e9, its owner's):** the (S3) cell, "none found among the parts read (L4-E11 16a, 16c)", can cite this
-  round: 16 parts, the class bound, the best printed-maximum sets each under the bar.
+  round: 18 parts, the class bound, the best printed-maximum sets each under the bar.
 - **For REMAINING-ENGINEERING HO-L (record l4close):** "(ii) two FETs, the BUK6Y10-30P pair ... a draft then owed" is now drafted
   (`fallback/apply_gen_sch_a_fetpair.py`), still conditional.
-- **For the supplier's phase 1:** TI's P-channel range and makers that print typical capacitances only were not read; a part found there
+- **For the supplier's phase 1:** TI's P-channel range, the rest of Infineon's and Vishay's -30 V P-channel parts and the makers that print typical
+  capacitances only were not read; a part found there
   enters the same screen (`l4e11_fet.py`), and the class bound says what it must beat.
 
 ## 9. Status
