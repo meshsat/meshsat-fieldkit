@@ -474,7 +474,7 @@ def figures():
     end = mm.end(1) - mm.start(0)
     F["t3_tdmr"] = min(("MIN", "NOM", "MAX"), key=lambda c: abs(hdr.index(c) + len(c) - end))
     # W152 (W150's F4): the hold check's time base. DS12110 Rev 11 Table 136 (p.233, rev V): the LSI's frequency; RM0433 Rev 8 p.426
-    # (RCC_BDCR: the RTC's source survives every reset but a backup domain reset; the HSE is lost at a pin reset), p.428 (RCC_CSR: the
+    # (RCC_BDCR: the RTC's source kept through every reset but a backup domain reset; the HSE is lost at a pin reset), p.428 (RCC_CSR: the
     # RTC's request keeps the LSI running whatever LSION), p.1910 and p.1932 (the sub-second counter's clock; RTC_PRER untouched by a
     # system reset); DS12110 Table 147 (p.241): NRST's VIH
     t = page(DS, 233)
@@ -1069,7 +1069,8 @@ def main():
     w("       p.332): %s set, %s clear (W145-3)," % (" and ".join(k for k in hdr if pat2[k]), ", ".join(k for k in hdr if not pat2[k])))
     w("       and (W148-3, restated by SESSION W152-1 on W150's F4) the RTC's time from the write to the restart at least %.0f ms, else HOLD" % (
         T_HOLD_CHECK_S * 1e3))
-    w("       FAILED. The time base: the RTC clocked by the LSI, which a pin reset does not stop: RCC_BDCR, \"%s\" (RM0433 8.7.26," % F["rtc_q"]["bdcr"])
+    w("       FAILED. The time base: the RTC clocked by the LSI, which a pin reset does not stop (PRINTED by reference, V-B24 confirms it):")
+    w("       RCC_BDCR, \"%s\" (RM0433 8.7.26," % F["rtc_q"]["bdcr"])
     w("       p.426), RTCSEL \"%s\"; LSIRDY \"%s\" (8.7.27, p.428); never the HSE: \"%s\" (p.426);" % (
         F["rtc_q"]["lsisel"], F["rtc_q"]["lsirdy"], F["rtc_q"]["hse"]))
     w("       board B draws no LSE crystal (each controller's PC14 and PC15, pins 8 and 9, open: section 8 reads them). The LSI runs at %.1f to" % (f_lo / 1e3))
@@ -1401,9 +1402,9 @@ def main():
           "CONDITIONAL (S4)"),
          ("S-i", "a latent monitor fault, then a firmware VOS0 entry", "105 C", "a double fault; window at most %.0f s" % T_TEST_S, "RESIDUAL (single-fault)"),
          ("S-k", "the reset loop: every excursion the monitor registers, at every boot", "105 C",
-          "duty <= %.3f %%, rise <= %.3f K with T10's feedback, any fault length; ZthJA(t_resp) <= %.2f K/W" % (duty * 100, rise, z_loop),
+          "duty <= %.3f %%, rise <= %.3f K, any fault length; ZthJA(t_resp) <= %.2f K/W" % (duty * 100, rise, z_loop),
           "CONDITIONAL (S1, S2; C2, C3)"),
-         ("S-l", "a latent hold fault (CT's pull-up lost), then the reset loop", "105 C", "a double fault; W148-3's hold timing, window at most %.0f s" % T_TEST_S,
+         ("S-l", "a latent hold fault (CT's pull-up lost), then the reset loop", "105 C", "a double fault; W148-3's hold timing (W152-1), window at most %.0f s" % T_TEST_S,
           "RESIDUAL (single-fault)"),
          ("S-m", "the self-reset loop: an image resetting itself before the monitor registers (W148-F4)", "105 C",
           "no printed cadence; S-k's if every excursion registers (5i: S2 extended)", "CONDITIONAL (S2 extended, S1; C2, C3; row R-4)"),
