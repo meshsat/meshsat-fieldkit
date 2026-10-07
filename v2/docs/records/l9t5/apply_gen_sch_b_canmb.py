@@ -25,6 +25,14 @@ vote of the other two on its SHDN or its LDO's EN". This draft takes it on SHDN,
   3. THE LIMITER REMOVED (SESSION W137-D2, reversible): the six TPS3701 share comparators, their 1 MOhm and 150 kOhm dividers, 1 uF
      filters and LIMO pull-ups go (their places re-used above); the rail trips of iocguard stay as they are (RE-6 and RE-7 are L4A-56 to
      L4A-58's).
+  4. THE SELF-TEST this circuit is exercised by in service (firmware, FW-B22 restated in apply_hw_fw_contract_canq.py; RESTATED in
+     round 9 by W143 on W139's analysis, record l9t5 l9t5_canmb.out section 7): a 12-window cycle with both fabrics at once (in window n
+     fabric A's target is A, B or C by (n mod 12) div 4 and fabric B's the next controller, the phase S, P1, P2 or V by n mod 4), acting
+     only in the hold 52 to 88 ms, outside every state slot: S the target's own SHDN request; P1 and P2 one peer's vote alone; V the
+     target's one malformed test frame struck by both readers' attribution paths, whose votes then act to the hold's end. A fabric's
+     phase runs when in the previous window every controller received every other's state frame on that fabric, so every S phase runs
+     as worded and the surviving fabric keeps being tested while the other is down; a latent fault of this circuit is found within
+     2.60 s. The latched supervisor's restart (W139-F2) is apply_gen_sch_b_canen.py, after this draft and W138's regstage.
 CON-004's two fabrics, their six transceivers, their four split terminations and the two break links of test A7 are untouched.
 Designators: twelve new resistors R611 to R614, R631 to R634, R651 to R654 and six new buffers U580 to U585; the gates take U47, U48,
 U57, U58, U67, U68 with C944, C946, C954, C956, C964, C966, the buffers C943, C945, C953, C955, C963, C965, the TXD pull-ups R606, R610,
