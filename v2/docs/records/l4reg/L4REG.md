@@ -1,4 +1,4 @@
-**Status (7 October 2026, 06:16 CEST): DONE: Layer 4 task L4A-56 as re-scoped by W135's CHANGE-METHOD: three approaches compared on printed figures (A the TPS2553-1 limiter with a replacement regulator; B K1, a buck per supervisor; C the regulator's own limit), A selected (SESSION W138-1: TI TPS2553-1 at RILIM 49.9 kOhm with TI TPS73733DCQRM3), its draft `apply_gen_sch_b_regstage.py` composed after record l9t5's iocguard and with W137's canmb in either order, read by pin and value, eight mutations failing, three refusals; the acceptance judge with five failing mutations; the tests. NOT DONE: no independent check; nothing applied; L4A-57's, L4A-58's and L4A-61's own work; nothing physical. NEXT: the coordinator's reading, then one focused independent check of the selection (constitution section 6).**
+**Status (7 October 2026, 06:24 CEST): DONE: Layer 4 task L4A-56 as re-scoped by W135's CHANGE-METHOD: three approaches compared on printed figures (A the TPS2553-1 limiter with a replacement regulator; B K1, a buck per supervisor; C the regulator's own limit), A selected (SESSION W138-1: TI TPS2553-1 at RILIM 49.9 kOhm with TI TPS73733DCQRM3), its draft `apply_gen_sch_b_regstage.py` composed after record l9t5's iocguard and with W137's canmb in either order, read by pin and value, eight mutations failing, three refusals; the acceptance judge with five failing mutations; the tests (test_l4reg: "tests: 8 passed, 0 failed, 0 skipped"; test_pdftext_input: "tests: 19 passed, 0 failed, 0 skipped"; test_l9t5 with test_applier_state: "tests: 62 passed, 0 failed, 0 skipped"). NOT DONE: no independent check; nothing applied; L4A-57's, L4A-58's and L4A-61's own work; nothing physical. NEXT: the coordinator's reading, then one focused independent check of the selection (constitution section 6).**
 
 # Record l4reg: the supervisors' regulator stage (Layer 4 task L4A-56, re-scoped by W135's CHANGE-METHOD; RE-6 and RE-7)
 
@@ -18,7 +18,7 @@
   committed or held texts through `v2/docs/records/_lib/pdftext.py`, and reproduces record l9t5's corner and T10-A3 and W135's figures
   before using them. Its test is `v2/ecad/tools/tests/test_l4reg.py`.
 - **Labels:** PRINTED (a maker's limit or tested row), TYPICAL, DESCRIBED (the maker's prose, no limit), DECLARED, MODEL, INFERRED,
-  ASSUMPTION, SESSION. A TYPICAL figure is never used as a limit (the judge refuses one, OUT 8).
+  ASSUMPTION, SESSION. A TYPICAL figure is never used as a limit (the judge refuses one at J0 and FAILS, OUT 8).
 
 ## 1. The rows every approach is judged on (OUT 2)
 
@@ -45,7 +45,7 @@ the LDO's worst drop 0.8669 V. Criterion: 125 C for every sustained state, 150 C
 | T10-A3 | +0.1161 V at 0.5704 A on all three (3.6082 V against 3.4921 V; the dropout INFERRED linear from 250 mV at 1 A) | input 3.7579 V at most, under the AP63203's recommended 3.8 V: FAILS at 14.0 k (R602 back to 10.7 k needed) | as A's regulator |
 | Area a supervisor (MODEL on package outlines) | +49.7 mm2 against the tree, +24.6 mm2 against round 6's drafted state; 3.1 % of the 1624 mm2 pocket | +23.5 mm2 (+35.5 with A's limiter) | +37.8 mm2 |
 | Board A | unchanged (R602 14.0 k kept) | R602 10.7 k: iocpre and iocset withdrawn, L9T5-D9 reversed | unchanged |
-| HO-E | not covered (IOSmin over 0.1936 and 0.328 A): L4A-59 | not covered | not covered |
+| HO-E | not covered: IOSmin is over VOS0's 0.1936 A and the H743's 0.328 A; the served 0.1855 A against 0.1936 A is a 4.4 % band no limiter reaches, which A neither narrows nor widens (L4A-59) | not covered | not covered |
 | Verdict | HOLDS on its rows (the judge, OUT 8) | NOT SUPPORTED ON PRINTED FIGURES; the fallback | FAILS; not taken |
 
 **Within A, the regulators read** (OUT 4, each at the limiter's maximum from the corner):
@@ -117,7 +117,8 @@ entries; +5V_IOC's load allocations on U45, U55, U65; the rail's source text.
 What it offers once independently checked: RE-7's peak-current containment (a constant-power bound on the regulator at the limiter's
 printed maximum, for every waveform under the limit with the output in regulation, cx46's periodic countermodel included) and RE-6's
 response replaced by a printed limit with a printed latch timer (the limiter's response itself, 2 us, is TYPICAL only and is not used:
-the bound is the DC limit). It does not close, and leaves open: HO-D (the limiter's latent loss of its limit, L4A-58), HO-E (L4A-59),
+the bound is the DC limit; the regulator's ground current, 880 uA TYPICAL at 1 A with no maximum printed, is outside it: 3.6 mW,
+0.28 K on the printed theta, MODEL on a TYPICAL, against the 11.2 K margin). It does not close, and leaves open: HO-D (the limiter's latent loss of its limit, L4A-58), HO-E (L4A-59),
 the realisation of the printed theta on board B's copper (E-17), the band between VOUT + VDO and VOUT + 0.5 V (V-T10-DROP), the
 propagation into T10's rows and Layer 5's FW-B20 to FW-B22 and V-B20 to V-B23 (L4A-61), and the given-up average bound on the
 controller's own current (L4REG-F7). L4A-57's acceptance can read the judge's J2 on the printed steady theta (W135's finding for it).
@@ -141,6 +142,8 @@ controller's own current (L4REG-F7). L4A-57's acceptance can read the judge's J2
   FW-B20, not VOS0 alone.
 - **L4REG-F8** (the coordinator): when record l4lim is merged its fetch script lists the TPS2553 sheet too, and pdftext.FETCH's entry
   becomes ("l4lim", "l4reg").
+- **L4REG-F9** (the coordinator, L4-E9's change list): `apply_gen_sch_b_regstage.py` needs its row on board B after record l9t5's
+  iocguard (and W137's canmb, either order); the register's rows L4A-56 and L4A-57 read this record's selection.
 
 ## 7. What this record does not do
 

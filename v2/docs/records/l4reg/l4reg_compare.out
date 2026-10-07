@@ -69,6 +69,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    TPS737    acc_head    0.5                                  PRINTED  SBVS067W 5.6 p.6 (the accuracy row's condition VIN >= VOUT + 0.5 V)
    TPS737    icl         (1.05, 1.6, 2.2)                     PRINTED  SBVS067W 5.6 p.6 (min / typ / max)
    TPS737    isc         0.51                                 TYPICAL  SBVS067W 5.6 p.6 (typical only, new silicon)
+   TPS737    ignd        0.0008799999999999999                TYPICAL  SBVS067W 5.6 p.6 (typical only, new silicon, 1 A)
    TPS737    vin         (2.2, 5.5)                           PRINTED  SBVS067W 5.3 p.4
    TPS737    iout        1.0                                  PRINTED  SBVS067W 5.3 p.4
    TPS737    tj_op       125.0                                PRINTED  SBVS067W 5.3 p.4
@@ -125,6 +126,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    (2) THE REGULATOR'S JUNCTION at 76.25 C air on its PRINTED 76.0 C/W: at the limiter's maximum 0.5704 A, 113.8 C (holds 125 C for every waveform
        under the limit: a constant-power bound, the cx46 countermodel's periodic peaks included); at S1 0.1855 A, 88.5 C; the realisation of the
        printed figure on board B's copper is a Layer 10 means (JEDEC 2s2p, 3×2 vias under the tab): read at E-17's coupon, never assumed
+       its ground current (880 uA TYPICAL at 1 A, no maximum printed) is outside the bound: 3.6 mW at the top input, 0.28 K on the printed
+       theta (MODEL on a TYPICAL), against the 11.2 K margin
        the limiter's own junction in service at 0.5704 A: 84.3 C (0.135 ohm, 182.6 C/W, PRINTED); its continuous rating 1.2 A to 125 C TJ PRINTED
    (3) THE OUTPUT SHORT: (i) a short above the regulator's foldback draws the limit and latches within 10 ms (PRINTED): at most 23.5 mJ (MODEL);
        (ii) a hard short folds the TPS737 back to its own short-circuit current, 0.510 A TYPICAL only, which may sit under IOSmin: the limiter
@@ -150,7 +153,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
        (the region lists carry no part of any P0 draft yet, round 6's included: finding L4REG-F6). Parts: two ICs and three passives a
        supervisor in place of round 6's two ICs and six passives; order codes owed (finding L4REG-F4)
    (6) HO-E: unchanged by A. The H743's VOS0 105 C current 0.1936 A and its 125 C current 0.328 A depend on its own 45 C/W and the air, not
-       on the regulator; IOSmin 0.4702 A sits over both, so no current limit of this stage holds the controller (W127 finding 2, L4A-59)
+       on the regulator; IOSmin 0.4702 A sits over both, so no current limit of this stage holds the controller (W127 finding 2, L4A-59):
+       the largest served S1 0.1855 A against VOS0's 0.1936 A is a 4.4 % band no limiter's printed tolerance reaches; A neither narrows nor widens it
    (7) NEW FAILURE MODES: a latched limiter (row 8, or any overload over IOSmin for 5 ms) leaves its supervisor dark until EN or power is
        cycled (nothing in this draft drives EN: the peers' restart is L4A-54's or L4A-58's, finding L4REG-F3); the limiter's latent loss of
        its limit (HO-D, L4A-58: FAULT asserts only while limiting); the legacy silicon fitted under a code without M3 (T10-A3 then fails at
@@ -215,8 +219,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    J5 holds rated output 1.00 A, current limit at least 1.05 A, input to 5.50 V, against 0.5704 A and the pre-regulator's top 4.1174 V
    J6 holds a short drawing the limit latches within 10 ms (23.5 mJ at most, MODEL); the regulator's output short-circuit duration Indefinite (PRINTED)
    J7 holds three limiters at their maximum 1.7111 A against U601's 3 A and the lead's 10 A
-   mutated, the limiter's maximum taken at its TYPICAL 0.520 A:                        REFUSED (labels)
-   mutated, the regulator's dropout taken at its TYPICAL 0.122 V at 1 A:               REFUSED (labels)
+   mutated, the limiter's maximum taken at its TYPICAL 0.520 A:                        FAILS (J0)
+   mutated, the regulator's dropout taken at its TYPICAL 0.122 V at 1 A:               FAILS (J0)
    mutated, the AP2112K (SOT25, 184 C/W PRINTED, its rows) at the new current:         FAILS (J2, J4)
    mutated, the code without M3 (legacy silicon may ship: 0.500 V at 1 A, +-3 %):      FAILS (J4)
    mutated, the regulator's junction-to-ambient one step over the requirement, 98.7 C/W: FAILS (J2)
@@ -260,6 +264,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      watchdog proof should cover every state outside FW-B20, not VOS0 alone
    L4REG-F8 (the coordinator): pdftext.FETCH lists the TPS2553 sheet for record l4reg; when record l4lim (fnd/l4lim) is merged its fetch
      script lists it too, and the entry becomes ('l4lim', 'l4reg') (test_pdftext_input's W37 map)
+   L4REG-F9 (the coordinator, L4-E9's change list): apply_gen_sch_b_regstage.py needs its row on board B after record l9t5's iocguard
+     (and W137's canmb, either order), as V6-m11 asked of canshdn; the register's rows L4A-56 and L4A-57 read this record's selection
 
 11. THE PREDICATES
    record l9t5's corner and T10-A3 reproduce from its modules; W135's figures reproduce from them and the makers' rows              yes
@@ -270,7 +276,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    K1's input is under its recommended range at 14.0k; its loss has no printed bound                                                yes
    the regulator's own limit (C) passes 150 C at its printed maximum                                                                yes
    the judge holds on the selected stage                                                                                            yes
-   each mutation of the judge reads REFUSED or FAILS (a typical as a limit, the AP2112K, no M3, theta over)                         yes
+   each mutation of the judge FAILS (a typical as a limit refused at J0, the AP2112K, no M3, theta over)                            yes
    the draft composes after iocguard, reads DRAWN by pin and value, and the state before it FAILS                                   yes
    every netlist and value mutation FAILS                                                                                           yes
    with canmb in either order the draft reads DRAWN, the netlists are identical; no part, signal net or controller pin is shared    yes
