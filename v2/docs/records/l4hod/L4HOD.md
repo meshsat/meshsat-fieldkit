@@ -52,7 +52,10 @@ B, C 20 s apart), then each supervisor every 3600 s, the three 1200 s apart.
 | 4 | 3.604 s | restart votes for 2.0 s, release: the output back over 3.3 V, FAULT high; the target boots and rejoins within 0.800 s (W139) | RESTORE FAILED: canen's automatic restart retries every 10 s |
 
 Any failure: both peers open their halves, report the verdict (state frames, the kit's status path), restore the target if latched,
-and stop that supervisor's tests until the next start (W146-D6). Continuous checks every window (a fault on the second consecutive
+and stop that supervisor's tests until the next start (W146-D6). Each peer records the target and the step in its backup registers
+before step 3 and clears it after step 4, so a peer that boots with a step 3 recorded (the survivors reset by the step's transient,
+W146-F10) takes that test as failed and stops its tests (DRAFTED; the registers' retention through a brown-out reset is an ASSUMPTION,
+RM0433's backup domain not read here). Continuous checks every window (a fault on the second consecutive
 failure, within 0.3 s): each peer reads both targets' FAULT and output; FAULT low with the output normal, or an output out of its band,
 is a test-path fault. The FAULT window 4.75 to 10.25 ms is the printed deglitch widened by 0.25 ms for the 50 us sampling and the
 divider's 66.7 us time constant (MODEL).
@@ -98,7 +101,7 @@ service residual (W146-F8), not a protection one.
 | J5 | the output with a healthy limit reads at most 1.8419 V, with the limit lost at least 3.3130 V; the abort at 2.5 V between them |
 | J6 | each half alone 4.0 ms, under the 5.0 ms least deglitch |
 | J7 | the reading 1 to 4 ms, before the least deglitch; its start 500 times the TYPICAL 2 us response (ASSUMPTION that the limit has settled) |
-| J8 | the limiter's 16.1 mJ in a test, inside W138's 23.5 mJ latch case |
+| J8 | the limiter's 15.8 mJ in a test, inside W138's 23.5 mJ latch case |
 | J9 | the gates at least 2.8141 V, the upper's VGS at least 2.7150 V: over the 2.5 V RDS(on) row |
 
 Mutations, each FAILS: a TYPICAL deglitch used as the bound (J0); a test that cannot detect a lost limit, a 10 Ohm load that never
@@ -189,7 +192,9 @@ The tests, as run.py printed them (7 October 2026, this branch, the held sheets 
   test's 1.4396 A step with a lost limit, and the base design's own step of up to IOSmax 0.5704 A at any supervisor's overload (W138's
   J7 is a DC row). PROVISIONAL; the hold-up a step needs is 26.3 us (section 4, MODEL), which U601's printed figures do not bound
   (its load-transient response is printed only as TYPICAL curves); a desk transient model of U601 and the lead, or the supplier's
-  measurement of section 11, task 2.
+  measurement of section 11, task 2. Were the survivors reset by it, the quorum would be lost for their boot and rejoin (IOHA row 4: every
+  voted bit on its pull-down, the banks on their home modules, for about 0.8 s), once: the backup-register rule of section 3 stops that
+  supervisor's tests.
 
 ## 11. The supplier's tasks (amendment 1; none a gate of this desk round)
 

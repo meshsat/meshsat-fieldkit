@@ -13,7 +13,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    c010ff134aa457ee v2/docs/records/l9t5/l9t5_canq.out
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
-   f8ae03bea14e144a v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
+   89576bfb472d983e v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
    9fbda7a6e79430c2 v2/docs/records/l4reg/l4reg_compare.out
    161f79300dc27748 v2/docs/records/l4reg/l4reg_compare.py
@@ -256,7 +256,11 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
       the enable is toggled'); the target boots and rejoins within 0.800 s (W139: boot 0.5 s ASSUMPTION, 2 windows listening,
       its slot)
    any failed check: both peers open their halves, the verdict goes into their state frames and the kit's status path, the target is restored
-     if latched (step 4) or simply readmitted if never latched; that supervisor's tests stop until the next start (DRAFTED, W146-D6)
+     if latched (step 4) or simply readmitted if never latched; that supervisor's tests stop until the next start (DRAFTED, W146-D6); each peer
+     writes the target and the step to its backup registers before step 3 and clears it after step 4, so a peer that boots with a step 3
+     recorded (the survivors reset by the step's transient, W146-F10) takes that test as failed (LIMIT NOT SHOWN) and stops its tests: the
+     transient cannot repeat on every restart (DRAFTED; the registers' retention through a brown-out reset is RM0433's backup domain, not
+     read here: ASSUMPTION; DS12110 describes VBAT supplying that domain when VDD is absent)
    THE INTERVAL THE TARGET IS OUT of the quorum: 5.945 s (the announcement 0.1 s, step 1 2.190 s, settle 0.020 s, step 2 0.012 s, step 3 0.019 s, step 4 3.604 s)
      (MODEL on PRINTED, DRAFTED and the boot and domain ASSUMPTIONs; record l4canen's recovery 5.603 s is step 4 plus its 2.0 s decision)
    THE SERVICE LOST: two of three serve for that interval (IOHA row 3: ownership unaffected); the quorum has no spare then (a

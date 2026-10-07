@@ -1019,7 +1019,11 @@ def main():
             for i_, x in enumerate(textwrap.wrap("step %s, %s (%.3f s): %s" % (code, lab, dur, txt), 122)):
                 w(("   " if i_ == 0 else "      ") + x)
         w("   any failed check: both peers open their halves, the verdict goes into their state frames and the kit's status path, the target is restored")
-        w("     if latched (step 4) or simply readmitted if never latched; that supervisor's tests stop until the next start (DRAFTED, W146-D6)")
+        w("     if latched (step 4) or simply readmitted if never latched; that supervisor's tests stop until the next start (DRAFTED, W146-D6); each peer")
+        w("     writes the target and the step to its backup registers before step 3 and clears it after step 4, so a peer that boots with a step 3")
+        w("     recorded (the survivors reset by the step's transient, W146-F10) takes that test as failed (LIMIT NOT SHOWN) and stops its tests: the")
+        w("     transient cannot repeat on every restart (DRAFTED; the registers' retention through a brown-out reset is RM0433's backup domain, not")
+        w("     read here: ASSUMPTION; DS12110 describes VBAT supplying that domain when VDD is absent)")
         w("   THE INTERVAL THE TARGET IS OUT of the quorum: %.3f s (the announcement %.1f s, step 1 %.3f s, settle %.3f s, step 2 %.3f s, step 3 %.3f s, step 4 %.3f s)" % (
             T["out"], WINDOW, T["step1"], T_SETTLE, T["step2"], T["step3"], T["step4"]))
         w("     (MODEL on PRINTED, DRAFTED and the boot and domain ASSUMPTIONs; record l4canen's recovery %.3f s is step 4 plus its %.1f s decision)" % (
