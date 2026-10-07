@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 2533 -l 2533 v2/vendor/st/st-rm0433-rev8.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "2533",
+  "-l",
+  "2533"
+ ],
+ "pdf": "v2/vendor/st/st-rm0433-rev8.pdf",
+ "pdf_sha256": "9ba54135736a47a302cdc28fdc7ca8f23c6eed5a646fa0a639af6ed2ad71336e",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2533.txt",
+ "text_bytes": 2846,
+ "text_sha256": "6d1e639ddcc9cdbd5aca7fd5b385118a0d10165346eb6b40f93f16d8c0efeac4"
+}
