@@ -49,7 +49,8 @@ sys.dont_write_bytecode = True
 PDFTEXT = {
     "v2/vendor/st/st-es0392-rev15.pdf": [["-layout", "-f", "48", "-l", "48"]],
     "v2/vendor/st/st-rm0433-rev8.pdf": [["-layout", "-f", "533", "-l", "533"], ["-layout", "-f", "2469", "-l", "2469"],
-                                        ["-layout", "-f", "2470", "-l", "2470"], ["-layout", "-f", "2532", "-l", "2532"],
+                                        ["-layout", "-f", "2470", "-l", "2470"], ["-layout", "-f", "2529", "-l", "2529"], ["-layout", "-f", "2530", "-l", "2530"],
+                                        ["-layout", "-f", "2532", "-l", "2532"],
                                         ["-layout", "-f", "2533", "-l", "2533"], ["-layout", "-f", "2534", "-l", "2534"],
                                         ["-layout", "-f", "2535", "-l", "2535"]],
     "v2/vendor/st/st-stm32h743xi-datasheet.pdf": [["-layout"]],
@@ -155,6 +156,11 @@ def figures():
     p = page("rm", 2470)
     m = need(p, r"In DAR mode all transmissions are automatically canceled after they started on the CAN\s*\n\s*bus\.", "DAR")
     Q["dar"] = "'" + one(m.group(0)) + "' (RM0433 Rev 8 p.2470)"
+    p = page("rm", 2529)
+    m = need(p, r"10: External timestamp counter from TIM3 value used \(tim3_cnt\[0:15\]\)", "TSS = 10")
+    need(page("rm", 2530), r"The internal/external timestamp counter value is captured on start of frame \(both Rx and Tx\)", "the capture at SOF")
+    Q["tsc"] = ("FDCAN_TSCC TSS[1:0] = 10: 'External timestamp counter from TIM3 value used (tim3_cnt[0:15])', and 'The internal/external "
+                "timestamp counter value is captured on start of frame (both Rx and Tx)' (RM0433 Rev 8 pp.2529 and 2530)")
     p = page("rm", 2532)
     need(p, r"The receive error counter has reached the error passive level of 128", "the error passive level")
     P["ep_level"] = 128
@@ -200,6 +206,8 @@ def figures():
     t = text(DOCS["t10_out"])
     P["f2_a"] = float(need(t, r"\(f2\) both fabrics faulted, both transceivers driving into their faults: (\d\.\d+) A", "(f2)").group(1))
     P["f2v_a"] = float(need(t, r"rev V: held (\d\.\d+) A, 184\.2 C", "rev V held").group(1))
+    P["f1_a"] = float(need(t, r"\(f1\) one fabric faulted, its transceiver driving dominant into the fault.*?the other transceiver recessive: (\d\.\d+) A",
+                           "(f1)", re.S).group(1))
     t = text(DOCS["gen_a_buck"])
     need(t, r'"2": "RAIL_EN"', "U601's EN on RAIL_EN")
     return P, Q
@@ -1167,7 +1175,7 @@ def bounds(cfg, P):
 # --------------------------------------------------------------------------------------------------- 9. the contract draft and acceptance
 CONTRACT_FIGS = ("100 ms", "10 ms", "52 ms to 88 ms", "3 consecutive windows", "either fabric", "two copies that differ", "1 ms",
                  "1 s", "doubled", "64 s", "DAR = 1", "2.24.5", "bus monitoring mode", "2 windows", "never on a TXD reading alone",
-                 "11 bit-times", "2 of 3")
+                 "11 bit-times", "2 of 3", "its sender's identifier", "FDCAN_TSCC.TSS = 10")
 
 
 def contract_check():
@@ -1269,6 +1277,7 @@ DECISIONS = (
     "W139-D9 a returning controller listens in bus monitoring mode for 2 windows and sets its outputs to the read-back first",
     "W139-D10 row R8b takes W138's 'MAY latch' as written (the TPS2553 sheet is held back and not read here)",
     "W139-D11 the evaluation time 1 ms (a firmware row) and a 0.5 s boot (ASSUMPTION) in the recovery bounds",
+    "W139-D12 one time base: TIM3 for the captures and, with FDCAN_TSCC.TSS = 10, for the FDCANs' timestamps (RM0433 p.2529)",
 )
 FINDINGS = (
     "W139-F1 (Layer 6, STM32H743-COMPATIBILITY.md's ES0392 2.24.5 row): 'firmware does not use DAR' contradicts FW-B21 and FW-B22",
@@ -1337,7 +1346,7 @@ def render(res):
     w("     this draft drives EN'; row 8's held states %.4f A ((f2)) and %.4f A (rev V held, t10 10e) lie inside the band" % (P["f2_a"], P["f2v_a"]))
     w("")
     w("3. THE PRINTED FIGURES THE TIMING RESTS ON")
-    for k in ("dto", "tmode", "eleven", "shdn", "unpowered", "gpio", "gate", "mon", "dar", "busoff", "pea", "es"):
+    for k in ("dto", "tmode", "eleven", "shdn", "unpowered", "gpio", "gate", "mon", "dar", "tsc", "busoff", "pea", "es"):
         w("   " + Q[k])
     w("   RM0433 Rev 8 pp.2532 and 2533: error passive at %d, Error_Warning at %d, TEC 0 to %d (PRINTED); the increments (+8 a failed"
       % (P["ep_level"], P["ew_level"], P["tec_top"]))
@@ -1354,6 +1363,8 @@ def render(res):
     w("     V4 a dominant bit where the frame's owner sends recessive, other than the ACK slot, before any other deviation in that frame")
     w("        (the FIRST deviation: the flags of the controllers that answer it begin after it and are legal)")
     w("     V5 a start of frame outside its own slot, or more frames in a window than its slot allows (1 state and 5 event frames)")
+    w("   ONE TIME BASE: the reader's TIM3 time-stamps the peers' TXD edges (W137's capture channels) and, with FDCAN_TSCC.TSS = 10, its own")
+    w("     FDCANs' start of every frame sent or received (RM0433 p.2529), so the TXDs and its own frames are compared on one counter")
     w("   a STRIKE needs the violation AND the reader's own evidence on that fabric: its FDCAN's protocol error (FDCAN_IR.PEA, PSR.LEC) or its")
     w("     own scheduled frame lost, inside the frame the violation hit, explained by the target's deviation; NEVER a TXD reading alone: a")
     w("     dark controller (its buffer reads recessive), a stuck buffer or a stuck reading input moves no bus bit and yields no strike;")
@@ -1380,7 +1391,8 @@ def render(res):
     w("     silenced by the test (W137's draft holds 10 to 90 ms with the state frames at mid-window); both fabrics tested in parallel, fabric B's")
     w("     target the next controller; a cycle is 3 targets x 4 phases = 12 windows; the restated V phase runs the attribution path end to")
     w("     end (the target's deliberate malformed test frame, struck by both readers, their votes acting to the hold's end)")
-    w("   the decision: a peer's state frame for window n taken from EITHER fabric; two copies that differ discard that peer's state for n;")
+    w("   the decision: a peer's state frame for window n taken from EITHER fabric, counted only in its sender's slot with its sender's")
+    w("     identifier (a frame carrying another controller's identifier is discarded); two copies that differ discard that peer's state for n;")
     w("     a peer is lost after %d consecutive windows with no valid state frame on either fabric; 2 of 3 as drafted" % cfg["n_loss"])
     w("   DAR = 1 kept (L9T5-D2) with ES0392 2.24.5's printed workaround inside the controller's own slot: with slots healthy controllers")
     w("     never lose arbitration to each other, so 2.24.5 is met only against a faulty one; the compatibility page's 'firmware does not")
@@ -1418,7 +1430,9 @@ def render(res):
     w("     moves' holds (the voters at the home assignment), and the return is section 8's; the held states reach the band only while both")
     w("     transceivers drive into their faults, which a healthy controller does for at most an attempt's bits; a held TXD is ended by the DTO")
     w("     after at most %.1f ms, under the latch's %.1f ms minimum: whether the latch timer restarts when the current falls is the held" % (P["dto_max_ms"], P["latch_min_ms"]))
-    w("     sheet's (SLVS841F) and is NOT read here, so R8b takes W138's 'MAY latch' as written")
+    w("     sheet's (SLVS841F) and is NOT read here, so R8b takes W138's 'MAY latch' as written; row 7's held state (f1), %.4f A, is under"
+      % P["f1_a"])
+    w("     the limiter's least %.4f A, so no row 7 case reaches the band" % P["ios_min"])
     w("")
     w("7. THE SELF-TEST'S INTERVAL AND THE LATENT FAULTS OF THE VOTE PATH (onset anywhere in the cycle; a phase judged at its window's end,")
     w("   declared on the second consecutive failure, the verdict exchanged in the next window: simulated where a phase finds it)")
