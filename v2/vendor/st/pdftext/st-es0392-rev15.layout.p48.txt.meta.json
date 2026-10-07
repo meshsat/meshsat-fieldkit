@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 48 -l 48 v2/vendor/st/st-es0392-rev15.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "48",
+  "-l",
+  "48"
+ ],
+ "pdf": "v2/vendor/st/st-es0392-rev15.pdf",
+ "pdf_sha256": "effe23b2b79ec4ee33a8ab42b1b934cdd34100775cd6ca6b8dc8f3f2f01a1f9e",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/st/pdftext/st-es0392-rev15.layout.p48.txt",
+ "text_bytes": 3831,
+ "text_sha256": "9e7f53205453bb22d5328194aab698db210c1f53944c7f89d9169e1554251dc8"
+}

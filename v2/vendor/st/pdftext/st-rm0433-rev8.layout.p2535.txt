@@ -1,0 +1,59 @@
+RM0433                                               Controller area network with flexible data rate (FDCAN)
+
+
+ Bits 31:15 Reserved, must be kept at reset value.
+  Bits 14:8 TDCO[6:0]: Transmitter delay compensation offset
+            Offset value defining the distance between the measured delay from FDCAN_TX to FDCAN_RX and
+            the secondary sample point. Valid values are 0 to 127 mtq.
+            These are write-protected bits, which means that write access by the bits is possible only when the bit
+            CCE and bit INIT of FDCAN_CCCR register are set to 1.
+          Bit 7 Reserved, must be kept at reset value.
+       Bits 6:0 TDCF[6:0]: Transmitter delay compensation filter window length
+                Defines the minimum value for the SSP position, dominant edges on FDCAN_RX that would result in
+                an earlier SSP position are ignored for transmitter delay measurements.
+                These are write-protected bits, which means that write access by the bits is possible only when the bit
+                CCE and bit INIT of FDCAN_CCCR register are set to 1.
+
+56.5.15           FDCAN interrupt register (FDCAN_IR)
+                  The flags are set when one of the listed conditions is detected (edge-sensitive). The flags
+                  remain set until the user clears them. A flag is cleared by writing a 1 to the corresponding bit
+                  position.
+                  Writing a 0 has no effect. A hard reset clears the register. The configuration of IE controls
+                  whether an interrupt is generated. The configuration of ILS controls on which interrupt line
+                  an interrupt is signaled.
+                  Address offset: 0x0050
+                  Reset value: 0x0000 0000
+
+  31        30      29     28     27     26     25       24    23     22      21     20     19      18     17     16
+
+ Res.      Res.    ARA    PED    PEA    WDI     BO       EW    EP     ELO    Res.   Res.    DRX    TOO    MRAF   TSW
+
+                    rw     rw     rw     rw     rw       rw    rw     rw                    rw      rw     rw      rw
+  15        14      13     12     11     10      9       8      7      6      5       4      3      2       1      0
+
+ TEFL     TEFF     TEFW   TEFN   TFE    TCF     TC     HPM    RF1L   RF1F   RF1W    RF1N   RF0L    RF0F   RF0W   RF0N
+
+  rw        rw      rw     rw     rw     rw     rw       rw    rw     rw      rw     rw     rw      rw     rw      rw
+
+
+
+ Bits 31:30 Reserved, must be kept at reset value.
+        Bit 29 ARA: Access to reserved address
+                0: No access to reserved address occurred
+                1: Access to reserved address occurred
+        Bit 28 PED: Protocol error in data phase (data bit time is used)
+                0: No protocol error in data phase
+                1: Protocol error in data phase detected (PSR.DLEC different from 0,7)
+        Bit 27 PEA: Protocol error in arbitration phase (nominal bit time is used)
+                0: No protocol error in arbitration phase
+                1: Protocol error in arbitration phase detected (PSR.LEC different from 0,7)
+        Bit 26 WDI: Watchdog interrupt
+                0: No message RAM watchdog event occurred
+                1: Message RAM watchdog event due to missing READY
+
+
+
+
+                                                     RM0433 Rev 8                                           2535/3353
+                                                                                                                          2589
+
