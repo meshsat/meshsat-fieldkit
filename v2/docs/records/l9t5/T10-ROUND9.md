@@ -120,7 +120,17 @@ Board B in L4-E9's change-list order, canmb and regstage after iocguard in eithe
 netlists identical in both orders with canen (1554 parts, 1132 nets) and without (1521, 1111: W138's claim re-read on the corrected
 canmb); CON-004 HOLDS (each rail sourced by its own regulator alone, no resistor joining two rails); canmb DRAWN on the limiter's state.
 The contract draft composes after t10's on a scratch copy (exit 3 without t10's rows, 0, 0, 3 on a second application) and W139's A9
-holds on the new text. The tests, as run.py printed them, are in the commit that carries this page and the final report.
+holds on the new text. The tests, as run.py printed them (7 October 2026, this branch, the held sheets staged from a sibling as
+set 32's chain stages them):
+
+| Module | run.py's line |
+|---|---|
+| test_l4canen | tests: 11 passed, 0 failed, 0 skipped |
+| test_l9t5_canmb | tests: 10 passed, 0 failed, 0 skipped |
+| test_l9t5_canq | tests: 22 passed, 0 failed, 0 skipped |
+| test_pdftext_input | tests: 19 passed, 0 failed, 0 skipped |
+| test_applier_state | tests: 20 passed, 0 failed, 0 skipped |
+| test_l9t5 | tests: 42 passed, 0 failed, 0 skipped |
 
 ## 7. The four acceptance states (constitution section 2)
 
@@ -162,6 +172,11 @@ holds on the new text. The tests, as run.py printed them, are in the commit that
 - **W143-F8 (the coordinator, C-DEV):** each controller's rail with the route at most 0.1770 A (round 7: 0.1753 A), a labelled scenario
   inside C-DEV rev 2's conservative 0.2558 A.
 - **W143-F9 (Layer 12, IOHA A4 and A6):** a supervisor held off by J_IOCOFF is restarted by its peers every 10 s, harmlessly.
+- **W143-F10 (the coordinator, L4-E9's change list and the register):** a row for `apply_gen_sch_b_canen.py` on board B, after both
+  canmb (W137-F2's row) and W138's regstage, before R-236; L4A-54's text gains six restart votes and three read-backs (43 of 100).
+- **W143-F11 (the coordinator, the integration gates):** `inputs/l4canmb-l9t5_canmb-5d14cc85.out` (W139's copy) and
+  `inputs/l4reg-l4reg_compare-9fbda7a6.out` are verbatim copies whose own pin lines name canmb's draft at its round 7 sha; they are
+  inputs, not outputs, and a gate that re-checks every `.out` file's pins must skip `inputs/`.
 - **Supplier's tasks (none a gate of this desk round):** on the first article of board B, each route fault of canen 8 injected with the
   self-test running and found within its bound; one supervisor's limiter latched by an over-limit load and restarted by its peers
   within 5.603 s; one peer's restart vote held asserted: the supervisor never switched off; the AO3400A's leakage at 85 C and 4.2 V;
