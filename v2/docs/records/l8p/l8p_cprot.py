@@ -69,6 +69,8 @@ RECS = {
     "och": "v2/docs/records/l8p/check_l8p_och.py",
     "gen_p": "v2/ecad/tools/gen_sch_p.py",
     "l9g": "v2/docs/records/l8p/inputs/l9stk-section15.9-bb6d2c8f.md",
+    "a5": "v2/docs/records/l8p/apply_pcb_interfaces_guard_allowance.py",
+    "a9": "v2/docs/records/l8p/apply_l9stk_guard_allowance.py",
 }
 DOCS = {
     "tps37": ("v2/vendor/ti/ti-tps37-snvsbj1e.pdf", "TI TPS37, SNVSBJ1E (August 2023)"),
@@ -200,7 +202,7 @@ def compute():
 
     # 2C. a controller with a tighter printed limit spread (TI LM5066I)
     t = flat(pdftext("lm5066i"))
-    m = need(t, r"Current limit threshold voltage CL = VDD ([\d.]+) ([\d.]+) ([\d.]+) VCL mV \(VVIN_K – VSENSE\) CL = GND ([\d.]+) ([\d.]+) ([\d.]+)",
+    m = need(t, r"Current limit threshold voltage CL = VDD ([\d.]+) ([\d.]+) ([\d.]+) VCL mV \(VVIN_K \u2013 VSENSE\) CL = GND ([\d.]+) ([\d.]+) ([\d.]+)",
              "LM5066I VCL rows")
     V66 = (float(m.group(4)), float(m.group(6)))
     m = need(t, r"VIN, SENSE, OUT voltage ([\d.]+) ([\d.]+) V", "LM5066I recommended VIN")
@@ -229,9 +231,9 @@ def compute():
     need(t37, r"ISENSE VIT = 800 mV 100 nA", "TPS37 ISENSE")
     need(t37, r"VIT = 800 mV 1 2\.6 [µμ]A", "TPS37 IDD at 800 mV")
     o = flat(pdftext("opa187"))
-    need(o, r"OFFSET VOLTAGE ±1 ±10 [µμ]V VOS Input offset voltage TA = –40°C to \+125°C ±0\.001 ±0\.015 [µμ]V/°C", "OPA187 VOS and drift")
-    need(o, r"\(V–\) – 0\.1 \(V\+\) – 2 V", "OPA187 VCM")
-    need(o, r"IO = 0 mA, TA = –40°C to \+125°C 150 [µμ]A", "OPA187 IQ")
+    need(o, r"OFFSET VOLTAGE ±1 ±10 [µμ]V VOS Input offset voltage TA = \u201340°C to \+125°C ±0\.001 ±0\.015 [µμ]V/°C", "OPA187 VOS and drift")
+    need(o, r"\(V\u2013\) \u2013 0\.1 \(V\+\) \u2013 2 V", "OPA187 VCM")
+    need(o, r"IO = 0 mA, TA = \u201340°C to \+125°C 150 [µμ]A", "OPA187 IQ")
     lo, hi = O.window({"comps": {"R132": {"value": "1.00k"}, "R133": {"value": "19.3k"}}, "pins": {}, "on": {}})
     gd = O.GAIN_TOL + O.GAIN_TCR * O.GAIN_DT
     vos_tot = O.VOS
@@ -518,7 +520,8 @@ def render(R, K):
     w("   path 2's load is on VBAT, not on the loop: U62 16 uA and U63 2.25 uA at their printed table maxima (10c)")
     w("   the round 11 trip adds nothing on DOCK_EN_OUT or DOCK_EN_RET (check_l8p_och's APART); the consumers' texts:")
     w("     Layer 5 (IF-AE-DOCK, apply_pcb_interfaces_guard_allowance.py): '%s'" % LAYER5_TEXT)
-    w("     record l9stk 15.9 (apply_l9stk_guard_allowance.py): '%s'" % L9STK_TEXT)
+    w("     record l9stk 15.9 (apply_l9stk_guard_allowance.py, three edits: this restatement after the supply bullet, the acceptance item")
+    w("       and the Layer 5 row of its correction scope, each keeping the round's 30 uA as history): '%s'" % L9STK_TEXT)
     w("   the replay of L4-E11's 20f, 22 and 28 at these figures: record l4e11's round 19 (l4e11_rowc.py)")
     w("")
     w("8. VERDICTS")
@@ -551,14 +554,10 @@ FAILS = (
     ("C119 open", "the sense delay 17 us at most: a trip on an excursion E-10 allows (found)"),
 )
 
-LAYER5_TEXT = ("DOCK_EN_OUT on board A carries the thermal guard's draw: at most 40 uA with the guard cold and 50 uA tripped (record l8p 10c: "
-               "printed maxima, the off leakage at the doubling, the worst single fault), C261 and C268 330 nF each and U61's 4.7 uF "
-               "behind them; path 2's regulator and switch load VBAT, not the loop; DOCK_EN_RET may be held at ground by board A's Q60, "
-               "Q44 and board P's Q107 with Q108, and DOCK_EN_OUT by board A's Q61 (path 2 tripped); DRAFTED (R-222, R-244), applied with "
-               "record l8p's drafts; replaces round 8's 30 uA and 1 uF")
-L9STK_TEXT = ("ROUND 11 OF RECORD l8p (7 October 2026): with record l8p's fail-safe delta (two guard paths, apply_gen_sch_a_thgfs.py) the guard's "
-              "draw on DOCK_EN_OUT is at most 40 uA cold and 50 uA tripped (record l8p 10c, printed maxima with the off leakage at the "
-              "doubling), in place of the 30 uA this round allows round 8's single path; its input capacitance is C261 and C268, 330 nF each")
+import apply_pcb_interfaces_guard_allowance as A5   # noqa: E402  Layer 5's text, one source
+import apply_l9stk_guard_allowance as A9           # noqa: E402  record l9stk 15.9's restatement, one source
+LAYER5_TEXT = A5.TEXT
+L9STK_TEXT = " ".join(A9._NEW_1.split("\n", 1)[1].replace("**", "").split())
 
 
 def rows(R):
