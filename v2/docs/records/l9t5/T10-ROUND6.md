@@ -92,6 +92,10 @@ inside C-DEV rev 2's conservative 0.2558 A (a labelled scenario for the coordina
 
 ## 6. The vote path's in-service self-test (canmb 7; specified for the firmware stage, its contract rows L4A-61's; nothing applied)
 
+**SUPERSEDED in round 9 (W143, 7 October 2026, `T10-ROUND9.md` section 2, on W139's findings W139-F5 and W139-F8): the
+schedule below is round 7's and is kept as history; `l9t5_canmb.out` section 7 now prints the restated schedule (12-window cycle, both
+fabrics at once, interval 2.60 s).**
+
 One transceiver at a time, never while a fabric is down, so the quorum keeps its three controllers on the other fabric and two on the
 tested one. Per transceiver four phases, one per 100 ms window of FW-B22 (DRAFTED): S, the target's own SHDN request alone (silenced);
 P1 and P2, one peer's vote alone (not silenced); V, both peers' votes (silenced). The asserting party holds its line from 10 ms after
