@@ -2,7 +2,7 @@
 
 **Status: round 2 (5 October 2026, P0 Slot C, branch `fnd/p0t10` from `fnd/p0base` `e132db0e`) after the independent check V6
 (item D: CONFIRMED AS CONDITIONAL; minors m3 to m6), on round 1 (branch `fnd/efuse` from main `aa32332c`). Round 2 is not
-reviewed.** Round 2 in one paragraph: the composition is the P0 candidate's full one and board B regenerates whole (V6-m3; R36 750 R
+reviewed.** (Dated note, 7 October 2026, record l4k, the DESK-gate assessment's K-16: round 2 has been read since by the checks cx45 and cx46, as the section Not done below now says.) Round 2 in one paragraph: the composition is the P0 candidate's full one and board B regenerates whole (V6-m3; R36 750 R
 on U23 pin 7 and R43 1.21 k on U24 pin 7 read on it, 301 R and 909 R fail); board A's U23 is a defect by EF-F01's rule, EF-F03, with
 its draft (V6-m6); the downstream ratings are read at the inside air as well, two rows PROVISIONAL with the supplier's task (V6-m4);
 the RockBLOCK's charge pads are a build condition drafted for ASSEMBLY.md (V6-m5). C-DEV rev 2 (issued 5 October 2026, 16:00,
@@ -211,7 +211,7 @@ C2155778 on every eFuse; R36's 750 Ohm is C23241, already read by Layer 6).
 ## Not done, and why
 
 - Round 1 had one independent check (V6, item D, CONFIRMED AS CONDITIONAL); round 2 has none (the next step: the targeted recheck
-  of EF-F03, the inside-air rows and the composition).
+  of EF-F03, the inside-air rows and the composition). Dated note, 7 October 2026 (record l4k, the DESK-gate assessment's K-16): since written, round 2 was read, as filed, by two checks of the P0 candidate that carried it: cx45 on `06077cee`, "P0-4: CONFIRMED AS CONDITIONAL on connector thermal qualification and the RockBLOCK build condition" (`v2/docs/records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md`, line 10), and cx46 on `4d0ff8a2`, "16. P0-4 eFuse conditions retained: CLOSED AS CONDITIONAL" (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md`, line 191); this page reads byte for byte the same at both revisions and on main `be07863b` (sha256/16 d7f48ef5009684f9). Each check's words stand as given and are not read here as more: EF-F03 stays "EF-F03 DESIGN DEFECT, OPEN" (`v2/docs/records/efuse/efuse_check.out`, line 615 on `be07863b`), and the conditions cx46 names remain conditions.
 - The converters' own current limits (the LM5176 stages, the AP64500 and TPS62933 bucks, the TPS61089 step-ups, the LT8705A's
   input limit, the LTC3115), the charger's input limit (record l4e4), the gauge's protections and the polyfuses are not power
   switches and are outside T12's list; the device rail's capacity is C-DEV's (T5).

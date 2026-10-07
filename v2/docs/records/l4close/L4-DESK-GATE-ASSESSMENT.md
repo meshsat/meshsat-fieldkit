@@ -405,7 +405,7 @@ the class the author gave in its file (set 31's classes [H31:14-16]: PRESENTATIO
 author's file gives no class word. W8 restates no K item (its restatement is record l5pwr's L5-F14, section 8). 19 entries stand
 on the candidate and 9 do not; of the 19, 13 have a restatement on a next-set branch and 6 have none in a committed file (W11's tip
 `85b6f258`, read at the end of this draft, restates K-26 and K-28 in the generator only; section 10). The column Stumble keeps Slot
-L's reading (SESSION, for the coordinator to keep or change); 17 read YES on the candidate. This draft settles none.
+L's reading (SESSION, for the coordinator to keep or change); 17 read YES on the candidate. This draft settles none. Dated note, 7 October 2026 (record l4k, W131): this table is the candidate's reading, kept as written; its re-reading on main `be07863b` is section 11.
 
 | Id | Sources | The contradiction (both citations, on the candidate) | Standing on the candidate | Restated where | Class | Stumble |
 |---|---|---|---|---|---|---|
@@ -705,3 +705,51 @@ Draft 2's own list:
 - **A verdict word, a percentage, or any reading of a criterion as passed:** the coordinator's, by the brief.
 - **No generator, suite, regen_out, candidate_guard, box job or sweep was run.** The digest and pin comparisons, the cache file's
   commits and the ancestry of the pre-freeze branches were read with `git` and `sha256sum` in this session and are held by the test.
+
+## 11. Section 5 re-read on main `be07863b` (a dated block, 7 October 2026; record l4k, register task L4A-87)
+
+Added by worker W131 on branch `fnd/l4k` from main `be07863bbca206a81ab42b9f96a7684c5c10a746` (read from 04:17 CEST). Sections 0 to
+10 above are kept as written: section 5's table is the candidate's reading (`6bc4424e`, with the adoption's dated notes on
+`dd1aed00`), and this block restates it on `be07863b` without editing it. The evidence, each line as `be07863b:<path>:<line>` with
+its words, is `v2/docs/records/l4k/K-TABLE-be07863b.md`; the resolutions are in `v2/docs/records/l4k/` (the record's README and five
+apply scripts for set 33). This block settles no engineering item: cx46 reads CORRECTIONS NOT CLOSED, Layer 4's DESK gate
+reads NOT PASSED and power-design closure and fabrication release read BLOCKED, as section 6 records them.
+
+The states (the record's reading, SESSION): STANDING, both sides current on `be07863b`; RESOLVED, one side corrected or restated in
+its record, or the two shown to name different things; SUPERSEDED, one side's subject replaced as a whole. On `be07863b`: 28 rows,
+7 STANDING, 20 RESOLVED, 1 SUPERSEDED. Of the 19 rows standing on the candidate, 12 no longer stand (set 31's merges of W3, W4, W5,
+W7, W9 and W11, and set 30's adoption); of the 6 with no restatement, K-15 is SUPERSEDED, K-18 RESOLVED by reading, and K-03, K-16,
+K-17 and K-22 stand. Of the 7 STANDING: K-16 is resolved on `fnd/l4k` in its record; K-03, K-13, K-17, K-23 and K-24 by apply scripts
+that set 33 runs on its integrated tree (each target is a file set 32 changes or a file a set 32 output pins); K-22 stays STANDING,
+changing no instruction, state, limit or part, with register task L4A-61 its owner.
+
+| Id | On the candidate (section 5) | On `be07863b` | Where it stands, or how it is resolved |
+|---|---|---|---|
+| K-01 | no | RESOLVED | L4-E9's page, set 29's criterion 2 text corrected (line 1007) |
+| K-02 | no | RESOLVED | 235 items on the page (line 1612) and 235 register rows |
+| K-03 | yes | STANDING | LH-12 (LAYER5-HANDOVER.md line 28) against R-28 (register line 134); `apply_l4k_lh12.py` restates LH-12 and test_l4e9's line for set 33 |
+| K-04 | yes | RESOLVED | revision 3 of the P0 list carries the record's band and case (lines 67 to 68) |
+| K-05 | no | RESOLVED | R-242, R-244, R-245 KNOWN ENGINEERING DEFECT (register lines 337, 339, 340) |
+| K-06 | yes | RESOLVED | W7's P-01 to P-12 applied: 45.88 K/W marked SUPERSEDED on L4-E9's page (line 1401); record l9stk's own 45.88 K/W is finding F-1 of record l4k |
+| K-07 | no | RESOLVED | R-48 and R-190 restated (register lines 154, 286); record l8r2 line 11 |
+| K-08 | yes | RESOLVED | every E-1 names its record (W4, W9) |
+| K-09 | yes | RESOLVED | the annex states which D-06 it means (line 87, section 6.5) |
+| K-10 | no | RESOLVED | ADDRESSED IN DRAFTS on L4-E9's page; the change itself is register task L4A-86's to verify |
+| K-11 | no | RESOLVED | test_l4e9 line 686 |
+| K-12 | yes | RESOLVED | one target at two roundings, read at 0.29 K/W for layout (annex line 193; P0 list line 177) |
+| K-13 | yes | STANDING | record l4e7's generator (l4e7_p0sol.py line 1225, its output lines 281 to 282) and the P0 list's quotation (line 124); `apply_l4k_p0sol.py` and `apply_l4k_p0list.py` for set 33 |
+| K-14 | yes | RESOLVED | record l8p's one release for six drafts (L8P-BREAKER.md line 266) |
+| K-15 | yes | SUPERSEDED | revision 3 adopted at `836f711b`; the ledger's item F dated by `apply_l4k_remeng.py` |
+| K-16 | yes | STANDING | record efuse's page line 213 against cx45 and cx46; resolved on `fnd/l4k` by two dated notes in place |
+| K-17 | yes | STANDING | the ledger's item C (lines 714 to 718) reports a gap closed at `ac8efbca`; `apply_l4k_remeng.py` for set 33 |
+| K-18 | yes | RESOLVED | by reading: the check's base_commit is the branch base `e132db0e`, its HEAD `06077cee` the revision read; the filed check is not edited |
+| K-19 | no | RESOLVED | U101 LM5069MM-1 (register line 302; page line 517) |
+| K-20 | yes | RESOLVED | L9T5-F28, renamed from L9T5-F26 (T10-ROUND5.md line 227); the ledger's item A dated by `apply_l4k_remeng.py` |
+| K-21 | yes | RESOLVED | both bounds stated with their bases (record l9t5 README lines 59, 147; record l8r2 line 1081); the ledger's item B dated by `apply_l4k_remeng.py` |
+| K-22 | yes | STANDING | two MODEL readings of the ended rail-trip method (cx46 lines 89, 91; l9t5_t10.out lines 585, 620); left STANDING, register task L4A-61 |
+| K-23 | yes | STANDING | record l4e7's generator, section 5g (l4e7_p0sol.py line 1353, output line 403); `apply_l4k_p0sol.py` for set 33 |
+| K-24 | yes | STANDING | the change-list applier's docstring (apply_l4e9_changelist_p0.py line 23); `apply_l4k_changelist.py` for set 33; other B2 wording is register task L4A-80's |
+| K-25 | no | RESOLVED | R-240 names l4e7's E-1 and S1 (register line 336) |
+| K-26 | yes | RESOLVED | revision X HELD in the connected output (line 350); admission elsewhere is register task L4A-60's |
+| K-27 | no | RESOLVED | set 31's text governs (L4-E9's page line 965); Slot F's draft is not in the tree |
+| K-28 | yes | RESOLVED | the connected output reads the change list APPLIED (line 361); L4-E9's four cascade pins equal their files |
