@@ -14,6 +14,11 @@ test_remeng's predicates hold on the applied copy; the page carries the output's
 private path and no claim word outside quotations. These are software predicates on DRAFTS and a desk MODEL: they establish no property
 of any board, regulator, limiter or controller, and nothing in the kit has been built, bought, powered or measured.
 
+Round 12 (W167 on W163's targeted recheck Q-183, T10-ROUND12.md): the contract's HO-D band equals l4hod.out's J4, W163's M3 and M4
+FAILING (N3); E-17 reads the junction at HO-D's pass top wherever it is stated, J4 CONDITIONAL on it (N1); V-B23's hold-off vector a
+short holding the rail under BOR, the 10 Ohm vector FAILING (N2); the change-list class read against its acceptance (N5); the hold-off
+across a peer's own reset (N6).
+
 Runs under the suite's runner (`env -C v2/ecad/tools python3 tests/run.py test_l9t5_rowb.`); a few seconds (it runs no generator; the
 outputs' reproduction is test_l9t5's)."""
 import importlib.util
