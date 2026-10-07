@@ -57,9 +57,15 @@ def t_the_committed_output_is_what_the_script_prints():
     assert r.returncode == 0, r.stderr.decode()[-400:]
     assert r.stdout == open(OUT, "rb").read(), "l4lim_screen.out is not what l4lim_screen.py prints; regenerate it with _bin/regen_out.py"
     t = r.stdout.decode()
-    for s in ("8. THE LINE FOR L4A-56\n   CHANGE-METHOD", "(T10 line 612 prints 3.6524 against 3.5213): EQUAL",
-              "so W1 is CLOSED at 184 C/W for both candidates", "W1 holds on the served side", "l4lim_screen: done"):
+    for s in ("8. THE LINE FOR L4A-56\n   CHANGE-METHOD", "so W1 is CLOSED at 184 C/W for both candidates", "W1 holds on the served side",
+              "l4lim_screen: done"):
         assert s in t, s
+    # the T10 line the screen cites is read, not typed (W159 on W157-F3: on row (b)'s composite it is 643, on fnd/l4lim's base 612)
+    mm = re.search(r"\(T10 line (\d+) prints 3\.6524 against 3\.5213\): EQUAL", t)
+    assert mm, "the screen's T10-A3 reproduction is not printed"
+    t10 = open(os.path.join(ROOT, "v2", "docs", "records", "l9t5", "l9t5_t10.out"), encoding="utf-8").read().splitlines()
+    i = int(mm.group(1)) - 1                                         # the statement starts on the cited line and may wrap once
+    assert "3.6524 V against 3.5213 V" in " ".join(" ".join(t10[i:i + 2]).split()), "the cited T10 line does not carry the figures"
     assert " NO\n" not in t.split("9. THE PREDICATES")[1], "a predicate reads NO"
 
 

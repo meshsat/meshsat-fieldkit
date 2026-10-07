@@ -81,7 +81,14 @@ From the repository root, in dependency order through `_bin/regen_out.py <worktr
 `l9t5/l9t5_connected.py`, `l4lim/l4lim_screen.py` (held sheets: the fetch scripts of records l4reg, l4canen and l4lim; the texts:
 `python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4hod` and `.../l4lim`). Apply drafts, never on the tree: the
 contract order t10, (hoe,) canq, rowb, with revx before or after; `apply_l4e9_changelist_rowb.py --check`. Tests: `env -C
-v2/ecad/tools python3 tests/run.py test_l9t5_rowb.` and the modules listed in the round's commit.
+v2/ecad/tools python3 tests/run.py test_l9t5_rowb.` and the modules below.
+
+Tests on the composite (7 October 2026, 11:28 to 11:38 CEST, each module as run.py printed it): test_l4reg "tests: 8 passed, 0 failed,
+0 skipped"; test_l9t5_canmb 10/0/0; test_l9t5_canq 22/0/0; test_l4canen 11/0/0; test_l4hod 12/0/0; test_l9t5_rowb 13/0/0;
+test_w11l9t5 8/0/0; test_l4small 10/0/0; test_remeng 17/0/0; test_applier_state 20/0/0; test_l4lim 8/0/0 (rerun after its T10 line
+citation was made read, not typed: 7/1/0 before, the line moving from 612 to 643 on the composite, W157-F3); test_pdftext_input 19/0/0;
+test_l9t5 42/0/0 (the T10 predicate count 34 to 35, the hold-off's); test_l4e9 64/0/0; test_l8r2 40/0/0. Fifteen modules, 304 passed,
+0 failed, 0 skipped. Every regenerated output passed regen_out's four conditions (two identical runs, exit 0, every pin current).
 
 The constitution was read and is acknowledged (sections 3 to 6 and 8): each correction is checked against its own failure case, the
 one design change (the hold-off) has a judge whose mutations fail, no verdict is upgraded, and the recheck is the next step.
