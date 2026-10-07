@@ -365,6 +365,8 @@ def t_every_cited_source_line_holds():
               "## 5. Summary"):
         assert ("\n" + h) in tree_led, h
     s4 = tree_led.split("\n## 4. The claims a remaining item weakens", 1)[1].split("\n## 5. Summary", 1)[0]
+    # section 4's OWN table: row (b)'s restated table (ROWB-1, applied at set 33's d16) follows it and leaves its rows as written
+    s4 = s4.split("**Row (b)'s drafts restate six of these claims", 1)[0]
     rows = [l.split(" | ")[3] for l in s4.splitlines() if l.startswith("| ") and not l.startswith("| Claim") and "---" not in l]
     # thirteen on the tree: W11's twelve and the ledger's HO-L row for E11-37 (99bbc0c6), every one OPEN or PROVISIONAL
     assert len(rows) == 13 and all(("OPEN" in s or "PROVISIONAL" in s) for s in rows), rows

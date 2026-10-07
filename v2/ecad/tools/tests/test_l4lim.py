@@ -65,7 +65,8 @@ def t_the_committed_output_is_what_the_script_prints():
     assert mm, "the screen's T10-A3 reproduction is not printed"
     t10 = open(os.path.join(ROOT, "v2", "docs", "records", "l9t5", "l9t5_t10.out"), encoding="utf-8").read().splitlines()
     i = int(mm.group(1)) - 1                                         # the statement starts on the cited line and may wrap once
-    assert "3.6524 V against 3.5213 V" in " ".join(" ".join(t10[i:i + 2]).split()), "the cited T10 line does not carry the figures"
+    pair = [t10[i]] + ([t10[i + 1]] if i + 1 < len(t10) else [])   # the cited line and the one it may wrap onto
+    assert "3.6524 V against 3.5213 V" in " ".join(" ".join(pair).split()), "the cited T10 line does not carry the figures"
     assert " NO\n" not in t.split("9. THE PREDICATES")[1], "a predicate reads NO"
 
 

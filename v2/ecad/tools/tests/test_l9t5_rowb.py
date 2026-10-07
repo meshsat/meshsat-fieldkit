@@ -281,8 +281,35 @@ def t_the_ioha_rows_apply_once():
     assert _run(A_IOHA).returncode == 0 and _text(IOHA) == tree_before                    # --check only on the tree
 
 
+def _rowb_cites_read_what_they_cite(t):
+    t10 = _text(T10_OUT).splitlines()
+    con = _text(CON_OUT).splitlines()
+    sub = t.split("**Row (b)'s drafts restate six of these claims", 1)[1].split("\n## 5. Summary", 1)[0]
+    cites = re.findall(r"\[(T10|CON):(\d+)(?:-(\d+))?\]", sub)
+    assert len(cites) == 10, cites
+    for k, s_, e_ in cites:
+        lines = (t10 if k == "T10" else con)[int(s_) - 1:int(e_ or s_)]
+        assert lines and ("11a" in " ".join(lines) or lines[0].startswith("   (") or lines[0].startswith("     ")), (k, s_)
+    assert any("L4A-57: DONE AS CONDITIONAL on E-17." in l for k, s_, e_ in cites if k == "T10"
+               for l in t10[int(s_) - 1:int(e_ or s_)])
+
+
 def t_the_ledger_table_applies_once_and_remeng_holds():
+    # Holds in both states of the tree's ledger: UNAPPLIED (the branch the round was written on) and APPLIED (set 33 applies ROWB-1 at
+    # d16 under the coordinator's APPLY ruling, _runs/int33/applies.tsv); the coordinator's set 33 correction of 7 October 2026
     tree_before = _text(LEDGER)
+    head = "**Row (b)'s drafts restate six of these claims"
+    if head in tree_before:
+        assert tree_before.count(head) == 1, "the restated table appears more than once"
+        _rowb_cites_read_what_they_cite(tree_before)
+        a_mod = _mod(A_REM, "apply_remeng_rowb_on_tree")
+        assert a_mod.block() in tree_before, "the applied table is not the block the script writes against the tree's outputs"
+        with tempfile.TemporaryDirectory(prefix="t_rowb_") as d:
+            p = os.path.join(d, "REMAINING-ENGINEERING.md")
+            shutil.copy(LEDGER, p)
+            assert _run(A_REM, p, "--write").returncode == 3 and open(p, encoding="utf-8").read() == tree_before
+        assert _run(A_REM).returncode == 3 and _text(LEDGER) == tree_before                   # --check refuses on the applied tree
+        return
     rem = _mod(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_remeng.py"), "test_remeng_on_rowb")
     with tempfile.TemporaryDirectory(prefix="t_rowb_") as d:
         p = os.path.join(d, "REMAINING-ENGINEERING.md")
@@ -290,16 +317,7 @@ def t_the_ledger_table_applies_once_and_remeng_holds():
         assert _run(A_REM, p, "--write").returncode == 0
         t = open(p, encoding="utf-8").read()
         assert _run(A_REM, p, "--write").returncode == 3 and open(p, encoding="utf-8").read() == t
-        t10 = _text(T10_OUT).splitlines()
-        con = _text(CON_OUT).splitlines()
-        sub = t.split("**Row (b)'s drafts restate six of these claims", 1)[1].split("\n## 5. Summary", 1)[0]
-        cites = re.findall(r"\[(T10|CON):(\d+)(?:-(\d+))?\]", sub)
-        assert len(cites) == 10, cites
-        for k, s_, e_ in cites:
-            lines = (t10 if k == "T10" else con)[int(s_) - 1:int(e_ or s_)]
-            assert lines and ("11a" in " ".join(lines) or lines[0].startswith("   (") or lines[0].startswith("     ")), (k, s_)
-        assert any("L4A-57: DONE AS CONDITIONAL on E-17." in l for k, s_, e_ in cites if k == "T10"
-                   for l in t10[int(s_) - 1:int(e_ or s_)])
+        _rowb_cites_read_what_they_cite(t)
         # test_remeng's predicates on the applied copy (its module reads its LEDGER path; pointed at the copy here, then restored)
         old, cache = rem.LEDGER, dict(rem._C)
         try:
