@@ -144,6 +144,11 @@ nothing built or measured)
      unpowered FT pin (DS12110 Rev 10 prints none; Table 120's note 3 says only that no positive injection occurs under the maximum),
      so a dark target's TXD is UNDEFINED at its readers
      and the attribution must never act on a TXD reading alone (a condition for L4A-55). A dark VOTER's input reads low through 10 kOhm
+   the controller's own rail: round 6's bounded state 0.1739 A less its limiters' pull-ups 0.678 mA, plus its two gates' ICC 10 uA each
+     (PRINTED), its four readings' pull-ups 0.104 mA each while dominant, and the larger of two of its votes asserted at 0.353 mA each (one
+     peer contained on both fabrics) and its own gate's two inputs high from the peers' lower rails (the self-test's V phase on it:
+     delta ICC 500 uA an input at VCC - 0.6 V, PRINTED, taken per input), all at once: at most 0.1747 A (MODEL; a labelled scenario for
+     the coordinator's C-DEV, no case row changed here)
    all levels hold: yes
 
 7. THE VOTE PATH'S IN-SERVICE SELF-TEST (drafted for the firmware stage as rows of the contract; nothing applied)
@@ -176,6 +181,10 @@ nothing built or measured)
    the self-test's cost: two phases in four silence one transceiver for 80 ms; with DAR = 1 (L9T5-D2) the target's one attempt in such
      a phase raises its transmit error count by 8, 16 a cycle per transceiver, against at least 22 successful frames that lower it by 1
      each: the count stays bounded and error-active (the protocol's fault confinement)
+   the target's probe and that bound rest on DAR = 1, and the records disagree (finding W137-F1, for L4A-55 and Layer 5): the
+     contract draft reads "FDCAN_CCCR.DAR = 1" and the compatibility page's ES0392 2.24.5 row "firmware does not use DAR". With DAR = 0
+     the target sends nothing on the tested fabric in its silenced phases (an automatic retry would raise its count by 8 at every
+     attempt), so the silence rests on two readings, not three (no frame of it, its receiver hearing neither peer), same interval
    timing and cost hold: yes
    THE SELF-TEST'S OWN FAULTS, element by element (per transceiver; the residuals are named, none defeats the containment alone):
      a vote output, its line or its gate input  stuck low or open              the target cannot be silenced by the vote                    V fails                      within 5.00 s
