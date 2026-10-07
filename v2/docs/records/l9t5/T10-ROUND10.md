@@ -151,7 +151,16 @@ CONDITIONAL on E-17**; RE-6 and RE-7 read SUPPORTED ON PRINTED FIGURES, CONDITIO
 `v2/ecad/tools/tests/test_l9t5_rowb.py` (new): section 11a's figures re-solved from the printed values the outputs name, the judge's
 mutants, the connected window, each apply script on scratch copies (once, refused twice, refused without its predecessors, re-parsed;
 test_remeng's predicates on the applied ledger), the record's hygiene. `test_l9t5.py`: section 12's count 28 to 34 (six round 10
-predicates). The totals as `run.py` printed them are in the round's final report and in the commit that carries this page.
+predicates). `test_w11l9t5.py`: W11's frozen-generator predicate sets aside the connected generator's additive section 11a (one call
+and one appended block, taken out exactly and once) before holding W11's change against its base; without that it read FAIL on this
+round's generator, which no other change of W11's subject explains.
+
+The affected modules as `run.py` printed them (7 October 2026, this branch, the held sheets staged), each `tests: N passed, 0 failed,
+0 skipped`: test_l9t5_rowb 9; test_l9t5 42; test_remeng 17; test_pdftext_input 19; test_applier_state 20; test_lstat31 16;
+test_lstat32 13; test_recpack 7; test_w11l9t5 8 (after the change above; before it 7 passed, 1 failed); test_w42cite 8; test_w15class 8;
+test_w17p0list 8; test_w20oneliners 9; test_w23cite 8; test_w24l4e9 11; test_w28q40 7; test_w3annex 10; test_w4l4e7 9; test_w7rem 9;
+test_w8l5 6; test_w9l9t5 11; test_dgate 19; test_dgate2 26; test_entrypage 16; test_l4e9 64; test_l8r2 40; test_l4reg 8;
+test_l4canen 11; test_l9t5_canmb 10; test_l9t5_canq 22; test_l4hod 12: 475 passed, 0 failed, 0 skipped in 31 modules.
 
 ## 12. Reproduce
 
