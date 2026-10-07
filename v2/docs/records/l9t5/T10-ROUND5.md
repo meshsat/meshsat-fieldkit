@@ -1,4 +1,4 @@
-**DISPOSITION (T10, 5 October 2026, after the recheck cx46 of 4d0ff8a2: CORRECTIONS NOT CLOSED, the second negative; the method ends), Slot C: cx45's Q3 stays NOT CLOSED [as written at this disposition, 5 October 2026; W53, 6 October 2026 (W38's F10, W48's residual): each word is its check's, Q3: cx45 'P0-3: NOT CONFIRMED' (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md` line 10), cx46's items 5 to 8 'NOT CLOSED' (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` lines 136 to 151)] and is carried as REMAINING ENGINEERING with its claims OPEN or PROVISIONAL (section 12): CON-004's quorum service OPEN; FW-B22 PROVISIONAL (a traffic MODEL); L9T5-F21 OPEN; the limiter's and the rail trip's response times PROVISIONAL (no printed maximum for the comparator's delay); V-B23's 0.2 s WITHDRAWN; the universal sustained thermal bound WITHDRAWN (cx46's periodic countermodel, reproduced: 127.54 C under the trip); T10-A3 at a peak PROVISIONAL; revision X held with no admission route. What stays: the drafted circuits (apply_gen_sch_b_iocguard.py, composed, read, mutated) and the rows on revision V and R602 14.0k. NOT DONE: no new design; nothing applied; nothing physical. NEXT: the receiving company's scope (section 12's list).**
+**DISPOSITION (T10, 5 October 2026, after the recheck cx46 of 4d0ff8a2: CORRECTIONS NOT CLOSED, the second negative; the method ends), Slot C: cx45's Q3 stays NOT CLOSED [as written at this disposition, 5 October 2026; W53, 6 October 2026 (W38's F10, W48's residual): each word is its check's, Q3: cx45 'P0-3: NOT CONFIRMED' (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md` line 10), cx46's items 5 to 8 'NOT CLOSED' (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` lines 136 to 151)] and is carried as REMAINING ENGINEERING with its claims OPEN or PROVISIONAL (section 12): CON-004's quorum service OPEN; FW-B22 PROVISIONAL (a traffic MODEL); L9T5-F21 OPEN; the limiter's and the rail trip's response times PROVISIONAL (no printed maximum for the comparator's delay); V-B23's 0.2 s WITHDRAWN; the universal sustained thermal bound WITHDRAWN (cx46's periodic countermodel, reproduced: 127.54 C under the trip); T10-A3 at a peak PROVISIONAL; revision X held with no admission route [revision X NOT ADMITTED since 7 October 2026, SESSION L9T5-D11, section W133]. What stays: the drafted circuits (apply_gen_sch_b_iocguard.py, composed, read, mutated) and the rows on revision V and R602 14.0k. NOT DONE: no new design; nothing applied; nothing physical. NEXT: the receiving company's scope (section 12's list).**
 
 **ROUND 5 (T10, 5 October 2026), Slot C: DONE: V6-B3 corrected (CON-004 traced); FW-B20 and FW-B21 drafted; SHDN drafted, composed, read and mutated; the credible bus faults re-solved; C-DEV rev 2 issued from it; the owner's four questions of part 21 answered (every junction at the LDO's worst drop corner; rev V fitted, L9T5-D7); and the owner's part 22: the criterion per state (125 C for every sustained state, 150 C only for a transient hardware ends), the babbling supervisor a SUSTAINED state that FAILED 125 C on rev V (130.6 C) and holds with the set point delta drafted (R602 14.0k, apply_gen_sch_?_iocset.py: 121.5 C), revision V made enforceable by three drafted rows (Layer 6 identity, Layer 12 inspection, the model's selection). NOT DONE: no independent check; the rows unapplied; the babbler's quorum effect (L9T5-F21) not drafted; nothing physical. NEXT: Slot A takes the canshdn and iocset drafts and restates its pre-regulator check (L9T5-F24).**
 
@@ -53,7 +53,7 @@ not an instruction:** round 5's admission route for a rev X part ("accepted only
 at the bound at most 0.2318 A"; rev V's rows 0.1570 A, rev Y's 0.2396 A) and L9T5-F22's shortcut (R602 14.0 k with T10-A3 at
 0.4512 A, 3.7004 V over 3.6652 V, rev Y's cover at 118.1 C, "that would admit any revision without V-B20"). **Current instruction:**
 revision V only; revision X HELD with no admission route; R602 14.0 k is the final set point; a rev X part's qualification is
-REMAINING ENGINEERING (section 12).
+REMAINING ENGINEERING (section 12) [superseded 7 October 2026 by SESSION L9T5-D11, section W133: revision X NOT ADMITTED; its qualification an UNSELECTED OPTION outside the scope, not remaining engineering].
 
 **(2) The CAN service under the bound.** The fabrics carry the supervisors' quorum only; the modules' heartbeats (GPIO, FW-B01), the
 voted outputs (GPIO, FW-B12) and FW-E07's stopped-fan report (board E, the kit bus, V-E07's 5 s) are not on them. The tree defines no
@@ -89,7 +89,7 @@ under FW-B10). The babbling row (a running firmware that breaks FW-B21 and still
 FAIL. T10-A3 is restated at the largest current the record computes for a regulator (0.4512 A): the LDOs' input at least 3.7004 V
 against 3.6652 V (SESSION L9T5-D8; round 4's 600 mA criterion fails at 14.0k, and a supervisor drawing more browns out alone under its
 BOR). On rev Y's rows (the cover for rev X) every served row holds at 14.0k except the babbler (134.7 C) and B7b with SHDN ignored
-(125.9 C): a rev X part still waits on V-B20. The service in the babbling state: the babbler can deny both fabrics by arbitration, so
+(125.9 C): a rev X part still waits on V-B20 [as written at round 5; superseded by SESSION L9T5-D11, 7 October 2026: revision X NOT ADMITTED, no V-B20 reading admits it]. The service in the babbling state: the babbler can deny both fabrics by arbitration, so
 the quorum may stop and the voters hold the home assignment (row 8's safe state); that one supervisor's firmware can stop CON-004's
 quorum stays OPEN (L9T5-F21: a voted silence of the babbler by the other two is the circuit direction, not drafted).
 
@@ -99,7 +99,7 @@ and t10 10h, 10i):**
 | Layer | Row (drafted) | Acceptance |
 |---|---|---|
 | 6, part identity (`STM32H743-COMPATIBILITY.md` F1 and the BOM line of U41, U51, U61) | STM32H743VIT6, LCSC C114409, SILICON REVISION V ONLY: package marking revision code "V", DBGMCU_IDC REV_ID 0x2003 (ES0392 Rev 15 Table 2); revisions X and Y not accepted | the BOM line and the compatibility page name revision V |
-| 12, incoming inspection and first article | every supervisor's package read for revision code "V" before assembly, a lot with any other code held; at first power each supervisor's REV_ID read over SWD equal to 0x2003 | the inspection record names each part's code; no other code fitted |
+| 12, incoming inspection and first article | every supervisor's package read for revision code "V" before assembly, a lot with any other code held [and refused: revision X NOT ADMITTED, SESSION L9T5-D11]; at first power each supervisor's REV_ID read over SWD equal to 0x2003 | the inspection record names each part's code; no other code fitted |
 | the model (`l9t5_t10.py`) | the verdicts of F13, F16, F17 and the part 22 rows read revision V's printed rows only (`FITTED_REV`); revision Y's rows are printed as the cover for rev X and decide nothing | the test keys the verdicts to `FITTED_REV` |
 
 **(4) The composed changes against the calculation and the case row.** The contract draft's rows carry the record's figures (VOS3, at
@@ -141,14 +141,14 @@ declaration for any dominant current up to 828.5 mA.
 - **Residual B7b:** a transceiver whose driver, time-out and SHDN fail together: 120.0 C on revision V, the fitted part, inside 125 C
   (round 6: L9T5-D5 WITHDRAWN, nothing is tolerated over 125 C; over the rail trip's least 0.2183 A the supervisor is unpowered and the
   other two hold the quorum).
-- **Revision X: HELD** (not fitted, round 6) until its own qualification: V-B20 in its bounded state at most 0.2183 A (the rail trip's
+- **Revision X: HELD** [NOT ADMITTED since 7 October 2026, SESSION L9T5-D11, section W133; the rest of this item is round 6's text, kept as history: the qualification it names is an UNSELECTED OPTION] (not fitted, round 6) until its own qualification: V-B20 in its bounded state at most 0.2183 A (the rail trip's
   least) and its rows re-solved; no revision V figure is applied to it.
 
 ## 6. The supplier's validation tasks and the bounded provisional choices (amendment 1)
 
 | Fact not established at the desk | Claim it supports | Bounded provisional choice | Supplier task: specimen, quantity, pass limit |
 |---|---|---|---|
-| a rev X controller's supply current (DS12110 prints rev Y and rev V only) | T10-A2, F13, F16 on a rev X part | fit rev V (L9T5-D7); revision X HELD | three rev X STM32H743VIT6 on the first-article board B: each supervisor's supply current at the FW-B20 bound and FW-B21 share at its operating junction: at most 0.2183 A (V-B20, the rail trip's least) |
+| a rev X controller's supply current (DS12110 prints rev Y and rev V only) | T10-A2, F13, F16 on a rev X part | fit rev V (L9T5-D7); revision X HELD [NOT ADMITTED, SESSION L9T5-D11] | [no supplier task since 7 October 2026, SESSION L9T5-D11: the rev X qualification is an UNSELECTED OPTION; round 5's text kept as history:] three rev X STM32H743VIT6 on the first-article board B: each supervisor's supply current at the FW-B20 bound and FW-B21 share at its operating junction: at most 0.2183 A (V-B20, the rail trip's least) |
 | the enabled peripherals' maxima (typical only printed) | T10-A2 | typical times 144 MHz times the whole set's max/typ ratio (MODEL) | the same measurement (V-B20) |
 | each LDO's thermal resistance on board B's copper (184 C/W printed, its board not printed), and its transient impedance (not printed) | every junction; the trip's transient | the printed 184 C/W; the steady figure as the transient's bound | first-article board B in a 76 C chamber with one supervisor forced to its rail trip (round 6): each AP2112K's implied junction, its junction-to-air resistance and its step response MEASURED and reported, and the INA169's site under 85 C (T10-A5 restated): measurements, NOT an acceptance of a sustained bound (cx46: the periodic countermodel meets the round 6 limits and passes 125 C; the bound is REMAINING ENGINEERING) |
 | the TCAN334's current with a bus line at 0 V or on a rail (not printed) | B1, B2, B5 | the printed 180 mA and 200 mA rows; the share holds to 828.5 mA | V-B21: each fault injected with traffic running; each AP2112K's output current averaged over 1 s at or under the response figure |
@@ -171,7 +171,7 @@ fitted figure; 0.2558 A stays the conservative one for power.
 | L9T5-D5 | WITHDRAWN (round 6): was the B7b residual tolerated where it is over 125 C | on revision V, the fitted part, B7b reads 120.0 C, inside 125 C; nothing is tolerated over it | none |
 | L9T5-D6 | REVERSED (round 6): was K1 not taken for a firmware that breaks the clock bound | the rail trip (L9T5-D10) bounds that supply's AVERAGE in hardware instead (PROVISIONAL at a peak, section 12) | none |
 | L9T5-D8 | SUPERSEDED (round 6): T10-A3 is judged at the rail trip's AVERAGE maximum, 0.2452 A, the sense resistor's drop counted (3.6524 V against 3.5213 V); PROVISIONAL at a peak (cx46) | no supervisor carries a larger AVERAGE; a periodic peak is not covered | none |
-| L9T5-D7 | the supervisors fitted in revision V | rev V's printed rows hold with 14 K or more; rev Y's (the cover for rev X) miss 125 C; inside CON-017 (5) | a rev X part only after its own qualification (V-B20 at most 0.2183 A) |
+| L9T5-D7 | the supervisors fitted in revision V | rev V's printed rows hold with 14 K or more; rev Y's (the cover for rev X) miss 125 C; inside CON-017 (5) | a rev X part only after its own qualification (V-B20 at most 0.2183 A) [and only after SESSION L9T5-D11 is reversed, section W133] |
 | L9T5-D10 (round 6; renamed from D9, L9T5-F27: Slot A's D9 is the set point) | the containment as hardware on each controller: a transmit-share limiter per transceiver and a rail trip per supervisor (`apply_gen_sch_b_iocguard.py`), not a vote of the peers | no firmware sets either bound, a fault common to all three firmwares included; no H743 pin plan needed; the parts are the kit's (INA169, TPS3701) | the peers' 2-of-2 vote on SHDN or EN with TXD observation (twelve inputs, six outputs) |
 
 ## 9. The README lines for Slot A to apply (the README is Slot A's)
@@ -205,7 +205,7 @@ restated to 14.0k when the delta is taken.
 L9T5-F23 (Layer 6, part identities and procurement): L9T5-D7 fits silicon revision V. The order code STM32H743VIT6 fixes no
 revision (L9T5-F14); CON-017 (5) already reads the marking (V or X) and REV_ID at goods-in, so D7 narrows the accepted lots to V.
 Consequence (SUPERSEDED in its admission clauses by round 6 and cx46's item 8): a lot of rev X is HELD; no V-B20 reading and no set
-point admits it; its qualification is REMAINING ENGINEERING. No purchase is made and no supplier is asked here; lot availability of
+point admits it; its qualification is REMAINING ENGINEERING [superseded 7 October 2026 by SESSION L9T5-D11, section W133: revision X NOT ADMITTED, a lot of it refused at goods-in; its qualification an UNSELECTED OPTION, not remaining engineering]. No purchase is made and no supplier is asked here; lot availability of
 rev V against rev X is not read (no distributor query sent).
 
 ## 12. Round 6 and its disposition: the check cx45's Q3 and the recheck cx46 (t10 10j)
@@ -221,7 +221,7 @@ design). Every claim is OPEN or PROVISIONAL; what stays is drafted and reproduci
 | (c) quorum per fault | the fault table of t10 10j (c) | CON-004's quorum service OPEN; L9T5-F21 OPEN; VOS0 under the trip (the H743 at its 105 C VOS0 limit from 0.1936 A, MODEL, under the trip's band) weakens the controller's survival and FW-B20's and FW-B22's service | the same circuit and proof as (a); a hardware bar on VOS0 or its acceptance |
 | (d) headroom | the other LDOs at 3.6571 V against 3.4798 V during a response; T10-A3 at the trip's average maximum 3.6524 V against 3.5213 V | PROVISIONAL at a peak current (the trip holds an average) | T10-A3 on the peak current the containment allows |
 | (e) thermal | the constant-current figure at the trip's average maximum, 115.4 C (MODEL) | the universal sustained bound and its positive margin WITHDRAWN: cx46's periodic countermodel, reproduced on its ASSUMPTIONS (0.50 A for 0.40 s every 1.50 s, one pole of 184 K/W and 0.25 s): its filtered current 0.2122 A stays under the trip's least, its Zth(171 ms) 91.2 K/W meets the proposed limit, and its junction peaks at 127.54 C; a latent rail trip removes even the average bound; the qualification limits are measurements, not an acceptance | peak-current containment, or a complete periodic electrothermal solution with uncertainty |
-| (f) rows | revision V only, R602 14.0 k, 125 C for every sustained state in the contract draft, the 10i rows, this page and the output | revision X HELD with no admission route; round 5's V-B20 route at 0.2318 A and L9T5-F22's "admits any revision" SUPERSEDED (sections 3 (1) and 10) | a rev X part's qualification, resting on (e) |
+| (f) rows | revision V only, R602 14.0 k, 125 C for every sustained state in the contract draft, the 10i rows, this page and the output | revision X HELD with no admission route; round 5's V-B20 route at 0.2318 A and L9T5-F22's "admits any revision" SUPERSEDED (sections 3 (1) and 10) | a rev X part's qualification, resting on (e) [an UNSELECTED OPTION since 7 October 2026, SESSION L9T5-D11, section W133: not a task] |
 
 SESSION decision **L9T5-D10** (renamed from D9 under L9T5-F27; Slot A's D9 is the set point) stays as a drafted direction, not a closure.
 Findings: L9T5-F25 (Slot A): `check_l9t5_netlist.py`'s I-03 entry for the LDOs behind their sense resistors. L9T5-F28 (Slot A; renamed from L9T5-F26 under the remaining-engineering ledger's item A, `records/l4close/REMAINING-ENGINEERING.md` section 6, the way L9T5-F27 settled D9 and D10: this page first wrote "L9T5-F26 (Slot A, its
@@ -240,3 +240,28 @@ SHDN draft, in temporary directories). Tests: `env -C v2/ecad/tools python3 test
 Line 227: the second finding of section 12 is L9T5-F28, renamed from L9T5-F26 (the remaining-engineering ledger's item A); L9T5-F26
 stays Slot A's finding on J_PA's VH derating. No figure, verdict or state changes. The table of W9's items is the README's section W9;
 adopted in the NEXT set with the cascade (`l9t5_connected.py` reads this page).
+
+## W133 (7 October 2026): SESSION decision L9T5-D11, revision X not admitted
+
+Register task L4A-60 (RE-8, cx46's item 8), worker W133 on branch `fnd/l4small`; adopted in the NEXT set (set 33) through
+`apply_l4small_revx.py`. Record text and one SESSION decision with its reversal: no circuit, figure, verdict or state of a cx46 item
+changes, and nothing is accepted, closed or released. Nothing in this kit has been built, bought, powered or measured.
+
+| Field | L9T5-D11 |
+|---|---|
+| decision | Revision X is NOT ADMITTED. The three supervisors U41, U51 and U61 are STM32H743VIT6 of silicon revision V only (package marking revision code "V", DBGMCU_IDC REV_ID 0x2003, ES0392 Rev 15 Table 2). A part or lot of any other revision, X included, is refused at goods-in, not held for a later admission. The rev X qualification (V-B20 on a rev X part read against the selected regulator stage's window, record l9t5 `l9t5_t10.out` 11a (g), round 6's rail trip and its least 0.2183 A being removed by regstage, W138-2; its rows re-solved on RE-7's bound) is an UNSELECTED OPTION outside the scope, as route B2 is: no supplier task, no remaining-engineering item and no admission route rests on it. |
+| authority | SESSION |
+| authority_why | It changes no line a class of `v2/ecad/tools/reserved.json` protects (no part, net, value, land or order code changes: STM32H743VIT6, LCSC C114409, and L9T5-D7 already fits revision V); it spends nothing (no purchase and no distributor query; the lot availability of revision V against X is not read); it changes no claim about the kit (CON-017 (5), the erratum's bound V or X, stands as the requirement and the selection narrows inside it); and it accepts no residual risk a measurement could remove, because it removes the revision whose only cover rows fail. After the measurement one option stands: rev Y's rows, the only printed cover for a rev X part, miss 125 C at the drop's worst corner (125.2 C in the bounded state, section 3 (1)), and the method that would admit revision X (the register's RE-8 M-B, its qualification on RE-7's bound) rests on a bound RE-7 has not produced. |
+| ruled_by | SESSION (W133, Claude) under the owner's ruling of 21 September 2026 and his standing rule of 26 September 2026 |
+| ruled_on | 2026-10-07 |
+| reversed_by | a ruling that takes up the register's RE-8 M-B: three rev X parts' V-B20 read on the selected stage (each supply current under the TPS2553-1's least with the served window of record l9t5 `l9t5_t10.out` 11a (g) kept positive; the rail trip is removed by regstage, W138-2, W159 on W157-F5) and their rows re-solved on RE-7's restated bound (11a (d)), then every row listed below restated to admit revision X; or an owner item if revision V's supply becomes a money or procurement question (M-A's end condition in the register) |
+
+Rows restated, each by insertion with the earlier words kept as labelled history: on this page line 1, sections 3 (1), 3 (5), 3 (6)
+(the Layer 12 row), 5, 6 (the first row), 8 (L9T5-D7's reversal), 10 (L9T5-F23) and 12 (f); `L9T5-CASES.md` (two lines);
+`l9t5_t10.py` (10a, 10h (1), 10i, 10j (f), the disposition, L9T5-F22 and one predicate's words; the same printed lines);
+`l9t5_connected.py` (three lines of section 10); `apply_hw_fw_contract_t10.py` (FW-B20's row now reads "revision X NOT ADMITTED",
+and the docstring). Layer 6's rows, by `apply_l4small_layer6.py`: `v2/docs/parts/STM32H743-COMPATIBILITY.md` (F1, the five matrix rows
+on the erratum's revisions, HC6-SC-1) and `v2/docs/parts/PROCUREMENT.md` (U41, U51, U61), with CON-017's pin of the page rebound.
+The ledger's RE-8 and L4-E9's copy of its row: `records/l4close/apply_l4small_ledger.py`. Not restated, with the reason: CON-017 (5)
+and its trace and Layer 3 copies (the requirement's bound, which revision V meets; narrowing it would be a registry amendment the
+selection does not need), and the checks as received, the integration records and the K table (history).

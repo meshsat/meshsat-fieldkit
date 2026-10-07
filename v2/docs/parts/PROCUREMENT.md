@@ -115,7 +115,7 @@ the "Alternative" column names what is supported and its state under condition 1
 
 | Part (order code) | Board, refs | Need | JLCPCB (UTC 00:18-00:19) | Authorised distributors (FindChips) | Constraint | Alternative and its state |
 |---|---|---|---|---|---|---|
-| ST STM32H743VIT6 (C114409) | B U41, U51, U61 | 15 | 4265 | DigiKey 0, Farnell 0, TME 39, Schukat 176 | revision V or X only (HC6-SC-1); franchised stock thin | STM32H743VIT6TR C5271084 (894, same part on reel): MATCH; STM32H753VIT6 C730206 (0): the first-named part, not needed |
+| ST STM32H743VIT6 (C114409) | B U41, U51, U61 | 15 | 4265 | DigiKey 0, Farnell 0, TME 39, Schukat 176 | revision V ONLY (SESSION L9T5-D11, 7 October 2026: HC6-SC-1's revision V or X narrowed, revision X NOT ADMITTED; no stock figure here reads a lot's revision, so an order names revision V; no query sent); franchised stock thin | STM32H743VIT6TR C5271084 (894, same part on reel): MATCH; STM32H753VIT6 C730206 (0): the first-named part, not needed |
 | Microchip KSZ9897RTXI (C638299) | B U1 | 5 | 205 | DigiKey 4969, Avnet 44 | none | none needed |
 | Diodes PI7C9X2G404SLBFDEX (C500767) | B U101, U201, U301 | 15 | 2770 | DigiKey 70 | franchised stock thin | PI7C9X2G304SL (held sheet) is a 3-port part: not a drop-in |
 | TI TUSB8041IRGCR (C544686) | B U102, U202, U302 | 15 | 3180 | DigiKey 1304 | none | none needed |

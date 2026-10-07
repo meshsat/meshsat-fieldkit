@@ -15,16 +15,16 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    c4820a453aa7a159 v2/docs/PANEL.md
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
-   e307beba45d9120f v2/docs/records/l4e12/l4e12_thermal.out
+   18a40a981894d26d v2/docs/records/l4e12/l4e12_thermal.out
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
-   29f313c17d6f8283 v2/docs/records/l8r2/l8r2_gndret.out
+   c4b3d0fcf53a58ab v2/docs/records/l8r2/l8r2_gndret.out
    be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
-   1c19050b6a7608c6 v2/docs/records/l9t5/l9t5_drafts.out
+   3e078d4f3628e0da v2/docs/records/l9t5/l9t5_drafts.out
    8b0aab5cdd912493 v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
-   653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
+   45ee58fa2d170d1c v2/docs/REQUIREMENTS-TRACE.md
    72c306adf529de13 v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py
-   efcfdf67f1fcab83 v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
+   b986d78249aeb7bb v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
    85156e936ce21bcc v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md
    4f8831c8b21e2ca1 v2/docs/records/l9t5/apply_gen_sch_a_iocset.py
    ca218c9ed2f267ed v2/docs/records/l9t5/apply_gen_sch_b_iocset.py
@@ -300,7 +300,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    CON-004. A7 as written CUTS a fabric (the 0 Ohm break links R508 to R513): it exercises an open, not a shorted bus, and not the
    TCAN334's 180 mA bus-fault row (TXD 0 V, CANH -12 V, RL open); the shorted-bus variants are analysed in 10e and named in V-B21
    CON-017: '(5) the fitted supervisors are silicon revision V or X'; '(4) the supervisor firmware builds for the STM32H743 and refuses to run both FDCAN fabrics on revision Y or W' (V6-m9). So L9T5-F14's two revisions are
-     settled at assembly: the fitted part is V or X. DS12110 Rev 10 prints rev Y (section 6) and rev V (section 7) only, no rev X
+     settled at assembly: the fitted part is V or X [CON-017 (5)'s bound; the fitted part is revision V only, SESSION L9T5-D11, 7 October 2026]. DS12110 Rev 10 prints rev Y (section 6) and rev V (section 7) only, no rev X
      section; T10 keeps rev Y's larger rows as the cover for a rev X part (CONSERVATIVE for rev V by construction, an ASSUMPTION for
      rev X), and rev V's rows as the fitted revision's own figures
 
@@ -461,7 +461,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      operating point rises with the air, steeply on rev Y's rows near their runaway)
      THE CONTROLLER FIGURE A FITTED PART MUST MEET for the worst state (both fabrics faulted, responded) to hold 125 C at this corner: at most
      0.2318 A at its own operating point at 76.25 C air (rev V's rows: 0.1570 A; rev Y's: 0.2396 A). PROVISIONAL CHOICE (SESSION L9T5-D7): the
-     supervisors are fitted in revision V (inside CON-017 (5), which admits V or X), the revision whose printed rows hold; a rev X part is
+     supervisors are fitted in revision V (inside CON-017 (5), which admits V or X), the revision whose printed rows hold; [SUPERSEDED 7 October 2026 by SESSION L9T5-D11: revision X NOT ADMITTED; round 5's words kept as history:] a rev X part is
      accepted only after the supplier's V-B20 reads its supply current at the bound, at a junction of 105 C or more, at most that figure
      (specimen: three rev X STM32H743VIT6 on the first-article board B; quantity: each supervisor's supply current at FW-B20's bound and
      FW-B21's share, at its operating junction; pass limit: at most 0.2318 A); the inside air at the pockets is U-02's (the T-H1 mock-up)
@@ -559,7 +559,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      babbling (nothing ends it)                   Y   0.3666 A   125 C (sustained)  146.4 C FAILS    134.7 C FAILS
      so on revision V (fitted, L9T5-D7): with iocpre alone the babbling row FAILS 125 C (130.6 C); with iocset every row holds 125 C (the
      babbler 121.5 C). On rev Y's rows, the cover for rev X, the babbler stays over 125 C at 14.0k (134.7 C): a rev X part is still
-     admitted only by V-B20 (10h (1)); the proof above is revision V's and is never applied to revisions X or Y
+     admitted only by V-B20 (10h (1)) [as written at round 5; SUPERSEDED by SESSION L9T5-D11: revision X NOT ADMITTED]; the proof above is revision V's and is never applied to revisions X or Y
    T10-A3 RESTATED (SESSION L9T5-D8): each LDO's input over its requirement at the largest current this record computes for a regulator
      (0.4512 A, the held B5 row on rev Y's rows; dropout 301 mV INFERRED between the printed 300 and 600 mA points): at least 3.7004 V against
      3.6652 V: holds. Round 4 held it at the LDO's full 600 mA; at 14.0k that criterion fails, and a supervisor drawing more than the record's
@@ -676,7 +676,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    (f) THE ROWS MADE TO AGREE: every procurement, contract and inspection instruction points to revision V (L9T5-D7), the final set point
      R602 14.0k (4.0114 V nominal) and 125 C for every sustained state; revision X is HELD with no admission route (round 5's V-B20 route
      at 0.2318 A and L9T5-F22's 'admits any revision' are SUPERSEDED); a rev X part's admission, its own qualification, and the sustained
-     thermal acceptance it would rest on are REMAINING ENGINEERING ((e)); the rail trip's least 0.2183 A is a drafted circuit's figure,
+     thermal acceptance it would rest on are REMAINING ENGINEERING ((e)) [the rev X part's admission and qualification: an UNSELECTED OPTION since 7 October 2026, SESSION L9T5-D11, not remaining engineering]; the rail trip's least 0.2183 A is a drafted circuit's figure,
      not a qualification limit
    COMPOSED: board B in L4-E9's order with I-03's draft, iocpre, canshdn, iocset and the containment delta (16 drafts): every step OK; the generator
      ran to its end; read by pin (each rail's sense, monitor, filter and trip on its EN; each transceiver's SD, diodes, average and
@@ -695,7 +695,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      the rail trip's response times (PROVISIONAL, no printed maximum for the comparator's delay), V-B23's response (WITHDRAWN), the sustained thermal
      bound (WITHDRAWN as a bound, PROVISIONAL), T10-A3 at a peak (PROVISIONAL). REMAINING ENGINEERING, for the receiving company: the
      peer-silence or diagnostic circuit with the recovery proof; the corrected rail-trip response and its network calculation; peak-
-     current containment or the periodic electrothermal solution; a rev X part's qualification; VOS0 under the trip
+     current containment or the periodic electrothermal solution; a rev X part's qualification [an UNSELECTED OPTION since 7 October 2026, SESSION L9T5-D11]; VOS0 under the trip
 
 11. THE STATE OF L9T5-F06 (T10)
    L9T5-F06 STAYS OPEN, round 5's state: T10-A1's row is DRAFTED (FW-B20, unapplied) with the reset state now printed inside it; T10-A2
@@ -738,7 +738,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      is in no FMEA row; round 6 (10j) bounds a babbler through its FDCAN in hardware (the transmit-share limiters, 0.23 s); OPEN for a TX
      pin toggled as a GPIO under the limiter's least share (the peers' TXD observation and 2-of-2 vote, not drafted) and the FMEA row
    L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): DRAFTED in part 22 (apply_gen_sch_?_iocset.py, R602 14.0k, taken);
-     revision X stays HELD until its own qualification (10j (f))
+     revision X stays HELD until its own qualification (10j (f)) [superseded 7 October 2026 by SESSION L9T5-D11: NOT ADMITTED; its qualification an UNSELECTED OPTION]
    L9T5-F25 (Slot A, record l9t5's I-03 check): check_l9t5_netlist.py reads the LDOs' VIN on +5V_IOC; with the containment delta
      (apply_gen_sch_b_iocguard.py, round 6) each sits behind its sense resistor on IOC{t}_LDO_IN: to restate when the delta is taken
    L9T5-F24 (Slot A, record l9t5's pre-regulator check): check_l9t5_netlist.py's 't10' divider (13.3k) is to be restated to 14.0k when
@@ -956,7 +956,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    round 5: the reset state the reference manual prints (HSI at 64 MHz, VOS3) is inside the bound                                         yes
    round 5: at the drop's worst corner the bounded state holds 125 C at the case's air on rev V's rows (fitted, L9T5-D7)                  yes
    round 5: with the response every credible single fabric fault holds 125 C on rev V's rows and both fabrics hold 150 C on both          yes
-   round 5 (part 21, (1)): rev Y's rows, the cover for a rev X part, do not hold 125 C at that corner (a rev X part waits on V-B20)       yes
+   round 5 (part 21, (1)): rev Y's rows, the cover for a rev X part, do not hold 125 C at that corner (a rev X part waits on V-B20 [as at round 5; SESSION L9T5-D11: NOT ADMITTED]) yes
    round 5: without a row the held bus-fault rows still FAIL (the response, not the parts, closes them)                                   yes
    round 5: the SHDN draft composes and reads DRAWN; the state before it and both mutations FAIL; the contract draft applies once         yes
    round 5 (part 21, (4)): the contract draft carries this record's figures and C-DEV rev 2 as issued carries this output's               yes

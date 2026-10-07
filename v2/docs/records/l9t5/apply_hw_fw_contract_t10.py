@@ -5,7 +5,7 @@ MESHSAT-1357, 5 October 2026). UNAPPLIED: the integrator runs it; record l9t5 ru
 WHAT IT IS: two Layer 5 rows brought forward as a NAMED PREREQUISITE of the Layer 4 power gate (the owner's instruction of
 5 October 2026 14:20, section 4: "a narrowly necessary ... interface correction ... may be brought forward solely as a named
 prerequisite of the current power gate. It must have a stated reason and acceptance check"). It restarts no other Layer 5 work.
-ROUND 6 (the check cx45's Q3): FW-B20 restated on revision V only (rev X held until its qualification) and the 14.0 k set
+ROUND 6 (the check cx45's Q3): FW-B20 restated on revision V only (rev X held until its qualification; since 7 October 2026 NOT ADMITTED, SESSION L9T5-D11) and the 14.0 k set
 point (4.01 V); FW-B21's SHDN OR'd with the hardware transmit-share limiter; FW-B22, the quorum's message schedule; V-B22 and V-B23,
 the hardware share limiters and rail trips (apply_gen_sch_b_iocguard.py) on the bench.
 DISPOSITION (the recheck cx46): FW-B22 PROVISIONAL (a traffic model; L9T5-F21 OPEN); V-B23's 0.2 s withdrawn; V-B20's thermal
@@ -39,7 +39,7 @@ TREE = os.path.join(REPO, "v2", "docs", "HW-FW-CONTRACT.md")
 HEAD_OLD = "### 3.3 Board B: modules, supervisors and board B's devices (FW-B01 to FW-B19)\n"
 HEAD_NEW = "### 3.3 Board B: modules, supervisors and board B's devices (FW-B01 to FW-B22)\n"
 FW_B20 = ("| FW-B20 | the three supervisors `B:U41`, U51, U61 (STM32H743VIT6, silicon revision V only, record l9t5 L9T5-D7: revision X "
-          "held until its own qualification, V-B20), each on its private AP2112K-3.3 (U40, U50, U60) from `+5V_IOC` pre-regulated to "
+          "NOT ADMITTED, record l9t5 SESSION L9T5-D11), each on its private AP2112K-3.3 (U40, U50, U60) from `+5V_IOC` pre-regulated to "
           "4.01 V by board A's U601 (R602 14.0 k; record l9t5 T10, `apply_gen_sch_a_iocpre.py` with `apply_gen_sch_a_iocset.py`, DRAFTED), "
           "each behind its rail trip (`apply_gen_sch_b_iocguard.py`, DRAFTED: the supply's AVERAGE held at 0.22 to 0.25 A by hardware, its "
           "peak not; PROVISIONAL, record l9t5 10j (e)) | Run each supervisor at voltage scale VOS3 with the CPU clock (frcc_c_ck) at most "

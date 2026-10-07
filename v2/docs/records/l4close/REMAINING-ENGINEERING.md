@@ -296,7 +296,7 @@ as filed.
 - **Affected provisional outputs.** "the universal sustained bound and its positive margin are WITHDRAWN" ([T10:620]); the worst-case
   margin row "PROVISIONAL/OPEN" ([CON:314-317]); every final T10 figure a MODEL reading, PROVISIONAL/OPEN ([CON:293-312]); T10-A3 at a
   peak PROVISIONAL ([T10:611-613]); L9T5-F13 and the babbling row PROVISIONAL ([T10:678-690]); T10-A5's limits "measurements, NOT an
-  acceptance" ([T10R:153]); a rev X part's admission resting on it ([T10R:224]); Layer 5's contract row V-B20, whose readings are "measurements, NOT an
+  acceptance" ([T10R:153]); a rev X part's admission resting on it ([T10R:224]) [an UNSELECTED OPTION since 7 October 2026, SESSION L9T5-D11]; Layer 5's contract row V-B20, whose readings are "measurements, NOT an
   acceptance of a sustained bound" ([HWFW:64-70]).
 - **Receiving company's task.** As [T10:620-621]; acceptance on the unchanged criterion: "125 C for every sustained state, 150 C only for a
   transient hardware ends" ([T10R:3]), "over tolerances and repeated faults, including
@@ -322,11 +322,11 @@ as filed.
   admission route; R602 14.0 k is the final set point" ([T10R:51-56]); L9T5-F23's consequence "SUPERSEDED in its admission clauses"
   ([T10R:205-209]); the rows made to agree ([T10:645-649], [HWFW:41-51]).
 - **Unresolved, of substance.** "a rev X part's admission, its own qualification, and the sustained thermal acceptance it would rest
-  on are REMAINING ENGINEERING" ([T10:647-648]).
+  on are REMAINING ENGINEERING" ([T10:647-648]) [the admission and the qualification: an UNSELECTED OPTION since 7 October 2026, SESSION L9T5-D11, revision X NOT ADMITTED].
 - **Affected provisional outputs.** Revision X HELD ([T10R:144-145]); the procurement and inspection rows (L9T5-F23, Layer 6)
   ([T10R:205-209]).
 - **Receiving company's task.** A rev X part's qualification: "V-B20 in its bounded state at most 0.2183 A (the rail trip's least) and
-  its rows re-solved" ([T10R:144-145]), resting on RE-7's bound ([T10R:224]).
+  its rows re-solved" ([T10R:144-145]), resting on RE-7's bound ([T10R:224]) [none since 7 October 2026: SESSION L9T5-D11 (record l9t5, `T10-ROUND5.md` section W133) does not admit revision X, so this qualification is an UNSELECTED OPTION outside the scope, not a task].
 - **Reproduce.** As RE-5.
 - **State on this tip.** The text defect is disposed of in the cited passages; the dependent acceptance stays REMAINING ENGINEERING
   ([T10:647-648]). The record makes no closure claim for item 8.
@@ -445,7 +445,7 @@ as filed.
   ([B2:157-164]).
 - **Reproduce.** `python3 v2/docs/records/l4e7/l4e7_p0sol.py` (section 5, the separate composition `ORDER_E_B2`) ([B2:36-37]).
 - **State on this tip.** The wording defect is disposed of in the cited passages; HO-G stays REMAINING ENGINEERING outside the
-  baseline.
+  baseline [and SESSION L4E7-D1 (7 October 2026, record l4e7 `B2-PRESENCE.md` section 8) takes up no presence-pair route, so nothing in the baseline rests on HO-G].
 
 ## 2. The cases the authors handed over
 
@@ -546,7 +546,7 @@ as filed.
   B2's function lost, LATENT ([B2:148-152]).
 - **Unresolved.** "monitored or fault-tolerant presence detection" and "INP held inside its absolute maximum", then the timing proof
   ([B2:157-164]); neither is drafted ([B2:163]).
-- **Affected outputs.** None in the baseline ([B2:34-37]). **Task.** Only for a presence-pair route taken up again ([B2:157-164]).
+- **Affected outputs.** None in the baseline ([B2:34-37]). **Task.** Only for a presence-pair route taken up again ([B2:157-164]) [none is taken up: SESSION L4E7-D1, 7 October 2026].
   **Reproduce.** As RE-18.
 
 ### HO-H: E11-29, the three paralleled battery FETs' sharing (QUALIFICATION, kept apart)
@@ -667,6 +667,17 @@ as filed.
 | The eFuses' downstream contacts at the inside air | [CON:179-186]; [EFS:143-161] | CO-16's conditions | PROVISIONAL at the inside air ([EFO:425-431]) |
 | The battery switch's gate drive: D-14 with UDC-1's (S1), the three BUK6Y10-30P on one BATDRV, and E-1's installed acceptance at (i)(a) (cited at `6fe398e9`) | [L4E9:1131-1135]; [L4E9:1401]; [E11:1521-1526] | HO-L (E11-37) | OPEN: "E11-37 OPEN (TI or the bench)" ([E11:1533]); D-14 "CONDITIONAL on E11-29, E11-30 and E11-36 with E11-37 OPEN" ([L4E9:1134]); R-183 OWED ([REG:279]) |
 
+**Row (b)'s drafts restate six of these claims (7 October 2026, Layer 4 task L4A-61; DRAFTED, none applied, unchecked until row (b)'s check L4A-62).** Row (b)'s drafts take the place of the containment that section 4's rows read (record l9t5 `apply_gen_sch_b_canmb.py`, `apply_gen_sch_b_regstage.py`, `apply_gen_sch_b_canen.py`, `apply_gen_sch_b_hodtest.py`). The rows above stand as the tip `1c6d56f5` read them; each claim row (b) touches reads as below with the drafts, and no state is raised: RE-5 to RE-8 stay NOT CLOSED as cx46 filed them. The line numbers below are those of the outputs this table was applied beside.
+
+| Claim (its row above) | Row (b)'s draft | State it reads with the drafts (cited) |
+|---|---|---|
+| The supervisors' LDOs' 125 C sustained bound | regstage (W138): a TPS2553-1 latch-off limiter ahead of a TPS73733DCQRM3 at each supervisor, the rail trip removed; hodtest (W146): the limiter's latent loss of its limit found by the peers' in-service test | SUPPORTED ON PRINTED FIGURES with the theta read as printed, CONDITIONAL on E-17 (the site's theta at IOSmax and at HO-D's pass top, its Zth at 10 ms and the ground current), PROVISIONAL until L4A-62: the junction at constant maximum dissipation at the limiter's printed maximum bounds every waveform under it, cx46's countermodel included ([T10:800-815]); the printed theta is a JEDEC best case, so E-17 decides the condition ([T10:830-842]); L4A-57 "DONE AS CONDITIONAL on E-17" ([T10:896-912]); the output out of regulation excluded with its reason, W151-1 ([T10:843-858]); a lost limit found within 3602.341 s (record l4hod, DRAFTED), its pass at the site CONDITIONAL on E-17 read also at the test's pass top 0.6819 A, the site's theta at most 82.5 C/W at zero ground current (W163-N1, the same block of T10) |
+| CON-004's quorum service | canmb (W137, W143), canq (W139), canen (W143) | DRAFTED, PROVISIONAL until L4A-62: the peers' attribution and 2-of-2 votes hold the quorum on IOHA rows 3, 5 and 7, lost only with both fabrics broken (row 8) ([T10:918-938]); the FMEA rows 21 to 24 drafted (record l9t5 `apply_ioha_fmea_rowb.py`) |
+| FW-B22, the quorum's schedule | canq's restated schedule (W139, W143) and the in-service test's restart exception | PROVISIONAL, DRAFTED (records l9t5 `apply_hw_fw_contract_canq.py` and `apply_hw_fw_contract_rowb.py`, none applied) |
+| FW-B20 and the controller's survival | regstage (the limiter's least is over VOS0's current, so it does not bound HO-E) | PROVISIONAL, WEAKENED by row (b): the rail trip's controller-protection role (each controller's average under its 125 C current) moves to HO-E (record l4reg L4REG-F7, W159 on W157-F4), L4A-59's with its check L4A-100 ([T10:918-938]); FW-B20's enabled set restated with TIM3 and an ADC (record l9t5 `apply_hw_fw_contract_rowb.py`) |
+| T10-A3, the LDO input headroom at the hardware bound | regstage: the limiter's resistance in place of the sense resistor, at the limiter's maximum on all three | PROVISIONAL (V-T10-DROP extended, L4REG-F2; L4A-62): it holds on the 1 A dropout row taken as the bound and on the INFERRED linear dropout ([T10:892-895]) |
+| The worst-case margin row and the final figures of the connected trace | the four drafts with their rail additions | restated in the connected output's section 11a: the service window with row (b)'s enabled set and the drafts' additions ([CON:374-378]), the final figures and the worst-case margin row on the selected stage, CONDITIONAL on E-17 ([CON:379-400]), section 11's rows 5, 6, 7 and 17 under row (b), each keeping cx46's state ([CON:401-406]) |
+
 ## 5. Summary
 
 Counts: remaining engineering 20; qualification 1; external architecture fact 3; closed 4; conditional 2.
@@ -679,12 +690,12 @@ Counts: remaining engineering 20; qualification 1; external architecture fact 3;
 | RE-5 | remaining engineering | peer-silence or diagnostic circuit and recovery proof | CON-004, FW-B22, L9T5-F21, L9T5-F16, R-245 | `v2/docs/records/l9t5/l9t5_t10.py` |
 | RE-6 | remaining engineering | a rail-trip response on printed timing and its full network | V-B23 (withdrawn), T10 thermal and T10-A3 bounds | `v2/docs/records/l9t5/l9t5_t10.py` |
 | RE-7 | remaining engineering | peak-current containment or a periodic electrothermal solution with uncertainty | the sustained bound, the worst-case margin row, T10-A5 limits | `v2/docs/records/l9t5/l9t5_t10.py` |
-| RE-8 | remaining engineering | a rev X part's qualification (V-B20 at most 0.2183 A) on RE-7's bound | revision X HELD; L9T5-F23 rows | `v2/docs/records/l9t5/l9t5_t10.py` |
+| RE-8 | remaining engineering | a rev X part's qualification (V-B20 at most 0.2183 A) on RE-7's bound [an UNSELECTED OPTION since 7 October 2026, SESSION L9T5-D11: revision X NOT ADMITTED, no task] | revision X HELD [NOT ADMITTED, SESSION L9T5-D11]; L9T5-F23 rows | `v2/docs/records/l9t5/l9t5_t10.py` |
 | RE-9 | remaining engineering | replay 20f and 22 at the owners' restated allowance | rows resting on the DOCK_EN_OUT allowance | `v2/docs/records/l4e11/l4e11_power.py` |
 | RE-10 | remaining engineering | retry-energy analysis; automatic diagnostic or fault-tolerant redesign | C-PROT for the guard, L4-E11 28, R-244 | `v2/docs/records/l8p/l8p_c4.py` |
 | RE-13 | remaining engineering | re-run the connected trace after the seven rows close | `l9t5_connected.out` sections 5 to 10 | `v2/docs/records/l9t5/l9t5_connected.py` |
 | RE-17 | remaining engineering | HO-A to HO-E | section 4 | as RE-5, RE-10, RE-13 |
-| RE-18 | remaining engineering | HO-G, only if a presence-pair route is taken up again | none in the baseline | `v2/docs/records/l4e7/l4e7_p0sol.py` |
+| RE-18 | remaining engineering | HO-G, only if a presence-pair route is taken up again [none is: SESSION L4E7-D1, 7 October 2026] | none in the baseline | `v2/docs/records/l4e7/l4e7_p0sol.py` |
 | HO-A | remaining engineering | automatic diagnostic with a bounded interval, or a redesign | C-PROT for the guard, L4-E11 28 | `v2/docs/records/l8p/l8p_c4.py` |
 | HO-B | remaining engineering | bounded retry-energy analysis of path 2 alone | claims on path 2 alone | `v2/docs/records/l8p/l8p_c4.py` |
 | HO-C | remaining engineering | 2-of-2 peer observation and vote (not drafted) | CON-004, FW-B22 | `v2/docs/records/l9t5/l9t5_t10.py` |
@@ -708,14 +719,14 @@ Counts: remaining engineering 20; qualification 1; external architecture fact 3;
 
 - **A. One finding identifier, two findings.** Slot A's L9T5-F26 is J_PA's VH derating ([T5R:194-196], [CON:356-358]); Slot C's
   `T10-ROUND5.md` names "L9T5-F26 (Slot A, its `l9t5_connected.out` 193-199, 282-301, 350-352)" for the connected verdicts inheriting
-  its OPEN claims ([T10R:227-229]). L9T5-F27 settled a similar collision for the decisions D9 and D10 ([T5R:174-176]).
+  its OPEN claims ([T10R:227-229]). L9T5-F27 settled a similar collision for the decisions D9 and D10 ([T5R:174-176]). Dated note, 7 October 2026 (record l4k, the DESK-gate assessment's K-20): answered on the records' side by W9, merged into set 31 at `0ed29a78`: `T10-ROUND5.md` names the second finding L9T5-F28, "renamed from L9T5-F26" ([T10R:227]), and record l9t5's README says of J_PA's finding "The identifier is this finding's alone" ([T5R:196]); this item is history from `1c6d56f5`.
 - **B. Two figures for the declared upper bound of the return.** 27.8159 A with J_5V_IOC at 1.3800 A in the study ([DIST:86]) and
-  27.9108 A in the one-node model and the README ([P0R:21], [T5R:59]), whose J_5V_IOC term is the declared peak 1.4749 A ([CON:151]).
+  27.9108 A in the one-node model and the README ([P0R:21], [T5R:59]), whose J_5V_IOC term is the declared peak 1.4749 A ([CON:151]). Dated note, 7 October 2026 (record l4k, K-21): answered on the records' side by W9 (merged at `0ed29a78`): record l9t5's README names 27.9108 A the one-node model's ([T5R:59]) and uses the study's own 27.8159 A where the study is meant ([T5R:147]), and record l8r2 states "every 'declared upper bound' of this paragraph is that figure", 27.8159 A ([L8R2:1081]); this item is history from `1c6d56f5`.
 - **C. The stability condition on the tip read (CO-14).** `stability/DIGESTS-cr3.txt` records `l9t5_f01.out` at a sha256 that differs
   from the file on `1c6d56f5`, and `l9t5_connected.out` pins `l9t5_f01.out` as `2c590640a2f7322b` ([CON:21]) while the file on this
   tip begins `2aa78a95`; the checkpoint changed only the label of that output's PRINTED-rows band, which now reads "NOT a bound on the cap"
   ([F01:132-134]), and its commit subject ends with the words outputs regenerating. The other seventeen outputs of the cascade equal their DIGESTS-cr3
-  digests on this tip ([STAB]).
+  digests on this tip ([STAB]). Dated note, 7 October 2026 (record l4k, K-17): the gap closed at CANDIDATE 3 (`ac8efbca`), which re-took the digests with `l9t5_f01.out` at `2aa78a957e497677` ([STAB:15]), the file's sha256 and the connected output's pin at the candidate `6bc4424e`; on main `be07863b` the connected output's pin of `l9t5_f01.out` and the file read `f1aa6ae62223e936` alike; this item is history from `1c6d56f5`, and cx46's reading of CO-14 stands as given.
 - **D. The response time and the countermodel's peak, two MODEL readings each.** V-B23's response: 0.9259 s (cx46, from 0.1739 A)
   ([CX46:89]) and about 0.98 s (the record, from the bounded state) ([T10:584-586]). The countermodel's peak: 127.55 C ([CX46:91])
   and 127.54 C (the record's reproduction) ([T10:619-620]). Neither difference changes a state: both sides read over 125 C and over
@@ -729,7 +740,7 @@ Counts: remaining engineering 20; qualification 1; external architecture fact 3;
   [SOLO:399-404], [P11:154-160]): it is not this ledger's file, and the contradiction between that text and this reading is the
   coordinator's to carry to the next set. (6 October 2026: once `fnd/w4l4e7` at `786aed2f` is adopted, record l4e7's L4E7-P0SOL.md
   section 4 (a) carries this reading ([P0SOL:141-149] at `786aed2f`), which answers the contradiction on record l4e7's side.)
-- **F. The P0 list is revision 2 (RE-1)** ([P0L2:1]) while the records carry the cx46 disposition ([T5R:1]).
+- **F. The P0 list is revision 2 (RE-1)** ([P0L2:1]) while the records carry the cx46 disposition ([T5R:1]). Dated note, 7 October 2026 (record l4k, K-15): revision 3 was adopted as the P0 list at set 30's adoption (`836f711b`; its first line, [P0L:1]) and revision 2 kept as dated history in `v2/docs/records/l4close/P0-POWER-LIST.rev2-2026-10-05.md`; this item is history.
 - **G. E11-37's references and class (added 6 October 2026, cited at `6fe398e9`).** The P0 list's row P0-8 cites "(V2R)" and
   "(L4-E11 round 16)" for the bound and the rebinding ([P0L2:25]); L4-E11's rounds 14 to 16, which answer V2R, V2RF and V2RG, are
   TP-E11-29's fixture and heavy leads and name no E11-37 ([E11:1817-2066]); the rebinding to the three devices is round 9's 19d

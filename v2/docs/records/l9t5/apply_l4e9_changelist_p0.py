@@ -20,7 +20,7 @@ What it changes, and nothing else:
   2. v2/docs/records/l4e9/l4e9_power_path.py: the board D owner, the release guards, the rows' places in CHANGE_ORDER and their order
      constraints, the class rule's WITHDRAWN branch, the change list's printed state for a withdrawn row, and D-10's and D-16's rows
      and next actions restated from record l4e7's L4E7-P0SOL.md section 5 (D-10 OPEN, an UNRESOLVED PROTECTION DEFECT in the present
-     model, the receiving company's engineering item E-1; route B2 an unapproved PARTIAL proposal that does not resolve it; D-16
+     model, the receiving company's engineering item E-1; route B2 (as written then, an unapproved partial proposal; since set 31 UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline, with no owner item: record l4k, 7 October 2026, K-24), which does not resolve it; D-16
      corrected in draft);
   3. v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md section 3: the note below the section's prose and the table regenerated from the
      patched script's change list, R-240 with it (the page was not touched for it alone: L4-E11 and L4-E10 pin it); the record's

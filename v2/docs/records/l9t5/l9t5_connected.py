@@ -921,7 +921,7 @@ def main():
             s13[1]["at"] - s13[1]["need"], s14[0]["at"] - s14[0]["need"], s14[1]["at"] - s14[1]["need"], FC["i_hold"]))
         w("   row, the cover for the held revision X) holds at 13.3 k (%+.4f V, %+.4f V) and not at 14.0 k (%+.4f V, %+.4f V): no fitted state" % (
             h13[0]["at"] - h13[0]["need"], h13[1]["at"] - h13[1]["need"], h14[0]["at"] - h14[0]["need"], h14[1]["at"] - h14[1]["need"]))
-        w("   reaches it, because a revision X part must stay under the trip's least %.4f A in its bounded state (V-B20, 10j (f)), and a draw over" % FC["win"][0])
+        w("   reaches it, because a revision X part must stay under the trip's least %.4f A in its bounded state (V-B20, 10j (f)) [revision X NOT ADMITTED since 7 October 2026, SESSION L9T5-D11], and a draw over" % FC["win"][0])
         w("   the hardware bound is a fault the trip ends while the other two hold the quorum (Slot C's round 6 restatement, which supersedes")
         w("   SESSION L9T5-D8)")
         w("   ADAPTATION REJECTED: R602 13.8 k was to keep the 600 mA row; with the sense resistor that row fails there too (%+.4f V as drawn," % (
@@ -933,7 +933,7 @@ def main():
         w("   the supplier's validation task V-T10-DROP, restated on the hardware bound: three AP2112K-3.3 specimens of the fitted lot, dropout at")
         w("   %.4f A and TJ 125 C at most %.0f mV (or Diodes' printed statement)" % (FC["i_trip"], drop_mv(FC)))
         w("   L9T5-D7 (revision V fitted) STAYS a constraint, not a fallback: with the containment rev Y's bounded state is over the trip's least")
-        w("   current, so revision X stays HELD on V-B20 (Slot C, 10j (f));")
+        w("   current, so revision X stays HELD on V-B20 (Slot C, 10j (f)) [superseded: NOT ADMITTED, SESSION L9T5-D11];")
         w("   check_l9t5_netlist.py reads the composed design in its t10s mode (R602 14.0 k; the band 3.87 to 4.18 V, its floor from the superseded")
         w("   L9T5-D8 row as drawn without the sense resistor, stricter than the hardware bound's, kept) and its guard mode (each LDO behind one")
         w("   sense resistor, L9T5-F25 restated)")
@@ -956,7 +956,7 @@ def main():
             RE if (OPEN[6] or OPEN[7]) else "as shown", 125.0 - tt[14.0e3][0]))
         w("     constant current at the trip's average maximum, %+.1f K under cx46's periodic countermodel (the largest served state %+.1f K);" % (
             125.0 - FC["tj_peak"], 125.0 - sv_max))
-        w("     rev Y's rows no longer cover a revision X part (its bounded state over the trip's least; HELD on V-B20); the LDO input headroom of T10-A3's chain at the hardware bound %+.4f V with the return as drawn and %+.4f V with the" % (
+        w("     rev Y's rows no longer cover a revision X part (its bounded state over the trip's least; HELD on V-B20 [superseded: NOT ADMITTED, SESSION L9T5-D11]); the LDO input headroom of T10-A3's chain at the hardware bound %+.4f V with the return as drawn and %+.4f V with the" % (
             t14[0]["at"] - t14[0]["need"], t14[1]["at"] - t14[1]["need"]))
         w("     dedicated return (the return's effect %+.4f V), the top %.4f V under the LDO's %.1f V maximum; the required service unchanged (only" % (
             (t14[1]["at"] - t14[1]["need"]) - (t14[0]["at"] - t14[0]["need"]), FC["tops"][14.0e3][2], FC["vin_max"]))

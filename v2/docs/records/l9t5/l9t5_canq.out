@@ -5,20 +5,20 @@ until independently checked)
 
 1. INPUTS (sha256/16)
    5d14cc85213ad999 v2/docs/records/l9t5/inputs/l4canmb-l9t5_canmb-5d14cc85.out
-   67335ea42747e22f v2/docs/parts/STM32H743-COMPATIBILITY.md
+   43b57022e32a0ce0 v2/docs/parts/STM32H743-COMPATIBILITY.md
    12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
    20fdb1cd9e1c1e29 v2/docs/records/l9t5/apply_hw_fw_contract_canq.py
-   efcfdf67f1fcab83 v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
+   b986d78249aeb7bb v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
    336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
    69e6ac4fc0417d3c v2/docs/records/l9t5/apply_gen_sch_a_iocbuck.py
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
-   fe5e69e35142a031 v2/docs/records/l4reg/l4reg_compare.out
-   37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
+   4ae2e514201032f2 v2/docs/records/l4reg/l4reg_compare.out
+   94e561ae771c7cdd v2/docs/records/l4close/REMAINING-ENGINEERING.md
    ec2da3f14b66fcfb v2/docs/records/l9t5/inputs/SOURCES-canq.txt
-   d2f9cb974c384add v2/docs/records/l9t5/l9t5_t10.out
-   74753bb1e2860bff v2/docs/records/l9t5/T10-ROUND5.md
-   653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
+   e106c880d49ceaea v2/docs/records/l9t5/l9t5_t10.out
+   ba7d212fe04fbf34 v2/docs/records/l9t5/T10-ROUND5.md
+   45ee58fa2d170d1c v2/docs/REQUIREMENTS-TRACE.md
    9e7f53205453bb22 v2/vendor/st/pdftext/st-es0392-rev15.layout.p48.txt
    bb7ff2f3f5cb2ce8 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2469.txt
    609cb3ecd86269dd v2/vendor/st/pdftext/st-rm0433-rev8.layout.p2470.txt

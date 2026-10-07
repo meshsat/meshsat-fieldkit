@@ -13,7 +13,7 @@ NOT READ; DRAFTED: true of a release-guarded draft no generator carries; PROVISI
    sanyo      d47c98af1a1e3f285250120f28027a7264e7016e6182b9ccb21d9b4ad13e3611  v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md
    l4e11md    101b9896de5195619dda7fb97eafd24fd349abaeb879bb79edc4456ced6bf4b3  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
    assembly   29dbe3a0c4938274b3fe780d27c565737adf9dd506b8c8c81e72f3776ef75fed  v2/docs/ASSEMBLY.md
-   proc       6308d0b7335e294f714209f8e961e5ab15c2a4551d3d7119351e6229923346ed  v2/docs/parts/PROCUREMENT.md
+   proc       d6a925fb812ee484b64ff52e68e5c44c75a4405cf2939d93af16f11b38b546b2  v2/docs/parts/PROCUREMENT.md
    net_a      6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
    net_b      3ef9b8c49a01b72834dece18a69e8637305d97bbf7342d765d28be596f0464d6  v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
    net_c      c9f7394594201045be328a07284328a7eef2c2f451e35e0828a98ac3e5510609  v2/ecad/pcb-c-display-c8/out/pcb-c-display.net

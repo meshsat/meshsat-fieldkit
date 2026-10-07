@@ -3,9 +3,9 @@ l4e11_rowc: record l4e11 round 19, Layer 4 register row (c): L4A-67 (section 28 
 built, bought or measured. LABELS: RECORD; INFERRED; MODEL; ASSUMED.
 
 0. PINS (sha256/16)
-   36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
-   3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
-   825562517df6374f  v2/docs/records/l8p/l8p_cprot.out
+   e742b1eb590e408a  v2/docs/records/l4e11/l4e11_power.out
+   5cc3eedafd987a74  v2/docs/records/l8p/l8p_c4.out
+   f4d635d06cdd6f69  v2/docs/records/l8p/l8p_cprot.out
    e8f1294bb0f76c75  v2/docs/records/l8p/apply_gen_sch_p_breaker.py
    544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    19af759a934be6cc  v2/docs/records/l8p/apply_gen_sch_a_thgfs.py

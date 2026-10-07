@@ -2361,7 +2361,7 @@ def t_decision_d11s_all_transmit_floor_on_the_final_drafts_is_open_and_its_desig
     assert reg["R-213"][1] == "TEST" and "60 s" in reg["R-213"][2] and reg["R-214"][1] == "TEST" and "rest-voltage" in reg["R-214"][2]
     ho = {r[0]: r for r in _md_rows(HAND, "| ID | Target |")}
     lh = [r for r in ho.values() if "FW-A05" in r[1] and "K4" in r[1]]
-    assert len(lh) == 1 and "the fans off while keyed" in lh[0][2] and "SoC floors 15.5 V and 12.4 V rest" in lh[0][2] and lh[0][4] == "DRAFTED"
+    assert len(lh) == 1 and "SoC floors 15.5 V and 12.4 V rest" in lh[0][2] and lh[0][4] == "DRAFTED" and "the fans NOT on it" in lh[0][2] and lh[0][2].count("FAN_OK") == 1 and "R-210 to R-212)\" is WITHDRAWN" in lh[0][2], "LH-12 must read K4's off-list as R-28 states it, round 8's fans clause WITHDRAWN (K-03, record l4k, 7 October 2026; basis: the register's R-28 and R-210 to R-212 WITHDRAWN)"
     contract = open(os.path.join(ROOT, "v2", "docs", "HW-FW-CONTRACT.md"), encoding="utf-8").read()
     assert "the outlets and the heater off while keyed" in contract and "SoC floors 15.5 V and 12.4 V rest" in contract
     # the modes as Layer 9 prints them, in 1d and out 3

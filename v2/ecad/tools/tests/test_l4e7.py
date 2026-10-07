@@ -1934,7 +1934,8 @@ def t_p0sol_b2_page_carries_the_authority_finding_the_owner_item_and_the_figures
 def t_p0sol_d10_is_written_as_an_unresolved_defect_and_b2_never_as_its_closure():
     """The owner's review of checkpoint 4 (part 23): D-10 is an unresolved protection defect in the present model, written as the
     receiving company's remaining engineering item E-1 with its failing cases, requirements, needed correction and the outputs that
-    stay PROVISIONAL; route B2 is an unapproved PARTIAL proposal and no text says adopting or declining it resolves D-10."""
+    stay PROVISIONAL; route B2 is an unapproved PARTIAL proposal [round 3's words; UNSELECTED and WITHDRAWN AS DRAFTED since,
+    and SESSION L4E7-D1 takes up no presence-pair route] and no text says adopting or declining it resolves D-10."""
     import re
     texts = {nm: " ".join(open(os.path.join(REC, nm), encoding="utf-8").read().split())
              for nm in ("l4e7_p0sol.out", "L4E7-P0SOL.md", "B2-PRESENCE.md", "SUPPLIER-P1-1-P0SOL.md")}
