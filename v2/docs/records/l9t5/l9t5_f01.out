@@ -3,10 +3,10 @@ DESIGN, DESK ARITHMETIC: nothing has been built, bought, powered or measured. La
 MODEL, ASSUMPTION, MISSING.
 
 0. PINS (path  sha256/16; the INA250 sheet is held back, fetched and checked by record l4e7's fetch_held_back.py, never committed)
-   a1_out     v2/docs/records/l9t5/l9t5_a1.out  sha256 7863f8e54bc67878
+   a1_out     v2/docs/records/l9t5/l9t5_a1.out  sha256 983bf084e9576806
    bq4050     v2/vendor/battery/ti-bq4050.pdf  sha256 2664e33fe6d6ebed
    budget     v2/docs/records/l9pwr/l9pwr_budget.py  sha256 9b251b7d3be2aca7
-   case_out   v2/docs/records/l9t5/l9t5_case.out  sha256 feef12bdceb5340c
+   case_out   v2/docs/records/l9t5/l9t5_case.out  sha256 1e89febe12c2c1e7
    case_py    v2/docs/records/l9t5/l9t5_case.py  sha256 ada5c44d7c9e33f7
    cases      v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md  sha256 0be579949c22eab1
    csd18510   v2/vendor/battery/ti-csd18510q5b.pdf  sha256 cb747de812f66859
