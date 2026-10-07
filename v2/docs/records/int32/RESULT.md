@@ -8,7 +8,8 @@ re-key set 32 is planned to carry and why one, the dry runs as logged, the compu
 claims as the assessment gives them, the classification bound; W75's independent read of it answered by W78 (row 15 `REVIEWED-INPUT
 CHANGED` by the coordinator's ruling on W75's F2); W79's recheck answered by W80 (`test_res32.py` holds through the fill); W81's four commits on fnd/w34pdftext added by W85 (rows 13.1
 to 13.4, none `REVIEWED-INPUT CHANGED`, read by W87, an AI review, and each still UNREVIEWED since cx46, section 2b); W95's rows that bring the four adoption pages to set 32,
-`v2/docs/records/int32/ENTRY-PAGES.patch.md` (held by `test_patch32.py` against the pages as set 32's integration holds them, section 7), corrected by W102 on W99's independent read of them. **NOT DONE:** everything the integration will give: set 31's promoted
+`v2/docs/records/int32/ENTRY-PAGES.patch.md` (held by `test_patch32.py` against the pages as set 32's integration holds them, section 7), corrected by W102 on W99's independent read of them; W109's F2 to F4, W110's B1, B2 and C1 to C3 and W106's N-c answered by W113 on
+fnd/adopt32 (the classification's rows 31 to 33 prepared in its section 3; section 8). **NOT DONE:** everything the integration will give: set 31's promoted
 revision (the record's BASE row; the chain's base is main's tip at its start, section 3b), the chain's counts and the freeze's and the gate's lines, the re-key's cache commit, the candidate, the
 promotion and the adoption commit, each a placeholder that the coordinator's fill tool fills (the paragraph "Placeholders" below).
 **NEXT:** at the adoption, in this order: the coordinator runs the fill tool on both files and the patch file they name (`<worktrees>/_bin/fill_res.py --set 32`:
@@ -480,7 +481,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   W95 repeated the three stages after naming the patch file (stand-ins on set 31's candidate holding the five tips): the template 97 rows,
   the first run 79 lines applied with 3 ADOPTION occurrences deferred, the second 3 lines, a third refused; `test_res32` and
   `test_patch32` read 24 passed at each stage.
-  W102 repeated them on the tree set 32's chain builds (set 31's promoted revision, main `ad757edb` as step a1, the five pins, step
+  W102 repeated them on the tree set 32's chain was then planned to build (set 31's promoted revision, main `ad757edb` as step a1, the five pins, step
   a5; the patch file's paragraph "How the rows were checked again"): the template 97 rows (this count unchanged), the first run 79
   lines with 3 ADOPTION occurrences deferred, the second 3 lines, a third refused; `test_res32`, `test_patch32` and
   `test_public_hygiene` read 30 passed before the fill, after the first run and with the rows applied, and after the second run once
@@ -490,7 +491,13 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   SUPPLIER-HANDOVER.md 8, LAYER-STATUS.md 3, EXECUTION-PLAN.md 6), each the token of a row of the patch file. W105 repeated
   the three stages on that tree with fnd/adopt32 merged (the patch file's paragraph "The rows applied and the tests restated"): the
   template 122 rows, the first run 101 lines with 5 ADOPTION occurrences deferred, the second 5 lines, a third refused (exit 2);
-  ten modules, `test_res32` and `test_patch32` among them, read 113 passed, 0 failed, 0 skipped at each stage.
+  ten modules, `test_res32` and `test_patch32` among them, read 113 passed, 0 failed, 0 skipped at each stage. That tree was not the
+  chain's: since W104 the chain's base is main's tip at its start (section 3b), and on the chain's tree W110 read the ten modules as
+  116 passed, 1 failed before the fill and 114 passed, 3 failed after each run (its B1 and B2, W110's C3). W113 merged main into
+  fnd/adopt32, restated the two tests and repeated the stages on the chain's tree (main `be07863b`, the five pins, step a5, stand-ins
+  for the re-key and the candidate, then fnd/adopt32 merged; the patch file's paragraph "The stages on the chain's own tree"): the
+  template 122 rows, the first run 101 lines with 5 ADOPTION occurrences deferred, the second 5 lines, a third refused (exit 2); the
+  ten modules read 117 passed, 0 failed, 0 skipped at each stage.
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.
