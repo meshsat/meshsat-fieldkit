@@ -566,7 +566,16 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   fnd/adopt32, restated the two tests and repeated the stages on the chain's tree (main `be07863b`, the five pins, step a5, stand-ins
   for the re-key and the candidate, then fnd/adopt32 merged; the patch file's paragraph "The stages on the chain's own tree"): the
   template 122 rows, the first run 101 lines with 5 ADOPTION occurrences deferred, the second 5 lines, a third refused (exit 2); the
-  ten modules read 117 passed, 0 failed, 0 skipped at each stage.
+  ten modules read 117 passed, 0 failed, 0 skipped at each stage. W154 (7 October 2026, after writing the classification's integration
+  rows from git) ran the template on two scratch clones of fnd/adopt32 with set 32's candidate merged (`--no-ff`, as the adoption's
+  first step merges it), one at W128's `27668471` and one at W154's tip: 122 rows on each (RESULT.md 70, CLASSIFICATION.md 2,
+  ENTRY-PAGES.patch.md 25 and the four pages 25; GATE 74, CANDIDATE 33, REKEY 6, ADOPTION 5, PROMOTED 4; no KEEP row), equal row for
+  row in file, token, occurrence and suggested source; 72 rows moved line (this file's by 3 and 10, the classification's rows 32 and
+  33 by 25) and rows 32 and 33's context now reads their written cells. On the same two trees the placeholder check printed the same
+  lines (the record's three files deferred and recounted; the four pages' tokens, which the fill fills, not deferred: a refusal on both
+  trees alike). The known step's script on W154's tree: exit 0, CORRECTED, six files restated, row 33's KNOWN ITEM already filled,
+  where adopt32.sh's KNOWN_NFILES expects seven (W123's count, made while row 33 still carried its fill-in cell): W154's finding for the
+  coordinator, who sets that count to six for the real run or restates the script.
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.

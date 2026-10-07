@@ -176,7 +176,9 @@ OUTSIDE = {"4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31's tip, set 31'
            "06d064ffa58a1211139d0f1d8e7b536675a67948": "the coordinator's merge of fnd/s32applier, C2 (row 31.9)",
            "c205ff65636e914ef26c87eca3209ea4c7d096de": "fnd/s32applier, W134: test_applier_state's fixture (row 31.9.1)",
            "a598ada042acf35a1af59818a6ebdd26192e7996": "the re-key's cache commit C3 (row 32)",
-           "f08e396175dd418434061d731e08111d006d6efa": "set 32's candidate C4 (row 33)"}
+           "f08e396175dd418434061d731e08111d006d6efa": "set 32's candidate C4 (row 33)",
+           # W154: fnd/adopt32 at W128's tip, the baseline of W154's template comparison (RESULT section 8)
+           "2766847182980fe48f32e63ace253463cdde4c74": "fnd/adopt32 at W128's tip (RESULT section 8, W154's template baseline)"}
 # W154: the integration's rows read from git (p_integ): the first-parent line from CHAIN_BASE to INTEG_TIP (C2, the last commit before the
 # re-key), then REKEY_AT (C3) and CAND_AT (C4) as rows 32 and 33; RES32_MERGED is fnd/res32 as the chain merged it (row 31.4)
 INTEG_TIP = "06d064ffa58a1211139d0f1d8e7b536675a67948"
