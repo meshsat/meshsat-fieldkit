@@ -684,6 +684,9 @@ def main():
     for k, lab in (("a", "at T10's point %.4f A on all three" % E["a3_i"][0]), ("b", "at the limiter's maximum %.4f A on all three" % hi1),
                    ("c", "S1 %.4f A at the other two, one at the limiter's maximum" % E["s1"][0]), ("e", "S3' %.4f A on all three in one bit" % s3m)):
         w("       (%s) %-50s %.4f V against %.4f V: %+.4f V, %s" % (k, lab, A3[k][0], A3[k][1], A3[k][0] - A3[k][1], "holds" if A3[k][0] >= A3[k][1] else "FAILS"))
+    keep = avail(hi1, 3 * hi1, S["ron"][0] + 0.3 * 1.01)
+    w("       (f) with round 6's 0.3 ohm sense (+1 %%) kept in series, at the limiter's maximum: %.4f V against %.4f V: %+.4f V, %s (SESSION W138-2)" % (
+        keep, need_reg(REG, hi1), keep - need_reg(REG, hi1), "holds" if keep >= need_reg(REG, hi1) else "FAILS"))
     w("       (d) U601 and the lead's pin 1 at three maxima: %.4f A against %.0f A and %.0f A (PRINTED, T10 line %d): %s" % (
         3 * hi1, E["u601"][0], E["vh"][0], E["u601"][1], "holds" if 3 * hi1 <= E["u601"][0] else "FAILS"))
     head = 3.3 * (1 + REG["acc"][0]) + S["acc_head"][0]

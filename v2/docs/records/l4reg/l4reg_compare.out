@@ -138,6 +138,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
        (b) at the limiter's maximum 0.5704 A on all three     3.6082 V against 3.4921 V: +0.1161 V, holds
        (c) S1 0.1855 A at the other two, one at the limiter's maximum 3.6929 V against 3.3959 V: +0.2970 V, holds
        (e) S3' 0.4240 A on all three in one bit               3.6466 V against 3.4555 V: +0.1911 V, holds
+       (f) with round 6's 0.3 ohm sense (+1 %) kept in series, at the limiter's maximum: 3.4354 V against 3.4921 V: -0.0567 V, FAILS (SESSION W138-2)
        (d) U601 and the lead's pin 1 at three maxima: 1.7111 A against 3 A and 10 A (PRINTED, T10 line 272): holds
        the band's own condition: the TPS737's +-1.5 % is PRINTED for VIN >= VOUT + 0.5 V (5.6); the input here is 3.6466 to 3.7579 V at the served
        currents, under 3.8495 V: the band between VOUT + VDO and VOUT + 0.5 V is INFERRED (the AP2112's was tested at 4.3 V, T10's same gap):
