@@ -339,9 +339,9 @@ def t_the_new_texts_name_the_current_row_and_label_the_old_bar():
 def t_the_set_29_date_and_l4e11s_rows():
     t, md = _read(E11O), _read(E11P)
     tl = t.split("\n")
-    assert "each FET's (Zself + 2 Zmut) at most 45.88 K/W steady with R17 placed apart" in tl[1105], "out 19c"
-    assert "(Zself + 2 Zmut) at most 40.78 K/W" in tl[1453], "out 21d"
-    assert "at most 45.88 K/W, so each (Zself + 2 Zmut) at most 40.78 K/W without m" in tl[499] and "Zw at most 37.59 K/W" in tl[499]
+    assert "each FET's (Zself + 2 Zmut) at most 45.88 K/W steady with R17 placed apart" in tl[1173], "out 19c"
+    assert "(Zself + 2 Zmut) at most 40.78 K/W" in tl[1521], "out 21d"
+    assert "at most 45.88 K/W, so each (Zself + 2 Zmut) at most 40.78 K/W without m" in tl[567] and "Zw at most 37.59 K/W" in tl[567]
     assert md.split("\n")[1816] == "## 19. Round 9: record l9stk's protection and record l8p's breaker (4 October 2026; out 19)"
     seen = 0
     for sha, has in (("aa76c89448ec943e3a37357ebc11ce3322fa4020", True), ("d834e6a7be211d1cdd1b18ded54bec1c427048fd", False),

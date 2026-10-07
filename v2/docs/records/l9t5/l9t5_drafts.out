@@ -55,14 +55,35 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    afb77ab72e0d2d4c v2/docs/records/l9t5/inputs/apply_gen_sch_b_iocbuck-7c28f9da.py
    ab05b829283594c0 v2/docs/records/l9t5/inputs/SOURCES.txt
    0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
-   2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
-   eeb1296c913ccba0 v2/docs/records/l9t5/l9t5_case.out
+   ada5c44d7c9e33f7 v2/docs/records/l9t5/l9t5_case.py
+   ff9ee2c115bd9bf8 v2/docs/records/l9t5/l9t5_case.out
    d8882cd01e9df691 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   24722259a30363c5 v2/docs/records/l8r2/l8r2_gndret.out
+   046e2120dfede901 v2/docs/records/l8r2/l8r2_gndret.out
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
    b0ea9ce43308e789 v2/ecad/tools/pcb_interfaces.yaml
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
+   d2eed21ecffdff2b v2/vendor/battery/pdftext/samsung-35e-orbtronic.layout.txt
+   f83f141c39e09df2 v2/vendor/battery/pdftext/ti-bq4050.layout.txt
+   5ecf7f639ea2bf4c v2/vendor/battery/pdftext/ti-csd18510q5b.layout.txt
+   0b5fe9a39d996e7a v2/vendor/coilcraft/pdftext/coilcraft-xal60xx-series.layout.txt
+   9d315dec55a94ab8 v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt
+   6793d4bc0e60cc6d v2/vendor/diodes/pdftext/diodes-ap2112-ldo.layout.txt
+   c59cee8614dfb14b v2/vendor/diodes/pdftext/diodes-ap2112-ldo.plain.l1.txt
+   86e6d8baf3f2bd0f v2/vendor/diodes/pdftext/diodes-ap63200-series-buck.plain.l1.txt
+   523141f25b1ce791 v2/vendor/diodes/pdftext/diodes-ap64500.plain.l1.txt
+   e1ad9f624efd2d98 v2/vendor/mitsubishi/pdftext/ra30h1317m1-datasheet.layout.txt
+   0645dd67a4e97ebd v2/vendor/power/pdftext/ti-tlv755p-ldo.plain.l1.txt
+   6830354f577b4bad v2/vendor/power/pdftext/tps2596.plain.txt
+   8b51c389f0e8ace7 v2/vendor/st/pdftext/st-stm32h743xi-datasheet.layout.txt
+   23961b85e31fdbb3 v2/vendor/ti/held/pdftext/ti-ina250-sbos511c.layout.txt
+   6399dcdabf2895da v2/vendor/ti/pdftext/lm5176-datasheet.layout.txt
+   234fbb73ef374502 v2/vendor/ti/pdftext/ti-ina226.layout.txt
+   da725d6f1fcac1bd v2/vendor/ti/pdftext/ti-tlv758p.layout.txt
+   dae07174ea3a294c v2/vendor/ti/pdftext/ti-tlv9062-op-amp.layout.txt
+   010f30f3bffdad5f v2/vendor/ti/pdftext/ti-tps62933.layout.txt
+   a4965834fb931ea9 v2/vendor/ti/pdftext/ti-tps62933.plain.l1.txt
+   3a3efdb44c14796b v2/vendor/vishay/pdftext/vishay-wsl-power-metal-strip.layout.txt
    the four copies filed in rounds 2 and 3 equal the sha256 SOURCES.txt names: yes
 
 2. EACH DRAFT ON A SCRATCH COPY (check, apply once, refuse a second time, refuse the tree's own generator)

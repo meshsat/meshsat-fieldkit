@@ -18,15 +18,15 @@ table's D-14 row, U-04's choice row, UDC-1's comparison and the 8a history parag
 
 - **45.88 K/W** is record l9stk's even-split per-FET bar (its E-1, section 15.5), taken by L4-E11's round 9 as E11-29's junction
   limit: "the installed three, each FET's (Zself + 2 Zmut) at most 45.88 K/W steady with R17 placed apart, R17's coupling into each
-  junction at most 1 K/W" (`v2/docs/records/l4e11/l4e11_power.out:1106`, 19c), under the heading "## 19. Round 9: record l9stk's
+  junction at most 1 K/W" (`v2/docs/records/l4e11/l4e11_power.out:1174`, 19c), under the heading "## 19. Round 9: record l9stk's
   protection and record l8p's breaker (4 October 2026; out 19)" (`v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md:1817`). It
   entered L4-E9 with set 29: the page at set 29's commit `aa76c894` (4 October 2026, 15:24) prints it, the page at set 27's
   `94971c8c` and at set 28's `d834e6a7` does not (read with `git grep`; the test of this record re-reads it where those commits are in
   the object store). **SESSION reading:** the brief named it "the superseded set 27/28 figure"; the tree dates it to set 29, 4 October
   2026, and every row below says set 29. Reversed by: a commit of set 27 or 28 shown to print it on L4-E9's page.
 - **Superseded as the per-FET bar** by L4-E11's round 11 (21d: "E-1's installed acceptance becomes the worst split's, (Zself + 2 Zmut)
-  at most 40.78 K/W", `v2/docs/records/l4e11/l4e11_power.out:1454`) and, as it now stands, by E11-29's row
-  (`v2/docs/records/l4e11/l4e11_power.out:500`): "each junction's worst-split figure at its OWN m_k ... at most 45.88 K/W, so each
+  at most 40.78 K/W", `v2/docs/records/l4e11/l4e11_power.out:1522`) and, as it now stands, by E11-29's row
+  (`v2/docs/records/l4e11/l4e11_power.out:568`): "each junction's worst-split figure at its OWN m_k ... at most 45.88 K/W, so each
   (Zself + 2 Zmut) at most 40.78 K/W without m", and the design target (round 16) "each junction's worst-split figure Zw at most 37.59
   K/W (Zself 30.07 K/W for three side by side at m 0.1)". The register's R-159 already reads that row word for word since set 31
   (`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:255`).

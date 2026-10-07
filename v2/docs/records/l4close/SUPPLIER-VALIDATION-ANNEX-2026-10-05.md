@@ -181,11 +181,11 @@ of the owner, nothing [ANX:113].
 
 - **What the record computes.** One design target for R17's coupling into a junction: the largest coupling at which R17's line plus
   twice its propagated U stays at or under R17's limit, 1 K/W ("R17's design target: its line passes with twice its U" [E11PY:6019];
-  the solve [E11PY:6029]; "R17's coupling at most 1 K/W" in the row [E11:500]).
-- **How it prints it.** To three places: "R17's coupling target: at most 0.294 K/W (its line passes with twice its U)" [E11:1922]
-  (`fmt(S["z17_t"], 3)`, [E11PY:6182]), "R17 at most 0.294 K/W" in round 16's selection [E11:1975] ([E11PY:6375]), and the reading on
-  a coupon at the design target, "R17 0.294 K/W, U 0.353 K/W (119.9 %)" [E11:1913]. To two places: "R17's coupling at most 0.29 K/W"
-  in the row E11-29 [E11:500] (`fmt(R["S26"]["z17_t"], 2)`, [E11PY:6444]), the row R-159 restates word for word [REG:255] and
+  the solve [E11PY:6029]; "R17's coupling at most 1 K/W" in the row [E11:568]).
+- **How it prints it.** To three places: "R17's coupling target: at most 0.294 K/W (its line passes with twice its U)" [E11:1990]
+  (`fmt(S["z17_t"], 3)`, [E11PY:6182]), "R17 at most 0.294 K/W" in round 16's selection [E11:2043] ([E11PY:6375]), and the reading on
+  a coupon at the design target, "R17 0.294 K/W, U 0.353 K/W (119.9 %)" [E11:1981]. To two places: "R17's coupling at most 0.29 K/W"
+  in the row E11-29 [E11:568] (`fmt(R["S26"]["z17_t"], 2)`, [E11PY:6444]), the row R-159 restates word for word [REG:255] and
   TP-E11-29 quotes [TP29:713]. 0.294 + 2 x 0.353 = 1.000 K/W, the limit (DERIVED from the printed figures).
 - **The reading here.** The same computed figure at two roundings, not two targets, and neither is a pass line: R17's pass line is
   "the largest coupling plus U" at most "1 K/W" [E11P:2929], quoted by TP-E11-29 [TP29:738]. This annex's 0.294 K/W [ANX:105] and
@@ -239,30 +239,30 @@ company does not read one for the other.
 **Class.** The P0 list files the row as "E11-37, the charger's gate drive into three FETs" [P0L:25], class 2, "missing evidence
 boundable at the desk" [P0L:11]; L4-E9 reads it as "a qualification gap, not a demonstrated failure" of the battery FETs
 [L4E9:1134-1135]. This annex carries it as REMAINING ENGINEERING, the ledger's reading (HO-L, REM-M lines 586-593, text only):
-"E11-37 STAYS OPEN: no printed figure decides a three-device gate load against TI's 5 nF" [E11:1459], and its answer decides a design
+"E11-37 STAYS OPEN: no printed figure decides a three-device gate load against TI's 5 nF" [E11:1527], and its answer decides a design
 choice, "the choice between (S1) and (S2) for the final design" [E11P:1551], rather than testing a finished one. It is NOT a
 demonstrated failure (no record computes a failing case), and it is not one of the P0 list's ARCH rows (its class is 2 [P0L:25]);
 on a negative answer the records' options are UDC-1's own [L4E9:1401]. It is kept apart from the four items above.
 
 **The open case.** BATDRV, the BQ25730's battery-FET gate drive, into the three-device network Q39, Q40 and Q42 on one node (rebound
-from the pair in round 9 [E11:1110-1116]): supplement entry, the ideal diode's 30 mV regulation, LDO mode at VSYS_MIN, each FET's
-share of the current and each junction on the shared pour, at -20, 25 and 70 C [E11:508].
+from the pair in round 9 [E11:1178-1184]): supplement entry, the ideal diode's 30 mV regulation, LDO mode at VSYS_MIN, each FET's
+share of the current and each junction on the shared pour, at -20, 25 and 70 C [E11:576].
 
 **The bound from the printed limit, and what it does not decide.** TI prints a selection rule with no drain-source voltage, "the Ciss
 of P-channel MOSFET should be chosen less than 5 nF" (SLUSE65A p.92, [TIQ:74]). Nexperia prints the BUK6Y10-30P's Ciss as a TYPICAL
-only, "2.36 nF at -15 V (Table 7), no maximum" [E11:942]: the three are 7.08 nF typical at -15 V and about 8.61 nF near 0 V, "1.416
-and 1.722 times TI's 5 nF" [E11:1111]. From printed maxima: QG(tot) at most 64 nC each, 192 nC for the three [TIQ:100-102];
-RBATDRV_ON at most 6 kOhm and RBATDRV_OFF at most 2.1 kOhm [E11:944], so BATDRV's time constants into the three are 42.48 us on at
--15 V, 51.66 us on near 0 V and 18.08 us off (MAKER, INFERRED) [E11:1112]; the charge inhibit's Q49 moves at most 192 nC and BATDRV
-sinks at most 3.83 mA while it holds [E11:1450-1451]. Not bounded by any printed figure: what TI's 5 nF protects, and so whether the
-three's gate load is inside it [E11:1459].
+only, "2.36 nF at -15 V (Table 7), no maximum" [E11:1010]: the three are 7.08 nF typical at -15 V and about 8.61 nF near 0 V, "1.416
+and 1.722 times TI's 5 nF" [E11:1179]. From printed maxima: QG(tot) at most 64 nC each, 192 nC for the three [TIQ:100-102];
+RBATDRV_ON at most 6 kOhm and RBATDRV_OFF at most 2.1 kOhm [E11:1012], so BATDRV's time constants into the three are 42.48 us on at
+-15 V, 51.66 us on near 0 V and 18.08 us off (MAKER, INFERRED) [E11:1180]; the charge inhibit's Q49 moves at most 192 nC and BATDRV
+sinks at most 3.83 mA while it holds [E11:1518-1519]. Not bounded by any printed figure: what TI's 5 nF protects, and so whether the
+three's gate load is inside it [E11:1527].
 
 **The vendor question, drafted and UNSENT.** Q-TI-17 [TIQ:74-78], extended to three devices [TIQ:96-110] and given (e) and (f) in
 round 11 [TIQ:112-125]: "Nothing here has been sent, and no answer is assumed." [TIQ:3-4], and "an answer stated as a limit settles
 the row for production, a typical figure does not" [TIQ:6-7]. The P0 list: "TI's answer Q-TI-17, UNSENT (vendor)" [P0L:25]; section
 2 keeps OW-7's questions "drafted and UNSENT" [ANX:76].
 
-**The receiving company's task: specimen, measured quantity and pass limit** (one of the two routes the records state, [E11:508],
+**The receiving company's task: specimen, measured quantity and pass limit** (one of the two routes the records state, [E11:576],
 [REG:279]). (a) TI's statement of what the 5 nF bounds for three P-channel FETs on one BATDRV, stated as a limit [TIQ:6-7]; or (b)
 the bench of block E11-37 [E11P:1673-1690]: specimen "TI's BQ25730 evaluation hardware modified as drafted, or the controlled first
 prototype of board A" [E11P:1677], at -20, 25 and 70 C ambient [E11P:1680], each drain's current read within 2 % and each junction
@@ -273,8 +273,8 @@ Capability: the evaluation hardware or the first prototype, a chamber for -20 an
 drafted, is that specimen's base, its price NOT READ.
 
 **On a negative answer (the engineer's choice and its draft).** "the pair, its bar 20.39 K/W measured on the coupon, Q42 removed (a
-draft then owed)" [E11:1462-1463], or (S2), one BUK6Y10-30P with a heat path through the case [L4E9:1401]; the pair is under 5 nF only
-on a typical figure, "CONDITIONAL, Q-TI-17 (e)" [E11:1440], so that fallback also rests on TI's answer. Both are UDC-1's own options
+draft then owed)" [E11:1530-1531], or (S2), one BUK6Y10-30P with a heat path through the case [L4E9:1401]; the pair is under 5 nF only
+on a typical figure, "CONDITIONAL, Q-TI-17 (e)" [E11:1508], so that fallback also rests on TI's answer. Both are UDC-1's own options
 [L4E9:1401]; with the pair, TP-E11-29 runs with two gates against the fallback line [TP29:839-840].
 
 **Outputs kept PROVISIONAL or OPEN until it is answered.** D-14, "CONDITIONAL on E11-29, E11-30 and E11-36 with E11-37 OPEN"
@@ -282,7 +282,7 @@ on a typical figure, "CONDITIONAL, Q-TI-17 (e)" [E11:1440], so that fallback als
 installed acceptance (i)(a), reversed by "a negative answer to Q-TI-17 (E11-37): then (ii), a draft owed" [E11P:2416]; the charger
 draft's release (E11-27) [E11P:1455]; the three's production conformance, which "needs one of them (record l9stk's C3)"
 [E11P:1885-1886]; route (R1) of section 2, after which E11-37 stays open [ANX:73]. Not affected by the count: IF-1's hold and DD-7's
-inhibit [E11:1450-1451]. State on this tip: "E11-37 OPEN (TI or the bench)" [E11:1465]. Nothing here is bought, sent or measured.
+inhibit [E11:1518-1519]. State on this tip: "E11-37 OPEN (TI or the bench)" [E11:1533]. Nothing here is bought, sent or measured.
 
 ## 8. What this amendment leaves to other files, and its SESSION decisions
 

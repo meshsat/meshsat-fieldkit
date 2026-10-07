@@ -444,6 +444,16 @@ def t_the_contract_restatement_of_l5f09_and_l5f10_is_in_the_tree_and_idempotent(
     for i, tg, where, _old, new in a.edits(V):
         live = _w14_live(a.flat, tg, where, tree)
         if i in W8_RESTATED:
+            # Q-55 (set 32, record s32small, applied by apply_q55_ve16.py): V-E16's row 3 carries N1a's annotation of the
+            # register's R-176 row 3 (set 31, b2564b59), which this script printed before N1a. Where a restated field carries
+            # N1a's words they must stand exactly once, in V-E16, right after U5's line, and the script's values are read with
+            # those words taken out. Basis: N1a is the one intended difference (test_w8l5 states it so for the register, f0748b49),
+            # and the coordinator's decision of 6 October 2026 15:22 CEST (QUEUE line Q-55).
+            n1a = " (under R-240, drafted, not applied: under 10 mV in magnitude, a layout check, L4E7-P0SOL.md section 5)"
+            if n1a in live:
+                assert where == "| V-E16 |" and live.count(n1a) == 1 and live.count("U5's CSPIN to CSNIN within +-0.240 V" + n1a) == 1, \
+                    "%s: N1a's words stand elsewhere than once after U5's line in V-E16" % i
+                live = live.replace(n1a, "")
             assert a.flat(new) not in live, "%s: the script's text stands verbatim, so W8 did not restate it" % i
             assert _w14_restated(a.flat, i, new, live, quotes, V.values(), "no loop is claimed to pass"), i
         else:

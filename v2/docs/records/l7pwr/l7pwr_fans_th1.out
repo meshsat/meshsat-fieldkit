@@ -18,7 +18,7 @@ assumption, INFERRED a reading carried from a sibling document, NOT READ a figur
    th1         v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md  sha256 61fa23a04f592a9f
    l4e11       v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md  sha256 101b9896de519561
    l4e11_aux   v2/docs/records/l4e11/apply_gen_sch_e_aux.py  sha256 3d0a7b1d7d0bd8bf
-   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 36141414a1b60011
+   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 f4e716036854db03
    l8r2_fans   v2/docs/records/l8r2/apply_gen_sch_b_fans12.py  sha256 cb03ff040b0ef784
    l4e12       v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md  sha256 b0e303a557e38898
    l4e9        v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 d8882cd01e9df691
@@ -28,6 +28,11 @@ assumption, INFERRED a reading carried from a sibling document, NOT READ a figur
    reqs        v2/ecad/tools/pcb_requirements.yaml  sha256 8c8e26858293d6f7
    margins     v2/docs/CASE-MARGINS.md  sha256 55244f94aace54ca
    rta         v2/docs/reviews/READY-TO-ACT.md  sha256 bdaf61a4991afb8c
+   pdftext     v2/vendor/cm5/pdftext/rpi-cm5-cooler-product-brief-2024-12.layout.txt  sha256 d777db6b621c32aa
+   pdftext     v2/vendor/fans/pdftext/samesky-cfm-60bg68-dc-axial-fan-2024-09-12.layout.txt  sha256 13e8851031f1cc15
+   pdftext     v2/vendor/fans/pdftext/sunon-dc-fan-catalogue-240A-pp18-40-extract.layout.txt  sha256 0da9230ae92ea2ca
+   pdftext     v2/vendor/fans/pdftext/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.layout.txt  sha256 247450b0bb4de1e2
+   pdftext     v2/vendor/precidip/pdftext/precidip-catalog-slc-2018-03-20.layout.txt  sha256 d7934279f420d879
 
 1. THE SITES AND THEIR SUPPLIES (read from the generators and L4-E11)
    mixers:  board E J_FAN1, J_FAN2 as generated: 3 pins (1 CELL_F, 2 FANn_SW, 3 FANn_TACH); the low side chopped by Q9/Q10 (2N7002) from U10's FAN1_PWM/FAN2_PWM (GPIO8, 9), the tach pulled to +3V3_E6 by 10k into GPIO10, 11; SS14 flyback D7/D8; 0.1 A declared each. As DRAFTED (L4-E11 section 18, apply_gen_sch_e_aux.py): J_FAN1, J_FAN2 four pins (1 +12V_FAN, 2 GND, 3 FANn_PWM_OD, 4 FANn_TACH), +12V_FAN 12.0 V from U22 on VSYS_E, its loads {'J_FAN1': 0.17, 'J_FAN2': 0.17}, declared 0.34 A, efficiency 0.85 (an ASSUMPTION of the draft); VSYS_E's loads {'U12': 0.8, 'U22': 0.52}, declared 1.32 A

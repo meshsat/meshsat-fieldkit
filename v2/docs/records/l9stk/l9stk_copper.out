@@ -16,12 +16,15 @@ E11-29 as its section 19c restates it; no width, limit, split, field or barrel f
    gauge_image     v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md  sha256 6726f23778f48e10
    gen_sch_a       v2/ecad/tools/gen_sch_a.py  sha256 6a136feec6c9cf4e
    gen_sch_e       v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
-   l4e11_out       v2/docs/records/l4e11/l4e11_power.out  sha256 36141414a1b60011
-   l4e12_out       v2/docs/records/l4e12/l4e12_thermal.out  sha256 68d3df24f9e105cd
+   l4e11_out       v2/docs/records/l4e11/l4e11_power.out  sha256 f4e716036854db03
+   l4e12_out       v2/docs/records/l4e12/l4e12_thermal.out  sha256 a784a030eb1be73d
    l9pwr_out       v2/docs/records/l8r2/inputs/l9pwr_budget-38ef774c.txt  sha256 a2fe27d3f2cf1ddf
    lcsc_fill       v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
    mini_297        v2/vendor/keystone/littelfuse-297-ficcorp.pdf  sha256 98a7e99bc5bbdf2a
    pack_protection v2/ecad/tools/pcb_pack_protection.yaml  sha256 ab1dbc3f3f69aa46
+   pdftext 01      v2/vendor/battery/pdftext/amass-xt60-spec-tme.layout.txt  sha256 ffd3fbf0c0712133
+   pdftext 02      v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt  sha256 9d315dec55a94ab8
+   pdftext 03      v2/vendor/keystone/pdftext/littelfuse-297-ficcorp.layout.txt  sha256 c994655b76916585
    power_thermal   v2/docs/feasibility/POWER-THERMAL.md  sha256 ad3ba27cef9e0f68
    sources         v2/vendor/SOURCES.yaml  sha256 09013212f6160912
    stackup_write   v2/ecad/tools/stackup_write.py  sha256 b55a3c0f58c805c2

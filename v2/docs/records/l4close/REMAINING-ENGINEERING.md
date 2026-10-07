@@ -344,16 +344,16 @@ as filed.
   the worst single fault) against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2) ([BRK:1407-1409]); cx46's DC check at
   180 uA gives about 3.447 V on DOCK_EN_OUT at the low-source corner, MODEL ([CX46:92]).
 - **Attempted correction and the disposition.** L4-E11 section 28 states the changed circuit and executes both allowance cases, 40
-  and 50 uA and the first form's 50 and 180 uA ([E11:2036-2054]); its disposition: "these rows hold on the delta's intact circuit at
-  both allowance cases; PROVISIONAL, not closed" ([E11:2066-2071]); the consumers drafted for their owners, not applied
+  and 50 uA and the first form's 50 and 180 uA ([E11:2104-2122]); its disposition: "these rows hold on the delta's intact circuit at
+  both allowance cases; PROVISIONAL, not closed" ([E11:2134-2139]); the consumers drafted for their owners, not applied
   ([BRK:1409-1413]).
-- **Unresolved.** The owners' restatement of the allowance (Layer 5's row, record l9stk 15.9: still 30 uA, [E11:2043-2044]) and "the
+- **Unresolved.** The owners' restatement of the allowance (Layer 5's row, record l9stk 15.9: still 30 uA, [E11:2111-2112]) and "the
   replay of the dependent start-up and protection rows (20f's timing against U47's and U48's tSD at the owners' restated allowance,
-  22's bleed with path 2's VBAT load)" ([E11:2068-2071]).
+  22's bleed with path 2's VBAT load)" ([E11:2136-2139]).
 - **Affected provisional outputs.** Every row resting on the allowance ([BRK:1413-1414]); the connected guard row ([CON:201-203]).
 - **Receiving company's task.** The replay named above, against L4-E11's own windows (the held reading under 0.7755 V, the powered
   reading at most 1.981 V, RET/OUT at 0.4707 or more, the breaker's start no sooner than the RC hold's least 0.110 s)
-  ([E11:2046-2065]).
+  ([E11:2114-2133]).
 - **Reproduce.** `python3 v2/docs/records/l4e11/l4e11_power.py` (section 28) and `python3 v2/docs/records/l8p/l8p_c4.py` (10c).
 - **State on this tip.** NOT CLOSED: L8P-R9-F2 OPEN ([BRK:1407], [BRK:1420-1422]).
 
@@ -381,7 +381,7 @@ as filed.
   breaker in service, and a cross-check of the two VTEMP outputs sees the switches, not the gate networks or the shunts"
   ([BRK:1400-1402]).
 - **Affected provisional outputs.** "C-PROT rev 1 for the guard is PROVISIONAL at every claim that rests on this" ([C4:274-275]);
-  "L8P-R9-F1 weakens every C-PROT claim for the guard" ([BRK:1406]); L4-E11 section 28 ([E11:2066-2068]); the connected guard row
+  "L8P-R9-F1 weakens every C-PROT claim for the guard" ([BRK:1406]); L4-E11 section 28 ([E11:2134-2136]); the connected guard row
   ([CON:194-203], [CON:326-327]); E-13b (e) ([BRK:1417-1419]).
 - **Receiving company's task.** As stated above ([BRK:1402-1406]); acceptance: C-PROT rev 1, every series part within its limits below
   and above the trip ([BRK:1343-1344]), the FETs' 150 C behind the guard ([CON:199]).
@@ -418,7 +418,7 @@ as filed.
   ([CX46:108]) and ([CX46:109]), quoted under RE-10 and RE-13.
 - **Failed cases.** The handed-over cases HO-A to HO-E (section 2), with cx46's statement of their effects ([CX46:97]).
 - **Attempted correction and the disposition.** The effects written at each claim: [CON:320-335], [T10:662-667], [C4:355-358],
-  [BRK:1369-1422], [E11:2066-2071]; section 4 of this ledger lists each claim with the row that names it.
+  [BRK:1369-1422], [E11:2134-2139]; section 4 of this ledger lists each claim with the row that names it.
 - **Unresolved, of substance.** The cases themselves (HO-A to HO-E).
 - **Affected provisional outputs.** Section 4.
 - **Receiving company's task.** Those of HO-A to HO-E.
@@ -590,28 +590,28 @@ as filed.
   its class 2 ([P0L2:25]), "missing evidence boundable at the desk" ([P0L2:11]); L4-E9 reads it as "a qualification gap, not a
   demonstrated failure of the battery FETs" ([L4E9:1134-1135]). This ledger classes it REMAINING ENGINEERING by its own definition
   above (a missing bound the desk could not close): "E11-37 STAYS OPEN: no printed figure decides a three-device gate load against
-  TI's 5 nF" ([E11:1459]), and its answer decides a design choice rather than testing a finished one, the evidence blocking only
-  "the choice between (S1) and (S2) for the final design" ([E11P:1551]), with a draft owed on a negative answer ([E11:1462-1463]).
+  TI's 5 nF" ([E11:1527]), and its answer decides a design choice rather than testing a finished one, the evidence blocking only
+  "the choice between (S1) and (S2) for the final design" ([E11P:1551]), with a draft owed on a negative answer ([E11:1530-1531]).
   It is NOT a demonstrated failure: no record computes a failing case. Reversed by: TI's answer stated as a limit that admits the
   three, or the coordinator's P0 list classing the row otherwise (section 6, item G).
 - **The open case.** BATDRV, the BQ25730's battery-FET gate drive, into the three-device network Q39, Q40 and Q42 on one node
-  (rebound from the pair in round 9: [E11:1110-1116], [E11P:1871-1886]): supplement entry, the ideal diode's 30 mV regulation, LDO
-  mode at VSYS_MIN, each FET's share of the current and each junction on the shared pour, at -20, 25 and 70 C ([E11:508]).
+  (rebound from the pair in round 9: [E11:1178-1184], [E11P:1871-1886]): supplement entry, the ideal diode's 30 mV regulation, LDO
+  mode at VSYS_MIN, each FET's share of the current and each junction on the shared pour, at -20, 25 and 70 C ([E11:576]).
 - **What is bounded, and from which printed figure.** TI prints a selection rule without a drain-source voltage, "the Ciss of
   P-channel MOSFET should be chosen less than 5 nF" (SLUSE65A p.92, [TIQ:74], [TIQ:118]). Nexperia prints the BUK6Y10-30P's Ciss as a
-  typical only, 2.36 nF at -15 V, no maximum ([E11:942]): the three are 7.08 nF typical at -15 V and about 8.61 nF near 0 V, 1.416
-  and 1.722 times TI's 5 nF ([E11:1111-1112]). From printed maxima: QG(tot) at most 64 nC each at -10 V, 192 nC for the three
-  ([TIQ:100-102]); RBATDRV_ON at most 6 kOhm and RBATDRV_OFF at most 2.1 kOhm ([E11:944]), so BATDRV's time constants into the three
-  are 42.48 us on at -15 V, 51.66 us on near 0 V and 18.08 us off (MAKER, INFERRED) ([E11:1111-1112]); the charge inhibit's Q49
-  moves at most 192 nC and BATDRV sinks at most 3.83 mA while it holds ([E11:1450-1451]). Not bounded by any printed figure: what
-  TI's 5 nF protects, and so whether the three's gate load is inside it ([E11:944], [E11:1459-1461]). The P0 list's row says
+  typical only, 2.36 nF at -15 V, no maximum ([E11:1010]): the three are 7.08 nF typical at -15 V and about 8.61 nF near 0 V, 1.416
+  and 1.722 times TI's 5 nF ([E11:1179-1180]). From printed maxima: QG(tot) at most 64 nC each at -10 V, 192 nC for the three
+  ([TIQ:100-102]); RBATDRV_ON at most 6 kOhm and RBATDRV_OFF at most 2.1 kOhm ([E11:1012]), so BATDRV's time constants into the three
+  are 42.48 us on at -15 V, 51.66 us on near 0 V and 18.08 us off (MAKER, INFERRED) ([E11:1179-1180]); the charge inhibit's Q49
+  moves at most 192 nC and BATDRV sinks at most 3.83 mA while it holds ([E11:1518-1519]). Not bounded by any printed figure: what
+  TI's 5 nF protects, and so whether the three's gate load is inside it ([E11:1012], [E11:1527-1529]). The P0 list's row says
   "bounded from the printed limit (V2R); the third FET and E11-37 rebound (L4-E11 round 16)" ([P0L2:25]); on this tree the bound
   is in L4-E11's rounds 9 and 11 (section 6, item G).
-- **Attempted correction (the desk's comparison).** Round 11 compared three approaches ([E11:1418-1447]): (i)(a) the three kept,
+- **Attempted correction (the desk's comparison).** Round 11 compared three approaches ([E11:1486-1515]): (i)(a) the three kept,
   SELECTED (SESSION) with E-1's bar 40.78 K/W; (ii) two FETs, the BUK6Y10-30P pair the only one under 5 nF, and only on a TYPICAL
   figure (4.72 nF at -15 V, about 5.74 nF near 0 V, over it), its bar 20.39 K/W; (iii) a buffer on BATDRV, no printed basis
-  ([E11:1432-1447], [E11:1453-1463]). The check V2 "confirmed round 11's item A (the worst split, the 40.78 K/W bar, E11-37 open) as
-  conditional" ([E11P:2465-2467]). Round 11 changed no net: its correction is E-1's acceptance alone ([E11:1464-1465]).
+  ([E11:1500-1515], [E11:1521-1531]). The check V2 "confirmed round 11's item A (the worst split, the 40.78 K/W bar, E11-37 open) as
+  conditional" ([E11P:2465-2467]). Round 11 changed no net: its correction is E-1's acceptance alone ([E11:1532-1533]).
 - **The vendor question, drafted and UNSENT.** Q-TI-17 ([TIQ:74-78]), extended to the three devices with its items (a) to (d)
   ([TIQ:96-110]) and given (e) and (f) in round 11 ([TIQ:112-125]); the file's own words: "Nothing here has been sent, and no
   answer is assumed." ([TIQ:3-4]), and "an answer stated as a limit settles the row for production, a typical figure does not"
@@ -622,21 +622,21 @@ as filed.
   acceptance (i)(a), reversed by "a negative answer to Q-TI-17 (E11-37): then (ii), a draft owed" ([E11P:2416]); the charger
   draft's release (E11-27) ([E11P:1455]); the three's production conformance, which "needs one of them (record l9stk's C3)"
   ([E11P:1885-1886]); U-04's route (R1), after which E11-37 stays open ([ANX:73]), and E11-31, whose specimen is E11-37's
-  ([L4E9:754]). Not affected by the count: IF-1's hold and DD-7's inhibit ([E11:1450-1451]). The supplier validation annex carries
+  ([L4E9:754]). Not affected by the count: IF-1's hold and DD-7's inhibit ([E11:1518-1519]). The supplier validation annex carries
   no row for E11-37 of its own; it names it only among what stays open after route (R1) ([ANX:73]).
-- **Receiving company's task and acceptance.** One of the two routes the records state ([E11:508], [REG:279]): TI's statement of
+- **Receiving company's task and acceptance.** One of the two routes the records state ([E11:576], [REG:279]): TI's statement of
   what the 5 nF bounds for three P-channel FETs on one BATDRV, stated as a limit ([TIQ:6-7]); or the bench of block E11-37
   ([E11P:1673-1690]) on TI's BQ25730 evaluation hardware modified as drafted or the controlled first prototype of board A, at -20,
   25 and 70 C, each drain's current and each junction read, its pass criterion "supplement entry, the 30 mV ideal-diode regulation
   without oscillation, LDO mode inside its printed band" ([E11P:1455]), where "a result with the pair does not transfer to the three,
   nor the three's to the pair." ([E11P:1688-1689]). On a negative answer the engineer's choice and its draft: "the pair, its bar
-  20.39 K/W measured on the coupon, Q42 removed (a draft then owed)" ([E11:1462-1463]), or (S2), one BUK6Y10-30P with a heat path
+  20.39 K/W measured on the coupon, Q42 removed (a draft then owed)" ([E11:1530-1531]), or (S2), one BUK6Y10-30P with a heat path
   through the case ([L4E9:1401]); the pair is itself under 5 nF only on a typical figure, so that fallback also rests on Q-TI-17 (e)
-  ([E11:1439-1440]). Nothing here is bought, sent or measured.
+  ([E11:1507-1508]). Nothing here is bought, sent or measured.
 - **Reproduce.** `python3 v2/docs/records/l4e11/l4e11_power.py` (sections 16c, 19d and 21; output [E11]), the held makers' sheets
   fetched by sha256 by `v2/docs/records/l4e11/fetch_held_back.py`; the record's tests `t_round11_*` in
   `v2/ecad/tools/tests/test_l4e11.py`.
-- **State on this tip.** OPEN: "E11-37 OPEN (TI or the bench)" ([E11:1465]).
+- **State on this tip.** OPEN: "E11-37 OPEN (TI or the bench)" ([E11:1533]).
 
 ## 3. Closed by the correction (four) and closed as conditional (two), each in its stated scope only
 
@@ -662,10 +662,10 @@ as filed.
 | F01's 15.5 V case (C-ALLTX rev 3 at the cap, 15.1308 V) | [CON:123-124]; [F01:209-214] | RE-2; B-PA1, B-PA2 | PROVISIONAL ([F01:212-214], [CON:334-335]) |
 | The return's ratings (the distributed study) | [CON:163-176]; [DIST:112-124] | RE-4 (V6-B1); L8R2-F43, L8R2-F44 (vendor curves) | V6-B1 OPEN, REMAINING ENGINEERING ([CON:174], [DIST:125]) |
 | J_PA's VH lead at the cap's top 6.9259 A | [CON:157-161] | RE-2 (the cap); L8R2-F43 (JST's curve MISSING) | PROVISIONAL ([CON:160-161], [T5R:194-196]) |
-| L4-E11 section 28's 20c and 20f rows with the guard | [E11:2036-2065] | HO-A, HO-B; RE-9 | PROVISIONAL, not closed ([E11:2066-2071]) |
+| L4-E11 section 28's 20c and 20f rows with the guard | [E11:2104-2133] | HO-A, HO-B; RE-9 | PROVISIONAL, not closed ([E11:2134-2139]) |
 | IF-01's protection of the solar entry against D-10; R-173 as a protection | [P11:46-51] | HO-F | PROVISIONAL until E-1's correction and S1 ([P11:114-119]) |
 | The eFuses' downstream contacts at the inside air | [CON:179-186]; [EFS:143-161] | CO-16's conditions | PROVISIONAL at the inside air ([EFO:425-431]) |
-| The battery switch's gate drive: D-14 with UDC-1's (S1), the three BUK6Y10-30P on one BATDRV, and E-1's installed acceptance at (i)(a) (cited at `6fe398e9`) | [L4E9:1131-1135]; [L4E9:1401]; [E11:1453-1458] | HO-L (E11-37) | OPEN: "E11-37 OPEN (TI or the bench)" ([E11:1465]); D-14 "CONDITIONAL on E11-29, E11-30 and E11-36 with E11-37 OPEN" ([L4E9:1134]); R-183 OWED ([REG:279]) |
+| The battery switch's gate drive: D-14 with UDC-1's (S1), the three BUK6Y10-30P on one BATDRV, and E-1's installed acceptance at (i)(a) (cited at `6fe398e9`) | [L4E9:1131-1135]; [L4E9:1401]; [E11:1521-1526] | HO-L (E11-37) | OPEN: "E11-37 OPEN (TI or the bench)" ([E11:1533]); D-14 "CONDITIONAL on E11-29, E11-30 and E11-36 with E11-37 OPEN" ([L4E9:1134]); R-183 OWED ([REG:279]) |
 
 ## 5. Summary
 
@@ -732,8 +732,8 @@ Counts: remaining engineering 20; qualification 1; external architecture fact 3;
 - **F. The P0 list is revision 2 (RE-1)** ([P0L2:1]) while the records carry the cx46 disposition ([T5R:1]).
 - **G. E11-37's references and class (added 6 October 2026, cited at `6fe398e9`).** The P0 list's row P0-8 cites "(V2R)" and
   "(L4-E11 round 16)" for the bound and the rebinding ([P0L2:25]); L4-E11's rounds 14 to 16, which answer V2R, V2RF and V2RG, are
-  TP-E11-29's fixture and heavy leads and name no E11-37 ([E11:1749-1998]); the rebinding to the three devices is round 9's 19d
-  ([E11:1110-1116]) and the three approaches round 11's section 21 ([E11:1405-1466]), the round the check V2 read
+  TP-E11-29's fixture and heavy leads and name no E11-37 ([E11:1817-2066]); the rebinding to the three devices is round 9's 19d
+  ([E11:1178-1184]) and the three approaches round 11's section 21 ([E11:1473-1534]), the round the check V2 read
   ([E11P:2465-2467]). The class: the P0 list's 2, "missing evidence boundable at the desk" ([P0L2:11], [P0L2:25]), and L4-E9's
   "a qualification gap, not a demonstrated failure of the battery FETs" ([L4E9:1134-1135]), against this ledger's REMAINING
   ENGINEERING (HO-L), the narrower claim about the design (it does not treat the three-device network as a finished design awaiting
