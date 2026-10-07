@@ -447,7 +447,9 @@ def _run_script(path, out, head, n_pred, what):
 
 
 def t_round4_t10_output_reproduced_and_every_predicate_holds():
-    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 28, "the T10 script")
+    # round 10 (W151, L4A-57 and L4A-61, 7 October 2026): six predicates added to section 12 for section 11a (row (b)'s stage and the
+    # restated T10 rows); the 28 before them unchanged (their basis: section 11a, read by test_l9t5_rowb.py)
+    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 34, "the T10 script")
     for s_ in ("FINDING: THE STATE IS UNBOUNDED", "SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION", "L9T5-F06 STAYS OPEN",
                "T10-A1", "T10-A2", "T10-A3", "T10-A4", "T10-A5", "NOT the owner's", "Round 4 was the first attempt at this correction",
                "round 5 is the second round on the same correction"):

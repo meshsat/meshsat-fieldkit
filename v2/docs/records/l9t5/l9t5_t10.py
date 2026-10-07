@@ -21,7 +21,9 @@ return does not address that separate deficit." It prints, deterministically and
   10j (round 6, the check cx45's Q3): the quorum's schedule, the containment no firmware sets (apply_gen_sch_b_iocguard.py: a
      transmit-share limiter per transceiver and a rail trip per supervisor) composed, read and mutated, the surviving quorum per fault,
      the other supervisors' headroom, the thermal envelope with its qualification limits, and the rows on revision V and 14.0k;
- 10. the state of L9T5-F06, the findings for other authors, and the predicates test_l9t5.py holds.
+ 10. the state of L9T5-F06, the findings for other authors, and the predicates test_l9t5.py holds;
+  11a (round 10, 7 October 2026, W151; L4A-57 and L4A-61): row (b)'s drafts composed, the selected stage's acceptance (the TPS73733DCQRM3
+     at constant maximum dissipation at the TPS2553-1's printed maximum), the theta on board B's copper (E-17 named), the T10 rows restated.
 Run from the repository root:  python3 v2/docs/records/l9t5/l9t5_t10.py  (l9t5_t10.out is its output, regenerated with
 _bin/regen_out.py after l9t5_drafts.out). Labels: PRINTED (a maker's limit), TYPICAL, DECLARED, MODEL, ASSUMPTION, SESSION."""
 import hashlib
@@ -57,7 +59,14 @@ PDFTEXT = {
     "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf": [["-layout"]],
     "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf": [["-layout"]],
     "v2/vendor/ti/ti-tps62933.pdf": [["-layout"]],
+    # round 10 (W151, L4A-57): the selected stage's sheets and TI's thermal metrics note, all held back (records l4reg and l4e11 fetch them);
+    # printed in section 11a, never in section 1, so every line of sections 1 to 11 keeps its number
+    "v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf": [["-layout"]],
 }
+SHEETS10 = {"tps737": "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf", "tps2553": "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf",
+            "spra953": "v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf"}
 _PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
 PDFT = importlib.util.module_from_spec(_PTS)
 _PTS.loader.exec_module(PDFT)
@@ -1405,7 +1414,7 @@ def main():
     w("'verify its applicable operating conditions and give it a named correction and acceptance criterion'")
     w("")
     w("1. INPUTS, pinned by sha256")
-    for rel in list(SHEETS.values()) + list(DOCS.values()) + [t for t, _h, _held in PDFT.inputs(ROOT, PDFT.merge(PDFTEXT, *(PDFT.declared_in(os.path.join(ROOT, x)) for x in ("v2/docs/records/l9t5/l9t5_drafts.py", "v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l9t5/l9t5_paloop.py", "v2/docs/records/l9pwr/l9pwr_budget.py"))))]:
+    for rel in list(SHEETS.values()) + list(DOCS.values()) + [t for t, _h, _held in PDFT.inputs(ROOT, PDFT.merge({k: v for k, v in PDFTEXT.items() if k not in SHEETS10.values()}, *(PDFT.declared_in(os.path.join(ROOT, x)) for x in ("v2/docs/records/l9t5/l9t5_drafts.py", "v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l9t5/l9t5_paloop.py", "v2/docs/records/l9pwr/l9pwr_budget.py"))))]:
         w("   %s %s" % (sha(rel), rel))
     w("")
     # 2. the applicable state
@@ -1847,6 +1856,7 @@ def main():
     w("   L9T5-F20 (Layer 6; L4-E9's change list): PD2 and PB14 become outputs on each supervisor (STM32H743-COMPATIBILITY.md's matrix) and")
     w("     R67, R68, R79, R80, R91, R92 (100 k) need order codes; the draft needs a row in L4-E9's change list after T10's iocpre (V6-m11)")
     w("")
+    R10 = round10_rowb(w, out, P, DP, air, R5, FAULT)
     pred = {}
     pred["no contract, panel or firmware text in the tree bounds a supervisor's run mode, clock or voltage scale"] = unbounded
     pred["both revisions' run-mode tables are read; rv-pwr's HIGH is rev Y's 400 MHz all-peripherals maximum at TJ 85 C"] = abs(P["rv"][2] * 1000 - P["Y"][("on", 400)][2]) < 1e-9
@@ -1892,6 +1902,7 @@ def main():
         r6["a3"][1] >= r6["a3"][0] and r6["other"][1] >= r6["other"][0])
     pred["round 6: the containment delta composes, reads DRAWN by pin, its six mutations FAIL, and refuses (a drafted circuit, not closure)"] = (
         r6["v6"] == "DRAWN" and all(v == "FAIL" for _l, v in r6["vm"]) and all(r6["refused"]) and r6["ok6"])
+    pred.update(R10["pred"])
     w("12. THE PREDICATES")
     for k, v in pred.items():
         w("   %-134s %s" % (k, "yes" if v else "NO"))
@@ -1899,6 +1910,478 @@ def main():
     w("l9t5_t10: done")
     sys.stdout.write("\n".join(out) + "\n")
     return 0 if all(pred.values()) else 4
+
+
+# ======================================================================================================================================
+# ROUND 10 (7 October 2026, W151, MESHSAT-1357; Layer 4 tasks L4A-57 and L4A-61 of the AI-scope register): row (b)'s drafts composed
+# (record l9t5's apply_gen_sch_b_canmb.py, W137 and W143; apply_gen_sch_b_regstage.py, W138; apply_gen_sch_b_canen.py, W143;
+# apply_gen_sch_b_hodtest.py, W146), the selected regulator stage's acceptance (RE-6, RE-7: the TPS73733DCQRM3's junction at constant
+# maximum dissipation at the TPS2553-1's printed maximum) and the T10 rows the drafts change, restated. Printed as section 11a, after
+# section 11 and before the predicates, so every line of sections 1 to 11 keeps its number; its own inputs are pinned in 11a (a).
+# Nothing here is applied, and nothing is independently checked (row (b)'s check is L4A-62).
+# ======================================================================================================================================
+R10_DRAFTS = {"canmb": "v2/docs/records/l9t5/apply_gen_sch_b_canmb.py", "regstage": "v2/docs/records/l9t5/apply_gen_sch_b_regstage.py",
+              "canen": "v2/docs/records/l9t5/apply_gen_sch_b_canen.py", "hodtest": "v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py",
+              "facts": "v2/ecad/tools/pcb_board_facts.yaml"}
+R10_ADMIT = {"PRINTED"}       # the labels a figure used as a LIMIT may carry in the judge (k_judge); TYPICAL, DESCRIBED, GUIDELINE are refused
+R10_H = (5.0, 10.0)           # W/(m2 K), ASSUMPTION: natural convection from each face of board B into still inside air, no radiation credit
+R10_A = (2.0e-3, 3.0e-3)      # m, ASSUMPTION: the radius of a disc of the SOT-223 tab's land and its 3 x 2 vias into In1 (no layout exists)
+R10_R = (10.0e-3, 20.0e-3)    # m, ASSUMPTION: the LDO's distance from its own controller's centre (no placement exists, L4REG-F6)
+R10_K_CU, R10_K_FR4 = 390.0, 0.3   # W/(m K): copper, and FR-4 through its plane (ASSUMPTION, a common handbook figure)
+R10_RESTART = 10.0            # s: the peers' restart of one supervisor at most once in 10 s (FW-B22's RESTART rule, record l4canen, DRAFTED)
+
+
+def pdf10(key):
+    if key not in _PDF:
+        _PDF[key] = PDFT.pdf_text(ROOT, SHEETS10[key], ["-layout"], PDFTEXT, "v2/docs/records/l9t5")
+    return _PDF[key]
+
+
+def _page(t, m):
+    return t.count("\f", 0, m.start()) + 1
+
+
+def r10_sheets():
+    """The selected stage's printed rows (TI SLVS841F, SBVS067W) and TI's own reading of a JEDEC theta (SPRA953D). Each figure is
+    (value, label, where); the patterns follow record l4reg's (l4reg_compare.py sheets(), W138) and are re-read here, never copied."""
+    S = {}
+    t = pdf10("tps2553")
+    need(t, r"SLVS841F", "the TPS255x sheet's number")
+    m = need(t, r"RILIM = 49\.9 kΩ\s*\n\s*connected to GND\s+\S40°C ≤TJ ≤125°C\s+(\d+)\s+(\d+)\s+(\d+)", "IOS at 49.9 kOhm over TJ")
+    S["ios49"] = (tuple(float(x) / 1000 for x in m.groups()), "PRINTED", "SLVS841F 7.5 p.%d (min / typ / max, -40 to 125 C TJ)" % _page(t, m))
+    eq = {}
+    for k in ("max", "min"):
+        m = need(t, r"(\d+)V\s*\n\s*IOS%s \(mA\) =\s*\n\s*RILIM([\d.]+)kW" % k, "the IOS%s equation" % k)
+        eq[k] = (float(m.group(1)), float(m.group(2)))
+    S["ios_eq"] = (eq, "PRINTED", "SLVS841F 9.5.1 p.%d (the maker's equations; their exponents carry the resistor's 1 %%)" % _page(t, m))
+    m = need(t, r"DBV package, \S40°C ≤TJ ≤125°C\s+(\d+)", "rDS(on) DBV over TJ")
+    S["ron"] = (float(m.group(1)) / 1000, "PRINTED", "SLVS841F 7.5 p.%d (maximum, -40 to 125 C TJ)" % _page(t, m))
+    m = need(t, r"FAULT assertion or de-assertion due to overcurrent condition\s+(\d+)\s+([\d.]+)\s+(\d+)\s+ms", "the overcurrent deglitch")
+    S["tlatch"] = (tuple(float(x) / 1000 for x in m.groups()), "PRINTED", "SLVS841F 7.5 p.%d (min / typ / max)" % _page(t, m))
+    m = need(t, r"the TPS255x-1 limits the current to IOS until the overload condition is removed or the internal deglitch time\s*\nis reached "
+             r"and the device is latched off\.", "the latch-off sentence (9.3.1)")
+    S["latch"] = ("latched off at the deglitch, off until power or EN is cycled", "DESCRIBED", "SLVS841F 9.3.1 p.%d" % _page(t, m))
+    m = need(t, r"tIOS\s+Response time to short circuit\s+VIN = 5 V \(see Figure 21\)\s+(\d+)\s+µs", "tIOS (7.5)")
+    S["tios"] = (float(m.group(1)) * 1e-6, "TYPICAL", "SLVS841F 7.5 p.%d (typical column only)" % _page(t, m))
+    m = need(t, r"momentarily disables the internal current-limit\s*\nMOSFET\.", "the response's description (9.3.1)")
+    S["tios_p"] = _page(t, m)
+    m = need(t, r"RθJA\s+Junction-to-ambient thermal resistance\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)", "RthJA (7.4)")
+    S["lim_rja"] = (float(m.group(3)), "PRINTED", "SLVS841F 7.4 p.%d (TPS2553 DBV, JEDEC)" % _page(t, m))
+    m = need(t, r"Thermal shutdown threshold in\s*\n\s*(\d+)\s+°C\s*\n\s*current-limit", "the shutdown in current limit (7.5)")
+    S["lim_tsd"] = (float(m.group(1)), "PRINTED", "SLVS841F 7.5 p.%d (minimum column: no shutdown under it; no maximum: no protection limit)" % _page(t, m))
+
+    t = pdf10("tps737")
+    need(t, r"SBVS067W %s JANUARY 2006 %s REVISED AUGUST 2025" % (EN_DASH, EN_DASH), "the TPS737 sheet's number")
+    m = need(t, r"5\.4 Thermal Information\s*\n\s*TPS737 New silicon\s*\n.*?DRB \(VSON\)\s+DCQ \(SOT-223\)\s+DRV \(WSON\).*?RθJA\s+Junction-to-ambient thermal resistance\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)"
+             r".*?RθJB\s+Junction-to-board thermal resistance\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)[^\n]*\n\s*ψJT\s+Junction-to-top characterization parameter\s+([\d.]+)\s+([\d.]+)"
+             r"\s+([\d.]+)[^\n]*\n\s*ψJB\s+Junction-to-board characterization parameter\s+([\d.]+)\s+([\d.]+)", "the new silicon's thermal table (5.4)", re.S)
+    p = _page(t, m)
+    S["rja"] = (float(m.group(2)), "PRINTED", "SBVS067W 5.4 p.%d (new silicon, DCQ; JEDEC methodology, the thermal metrics note)" % p)
+    S["rjb"] = (float(m.group(5)), "PRINTED", "SBVS067W 5.4 p.%d (new silicon, DCQ)" % p)
+    S["psijt"] = (float(m.group(8)), "PRINTED", "SBVS067W 5.4 p.%d (new silicon, DCQ, a characterization parameter)" % p)
+    S["psijb"] = (float(m.group(11)), "PRINTED", "SBVS067W 5.4 p.%d (new silicon, DCQ)" % p)
+    m = need(t, r"VDO\s+IOUT = 1A, new silicon\s+(\d+)\s+(\d+)\s+mV", "the new dropout (5.6)")
+    S["vdo1a"] = (float(m.group(2)) / 1000, "PRINTED", "SBVS067W 5.6 p.%d (maximum at 1 A, new silicon)" % _page(t, m))
+    m = need(t, r"When \(VIN %s VOUT\) is less than\s*\nthe dropout voltage \(VDO\), the NMOS pass transistor is in the linear region of operation" % EN_DASH,
+             "the dropout's description (7.2.2.2)")
+    S["vdo_desc"] = ("the pass transistor in its linear region below VDO", "DESCRIBED", "SBVS067W 7.2.2.2 p.%d" % _page(t, m))
+    m = need(t, r"5\.5V; 10mA ≤ IOUT ≤ 1A, new\s+%s([\d.]+)\s+±0\.5\s+([\d.]+)\s*\n\s*silicon" % EN_DASH, "the new accuracy (5.6)")
+    S["acc"] = (float(m.group(2)) / 100, "PRINTED", "SBVS067W 5.6 p.%d (over VIN, IOUT and T; VOUT + 0.5 V <= VIN <= 5.5 V)" % _page(t, m))
+    m = need(t, r"ICL\s+Output current limit\s+VOUT = 0\.9 × VOUT\(nom\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+A", "the current limit (5.6)")
+    S["icl"] = (tuple(float(x) for x in m.groups()), "PRINTED", "SBVS067W 5.6 p.%d (min / typ / max)" % _page(t, m))
+    m = need(t, r"IGND\s+Ground pin current\s+IOUT = 1A, new silicon\s+(\d+)\s+µA", "the ground current at 1 A (5.6)")
+    S["ignd"] = (float(m.group(1)) * 1e-6, "TYPICAL", "SBVS067W 5.6 p.%d (typical column only, new silicon, 1 A: no maximum printed)" % _page(t, m))
+    m = need(t, r"IOUT\s+Output current\s+0\s+(\d+)\s+A", "the output current (5.3)")
+    S["iout"] = (float(m.group(1)), "PRINTED", "SBVS067W 5.3 p.%d" % _page(t, m))
+    m = need(t, r"VIN\s+Input supply voltage\s+([\d.]+)\s+([\d.]+)\s+V", "the input range (5.3)")
+    S["vin"] = ((float(m.group(1)), float(m.group(2))), "PRINTED", "SBVS067W 5.3 p.%d" % _page(t, m))
+    m = need(t, r"TJ\s+Operating junction temperature\s+%s40\s+(\d+)\s+°C" % EN_DASH, "the operating junction (5.3)")
+    S["tj_op"] = (float(m.group(1)), "PRINTED", "SBVS067W 5.3 p.%d" % _page(t, m))
+    m = need(t, r"Operating junction, TJ\s+%s55\s+(\d+)" % EN_DASH, "the absolute maximum junction (5.1)")
+    S["tj_abs"] = (float(m.group(1)), "PRINTED", "SBVS067W 5.1 p.%d (Absolute Maximum Ratings)" % _page(t, m))
+    m = need(t, r"Output short-circuit duration\s+(Indefinite)", "the short-circuit duration (5.1)")
+    S["short"] = (m.group(1), "PRINTED", "SBVS067W 5.1 p.%d (Absolute Maximum Ratings)" % _page(t, m))
+    m = need(t, r"intended only as a guideline to demonstrate the effects of heat spreading in the ground plane and is not intended\s*\n"
+             r"to be used to estimate actual thermal performance in real application environments\.", "Figure 7-9's caveat (7.5.1.1)")
+    S["fig79"] = ("RthJA against board size", "GUIDELINE", "SBVS067W Figure 7-9 p.%d ('intended only as a guideline')" % _page(t, m))
+    m = need(t, r"ISC\s+Short-circuit current\s+VOUT = 0V, new silicon\s+(\d+)\s+mA", "the short-circuit current (5.6)")
+    S["isc"] = (float(m.group(1)) / 1000, "TYPICAL", "SBVS067W 5.6 p.%d (typical only, new silicon)" % _page(t, m))
+
+    t = pdf10("spra953")
+    need(t, r"SPRA953D %s DECEMBER 2003 %s REVISED MARCH 2024" % (EN_DASH, EN_DASH), "the thermal metrics note's number")
+    m = need(t, r"This is a misapplication of the RθJA thermal parameter because RθJA is a variable function of not just the\s*\n"
+             r"package, but of many other system level characteristics such as the design and layout of the printed circuit\s*\n"
+             r"board \(PCB\) on which the part is mounted\.", "1.1's misapplication sentence")
+    S["mis_p"] = _page(t, m)
+    m = need(t, r"A 2s2p \(double signal\s*\nlayer, double buried power plane\) configuration gives a best case performance estimate assuming a sparsely\s*\n"
+             r"populated, high-trace-density board design with buried power and ground planes\.", "1.2's best-case sentence")
+    S["best_p"] = _page(t, m)
+    m = need(t, r"For very low power\s*\ndissipation which results in minimal increase in surface temperature, RθJA is sometimes found to be 2×%s3x\s*\n"
+             r"higher than at rated package power levels\." % EN_DASH, "1.7's low-power sentence")
+    S["low_p"] = _page(t, m)
+    return S
+
+
+def _bessel_k(n, x, u_max=25.0, steps=20000):
+    """the modified Bessel function of the second kind K_n(x) = integral over u of exp(-x cosh u) cosh(n u) (Simpson): the radial fin's
+    kernel for the conduction screen (no library outside the standard one)"""
+    h = u_max / steps
+    s = 0.0
+    for i in range(steps + 1):
+        u = i * h
+        f = math.exp(-x * math.cosh(u)) * math.cosh(n * u)
+        s += f * (1 if i in (0, steps) else (4 if i % 2 else 2))
+    return s * h / 3.0
+
+
+def r10_judge(st, R):
+    """L4A-57's acceptance of the selected stage on its case rows (C-DEV rev 2's T10 rows, the 14.0k corner, 76.25 C air). st: {name:
+    (value, label, where)}. A figure used as a LIMIT must carry an admitted label (R10_ADMIT): a TYPICAL response time, a TYPICAL ground
+    current or a guideline theta used as a bound FAILS the judge at K0 whatever its value. Returns (verdict, [(row, holds, text)])."""
+    lim = ("ios_lo", "ios_hi", "rja", "ron", "t_latch", "vdo1a", "acc", "iout", "icl_min", "vin_max", "lim_rja", "tj_op")
+    bad = [k for k in lim + tuple(k for k in ("t_resp", "ignd_max") if k in st) if st[k][1] not in R10_ADMIT]
+    if bad:
+        return "FAILS", [("K0", False, "REFUSED: a limit carried a non-admitted label: %s" % ", ".join(
+            "%s %s (%s)" % (k, st[k][0], st[k][1]) for k in bad))]
+    lo, hi = st["ios_lo"][0], st["ios_hi"][0]
+    res = [("K0", True, "every figure used as a limit is PRINTED; IGND, tIOS and Figure 7-9 enter as named terms, never as bounds")]
+    peak = max(R["served"].values())
+    res.append(("K1", lo >= peak, "no served state limited: IOSmin %.4f A against the largest served %.4f A (%s): %+.4f A" % (
+        lo, peak, max(R["served"], key=R["served"].get), lo - peak)))
+    p0 = R["drop"] * hi
+    tj0 = R["air"] + st["rja"][0] * p0
+    g_star = ((R["tj"] - R["air"]) / st["rja"][0] - p0) / R["vout_lo"]
+    res.append(("K2", tj0 <= R["tj"] and g_star > 0, "the regulator's junction at constant maximum dissipation %.1f C (%.4f W at %.4f A, the drop %.4f V, %.1f C/W %s) "
+                "against %.0f C; IGND admitted up to %.1f mA" % (tj0, p0, hi, R["drop"], st["rja"][0], st["rja"][1], R["tj"], g_star * 1e3)))
+    res.append(("K3", R["cm_i"] <= hi, "cx46's countermodel current %.2f A under the limiter's maximum %.4f A: inside the bound (or limited and latched where a "
+                "specimen limits under it)" % (R["cm_i"], hi)))
+    e = R["vin_hi"] * hi * st["t_latch"][0][2]
+    res.append(("K4", st["t_latch"][0][2] > 0 and st["short"][0] == "Indefinite", "an output short at or over IOS latched within %.0f ms (%.1f mJ at most); under "
+                "IOSmin excluded with its reason; the regulator's short-circuit duration %s" % (st["t_latch"][0][2] * 1e3, e * 1e3, st["short"][0])))
+    p_lim = st["ron"][0] * hi * hi
+    tjl = R["air"] + st["lim_rja"][0] * p_lim
+    res.append(("K5", tjl <= R["tj"], "the limiter in service at its maximum %.1f mW, %.1f C on %.1f C/W; no automatic restart (latch-off); the peers' restart at most once "
+                "in %.0f s, %.2f mW on average" % (p_lim * 1e3, tjl, st["lim_rja"][0], R10_RESTART, e / R10_RESTART * 1e3)))
+    at = R["avail"](hi, 3 * hi, st["ron"][0])
+    nd_inf = 3.3 * (1 + st["acc"][0]) + st["vdo1a"][0] * hi
+    nd_bnd = 3.3 * (1 + st["acc"][0]) + st["vdo1a"][0]
+    res.append(("K6", at >= nd_bnd and at >= nd_inf, "T10-A3 at %.4f A on all three with %.3f ohm: %.4f V against %.4f V on the 1 A row as the bound (%+.4f V) and %.4f V on "
+                "the INFERRED linear dropout (%+.4f V)" % (hi, st["ron"][0], at, nd_bnd, at - nd_bnd, nd_inf, at - nd_inf)))
+    res.append(("K7", 3 * hi <= R["u601"] and 3 * hi <= R["vh"], "three limiters at their maximum %.4f A against U601's %.0f A and the lead's %.0f A" % (
+        3 * hi, R["u601"], R["vh"])))
+    res.append(("K8", st["iout"][0] >= hi and st["icl_min"][0] >= hi and st["vin_max"][0] >= R["vin_hi"], "rated %.1f A, current limit at least %.2f A, input to %.1f V, "
+                "against %.4f A and %.4f V" % (st["iout"][0], st["icl_min"][0], st["vin_max"][0], hi, R["vin_hi"])))
+    res.append(("K9", st["t_latch"][0][2] > 0, "every limiting event ends at the latch, at most %.0f ms after the limit acts (PRINTED); the limit's onset tIOS is "
+                "not used as a bound" % (st["t_latch"][0][2] * 1e3)))
+    return ("HOLDS" if all(h for _c, h, _t in res) else "FAILS"), res
+
+
+def r10_stage_check(nl):
+    """the selected stage read on the composed board B netlist by pin and value, with row (b)'s other drafts on the same nets"""
+    why = []
+    for tag, k in (("A", 0), ("B", 1), ("C", 2)):
+        u_reg, u_lim, r_ilim = "U%d" % (40 + 10 * k), "U%d" % (45 + 10 * k), "R%d" % (601 + 20 * k)
+        why += CHK.rows(nl, [(u_lim, "1", "+5V_IOC"), (u_lim, "2", "GND"), (u_lim, "3", "IOC%s_LIM_EN" % tag), (u_lim, "5", "IOC%s_ILIM" % tag),
+                             (u_lim, "6", "IOC%s_LDO_IN" % tag), (u_reg, "1", "IOC%s_LDO_IN" % tag), (u_reg, "2", "+3V3_IOC%s" % tag),
+                             (u_reg, "3", "GND"), (u_reg, "5", "IOC%s_LDO_EN" % tag), (u_reg, "6", "GND")])
+        if not CHK.value(nl, u_reg).startswith("TPS73733DCQRM3"):
+            why.append("%s is %r, not the TPS73733DCQRM3" % (u_reg, CHK.value(nl, u_reg)[:30]))
+        if not CHK.value(nl, u_lim).startswith("TPS2553-1"):
+            why.append("%s is %r, not the TPS2553-1" % (u_lim, CHK.value(nl, u_lim)[:30]))
+        if CHK.two(nl, r_ilim) != sorted(["IOC%s_ILIM" % tag, "GND"]) or CHK.value(nl, r_ilim) != "49.9k 1%":
+            why.append("%s is %r on %s, not 49.9k 1%% from ILIM to GND" % (r_ilim, CHK.value(nl, r_ilim), CHK.two(nl, r_ilim)))
+        for gone in ("R%d" % (600 + 20 * k), "U%d" % (46 + 10 * k)):
+            if gone in nl["pins"] or gone in nl["comps"]:
+                why.append("%s, a part of round 6's rail trip, is still drawn" % gone)
+    return ("FAIL" if why else "DRAWN"), why
+
+
+def r10_set_value(path, d, tag, ref, value):
+    raw = open(path, encoding="utf-8").read()
+    m = re.search(r'\(comp \(ref "%s"\) \(value "([^"]*)"\)' % re.escape(ref), raw)
+    if not m:
+        refuse("round 10's value mutation: %s is not in the netlist" % ref)
+    p = os.path.join(d, tag + ".net")
+    open(p, "w", encoding="utf-8").write(raw[:m.start(1)] + value + raw[m.end(1):])
+    return p
+
+
+def round10_rowb(w, out, P, DP, air, R5, FAULT):
+    """section 11a: L4A-57 (the stage's acceptance) and L4A-61 (the T10 rows restated); returns its predicates"""
+    S = r10_sheets()
+    lo14, nom14, hi14 = CHK.vout_band(R601, R602_SET)
+    acc = S["acc"][0]
+    vout_lo, vout_hi = 3.3 * (1 - acc), 3.3 * (1 + acc)
+    drop = hi14 - vout_lo
+    eq = S["ios_eq"][0]
+    ios_lo = S["ios49"][0][0] * (1 + R_TOL) ** -eq["min"][1]
+    ios_hi = S["ios49"][0][2] * (1 - R_TOL) ** -eq["max"][1]
+    G = D.gndret()
+    r_sup = G["rhot"] + 2 * DP["vh_r"][1]
+    fixed = lo14 - D.RAIL_BUDGET * nom14 - G["shift_drawn_ub"]
+
+    def avail(i_self, i_lead, r_ser):
+        return fixed - i_lead * r_sup - r_ser * i_self
+    # the served rows on C-DEV rev 2's T10 figures, revision V (W135's rows, re-derived from this record's own figures)
+    i_rec, i_dom = P["can_rec"], P["can_dom_hi"]
+    share = i_rec + (i_dom - i_rec) * SHARE
+    held = {r[0]: r[1] for r in R5["fault_rows"][FITTED_REV]}
+    s3p = {f: held[f] - share + i_dom for f in ("B1", "B2", "B3", "B4", "B5")}
+    s3_key = max(s3p, key=s3p.get)
+    bab = [r[2] for r in R5["p22_rows"] if r[0] == FITTED_REV and r[1].startswith("babbling")][0]
+    served = {"S1 the largest sustained served (10j (e))": R5["r6"]["serve_max"], "S2 both transceivers dominant in one bit (10i)": bab,
+              "(f1) one fabric on the 180 mA row (section 8)": FAULT["d_f1"], "S3' row 7 with the healthy fabric's bit (%s, 10e)" % s3_key: s3p[s3_key]}
+    surv = {"(f2) both fabrics on the 180 mA row (section 8)": FAULT["d_f2"], "both fabrics held, revision V (10e)": R5["both"][FITTED_REV][1]}
+    i125 = (TJ_GOAL - air) / (S["rja"][0] * drop)
+    w("11a. ROUND 10 (7 October 2026, W151; Layer 4 tasks L4A-57 and L4A-61): ROW (b)'S DRAFTS COMPOSED, THE SELECTED REGULATOR STAGE'S")
+    w("   ACCEPTANCE (RE-6, RE-7) AND THE T10 ROWS RESTATED. A DRAFT: nothing applied, no independent check (row (b)'s is L4A-62); every junction")
+    w("   below is a MODEL on printed figures, never a measured temperature; sections 1 to 11 stand as written, and where (j) restates a row its")
+    w("   old text above is history, not an instruction")
+    w("   (a) THE INPUTS OF THIS SECTION, pinned by sha256 (section 1's list unchanged)")
+    for rel in list(R10_DRAFTS.values()) + list(SHEETS10.values()) + [t for t, _h, _held in PDFT.inputs(ROOT, {k: v for k, v in PDFTEXT.items() if k in SHEETS10.values()})]:
+        w("   %s %s" % (sha(rel), rel))
+    # (b) the stage as drawn
+    with tempfile.TemporaryDirectory(prefix="l9t5_t10r10_") as d:
+        seq = D.seq_of("b", "slot")
+        at = seq.index(D.MINE["b"]) + 1
+        rb = [os.path.join(ROOT, R10_DRAFTS[k]) for k in ("canmb", "regstage", "canen", "hodtest")]
+        seq10 = seq[:at] + [PRE["b"], SHDN, SET % "b", GUARD_B] + rb + seq[at:]
+        p10, res10, ok10 = D.compose("b", seq10, d, "t10r10")
+        rc10, net10, _t = D.netlist("b", p10, d, "t10r10")
+        if rc10 or not ok10:
+            refuse("board B with row (b)'s drafts did not compose or regenerate: %s" % ("; ".join("%s %s" % (s, v) for s, v, _m in res10 if v != "OK") or net10))
+        nl10 = CHK.read(open(net10, "rb").read())
+        v10, why10 = r10_stage_check(nl10)
+        n_parts = len(nl10["comps"])
+        muts = (("RILIM at 102 kOhm (a band under the served peak)", "R601", "102k 1%"), ("the AP2112K-3.3 back on U40", "U40", "AP2112K-3.3"),
+                ("U40 ordered without M3 (legacy silicon may ship)", "U40", "TPS73733DCQR"))
+        vm = [(lab, r10_stage_check(CHK.read(open(r10_set_value(net10, d, "r10m%d" % i, ref, val), "rb").read()))[0]) for i, (lab, ref, val) in enumerate(muts)]
+    w("   (b) THE STAGE AS DRAWN: board B composed in L4-E9's order with iocpre, canshdn, iocset and iocguard, then row (b)'s canmb, regstage, canen")
+    w("     and hodtest (%d drafts; record l4hod composed the four in all five orders they admit, identical netlists): %s; the generator ran to its end" % (
+        len(seq10), "every step OK" if ok10 else "REFUSED"))
+    w("     (%d parts); read by pin and value, each supervisor's TPS2553-1 (IN +5V_IOC, OUT IOCx_LDO_IN, ILIM through 49.9k 1%% to GND, EN" % n_parts)
+    w("     IOCx_LIM_EN) ahead of its TPS73733DCQRM3 (IN IOCx_LDO_IN, OUT +3V3_IOCx), round 6's rail trip absent: %s%s" % (v10, (": " + "; ".join(why10[:3])) if why10 else ""))
+    for lab, v in vm:
+        w("     mutated, %-52s %s" % (lab + ":", v))
+    # (c) the printed figures
+    w("   (c) THE PRINTED FIGURES (label and place; a TYPICAL, DESCRIBED or GUIDELINE figure is shown, never used as a bound)")
+    for k in ("ios49", "ron", "tlatch", "latch", "tios", "lim_rja", "lim_tsd", "rja", "rjb", "psijt", "psijb", "vdo1a", "vdo_desc", "acc", "icl", "iout",
+              "vin", "tj_op", "tj_abs", "short", "ignd", "isc", "fig79"):
+        v, lab, where = S[k]
+        vs = ("%g" % v) if isinstance(v, float) else (" / ".join("%g" % x for x in v) if isinstance(v, tuple) else str(v))
+        w("     %-9s %-38s %-9s %s" % (k, vs[:38], lab, where))
+    w("     with RILIM's 1 %% through the equations' exponents (W135's rule, MODEL on PRINTED): IOS %.4f to %.4f A" % (ios_lo, ios_hi))
+    w("     TI on a JEDEC theta (SPRA953D, held, p.%d, 1.1): 'This is a misapplication of the RθJA thermal parameter because RθJA is a variable function" % S["mis_p"])
+    w("       of not just the package'; (p.%d, 1.2) the 2s2p board 'gives a best case performance estimate assuming a sparsely populated, high-trace-" % S["best_p"])
+    w("       density board design with buried power and ground planes'; (p.%d, 1.7) at very low power the note finds RθJA two to three times higher" % S["low_p"])
+    # (d) the sustained bound
+    p0 = drop * ios_hi
+    tj0 = air + S["rja"][0] * p0
+    g_star = ((TJ_GOAL - air) / S["rja"][0] - p0) / vout_lo
+    tj_typ = air + S["rja"][0] * (p0 + vout_lo * S["ignd"][0])
+    rja_need = (TJ_GOAL - air) / p0
+    w("   (d) RE-7, THE SUSTAINED BOUND AT CONSTANT MAXIMUM DISSIPATION (L4A-57). After the limiter acts, everything the LDO's input takes is")
+    w("     at most IOSmax %.4f A (PRINTED over -40 to 125 C TJ, the resistor's 1 %% counted). With its output in regulation the LDO dissipates" % ios_hi)
+    w("     P = VIN x I_IN - VOUT x IOUT = (VIN - VOUT) x IOUT + VOUT x IGND, so at most (VIN_max - VOUT_min) x IOSmax + VOUT_min x IGND: VIN_max the")
+    w("     pre-regulator's top %.4f V (no drop counted ahead of the LDO), VOUT_min %.4f V (-%.1f %%, PRINTED where VIN >= VOUT + 0.5 V; below that" % (hi14, vout_lo, acc * 100))
+    w("     the band is V-T10-DROP's, L4REG-F2): the drop %.4f V, %.4f W at IGND = 0" % (drop, p0))
+    w("     WHY IT BOUNDS EVERY WAVEFORM UNDER THE LIMIT: the junction's rise is the input power convolved with the rise per unit step, which for a")
+    w("     passive conduction network climbs monotonically to its steady theta; for any power p(t) at most P_max the junction never exceeds the air")
+    w("     plus theta x P_max (MODEL: superposition on a linear passive network, a property of the network, not a typical curve). cx46's")
+    w("     countermodel (0.50 A for 0.40 s every 1.50 s) lies under IOSmax, so inside the bound; a specimen whose limit is under 0.50 A limits it")
+    w("     and latches within the printed deglitch (K3)")
+    w("     IGND: TI prints the ground current as TYPICAL only (%.0f uA at 1 A, new silicon; no maximum). It is not used as a bound: the result" % (S["ignd"][0] * 1e6))
+    w("     is stated as a function of it. On the printed %.1f C/W: the junction %.1f C at IGND = 0, +%.3f K per mA of IGND; 125 C holds for" % (
+        S["rja"][0], tj0, S["rja"][0] * vout_lo * 1e-3))
+    w("     every IGND up to %.1f mA (%.0f times the TYPICAL, which would read %.1f C: shown, not a bound). CONDITIONAL: E-17 reads the junction" % (
+        g_star * 1e3, g_star / S["ignd"][0], tj_typ))
+    w("     with IGND inside it (below)")
+    w("     the regulator's 125 C current at this corner on the printed theta %.4f A, over IOSmax by %.4f A; the theta that holds 125 C at IOSmax" % (i125, i125 - ios_hi))
+    w("     with IGND = 0: %.1f C/W (W135's and W138's figure reproduced)" % rja_need)
+    # (e) theta on board B's copper
+    w("   (e) THE THETA ON BOARD B'S COPPER: NOT BOUNDED AT THE DESK. The printed %.1f C/W is TI's JEDEC 2s2p figure for a single device, which" % S["rja"][0])
+    w("     TI itself calls a best case and a misapplication when carried to a system board (c). Board B (pcb_board_facts.yaml): six layers, outer")
+    w("     1 oz, inner 0.5 oz, In1 the ground plane; no P0 draft part is placed (L4REG-F6), so the tab's land, its vias and the neighbours are not")
+    w("     drawn. A CONDUCTION SCREEN (MODEL, a means, never evidence): RθJB %.1f C/W (PRINTED, its ring cold plate) plus the spreading of In1 alone" % S["rjb"][0])
+    w("     (17.5 um copper at %.0f W/m K, with the board's FR-4 at %.1f W/m K, ASSUMED) from a disc of radius a into still air on both faces at h" % (R10_K_CU, R10_K_FR4))
+    w("     (ASSUMED; natural convection, no radiation credit), the radial fin's K0/K1 kernel; and the controller's own heat at its rev V bounded state")
+    kt = R10_K_CU * 17.5e-6 + R10_K_FR4 * 1.6e-3
+    p_mcu = vout_hi * R5["B"][(FITTED_REV, air)][1]
+    screen = []
+    for h in R10_H:
+        m_ = math.sqrt(2 * h / kt)
+        for a in R10_A:
+            x = m_ * a
+            rb_ = _bessel_k(0, x) / (2 * math.pi * kt * x * _bessel_k(1, x))
+            mut = [(r, _bessel_k(0, m_ * r) / (2 * math.pi * kt)) for r in R10_R]
+            screen.append((h, a, S["rjb"][0] + rb_, mut))
+    w("     (%.4f W at its operating point, MODEL) reaching the LDO's site through the same plane at distance r (ASSUMED):" % p_mcu)
+    for h, a, rja_s, mut in screen:
+        w("       h %4.1f W/m2 K, a %.1f mm: RθJA(screen) %5.1f C/W; the controller adds %s" % (
+            h, a * 1e3, rja_s, ", ".join("%.1f K at %.0f mm" % (p_mcu * zm, r * 1e3) for r, zm in mut)))
+    worst = max(screen, key=lambda s: s[2])
+    tj_scr = air + worst[2] * p0 + p_mcu * max(z for _r, z in worst[3])
+    w("     on the screen's worst row the LDO at IOSmax reads %.1f C with the controller 10 mm away: the screen does not establish the site; it" % tj_scr)
+    w("     shows the outcome rests on the tab's copper and on the distance from the controller (Layer 10 means: the LDO's tab on In1 through its")
+    w("     vias, and away from its controller), which only a laid-out board settles")
+    zth_10 = (S["tj_abs"][0] - tj0) / (hi14 * ios_hi)
+    w("     E-17 (THE RECEIVING COMPANY'S MEASUREMENT, named here; nothing sent): SPECIMEN the first-article board B (or a coupon of its six-layer")
+    w("       stack with the U40, U50 and U60 sites as Layer 10 lays them out, their controllers and limiters powered at their bounded state), three")
+    w("       sites; QUANTITY each LDO's junction with its input current held at the limiter's printed maximum %.4f A, its input at %.4f V and its" % (ios_hi, hi14))
+    w("       output in regulation, from its case-top temperature by ψJT %.1f C/W (PRINTED), in still air at %.2f C, its IGND read as input less" % (S["psijt"][0], air))
+    w("       output current; PASS LIMIT the junction at most %.0f C (equivalently RθJA(effective) at most %.2f K over the measured power; %.1f C/W" % (
+        TJ_GOAL, TJ_GOAL - air, rja_need))
+    w("       at IGND = 0); and for the latched transient, the junction's rise in %.0f ms of %.3f W at most %.1f K from the steady bound, Zth(%.0f ms) at" % (
+        S["tlatch"][0][2] * 1e3, hi14 * ios_hi, S["tj_abs"][0] - tj0, S["tlatch"][0][2] * 1e3))
+    w("       most %.1f C/W, which would remove W151-1's exclusion (f)" % zth_10)
+    # (f) the response and the output short
+    e_lat = hi14 * ios_hi * S["tlatch"][0][2]
+    w("   (f) RE-6, THE RESPONSE ON PRINTED TIMING, AND THE OUTPUT SHORT. No response time is needed for the sustained bound: the limit is a")
+    w("     DC limit (IOS, PRINTED), and every state with the output in regulation is inside (d) whatever its waveform. A demand over IOS is a")
+    w("     fault (no served state reaches IOSmin, (g)): the limiter holds IOS and latches off at most %.0f ms after the limit acts (PRINTED deglitch," % (S["tlatch"][0][2] * 1e3))
+    w("     9.3.1 DESCRIBED), then stays off until its EN is toggled: the peers' 2-of-2 route (record l4canen) at most once in %.0f s. The limit's" % R10_RESTART)
+    w("     onset tIOS (%.0f us) is TYPICAL only and is not used: the microseconds before it are part of the fault state (below). V-B23's round 6" % (S["tios"][0] * 1e6))
+    w("     0.2 s stays WITHDRAWN (the rail trip it tested is gone, W138-2); V-B23 is restated on the limiter (record l9t5 apply_hw_fw_contract_rowb.py)")
+    w("     the output out of regulation, (i) at or over IOS: latched within %.0f ms, at most %.1f mJ (%.4f V x %.4f A x %.0f ms, MODEL on PRINTED);" % (
+        S["tlatch"][0][2] * 1e3, e_lat * 1e3, hi14, ios_hi, S["tlatch"][0][2] * 1e3))
+    w("     (ii) under IOSmin (a hard short in foldback, ISC %.0f mA TYPICAL; a partial short): not limited. SESSION W151-1, extending W138-3: the" % (S["isc"][0] * 1e3))
+    w("     LDO's junction in a state whose OUTPUT IS OUT OF REGULATION is excluded from the 125 C and 150 C criterion, in both (i) and (ii).")
+    w("     Why: that supervisor is lost (IOHA row 3: the other two are a majority), the containment of the other two holds on the limiter's")
+    w("     printed IOSmax whatever the LDO does (an LDO failing open darkens its own supervisor; failing shorted from IN to OUT it puts at most")
+    w("     %.4f V on that supervisor's own rail, whose parts are its own, and its peers read it through FT pins rated to VDD + 3.6 V powered;" % hi14)
+    w("     a peer dark at the same time sees it over its unpowered 4.0 V: a double condition, as W146-F9), and the regulator prints its output")
+    w("     short-circuit duration '%s' (%s). Reverse it: E-17's Zth(%.0f ms) limit read, or a regulator printing its short-circuit current with a" % (
+        S["short"][0], S["short"][2], S["tlatch"][0][2] * 1e3))
+    w("     maximum under IOSmin. authority SESSION (the owner's standing rule of 26 September 2026 and ruling of 21 September 2026), ruled_by W151,")
+    w("     ruled_on 7 October 2026, reversed_by none")
+    # (g) W135's four rows held on the selected parts and the service window against C-DEV rev 2
+    tj_lim_s3 = air + S["lim_rja"][0] * S["ron"][0] * s3p[s3_key] ** 2
+    p_lim_hi = S["ron"][0] * ios_hi ** 2
+    rja_lim_ok = (TJ_GOAL - air) / p_lim_hi
+    at = avail(ios_hi, 3 * ios_hi, S["ron"][0])
+    nd_bnd = vout_hi + S["vdo1a"][0]
+    nd_inf = vout_hi + S["vdo1a"][0] * ios_hi
+    served_max = max(served.values())
+    other = avail(served_max, ios_hi + 2 * served_max, S["ron"][0])
+    nd_other = vout_hi + S["vdo1a"][0]
+    w("   (g) W135's FOUR SCREEN ROWS ON THE SELECTED PARTS, AND THE SERVICE WINDOW AGAINST C-DEV REV 2 (the case row's T10 figures, revision V;")
+    w("     conditional on FW-B20 and FW-B21 as the row states)")
+    for lab, i in served.items():
+        w("     served  %-56s %.4f A  %s" % (lab, i, "not limited" if i < ios_lo else "LIMITED"))
+    for lab, i in surv.items():
+        w("     row 8   %-56s %.4f A  %s" % (lab, i, "may latch a supervisor off (row 8 accepts it; the peers' route restarts it)" if i >= ios_lo else "not limited"))
+    w("     (1) the bus-fault rows served: IOSmin %.4f A over the largest served %.4f A by %.4f A, no served state limited, no bridging capacitance" % (
+        ios_lo, served_max, ios_lo - served_max))
+    w("       needed; the 180 mA a transceiver (PRINTED) enters (f1), (f2) and S3' above. THE WINDOW: %.4f A between the largest served state and" % (ios_lo - served_max))
+    w("       the limiter's least, and %.4f A between its most and the regulator's 125 C current on the printed theta (zero at E-17's pass limit by" % (i125 - ios_hi))
+    w("       construction). Row (b)'s own rail additions (the buffers, gates, pull-ups and votes of canmb, canen and hodtest) are the drafts'")
+    w("       records' figures, read against this window in the connected record (l9t5_connected.out 11a), never typed here")
+    w("     (2) the output short: (f) (i) latched within %.0f ms, (ii) excluded with its reason (W151-1, W138-3, W135-2)" % (S["tlatch"][0][2] * 1e3))
+    w("     (3) the limiter's own dissipation: %.1f mW at S3' (%.1f C on %.1f C/W) and %.1f mW at IOSmax in regulation; it holds 125 C to %.0f C/W, so" % (
+        S["ron"][0] * s3p[s3_key] ** 2 * 1e3, tj_lim_s3, S["lim_rja"][0], p_lim_hi * 1e3, rja_lim_ok))
+    w("       no measurement decides it; limiting into a short at most %.3f W for at most %.0f ms (its junction then not computed: no Zth printed;" % (
+        hi14 * ios_hi, S["tlatch"][0][2] * 1e3))
+    w("       its shutdown in current limit printed as a minimum %.0f C only, no protection limit); no automatic restart (latch-off, DESCRIBED); the" % S["lim_tsd"][0])
+    w("       peers' restart at most once in %.0f s keeps a latched event's average at most %.2f mW" % (R10_RESTART, e_lat / R10_RESTART * 1e3))
+    w("     (4) T10-A3 with the limiter's %.3f ohm in place of the 0.3 ohm sense, at IOSmax on all three: %.4f V against %.4f V on the 1 A row" % (
+        S["ron"][0], at, nd_bnd))
+    w("       taken as the bound (the dropout rises with current as the pass device's linear-region resistance, DESCRIBED) %+.4f V, and against" % (at - nd_bnd))
+    w("       %.4f V on the INFERRED linear dropout %+.4f V; the other two at the largest served while one sits at IOSmax: %.4f V against %.4f V" % (
+        nd_inf, at - nd_inf, other, nd_other))
+    w("       (%+.4f V); U601 and the lead at three limiters' maxima %.4f A against %.0f A and %.0f A (PRINTED)" % (other - nd_other, 3 * ios_hi, DP["tps_a"], DP["vh_a"]))
+    # (h) the judge
+    st = {"ios_lo": (ios_lo, "PRINTED", "SLVS841F 7.5 and 9.5.1"), "ios_hi": (ios_hi, "PRINTED", "SLVS841F 7.5 and 9.5.1"), "rja": S["rja"], "ron": S["ron"],
+          "t_latch": S["tlatch"], "vdo1a": S["vdo1a"], "acc": S["acc"], "iout": S["iout"], "icl_min": (S["icl"][0][0], "PRINTED", S["icl"][2]),
+          "vin_max": (S["vin"][0][1], "PRINTED", S["vin"][2]), "lim_rja": S["lim_rja"], "tj_op": S["tj_op"], "short": S["short"]}
+    RJ = {"served": served, "air": air, "drop": drop, "tj": TJ_GOAL, "vout_lo": vout_lo, "cm_i": 0.50, "vin_hi": hi14, "avail": avail,
+          "u601": DP["tps_a"], "vh": DP["vh_a"]}
+    verdict, rows = r10_judge(st, RJ)
+    jm = (("a TYPICAL response time (tIOS) used as the response bound", dict(st, t_resp=S["tios"])),
+          ("the TYPICAL ground current used as its maximum", dict(st, ignd_max=S["ignd"])),
+          ("Figure 7-9's guideline used as the site's theta", dict(st, rja=(S["rja"][0], "GUIDELINE", S["fig79"][2]))),
+          ("the AP2112K's 184 C/W on the stage (the old regulator)", dict(st, rja=(P["theta_ldo"], "PRINTED", "DS39724 p.3"))),
+          ("RILIM at 102 kOhm (its band under the served peak)", dict(st, ios_lo=(0.2274, "PRINTED", "W135's C1"), ios_hi=(0.3002, "PRINTED", "W135's C1"))))
+    vjm = [(lab, r10_judge(s_, RJ)[0]) for lab, s_ in jm]
+    w("   (h) L4A-57's ACCEPTANCE (K0 to K9, every limit PRINTED; the judge refuses a TYPICAL or a guideline used as a bound): %s on the printed theta" % verdict)
+    for c, h, t_ in rows:
+        w("     %-3s %-5s %s" % (c, "holds" if h else "FAILS", t_))
+    for lab, v in vjm:
+        w("     mutated, %-60s %s" % (lab + ":", v))
+    done = verdict == "HOLDS" and v10 == "DRAWN" and all(v == "FAIL" for _l, v in vm) and all(v == "FAILS" for _l, v in vjm)
+    w("     L4A-57: %s. The stage holds its rows on printed figures with the theta read as printed; the printed theta is a JEDEC best case and" % (
+        "DONE AS CONDITIONAL on E-17" if done else "NOT DONE"))
+    w("     no bound on board B's copper, so RE-7's sustained bound and RE-6's response read SUPPORTED ON PRINTED FIGURES, CONDITIONAL on E-17's")
+    w("     theta and IGND at the site, PROVISIONAL until row (b)'s check (L4A-62); RE-6 and RE-7 stay NOT CLOSED (cx46), REMAINING ENGINEERING")
+    w("     until that check and E-17. HO-D (the limiter's latent loss of its limit) is record l4hod's in-service test (a lost limit found within")
+    w("     3602.341 s, DRAFTED); HO-E is unchanged by the limiter (IOSmin over VOS0's %.4f A and the H743's 125 C current) and is L4A-59's" % 0.1936)
+    # (j) the T10 rows restated (L4A-61)
+    text_ = "\n".join(out)
+
+    def ln(anchor):
+        i = text_.find(anchor)
+        if i < 0:
+            refuse("round 10's restatement: its anchor %r is not in this output" % anchor[:60])
+        return text_.count("\n", 0, i) + 1
+    RS = [
+        ("T10-A2 on the AP2112K's 184 C/W", "T10-A2 at 76.25 C inside air and that state's demand",
+         "the regulator replaced (regstage): the bounded state rev V %.4f A reads %.1f C on the TPS73733's printed %.1f C/W, CONDITIONAL on E-17" % (
+             R5["B"][(FITTED_REV, air)][2], air + S["rja"][0] * drop * R5["B"][(FITTED_REV, air)][2], S["rja"][0])),
+        ("T10-A3 as round 4 and L9T5-D8 wrote it", "T10-A3 RESTATED (SESSION L9T5-D8)",
+         "restated at the limiter's maximum on all three: %+.4f V (1 A row as bound), %+.4f V (INFERRED); V-T10-DROP extended (L4REG-F2)" % (at - nd_bnd, at - nd_inf)),
+        ("T10-A5, the AP2112K's case in a 76 C chamber", "T10-A5 PHYSICAL, on the first article",
+         "restated: E-17 on the TPS73733 sites ((e)); V-B20 restated by apply_hw_fw_contract_rowb.py"),
+        ("10j (b) 1, the transmit-share limiter", "1. THE TRANSMIT-SHARE LIMITER, one per transceiver",
+         "REMOVED by canmb (W137): the peers' buffered TXD reads and 2-of-2 SHDN votes, attribution and self-test (canq, W143: 2.60 s); PROVISIONAL"),
+        ("10j (b) 2, the rail trip and its average bound", "2. THE RAIL TRIP, one per controller",
+         "REMOVED by regstage (W138-2): the TPS2553-1 latch-off limiter, IOS %.4f to %.4f A, latched within %.0f ms ((f)); PROVISIONAL" % (ios_lo, ios_hi, S["tlatch"][0][2] * 1e3)),
+        ("10j (b) V-B23's 0.2 s", "V-B23's response, as round 6 drafted it",
+         "stays WITHDRAWN; V-B23 restated on the limiter's band and latch (apply_hw_fw_contract_rowb.py)"),
+        ("10j (c) the quorum per fault on the limiters", "(c) THE QUORUM AND RECOVERY, FAULT BY FAULT",
+         "restated by canq (W139): quorum held on rows 3, 5 and 7, the GPIO-toggled TX silenced in 1.310 ms, lost only with both fabrics (row 8); PROVISIONAL"),
+        ("10j (c) the peers' observation and vote NOT DRAFTED", "NOT DRAFTED here. And a latent stuck comparator",
+         "DRAFTED (canmb, canq, canen; W137, W139, W143); the comparators gone; latent faults found by the self-test (2.60 s; 8.545 s in an HO-D test)"),
+        ("10j (d) T10-A3 at the trip's average maximum", "T10-A3 at the trip's AVERAGE maximum",
+         "restated at IOSmax %.4f A with %.3f ohm ((g) (4)); the other two %+.4f V while one sits at IOSmax" % (ios_hi, S["ron"][0], other - nd_other)),
+        ("10j (e) the sustained bound WITHDRAWN, the countermodel over 125 C", "the universal sustained bound and its positive margin are",
+         "restated: constant maximum dissipation at IOSmax, %.1f C on the printed theta, the countermodel inside it; CONDITIONAL on E-17" % tj0),
+        ("10j (e) the qualification limits (229 C/W, 105 C/W at 181 ms, the INA169)", "the qualification limits below are measurements to take",
+         "superseded by E-17 ((e): the junction at IOSmax at most %.0f C; Zth(%.0f ms) at most %.1f C/W or W151-1's exclusion kept)" % (TJ_GOAL, S["tlatch"][0][2] * 1e3, zth_10)),
+        ("10j (e) VOS0 under the trip", "residual handed over: VOS0 at a current under the trip",
+         "unchanged by the limiter (IOSmin over VOS0's current): HO-E, L4A-59 and its check L4A-100 (fnd/l4hoe, not in this tree)"),
+        ("L9T5-F13, bounded only on its average", "PROVISIONAL after cx46: a firmware outside the row is bounded only on its AVERAGE",
+         "restated: a firmware outside the row is bounded by the limiter's printed maximum at constant maximum dissipation ((d)), CONDITIONAL on E-17"),
+        ("L9T5-F16, a latent share comparator", "PROVISIONAL: a latent share comparator weakens",
+         "restated: no share comparator; the vote path's latent faults found by the self-test within 2.60 s (W143)"),
+        ("the babbling row, bounded only on its average", "a babbler outside FW-B20's clock is bounded only on its average",
+         "restated: silenced by the peers' vote (canq) and its regulator inside (d); its quorum effect PROVISIONAL (L4A-62)"),
+        ("L9T5-F21, OPEN", "L9T5-F21 (Layer 5, IOHA section 12's owner)",
+         "DRAFTED: canmb and canq, IOHA section 12's rows by apply_ioha_fmea_rowb.py; UNCHECKED (L4A-62)"),
+        ("L9T5-F25, the I-03 check's LDO entry", "L9T5-F25 (Slot A, record l9t5's I-03 check)",
+         "restated with L4REG-F1: check_l9t5_netlist.py's entry reads the limiter ahead of the LDO, EN on pin 5; owed to the checker's owner"),
+    ]
+    w("   (j) THE T10 ROWS ROW (b)'S DRAFTS CHANGE, RESTATED (L4A-61; each row's old text, at the line named, is history from here on)")
+    for lab, anchor, new in RS:
+        w("     line %4d  %-66s -> %s" % (ln(anchor), lab, new))
+    w("     the contract rows (FW-B20, FW-B21, FW-B22's restart rule, V-B20, V-B21, V-B23 and the in-service test FW-B24 with V-B25) are restated")
+    w("     by apply_hw_fw_contract_rowb.py after apply_hw_fw_contract_canq.py; IOHA section 12 by apply_ioha_fmea_rowb.py; the ledger's section 4")
+    w("     by apply_remeng_rowb.py; none applied (the integrator's); the connected rows in l9t5_connected.out 11a")
+    w("   (k) NOT DONE HERE: no independent check; nothing applied; the site's theta, Zth and IGND (E-17); the band under VOUT + 0.5 V (V-T10-DROP);")
+    w("     the supply's dip at a load step (W146-F10, record l4hod, PROVISIONAL); HO-E (L4A-59); a rev X part (L4A-60)")
+    w("")
+    pred = {}
+    pred["round 10 (L4A-57): row (b)'s four drafts compose after round 6's, the stage reads DRAWN by pin and value, its three mutations FAIL"] = (
+        v10 == "DRAWN" and ok10 and all(v == "FAIL" for _l, v in vm))
+    pred["round 10 (L4A-57): the regulator holds 125 C at constant maximum dissipation at IOSmax on the printed theta, IGND stated, not bounded"] = (
+        tj0 <= TJ_GOAL and g_star > 0 and S["ignd"][1] == "TYPICAL")
+    pred["round 10 (L4A-57): no served state reaches IOSmin; T10-A3 holds at IOSmax on the 1 A row; three limiters inside U601 and the lead"] = (
+        served_max < ios_lo and at >= nd_bnd and other >= nd_other and 3 * ios_hi <= DP["tps_a"])
+    pred["round 10 (L4A-57): the judge holds on its rows and each mutation FAILS (a TYPICAL or a guideline used as a bound refused at K0)"] = (
+        verdict == "HOLDS" and all(v == "FAILS" for _l, v in vjm))
+    pred["round 10 (L4A-57): the printed theta is TI's best case, not a site bound: DONE AS CONDITIONAL on E-17, its limits named"] = (
+        done and rja_need > S["rja"][0] and zth_10 > 0)
+    pred["round 10 (L4A-61): every T10 row the drafts change is restated, its anchor found in this output"] = len(RS) == 17
+    return {"pred": pred, "tj0": tj0, "ios": (ios_lo, ios_hi), "served_max": served_max, "window": ios_lo - served_max, "a3": (at, nd_bnd, nd_inf),
+            "g_star": g_star, "rja_need": rja_need, "zth_10": zth_10, "verdict": verdict, "done": done}
 
 
 if __name__ == "__main__":
