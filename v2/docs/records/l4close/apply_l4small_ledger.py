@@ -43,6 +43,11 @@ EDITS = [
           "its rows re-solved\" ([T10R:144-145]), resting on RE-7's bound ([T10R:224]) [none since 7 October 2026: %s (record l9t5, "
           "`T10-ROUND5.md` section W133) does not admit revision X, so this qualification is an UNSELECTED OPTION outside the scope, "
           "not a task]." % DX, True),
+    (LED, "a rev X part's admission resting on it ([T10R:224]);",
+          "a rev X part's admission resting on it ([T10R:224]) [an UNSELECTED OPTION since 7 October 2026, %s];" % DX, True),
+    (LED, "on are REMAINING ENGINEERING\" ([T10:647-648]).",
+          "on are REMAINING ENGINEERING\" ([T10:647-648]) [the admission and the qualification: an UNSELECTED OPTION since 7 October "
+          "2026, %s, revision X NOT ADMITTED]." % DX, True),
     (LED, ROW8 + " revision X HELD; L9T5-F23 rows |",
           ROW8_NEW + " revision X HELD [NOT ADMITTED, %s]; L9T5-F23 rows |" % DX, True),
     # the ledger: RE-18 and HO-G
