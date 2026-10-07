@@ -132,7 +132,8 @@ INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, r
    the steady periodic peak: any on and off pattern whose current never exceeds 23.93 A heats every junction at most as the same current
      held does (superposition on a passive thermal network; the RDS(on) at its 150 C allowance at every instant), so the peak is at most
      the held state: 150.00 C at E-1's bar, 136.79 C at E11-29's design target: BOUNDED against 150 C on printed device maxima, CONDITIONAL
-     on E11-29 (the pour), E11-36 (the allowance) and E-05 (the three), as section 2a; bounded on the typical curve instead: FAILS
+     on E11-29 (the pour), E11-36 (the allowance), E-05 (the three) and E-9 (the -1's as-built most limit: the train never exceeds
+     it; round 12, the check's F4), as section 2a; bounded on the typical curve instead: FAILS
    the train's mean loss is at most 0.284 of the held one; no credit is taken for it (the pour's own transient is no maker's figure)
    currents over 23.93 A are single events outside the train, judged in their records: a fault's onset up to the breaker's 50.59 A for
      at most 16.5 us, after which the -1 latches off and a restart into the short is power-limited (record l9stk 15.3, its table); the
@@ -142,7 +143,8 @@ INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, r
 
 6. VERDICTS
    the guard's own parts (section 2): the three FETs HOLD 23.93 A indefinitely at 150.00 C at E-1's bar (136.79 C at the design target),
-     CONDITIONAL on E11-29, E11-36 and E-05; the pour and the vias WITHIN on the model; R17 WITHIN its printed derating while its
+     CONDITIONAL on E11-29, E11-36, E-05 and E-9 (round 12: the held current is the -1's as-built most limit, which the window counts
+     at the parts' 1.5 % only; the check's F4); the pour and the vias WITHIN on the model; R17 WITHIN its printed derating while its
      terminals stay at or under 128.5 C (CONDITIONAL, read on E11-29's coupon)
    every other series part (section 3): the three 25 A blades OVER their printed rerated current by 3.6 % (0.83 A) at the air;
      NOT SHOWN on printed maxima: board P's Q1, Q2, Q109, Q101, Q102 (hot RDS(on) typical only), R10, R101 and R102 (no derating held),
@@ -150,9 +152,15 @@ INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, r
    so M-A's acceptance as the register writes it ('every series part inside its PRINTED limits') is NOT MET on printed figures: the
      blades by 0.83 A, the rest NOT SHOWN; each of those rows is independent of the guard (section 4), so none is HO-A's consequence
    L4A-65 (HO-B): BOUNDED on printed device maxima at the held state (150.00 C at the bar); FAILS on the typical curve, as it must
-   what M-A closes once checked (L4A-69): HO-A's consequence for the parts the guard protects (the three FETs hold the breaker's most
-     limit, so a latent guard failure removes no protection they need) and HO-B (no retry exceeds a current they hold); the guard
-     stays as defence in depth; CONDITIONAL on E-05, E11-29 (with R17's terminal reading) and E11-36
+   what M-A closes once checked (L4A-69): HO-A's consequence for the parts the guard protects ON A BOARD WHOSE INSTALLED PATH MEETS
+     E-1's BAR (the three FETs hold the breaker's most limit there, so a latent guard failure removes no protection they need) and HO-B
+     (no retry exceeds a current they hold); the guard stays as defence in depth; CONDITIONAL on E-05, E11-29 (with R17's terminal
+     reading), E11-36, E-9 (the -1's as-built most limit, round 12, the check's F4) and E11-29u (round 12, the check's F5: a check of
+     EACH BUILT BOARD's path, since E11-29's coupon qualifies the design, not a board with a void or a poor tab joint: at production,
+     an X-ray of the three FETs' tab joints against the voiding E11-29's coupon was built with, and at commissioning a per-unit
+     reading, the three FETs carrying a known current for a known time from a known air with the guard's die (or the pour's NTC)
+     read against E11-29's curve, pass: the bar met within the reading's stated uncertainty); on a board that misses the bar the
+     guard is still needed and its silent failures, with no detection interval, stay a residual (REMAINING ENGINEERING, HO-A's pattern)
    M-B's entry condition (decision L4E11-FET-D2): (1) and (2) not met (E11-29, E11-36 and E-05 unanswered, none refused); (3) not met for
      the guard's parts; the blades' row is a part over its printed limit, but the guard does not assure its protection, nor would M-B:
      it enters C-PROT rev 1's re-evaluation (L4A-67), not M-B
