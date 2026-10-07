@@ -61,7 +61,6 @@ SHEETS = {"fet": "v2/vendor/power/aos-ao3400a-n-mosfet.pdf", "es": "v2/vendor/st
           "rm": "v2/vendor/st/st-rm0433-rev8.pdf", "h743": "v2/vendor/st/st-stm32h743xi-datasheet.pdf",
           "lim": "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf", "ldo": "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf",
           "g08": "v2/vendor/ti/ti-sn74lvc1g08.pdf"}
-OPTS = {"es": ["-layout", "-f", "48", "-l", "48"], "rm": ["-layout", "-f", "533", "-l", "533"]}
 L9R = "v2/docs/records/l9t5"
 DOCS = {"canen": L9R + "/apply_gen_sch_b_canen.py", "canmb": L9R + "/apply_gen_sch_b_canmb.py",
         "regstage": REC + "/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py", "sources": REC + "/inputs/SOURCES.txt",
@@ -109,7 +108,16 @@ def text(rel):
 
 
 def pdf(key):
-    return PDFT.pdf_text(ROOT, SHEETS[key], OPTS.get(key, ["-layout"]), PDFTEXT, REC)
+    """a whole sheet's layout text (the page reads have their own functions, so that every read names its options literally)"""
+    return PDFT.pdf_text(ROOT, SHEETS[key], ["-layout"], PDFTEXT, REC)
+
+
+def es_page48():
+    return PDFT.pdf_text(ROOT, SHEETS["es"], ["-layout", "-f", "48", "-l", "48"], PDFTEXT, REC)
+
+
+def rm_page533():
+    return PDFT.pdf_text(ROOT, SHEETS["rm"], ["-layout", "-f", "533", "-l", "533"], PDFTEXT, REC)
 
 
 def load(rel, name):
@@ -200,9 +208,9 @@ def figures():
     b158 = M.block(h, "Table 158. Output voltage characteristics for all I/Os except PC13, PC14, PC15 and PI8(1)", "DS12110 Table 158", 1500)
     F["voh_drop"] = float(need(b158, r"VOH\s+Output high level voltage\s+IIO=-8 mA\s+VDD%s([\d.]+)" % chr(0x2212), "VOH at -8 mA").group(1))
     F["iio"] = 8e-3
-    r533 = pdf("rm")
+    r533 = rm_page533()
     F["debug_pins"] = re.findall(r"(P[AB]\d+): N?J", r533)
-    e = pdf("es")
+    e = es_page48()
     m = need(e, r"^(2\.24\.5)\s+DAR mode transmission failure due to lost arbitration\s*\n.*?Workaround\s*\n\s+(Upon failure,.*?restart the transmission\.)",
              "ES0392 2.24.5's workaround", re.M | re.S)
     F["es_item"], F["es_work"] = m.group(1), " ".join(m.group(2).split())
