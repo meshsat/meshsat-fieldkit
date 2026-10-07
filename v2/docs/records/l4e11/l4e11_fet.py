@@ -12,7 +12,7 @@ Inputs, all read from this tree (a record reads its inputs from its own tree):
   - L4-E11's round 11 (l4e11_power.out 21b: the worst-split bar 40.78 K/W, the allowance 21.136 mOhm; 16d: the docking pulse 242.9 A);
   - record l8p's breaker (L8P-BREAKER.md: "the breaker's held 23.93 A");
   - the makers' sheets, held back under v2/vendor/*/held/ (fetched by fetch_held_back.py and fetch_held_back_fet.py, checked by sha256
-    here): TI SLUSE65A (BATDRV: pin table p.5, VBATDRV_ON and RBATDRV p.17, the 5 nF rule p.92) and the sixteen P-channel sheets of the
+    here): TI SLUSE65A (BATDRV: pin table p.5, VBATDRV_ON and RBATDRV p.17, the 5 nF rule p.92) and the eighteen P-channel sheets of the
     search. Each printed row the screen uses is read back from the cited page's text (pdftotext -layout) when the sheet has a text
     layer; the five Infineon sheets of 16 November 2009 carry no usable text layer (their fonts map to no Unicode), so their rows are
     this record's reading of the rendered pages, filed in inputs/fet-search-readings-2026-10-07.json with each sheet's sha256.
@@ -61,6 +61,10 @@ DOCS = {
                  "Vishay SQS401EN, document 65529, S21-1246 Rev. D, 10 January 2022"),
     "bsz086": ("v2/vendor/power/held/infineon-bsz086p03ns3-g-rev2.4-2019-12-03.pdf", "1e67b3366caacf20bf990e5238cd3b7d963a1276d6f97b69f79a658513f2a6a2", "text",
                "Infineon BSZ086P03NS3 G final data sheet Rev. 2.4, 3 December 2019"),
+    "ipd042": ("v2/vendor/power/held/infineon-ipd042p03l3-g-rev2.2-2014-05-16.pdf", "8dbb10cfa21baa671bc6b86e8718bc2c40606504fca7d24e8a21ac11a8d414d1", "text",
+               "Infineon IPD042P03L3 G Rev. 2.2, 16 May 2014"),
+    "bso301": ("v2/vendor/power/held/infineon-bso301sp-h-rev1.32-2010-05-12.pdf", "f391eea4f0ea21cb1c2970fc544a1a5fdd7ea8b4fae35e3b2193c1a4f49044dc", "text",
+               "Infineon BSO301SP H Rev. 1.32, 12 May 2010"),
     "bsc030": ("v2/vendor/power/held/infineon-bsc030p03ns3-g-rev2.1-2009-11-16.pdf", "a9786bf2b5f65b25742d95d5f4f5c4c76f758bf3f8f8e5b9076c9e97c6edda19", "rendered",
                "Infineon BSC030P03NS3 G Rev. 2.1, 16 November 2009"),
     "bsc060": ("v2/vendor/power/held/infineon-bsc060p03ns3e-g-rev2.1-2009-11-16.pdf", "64c17f6d22bac04897fb583456f3b560cc7a65bd0c0d05af5beb23c9296e9112", "rendered",
@@ -136,6 +140,17 @@ PARTS = [
          chk=[(3, ("Gate source voltage", "-25", "25")), (3, ("Operating and storage temperature", "150")), (3, ("RthJC", "1.8")),
               (4, ("6.5", "8.6", "VGS=-10 V")), (4, ("8.7", "13.4", "VGS=-6 V")), (4, ("Ciss", "3190", "4785", "VDS=-15 V")),
               (4, ("Gate charge total", "43.2", "57.5", "VDD=-15 V")), (5, ("Diode pulse current", "-160"))]),
+    dict(part="IPD042P03L3 G", maker="Infineon", doc="ipd042", pkg="DPAK (TO-252)", vds=30, vgs=20, tj=175, rth=("RthJC", 1.0),
+         r10={25: 4.2e-3}, rlo=(4.5, 6.8e-3), ciss=(9.29e-9, 12.4e-9, 15), qg=(131e-9, 175e-9, 10), ism=280.0,
+         chk=[(1, ("VDS", "-30")), (1, ("T j, T stg", "175")), (1, ("V GS", "\u00b120")), (2, ("R thJC", "1.0")), (2, ("V GS=-4.5 V", "6.8")),
+              (2, ("V GS=-10 V", "4.2")), (3, ("C iss", "9290", "12400")), (3, ("V DS=-15 V",)), (3, ("Gate charge total", "131", "175")),
+              (3, ("V GS=0 to -10 V",)), (3, ("I S,pulse", "280"))]),
+    # BSO301SP H prints a junction-to-soldering-point resistance (RthJS) and no junction-to-case figure
+    dict(part="BSO301SP H", maker="Infineon", doc="bso301", pkg="SO-8", vds=30, vgs=20, tj=150, rth=("RthJS", 35.0),
+         r10={25: 8.0e-3}, rlo=(4.5, 12e-3), ciss=(4.43e-9, 5.89e-9, 25), qg=(102e-9, 136e-9, 10), ism=60.0,
+         chk=[(1, ("V DS", "-30")), (1, ("T j, T stg", "150")), (1, ("V GS", "\u00b120")), (2, ("R thJS", "35")), (2, ("V GS=-4.5 V", "12")),
+              (2, ("V GS=-10 V", "8.0")), (3, ("C iss", "4430", "5890")), (3, ("V DS=-25 V",)), (3, ("Gate charge total", "-102", "-136")),
+              (3, ("V GS=0 to -10 V",)), (3, ("I S,pulse", "-60"))]),
     dict(part="BSC030P03NS3 G", maker="Infineon", doc="bsc030", pkg="SuperSO8", vds=30, vgs=25, tj=150, rth=("RthJC", 1.0),
          r10={25: 3.0e-3}, rlo=(6.0, 4.6e-3), ciss=(10.5e-9, 14.0e-9, 15), qg=(140e-9, 186e-9, 10), ism=200.0, chk=[]),
     dict(part="BSC060P03NS3E G", maker="Infineon", doc="bsc060", pkg="SuperSO8", vds=30, vgs=25, tj=150, rth=("RthJC", 1.5),
@@ -454,8 +469,8 @@ def report(R):
     w("2. THE SCREEN (SESSION: its scope and readings; INFERRED: its arithmetic)")
     w("   scope: P-channel, |VDS| at least %s V (VBAT's 29.2 V clamp with the cells' side near 0 V), |VGS| rating at least %s V (BATDRV's "
       "printed largest drive), like parts in parallel on one BATDRV node, 1 to %d of them; makers whose sheets print a Ciss or QG(tot) "
-      "maximum read in full (Vishay's automotive SQ range and Infineon's -30 V OptiMOS P3 range), with the record's three earlier parts "
-      "(Nexperia, AOS) restated; an N-channel FET is outside the drive the design has (BATDRV pulls the gate 10 V BELOW VSYS, p.5)"
+      "maximum read in full (seven Vishay automotive SQ parts and eight of the -30 V parts of Infineon's 2023 P-channel selection guide), "
+      "with the record's three earlier parts (Nexperia, AOS) restated; an N-channel FET is outside the drive the design has (BATDRV pulls the gate 10 V BELOW VSYS, p.5)"
       % (fmt(30.0, 0), fmt(E["vgs_drive_max"], 1), SCREEN_N))
     w("   G, TI's 5 nF on PRINTED maxima: n x Ciss(max) under 5 nF at the maker's own VDS (near 0 V not bounded: Q-TI-17 (e)), or n x "
       "QG(tot)(max) at -10 V under 50 nC (the charge 5 nF takes over 10 V; a SESSION reading TI does not state, Q-TI-17 asks); a sheet "
@@ -496,10 +511,17 @@ def report(R):
     w("   for n like FETs G (by Ciss) and T together need Ciss(max) x R under 5 nF x 4 (n - 1) B / (bar I^2 n), rising with n to %s nF.mOhm "
       "for a 175 C part (limit 150 C) and %s for a 150 C part (limit 125 C); by QG the same limit is %s nC.mOhm and %s"
       % (fmt(class_limit(E, 150.0), 2), fmt(class_limit(E, 125.0), 2), fmt(class_limit(E, 150.0) * TI_QG_V, 1), fmt(class_limit(E, 125.0) * TI_QG_V, 1)))
-    lo = min((S["fom"], P["part"]) for P, S in res if S["fom"] is not None)
-    w("   every part read with a printed Ciss maximum sits above its limit (the lowest, %s, %s nF.mOhm on its %s, against its own limit); the parts with no printed "
-      "maximum give no G at any count; so no set of the parts read meets G and T together at ANY count, whatever the count's pour" %
-      (lo[1], fmt(lo[0], 1), [S["R_basis"].split(" (")[0].lower() for P, S in res if P["part"] == lo[1]][0]))
+    form = [(S["fom"], P["part"], S) for P, S in res if P["ciss"][1] is not None and P["ciss"][1] < TI_CISS]
+    lo = min(form, key=lambda x: x[0] - x[2]["fom_lim"])
+    over = [P["part"] for P, S in res if P["ciss"][1] is not None and P["ciss"][1] >= TI_CISS]
+    near = [(P["part"], S["fom"], S["fom_lim"]) for P, S in res if P["ciss"][1] is not None and P["ciss"][1] >= TI_CISS and S["fom"] < S["fom_lim"]]
+    w("   every part read whose own Ciss maximum is under 5 nF sits above its limit (the nearest, %s, %s nF.mOhm on its %s against %s), so "
+      "it makes no set at any count; the parts whose single Ciss maximum is at or over 5 nF (%s) make no set at all; the parts with no "
+      "printed maximum give no G at any count; so no set of the parts read meets G and T together at ANY count, whatever the count's pour" %
+      (lo[1], fmt(lo[0], 1), lo[2]["R_basis"].split(" (")[0].lower(), fmt(lo[2]["fom_lim"], 2), ", ".join(over)))
+    for nm, fo, li in near:
+        w("   %s alone sits under the limit on its favourable bound (%s against %s nF.mOhm; no hot maximum printed): the bound would not exclude "
+          "a smaller die of its technology at a large count; its own die is over 5 nF" % (nm, fmt(fo, 1), fmt(li, 2)))
     w("")
     w("5. THE RECORD'S OPTIONS ON THE SAME BASIS (BUK6Y10-30P at the allowance %s mOhm)" % fmt(E["ra"] * 1e3, 3))
     for x in R["opts"]:
