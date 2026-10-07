@@ -54,11 +54,13 @@ deliverable, acceptance, owner, dependency, checkpoint). Ids are proposals; the 
   `l9t5_hoe.out` 5e and 8.
 - **Requirement:** HO-E's acceptance; CON-004 (one supervisor out at a time, IOHA row 3).
 - **Task:** take FW-B23 and V-B24 into L4A-61's propagation after T10's rows: clear the flags (RMVF), keep the marker where NRST does
-  not reach (Table 55, p.330), write Scale 1 and wait t_resp (174.7 us) from that write, write Scale 3 within 10 us if still running,
-  and read PASSED only on Table 56's row 2 (PINRSTF and CPURSTF set, every other flag clear).
+  not reach (Table 55, p.330), write Scale 1 and wait t_resp (122.6 us since W148's hold stage; 174.7 us in W145's draft) from that
+  write, write Scale 3 within 10 us if still running, and read PASSED only on Table 56's row 2 (PINRSTF and CPURSTF set, every other
+  flag clear) with the restart at least 7 ms after the write on the RTC (W148-3: the hold stage timed).
 - **Deliverable:** HW-FW-CONTRACT.md with FW-B20 to FW-B23 and V-B20 to V-B24, applied by the integrator in that order.
 - **Acceptance:** both scripts apply in order on the tree's contract and re-parse (FW-B01 to FW-B23, V-B ending V-B24); FW-B23's
-  PASSED pattern equals Table 56's row 2 and its window equals `l9t5_hoe.out`'s t_resp; test_l9t5_hoe passes.
+  PASSED pattern equals Table 56's row 2, its window equals `l9t5_hoe.out`'s t_resp and its hold check reads 7 ms; test_l9t5_hoe
+  passes.
 - **Owner:** L4A-61's author; the integrator applies.
 - **Dependency:** L4A-61, after L4A-100's targeted recheck; `apply_hw_fw_contract_t10.py` applied first.
 - **Checkpoint:** with L4A-61's first checkpoint.

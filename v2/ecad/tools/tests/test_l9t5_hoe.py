@@ -13,7 +13,10 @@ byte for byte; the six mutations read FAIL; the acceptance reads CONDITIONAL and
 fields and claims no closure; the task's new files carry no long dash, no private path and no claim word outside quotations. W145's
 additions: the CTR1 hold re-solved from TI's Equation 2 and the draft's value, the reset loop's duty and rise re-solved and its
 full-discharge condition kept CONDITIONAL (S5); the hold capacitor's removal reads FAIL; every thermal limit at one supply corner;
-Table 56's pin-reset row re-read; the firmware row FW-B23 applies only after T10's draft and once; the register rows file. These are
+Table 56's pin-reset row re-read; the firmware row FW-B23 applies only after T10's draft and once; the register rows file. W148's (the
+same day, on W145's finding W145-F1): the hold stage that replaces the CTR1 capacitor, its printed minimum re-read from TI's TPS3703 and
+TPS3808 sheets with their columns, the loop's duty re-solved on it for any fault length (S5 retired), the stock TPS3703 windows re-solved
+against VCAP's band (none fits), the hold stage bypassed and a hold under its printed minimum read FAIL, W148-1's authority fields. These are
 software predicates on a DRAFT and its arithmetic: they establish no property of any board, monitor or controller, and nothing in the
 kit has been built or measured.
 """
@@ -42,6 +45,7 @@ CONTRACT = os.path.join(ROOT, "v2", "docs", "HW-FW-CONTRACT.md")
 GEN_B = os.path.join(TOOLS, "gen_sch_b.py")
 ST = os.path.join(ROOT, "v2", "vendor", "st", "pdftext")
 TI = os.path.join(ROOT, "v2", "vendor", "ti", "pdftext")
+TI_HELD = os.path.join(ROOT, "v2", "vendor", "ti", "held", "pdftext")   # held back (records/l9t5hoe/fetch_held_back.py, then the re-take); absent: the test skips
 sys.dont_write_bytecode = True
 sys.path.insert(0, TOOLS)
 from harness import need  # noqa: E402
@@ -93,7 +97,7 @@ def t_output_reproduced_and_every_input_pinned():
 def t_every_predicate_holds():
     text_ = _out()
     rows = [l for l in text_.split("10. THE PREDICATES")[1].split("l9t5_hoe: done")[0].splitlines()[1:] if l.strip()]
-    assert len(rows) == 24, rows
+    assert len(rows) == 27, rows
     assert all(l.rstrip().endswith(" yes") for l in rows), [l for l in rows if not l.rstrip().endswith(" yes")]
 
 
@@ -175,26 +179,28 @@ def t_the_draft_applies_once_and_refuses_the_tree():
         assert r1.returncode == 0, r1.stderr[-300:]
         new = open(cp, encoding="utf-8").read()
         ast.parse(new)
-        assert new.count("_VMON") >= 3 and "TPS37" in new and "IOC%s_MONRST" in new and '"6": "IOC%s_MONCTR" % _tag' in new
+        assert new.count("_VMON") >= 3 and "TPS37" in new and "IOC%s_MONRST" in new and '"6": "IOC%s_MONRST" % _tag' in new
+        assert '"4": "IOC%s_MONOUT" % _tag' in new and "_MONCTR" not in new and "TPS3703F6050DSER" in new
         r2 = subprocess.run([sys.executable, "-B", DRAFT, cp, "--write"], capture_output=True)
         assert r2.returncode == 3 and b"already applied" in r2.stderr
     r3 = subprocess.run([sys.executable, "-B", DRAFT, GEN_B, "--write"], capture_output=True)
     assert r3.returncode == 3 and b"NOT RELEASED" in r3.stderr
     assert hashlib.sha256(open(GEN_B, "rb").read()).hexdigest() == before, "the tree's generator changed"
     dm = _draft()
-    assert len(dm.ADDS) == 18 and len(set(dm.ADDS)) == 18 and {"C813", "C814", "C815"} <= set(dm.ADDS)
+    assert len(dm.ADDS) == 24 and len(set(dm.ADDS)) == 24 and {"U811", "U821", "U831", "R813", "R823", "R833", "C816"} <= set(dm.ADDS)
+    assert not {"C813", "C814", "C815"} & set(dm.ADDS), "W145's CTR1 capacitors are withdrawn (W148-1)"
 
 
 def t_mutations_fail_and_the_draft_reads_drawn():
     text_ = _out()
     sec = text_.split("the mutations (each must FAIL the reading")[1].split("\n", 1)[1].split("the draft on the tree's generator")[0]
     rows = [l for l in sec.splitlines() if l.strip() and not l.strip().startswith("its reading:")]
-    assert len(rows) == 7 and all(l.rstrip().endswith("FAIL") for l in rows), rows
-    assert "the hold capacitor removed" in rows[-1]
+    assert len(rows) == 9 and all(l.rstrip().endswith("FAIL") for l in rows), rows
+    assert "the hold removed" in rows[6] and "the hold stage bypassed" in rows[7] and "shorter than its printed minimum" in rows[8]
     assert "V): DRAWN; before the draft: FAIL" in text_
     assert "DRAWN; the two netlists identical" in text_
-    assert ("added 18: C810, C811, C812, C813, C814, C815, R810, R811, R812, R820, R821, R822, R830, R831, R832, U810, U820, U830; "
-            "removed 0") in text_
+    assert ("added 24: C810, C811, C812, C816, C817, C818, R810, R811, R812, R813, R820, R821, R822, R823, R830, R831, R832, R833, U810, "
+            "U811, U820, U821, U830, U831; removed 0") in text_
 
 
 def t_acceptance_conditional_never_met():
@@ -203,7 +209,9 @@ def t_acceptance_conditional_never_met():
     for s_ in ("S-c", "S-d", "S-e", "S-k"):
         row = [l for l in acc.splitlines() if l.strip().startswith(s_)][0]
         assert row.rstrip().split("  ")[-1].strip().startswith("CONDITIONAL"), row
-    assert "S5" in [l for l in acc.splitlines() if l.strip().startswith("S-k")][0]
+    sk = [l for l in acc.splitlines() if l.strip().startswith("S-k")][0]
+    assert "S5" not in sk and "any fault length" in sk, sk           # W148-1: the loop's bound no longer rests on S5
+    assert "W148-3" in [l for l in acc.splitlines() if l.strip().startswith("S-l")][0]
     for c_ in ("C1 (F1)", "C2 (F2)", "C3 (F4)", "C4 (F8, F11)", "C5 (F3, F6)"):
         assert c_ in acc, c_
     assert "HO-E's ACCEPTANCE: CONDITIONAL" in acc
@@ -221,7 +229,8 @@ def t_the_page_states_the_selection_and_no_closure():
     for s_ in ("H-1", "H-2", "H-3", "DROPS OUT", "NOT ESTABLISHED", "PROVISIONAL", "CONDITIONAL", "SESSION W140-1", "authority_why", "ruled_by",
                "ruled_on", "reversed_by", "apply_gen_sch_b_vcoremon.py", "NOT APPLIED", "S1", "S2", "S3", "S4", "S5", "L4A-100", "L4REG-F7",
                "0.5704 A", "76.0 C/W", "p.560", "p.279", "p.344", "NOT CLOSED", "C1", "C2", "C3", "C4", "C5", "W145-1", "W145-5", "Table 56",
-               "p.329", "p.306", "FW-B23", "HO-E-REGISTER-ROWS.md", "apply_hw_fw_contract_hoe.py", "Equation 2", "p.23"):
+               "p.329", "p.306", "FW-B23", "HO-E-REGISTER-ROWS.md", "apply_hw_fw_contract_hoe.py", "Equation 2", "p.23", "W148-1", "W148-3",
+               "TPS3703", "HS-1", "HS-2", "HS-3", "S5: RETIRED", "SBVS249B", "tMR_W"):
         assert s_ in page, s_
     for bad in ("HO-E CLOSED", "desk acceptance MET", "hardware bar on VOS0 exists", "ACCEPTANCE: MET"):
         assert bad not in page, bad
@@ -245,28 +254,54 @@ def t_record_hygiene():
 
 
 def t_hold_and_reset_loop_resolved():
-    """W144's F1: the CTR1 hold from TI's Equation 2 (8.3.4.1, p.23) on RCTR's minimum (7.5, p.8) and the draft's capacitor at -20 %, the
-    loop's duty and average rise from t_resp and the one-corner step, and TI's full-discharge condition against the loop's least fault"""
-    t = _txt(TI, "ti-tps37-snvsbj1e.layout.txt")
+    """W144's F1 as W148 corrects it (W145-F1): the hold is TI TPS3703 option F's tD with CT pulled to VDD, 14 ms minimum (SBVS249B 7.6,
+    p.7), for any manual-reset pulse of tMR_W, 1 us, in the MIN column; the loop's least pulse (NRST's fastest fall) exceeds it; the duty
+    re-solved as t_resp / tD(min) and the rise from the one-corner step; W145's CTR1 hold kept only as withdrawn history"""
+    t = _txt(TI_HELD, "ti-tps3703-sbvs249b.layout.txt")
     page_of = lambda s: t.count("\x0c", 0, t.index(s)) + 1
-    assert page_of("tCTRx (min) = -ln (0.31) x RCTRx (min) x CCTRx_EXT (min)") == 23
-    assert page_of("To ensure the capacitor is fully discharged") == 23 and _has(t, "needs to be greater than 5% of the programmed reset time delay.")
-    rmin = float(re.search(r"RCTR\s+(\d+)\s+\d+\s+\d+\s+Kohms", t).group(1)) * 1e3
-    assert rmin == 877e3 and page_of("RCTR ") == 8
+    m = re.search(r"^ tD\s+Reset time delay, TPS3703B, TPS3703F\s+CT = 10 k\S to VDD\s+(\d+)\s+(\d+)\s+(\d+)\s+ms\s*$", t, re.M)
+    assert m and (m.group(1), m.group(2), m.group(3)) == ("14", "20", "26") and page_of("Reset time delay, TPS3703B, TPS3703F") == 7
+    hdr = re.search(r"^ +PARAMETER +MIN +NOM +MAX +UNIT *$", t, re.M).group(0)
+    row = re.search(r"^ tMR_W\s+MR pin pulse width duration to assert RESET\s+(\d+)", t, re.M)
+    assert row.group(1) == "1" and abs((row.end(1) - row.start(0)) - (hdr.index("MIN") + 3)) <= 2, "tMR_W is not in the MIN column"
     dm = _draft()
-    c = float(dm.HOLD.rstrip("n")) * 1e-9 * 0.8
-    tmin = -math.log(0.31) * rmin * c
+    assert dm.HOLD_PART == "TPS3703F6050DSER" and dm.CT_PULLUP.startswith("10k")
     text_ = _out()
-    assert abs(_num(r"tCTR\(min\) = 1\.1712 x 877 kOhm x 80 nF \+ 0 = ([\d.]+) ms", text_) - round(tmin * 1e3, 1)) < 1e-9
-    t_resp = _num(r"t_resp = 17 \+ [\d.]+ \+ 0\.3 us = ([\d.]+) us", text_) * 1e-6
+    t_resp = _num(r"t_resp = 17 \+ 0\.5 \+ [\d.]+ \+ 0\.3 us = ([\d.]+) us", text_) * 1e-6
     p_ex = _num(r"0\.550 A adds ([\d.]+) W", text_)
-    duty = t_resp / (t_resp + tmin)
-    assert abs(_num(r"duty at most [\d.]+ / \([\d.]+ \+ \d+\) us = ([\d.]+) %", text_) - round(duty * 100, 3)) < 1e-9
-    assert abs(_num(r"x 45\.0 C/W = ([\d.]+) K \(MODEL\)", text_) - round(duty * p_ex * 45.0, 3)) < 1e-9
-    assert duty < 0.0025 and "ITS CONDITION, NOT SHOWN" in text_ and "CONDITIONAL on S5" in text_
-    t_full = 0.05 * (-math.log(0.25) * 1147e3 * c / 0.8 * 1.2 + 40e-6)
-    assert abs(_num(r"at most ([\d.]+) ms at tCTR\(max\)", text_) - round(t_full * 1e3, 2)) < 1e-9
-    assert _num(r"at least NRST's fastest fall to VIL, ([\d.]+) us", text_) * 1e-6 < t_full
+    duty = t_resp / 0.014
+    assert abs(_num(r"the duty is at most t_resp / tD\(min\) = [\d.]+ / 14000 us = ([\d.]+) %", text_) - round(duty * 100, 3)) < 1e-9
+    assert abs(_num(r"x 45\.0 C/W = ([\d.]+) K \(MODEL\); S1's limit at t_resp", text_) - round(duty * p_ex * 45.0, 3)) < 1e-9
+    assert duty < 0.01 and "S5 is RETIRED" in text_ and "S5: RETIRED (SESSION W148-1)" in text_
+    assert _num(r"In a loop the MR pulse lasts at least NRST's fastest fall, ([\d.]+) us", text_) > 1.0
+    assert "W145's CTR1 hold, WITHDRAWN (the history of S5)" in text_ and "CONDITIONAL on S5" not in text_.split("5g. THE RESET LOOP")[1].split("W145's CTR1 hold, withdrawn")[0]
+
+
+def t_hold_stage_compared():
+    """W148's comparison (5h): TPS3808's MR pulse prints in the TYP column only (SBVS050N 6.6, p.7) and its td 180 ms minimum; no orderable
+    TPS3703 window (its addendum) keeps VCAP's printed VOS3 band inside it and trips under VOS1's bottom, re-solved here on 7.5's
+    accuracy and hysteresis; the selection W148-1 carries its authority fields and HS-1a stands as its reversal"""
+    t7 = _txt(TI, "ti-tps3808.layout.p7.txt")
+    hdr = re.search(r"^ +PARAMETER +TEST CONDITIONS +MIN +TYP +MAX UNIT *$", t7, re.M).group(0)
+    row = re.search(r"^ +RESET\s+MR\s+VIH = 0\.7VDD, VIL = 0\.3VDD\s+([\d.]+)", t7, re.M)
+    assert row.group(1) == "0.001" and abs((row.end(1) - row.start(0)) - (hdr.index("TYP") + 3)) <= 2, "TPS3808's MR pulse is not TYP"
+    assert re.search(r"CT = VDD\s+180\s+300\s+420\s+ms", t7)
+    t = _txt(TI_HELD, "ti-tps3703-sbvs249b.layout.txt")
+    orderable = sorted(set(re.findall(r"^\s+TPS3703([A-D])(\d)(\d{3})DSER\s+Active\s", t, re.M)))
+    assert len(orderable) == 13, orderable
+    for _l, tl, nom in orderable:
+        nom_v, tl_v = int(nom) / 100.0, int(tl) / 100.0
+        acc, hy = (0.007, 0.008) if nom_v >= 0.8 else (0.01, 0.007)
+        ov, uv = nom_v * (1 + tl_v), nom_v * (1 - tl_v)
+        g_hi = min(1.0, ov * (1 - acc) * (1 - hy) / 1.05)
+        g_lo = max(ov * (1 + acc) / 1.15, uv * (1 + acc) * (1 + hy) / 0.95)
+        assert g_lo >= g_hi, "an orderable TPS3703 window fits VCAP: %s at %s %%" % (nom, tl)
+    text_ = _out()
+    sel = text_.split("7. THE SELECTION")[1].split("8. THE DRAFT")[0]
+    for f in ("W148-1", "W148-2", "W148-3", "ruled_by: W148 (Claude)", "reversed_by: none", "HS-1a (TPS3808G30", "REVERSED by W148-1"):
+        assert f in sel, f
+    cmp_ = text_.split("5h. THE HOLD, COMPARED")[1].split("VERDICT H-2")[0]
+    assert "HS-1a" in cmp_ and "HS-1b" in cmp_ and "HS-2" in cmp_ and "HS-3" in cmp_ and "none fits" in cmp_ and "SELECTED (SESSION W148-1" in cmp_
 
 
 def t_one_supply_corner():
@@ -300,7 +335,7 @@ def t_reset_flags_pattern():
     cm = importlib.util.module_from_spec(sp)
     sp.loader.exec_module(cm)
     for k in ("PINRSTF and CPURSTF set", "LPWRRSTF, WWDG1RSTF, IWDG1RSTF, SFTRSTF, PORRSTF, BORRSTF, D2RSTF and D1RSTF clear", "RMVF",
-              "wait 174.7 us from that write", "no wait on VOSRDY"):
+              "wait 122.6 us from that write", "no wait on VOSRDY", "at least 7 ms, else HOLD FAILED"):
         assert k in cm.FW_B23, k
 
 
