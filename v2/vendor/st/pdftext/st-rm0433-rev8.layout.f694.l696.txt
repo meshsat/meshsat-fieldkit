@@ -1,0 +1,153 @@
+DMA request multiplexer (DMAMUX)                                                           RM0433
+
+
+                   Table 122. DMAMUX1: assignment of multiplexer inputs to resources
+              DMA                           DMA                          DMA
+            request        Resource        request        Resource      request       Resource
+           MUX input                      MUX input                    MUX input
+
+              1        dmamux1_req_gen0      44       usart2_tx_dma       87         sai1a_dma
+              2        dmamux1_req_gen1      45       usart3_rx_dma       88         sai1b_dma
+              3        dmamux1_req_gen2      46       usart3_tx_dma       89         sai2a_dma
+              4        dmamux1_req_gen3      47           TIM8_CH1        90         sai2b_dma
+              5        dmamux1_req_gen4      48           TIM8_CH2        91       swpmi_rx_dma
+              6        dmamux1_req_gen5      49           TIM8_CH3        92       swpmi_tx_dma
+              7        dmamux1_req_gen6      50           TIM8_CH4        93       spdifrx_dat_dma
+              8        dmamux1_req_gen7      51           TIM8_UP         94       spdifrx_ctrl_dma
+              9            adc1_dma          52          TIM8_TRIG        95         HR_REQ(1)
+              10           adc2_dma          53          TIM8_COM         96         HR_REQ(2)
+              11          TIM1_CH1           54           Reserved        97         HR_REQ(3)
+              12          TIM1_CH2           55           TIM5_CH1        98         HR_REQ(4)
+              13          TIM1_CH3           56           TIM5_CH2        99         HR_REQ(5)
+              14          TIM1_CH4           57           TIM5_CH3       100         HR_REQ(6)
+              15           TIM1_UP           58           TIM5_CH4       101        dfsdm1_dma0
+              16          TIM1_TRIG          59           TIM5_UP        102        dfsdm1_dma1
+              17          TIM1_COM           60          TIM5_TRIG       103        dfsdm1_dma2
+              18          TIM2_CH1           61          spi3_rx_dma     104        dfsdm1_dma3
+              19          TIM2_CH2           62          spi3_tx_dma     105         TIM15_CH1
+              20          TIM2_CH3           63       uart4_rx_dma       106         TIM15_UP
+              21          TIM2_CH4           64       uart4_tx_dma       107        TIM15_TRIG
+              22           TIM2_UP           65       uart5_rx_dma       108        TIM15_COM
+              23          TIM3_CH1           66       uart5_tx_dma       109         TIM16_CH1
+              24          TIM3_CH2           67       dac_ch1_dma         110        TIM16_UP
+              25          TIM3_CH3           68       dac_ch2_dma         111        TIM17_CH1
+              26          TIM3_CH4           69           TIM6_UP         112        TIM17_UP
+              27           TIM3_UP           70           TIM7_UP         113        sai3_a_dma
+              28          TIM3_TRIG          71       usart6_rx_dma       114        sai3_b_dma
+              29          TIM4_CH1           72       usart6_tx_dma       115        adc3_dma
+              30          TIM4_CH2           73          i2c3_rx_dma      116         Reserved
+              31          TIM4_CH3           74          i2c3_tx_dma      117         Reserved
+              32           TIM4_UP           75           dcmi_dma        118         Reserved
+              33          i2c1_rx_dma        76          cryp_in_dma      119         Reserved
+              34          i2c1_tx_dma        77       cryp_out_dma       120          Reserved
+              35          i2c2_rx_dma        78          hash_in_dma     121          Reserved
+              36          i2c2_tx_dma        79       uart7_rx_dma       122          Reserved
+
+
+
+
+694/3353                                  RM0433 Rev 8
+RM0433                                                      DMA request multiplexer (DMAMUX)
+
+
+          Table 122. DMAMUX1: assignment of multiplexer inputs to resources (continued)
+            DMA                           DMA                          DMA
+          request        Resource        request        Resource      request       Resource
+         MUX input                      MUX input                    MUX input
+
+            37          spi1_rx_dma        80       uart7_tx_dma       123          Reserved
+            38          spi1_tx_dma        81       uart8_rx_dma       124          Reserved
+            39          spi2_rx_dma        82       uart8_tx_dma       125          Reserved
+            40          spi2_tx_dma        83          spi4_rx_dma     126          Reserved
+            41         usart1_rx_dma       84          spi4_tx_dma     127          Reserved
+            42         usart1_tx_dma       85          spi5_rx_dma       -              -
+            43         usart2_rx_dma       86          spi5_tx_dma       -              -
+
+
+                 Table 123. DMAMUX1: assignment of multiplexer inputs to resources
+            DMA                           DMA                          DMA
+          request        Resource        request        Resource      request       Resource
+         MUX input                      MUX input                    MUX input
+
+            1        dmamux1_req_gen0      44       usart2_tx_dma       87         sai1a_dma
+            2        dmamux1_req_gen1      45       usart3_rx_dma       88         sai1b_dma
+            3        dmamux1_req_gen2      46       usart3_tx_dma       89         sai2a_dma
+            4        dmamux1_req_gen3      47          TIM8_CH1         90         sai2b_dma
+            5        dmamux1_req_gen4      48          TIM8_CH2         91       swpmi_rx_dma
+            6        dmamux1_req_gen5      49          TIM8_CH3         92       swpmi_tx_dma
+            7        dmamux1_req_gen6      50          TIM8_CH4         93       spdifrx_dat_dma
+            8        dmamux1_req_gen7      51           TIM8_UP         94       spdifrx_ctrl_dma
+            9            adc1_dma          52          TIM8_TRIG        95         HR_REQ(1)
+            10           adc2_dma          53          TIM8_COM         96         HR_REQ(2)
+            11          TIM1_CH1           54           Reserved        97         HR_REQ(3)
+            12          TIM1_CH2           55          TIM5_CH1         98         HR_REQ(4)
+            13          TIM1_CH3           56          TIM5_CH2         99         HR_REQ(5)
+            14          TIM1_CH4           57          TIM5_CH3        100         HR_REQ(6)
+            15           TIM1_UP           58          TIM5_CH4        101        dfsdm1_dma0
+            16          TIM1_TRIG          59           TIM5_UP        102        dfsdm1_dma1
+            17          TIM1_COM           60          TIM5_TRIG       103        dfsdm1_dma2
+            18          TIM2_CH1           61          spi3_rx_dma     104        dfsdm1_dma3
+            19          TIM2_CH2           62          spi3_tx_dma     105         TIM15_CH1
+            20          TIM2_CH3           63       uart4_rx_dma       106         TIM15_UP
+            21          TIM2_CH4           64       uart4_tx_dma       107        TIM15_TRIG
+            22           TIM2_UP           65       uart5_rx_dma       108        TIM15_COM
+            23          TIM3_CH1           66       uart5_tx_dma       109         TIM16_CH1
+            24          TIM3_CH2           67       dac_ch1_dma         110        TIM16_UP
+            25          TIM3_CH3           68       dac_ch2_dma         111        TIM17_CH1
+
+
+                                        RM0433 Rev 8                                        695/3353
+                                                                                                       714
+DMA request multiplexer (DMAMUX)                                                                          RM0433
+
+
+             Table 123. DMAMUX1: assignment of multiplexer inputs to resources (continued)
+              DMA                               DMA                              DMA
+            request           Resource         request        Resource          request        Resource
+           MUX input                          MUX input                        MUX input
+
+               26            TIM3_CH4             69          TIM6_UP             112          TIM17_UP
+               27             TIM3_UP             70          TIM7_UP             113         sai3_a_dma
+               28            TIM3_TRIG            71      usart6_rx_dma           114         sai3_b_dma
+               29            TIM4_CH1             72      usart6_tx_dma           115          adc3_dma
+               30            TIM4_CH2             73         i2c3_rx_dma          116          Reserved
+               31            TIM4_CH3             74         i2c3_tx_dma          117          Reserved
+               32             TIM4_UP             75          dcmi_dma            118          Reserved
+               33            i2c1_rx_dma          76         cryp_in_dma          119          Reserved
+               34            i2c1_tx_dma          77      cryp_out_dma           120           Reserved
+               35            i2c2_rx_dma          78         hash_in_dma         121           Reserved
+               36            i2c2_tx_dma          79      uart7_rx_dma           122           Reserved
+               37            spi1_rx_dma          80      uart7_tx_dma           123           Reserved
+               38            spi1_tx_dma          81      uart8_rx_dma           124           Reserved
+               39            spi2_rx_dma          82      uart8_tx_dma           125           Reserved
+               40            spi2_tx_dma          83         spi4_rx_dma         126           Reserved
+               41           usart1_rx_dma         84         spi4_tx_dma         127           Reserved
+               42           usart1_tx_dma         85         spi5_rx_dma           -                  -
+               43           usart2_rx_dma         86         spi5_tx_dma           -                  -
+
+
+                        Table 124. DMAMUX1: assignment of trigger inputs to resources
+             Trigger input               Resource              Trigger input               Resource
+
+                    0                dmamux1_evt0                   4                      lptim2_out
+                    1                dmamux1_evt1                   5                      lptim3_out
+                    2                dmamux1_evt2                   6                        extit0
+                    3                    lptim1_out                 7                   TIM12_TRGO
+
+
+                Table 125. DMAMUX1: assignment of synchronization inputs to resources
+              Sync. input                Resource              Sync. input                 Resource
+
+                    0                dmamux1_evt0                   4                      lptim2_out
+                    1                dmamux1_evt1                   5                      lptim3_out
+                    2                dmamux1_evt2                   6                        extit0
+                    3                    lptim1_out                 7                   TIM12_TRGO
+
+
+17.3.3     DMAMUX2 mapping
+           DMAMUX2 channels 0 to 7 are connected to BDMA channels 0 to 7.
+
+
+
+696/3353                                      RM0433 Rev 8
+

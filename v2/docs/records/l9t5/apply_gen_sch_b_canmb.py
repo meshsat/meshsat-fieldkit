@@ -9,7 +9,7 @@ transmit-share limiter admits a TX pin toggled as a GPIO under its least 4.7 % s
 quorum service stays OPEN. The record's own route (l9t5_t10.out 10j (c)): "each controller's TXD read by the other two and a 2-of-2
 vote of the other two on its SHDN or its LDO's EN". This draft takes it on SHDN, per fabric:
   1. OBSERVATION (twelve inputs): each controller's TXD on each fabric (IOC{t}_CAN1_TX, IOC{t}_CAN2_TX) reaches each of the other
-     two controllers through its own 4.7 kOhm 1 % (R(600 + 20k + 11 to 14)): pins 63 to 66 (PC6 to PC9, TIM3_CH1 to TIM3_CH4 on AF2,
+     two controllers through its own 2.2 kOhm 1 % (R(600 + 20k + 11 to 14)): pins 63 to 66 (PC6 to PC9, TIM3_CH1 to TIM3_CH4 on AF2,
      DS12110 Rev 10 Table 12) of the reader read the next controller's TXD on fabric A and B, then the one after it on A and B. The
      resistor keeps a faulty reader from moving the line: the TXD output holds its level against it (l9t5_canmb.out section 4).
   2. THE VOTE (twelve outputs, two per transceiver): each controller drives four votes on pins 55 to 58 (PD8 to PD11, GPIO), one
@@ -41,13 +41,13 @@ REMOVES = tuple("R%d" % (600 + 20 * k + n) for k in range(3) for n in (6, 10)) +
 # the pin plan, read by l9t5_canmb.py (never typed there): LQFP-100 pin -> (port, which peer (1 next, 2 the one after), fabric, use, AF)
 OBS_PINS = {63: ("PC6", 1, "A", "TIM3_CH1", 2), 64: ("PC7", 1, "B", "TIM3_CH2", 2), 65: ("PC8", 2, "A", "TIM3_CH3", 2), 66: ("PC9", 2, "B", "TIM3_CH4", 2)}
 VOTE_PINS = {55: ("PD8", 1, "A"), 56: ("PD9", 1, "B"), 57: ("PD10", 2, "A"), 58: ("PD11", 2, "B")}
-R_ISO, R_VOTE, GATE, GATE_LCSC = "4.7k 1%", "10k", "SN74LVC1G08DBVR", "C7666"
+R_ISO, R_VOTE, GATE, GATE_LCSC = "2.2k 1%", "10k", "SN74LVC1G08DBVR", "C7666"
 
 _OLD_MAP = '              83: "IOC%s_CAN1_SHDN" % _tag, 53: "IOC%s_CAN2_SHDN" % _tag})\n'
 _NEW_MAP = ('              83: "IOC%s_CAN1_SHDN" % _tag, 53: "IOC%s_CAN2_SHDN" % _tag,\n'
             '              # T10 ROUND 7 (record l9t5, L4A-54, M-B; apply_gen_sch_b_canmb.py, NOT APPLIED): the peers\' observation and vote.\n'
             '              # PC6 to PC9 (pins 63 to 66; TIM3_CH1 to TIM3_CH4, AF2, DS12110 Rev 10 Table 12) read the next controller\'s TXD on\n'
-            '              # fabric A and B, then the one after it on A and B, each through the 4.7 kOhm of the controller it reads; PD8 to PD11\n'
+            '              # fabric A and B, then the one after it on A and B, each through the 2.2 kOhm of the controller it reads; PD8 to PD11\n'
             '              # (pins 55 to 58, GPIO outputs) are this controller\'s votes to silence those four transceivers (2 of 2 with the other peer)\n'
             '              63: "IOC%s_CAN1_OBS%s" % ("ABC"[(_k + 1) % 3], _tag), 64: "IOC%s_CAN2_OBS%s" % ("ABC"[(_k + 1) % 3], _tag),\n'
             '              65: "IOC%s_CAN1_OBS%s" % ("ABC"[(_k + 2) % 3], _tag), 66: "IOC%s_CAN2_OBS%s" % ("ABC"[(_k + 2) % 3], _tag),\n'
@@ -73,7 +73,7 @@ _OLD_LIM = (
 _NEW_VOTE = (
     "        # T10 ROUND 7 (record l9t5, Layer 4 task L4A-54: RE-5 and HO-C by method M-B; apply_gen_sch_b_canmb.py, a DRAFT, NOT APPLIED):\n"
     "        # THE PEERS' 2-OF-2 VOTE takes the place of round 6's transmit-share limiter (removed: SESSION W137-D2). This TXD reaches each\n"
-    "        # of the other two controllers through its own 4.7 kOhm (a faulty reader cannot move the line: the push-pull output holds its\n"
+    "        # of the other two controllers through its own 2.2 kOhm (a faulty reader cannot move the line: the push-pull output holds its\n"
     "        # level against it, l9t5_canmb.out section 4); those two each drive one input of an SN74LVC1G08 on THIS controller's own 3.3 V,\n"
     "        # whose output lifts this transceiver's SHDN through a 1N4148W only while BOTH drive it, so one faulty peer cannot silence a\n"
     "        # healthy controller (SHDN high: driver and receiver off, RXD high, SLLSEQ7F Table 6-5). Each vote input is held low by 10 kOhm\n"
@@ -89,7 +89,7 @@ _NEW_VOTE = (
     '        r(_GR(4 + 4 * _j), "10k", _v1, "GND"); r(_GR(5 + 4 * _j), "10k", _v2, "GND")   # each vote input low while its voter is in reset or dark\n'
     '        lvc1g08(U_(7 + _j), _v1, _v2, _mb, v33, _GC(4 + 2 * _j), "controller %s\'s fabric %s silence, the 2-of-2 vote of controllers %s and %s (record l9t5, M-B)" % (_tag, _f, _p1, _p2))\n'
     '        for _i, _o in enumerate((_p1, _p2)):\n'
-    '            r(_GR(11 + 2 * _j + _i), "4.7k 1%", _tx, "IOC%s_CAN%d_OBS%s" % (_tag, _un - 2, _o))   # controller _o reads this TXD through it\n')
+    '            r(_GR(11 + 2 * _j + _i), "2.2k 1%", _tx, "IOC%s_CAN%d_OBS%s" % (_tag, _un - 2, _o))   # controller _o reads this TXD through it\n')
 EDITS = [(_OLD_MAP, _NEW_MAP), (_OLD_LIM, _NEW_VOTE)]
 PLANNED = tuple(OBS_PINS) + tuple(VOTE_PINS)
 
