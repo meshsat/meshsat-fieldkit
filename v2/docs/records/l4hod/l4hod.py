@@ -68,11 +68,13 @@ PDFTEXT = {
     "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf": [["-layout"]],
     "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf": [["-layout"]],
     "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tps62933.pdf": [["-layout"]],
 }
 SHEETS = {"bat": "v2/vendor/diodes/diodes-bat46w.pdf", "uni": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
           "fet": "v2/vendor/power/aos-ao3400a-n-mosfet.pdf", "rm": "v2/vendor/st/st-rm0433-rev8.pdf",
           "h743": "v2/vendor/st/st-stm32h743xi-datasheet.pdf", "lim": "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf",
-          "ldo": "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf", "tcan": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf"}
+          "ldo": "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf", "tcan": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf",
+          "u601": "v2/vendor/ti/ti-tps62933.pdf"}
 DOCS = {"hodtest": L9R + "/apply_gen_sch_b_hodtest.py", "canen": L9R + "/apply_gen_sch_b_canen.py", "canmb": L9R + "/apply_gen_sch_b_canmb.py",
         "regstage": L9R + "/apply_gen_sch_b_regstage.py", "canen_out": "v2/docs/records/l4canen/l4canen.out",
         "canen_py": "v2/docs/records/l4canen/l4canen.py", "canmb_out": L9R + "/l9t5_canmb.out", "canq_out": L9R + "/l9t5_canq.out",
@@ -305,6 +307,12 @@ def figures():
     S["tcan_uv"] = F_(tuple(float(x) for x in m.groups()), "PRINTED", "SLLSEQ7F 5.5 p.%d (falling, protected mode)" % ti_page(t, m.end()))
     m = need(t, r"(This protects the bus during an under voltage event on VCC by placing the\s*\nbus into a high impedance biased to ground state)", "SLLSEQ7F 6.3.4")
     S["tcan_text"], S["tcan_text_p"] = " ".join(m.group(1).split()), ti_page(t, m.end())
+    # --- TI TPS62933, SLUSEA4D (board A's U601, +5V_IOC's source): its switching frequency with RT open (the drafted part)
+    t = pdf("u601")
+    S["u601_rev"] = need(t, r"(SLUSEA4D) %s JUNE 2021 %s REVISED AUGUST 2022" % (EN, EN), "SLUSEA4D's revision").group(1)
+    m = need(t, r"RT = floating\s+(\d+)\s+(\d+)\s+(\d+)", "fSW with RT floating")
+    S["u601_fsw"] = F_(float(m.group(1)) * 1e3, "PRINTED", "SLUSEA4D 7.5 p.%d (minimum, RT floating)" % ti_page(t, m.end()))
+    need(t, r"Load Transient Response, 0\.5 to 2\.5", "the load-transient figures (typical curves only)")
     # --- UNI-ROYAL thick-film chip resistors, V.3 Feb 2019 (the test load's series)
     u = uni_pages4to7()
     m = need(u, r"^\s*2512\s+1W\s+1\S-10M\S\s+0\.01\S-10M\S", "the 2512's power rating (6)")   # the sheet's Ohm is U+2126
@@ -826,7 +834,7 @@ def main():
             ("H743 FT leakage", "ilkg"), ("H743 VOH drop at -8 mA", "voh_drop"), ("H743 VPDR falling", "vpdr"), ("H743 VBOR2 falling", "vbor2"),
             ("H743 CADC", "cadc"), ("H743 ADC TUE (LSB)", "tue_typ"), ("TCAN334 UV(VCC) falling", "tcan_uv"), ("UNI-ROYAL 2512 power", "uni_p"),
             ("UNI-ROYAL overload / RCWV", "uni_ov_k"), ("UNI-ROYAL overload change", "uni_ovl"), ("UNI-ROYAL TCR 1-10 Ohm", "uni_tcr"),
-            ("UNI-ROYAL load life", "uni_life")]
+            ("UNI-ROYAL load life", "uni_life"), ("TPS62933 fSW, RT open", "u601_fsw")]
     for lab, key in show:
         v, l_, wh = S[key]
         vs = ", ".join(("%g" % x) for x in v) if isinstance(v, tuple) else ("%g" % v)
@@ -1016,21 +1024,31 @@ def main():
             T["out"], WINDOW, T["step1"], T_SETTLE, T["step2"], T["step3"], T["step4"]))
         w("     (MODEL on PRINTED, DRAFTED and the boot and domain ASSUMPTIONs; record l4canen's recovery %.3f s is step 4 plus its %.1f s decision)" % (
             S["recovery"], CEN.T_DEC))
-        w("   THE SERVICE LOST: two of three serve for that interval (IOHA row 3: ownership unaffected); the quorum has no spare then (a second supervisor out")
-        w("     is row 4's home assignment); %.2f %% of the time at %.0f s a supervisor; the survivors keep their supply on the DC path (J2 and record" % (
-            100 * 3 * T["out"] / T_PERIOD, T_PERIOD))
-        w("     l4reg's J4 (c)); the transient dip of +5V_IOC at the test's load step (at most %.4f A with a healthy limit, %.4f A with the limit lost, for the" % (
-            S["ios"][1], S["v5b"][1] / rt_band(S)[0]))
-        w("     closer's %.1f ms) is NOT bounded on printed figures (U601's load-transient response and the lead's inductance are not printed; the base" % (
-            T_ABORT_CLOSER * 1e3))
-        w("     design's own overload step of up to IOSmax has the same open term, W138's J7 being a DC row): PROVISIONAL, finding W146-F10, the supplier's")
-        w("     task in L4HOD.md; their frames hold: the target's transceivers go to the protected mode (bus high impedance) as its rail falls under")
-        w("     UV(VCC) %.2f to %.2f V (PRINTED)," % (
-            S["tcan_uv"][0][0], S["tcan_uv"][0][2]))
-        w("     its TXDs rest recessive on canmb's pull-ups, and W139's row R3 (a controller dark, its onset scanned over the window) reads '%s' with the" % S["r3"][0])
-        w("     survivors' gap %d windows against the loss count %d: W139's loss count respected; the target itself is lost to the quorum by that count, as" % (
-            S["r3"][1], LOSS_COUNT))
-        w("     planned, and rejoins listening first (W139-D9)")
+        c_loc, c_loc_refs = cap_sum(nl1, "+5V_IOC")
+        c_out, c_out_refs = cap_sum(nl1, "+3V3_IOCB")
+        hu = {lab: holdup(S, R, c_loc, c_out, st_) for lab, st_ in (("lost", S["v5b"][1] / rt_band(S)[0]), ("healthy", S["ios"][1]))}
+        v0, v_need, t_rail, v_reg, t_hold = hu["lost"]
+        para = ("THE SERVICE LOST: two of three serve for that interval (IOHA row 3: ownership unaffected); the quorum has no spare then (a second "
+                "supervisor out is row 4's home assignment); %.2f %% of the time at %.0f s a supervisor. The survivors keep their supply on the DC path "
+                "(J2 and record l4reg's J4 (c)); the transient dip of +5V_IOC at the test's load step (at most %.4f A with a healthy limit, %.4f A with "
+                "the limit lost, for the closer's %.1f ms) is NOT bounded on printed figures (U601's load-transient response and the lead's inductance "
+                "are not printed; the base design's own overload step of up to IOSmax has the same open term, W138's J7 being a DC row): PROVISIONAL, "
+                "finding W146-F10. The hold-up it would need (MODEL on the drawn capacitors and the printed thresholds): board B's +5V_IOC carries "
+                "%.1f uF (%s); from %.4f V before the step to the survivors' need %.4f V at their limiter's input it carries the lost limit's step "
+                "%.2f us, the healthy step %.2f us; each survivor's own %.1f uF (B's: %s) then holds its rail from the regulator's least %.4f V over "
+                "VBOR2's highest falling %.2f V (PRINTED) for %.1f us at its %.4f A peak: the survivors stay out of reset if U601 and the lead carry "
+                "the step within %.1f us (%.0f of U601's switching periods at its printed least %.0f kHz); its load-transient response is printed only "
+                "as TYPICAL figures, so that time is the supplier's pass limit (L4HOD.md section 11, task 2). Their frames hold: the target's "
+                "transceivers go to the protected mode (bus high impedance) as its rail falls under UV(VCC) %.2f to %.2f V (PRINTED), its TXDs rest "
+                "recessive on canmb's pull-ups, and W139's row R3 (a controller dark, its onset scanned over the window) reads '%s' with the "
+                "survivors' gap %d windows against the loss count %d: W139's loss count respected; the target itself is lost to the quorum by that "
+                "count, as planned, and rejoins listening first (W139-D9)" % (
+                    100 * 3 * T["out"] / T_PERIOD, T_PERIOD, S["ios"][1], S["v5b"][1] / rt_band(S)[0], T_ABORT_CLOSER * 1e3, c_loc * 1e6,
+                    ", ".join(c_loc_refs), v0, v_need, t_rail * 1e6, hu["healthy"][2] * 1e6, c_out * 1e6, ", ".join(c_out_refs), v_reg,
+                    S["vbor2"][0][2], t_hold * 1e6, R["s3"], (t_rail + t_hold) * 1e6, (t_rail + t_hold) * S["u601_fsw"][0], S["u601_fsw"][0] / 1e3,
+                    S["tcan_uv"][0][0], S["tcan_uv"][0][2], S["r3"][0], S["r3"][1], LOSS_COUNT))
+        for i_, x in enumerate(textwrap.wrap(para, 122)):
+            w(("   " if i_ == 0 else "     ") + x)
         w("   W143's self-test skips its phases while the target is out (its own precondition: all three functional): a latent vote-path fault arising in a")
         w("     test is found within %.2f s + %.3f s = %.3f s (finding W146-F2)" % (S["selftest"], T["out"], S["selftest"] + T["out"]))
         w("   THE DETECTION INTERVAL of a lost limit (MODEL on the drafted schedule and the printed timing): a limit lost after start-up is found within")
@@ -1120,6 +1138,33 @@ def main():
         w("   %s: %s" % (k_, "yes" if v_ else "NO"))
     sys.stdout.write("\n".join(out) + "\n")
     return 0 if all(pred.values()) else 1
+
+
+def cap_sum(nl, net):
+    """the capacitance drawn on a net (each capacitor with one pin on it and the other on ground), from the values' leading figure"""
+    tot, refs = 0.0, []
+    for x in CHK.members(nl, net):
+        ref = x.split(".")[0]
+        pins = nl["pins"].get(ref, {})
+        if ref.startswith("C") and sorted(pins.values()) == sorted([net, "GND"]):
+            m = re.match(r"([\d.]+)\s*([pnu])", CHK.value(nl, ref))
+            if not m:
+                refuse("capacitor %s's value %r does not read" % (ref, CHK.value(nl, ref)))
+            tot += float(m.group(1)) * {"p": 1e-12, "n": 1e-9, "u": 1e-6}[m.group(2)]
+            refs.append(ref)
+    return tot, sorted(refs)
+
+
+def holdup(S, R, c_local, c_out, step):
+    """the time the survivors stay out of reset if nothing supplies a load step at board B (MODEL): the local capacitance carries the
+    step from the rail's level before it to the survivors' need at their limiter's input, then each survivor's output capacitance carries
+    its peak current from the regulator's least output to VBOR2's highest falling threshold"""
+    v0 = R["fixed"] - 3 * R["s3"] * R["r_sup"]
+    v_need = R["need"](R["s3"]) + R["s3"] * S["ron"][0]
+    t_rail = c_local * (v0 - v_need) / step
+    v_reg = 3.3 * (1 - S["ldo_acc"][0])
+    t_hold = c_out * (v_reg - S["vbor2"][0][2]) / R["s3"]
+    return v0, v_need, t_rail, v_reg, t_hold
 
 
 def crit_adc(S, i125):

@@ -67,7 +67,10 @@ divider's 66.7 us time constant (MODEL).
   pull-ups, and W139's row R3 reads "a node out and contained" with the survivors' gap 0 against the loss count 3: W139's loss count
   respected. The survivors' supply holds on the DC path (J2: 3.5854 V against 3.4555 V with the limit lost); the transient dip of
   +5V_IOC at the load step (0.5704 A with a healthy limit, 1.4396 A with the limit lost, for the closer's 0.2 ms) is NOT bounded on
-  printed figures: PROVISIONAL (W146-F10).
+  printed figures: PROVISIONAL (W146-F10). The hold-up it would need (MODEL on the drawn capacitors and printed thresholds): board B's
+  10.3 uF on +5V_IOC carries the lost limit's step 1.37 us before the survivors' limiter inputs reach their need (3.5127 V), and each
+  survivor's own 12.0 uF holds its rail from 3.2505 V over VBOR2's highest falling 2.37 V for 24.9 us at 0.4240 A: the survivors stay
+  out of reset if U601 and the lead carry the step within 26.3 us, 12 of U601's switching periods at its printed least 450 kHz.
 - **The detection interval of a lost limit:** 3600 s + 2.341 s = 3602.341 s from its onset after start-up; 102.341 s from the quorum
   first holding for one present at start-up; a test whose preconditions fail waits (a node out or a fabric down adds its own repair
   time, IOHA rows 3 and 7).
@@ -184,8 +187,9 @@ The tests, as run.py printed them (7 October 2026, this branch, the held sheets 
   this draft is taken.
 - **W146-F10 (L4A-57; W138; the coordinator):** the transient dip of +5V_IOC at a load step is not bounded on printed figures: the
   test's 1.4396 A step with a lost limit, and the base design's own step of up to IOSmax 0.5704 A at any supervisor's overload (W138's
-  J7 is a DC row). PROVISIONAL; a desk transient model of U601 with its printed compensation and the lead, or the supplier's
-  measurement of section 11.
+  J7 is a DC row). PROVISIONAL; the hold-up a step needs is 26.3 us (section 4, MODEL), which U601's printed figures do not bound
+  (its load-transient response is printed only as TYPICAL curves); a desk transient model of U601 and the lead, or the supplier's
+  measurement of section 11, task 2.
 
 ## 11. The supplier's tasks (amendment 1; none a gate of this desk round)
 
@@ -193,8 +197,8 @@ On the first article of board B (one board, its three supervisors):
 1. the test run on each supervisor: PASS, the reading inside 0.4345 to 0.6140 A, FAULT 4.75 to 10.25 ms after the drop, LATCHED,
    restored within 5.945 s;
 2. a lost limit injected on one supervisor (RILIM shorted): LIMIT NOT SHOWN or LIMIT HIGH at its next test; the two survivors' +3V3
-   rails and reset flags recorded through the step: pass, no survivor resets and each LDO input stays at 3.4555 V or more apart from
-   dips their output capacitors carry (W146-F10);
+   rails, reset flags and board B's +5V_IOC recorded through the step: pass, no survivor resets, each survivor's +3V3 stays over 2.37 V,
+   and +5V_IOC at board B is back over 3.5127 V within 26.3 us of the step (W146-F10); the same with a healthy limiter's step;
 3. each half's drain and source bridged in turn: SWITCH STUCK ON at step 2 with no latch; the load opened, then shorted: LIMIT NOT SHOWN,
    LIMIT LOW; a FAULT read diode opened: the peers disagree; canen's RC capacitor shorted: step 1 aborts with nothing latched;
 4. the output's draw during the reading window with D406 fitted (pass: 0.5 mA or less) and with it removed (pass: 20 mA or less);
