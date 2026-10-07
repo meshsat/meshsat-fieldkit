@@ -5,10 +5,11 @@
 `v2/docs/handover/LAYER-STATUS.md` and P-01 for `v2/docs/EXECUTION-PLAN.md`, each with its page, its line, the old text, the new
 text and its basis, written by worker W165 on branch fnd/res33 (7 October 2026) in set 32's form (`records/int32/ENTRY-PAGES.patch.md`,
 W95 and W102); `v2/ecad/tools/tests/test_patch33.py` holds every row against the pages as set 32's adoption left them (the paragraph
-"What the rows are read against"). **NOT DONE:** no page is edited here; no independent reader has read the rows; the page tests that
+"What the rows are read against"); re-read by worker W170 (queue item Q-192) on main `46d4fe58`, every old text found once on its
+line, no row restated for a moved line, and L-02 and P-01 brought to the final Layer 4 tips' verdicts and counts. **NOT DONE:** no page is edited here; no independent reader has read the rows; the page tests that
 the rows break are not measured (the paragraph "The tests the rows break"). **NEXT:** at set 33's adoption, in this order: (1) the
 fill's first run (the CANDIDATE and GATE tokens; `<worktrees>/_bin/fill_res.py --set 33`, which reaches this file because
-`records/int33/RESULT.md` names it); (2) the rows applied on the named lines, re-read on main first; (3) the page tests the rows break
+`records/int33/RESULT.md` names it); (2) the rows applied on the named lines (read on main `46d4fe58`; read again on the chain's base if main moves); (3) the page tests the rows break
 restated with their bases; (4) the fill's second run (the ADOPTION token on RESULT, here and on the pages' rows S-07 and U-05, which
 `fill_res.py --set 33` reaches because it lists the four pages); (5) this header and RESULT's restated for the state after the
 adoption; (6) the coordinator's dependency pass for the changed pages, as after sets 31 and 32.
@@ -16,17 +17,18 @@ adoption; (6) the coordinator's dependency pass for the changed pages, as after 
 Record text only: it changes no state of any page, accepts nothing and closes nothing; prototype framing: nothing in the kit has been
 built, bought, powered or measured.
 
-**What the rows are read against.** The four pages as set 32's adoption left them after its second fill run: fnd/adopt32 at
-`cb78bc49` (`cb78bc49b799097df0fe158754d73c2bb72f9e5a`, the commit naming set 32's adoption commit on its pages; the adoption's later
-steps regenerate outputs, not these pages). None of set 33's four branches changes the four pages (`git diff --name-only` over the four
+**What the rows are read against.** The four pages as set 32's adoption left them on main: `46d4fe58`
+(`46d4fe58a233f1417f28e5932b862e884940cd62`, main after set 32's adoption and its dependency pass), whose four pages are byte for byte
+those of fnd/adopt32 at `cb78bc49` (`cb78bc49b799097df0fe158754d73c2bb72f9e5a`, the commit naming set 32's adoption commit on its pages,
+against which W165 wrote the rows): `git diff --stat cb78bc49 46d4fe58` names none of the four, its later commit regenerating outputs only. None of set 33's four branches changes the four pages (`git diff --name-only` over the four
 ranges names none of them), and the chain's applies write none of them (`<worktrees>/_runs/int33/applies.tsv`), so the pages set 33's
-integration holds are main's after set 32's adoption. `test_patch33` reads them at `cb78bc49` through git and, when the tree it runs
-in holds `cb78bc49`, the tree's own pages too: every row must hold on both. Every "Old text" is one line or a part of one, found
+integration holds are main's after set 32's adoption. `test_patch33` reads them at `46d4fe58` through git and, when the tree it runs
+in holds `46d4fe58` (fnd/res33 does since W170 merged main into it), the tree's own pages too: every row must hold on both. Every "Old text" is one line or a part of one, found
 exactly once on the line named; every "New text" differs from it; a row whose new text begins with the whole old text and a line
 break inserts the lines after it. The rows of each page are applied on their own line numbers from the bottom of the page up, so that
 an inserted paragraph moves no later row's line. Taken under the owner's standing rule of 26 September 2026 (authority SESSION, W165):
-the rows are written before main holds set 32's adoption, against its adoption branch, as W95 wrote set 32's against fnd/adopt31
-before main held set 31's; reversed by re-reading them on main and restating any row whose line moved.
+the rows were written before main held set 32's adoption, against its adoption branch, as W95 wrote set 32's against fnd/adopt31
+before main held set 31's; W170 re-read them on main `46d4fe58` and no line had moved, so no row is restated for its line.
 
 **The revision rows, as set 30's pages define them.** Tested: set 33's candidate, to which main is fast-forwarded (the CANDIDATE
 token, as set 32's rows carry it). Adopted: set 33's adoption commit (the ADOPTION token, filled in the fill's second run). Packaged:
@@ -276,8 +278,9 @@ New text:
 
 **After set 33: IN_PROGRESS.** Set 33 moves no state of this layer to accepted or closed; it adopts Layer 4's AI work of 7 October
 2026 with each item's verdict as its check gave it (`v2/docs/records/int33/RESULT.md`, section 2b): row (c) SUPPORTED AS CONDITIONAL
-(three checks spent), HO-E SUPPORTED AS CONDITIONAL (two checks spent), row (b) as its focused check and its one targeted recheck
-read it, the limiter screen's CHANGE-METHOD and the K table as their authors' readings. Every circuit change is a release-guarded
+(three checks spent), HO-E SUPPORTED AS CONDITIONAL (two checks spent), row (b) SUPPORTED AS CONDITIONAL (its focused check and its
+one targeted recheck spent), the K table and the B2 sweep SUPPORTED AS CONDITIONAL on set 33's applies (one check each), the limiter
+screen's CHANGE-METHOD as its author's reading. Every circuit change is a release-guarded
 draft that no generator applies; applying them is Layer 8's A (section 2e). The DESK gate and the three completion claims, unchanged:
 "Layer 4's DESK gate: NOT PASSED"; "Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS"; "Power-design
 closure: BLOCKED. Fabrication release: BLOCKED." (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6). The set 32 block below stands.
@@ -309,7 +312,7 @@ HO-E compared and selected with a drafted VCORE monitor and hold stage; row (b),
 with the regulator stage and the in-service limiter test; row (c), the pack path's series parts on printed limits with the
 held-overcurrent trip on board P; each item's verdict as its check gave it, an AI review, none an acceptance of the power design
 (`records/int33/RESULT.md`, section 2b); every circuit change a release-guarded draft that no generator applies (section 2e).
-Its classification counts 11 REVIEWED-INPUT CHANGED commits among the 75 of its four branches and 14 that touch a file cx46 read
+Its classification counts 12 REVIEWED-INPUT CHANGED commits among the 78 of its four branches and 15 that touch a file cx46 read
 (`records/int33/CLASSIFICATION.md`, section 2), each UNREVIEWED since cx46 and credited nowhere.
 
 **The three claims, apart, and the gate, unchanged** (`records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6, of which set 33

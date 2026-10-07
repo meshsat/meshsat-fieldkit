@@ -5,8 +5,12 @@ classification `CLASSIFICATION.md` and its adoption-page statement `ENTRY-PAGES.
 The basis of each predicate: every classified row's sha, date, subject, file count and folders, and the closing clauses of its reason
 (the outputs and drafts it commits, the files of the reviewed tree it touches, the reviewed files it touches with "UNREVIEWED since
 cx46", or "no file cx46 read"), are compared with git over the four ranges in the chain's merge order: fnd/l4k `be07863b..ff0c79f0`,
-fnd/l4hoe `06d064ff..003338e3`, fnd/l4hod `06d064ff..23384006` read on its first-parent line with each merge's branch commits under it
-(the commits of `<first parent>..<second parent>`, numbered <merge>.1 onward, set 31's form), and fnd/l4rowc `be07863b..653cb1bc`. The
+fnd/l4hoe `06d064ff..531c4754`, fnd/l4hod `06d064ff..92d81690` read on its first-parent line with each merge's branch commits under it
+(the commits of `<first parent>..<second parent>`, numbered <merge>.1 onward, set 31's form), and fnd/l4rowc `be07863b..653cb1bc`.
+W170 (queue item Q-192, 7 October 2026) brought the record from W165's tips (fnd/l4hoe `003338e3`, fnd/l4hod `23384006`) to the pins
+set 33's chain uses: the commits a range gains past W165's tip are numbered after that tip's row with a letter, in the range's order
+(`531c4754` row 17a; `e1687b89` and `92d81690` rows 47a and 47b), so that rows 1 to 66 keep the numbers the record's prose, the fill
+tool's set 33 suggestions (rows 65 and 66) and the deferral list cite (SESSION decision W170-D1, CLASSIFICATION.md's decisions). The
 reviewed set is set 32's 62 files (`git diff --name-only 06077cee 4d0ff8a2` plus the L4-E9 page and its output); "the reviewed tree" is
 `git ls-tree -r 4d0ff8a2`. The class counts, the per-branch counts, the touching rows and the rows of new engineering content are
 recomputed from the table and compared with section 2 and with RESULT's restatement of them. The rule paragraph is set 30's line 11
@@ -41,12 +45,17 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 REC = "v2/docs/records/int33"
 RESULT, CLASS, PATCH = REC + "/RESULT.md", REC + "/CLASSIFICATION.md", REC + "/ENTRY-PAGES.patch.md"
 BE, B06 = "be07863bbca206a81ab42b9f96a7684c5c10a746", "06d064ffa58a1211139d0f1d8e7b536675a67948"
+# The tips: W170's restatement (Q-192) of W165's (basis: the pins of W170's brief, `_runs/claude/w170res33b/BRIEF.md` line 8, and the
+# coordinator's clerical verification of W167's round, QUEUE.md "12:59 (clock)": ROW (b) FINAL fnd/l4hod 92d81690, HO-E FINAL
+# fnd/l4hoe 531c4754). fnd/l4hoe was 003338e3 and fnd/l4hod 23384006 in W165's draft; LATE names those old tips, whose ranges keep
+# their row numbers, and the commits past them take a letter (W170-D1).
 BRANCHES = (("fnd/l4k", BE, "ff0c79f0242e7990e111c89f49b281c4a2953d2b", False),
-            ("fnd/l4hoe", B06, "003338e3f92a86d6bf687385ab752be5eab0c206", False),
-            ("fnd/l4hod", B06, "2338400687ba71b07889b4185dd86beda311c557", True),
+            ("fnd/l4hoe", B06, "531c4754a61847261678597f572e9596d16b0db1", False),
+            ("fnd/l4hod", B06, "92d816900925f94a690c00cdae7a1e52e814c610", True),
             ("fnd/l4rowc", BE, "653cb1bcfe2791728a7ba9aeafbf427830d06dd3", False))
-LABEL_TIPS = {"fnd/l4k": "ff0c79f0", "fnd/l4hoe": "003338e3", "fnd/l4canmb": "664d4019", "fnd/l4canq": "efce7c7a", "fnd/l4reg": "86dbcdff",
-              "fnd/l4hod": "23384006", "fnd/l4small": "77866143", "fnd/l4lim": "aa6704b2", "fnd/l4fet": "49d4f9e6", "fnd/l4rowc": "653cb1bc"}
+LATE = {"fnd/l4hoe": "003338e3f92a86d6bf687385ab752be5eab0c206", "fnd/l4hod": "2338400687ba71b07889b4185dd86beda311c557"}
+LABEL_TIPS = {"fnd/l4k": "ff0c79f0", "fnd/l4hoe": "531c4754", "fnd/l4canmb": "664d4019", "fnd/l4canq": "efce7c7a", "fnd/l4reg": "86dbcdff",
+              "fnd/l4hod": "92d81690", "fnd/l4small": "77866143", "fnd/l4lim": "aa6704b2", "fnd/l4fet": "49d4f9e6", "fnd/l4rowc": "653cb1bc"}
 PROMOTED32 = "f08e396175dd418434061d731e08111d006d6efa"   # set 32's promoted revision, this record's branch point
 REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"     # cx46's candidate
 CX45 = "06077cee85d0ed44c74c2a06c9fbb2030a0dedbc"         # the base of the delta cx46 read
@@ -97,7 +106,7 @@ def _anc(a, b):
 
 
 def _need_git():
-    for sha in (PROMOTED32, REVIEWED, CX45) + tuple(b[1] for b in BRANCHES) + tuple(b[2] for b in BRANCHES):
+    for sha in (PROMOTED32, REVIEWED, CX45) + tuple(b[1] for b in BRANCHES) + tuple(b[2] for b in BRANCHES) + tuple(LATE.values()):
         if not _has(sha):
             raise Skip("commit %s is not in this checkout" % sha[:8])
 
@@ -133,18 +142,31 @@ def _order():
     _need_git()
     out, n = [], 0
     for name, base, tip, firstparent in BRANCHES:
+        old = set(_git("rev-list", "%s..%s" % (base, LATE[name])).split()) if name in LATE else None
+        late = []
         if not firstparent:
             for c in _git("rev-list", "--topo-order", "--reverse", "%s..%s" % (base, tip)).split():
+                if old is not None and c not in old:
+                    late.append(c)
+                    continue
                 n += 1
                 out.append((str(n), name, c) + _facts(c))
-            continue
-        for c in _git("rev-list", "--first-parent", "--reverse", "%s..%s" % (base, tip)).split():
-            n += 1
+        else:
+            for c in _git("rev-list", "--first-parent", "--reverse", "%s..%s" % (base, tip)).split():
+                if old is not None and c not in old:
+                    late.append(c)
+                    continue
+                n += 1
+                f = _facts(c)
+                out.append((str(n), name, c) + f)
+                if len(f[0]) > 1:
+                    for k, b in enumerate(_git("rev-list", "--topo-order", "--reverse", "%s..%s" % (f[0][0], f[0][1])).split(), 1):
+                        out.append(("%d.%d" % (n, k), name, b) + _facts(b))
+        for k, c in enumerate(late):   # W170-D1: past W165's tip, the old tip's row number with a letter (none of them is a merge)
             f = _facts(c)
-            out.append((str(n), name, c) + f)
             if len(f[0]) > 1:
-                for k, b in enumerate(_git("rev-list", "--topo-order", "--reverse", "%s..%s" % (f[0][0], f[0][1])).split(), 1):
-                    out.append(("%d.%d" % (n, k), name, b) + _facts(b))
+                raise AssertionError("a merge %s past %s's old tip: its branch commits would need rows of their own" % (c[:8], name))
+            out.append(("%d%s" % (n, "abcdefghij"[k]), name, c) + f)
     _C["order"] = out
     return out
 
@@ -361,7 +383,7 @@ def _first(text):
 
 
 def _branch_of(num):
-    n = int(num.split(".")[0])
+    n = int(re.match(r"\d+", num).group(0))   # W170-D1: a row past an old tip reads 17a or 47b
     return "fnd/l4k" if n <= 5 else "fnd/l4hoe" if n <= 17 else "fnd/l4hod" if n <= 47 else "fnd/l4rowc"
 
 
@@ -613,7 +635,9 @@ def t_every_placeholder_is_a_declared_token_and_the_stage_holds():
 
 def t_the_table_is_the_four_ranges_in_order_with_gits_columns_and_classes():
     order = _order()
-    assert len(order) == 75, len(order)
+    # 78: W165's 75 and W167's three (basis: `git rev-list --count` 06d064ff..531c4754 13 and 06d064ff..92d81690 44, W170)
+    assert len(order) == 78, len(order)
+    assert [o[0] for o in order if not o[0].replace(".", "").isdigit()] == ["17a", "47a", "47b"], "the late rows are not 17a, 47a, 47b"
     text = _read(CLASS)
     assert not p_coverage(text, order), p_coverage(text, order)
     assert not p_columns(text, order), p_columns(text, order)[:5]
@@ -622,6 +646,8 @@ def t_the_table_is_the_four_ranges_in_order_with_gits_columns_and_classes():
     r1 = "| " + " | ".join(rows[0]) + " |"
     assert r1 in text
     _mutant_refused(lambda x, o: p_coverage(x[CLASS], o), t, CLASS, r1 + "\n", "", order)
+    r47b = [ln for ln in text.split("\n") if ln.startswith("| 47b | ")][0]   # W170: a late row dropped is refused too
+    _mutant_refused(lambda x, o: p_coverage(x[CLASS], o), t, CLASS, r47b + "\n", "", order)
     _mutant_refused(lambda x, o: p_columns(x[CLASS], o), t, CLASS, "| 2026-10-07 04:39:01 |", "| 2026-10-07 04:39:02 |", order)
     _mutant_refused(lambda x, o: p_columns(x[CLASS], o), t, CLASS, "`l9t5_t10.out`, `l9t5_t10.py`; UNREVIEWED since cx46 |",
                     "`l9t5_t10.out`; UNREVIEWED since cx46 |", order)
@@ -634,11 +660,13 @@ def t_the_summary_and_the_bound_statement_are_the_tables():
     order = _order()
     texts = _texts()
     assert not p_summary(texts, order), p_summary(texts, order)
-    _mutant_refused(p_summary, texts, CLASS, "| `REVIEWED-INPUT CHANGED` | 11 | 11 |", "| `REVIEWED-INPUT CHANGED` | 12 | 11 |", order)
+    # the anchors restated by W170 over the 78 rows (basis: the table with rows 17a, 47a, 47b read back by p_summary itself: 47a is a
+    # REVIEWED-INPUT CHANGED row touching 5 reviewed files, 47b RECORD TEXT first, 17a TOOLING first and new engineering content)
+    _mutant_refused(p_summary, texts, CLASS, "| `REVIEWED-INPUT CHANGED` | 12 | 12 |", "| `REVIEWED-INPUT CHANGED` | 11 | 12 |", order)
     _mutant_refused(p_summary, texts, CLASS, "fnd/l4k, 5 rows: RECORD TEXT 4, TEST 1", "fnd/l4k, 5 rows: RECORD TEXT 5", order)
-    _mutant_refused(p_summary, texts, CLASS, "33 file touches among them", "34 file touches among them", order)
-    _mutant_refused(p_summary, texts, RESULT, "RECORD TEXT 23; GENERATOR DATA (text) 0", "RECORD TEXT 22; GENERATOR DATA (text) 1", order)
-    _mutant_refused(p_summary, texts, CLASS, "(D-W165-1): 38**", "(D-W165-1): 37**", order)
+    _mutant_refused(p_summary, texts, CLASS, "38 file touches among them", "33 file touches among them", order)
+    _mutant_refused(p_summary, texts, RESULT, "RECORD TEXT 24; GENERATOR DATA (text) 0", "RECORD TEXT 23; GENERATOR DATA (text) 1", order)
+    _mutant_refused(p_summary, texts, CLASS, "(D-W165-1): 39**", "(D-W165-1): 38**", order)
 
 
 def t_every_quote_is_on_its_cited_line_and_every_commit_named_resolves():
@@ -674,7 +702,8 @@ def t_the_bounds_and_the_prepared_rows_are_gits():
     assert not p_prepared(text), p_prepared(text)
     t = {CLASS: text}
     _mutant_refused(lambda x: p_bounds(x[CLASS]), t, CLASS, "`apply_gen_sch_b_hodtest.py`, `apply_gen_sch_a_fetpair.py`", "`apply_gen_sch_a_fetpair.py`")
-    _mutant_refused(lambda x: p_prepared(x[CLASS]), t, CLASS, "expected 85, `git diff --name-only 06d064ff 003338e3`", "expected 86, `git diff --name-only 06d064ff 003338e3`")
+    # W170: fnd/l4hoe's pin 531c4754 (basis: `git diff --name-only 06d064ff 531c4754` names 86 files, W165's 85 and the filed l4reg copy)
+    _mutant_refused(lambda x: p_prepared(x[CLASS]), t, CLASS, "expected 86, `git diff --name-only 06d064ff 531c4754`", "expected 85, `git diff --name-only 06d064ff 531c4754`")
     _mutant_refused(lambda x: p_prepared(x[CLASS]), t, CLASS, "reviewed files it brings (2): `L8P-BREAKER.md`, `README.md` (l8p)", "reviewed files it brings (1): `L8P-BREAKER.md`")
 
 
