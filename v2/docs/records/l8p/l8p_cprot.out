@@ -14,6 +14,8 @@ INFERRED; MODEL; RECORD; ASSUMED.
    d0d538f802b4af97  v2/docs/records/l8p/check_l8p_och.py
    740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
    08a656ab0230986d  v2/docs/records/l8p/inputs/l9stk-section15.9-bb6d2c8f.md
+   b8fe467eb18e7135  v2/docs/records/l8p/apply_pcb_interfaces_guard_allowance.py
+   40f19805a32f9a71  v2/docs/records/l8p/apply_l9stk_guard_allowance.py
    d6aed9d98fbf7f16  v2/vendor/ti/ti-tps37-snvsbj1e.pdf
    62bd7b5285171597  v2/vendor/ti/held/ti-opa187-sbos807e.pdf
    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
@@ -202,7 +204,8 @@ INFERRED; MODEL; RECORD; ASSUMED.
    path 2's load is on VBAT, not on the loop: U62 16 uA and U63 2.25 uA at their printed table maxima (10c)
    the round 11 trip adds nothing on DOCK_EN_OUT or DOCK_EN_RET (check_l8p_och's APART); the consumers' texts:
      Layer 5 (IF-AE-DOCK, apply_pcb_interfaces_guard_allowance.py): 'DOCK_EN_OUT on board A carries the thermal guard's draw: at most 40 uA with the guard cold and 50 uA tripped (record l8p 10c: printed maxima, the off leakage at the doubling, the worst single fault), C261 and C268 330 nF each and U61's 4.7 uF behind them; path 2's regulator and switch load VBAT, not the loop; DOCK_EN_RET may be held at ground by board A's Q60, Q44 and board P's Q107 with Q108, and DOCK_EN_OUT by board A's Q61 (path 2 tripped); DRAFTED (R-222, R-244), applied with record l8p's drafts; replaces round 8's 30 uA and 1 uF'
-     record l9stk 15.9 (apply_l9stk_guard_allowance.py): 'ROUND 11 OF RECORD l8p (7 October 2026): with record l8p's fail-safe delta (two guard paths, apply_gen_sch_a_thgfs.py) the guard's draw on DOCK_EN_OUT is at most 40 uA cold and 50 uA tripped (record l8p 10c, printed maxima with the off leakage at the doubling), in place of the 30 uA this round allows round 8's single path; its input capacitance is C261 and C268, 330 nF each'
+     record l9stk 15.9 (apply_l9stk_guard_allowance.py, three edits: this restatement after the supply bullet, the acceptance item
+       and the Layer 5 row of its correction scope, each keeping the round's 30 uA as history): 'Restated (record l8p round 11, 7 October 2026; L8P-R9-F2): with record l8p's fail-safe delta (two guard paths, `apply_gen_sch_a_thgfs.py`, change-list row R-244) the guard's draw on DOCK_EN_OUT is at most 40 uA cold and 50 uA tripped (record l8p 10c: printed maxima, the off leakage at the doubling, the worst single fault), in place of the 30 uA this round allows round 8's single path; its input capacitance is C261 and C268, 330 nF each; path 2's regulator and switch load VBAT, not the loop. The rows that rest on it are replayed in record l4e11's round 19 and record l8p's round 11.'
    the replay of L4-E11's 20f, 22 and 28 at these figures: record l4e11's round 19 (l4e11_rowc.py)
 
 8. VERDICTS
