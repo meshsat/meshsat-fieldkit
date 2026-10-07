@@ -214,7 +214,7 @@ E11-29's row's [ANX:105].
 This annex carries no row of S1: S1 and its added row (b) are record l4e7's request P1-1 [P11:144], [P11:154-160]. Its reading here,
 the narrower one, is the ledger's HO-F as amended on 6 October 2026 (REM-M lines 522-535 and section 6 item E, lines 720-727; text
 only). The case: a stiff source below the stage's voltage, arriving after a withdrawal, draws the stage's charge back through Q12's
-body diode; no record computes it ("Not computed here" [B2:183-186]; "not computed here" [SOLO:402]), so it neither fails nor passes. It
+body diode; no record computes it ("Not computed here" [B2:183-186]; "not computed here" [SOLO:404]), so it neither fails nor passes. It
 is REMAINING ENGINEERING inside E-1 (D-10), where cx46 places it: "D-10's E-1 retains F1-F4 and the lower-source back-feed case."
 [CX46:95]. The receiving company computes it on E-1's corrected circuit as part of E-1's correction, against E-1's own requirement
 that every part stays within its makers' absolute maximum ratings during the fault [P11:72] and S1's criterion for the case, "Q12's
@@ -224,8 +224,8 @@ unperformed validation test." [OWN:681] and "A planned measurement alone does no
 [OWN:702]; cx46: "S1 is expressly subsequent qualification of a correction, not closure of the current circuit." [CX46:95]. This annex
 does not hand it over as a validation item; the ledger hands it over as remaining engineering (HO-F), and this annex sets no limit
 for it. Record l4e7's own words
-("validation P1-1's S1 (row added)" [B2:183-186]; "Validation: P1-1's S1" [SOLO:403]) are not this annex's file and stand as written
-(section 8). Dated note, 6 October 2026 (set 31's Q-40): W4's rewrite of record l4e7's pages at `786aed2f` overtook this sentence: the pages now read "P1-1's S1 row (b) is the later validation of that computation" [B2:185] and "S1's added row (b) is the later validation of that computation" [P11:63]; the generated output's line [SOLO:403] is outside that rewrite.
+("validation P1-1's S1 (row added)" [B2:183-186]; "Validation: P1-1's S1" [SOLO:405]) are not this annex's file and stand as written
+(section 8). Dated note, 6 October 2026 (set 31's Q-40): W4's rewrite of record l4e7's pages at `786aed2f` overtook this sentence: the pages now read "P1-1's S1 row (b) is the later validation of that computation" [B2:185] and "S1's added row (b) is the later validation of that computation" [P11:63]; the generated output's line [SOLO:405] is outside that rewrite.
 
 ### 6.5 D-06: two items under one identifier (K-09)
 
@@ -290,8 +290,8 @@ inhibit [E11:1518-1519]. State on this tip: "E11-37 OPEN (TI or the bench)" [E11
 K-01, K-02, K-05, K-07, K-10, K-11, K-19, K-25 and K-27 (no stumble on the candidate, by DGA's own column); K-03 (LH-12 in
 `LAYER5-HANDOVER.md`); K-04 and K-15 (the P0 list); K-08 (E-1's two meanings, L4-E9's page and register, record l4e7); K-13 (record
 l4e7's request P1-1); K-14 (record l8p's one release); K-16 (record efuse); K-17 (the ledger's item C); K-18 (cx45 as filed); K-20,
-K-21 and K-26 (records l9t5 and l8r2); K-22 (cx46 and record l9t5, no state changes); K-23's record l4e7 side ([B2:183-186], [SOLO:403],
-[P11:154-160]; this page's side is section 6.4; dated note, 6 October 2026 (set 31's Q-40): W4's rewrite of record l4e7's pages at `786aed2f` overtook this pointer: the pages now read "It is REMAINING ENGINEERING inside E-1" [P11:60] and "REMAINING ENGINEERING inside E-1" [B2:184], the generated output's line [SOLO:403] apart); K-06's L4-E9 side (set 29's 45.88 K/W per FET in D-14's rows, U-04's row and UDC-1's
+K-21 and K-26 (records l9t5 and l8r2); K-22 (cx46 and record l9t5, no state changes); K-23's record l4e7 side ([B2:183-186], [SOLO:405],
+[P11:154-160]; this page's side is section 6.4; dated note, 6 October 2026 (set 31's Q-40): W4's rewrite of record l4e7's pages at `786aed2f` overtook this pointer: the pages now read "It is REMAINING ENGINEERING inside E-1" [P11:60] and "REMAINING ENGINEERING inside E-1" [B2:184], the generated output's line [SOLO:405] apart); K-06's L4-E9 side (set 29's 45.88 K/W per FET in D-14's rows, U-04's row and UDC-1's
 comparison, [SET31:120-122]); K-24 (record l4e7 and the change-list draft); K-28 (the connected output and
 L4-E9's pins). K-06, K-09 and K-12 are answered on these pages (sections 6.3, 6.5 and 6.2).
 
