@@ -6,9 +6,9 @@ a DRAFT, NOT APPLIED; prototype design, nothing built or measured)
 1. INPUTS (sha256/16)
    1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
    51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
-   5ccf3509355e6533 v2/docs/records/l9t5/l9t5_canmb.out
+   13ae2ceaa05d5bc9 v2/docs/records/l9t5/l9t5_canmb.out
    babc11a248760e82 v2/docs/records/l9t5/l9t5_canmb.py
-   c010ff134aa457ee v2/docs/records/l9t5/l9t5_canq.out
+   96995e9052452edd v2/docs/records/l9t5/l9t5_canq.out
    9481b2e59034d379 v2/docs/records/l9t5/T10-CANQ.md
    592ae1e712b2d0cd v2/docs/records/l9t5/l9t5_canq.py
    12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
