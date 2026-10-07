@@ -9,7 +9,7 @@ INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, r
    36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
    aa05cdaac67f9fee  v2/docs/records/l4e11/l4e11_fet.out
    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
-   92e23993ab3f4c42  v2/docs/records/l8p/L8P-BREAKER.md
+   0bd41225369495db  v2/docs/records/l8p/L8P-BREAKER.md
    6a136feec6c9cf4e  v2/ecad/tools/gen_sch_a.py
    f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
    740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
@@ -111,7 +111,7 @@ INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, r
        R10 (2 mOhm 2512 2 W, no maker's sheet held: E-6), 1.15 W (RECORD); R101 4 mOhm and R102 7.5 mOhm (no part chosen: 2 W each at the
          band's temperature, Layer 6), 0.97 W and 0.52 W (RECORD): NOT SHOWN, no printed derating
        F2, Eaton SCF9550-30-05 (PRINTED: 30 A; operating -20 to +60 C): 79.8 % of its rating; its printed range ends 16.25 K under the
-         76.25 C air at any current: the pack stream's item (U-01's thermal environment), not a held-current row
+         76.25 C air at any current (record l4e10 section 9, Eaton's questions drafted): the pack's thermal environment, not a held-current row
        the cells: the breaker's and U-01's (W127's check 1c, finding 5), outside M-A
 
 4. WHICH ROWS THE GUARD EVER PROTECTED (INFERRED)
@@ -151,7 +151,7 @@ INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, r
      limit, so a latent guard failure removes no protection they need) and HO-B (no retry exceeds a current they hold); the guard
      stays as defence in depth; CONDITIONAL on E-05, E11-29 (with R17's terminal reading) and E11-36
    M-B's entry condition (decision L4E11-FET-D2): (1) and (2) not met (E11-29, E11-36 and E-05 unanswered, none refused); (3) not met for
-     the guard's parts; the blades' row is a part over its printed limit, but the guard never protected it and M-B would not either:
+     the guard's parts; the blades' row is a part over its printed limit, but the guard does not assure its protection, nor would M-B:
      it enters C-PROT rev 1's re-evaluation (L4A-67), not M-B
 
 7. PREDICATES

@@ -650,7 +650,7 @@ def render(R):
     w("       R10 (2 mOhm 2512 2 W, no maker's sheet held: E-6), %.2f W (RECORD); R101 4 mOhm and R102 7.5 mOhm (no part chosen: 2 W each at the" % R["R10_REC"])
     w("         band's temperature, Layer 6), %.2f W and %.2f W (RECORD): NOT SHOWN, no printed derating" % R["SNS_REC"])
     w("       F2, Eaton SCF9550-30-05 (PRINTED: 30 A; operating -20 to +60 C): %.1f %% of its rating; its printed range ends %.2f K under the" % (100 * R["scf_frac"], R["scf_over"]))
-    w("         %.2f C air at any current: the pack stream's item (U-01's thermal environment), not a held-current row" % R["T_AIR"])
+    w("         %.2f C air at any current (record l4e10 section 9, Eaton's questions drafted): the pack's thermal environment, not a held-current row" % R["T_AIR"])
     w("       the cells: the breaker's and U-01's (W127's check 1c, finding 5), outside M-A")
     w("")
     w("4. WHICH ROWS THE GUARD EVER PROTECTED (INFERRED)")
@@ -690,7 +690,7 @@ def render(R):
     w("     limit, so a latent guard failure removes no protection they need) and HO-B (no retry exceeds a current they hold); the guard")
     w("     stays as defence in depth; CONDITIONAL on E-05, E11-29 (with R17's terminal reading) and E11-36")
     w("   M-B's entry condition (decision L4E11-FET-D2): (1) and (2) not met (E11-29, E11-36 and E-05 unanswered, none refused); (3) not met for")
-    w("     the guard's parts; the blades' row is a part over its printed limit, but the guard never protected it and M-B would not either:")
+    w("     the guard's parts; the blades' row is a part over its printed limit, but the guard does not assure its protection, nor would M-B:")
     w("     it enters C-PROT rev 1's re-evaluation (L4A-67), not M-B")
     w("")
     return o
