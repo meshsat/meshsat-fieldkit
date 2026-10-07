@@ -40,9 +40,9 @@ REM = "v2/docs/records/l4close/REMAINING-ENGINEERING.md"
 
 A_OLD = "for the decisions D9 and D10 ([T5R:174-176]).\n- **B. Two figures"
 A_NEW = ("for the decisions D9 and D10 ([T5R:174-176]). Dated note, 7 October 2026 (record l4k, the DESK-gate assessment's K-20): "
-         "answered on the records' side by W9, merged into set 31 at `0ed29a78`: `T10-ROUND5.md` names the second finding L9T5-F28, "
-         "\"renamed from L9T5-F26\" ([T10R:227]), and record l9t5's README says of J_PA's finding \"The identifier is this finding's "
-         "alone\" ([T5R:196]); this item is history from `1c6d56f5`.\n- **B. Two figures")
+         "answered on the records' side by W9, merged into set 31 at `0ed29a78`: `T10-ROUND5.md` names the second finding "
+         "L9T5-F28, \"renamed from L9T5-F26\" ([T10R:227]), and record l9t5's README says of J_PA's finding \"The identifier is this "
+         "finding's alone\" ([T5R:196]); this item is history from `1c6d56f5`.\n- **B. Two figures")
 
 B_OLD = "is the declared peak 1.4749 A ([CON:151]).\n- **C. The stability"
 B_NEW = ("is the declared peak 1.4749 A ([CON:151]). Dated note, 7 October 2026 (record l4k, K-21): answered on the records' side "

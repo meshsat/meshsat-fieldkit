@@ -744,7 +744,7 @@ changing no instruction, state, limit or part, with register task L4A-61 its own
 | K-17 | yes | STANDING | the ledger's item C (lines 714 to 718) reports a gap closed at `ac8efbca`; `apply_l4k_remeng.py` for set 33 |
 | K-18 | yes | RESOLVED | by reading: the check's base_commit is the branch base `e132db0e`, its HEAD `06077cee` the revision read; the filed check is not edited |
 | K-19 | no | RESOLVED | U101 LM5069MM-1 (register line 302; page line 517) |
-| K-20 | yes | RESOLVED | L9T5-F28 renamed (T10-ROUND5.md line 227); the ledger's item A dated by `apply_l4k_remeng.py` |
+| K-20 | yes | RESOLVED | L9T5-F28, renamed from L9T5-F26 (T10-ROUND5.md line 227); the ledger's item A dated by `apply_l4k_remeng.py` |
 | K-21 | yes | RESOLVED | both bounds stated with their bases (record l9t5 README lines 59, 147; record l8r2 line 1081); the ledger's item B dated by `apply_l4k_remeng.py` |
 | K-22 | yes | STANDING | two MODEL readings of the ended rail-trip method (cx46 lines 89, 91; l9t5_t10.out lines 585, 620); left STANDING, register task L4A-61 |
 | K-23 | yes | STANDING | record l4e7's generator, section 5g (l4e7_p0sol.py line 1353, output line 403); `apply_l4k_p0sol.py` for set 33 |
