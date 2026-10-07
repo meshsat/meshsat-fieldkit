@@ -7,10 +7,11 @@ one targeted recheck, row (c), HO-E, the limiter screen, the K table and the B2 
 the assessment gives them, the classification bound, its integration rows prepared in W113's form (`CLASSIFICATION.md` section 3), and
 the 17 rows that bring the four adoption pages to set 33 (`ENTRY-PAGES.patch.md`, held by `test_patch33.py` against set 32's
 adopted pages); brought by W170 (queue item Q-192) to the final Layer 4 tips (fnd/l4hoe `531c4754`, fnd/l4hod `92d81690`) and
-to main `46d4fe58` (set 32's adoption, merged into fnd/res33 first), with W163's, W168's and W158's verdicts as received. **NOT DONE:** everything the integration will give: the chain's
+to main `46d4fe58` (set 32's adoption, merged into fnd/res33 first), with W163's, W168's and W158's verdicts as received, and the fill proof re-run on them (section 8, where it also found a second
+conflict at the chain's a4 on main `46d4fe58`). **NOT DONE:** everything the integration will give: the chain's
 base, the chain's counts and lines, the converged commit, the independent read of the lineage, the re-key's cache commit, the
 candidate, the freeze's and the gate's lines, the promotion and the adoption commit, each a placeholder the coordinator's fill tool
-fills (the paragraph "Placeholders" below). **NEXT:** at the adoption, in this order: the fill tool on this file, the classification and the patch
+fills (the paragraph "Placeholders" below). **NEXT:** before the chain runs, the coordinator's ruling on its OUTS_REGEN (section 8); at the adoption, in this order: the fill tool on this file, the classification and the patch
 file they name (`<worktrees>/_bin/fill_res.py --set 33`: template, values, apply; ADOPTION in its second run; `test_res33.py` holds this
 file before the fill and after each run); the classification's section 3 written into its section 1 from git (its NEXT line); this
 header restated for the state after the fill and the adoption; then the coordinator's dependency pass, as after sets 31 and 32.
@@ -199,7 +200,7 @@ logs named from it (`<worktrees>/_runs/int33/chain.sh` `<log without .log>.targe
 | Step | What the coordinator reads | Expected, as written before the run | Result |
 |---|---|---|---|
 | a0: the base | the chain's log | set 32's adoption in the base's lineage; the KEY-only check reads MATCH at the base (`6e11114faadda427`, set 32's re-key) | `__GATE__` |
-| a2 to a5: the four merges, pinned | the chain's log; the merge commits | fnd/l4k and fnd/l4hoe clean; fnd/l4hod with one conflict, `l9t5_connected.out` taken as a placeholder and regenerated; fnd/l4small and fnd/l4lim FOLDED; fnd/l4rowc with one conflict, record l8p's `README.md`, resolved by `resolve_l8p_readme33.py` (K1 to K6); a5b merges fnd/res33, this record | `__GATE__` |
+| a2 to a5: the four merges, pinned | the chain's log; the merge commits | fnd/l4k and fnd/l4hoe clean; fnd/l4hod with two conflicts on main `46d4fe58` (W170's fill proof, section 8), `l9t5_connected.out` and `l8r2_dist.out`, each taken as a placeholder and regenerated; fnd/l4small and fnd/l4lim FOLDED; fnd/l4rowc with one conflict, record l8p's `README.md`, resolved by `resolve_l8p_readme33.py` (K1 to K6); a5b merges fnd/res33, this record | `__GATE__` |
 | a6: the swaps and the open rows | the chain's log | W117's preflight swapped, W112's placeholder check swapped, no OPEN apply row | `__GATE__` |
 | a7: the PRE applies | the chain's log | eleven rows written in order, each `--check` first; row L4S-2 names the KEY's move; no generator touched | `__GATE__` |
 | b: held material | the chain's log | 57 texts, 57 sidecars, byte-identical, all ignored | `__GATE__` |
@@ -326,6 +327,25 @@ qualification (NONE).
   for the r2 targeted log, test group 3 and step r2; its test `<worktrees>/_bin/tests/test_fill_res33.py`, and
   `<worktrees>/_bin/tests/test_fill_res.py.new`, the live test with its one example of an unknown set moved from 33 to 34.
 - **The independent read of set 33's lineage** is a later queue item, after the chain; this record names no finding of it.
+- **A second conflict at a4 on main `46d4fe58`** (found by W170's fill proof below): merging fnd/l4hod `92d81690` after fnd/l4k and
+  fnd/l4hoe onto main `46d4fe58` conflicts in `v2/docs/records/l9t5/l9t5_connected.out` AND `v2/docs/records/l8r2/l8r2_dist.out`
+  (set 32's dependency pass `46d4fe58` and W167's `e1687b89` each moved a digest line of the latter). The chain takes ours as a
+  placeholder only for a path its OUTS_REGEN names (`<worktrees>/_runs/int33/chain.sh` `OUTS_REGEN=${OUTS_REGEN:-v2/docs/records/l9t5/l9t5_connected.out}`),
+  so as written its step a4 stops on the second file. `l8r2_dist.out` is a generated output with its generator `l8r2_dist.py` beside
+  it: recommended, `OUTS_REGEN` naming both files (taken under the owner's standing rule of 26 September 2026 as the recommendation;
+  the chain is the coordinator's file, so W170 changed nothing there). The resolver of a5 held K1 to K6 on that tree.
+- **Through the fill, again on the final tips** (W170's proof, 7 October 2026, 13:10 to 13:13 CEST; W165's method): on a sparse
+  `--shared` scratch clone of main `46d4fe58` (v2/docs and v2/ecad/tools; no tracked file outside them carries the CANDIDATE or the
+  INTEGRATED placeholder, by `git grep` on the merged commit) with fnd/l4k `ff0c79f0`, fnd/l4hoe `531c4754`, fnd/l4hod `92d81690` (its two conflicts taken as ours), fnd/l4small
+  and fnd/l4lim FOLDED, fnd/l4rowc `653cb1bc` (the README by `resolve_l8p_readme33.py`) and fnd/res33 merged in the chain's order,
+  then stand-in commits for the re-key and the candidate: `fill_res.py --set 33` (the live tool, swapped) read a template of 78 rows
+  (RESULT.md 63, CLASSIFICATION.md 2, ENTRY-PAGES.patch.md 13, the pages none; GATE 56, REKEY 5, PROMOTED 3, CANDIDATE 11, ADOPTION 3;
+  no KEEP row; W163's verdict, a GATE row of W165's template, is text now); its first run applied 59 lines with 3 ADOPTION occurrences
+  deferred (its NOTE on the two candidate_guard lines given one part), its second, after a stand-in adoption commit, 3 lines, and a
+  third was refused (exit 2). `test_res33` read 9 passed, 0 failed, 0 skipped and `test_patch33` 2 passed, 0 failed, 0 skipped before
+  the fill and after each run (the coordinator's folders given by MESHSAT_RUNS and MESHSAT_BIN); W112's `placeholders_check.py` with
+  `<worktrees>/_runs/int33/placeholders-deferred.tsv.new` printed `placeholders: every occurrence deferred` (exit 0) before the fill and
+  after each run, its three RECORD-DRAFT rows reported stale once the fill had run. The clone was deleted after.
 - **Through the fill** (W165's proof, 7 October 2026, about 12:33 CEST; set 32's W80 method): on a sparse scratch clone of fnd/res33
   `1862e5d9` with stand-in commits for the re-key (holding the four tips), the candidate and the adoption, `fill_res.py.new --set 33`'s
   template read 79 rows (RESULT.md 64, CLASSIFICATION.md 2, ENTRY-PAGES.patch.md 13, the pages none; GATE 57, REKEY 5, PROMOTED 3,
