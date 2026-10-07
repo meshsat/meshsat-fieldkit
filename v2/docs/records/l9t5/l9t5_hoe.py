@@ -24,7 +24,11 @@ W145 (7 October 2026) corrected it on the focused check L4A-100 (W144, `_runs/cl
 C5): the CTR1 reset hold drafted and the reset-loop row added (F1), U-02's local air (F2), the self-test's PASSED pattern (F3, RM0433
 Table 56) and its window from the Scale 1 write (F11), the revision the trip window rests on (F4), the reset state printed (F5), the
 register rows for S-f and S-g (F6), Table 120's 544 mA (F7), one supply corner for every thermal limit (F8), PWR_CR3's lock (F9) and
-H-3 not established (F10).
+H-3 not established (F10). W148 (the same day) replaced the CTR1 hold by a TPS3703 hold stage (5h). W152 (the same day) corrected it on
+the targeted recheck (W150, `_runs/claude/w150rechkhoe/`, F1 to F6): C2 a pair, S1's limits as a function of U-02's local air (F1); the
+loop's mean rise on T10's temperature-dependent current (F2); S-k worded for the excursions the monitor registers and the self-reset
+loop its own row S-m with S2 extended (F3, 5i); the hold check on the LSI-clocked RTC at 12 ms (F4); the reader reading FAIL on a part
+not fitted, with a tenth mutation (F5); the clerical items (F6).
 Run from the repository root:  python3 v2/docs/records/l9t5/l9t5_hoe.py  (a few seconds; l9t5_hoe.out is its output, regenerated with
 _bin/regen_out.py). Labels: PRINTED (a maker's limit or tested row), TYPICAL, DIAGRAM (read from a maker's drawn figure, no number in a
 table), DECLARED, DRAFTED (a contract row or a circuit, not applied), MODEL, ASSUMPTION, SESSION."""
@@ -52,19 +56,22 @@ PDFTEXT = {
                                         ["-layout", "-f", "262", "-l", "264"], ["-layout", "-f", "279", "-l", "280"],
                                         ["-layout", "-f", "306", "-l", "306"], ["-layout", "-f", "307", "-l", "309"],
                                         ["-layout", "-f", "329", "-l", "332"], ["-layout", "-f", "449", "-l", "450"],
-                                        ["-layout", "-f", "560", "-l", "560"], ["-layout", "-f", "1896", "-l", "1896"]],
+                                        ["-layout", "-f", "560", "-l", "560"], ["-layout", "-f", "1896", "-l", "1896"],
+                                        ["-layout", "-f", "426", "-l", "426"], ["-layout", "-f", "428", "-l", "428"],
+                                        ["-layout", "-f", "1910", "-l", "1910"], ["-layout", "-f", "1932", "-l", "1932"]],
     "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf": [["-layout", "-f", "29", "-l", "29"], ["-layout", "-f", "105", "-l", "105"],
                                                        ["-layout", "-f", "208", "-l", "210"],
                                                        ["-layout", "-f", "212", "-l", "212"], ["-layout", "-f", "215", "-l", "215"],
                                                        ["-layout", "-f", "216", "-l", "216"],
                                                        ["-layout", "-f", "241", "-l", "241"], ["-layout", "-f", "248", "-l", "248"],
-                                                       ["-layout", "-f", "344", "-l", "345"]],
+                                                       ["-layout", "-f", "344", "-l", "345"], ["-layout", "-f", "233", "-l", "233"]],
     "v2/vendor/st/st-an4938-rev7.pdf": [["-layout", "-f", "10", "-l", "10"], ["-layout", "-f", "19", "-l", "19"]],
     "v2/vendor/ti/ti-tps37-snvsbj1e.pdf": [["-layout"]],
     "v2/vendor/ti/ti-tps3808.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "4", "-l", "4"], ["-layout", "-f", "5", "-l", "5"],
                                     ["-layout", "-f", "6", "-l", "6"], ["-layout", "-f", "7", "-l", "7"],
                                     ["-layout", "-f", "11", "-l", "11"], ["-layout", "-f", "12", "-l", "12"]],
     "v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf": [["-layout"]],
+    "v2/vendor/st/st-es0392-rev15.pdf": [["-layout", "-f", "1", "-l", "1"]],
 }
 _PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
 PDFT = importlib.util.module_from_spec(_PTS)
@@ -75,6 +82,7 @@ AN = "v2/vendor/st/st-an4938-rev7.pdf"
 TPS = "v2/vendor/ti/ti-tps37-snvsbj1e.pdf"
 TPS38 = "v2/vendor/ti/ti-tps3808.pdf"
 TPS3703 = "v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf"   # W148: held back, v2/docs/records/l9t5hoe/fetch_held_back.py
+ES = "v2/vendor/st/st-es0392-rev15.pdf"                 # W152: the errata sheet's Table 2 (silicon revision codes), committed
 REC = "v2/docs/records/l9t5"
 DOCS = {"draft": REC + "/apply_gen_sch_b_vcoremon.py", "guard": REC + "/apply_gen_sch_b_iocguard.py", "drafts": REC + "/l9t5_drafts.py",
         "t10out": REC + "/l9t5_t10.out", "t10py": REC + "/l9t5_t10.py", "gen_b": "v2/ecad/tools/gen_sch_b.py",
@@ -93,8 +101,15 @@ MU = "[%s%s]" % (chr(0xB5), chr(0x3BC))
 OHM = "[%s%s]" % (chr(0x3A9), chr(0x2126))
 # ---- the session's choices (SESSION, under the owner's standing rule of 26 September 2026; section 7 gives each reason) ----
 T_TEST_S = 3600.0      # W140-3: the monitor's self-test runs at every start and then once every T_TEST_S seconds per supervisor
-T_HOLD_CHECK_S = 7e-3  # W148-3: the self-test's restart must come at least this long after its Scale 1 write (the hold stage timed)
-RTC_TOL = 0.40         # W148-3: the RTC clock error the hold check is read against (its source is Layer 5's: LSE or LSI)
+T_HOLD_CHECK_W148 = 7e-3   # W148-3 as drafted: the restart at least this long after the Scale 1 write, on an RTC within RTC_TOL_W148
+RTC_TOL_W148 = 0.40        # (withdrawn by W152-1: its 1 ms resolution, its +-40 % and its budget left terms out, W150's F4)
+T_HOLD_CHECK_S = 12e-3     # W152-1 (W150's F4): the restart at least this long after the Scale 1 write, read on the RTC clocked by the
+                           # LSI (Table 136's printed band), near the hold's printed 14 ms minimum
+RTC_APRE = 8               # W152-1: the RTC's PREDIV_A + 1 at most 8, so the sub-second step is at most 8 LSI periods (RM0433 46.6.5)
+REG_MARGIN = 2.0           # W152-3: S2's extension passes when the least excursion an image can make is at least twice the longest
+                           # excursion the monitor fails to register (a margin from three specimens to the population, SESSION)
+DWELL_SCALE_US, RESTART_SCALE_US = 17.0, 200.0   # W150's F3 illustration (TPS37 tCTS's 17 us at 20 % overdrive as a dwell, a 0.2 ms
+                           # restart): for scale only, never a bound
 T_RESTORE_US = 10.0    # W145-2: after its window (t_resp from the Scale 1 write, F11) the self-test writes Scale 3 within this long (a
                        # static property of the image, read like FW-B20's); W140-3's VOSRDY 1 ms and 2 ms waits are withdrawn
 TEMPCO_K = 65.0        # T10's convention for a 25 ppm/K resistor (l9t5_t10.out 10j: "the divider at 0.1 % and 25 ppm/K over 65 K")
@@ -149,6 +164,8 @@ def draft():
 
 
 def ohms(v):
+    if not (v or "").split():
+        refuse("a resistor value this script cannot read: %r (the part not fitted)" % v)
     t = v.split()[0]
     m = re.fullmatch(r"(\d+(?:\.\d+)?)([kKMR]?)", t)
     if not m:
@@ -450,6 +467,45 @@ def figures():
                                       "that holds RESET low for a specified reset delay period.", "TPS3808 7.3.4 (p.12)")}
     F["t38_pkg"] = tuple(float(x) for x in need(t1, r"DBV \(SOT-23, 6\)\s+([\d.]+)mm \S ([\d.]+)mm", "TPS3808 DBV package size").groups())
     need(t11, r"11\s*$", "TPS3808 p.11's page number")
+    # W152 (W150's F6): the 14 ms after MR is tD by reference: tD(MR)'s row prints "tD" in a column, read here off the header
+    t = PDFT.pdf_text(ROOT, TPS3703, ["-layout"], PDFTEXT, REC)
+    hdr = need(t, r"^ +PARAMETER +MIN +NOM +MAX +UNIT *$", "TPS3703 7.6's column header").group(0)
+    mm = need(t, r"^ tD \(MR\)\s+MR reset time delay\s+(tD)\s+ms\s*$", "TPS3703 tD(MR)")
+    end = mm.end(1) - mm.start(0)
+    F["t3_tdmr"] = min(("MIN", "NOM", "MAX"), key=lambda c: abs(hdr.index(c) + len(c) - end))
+    # W152 (W150's F4): the hold check's time base. DS12110 Rev 11 Table 136 (p.233, rev V): the LSI's frequency; RM0433 Rev 8 p.426
+    # (RCC_BDCR: the RTC's source survives every reset but a backup domain reset; the HSE is lost at a pin reset), p.428 (RCC_CSR: the
+    # RTC's request keeps the LSI running whatever LSION), p.1910 and p.1932 (the sub-second counter's clock; RTC_PRER untouched by a
+    # system reset); DS12110 Table 147 (p.241): NRST's VIH
+    t = page(DS, 233)
+    need(t, r"Table 136\. LSI oscillator characteristics", "DS12110 Table 136")
+    need(t, r"233/357", "DS12110 p.233")
+    F["lsi_typ"] = float(need(t, r"VDD = 3\.3 V, TJ = 25 .C\s+[\d.]+\(1\)\s+(\d+)\s+[\d.]+\(1\)", "Table 136 typical").group(1)) * 1e3
+    m = need(t, r"^\s+([\d.]+)\s+-\s+([\d.]+)\s*\n\s+3\.6 V\s*\n\s+LSI oscillator\s*$", "Table 136, TJ %s40 to 125 C" % EN)
+    need(t, r"fLSI\s+LSI frequency\s+TJ = %s40 to 125 .C, VDD = 1\.62 to\s+kHz" % EN, "Table 136's 125 C row label")
+    F["lsi_band"] = (float(m.group(1)) * 1e3, float(m.group(2)) * 1e3)
+    t = page(DS, 241)
+    F["vih_k"] = float(need(t, r"I/O input high level voltage except\s+(0\.\d)VDD\(1\)", "Table 147 VIH").group(1))
+    t426, t428, t1910, t1932 = page(RM, 426), page(RM, 428), page(RM, 1910), page(RM, 1932)
+    for tt, pgn in ((t426, 426), (t428, 428), (t1910, 1910), (t1932, 1932)):
+        need(tt, r"\b%d/3353\b" % pgn, "RM0433 p.%d in the pinned text" % pgn)
+    F["rtc_q"] = {
+        "bdcr": quote(t426, "RCC_BDCR bits are only reset after a backup domain reset (see Section 8.4.6: Backup domain reset). Any other "
+                            "internal or external reset will not have any effect on these bits.", "RM0433 8.7.26 p.426"),
+        "hse": quote(t426, "If HSE is selected as RTC clock: this clock is lost when the system is in Stop mode or in case of a pin reset (NRST).",
+                     "RM0433 8.7.26 p.426, RTCSEL"),
+        "lsisel": quote(t426, "10: LSI clock used as RTC clock", "RM0433 8.7.26 p.426, RTCSEL"),
+        "lsirdy": quote(t428, "This bit can be set even when LSION is not enabled if there is a request for LSI clock by the Clock Security "
+                              "System on LSE or by the Low Speed Watchdog or by the RTC.", "RM0433 8.7.27 p.428, LSIRDY"),
+        "apre": quote(t1910, "The ck_apre clock is used to clock the binary RTC_SSR subseconds downcounter.", "RM0433 46.3.4 p.1910"),
+        "prer": quote(t1932, "ck_apre frequency = RTCCLK frequency/(PREDIV_A+1)", "RM0433 46.6.5 p.1932"),
+        "sysrst": quote(t1932, "System reset: not affected", "RM0433 46.6.5 p.1932, RTC_PRER")}
+    # W152 (W150's F6): ES0392 Rev 15 Table 2 (p.1), the silicon revision codes C3 names
+    t = PDFT.pdf_text(ROOT, ES, ["-layout", "-f", "1", "-l", "1"], PDFTEXT, REC)
+    need(t, r"ES0392 - Rev 15 - September 2025", "ES0392's revision")
+    need(t, r"Table 2\. Device variants", "ES0392 Table 2")
+    F["revid"] = {k: need(t, r"^\s+%s\s+(0x[0-9A-F]{4})\s*$" % re.escape(k), "ES0392 Table 2, marking %s" % k).group(1) for k in ("Y, W", "X", "V")}
+    need(t, r"REV_ID\[15:0\] bitfield of DBGMCU_IDC register\.", "ES0392 Table 2 note 2")
     return F
 
 
@@ -601,7 +657,9 @@ def mon_check(nl, F, draft_mod):
             continue
         if not (lo > v3 and hi < v1 and rel > v3):
             why.append("controller %s's band %.4f to %.4f V (release from %.4f V) is not inside (%.2f, %.2f) V" % (t, lo, hi, rel, v3, v1))
-        if abs(ohms(CHK.value(nl, rs)) - ohms(draft_mod.SERIES)) > 1e-9:
+        if not CHK.value(nl, rs):                                     # W150's F5: read FAIL, never an exception, on a part not fitted
+            why.append("%s is not fitted: the hold stage's RESET reaches no NRST" % rs)
+        elif abs(ohms(CHK.value(nl, rs)) - ohms(draft_mod.SERIES)) > 1e-9:
             why.append("%s is %s, not the draft's %s" % (rs, CHK.value(nl, rs), draft_mod.SERIES))
         for ref in (u, rt, rb, rs, cb, uh, rct, ch):
             for n in nl["pins"].get(ref, {}).values():
@@ -627,7 +685,7 @@ def main():
     w("")
     # ---------------------------------------------------------------- 1. inputs
     w("1. INPUTS, pinned by sha256")
-    pins = [RM, DS, AN, TPS, TPS38, TPS3703, "v2/docs/records/l9t5hoe/fetch_held_back.py"] + [DOCS[k] for k in ("draft", "guard", "drafts", "t10out", "t10py", "gen_b", "gennet", "ledger", "cx46", "l4reg",
+    pins = [RM, DS, AN, TPS, TPS38, TPS3703, ES, "v2/docs/records/l9t5hoe/fetch_held_back.py"] + [DOCS[k] for k in ("draft", "guard", "drafts", "t10out", "t10py", "gen_b", "gennet", "ledger", "cx46", "l4reg",
                                                          "l4regout", "regstage", "round6", "canmb", "sources", "u23", "u24", "contract",
                                                          "cdraft", "ct10")]
     for rel in pins:
@@ -940,6 +998,9 @@ def main():
         dm.HOLD_PART[7], hold[0] * 1e3, hold[1] * 1e3))
     w("         %.0f ms (7.6, p.%d, PRINTED), after '%s ... %s' (8.3.5, p.16; Figure 8-2's note B: '%s'; note C: '%s')." % (
         hold[2] * 1e3, F["t3_td_page"], F["t3_q"]["mr2"], F["t3_q"]["mr3"], F["t3_q"]["noteB"], F["t3_q"]["noteC"]))
+    w("         The %.0f ms after MR is PRINTED BY REFERENCE (W150's F6): tD(MR)'s row, 'MR reset time delay', prints 'tD' in its %s column" % (
+        hold[0] * 1e3, F["t3_tdmr"]))
+    w("         (7.6, p.7), and 8.3.5 names tD, whose %.0f ms with CT pulled to VDD is the printed minimum of tD's own row" % (hold[0] * 1e3))
     w("         TI prints no condition on the fault's length beyond tMR_W: the hold is a timer, not a capacitor's discharge (9.1.2.1 against")
     w("         9.1.2.2's capacitor option, which this draft does not use). Its SENSE sits on its own VDD, so '%s' (8.3.4, p.15) happens at" % F["t3_q"]["reeval"])
     w("         the part's own start and SENSE never leaves the window after; a CT option misread there would show as a short hold, which")
@@ -988,6 +1049,16 @@ def main():
     pin_too = [rows56[k][0] for k in sorted(rows56) if k != 2 and dict(zip(hdr, rows56[k][1]))["PINRSTF"] == 1]
     q_rmvf = quote(t329, "The CPU can reset the flags by setting RMVF bit.", "RM0433 8.4.4 p.332")
     t_win = t_resp
+    # W152-1 (W150's F4): the hold check's time base (the LSI-clocked RTC) and its budget, every term named
+    t_ct_open = F["t3_td"][(dm.HOLD_PART[7], "open")][2]
+    f_nom, (f_lo, f_hi) = F["lsi_typ"], F["lsi_band"]
+    step_nom = RTC_APRE / f_nom                                      # one ck_apre step, read at the typical frequency
+    pass_min = hold[0] * f_lo / f_nom - step_nom                     # the least reading of a healthy hold
+    r_max = (T_HOLD_CHECK_S - step_nom) * f_nom / f_hi               # the longest true interval that still reads under the threshold
+    t_rise = max(r_up * c_rst * math.log(1.0 / (1.0 - F["vih_k"])) for r_up in pullups)   # NRST from 0 V to VIH (MODEL, slowest)
+    budget = r_max - t_resp - F["tctr"] - t_ct_open - t_rise         # left for VCAP's fall to the release and the boot (ASSUMPTION)
+    caught = r_max - t_resp - F["tctr"] - t_rise                     # a hold under this, less those two, reads HOLD FAILED
+    w148_budget = T_HOLD_CHECK_W148 / (1 + RTC_TOL_W148) - t_ct_open - t_resp
     w("   5e. ITS OWN FAULTS AND THEIR SELF-TEST (SESSION W140-3 as restated by W145-2, W145-3 and W148-3; the firmware row is FW-B23,")
     w("       drafted in apply_hw_fw_contract_hoe.py for L4A-61; nothing applied): at every start and then once every %.0f s, at HCLK" % T_TEST_S)
     w("       at most 144 MHz, the controller clears the reset flags (\"%s\", RM0433 8.4.4, p.332), keeps a marker and the RTC's" % q_rmvf)
@@ -996,13 +1067,32 @@ def main():
     w("       unit in service, W144's F11); still running, it writes Scale 3 within %.0f us (W145-2) and reports MONITOR FAILED in its" % T_RESTORE_US)
     w("       state frame. After the reset, PASSED needs the marker and RCC_RSR equal to Table 56's row 2, 'Pin reset (NRST)' (RM0433 8.4.4,")
     w("       p.332): %s set, %s clear (W145-3)," % (" and ".join(k for k in hdr if pat2[k]), ", ".join(k for k in hdr if not pat2[k])))
-    w("       and (W148-3) the RTC's time from the write to the restart at least %.0f ms: half the hold's printed %.0f ms minimum, %.1f times" % (
-        T_HOLD_CHECK_S * 1e3, hold[0] * 1e3, T_HOLD_CHECK_S / F["t3_td"][(dm.HOLD_PART[7], "open")][2]))
-    w("       the %.1f ms maximum TI prints with CT open (7.6), so a lost CT pull-up reads HOLD FAILED on an RTC clock within +-%.0f %%;" % (
-        F["t3_td"][(dm.HOLD_PART[7], "open")][2] * 1e3, RTC_TOL * 100))
-    w("       the restart after a reset adds NRST's rise and the boot, which no held page prints: the check sees a CT-open hold while they")
-    w("       stay under %.1f ms (ASSUMPTION; V-B24 reads them on the first article)" % ((T_HOLD_CHECK_S / (1 + RTC_TOL) - F["t3_td"][(dm.HOLD_PART[7], "open")][2]
-                                                                                  - t_resp) * 1e3))
+    w("       and (W148-3, restated by SESSION W152-1 on W150's F4) the RTC's time from the write to the restart at least %.0f ms, else HOLD" % (
+        T_HOLD_CHECK_S * 1e3))
+    w("       FAILED. The time base: the RTC clocked by the LSI, which a pin reset does not stop: RCC_BDCR, \"%s\" (RM0433 8.7.26," % F["rtc_q"]["bdcr"])
+    w("       p.426), RTCSEL \"%s\"; LSIRDY \"%s\" (8.7.27, p.428); never the HSE: \"%s\" (p.426);" % (
+        F["rtc_q"]["lsisel"], F["rtc_q"]["lsirdy"], F["rtc_q"]["hse"]))
+    w("       board B draws no LSE crystal (each controller's PC14 and PC15, pins 8 and 9, open: section 8 reads them). The LSI runs at %.1f to" % (f_lo / 1e3))
+    w("       %.1f kHz over TJ -40 to 125 C, %.0f kHz typical (DS12110 Rev 11 Table 136, p.233, PRINTED); the sub-second counter runs on" % (f_hi / 1e3, f_nom / 1e3))
+    w("       ck_apre: \"%s\" (46.3.4, p.1910), \"%s\" (46.6.5, p.1932; RTC_PRER: \"%s\"), with PREDIV_A + 1" % (
+        F["rtc_q"]["apre"], F["rtc_q"]["prer"], F["rtc_q"]["sysrst"]))
+    w("       at most %d: a step of at most %.3f ms read at the typical %.0f kHz (W150: the 1 ms resolution and the +-%.0f %% clock were too coarse)" % (
+        RTC_APRE, step_nom * 1e3, f_nom / 1e3, RTC_TOL_W148 * 100))
+    w("         a healthy hold (at least %.0f ms, PRINTED) reads at least %.0f ms x %.1f / %.0f kHz - %.3f ms = %.3f ms: over the %.0f ms threshold" % (
+        hold[0] * 1e3, hold[0] * 1e3, f_lo / 1e3, f_nom / 1e3, step_nom * 1e3, pass_min * 1e3, T_HOLD_CHECK_S * 1e3))
+    w("         a restart reads under %.0f ms while its true interval is under (%.0f - %.3f) ms x %.0f / %.1f kHz = %.3f ms; that interval is" % (
+        T_HOLD_CHECK_S * 1e3, T_HOLD_CHECK_S * 1e3, step_nom * 1e3, f_nom / 1e3, f_hi / 1e3, r_max * 1e3))
+    w("         t_resp %.1f us, the TPS37's release tCTR(no cap) at most %.0f us (p.9), the hold, NRST's rise to VIH %.1f x VDD (Table 147, p.241)" % (
+        t_resp * 1e6, F["tctr"] * 1e6, F["vih_k"]))
+    w("         at most %.3f ms (MODEL: from 0 V through 10 k at +5 %% (ASSUMPTION) and RPU %.0f kOhm into 100 nF at +20 %%), VCAP's fall to the" % (
+        t_rise * 1e3, F["rpu"][2] / 1e3))
+    w("         release and the boot to the RTC's read (with its shadow registers' resynchronisation): a lost CT pull-up (the hold at most")
+    w("         %.1f ms, 7.6) reads HOLD FAILED while those last two stay under %.3f ms (ASSUMPTION; V-B24 reads them on the first article)," % (
+        t_ct_open * 1e3, budget * 1e3))
+    w("         and any hold degraded under %.3f ms less them reads HOLD FAILED too (W150's F4: a component fault outside printed limits)" % (caught * 1e3))
+    w("         W148-3's 7 ms on an RTC within +-%.0f %% at 1 ms resolution left %.3f ms ('3.6 ms') with tCTR, VCAP's fall and the resolution left" % (
+        RTC_TOL_W148 * 100, w148_budget * 1e3))
+    w("         out: withdrawn by W152-1. A start that follows a test (the marker set) evaluates it and does not test again (W150's F6)")
     w("       PINRSTF alone is not enough: \"%s\", \"%s\" (8.7.39, p.450), and Table 56 sets it in the rows %s too" % (q_pin, q_pin2, "; ".join(pin_too)))
     w("       (W144's F3). Scale 1 (VCAP %.2f V and up) is over the trip's top by %.1f %%: the test drives the whole real path, VCAP to divider to" % (vc["VOS1"][0], od1 * 100))
     w("       SENSE1 to RESET1 to MR to RESET to NRST. One supervisor tests at a time and only while the other two serve (IOHA row 3); the peers")
@@ -1020,7 +1110,7 @@ def main():
               ("the hold stage's RESET stuck released, or R812 open", "never resets", "the next test"),
               ("the hold stage's RESET stuck low, or MONOUT at ground", "held in reset", "at once"),
               ("the hold stage unpowered (VDD open)", "RESET undefined under its VPOR", "the next test, or at once if it rests low"),
-              ("the CT pull-up R813 open (CT floating)", "the hold falls to CT open's 0.7 to 1.3 ms", "the next test's hold timing (W148-3)"),
+              ("the CT pull-up R813 open (CT floating)", "the hold falls to CT open's 0.7 to 1.3 ms", "the next test's hold timing (W148-3, W152-1)"),
               ("CT shorted to ground", "TI's latch mode (9.1.3): held after a trip", "at once (the start's own test latches it)"),
               ("a firmware that skips the test", "a latent monitor fault stays latent", "the peers, within 2 x %.0f s" % T_TEST_S)]
     for f_, eff, det in faults:
@@ -1075,8 +1165,45 @@ def main():
     w("         %.4f mm3 of silicon heated adiabatically; ST prints no die size" % vol_si)
     # 5g the reset loop (W144's F1), on the hold stage (W148-1)
     duty = t_resp / hold[0]
-    rise = duty * p_ex * F["ja"]["LQFP100"]
-    z_loop = (dT - rise) / p_ex
+    rise_ol = duty * p_ex * F["ja"]["LQFP100"]                       # W148's open-loop rise (the step held at the bounded state)
+    z_loop_ol = (dT - rise_ol) / p_ex
+    i0 = F["vos0_en"][3]
+
+    def loop_point(dd, a=air):
+        """the reset loop's mean junction (W150's F2): TJ = a + theta x V x ((1 - d) x I(TJ) + d x I0) on T10's own temperature-dependent
+        current I(TJ) (l9t5_t10.py's mcu_i, its leakage feedback), at the rail's top; None when no point lies at or under 125 C"""
+        g = lambda tj: a + PT10["theta_mcu"] * CORNER * ((1 - dd) * T.mcu_i(PT10, QT10, "V", tj) + dd * i0) - tj
+        if g(125.0) > 0:
+            return None
+        lo_, hi_ = a, 125.0
+        for _ in range(100):
+            mid = 0.5 * (lo_ + hi_)
+            if g(mid) > 0:
+                lo_ = mid
+            else:
+                hi_ = mid
+        return hi_, T.mcu_i(PT10, QT10, "V", hi_)
+
+    def loop_limit(dd, a=air):
+        """S1's limit at t_resp from the loop's mean state: (105 - TJ) / (V x (I0 - I(TJ))), the step taken from that state; None when
+        the mean itself is at or over 105 C"""
+        pt = loop_point(dd, a)
+        return None if pt is None or pt[0] >= 105.0 else (105.0 - pt[0]) / (CORNER * (i0 - pt[1]))
+
+    def air_zero(dd):
+        """the local air at which the loop's mean junction reaches 105 C (MODEL), by bisection over the air"""
+        lo_, hi_ = 40.0, 100.0
+        for _ in range(100):
+            mid = 0.5 * (lo_ + hi_)
+            pt = loop_point(dd, mid)
+            if pt is not None and pt[0] < 105.0:
+                lo_ = mid
+            else:
+                hi_ = mid
+        return lo_
+    tj_loop, i_loop = loop_point(duty)
+    rise = tj_loop - tbc
+    z_loop = loop_limit(duty)
     duty_w145 = t_resp_w145 / (t_resp_w145 + tctr_min)
     rise_w145 = duty_w145 * CORNER * (F["vos0_en"][3] - ibc) * F["ja"]["LQFP100"]
     w("   5g. THE RESET LOOP (W144's F1): an image that enters VOS1 or VOS0 at every boot. Each cycle it is in VOS1 or VOS0 for at most t_resp")
@@ -1086,13 +1213,85 @@ def main():
         t_fall_min * 1e6, F["t3_tmrw"][0]))
     w("         asserts and is held for tD after MR returns high, at least %.0f ms (7.6, PRINTED), for ANY length of the fault: TI's note B" % (hold[0] * 1e3))
     w("         starts the counter when MR is high; read by note C instead (the counter from RESET's assertion), the controller is still out of")
-    w("         VOS1 and VOS0 for at least tD less t_resp. Either way the duty is at most t_resp / tD(min) = %.1f / %.0f us = %.3f %%; the" % (
+    w("         VOS1 and VOS0 for at least tD less t_resp. Either way the duty is at most t_resp / tD(min) = %.1f / %.0f us = %.3f %%, for every" % (
         t_resp * 1e6, hold[0] * 1e6, duty * 100))
-    w("         average rise at most %.3f %% x %.4f W x %.1f C/W = %.3f K (MODEL); S1's limit at t_resp becomes (%.2f - %.3f) / %.4f = %.2f K/W" % (
-        duty * 100, p_ex, F["ja"]["LQFP100"], rise, dT, rise, p_ex, z_loop))
-    w("         (the average plus one pulse's own rise, a superposition MODEL). No fault-length condition: S5 is RETIRED (section 9)")
+    w("         excursion the monitor registers (W150's F3: an excursion it does not register never reaches the hold, 5i)")
+    w("         the average rise (W150's F2, MODEL): with T10's own temperature-dependent current (l9t5_t10.py's mcu_i, its leakage feedback),")
+    w("         the loop's mean junction solves TJ = %.2f C + %.1f C/W x %.4f V x ((1 - %.5f) x I(TJ) + %.5f x %.3f A): %.2f C at I = %.4f A," % (
+        air, PT10["theta_mcu"], CORNER, duty, duty, i0, tj_loop, i_loop))
+    w("         a rise of %.3f K over the bounded state's %.2f C (W148's %.3f K held the step at the bounded state and left the feedback out)" % (
+        rise, tbc, rise_ol))
+    w("         S1's limit at t_resp becomes (105 - %.2f) / (%.4f V x (%.3f - %.4f) A) = %.2f K/W, the step taken from the loop's mean state" % (
+        tj_loop, CORNER, i0, i_loop, z_loop))
+    w("         (the average plus one pulse's own rise, a superposition MODEL; W148's %.2f K/W withdrawn). No fault-length condition on a registered" % z_loop_ol)
+    w("         excursion: S5 is RETIRED (section 9)")
     w("         W145's CTR1 hold, withdrawn (5d): duty %.3f %% and %.3f K at its t_resp %.1f us, CONDITIONAL on TI's full discharge (S5)" % (
         duty_w145 * 100, rise_w145, t_resp_w145 * 1e6))
+    # U-02's local air against S1's limits (W150's F1): each limit as a function of the local air, and the two airs where they end
+    air_rows = []
+    for a_ in (air, 77.0, 78.0, 79.0):
+        tb_a, ib_a = bpoint(T, PT10, QT10, CORNER, a_)
+        air_rows.append((a_, tb_a, (105.0 - tb_a) / (CORNER * (i0 - ib_a)) if tb_a < 105.0 else None, loop_limit(duty, a_),
+                         (125.0 - tb_a) / (CORNER * (i_v1[t_v1] - ib_a))))
+    air_loop0 = air_zero(duty)
+    lo_, hi_ = 40.0, 100.0                       # W150's reading: the loop's open-loop rise added to the bounded state
+    for _ in range(100):
+        mid = 0.5 * (lo_ + hi_)
+        pt = bpoint(T, PT10, QT10, CORNER, mid)
+        if pt is not None and pt[0] + duty * CORNER * (i0 - pt[1]) * F["ja"]["LQFP100"] < 105.0:
+            lo_ = mid
+        else:
+            hi_ = mid
+    air_loop0_ol = lo_
+    lim = lambda z: "%5.2f K/W" % z if z is not None else "     none"
+    w("       U-02's LOCAL AIR AND S1's LIMITS (W150's F1; MODEL on T10's model at the rail's top): the limits above are read at %.2f C" % air)
+    w("       local air, the case's (L4-E12 E5); above it each one falls:")
+    w("         local air   bounded state   S-c, VOS0 (105 C)   S-k, the loop (105 C)   S-d, VOS1 (125 C)")
+    for a_, tb_a, lc, lk, ld in air_rows:
+        w("         %6.2f C    %7.2f C            %s             %s              %s" % (a_, tb_a, lim(lc), lim(lk), lim(ld)))
+    w("         at %.2f C local air the loop's mean junction reaches 105 C and S-k leaves no limit (W150 read about 79.0 C on the open-loop" % air_loop0)
+    w("         rise: %.2f C here); at %.2f C the bounded state itself reaches 105 C and no ending of any speed suffices for a VOS0 entry (5f)." % (
+        air_loop0_ol, air105_c))
+    w("         Condition C2 is therefore a pair: %.2f C for S1's limits as written, and above it the limit of this table at the T-H1 mock-up's" % air)
+    w("         measured air; no VOS0 or loop limit is left at or over %.2f C, none for a VOS0 entry at or over %.2f C" % (air_loop0, air105_c))
+    # 5i the self-reset loop (W148-F4, W150's F3): an excursion the monitor does not register
+    lo_, hi_ = 0.0, 0.5
+    for _ in range(100):
+        mid = 0.5 * (lo_ + hi_)
+        pt = loop_point(mid)
+        if pt is not None and pt[0] < 105.0:
+            lo_ = mid
+        else:
+            hi_ = mid
+    d_star = lo_
+    d_ill = DWELL_SCALE_US / (DWELL_SCALE_US + RESTART_SCALE_US)
+    pt_ill = loop_point(d_ill)
+    q_20 = quote(t329, "The pulse generator guarantees a minimum reset pulse duration of 20 %ss for each internal reset source." % chr(0x3BC),
+                 "RM0433 8.4.2 p.329")
+    w("   5i. THE SELF-RESET LOOP (W148-F4, given its own row by W150's F3): an image that enters VOS1 or VOS0 and resets itself (a software")
+    w("       or watchdog reset, RM0433 8.4.2, p.329) before the TPS37 registers the excursion. RESET1 never asserts, so the hold stage never")
+    w("       runs; the cycle is the image's own: a dwell under the monitor's registration time (unprinted below 20 % overdrive, S2), then the")
+    w("       internal reset (\"%s\", p.329), NRST's recharge after the" % q_20)
+    w("       pulse generator's unprinted pull, and the boot, none with a printed upper or lower figure but the 20 us. It is a VOS1 or VOS0")
+    w("       state with a printed current (Table 119), not S-g's kind: W148-F4's classification under row R-2 is withdrawn (row R-4)")
+    w("       for scale only (MODEL on T10's model, credited nothing): the loop's mean junction reaches 105 C at a duty of %.2f %% at %.2f C air," % (
+        d_star * 100, air))
+    w("         so %.0f us dwells (TPS37 tCTS's printed maximum at 20 %% overdrive, used as a size, not a bound) would have to come no oftener" % DWELL_SCALE_US)
+    w("         than every %.0f us; at %.0f us every %.0f us (W150's illustration) the duty is %.2f %% and the mean %.2f C, %.2f K over the" % (
+        DWELL_SCALE_US / d_star, DWELL_SCALE_US, DWELL_SCALE_US + RESTART_SCALE_US, d_ill * 100, pt_ill[0], pt_ill[0] - tbc))
+    w("         bounded state (W150's open-loop reviewer MODEL: about 7.6 %, about 4.5 K): the whole headroom")
+    w("       what decides it: whether every excursion an image can make is registered. After the image's own reset the regulator returns to")
+    w("       VOS3 (p.263) and VCAP falls from VOS1's band to the trip on the controller's own load and its two 2.2 uF; no held page prints")
+    w("       that fall, and while VCAP stays over the trip SENSE1 still sees the excursion. If the least excursion (the dwell plus that fall)")
+    w("       is longer than the longest the monitor fails to register, every self-reset becomes the monitor's own loop (S-k, held %.0f ms)" % (
+        hold[0] * 1e3))
+    w("       S2 EXTENDED (SESSION W152-3): on the three supervisors of S2 at 76 C and at -40 C, (a) the TPS37's shortest registered")
+    w("         excursion: VCAP's own ramp to VOS1's band and to VOS0's, cut short by a software reset at stepped delays after the Scale 1")
+    w("         write, the longest excursion that leaves RESET1 released; (b) VCAP's fall after a reset: the time from the reset to VCAP")
+    w("         under the trip's least %.4f V; (c) 1000 self-reset cycles per supervisor and temperature at the image's earliest reset. Pass:" % lo)
+    w("         the least excursion of (b) at least %.0fx the longest unregistered excursion of (a), and in (c) every cycle asserts RESET1 and" % REG_MARGIN)
+    w("         holds NRST low at least %.0f ms (zero escapes in 3000 per temperature). Fail: the row stays OPEN with a design task (row R-4)" % (
+        hold[0] * 1e3))
     # 5h the hold, compared (W148): at most three materially different approaches, each on its printed minimum
     tps5 = PDFT.pdf_text(ROOT, TPS38, ["-layout", "-f", "5", "-l", "5"], PDFTEXT, REC)
     i38 = float(need(tps5, r"I RESET\s+RESET pin current\s+[\d.]+\s+(\d+)\s+mA", "TPS3808 6.3 I RESET").group(1)) * 1e-3
@@ -1100,8 +1299,8 @@ def main():
     t_fall_a = slowest(rs38, F["t38_vol"][0], F["t38_vol"][1])
     t_resp_a = F["tcts"][1] + float(F["t38_tpd_mr"][0]) * 1e-9 + t_fall_a + F["vnf"]
     duty_a = t_resp_a / F["t38_td"][0]
-    rise_a = duty_a * p_ex * F["ja"]["LQFP100"]
-    z_a = (dT - rise_a) / p_ex
+    rise_a = loop_point(duty_a)[0] - tbc                             # with T10's feedback, as HS-1b's (W150's F2)
+    z_a = loop_limit(duty_a)
     ipk_a = rail[1] / (rs38 * 0.99)
 
     def window_fit(nom, tolp):
@@ -1192,35 +1391,48 @@ def main():
          ("S-c", "a VOS0 entry by any firmware", "105 C", "ended within t_resp %.1f us; needs ZthJA(t_resp) <= %.2f K/W" % (t_resp * 1e6, z_need),
           "CONDITIONAL (S1, S2; C2, C3)"),
          ("S-d", "a VOS1 entry by any firmware, the self-test included", "125 C", "ended within t_resp; needs ZthJA(t_resp) <= %.2f K/W" % z_need1,
-          "CONDITIONAL (S1, S2)"),
+          "CONDITIONAL (S1, S2; C2, C3)"),
          ("S-e", "the self-test with a dead monitor", "125 C", "at most %.1f us (firmware); needs ZthJA(%.1f us) <= %.2f K/W" % (t_dead * 1e6, t_dead * 1e6, z_need1),
-          "CONDITIONAL (S1)"),
+          "CONDITIONAL (S1; C2)"),
          ("S-f", "VOS2 with VCAP under the trip's top (%.2f to %.4f V)" % (vc["VOS2"][0], hi), "125 C", "not surely ended by the monitor",
           "OPEN (row R-1, HO-E-REGISTER-ROWS.md)"),
          ("S-g", "VOS3 above its printed 200 MHz", "125 C", "no printed current", "OPEN (row R-2, HO-E-REGISTER-ROWS.md)"),
          ("S-h", "power-up before the monitor is valid", "105 C", "NRST held under both UVLOs, then tD (>= %.0f ms) after MR rises (5d)" % (hold[0] * 1e3),
           "CONDITIONAL (S4)"),
          ("S-i", "a latent monitor fault, then a firmware VOS0 entry", "105 C", "a double fault; window at most %.0f s" % T_TEST_S, "RESIDUAL (single-fault)"),
-         ("S-k", "the reset loop: an image entering VOS1 or VOS0 at every boot", "105 C",
-          "duty <= %.3f %%, rise <= %.3f K, any fault length; ZthJA(t_resp) <= %.2f K/W" % (duty * 100, rise, z_loop), "CONDITIONAL (S1, S2)"),
+         ("S-k", "the reset loop: every excursion the monitor registers, at every boot", "105 C",
+          "duty <= %.3f %%, rise <= %.3f K with T10's feedback, any fault length; ZthJA(t_resp) <= %.2f K/W" % (duty * 100, rise, z_loop),
+          "CONDITIONAL (S1, S2; C2, C3)"),
          ("S-l", "a latent hold fault (CT's pull-up lost), then the reset loop", "105 C", "a double fault; W148-3's hold timing, window at most %.0f s" % T_TEST_S,
           "RESIDUAL (single-fault)"),
-         ("S-j", "any current up to the limiter's %.4f A" % ios[1], "as above", "a VOS3 state is S-a, S-b or S-g; a VOS1 or VOS0 state S-c, S-d or S-k",
-          "no state outside S-a to S-l")]
+         ("S-m", "the self-reset loop: an image resetting itself before the monitor registers (W148-F4)", "105 C",
+          "no printed cadence; S-k's if every excursion registers (5i: S2 extended)", "CONDITIONAL (S2 extended, S1; C2, C3; row R-4)"),
+         ("S-j", "any current up to the limiter's %.4f A" % ios[1], "as above", "a VOS3 state is S-a, S-b or S-g; a VOS1 or VOS0 state S-c, S-d, S-k or S-m",
+          "no state outside S-a to S-m")]
     for row in S:
         w("   %-4s %-60s %-9s %-80s %s" % row)
     w("   THE CONDITIONS OF THE FOCUSED CHECK (W144, L4A-100), RESTATED:")
     w("     C1 (F1): the reset hold drafted, composed, read and mutated, with the reset-loop row: W145's CTR1 hold (CONDITIONAL on S5) replaced")
-    w("        by the hold stage (SESSION W148-1: 5d, 5g, 5h, section 8), whose printed minimum bounds the loop for any fault length: S5 retired")
-    w("     C2 (F2): U-02's local air at the supervisors at or under %.2f C (MODEL at %.4f V; W144's linear %.1f C)" % (air105_c, CORNER, air105_lin))
+    w("        by the hold stage (SESSION W148-1: 5d, 5g, 5h, section 8), whose printed minimum bounds the loop for any fault length of every")
+    w("        excursion the monitor registers: S5 retired; the loop's rise with T10's feedback, %.3f K, S1's loop limit %.2f K/W (W150's F2);" % (rise, z_loop))
+    w("        an excursion the monitor does not register is S-m's (W150's F3)")
+    w("     C2 (F2; W150's F1), a pair: (a) S1's limits as written hold at U-02's local air %.2f C, the case's, and above it S1 is read against" % air)
+    w("        5g's table at the T-H1 mock-up's measured air; (b) at or over %.2f C the reset loop leaves no limit (W150: about 79.0 C on the" % air_loop0)
+    w("        open-loop rise), and at or over %.2f C no ending of any speed suffices for a VOS0 entry (MODEL at %.4f V; W144's linear %.1f C)" % (
+        air105_c, CORNER, air105_lin))
     w("     C3 (F4): revision V fitted (L9T5-D7): the trip window rests on Table 112's rows on DS12110's '(rev V)' pages (p.209); rev Y's Table 14")
-    w("        (p.105) prints no core voltage per scale, and no held page prints rev X's; a rev X part also needs its VCAP per scale (S3)")
-    w("     C4 (F8, F11): S1 at one supply corner (at most %.2f K/W at t_resp, %.2f K/W less the loop's rise); S2 on the real VCAP ramp, the" % (z_need, z_loop))
-    w("        self-test's window timed from the Scale 1 write, now through the hold stage; S3 and S4 as written; S5 retired (W148-1)")
+    w("        (p.105) prints no core voltage per scale, and no held page prints rev X's; a rev X part also needs its VCAP per scale (S3). The")
+    w("        codes (ES0392 Rev 15 Table 2, p.1, W150's F6): marking V, REV_ID %s; X, %s; Y and W, %s, which CON-017 (5) excludes" % (
+        F["revid"]["V"], F["revid"]["X"], F["revid"]["Y, W"]))
+    w("     C4 (F8, F11): S1 at one supply corner (at most %.2f K/W at t_resp, %.2f K/W from the loop's mean state); S2 on the real VCAP ramp," % (
+        z_need, z_loop))
+    w("        the self-test's window timed from the Scale 1 write, now through the hold stage, and extended for S-m (W152-3, 5i); S3 and S4")
+    w("        as written; S5 retired (W148-1)")
     w("     C5 (F3, F6): the register rows, HO-E-REGISTER-ROWS.md (R-1 S-f, R-2 S-g, R-3 the self-test's firmware row FW-B23, drafted in")
-    w("        apply_hw_fw_contract_hoe.py)")
+    w("        apply_hw_fw_contract_hoe.py, R-4 S-m, the self-reset loop: W150's F3)")
     w("   HO-E's ACCEPTANCE: CONDITIONAL. The served state holds 105 C; every VOS0 state the protection admits is ended by the drafted monitor,")
-    w("   and whether the junction stays inside 105 C during the ending rests on S1 and S2 (in a reset loop too) and on C2 and C3.")
+    w("   and whether the junction stays inside 105 C during the ending rests on S1 and S2 (in a reset loop too; S2 extended for an excursion")
+    w("   the monitor may not register, S-m) and on C2 and C3.")
     w("   Nothing is upgraded: cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand; this task closes no cx46 item before")
     w("   its own check's targeted recheck (L4A-100).")
     w("")
@@ -1235,8 +1447,8 @@ def main():
     w("       S5), so the selection accepts no risk a measurement cannot remove: amendment 1's supplier tasks, not an owner's risk acceptance")
     w("     ruled_by: W140 (Claude), MESHSAT-1357; ruled_on: 7 October 2026; reversed_by: none")
     w("     to reverse: drop apply_gen_sch_b_vcoremon.py; HO-E returns to REMAINING ENGINEERING with the owner item below")
-    w("     end condition: S1 reads the controller's ZthJA at t_resp over %.2f K/W on board B (%.2f K/W less the loop's rise); or S2 reads" % (z_need, z_loop))
-    w("       the sense delay at VOS0's overdrive long enough that S1's reading fails at the longer interval; or two negative independent")
+    w("     end condition: S1 reads the controller's ZthJA at t_resp over %.2f K/W on board B (%.2f K/W in the reset loop, from its mean state, W152-2); or S2" % (z_need, z_loop))
+    w("       reads the sense delay at VOS0's overdrive long enough that S1's reading fails at the longer interval; or two negative independent")
     w("       checks of this selection (W145's 'S5 fails' clause retired with S5 by W148-1)")
     w("   W145's decisions (each authority: SESSION, under the same rules; ruled_by: W145 (Claude), MESHSAT-1357; ruled_on: 7 October 2026;")
     w("   reversed_by: none unless named below; authority_why: an engineering value or method inside the drafted circuit and its rows, no")
@@ -1274,9 +1486,10 @@ def main():
                    i_pk * 1e3, F["t3_irec"] * 1e3),
                "with %.0f %% margin and whose held current stays over its recommended %.1f mA minimum" % ((1 - i_pk / F["t3_irec"]) * 100, F["t3_irec_min"] * 1e3),
                "750 Ohm with 5d's fall re-read", ""),
-              ("W148-3", "FW-B23 times the hold: PASSED also needs the RTC's time from the Scale 1 write to the restart at least %.0f ms" % (T_HOLD_CHECK_S * 1e3), "",
+              ("W148-3", "FW-B23 times the hold: PASSED also needs the RTC's time from the Scale 1 write to the restart at least %.0f ms" % (
+                   T_HOLD_CHECK_W148 * 1e3), "(its values RESTATED by W152-1: %.0f ms on the LSI-clocked RTC; the check itself stands)" % (T_HOLD_CHECK_S * 1e3),
                "a lost CT pull-up (the hold at %.1f to %.1f ms) is found by the next test on an RTC clock within +-%.0f %%, so S-l is a double fault" % (
-                   F["t3_td"][(dm.HOLD_PART[7], "open")][0] * 1e3, F["t3_td"][(dm.HOLD_PART[7], "open")][2] * 1e3, RTC_TOL * 100),
+                   F["t3_td"][(dm.HOLD_PART[7], "open")][0] * 1e3, F["t3_td"][(dm.HOLD_PART[7], "open")][2] * 1e3, RTC_TOL_W148 * 100),
                "bounded by the test interval, not a latent single fault", "drop the check; S-l back to inspection", ""),
               ("W148-4", "the TPS3703 sheet's fetch line in v2/docs/records/l9t5hoe/fetch_held_back.py, a folder of its own", "",
                "record l9t5's own fetch script is pinned by sha256 in l9t5_a1.py and l9t5_f01.py, whose outputs other records and pages pin;",
@@ -1289,6 +1502,42 @@ def main():
         w("             why: %s" % d_[3])
         w("               %s" % d_[4])
         w("             to reverse: %s%s" % (d_[5], (" " + d_[6]) if d_[6] else ""))
+    w("   W152's decisions (on W150's targeted recheck, its should-fix F1 to F3 and notes F4 to F6; each authority: SESSION, under the owner's")
+    w("   standing rule of 26 September 2026 and his ruling of 21 September 2026; ruled_by: W152 (Claude), MESHSAT-1357; ruled_on: 7 October")
+    w("   2026; reversed_by: none; authority_why: an engineering value, a method or a test row inside the drafted circuit and its rows; no")
+    w("   line a protected class holds, no money, nothing bought, no change to what the kit is claimed to be, no residual risk accepted):")
+    dec152 = [("W152-1", ["FW-B23's hold check on the RTC clocked by the LSI (RTCSEL = LSI, never the HSE), PREDIV_A + 1 at most %d, threshold %.0f ms" % (
+                   RTC_APRE, T_HOLD_CHECK_S * 1e3)],
+               ["W150's F4: the LSI's band is printed (%.1f to %.1f kHz, Table 136) and a pin reset stops neither it nor the RTC (p.426, p.428);" % (
+                   f_lo / 1e3, f_hi / 1e3),
+                "the HSE is lost at a pin reset (p.426); board B draws no LSE crystal; a healthy hold reads at least %.3f ms, and %.3f ms are" % (
+                    pass_min * 1e3, budget * 1e3),
+                "left for VCAP's fall and the boot, against W148-3's %.3f ms at +-%.0f %% and 1 ms" % (w148_budget * 1e3, RTC_TOL_W148 * 100)],
+               ["an LSE crystal per supervisor (32.768 kHz on PC14 and PC15 with its load capacitors, a part with its maker's tolerance), the",
+                "threshold re-read; end condition: V-B24 reads the RTC stopped by NRST, or the unprinted terms over %.3f ms" % (budget * 1e3)]),
+              ("W152-2", ["S1's loop limit read from the loop's mean state on T10's temperature-dependent current: %.2f K/W (rise %.3f K)" % (z_loop, rise)],
+               ["W150's F2: the record's own T10 model carries the controller's leakage at its junction; W148's open-loop %.3f K left it out" % rise_ol],
+               ["a measured S1 at the loop's duty replaces the model"]),
+              ("W152-3", ["the self-reset loop its own row S-m and register row R-4, CONDITIONAL on S2 extended (5i): 1000 cycles per supervisor",
+                          "and temperature with zero escapes, the least excursion at least %.0fx the longest unregistered one" % REG_MARGIN],
+               ["W150's F3: W148-F4's case reaches no hold and has a printed current, so it is not S-g's; three specimens carry no",
+                "population figure, so a margin is set"],
+               ["a statistical margin from S2's own data"]),
+              ("W152-4", ["S-e carries C2 as S-c, S-d and S-k do: its %.2f K/W is read at the case's air" % z_need1],
+               ["W150's F1 applied to every S1 limit (5g's table prints S-d's; S-e's is the same step)"], ["none needed"]),
+              ("W152-5", ["the reader reads FAIL on a part not fitted: ohms() refuses an empty value and mon_check names an unfitted series",
+                          "resistor; the tenth mutation, R812 not fitted"],
+               ["W150's F5: the reader raised IndexError on R812 not fitted (it failed closed, but did not read FAIL)"], ["none needed"])]
+    for id_, dl, wl, rl in dec152:
+        w("     %-7s %s" % (id_, dl[0]))
+        for x_ in dl[1:]:
+            w("             %s" % x_)
+        w("             why: %s" % wl[0])
+        for x_ in wl[1:]:
+            w("               %s" % x_)
+        w("             to reverse: %s" % rl[0])
+        for x_ in rl[1:]:
+            w("               %s" % x_)
     w("   the owner item, PREPARED AND NOT RAISED (it would be raised only if the selection's end condition is met): 'The I/O supervisors'")
     w("     STM32H743 cannot hold its 105 C VOS0 limit in the case's air, and no hardware means bars VOS0. Either accept that the 105 C limit")
     w("     during a firmware fault rests on the controller's measured transient thermal response, or change the supervisor part to one whose")
@@ -1347,7 +1596,7 @@ def main():
                 ("SENSE1 and SENSE2 exchanged (the overvoltage channel on the rail)", [(("U810", "2"), ("U810", "3"))]),
                 ("the monitor on a peer's rail", [(("U810", "1"), ("U820", "1"))]),
                 ("RESET1 on ground and the ground pin on the output (pins 4 and 10 exchanged)", [(("U810", "4"), ("U810", "10"))])]
-        w("   the mutations (each must FAIL the reading; W140's six, W145's seventh on the hold that replaced its capacitor, W148's two):")
+        w("   the mutations (each must FAIL the reading; W140's six, W145's seventh on the hold that replaced its capacitor, W148's two, W152's one):")
         mres = []
         for i, (lab, sw) in enumerate(muts):
             q = D.mutate(net1, d, "hoem%d" % i, sw)
@@ -1360,14 +1609,15 @@ def main():
                  "hoembyp", None, [(("U810", "4"), ("U811", "4"))]),
                 ("a hold shorter than its printed minimum (R813 not fitted: CT open, the delay %.1f to %.1f ms, under %.0f ms)" % (
                     F["t3_td"][(dm.HOLD_PART[7], "open")][0] * 1e3, F["t3_td"][(dm.HOLD_PART[7], "open")][2] * 1e3, hold[0] * 1e3),
-                 "hoemshort", "R813", None)):
+                 "hoemshort", "R813", None),
+                ("the hold stage's series resistor not fitted (R812: its RESET reaches no NRST; W150's F5, the tenth mutation)", "hoemrs", "R812", None)):
             q = remove_part(net1, d, tag_, ref_) if ref_ else D.mutate(net1, d, tag_, sw_)
             nlq = CHK.read(open(q, "rb").read())
             v_, wy_ = mon_check(nlq, F, dm)
             gone = ref_ is None or (ref_ not in nlq["comps"] and ref_ not in nlq["pins"])
             mres.append(v_ if gone else "NOT REMOVED")
             w("     %-98s %s" % (lab + ":", mres[-1]))
-            w("       its reading: %s" % ("; ".join(x for x in wy_ if "IOCA" in x or "U811" in x or "U810" in x) or "-")[:220])
+            w("       its reading: %s" % ("; ".join(x for x in wy_ if "IOCA" in x or "U811" in x or "U810" in x or (ref_ and ref_ in x)) or "-")[:220])
         dp = os.path.join(ROOT, DOCS["draft"])
         bare = os.path.join(d, "bare_gen_sch_b.py")
         shutil.copy(D.GEN["b"], bare)
@@ -1385,6 +1635,10 @@ def main():
                                  "U%d" % (811 + 10 * k), "R%d" % (813 + 10 * k), "C%d" % (816 + k))
                    for n in nl1["pins"].get(ref, {}).values()} - {"GND", "NC"}
             con.append(all(n.endswith("IOC%s" % t) or "IOC%s_" % t in n for n in dom))
+        lse_open = all(CHK.pin(nl1, "U%d" % (41 + 10 * k), p_) in (None, "NC") for k in range(3) for p_ in ("8", "9")) and all(
+            CHK.pin(nl1, "U%d" % (41 + 10 * k), "14") == "IOC%s_RST_n" % t for k, t in enumerate(TAGS))
+        w("   the controllers' PC14 and PC15 (pins 8 and 9, the LSE's oscillator pins) open on all three, so no LSE crystal is drawn and")
+        w("   FW-B23's hold check takes the LSI (5e, W152-1): %s" % ("yes" if lse_open else "NO"))
         w("   CON-004's failure domains ('own regulator branch, reset supervisor, watchdog, crystal and SWD pads'): each monitor touches its own")
         w("   controller's nets and ground only: %s; no controller pin added (CON-017's count unchanged)" % ("yes" if all(con) else "NO"))
         # the firmware row's draft (W145, F3 and F11): on scratch copies of the tree's contract, after T10's draft
@@ -1400,12 +1654,16 @@ def main():
         contract_ok = (rc_bare.returncode == 3 and b"T10 rows" in rc_bare.stderr and rc_t10.returncode == 0 and rc_one.returncode == 0
                        and rc_two.returncode == 3 and b"already applied" in rc_two.stderr and len(b23) == 1
                        and all(k in b23[0] for k in ("PINRSTF and CPURSTF set", "LPWRRSTF, WWDG1RSTF, IWDG1RSTF, SFTRSTF, PORRSTF, BORRSTF, D2RSTF and D1RSTF clear",
-                                                     "%.1f us from that write" % (t_resp * 1e6), "RMVF"))
+                                                     "%.1f us from that write" % (t_resp * 1e6), "RMVF", "RTCSEL = LSI",
+                                                     "at least %.0f ms, else HOLD FAILED" % (T_HOLD_CHECK_S * 1e3), "PREDIV_A + 1 at most %d" % RTC_APRE,
+                                                     "under %.3f ms, NRST's rise bounded at %.3f ms" % (budget * 1e3, t_rise * 1e3),
+                                                     "does not run the test again"))
                        and hashlib.sha256(open(os.path.join(ROOT, DOCS["contract"]), "rb").read()).hexdigest() == before_c)
-        w("   the firmware row FW-B23 and V-B24 (apply_hw_fw_contract_hoe.py, W145, F3 and F11) on a scratch copy of the tree's contract: alone")
-        w("     %s; after apply_hw_fw_contract_t10.py %s; a second time %s; the row carries Table 56's row 2 and the window %.1f us; the" % (
+        w("   the firmware row FW-B23 and V-B24 (apply_hw_fw_contract_hoe.py, W145, F3 and F11; W152, the hold check and the marker rule) on a")
+        w("     scratch copy of the tree's contract: alone")
+        w("     %s; after apply_hw_fw_contract_t10.py %s; a second time %s; the row carries Table 56's row 2, the window %.1f us, the LSI's %.0f ms and its budget; the" % (
             "refused (T10's rows absent)" if rc_bare.returncode == 3 else "NOT REFUSED", "applies" if rc_one.returncode == 0 else "REFUSED",
-            "refused" if rc_two.returncode == 3 else "NOT REFUSED", t_resp * 1e6))
+            "refused" if rc_two.returncode == 3 else "NOT REFUSED", t_resp * 1e6, T_HOLD_CHECK_S * 1e3))
         w("     tree's contract unchanged: %s" % ("yes" if contract_ok else "NO"))
     w("")
     # ---------------------------------------------------------------- 9. findings
@@ -1442,20 +1700,34 @@ def main():
     w("   W148-F3 (the targeted recheck, C1 to C3): read 5d's new chain (t_resp %.1f us, one TYPICAL term, tPD(MR) %.0f ns), 5g's duty on" % (
         t_resp * 1e6, F["t3_tpdmr"][0]))
     w("     TI's notes B and C read either way, and 5h's comparison; S1's limit is now read at %.1f us, not W145's %.1f us" % (t_resp * 1e6, t_resp_w145 * 1e6))
-    w("   W148-F4 (R-2's owner, a note): a loop driven by the image's own resets, each shorter than the TPS37's sense delay, is not seen by")
-    w("     the monitor and so not held: each dwell is under tCTS and its cadence rests on the image's boot time, which no held page prints;")
-    w("     it is S-g's kind (no printed current for an image outside FW-B20), not this hold's")
+    w("   W148-F4 (restated on W150's F3 by W152-3): a loop driven by the image's own resets, each excursion shorter than the monitor")
+    w("     registers, is not seen and so not held, and its cadence rests on the image's reset and boot, which no held page bounds. It is a")
+    w("     VOS1 or VOS0 state with a printed current, NOT S-g's kind (W148's classification withdrawn): its own row S-m (5i) and register")
+    w("     row R-4, CONDITIONAL on S2 extended")
     w("   W148-F5 (the coordinator): TI's TPS3808 sheet, which the brief asked fetched and held back, has been committed in the tree since 26")
     w("     September 2026 (v2/vendor/SOURCES.yaml, supervisor-tps3808g30); the fetch of 7 October 2026 is byte for byte that copy")
     w("     (inputs/SOURCES-HOE.txt); its committed status is left as it is (a publication question, not this record's)")
+    q_once = quote(page(RM, 426), "These bits can be written only one time (except in case of failure detection on LSE).", "RM0433 8.7.26 p.426, RTCSEL")
+    w("   W152-F1 (L4A-61, Layer 5): FW-B23's time base is a firmware fact: RTCSEL = LSI with RTCEN set, never the HSE (5e); RTCSEL \"%s\"" % q_once)
+    w("     (p.426), so the first image's choice holds to the next backup domain reset; PREDIV_A + 1 at most %d; any other use of the RTC" % RTC_APRE)
+    w("     shares that clock; a start with the marker set evaluates and does not test again (FW-B23, W150's F6)")
+    w("   W152-F2 (the coordinator): register row R-4 (S-m, the self-reset loop) in HO-E-REGISTER-ROWS.md; C2 restated as a pair (6)")
+    w("   W152-F3 (the T-H1 mock-up's owner): U-02's local air at the supervisors decides S1's limit by 5g's table (no loop limit at or over")
+    w("     %.2f C, no VOS0 ending at or over %.2f C); the mock-up's reading of that air is what S1 is judged against" % (air_loop0, air105_c))
     w("   S1: the controller's junction-to-ambient transient impedance on board B, three first-article supervisors at the rail's top, a junction")
     w("     step at %.4f W: pass at most %.2f K/W at %.1f us (%.2f K/W if the reset loop's %.3f K is carried), and at most %.2f K/W at the" % (
         p_ex, z_need, t_resp * 1e6, z_loop, rise, z_need1))
-    w("     VOS1 step %.4f W at %.1f us and %.1f us (or ST's transient thermal data for the LQFP100 with board B's copper)" % (p_ex1, t_resp * 1e6, t_dead * 1e6))
+    w("     VOS1 step %.4f W at %.1f us and %.1f us (or ST's transient thermal data for the LQFP100 with board B's copper); these limits hold" % (
+        p_ex1, t_resp * 1e6, t_dead * 1e6))
+    w("     at the case's %.2f C local air: above it, the limit of 5g's table at the T-H1 mock-up's measured air (C2, W150's F1)" % air)
     w("   S2: the monitor's interval on the real VCAP ramp (W144's F11; TI prints tCTS at 1 V/us and 20 % overdrive only, tPD(MR) as NOM only):")
     w("     VCAP driven by the controller's own Scale 1 write and VOS0 entry, three supervisors, the chamber at %.0f C and at -40 C: pass, from" % air)
     w("     the Scale 1 write and from VCAP crossing the trip to NRST under VIL, at most %.1f us; PWR_CSR1's ACTVOS reading Scale 3 at the" % (t_resp * 1e6))
-    w("     restart (a printed fact, F5)")
+    w("     restart (a printed fact, F5). EXTENDED for S-m (SESSION W152-3, 5i; W150's F3): the same three supervisors at 76 C and -40 C:")
+    w("     (a) the TPS37's shortest registered excursion on VCAP's own ramp to VOS1's and VOS0's bands, cut short by a software reset at")
+    w("     stepped delays after the Scale 1 write; (b) VCAP's fall after a reset to under the trip's least %.4f V; (c) 1000 self-reset" % lo)
+    w("     cycles per supervisor and temperature at the image's earliest reset: pass, the least excursion of (b) at least %.0fx the longest" % REG_MARGIN)
+    w("     unregistered one of (a), and every cycle of (c) asserting RESET1 with NRST low at least %.0f ms (zero escapes)" % (hold[0] * 1e3))
     w("   S3: VCAP in VOS3 with the divider fitted, under the controller's load steps: inside %.2f to %.2f V and under the trip's least %.4f V;" % (
         vc["VOS3"][0], vc["VOS3"][2], lo))
     w("     for a revision X part (W144's F4), its VCAP in VOS3, VOS1 and VOS0 read on three parts against Table 112's revision V rows first")
@@ -1475,6 +1747,8 @@ def main():
         ("The CPU can reset the flags by setting RMVF bit.", 332), ("Table 56. Reset source identification (RCC_RSR)", 332))}
     want2 = {"LPWRRSTF": 0, "WWDG1RSTF": 0, "IWDG1RSTF": 0, "SFTRSTF": 0, "PORRSTF": 0, "PINRSTF": 1, "BORRSTF": 0, "D2RSTF": 0, "D1RSTF": 0, "CPURSTF": 1}
     sk = [r for r in S if r[0] == "S-k"][0]
+    sm = [r for r in S if r[0] == "S-m"][0]
+    pt0 = loop_point(0.0)
     P = [("the five filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it)", copies_ok),
          ("every quoted sentence of H-1 is in its pinned text, with its page", True),
          ("no option-byte field of FLASH_OPTSR_PRG and no PWR pin of Table 32 selects a voltage scale or the supply configuration", not vos_like and not pin_scale),
@@ -1486,12 +1760,13 @@ def main():
          ("the hold stage's drain: its peak under TI's recommended maximum, its held current over the minimum, NRST held under VIL",
           i_pk <= F["t3_irec"] and i_hold_min >= F["t3_irec_min"] and v_inf_w < F["vil_k"] * rail[0]),
          ("the draft composes with and without W137's and W138's drafts, in either order, and reads DRAWN", v1_ == "DRAWN" and v2_ == "DRAWN" and v0_ == "FAIL" and same_order and not overlap and not clash),
-         ("each of the nine mutations FAILS: W140's six, the hold removed, the hold stage bypassed, a hold under its printed minimum",
-          all(v == "FAIL" for v in mres) and len(mres) == 9),
+         ("each of the ten mutations FAILS: W140's six, the hold removed, bypassed, under its printed minimum, R812 not fitted (no exception)",
+          all(v == "FAIL" for v in mres) and len(mres) == 10),
          ("the draft refuses a second application and the tree's own generator", all(refused)),
          ("each monitor stays inside its controller's failure domain", all(con)),
-         ("the VOS0 and VOS1 entries and the reset loop read CONDITIONAL, none HOLDS, and H-1 claims no hardware bar",
-          all(r[4].startswith("CONDITIONAL") for r in S[2:5]) and sk[4].startswith("CONDITIONAL") and not vos_like),
+         ("the VOS0 and VOS1 entries, the reset loop and the self-reset loop read CONDITIONAL, none HOLDS, and H-1 claims no hardware bar",
+          all(r[4].startswith("CONDITIONAL") for r in S[2:5]) and sk[4].startswith("CONDITIONAL") and sm[4].startswith("CONDITIONAL (S2 extended")
+          and not vos_like),
          ("T10's bounded state (99.6 C, 0.1570 A) is reproduced at 3.3 V by T10's own model before it is read at one supply corner",
           abs(tb3 - tj_b) < 0.05 and abs(ib3 - i_b) < 5e-5 and tbc > tb3),
          ("VOS1's step takes the largest printed 125 C row of Tables 119 to 121 (Table 120's 544 mA, W144's F7)", t_v1 == "Table 120" and abs(i_v1[t_v1] - 0.544) < 1e-9),
@@ -1509,8 +1784,17 @@ def main():
          ("no orderable TPS3703 window keeps VOS3's band inside it and trips under VOS1 (HS-2 needs a non-stock option)", not fits_stock and bool(fits_cat)),
          ("HS-1a's MR registration is TYPICAL only and HS-1b's tMR_W a MIN, and HS-1b's t_resp is the shorter (W148-1's reasons hold)",
           F["t38_tw_mr"][1] == "TYP" and F["t3_tmrw"][1] == "MIN" and t_resp < t_resp_a),
-         ("W148-3's hold check reads the printed hold as PASSED and a CT-open hold as FAILED on an RTC clock within the tolerance",
-          hold[0] * (1 - RTC_TOL) >= T_HOLD_CHECK_S > F["t3_td"][(dm.HOLD_PART[7], "open")][2] * (1 + RTC_TOL))]
+         ("W152-1's hold check on the LSI's printed band reads a healthy hold PASSED and leaves a CT-open hold's unprinted terms a budget",
+          f_lo < f_nom < f_hi and pass_min >= T_HOLD_CHECK_S and budget > 0 and t_ct_open * f_hi / f_nom + step_nom < T_HOLD_CHECK_S),
+         ("board B draws no LSE crystal (PC14 and PC15 open on all three controllers), and the HSE is lost at a pin reset (p.426)",
+          lse_open and "pin reset (NRST)" in F["rtc_q"]["hse"]),
+         ("the loop's mean is T10's model with its feedback: at zero duty it is the bounded state, and its rise exceeds the open-loop one",
+          abs(pt0[0] - tbc) < 1e-6 and rise > rise_ol and z_loop < z_loop_ol),
+         ("C2's pair: the air where the loop leaves no limit lies between the case's air and the air where the bounded state reaches 105 C",
+          air < air_loop0 < air105_c and all(r_[3] is None or r_[3] < r_[2] for r_ in air_rows)),
+         ("ES0392 Rev 15 Table 2 prints marking V as REV_ID 0x2003, X as 0x2001, Y and W as 0x1003 (C3)",
+          F["revid"] == {"V": "0x2003", "X": "0x2001", "Y, W": "0x1003"} and "revision V or X" in QT10["c17_5"]),
+         ("the 14 ms after MR is tD by reference: TPS3703 7.6 prints 'tD' in tD(MR)'s NOM column", F["t3_tdmr"] == "NOM")]
     for lab, ok in P:
         w("   %-128s %s" % (lab, "yes" if ok else "NO"))
     w("")

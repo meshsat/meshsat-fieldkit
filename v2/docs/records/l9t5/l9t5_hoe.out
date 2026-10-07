@@ -10,6 +10,7 @@ printed thermal resistances, never a measured temperature
    d6aed9d98fbf7f16 v2/vendor/ti/ti-tps37-snvsbj1e.pdf
    74d889c0f68af880 v2/vendor/ti/ti-tps3808.pdf
    cc65714774e50c97 v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf
+   effe23b2b79ec4ee v2/vendor/st/st-es0392-rev15.pdf
    774f9b5a7d962bd0 v2/docs/records/l9t5hoe/fetch_held_back.py
    824c95316ff2b5a8 v2/docs/records/l9t5/apply_gen_sch_b_vcoremon.py
    6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
@@ -29,10 +30,11 @@ printed thermal resistances, never a measured temperature
    cf216d4c1162798b v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py
    ea3b0cb6d96b12b9 v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py
    12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
-   9dfd4269d5f4b80e v2/docs/records/l9t5/apply_hw_fw_contract_hoe.py
+   e6ef73b9e7156e4e v2/docs/records/l9t5/apply_hw_fw_contract_hoe.py
    efcfdf67f1fcab83 v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
    c2dd2d711142bb57 v2/vendor/st/pdftext/st-an4938-rev7.layout.p10.txt
    54de699f9a727164 v2/vendor/st/pdftext/st-an4938-rev7.layout.p19.txt
+   446bcbeaef30a4fe v2/vendor/st/pdftext/st-es0392-rev15.layout.p1.txt
    f7f41ca2ef1f5d5e v2/vendor/st/pdftext/st-rm0433-rev8.layout.f215.l216.txt
    83afa06e5d67b1bf v2/vendor/st/pdftext/st-rm0433-rev8.layout.f262.l264.txt
    f4190c5b80dedafc v2/vendor/st/pdftext/st-rm0433-rev8.layout.f279.l280.txt
@@ -40,9 +42,13 @@ printed thermal resistances, never a measured temperature
    09e6651639f37be6 v2/vendor/st/pdftext/st-rm0433-rev8.layout.f329.l332.txt
    3d93fb62233e99ca v2/vendor/st/pdftext/st-rm0433-rev8.layout.f449.l450.txt
    7335d8c4f0c8e0e9 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p1896.txt
+   67916571f1ffc151 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p1910.txt
+   a28cb56b7e7f0452 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p1932.txt
    99f935eabcbf2be6 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p256.txt
    5b9234079e915cbb v2/vendor/st/pdftext/st-rm0433-rev8.layout.p260.txt
    fc78b4f9603a6ddb v2/vendor/st/pdftext/st-rm0433-rev8.layout.p306.txt
+   2695168eecc1a89e v2/vendor/st/pdftext/st-rm0433-rev8.layout.p426.txt
+   f6a28494a77b8a84 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p428.txt
    c549b896ed5fd25e v2/vendor/st/pdftext/st-rm0433-rev8.layout.p560.txt
    2c5d1288b4bd811f v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.f208.l210.txt
    5cec8bd005323df6 v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.f344.l345.txt
@@ -50,6 +56,7 @@ printed thermal resistances, never a measured temperature
    d77c15f6c6d6e627 v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p212.txt
    1827ebde1398be87 v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p215.txt
    b1f9e7304cb2f0dd v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p216.txt
+   c1917f0b83462530 v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p233.txt
    5fb9ce4646b5e1e1 v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p241.txt
    127ce3e43e52f0ca v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p248.txt
    bacf4b71a3afaebc v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p29.txt
@@ -211,6 +218,8 @@ printed thermal resistances, never a measured temperature
        the reset hold (SESSION W148-1, replacing W145-1's CTR1 capacitor): TPS3703F6050DSER with CT pulled to its VDD through 10k 1% (TI 7.3
          note 1: a pull-up 'is required, 10 kOhm is recommended'; 9.1.2.1: the factory-programmed timing), option F's delay tD 14 / 20 /
          26 ms (7.6, p.7, PRINTED), after 'After MR returns to a logic high and the SENSE pin voltage is within a valid window ... RESET is deasserted after the reset delay time (tD).' (8.3.5, p.16; Figure 8-2's note B: 'To initiate and continue time reset counter both conditions must be met MR pin above VMR_H or floating'; note C: 'MR is ignored during output RESET low event').
+         The 14 ms after MR is PRINTED BY REFERENCE (W150's F6): tD(MR)'s row, 'MR reset time delay', prints 'tD' in its NOM column
+         (7.6, p.7), and 8.3.5 names tD, whose 14 ms with CT pulled to VDD is the printed minimum of tD's own row
          TI prints no condition on the fault's length beyond tMR_W: the hold is a timer, not a capacitor's discharge (9.1.2.1 against
          9.1.2.2's capacitor option, which this draft does not use). Its SENSE sits on its own VDD, so 'The configuration of the CT pin is re-evaluated by the device every time the voltage on the SENSE line enters the valid window' (8.3.4, p.15) happens at
          the part's own start and SENSE never leaves the window after; a CT option misread there would show as a short hold, which
@@ -236,10 +245,22 @@ printed thermal resistances, never a measured temperature
        unit in service, W144's F11); still running, it writes Scale 3 within 10 us (W145-2) and reports MONITOR FAILED in its
        state frame. After the reset, PASSED needs the marker and RCC_RSR equal to Table 56's row 2, 'Pin reset (NRST)' (RM0433 8.4.4,
        p.332): PINRSTF and CPURSTF set, LPWRRSTF, WWDG1RSTF, IWDG1RSTF, SFTRSTF, PORRSTF, BORRSTF, D2RSTF, D1RSTF clear (W145-3),
-       and (W148-3) the RTC's time from the write to the restart at least 7 ms: half the hold's printed 14 ms minimum, 5.4 times
-       the 1.3 ms maximum TI prints with CT open (7.6), so a lost CT pull-up reads HOLD FAILED on an RTC clock within +-40 %;
-       the restart after a reset adds NRST's rise and the boot, which no held page prints: the check sees a CT-open hold while they
-       stay under 3.6 ms (ASSUMPTION; V-B24 reads them on the first article)
+       and (W148-3, restated by SESSION W152-1 on W150's F4) the RTC's time from the write to the restart at least 12 ms, else HOLD
+       FAILED. The time base: the RTC clocked by the LSI, which a pin reset does not stop: RCC_BDCR, "RCC_BDCR bits are only reset after a backup domain reset (see Section 8.4.6: Backup domain reset). Any other internal or external reset will not have any effect on these bits." (RM0433 8.7.26,
+       p.426), RTCSEL "10: LSI clock used as RTC clock"; LSIRDY "This bit can be set even when LSION is not enabled if there is a request for LSI clock by the Clock Security System on LSE or by the Low Speed Watchdog or by the RTC." (8.7.27, p.428); never the HSE: "If HSE is selected as RTC clock: this clock is lost when the system is in Stop mode or in case of a pin reset (NRST)." (p.426);
+       board B draws no LSE crystal (each controller's PC14 and PC15, pins 8 and 9, open: section 8 reads them). The LSI runs at 29.4 to
+       33.6 kHz over TJ -40 to 125 C, 32 kHz typical (DS12110 Rev 11 Table 136, p.233, PRINTED); the sub-second counter runs on
+       ck_apre: "The ck_apre clock is used to clock the binary RTC_SSR subseconds downcounter." (46.3.4, p.1910), "ck_apre frequency = RTCCLK frequency/(PREDIV_A+1)" (46.6.5, p.1932; RTC_PRER: "System reset: not affected"), with PREDIV_A + 1
+       at most 8: a step of at most 0.250 ms read at the typical 32 kHz (W150: the 1 ms resolution and the +-40 % clock were too coarse)
+         a healthy hold (at least 14 ms, PRINTED) reads at least 14 ms x 29.4 / 32 kHz - 0.250 ms = 12.613 ms: over the 12 ms threshold
+         a restart reads under 12 ms while its true interval is under (12 - 0.250) ms x 32 / 33.6 kHz = 11.190 ms; that interval is
+         t_resp 122.6 us, the TPS37's release tCTR(no cap) at most 40 us (p.9), the hold, NRST's rise to VIH 0.7 x VDD (Table 147, p.241)
+         at most 1.254 ms (MODEL: from 0 V through 10 k at +5 % (ASSUMPTION) and RPU 50 kOhm into 100 nF at +20 %), VCAP's fall to the
+         release and the boot to the RTC's read (with its shadow registers' resynchronisation): a lost CT pull-up (the hold at most
+         1.3 ms, 7.6) reads HOLD FAILED while those last two stay under 8.474 ms (ASSUMPTION; V-B24 reads them on the first article),
+         and any hold degraded under 9.774 ms less them reads HOLD FAILED too (W150's F4: a component fault outside printed limits)
+         W148-3's 7 ms on an RTC within +-40 % at 1 ms resolution left 3.577 ms ('3.6 ms') with tCTR, VCAP's fall and the resolution left
+         out: withdrawn by W152-1. A start that follows a test (the marker set) evaluates it and does not test again (W150's F6)
        PINRSTF alone is not enough: "Bit 22 PINRSTF: Pin reset flag (NRST) (1)", "Set by hardware when a reset from pin occurs." (8.7.39, p.450), and Table 56 sets it in the rows Power-on reset (pwr_por_rst); Brownout reset (pwr_bor_rst); System reset generated by CPU (SFTRESET); WWDG1 reset (wwdg1_out_rst); IWDG1 reset (iwdg1_out_rst); D1 erroneously enters DStandby mode or CPU erroneously enters CStop mode too
        (W144's F3). Scale 1 (VCAP 1.15 V and up) is over the trip's top by 1.7 %: the test drives the whole real path, VCAP to divider to
        SENSE1 to RESET1 to MR to RESET to NRST. One supervisor tests at a time and only while the other two serve (IOHA row 3); the peers
@@ -257,7 +278,7 @@ printed thermal resistances, never a measured temperature
          the hold stage's RESET stuck released, or R812 open    never resets                                               found: the next test
          the hold stage's RESET stuck low, or MONOUT at ground  held in reset                                              found: at once
          the hold stage unpowered (VDD open)                    RESET undefined under its VPOR                             found: the next test, or at once if it rests low
-         the CT pull-up R813 open (CT floating)                 the hold falls to CT open's 0.7 to 1.3 ms                  found: the next test's hold timing (W148-3)
+         the CT pull-up R813 open (CT floating)                 the hold falls to CT open's 0.7 to 1.3 ms                  found: the next test's hold timing (W148-3, W152-1)
          CT shorted to ground                                   TI's latch mode (9.1.3): held after a trip                 found: at once (the start's own test latches it)
          a firmware that skips the test                         a latent monitor fault stays latent                        found: the peers, within 2 x 3600 s
        the residuals: a monitor or hold fault latent since the last test, then a firmware VOS0 entry or an image that enters VOS1 or
@@ -285,20 +306,56 @@ printed thermal resistances, never a measured temperature
          the hold stage (SESSION W148-1): every cycle's MR pulse lasts at least 38.8 us, over tMR_W's 1 us minimum (5d), so RESET
          asserts and is held for tD after MR returns high, at least 14 ms (7.6, PRINTED), for ANY length of the fault: TI's note B
          starts the counter when MR is high; read by note C instead (the counter from RESET's assertion), the controller is still out of
-         VOS1 and VOS0 for at least tD less t_resp. Either way the duty is at most t_resp / tD(min) = 122.6 / 14000 us = 0.876 %; the
-         average rise at most 0.876 % x 1.3144 W x 45.0 C/W = 0.518 K (MODEL); S1's limit at t_resp becomes (4.80 - 0.518) / 1.3144 = 3.25 K/W
-         (the average plus one pulse's own rise, a superposition MODEL). No fault-length condition: S5 is RETIRED (section 9)
+         VOS1 and VOS0 for at least tD less t_resp. Either way the duty is at most t_resp / tD(min) = 122.6 / 14000 us = 0.876 %, for every
+         excursion the monitor registers (W150's F3: an excursion it does not register never reaches the hold, 5i)
+         the average rise (W150's F2, MODEL): with T10's own temperature-dependent current (l9t5_t10.py's mcu_i, its leakage feedback),
+         the loop's mean junction solves TJ = 76.25 C + 45.0 C/W x 3.3577 V x ((1 - 0.00876) x I(TJ) + 0.00876 x 0.550 A): 101.01 C at I = 0.1605 A,
+         a rise of 0.806 K over the bounded state's 100.20 C (W148's 0.518 K held the step at the bounded state and left the feedback out)
+         S1's limit at t_resp becomes (105 - 101.01) / (3.3577 V x (0.550 - 0.1605) A) = 3.05 K/W, the step taken from the loop's mean state
+         (the average plus one pulse's own rise, a superposition MODEL; W148's 3.25 K/W withdrawn). No fault-length condition on a registered
+         excursion: S5 is RETIRED (section 9)
          W145's CTR1 hold, withdrawn (5d): duty 0.212 % and 0.125 K at its t_resp 174.7 us, CONDITIONAL on TI's full discharge (S5)
+       U-02's LOCAL AIR AND S1's LIMITS (W150's F1; MODEL on T10's model at the rail's top): the limits above are read at 76.25 C
+       local air, the case's (L4-E12 E5); above it each one falls:
+         local air   bounded state   S-c, VOS0 (105 C)   S-k, the loop (105 C)   S-d, VOS1 (125 C)
+          76.25 C     100.20 C             3.65 K/W              3.05 K/W              19.16 K/W
+          77.00 C     101.38 C             2.78 K/W              2.17 K/W              18.39 K/W
+          78.00 C     102.94 C             1.59 K/W              0.98 K/W              17.34 K/W
+          79.00 C     104.51 C             0.39 K/W                  none              16.27 K/W
+         at 78.81 C local air the loop's mean junction reaches 105 C and S-k leaves no limit (W150 read about 79.0 C on the open-loop
+         rise: 78.99 C here); at 79.32 C the bounded state itself reaches 105 C and no ending of any speed suffices for a VOS0 entry (5f).
+         Condition C2 is therefore a pair: 76.25 C for S1's limits as written, and above it the limit of this table at the T-H1 mock-up's
+         measured air; no VOS0 or loop limit is left at or over 78.81 C, none for a VOS0 entry at or over 79.32 C
+   5i. THE SELF-RESET LOOP (W148-F4, given its own row by W150's F3): an image that enters VOS1 or VOS0 and resets itself (a software
+       or watchdog reset, RM0433 8.4.2, p.329) before the TPS37 registers the excursion. RESET1 never asserts, so the hold stage never
+       runs; the cycle is the image's own: a dwell under the monitor's registration time (unprinted below 20 % overdrive, S2), then the
+       internal reset ("The pulse generator guarantees a minimum reset pulse duration of 20 μs for each internal reset source.", p.329), NRST's recharge after the
+       pulse generator's unprinted pull, and the boot, none with a printed upper or lower figure but the 20 us. It is a VOS1 or VOS0
+       state with a printed current (Table 119), not S-g's kind: W148-F4's classification under row R-2 is withdrawn (row R-4)
+       for scale only (MODEL on T10's model, credited nothing): the loop's mean junction reaches 105 C at a duty of 5.34 % at 76.25 C air,
+         so 17 us dwells (TPS37 tCTS's printed maximum at 20 % overdrive, used as a size, not a bound) would have to come no oftener
+         than every 318 us; at 17 us every 217 us (W150's illustration) the duty is 7.83 % and the mean 107.58 C, 7.38 K over the
+         bounded state (W150's open-loop reviewer MODEL: about 7.6 %, about 4.5 K): the whole headroom
+       what decides it: whether every excursion an image can make is registered. After the image's own reset the regulator returns to
+       VOS3 (p.263) and VCAP falls from VOS1's band to the trip on the controller's own load and its two 2.2 uF; no held page prints
+       that fall, and while VCAP stays over the trip SENSE1 still sees the excursion. If the least excursion (the dwell plus that fall)
+       is longer than the longest the monitor fails to register, every self-reset becomes the monitor's own loop (S-k, held 14 ms)
+       S2 EXTENDED (SESSION W152-3): on the three supervisors of S2 at 76 C and at -40 C, (a) the TPS37's shortest registered
+         excursion: VCAP's own ramp to VOS1's band and to VOS0's, cut short by a software reset at stepped delays after the Scale 1
+         write, the longest excursion that leaves RESET1 released; (b) VCAP's fall after a reset: the time from the reset to VCAP
+         under the trip's least 1.0969 V; (c) 1000 self-reset cycles per supervisor and temperature at the image's earliest reset. Pass:
+         the least excursion of (b) at least 2x the longest unregistered excursion of (a), and in (c) every cycle asserts RESET1 and
+         holds NRST low at least 14 ms (zero escapes in 3000 per temperature). Fail: the row stays OPEN with a design task (row R-4)
    5h. THE HOLD, COMPARED (W148, on W145's finding W145-F1): what bounds the reset loop's duty for ANY fault length on printed figures
        HS-1 a hold stage after the TPS37 (its RESET1 on the stage's manual reset alone; the stage's RESET onto NRST), two parts read:
          HS-1a TI TPS3808G30 (board B's U221 and U543, SBVS050N): td 180 / 300 / 420 ms with CT to VDD (6.6, p.7, PRINTED); 'A logic low (0.3 VDD) on MR causes RESET to assert.'
            (7.3.3, p.11); 'Once MR is again logic high and SENSE is above VIT + VHYS (the threshold hysteresis), a delay circuit is enabled that holds RESET low for a specified reset delay period.' (7.3.4, p.12): no fault-length condition. The MR pulse that registers: 0.001 us in the TYP column
            only (6.6), MR to RESET 150 ns TYP; its drive prints only 0.4 V at 1 mA (6.5, p.6; board B's D4E-F2 buffers U221 for the same
            reason): through 750 Ohm (peak 4.52 mA, its 6.3 maximum 5 mA, p.5) NRST's fall is bounded at 346.1 us, t_resp 363.5 us; duty
-           0.202 %, rise 0.119 K, S1's limit 3.56 K/W at 363.5 us; IC body 2.90 x 1.60 mm (p.1)
+           0.202 %, rise 0.187 K, S1's limit 3.51 K/W at 363.5 us; IC body 2.90 x 1.60 mm (p.1)
          HS-1b TI TPS3703F6050DSER (SBVS249B, held back): tD 14 / 20 / 26 ms with CT to VDD through 10 k (7.6, p.7, PRINTED; option F,
            UV only, SENSE on its own VDD: 'Connect to VDD pin if monitoring VDD supply voltage.', pin functions p.4); the MR pulse that registers: tMR_W 1 us, MIN column
-           (PRINTED); its drive 250 mV at 3 mA (VDD 2 V row): t_resp 122.6 us (5d); duty 0.876 %, rise 0.518 K, S1's limit 3.25 K/W
+           (PRINTED); its drive 250 mV at 3 mA (VDD 2 V row): t_resp 122.6 us (5d); duty 0.876 %, rise 0.806 K, S1's limit 3.05 K/W
            at 122.6 us; IC body 1.50 x 1.50 mm (p.1); stock: Active in TI's package option addendum
          own faults (both): the stage's RESET stuck released or the series resistor open (no reset: the next test), stuck low (held:
            at once), unpowered (the next test or at once), its timing lost (HS-1a: CT open gives 12 to 28 ms, 6.6; HS-1b: CT open gives
@@ -318,7 +375,7 @@ printed thermal resistances, never a measured temperature
          latch at its first start unless a peer or a power cycle releases it, an action from outside its failure domain (CON-004)
        READING: HS-1a and HS-1b both bound the loop for any fault length on a printed minimum (180 and 14 ms); HS-1a's registration is
          TYPICAL and its drive slows NRST to 363.5 us; HS-1b's registration is a printed minimum, its drive keeps t_resp at 122.6 us, and
-         its shorter hold costs 0.518 K of loop rise; HS-2 needs a non-stock window with margins of a few millivolts; HS-3 breaks the
+         its shorter hold costs 0.806 K of loop rise; HS-2 needs a non-stock window with margins of a few millivolts; HS-3 breaks the
          self-test or the failure domains. SELECTED (SESSION W148-1, section 7): HS-1b, TPS3703F6050DSER as the hold stage
    VERDICT H-2: NOT SUPPORTED ON PRINTED FIGURES AS A PROOF: the register's end condition ('no printed timing bounds the entry-to-reset
    interval, or the thermal time cannot be bounded on printed figures') is met, since neither the sense delay at VOS0's overdrive (S2)
@@ -332,27 +389,35 @@ printed thermal resistances, never a measured temperature
    S-a  the bounded served state (FW-B20, FW-B21, rev V)             105 C     100.20 C (T10 10c's 99.6 C at 3.3 V)                                             HOLDS
    S-b  VOS3 at its printed maximum (200 MHz, all peripherals)       125 C     121.32 C (T10 section 4's 119.4 C at 3.3 V)                                      HOLDS
    S-c  a VOS0 entry by any firmware                                 105 C     ended within t_resp 122.6 us; needs ZthJA(t_resp) <= 3.65 K/W                    CONDITIONAL (S1, S2; C2, C3)
-   S-d  a VOS1 entry by any firmware, the self-test included         125 C     ended within t_resp; needs ZthJA(t_resp) <= 19.16 K/W                            CONDITIONAL (S1, S2)
-   S-e  the self-test with a dead monitor                            125 C     at most 132.6 us (firmware); needs ZthJA(132.6 us) <= 19.16 K/W                  CONDITIONAL (S1)
+   S-d  a VOS1 entry by any firmware, the self-test included         125 C     ended within t_resp; needs ZthJA(t_resp) <= 19.16 K/W                            CONDITIONAL (S1, S2; C2, C3)
+   S-e  the self-test with a dead monitor                            125 C     at most 132.6 us (firmware); needs ZthJA(132.6 us) <= 19.16 K/W                  CONDITIONAL (S1; C2)
    S-f  VOS2 with VCAP under the trip's top (1.05 to 1.1303 V)       125 C     not surely ended by the monitor                                                  OPEN (row R-1, HO-E-REGISTER-ROWS.md)
    S-g  VOS3 above its printed 200 MHz                               125 C     no printed current                                                               OPEN (row R-2, HO-E-REGISTER-ROWS.md)
    S-h  power-up before the monitor is valid                         105 C     NRST held under both UVLOs, then tD (>= 14 ms) after MR rises (5d)               CONDITIONAL (S4)
    S-i  a latent monitor fault, then a firmware VOS0 entry           105 C     a double fault; window at most 3600 s                                            RESIDUAL (single-fault)
-   S-k  the reset loop: an image entering VOS1 or VOS0 at every boot 105 C     duty <= 0.876 %, rise <= 0.518 K, any fault length; ZthJA(t_resp) <= 3.25 K/W    CONDITIONAL (S1, S2)
+   S-k  the reset loop: every excursion the monitor registers, at every boot 105 C     duty <= 0.876 %, rise <= 0.806 K with T10's feedback, any fault length; ZthJA(t_resp) <= 3.05 K/W CONDITIONAL (S1, S2; C2, C3)
    S-l  a latent hold fault (CT's pull-up lost), then the reset loop 105 C     a double fault; W148-3's hold timing, window at most 3600 s                      RESIDUAL (single-fault)
-   S-j  any current up to the limiter's 0.5704 A                     as above  a VOS3 state is S-a, S-b or S-g; a VOS1 or VOS0 state S-c, S-d or S-k            no state outside S-a to S-l
+   S-m  the self-reset loop: an image resetting itself before the monitor registers (W148-F4) 105 C     no printed cadence; S-k's if every excursion registers (5i: S2 extended)         CONDITIONAL (S2 extended, S1; C2, C3; row R-4)
+   S-j  any current up to the limiter's 0.5704 A                     as above  a VOS3 state is S-a, S-b or S-g; a VOS1 or VOS0 state S-c, S-d, S-k or S-m       no state outside S-a to S-m
    THE CONDITIONS OF THE FOCUSED CHECK (W144, L4A-100), RESTATED:
      C1 (F1): the reset hold drafted, composed, read and mutated, with the reset-loop row: W145's CTR1 hold (CONDITIONAL on S5) replaced
-        by the hold stage (SESSION W148-1: 5d, 5g, 5h, section 8), whose printed minimum bounds the loop for any fault length: S5 retired
-     C2 (F2): U-02's local air at the supervisors at or under 79.32 C (MODEL at 3.3577 V; W144's linear 79.5 C)
+        by the hold stage (SESSION W148-1: 5d, 5g, 5h, section 8), whose printed minimum bounds the loop for any fault length of every
+        excursion the monitor registers: S5 retired; the loop's rise with T10's feedback, 0.806 K, S1's loop limit 3.05 K/W (W150's F2);
+        an excursion the monitor does not register is S-m's (W150's F3)
+     C2 (F2; W150's F1), a pair: (a) S1's limits as written hold at U-02's local air 76.25 C, the case's, and above it S1 is read against
+        5g's table at the T-H1 mock-up's measured air; (b) at or over 78.81 C the reset loop leaves no limit (W150: about 79.0 C on the
+        open-loop rise), and at or over 79.32 C no ending of any speed suffices for a VOS0 entry (MODEL at 3.3577 V; W144's linear 79.5 C)
      C3 (F4): revision V fitted (L9T5-D7): the trip window rests on Table 112's rows on DS12110's '(rev V)' pages (p.209); rev Y's Table 14
-        (p.105) prints no core voltage per scale, and no held page prints rev X's; a rev X part also needs its VCAP per scale (S3)
-     C4 (F8, F11): S1 at one supply corner (at most 3.65 K/W at t_resp, 3.25 K/W less the loop's rise); S2 on the real VCAP ramp, the
-        self-test's window timed from the Scale 1 write, now through the hold stage; S3 and S4 as written; S5 retired (W148-1)
+        (p.105) prints no core voltage per scale, and no held page prints rev X's; a rev X part also needs its VCAP per scale (S3). The
+        codes (ES0392 Rev 15 Table 2, p.1, W150's F6): marking V, REV_ID 0x2003; X, 0x2001; Y and W, 0x1003, which CON-017 (5) excludes
+     C4 (F8, F11): S1 at one supply corner (at most 3.65 K/W at t_resp, 3.05 K/W from the loop's mean state); S2 on the real VCAP ramp,
+        the self-test's window timed from the Scale 1 write, now through the hold stage, and extended for S-m (W152-3, 5i); S3 and S4
+        as written; S5 retired (W148-1)
      C5 (F3, F6): the register rows, HO-E-REGISTER-ROWS.md (R-1 S-f, R-2 S-g, R-3 the self-test's firmware row FW-B23, drafted in
-        apply_hw_fw_contract_hoe.py)
+        apply_hw_fw_contract_hoe.py, R-4 S-m, the self-reset loop: W150's F3)
    HO-E's ACCEPTANCE: CONDITIONAL. The served state holds 105 C; every VOS0 state the protection admits is ended by the drafted monitor,
-   and whether the junction stays inside 105 C during the ending rests on S1 and S2 (in a reset loop too) and on C2 and C3.
+   and whether the junction stays inside 105 C during the ending rests on S1 and S2 (in a reset loop too; S2 extended for an excursion
+   the monitor may not register, S-m) and on C2 and C3.
    Nothing is upgraded: cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand; this task closes no cx46 item before
    its own check's targeted recheck (L4A-100).
 
@@ -366,8 +431,8 @@ printed thermal resistances, never a measured temperature
        S5), so the selection accepts no risk a measurement cannot remove: amendment 1's supplier tasks, not an owner's risk acceptance
      ruled_by: W140 (Claude), MESHSAT-1357; ruled_on: 7 October 2026; reversed_by: none
      to reverse: drop apply_gen_sch_b_vcoremon.py; HO-E returns to REMAINING ENGINEERING with the owner item below
-     end condition: S1 reads the controller's ZthJA at t_resp over 3.65 K/W on board B (3.25 K/W less the loop's rise); or S2 reads
-       the sense delay at VOS0's overdrive long enough that S1's reading fails at the longer interval; or two negative independent
+     end condition: S1 reads the controller's ZthJA at t_resp over 3.65 K/W on board B (3.05 K/W in the reset loop, from its mean state, W152-2); or S2
+       reads the sense delay at VOS0's overdrive long enough that S1's reading fails at the longer interval; or two negative independent
        checks of this selection (W145's 'S5 fails' clause retired with S5 by W148-1)
    W145's decisions (each authority: SESSION, under the same rules; ruled_by: W145 (Claude), MESHSAT-1357; ruled_on: 7 October 2026;
    reversed_by: none unless named below; authority_why: an engineering value or method inside the drafted circuit and its rows, no
@@ -397,6 +462,7 @@ printed thermal resistances, never a measured temperature
                with 13 % margin and whose held current stays over its recommended 0.3 mA minimum
              to reverse: 750 Ohm with 5d's fall re-read
      W148-3  FW-B23 times the hold: PASSED also needs the RTC's time from the Scale 1 write to the restart at least 7 ms
+             (its values RESTATED by W152-1: 12 ms on the LSI-clocked RTC; the check itself stands)
              why: a lost CT pull-up (the hold at 0.7 to 1.3 ms) is found by the next test on an RTC clock within +-40 %, so S-l is a double fault
                bounded by the test interval, not a latent single fault
              to reverse: drop the check; S-l back to inspection
@@ -404,6 +470,31 @@ printed thermal resistances, never a measured temperature
              why: record l9t5's own fetch script is pinned by sha256 in l9t5_a1.py and l9t5_f01.py, whose outputs other records and pages pin;
                an entry there would move them all, outside this task
              to reverse: move the entry into l9t5's script in a set whose dependency pass re-pins l9t5_a1.out and its dependants
+   W152's decisions (on W150's targeted recheck, its should-fix F1 to F3 and notes F4 to F6; each authority: SESSION, under the owner's
+   standing rule of 26 September 2026 and his ruling of 21 September 2026; ruled_by: W152 (Claude), MESHSAT-1357; ruled_on: 7 October
+   2026; reversed_by: none; authority_why: an engineering value, a method or a test row inside the drafted circuit and its rows; no
+   line a protected class holds, no money, nothing bought, no change to what the kit is claimed to be, no residual risk accepted):
+     W152-1  FW-B23's hold check on the RTC clocked by the LSI (RTCSEL = LSI, never the HSE), PREDIV_A + 1 at most 8, threshold 12 ms
+             why: W150's F4: the LSI's band is printed (29.4 to 33.6 kHz, Table 136) and a pin reset stops neither it nor the RTC (p.426, p.428);
+               the HSE is lost at a pin reset (p.426); board B draws no LSE crystal; a healthy hold reads at least 12.613 ms, and 8.474 ms are
+               left for VCAP's fall and the boot, against W148-3's 3.577 ms at +-40 % and 1 ms
+             to reverse: an LSE crystal per supervisor (32.768 kHz on PC14 and PC15 with its load capacitors, a part with its maker's tolerance), the
+               threshold re-read; end condition: V-B24 reads the RTC stopped by NRST, or the unprinted terms over 8.474 ms
+     W152-2  S1's loop limit read from the loop's mean state on T10's temperature-dependent current: 3.05 K/W (rise 0.806 K)
+             why: W150's F2: the record's own T10 model carries the controller's leakage at its junction; W148's open-loop 0.518 K left it out
+             to reverse: a measured S1 at the loop's duty replaces the model
+     W152-3  the self-reset loop its own row S-m and register row R-4, CONDITIONAL on S2 extended (5i): 1000 cycles per supervisor
+             and temperature with zero escapes, the least excursion at least 2x the longest unregistered one
+             why: W150's F3: W148-F4's case reaches no hold and has a printed current, so it is not S-g's; three specimens carry no
+               population figure, so a margin is set
+             to reverse: a statistical margin from S2's own data
+     W152-4  S-e carries C2 as S-c, S-d and S-k do: its 19.16 K/W is read at the case's air
+             why: W150's F1 applied to every S1 limit (5g's table prints S-d's; S-e's is the same step)
+             to reverse: none needed
+     W152-5  the reader reads FAIL on a part not fitted: ohms() refuses an empty value and mon_check names an unfitted series
+             resistor; the tenth mutation, R812 not fitted
+             why: W150's F5: the reader raised IndexError on R812 not fitted (it failed closed, but did not read FAIL)
+             to reverse: none needed
    the owner item, PREPARED AND NOT RAISED (it would be raised only if the selection's end condition is met): 'The I/O supervisors'
      STM32H743 cannot hold its 105 C VOS0 limit in the case's air, and no hardware means bars VOS0. Either accept that the 105 C limit
      during a firmware fault rests on the controller's measured transient thermal response, or change the supervisor part to one whose
@@ -441,7 +532,7 @@ printed thermal resistances, never a measured temperature
      DRAWN; the two netlists identical
      the two drafts add 18 parts of their own, none of them a designator of this draft (none shared); an old text of this draft inside
      any old or new text of theirs: none
-   the mutations (each must FAIL the reading; W140's six, W145's seventh on the hold that replaced its capacitor, W148's two):
+   the mutations (each must FAIL the reading; W140's six, W145's seventh on the hold that replaced its capacitor, W148's two, W152's one):
      the monitor's output on a peer's NRST (A's and B's series resistors exchanged at the NRST end):    FAIL
      the divider's top from the rail, not VCAP:                                                         FAIL
      the divider's top and bottom exchanged (the trip at the other ratio):                              FAIL
@@ -454,12 +545,17 @@ printed thermal resistances, never a measured temperature
        its reading: U810.4 on 'IOCA_MONOUT', wanted IOCA_MONRST; U811.4 on 'IOCA_MONRST', wanted IOCA_MONOUT; IOCA_MONRST carries ['U811.4', 'U811.6'], not RESET1 and the hold stage's MR alone (bypassed or latching); IOCA_MONOUT carries ['R
      a hold shorter than its printed minimum (R813 not fitted: CT open, the delay 0.7 to 1.3 ms, under 14 ms): FAIL
        its reading: U811's printed minimum delay 0.7 ms (option F, CT open) is under the reset-loop row's 14 ms; R813.1 on None, wanted +3V3_IOCA; R813.2 on None, wanted IOCA_MONCT
+     the hold stage's series resistor not fitted (R812: its RESET reaches no NRST; W150's F5, the tenth mutation): FAIL
+       its reading: IOCA_MONOUT carries ['U811.4'], not the hold stage's RESET and its series resistor alone; R812.1 on None, wanted IOCA_MONOUT; R812.2 on None, wanted IOCA_RST_n; R812 is not fitted: the hold stage's RESET reaches no NRST
    the draft on the tree's generator as it stands (no other draft): applies (order-free: it edits only the reset block and the class table);
    a second time: refused; on the tree's own generator: refused (NOT RELEASED)
+   the controllers' PC14 and PC15 (pins 8 and 9, the LSE's oscillator pins) open on all three, so no LSE crystal is drawn and
+   FW-B23's hold check takes the LSI (5e, W152-1): yes
    CON-004's failure domains ('own regulator branch, reset supervisor, watchdog, crystal and SWD pads'): each monitor touches its own
    controller's nets and ground only: yes; no controller pin added (CON-017's count unchanged)
-   the firmware row FW-B23 and V-B24 (apply_hw_fw_contract_hoe.py, W145, F3 and F11) on a scratch copy of the tree's contract: alone
-     refused (T10's rows absent); after apply_hw_fw_contract_t10.py applies; a second time refused; the row carries Table 56's row 2 and the window 122.6 us; the
+   the firmware row FW-B23 and V-B24 (apply_hw_fw_contract_hoe.py, W145, F3 and F11; W152, the hold check and the marker rule) on a
+     scratch copy of the tree's contract: alone
+     refused (T10's rows absent); after apply_hw_fw_contract_t10.py applies; a second time refused; the row carries Table 56's row 2, the window 122.6 us, the LSI's 12 ms and its budget; the
      tree's contract unchanged: yes
 
 9. FINDINGS FOR OTHER AUTHORS AND THE SUPPLIER'S TASKS (amendment 1: none is a gate of this desk round)
@@ -490,19 +586,31 @@ printed thermal resistances, never a measured temperature
    W148-F2 (Layer 10): the hold stage sits by its TPS37 in the controller's own pocket; CT's pull-up at its pin; R812 at the NRST end
    W148-F3 (the targeted recheck, C1 to C3): read 5d's new chain (t_resp 122.6 us, one TYPICAL term, tPD(MR) 500 ns), 5g's duty on
      TI's notes B and C read either way, and 5h's comparison; S1's limit is now read at 122.6 us, not W145's 174.7 us
-   W148-F4 (R-2's owner, a note): a loop driven by the image's own resets, each shorter than the TPS37's sense delay, is not seen by
-     the monitor and so not held: each dwell is under tCTS and its cadence rests on the image's boot time, which no held page prints;
-     it is S-g's kind (no printed current for an image outside FW-B20), not this hold's
+   W148-F4 (restated on W150's F3 by W152-3): a loop driven by the image's own resets, each excursion shorter than the monitor
+     registers, is not seen and so not held, and its cadence rests on the image's reset and boot, which no held page bounds. It is a
+     VOS1 or VOS0 state with a printed current, NOT S-g's kind (W148's classification withdrawn): its own row S-m (5i) and register
+     row R-4, CONDITIONAL on S2 extended
    W148-F5 (the coordinator): TI's TPS3808 sheet, which the brief asked fetched and held back, has been committed in the tree since 26
      September 2026 (v2/vendor/SOURCES.yaml, supervisor-tps3808g30); the fetch of 7 October 2026 is byte for byte that copy
      (inputs/SOURCES-HOE.txt); its committed status is left as it is (a publication question, not this record's)
+   W152-F1 (L4A-61, Layer 5): FW-B23's time base is a firmware fact: RTCSEL = LSI with RTCEN set, never the HSE (5e); RTCSEL "These bits can be written only one time (except in case of failure detection on LSE)."
+     (p.426), so the first image's choice holds to the next backup domain reset; PREDIV_A + 1 at most 8; any other use of the RTC
+     shares that clock; a start with the marker set evaluates and does not test again (FW-B23, W150's F6)
+   W152-F2 (the coordinator): register row R-4 (S-m, the self-reset loop) in HO-E-REGISTER-ROWS.md; C2 restated as a pair (6)
+   W152-F3 (the T-H1 mock-up's owner): U-02's local air at the supervisors decides S1's limit by 5g's table (no loop limit at or over
+     78.81 C, no VOS0 ending at or over 79.32 C); the mock-up's reading of that air is what S1 is judged against
    S1: the controller's junction-to-ambient transient impedance on board B, three first-article supervisors at the rail's top, a junction
-     step at 1.3144 W: pass at most 3.65 K/W at 122.6 us (3.25 K/W if the reset loop's 0.518 K is carried), and at most 19.16 K/W at the
-     VOS1 step 1.2943 W at 122.6 us and 132.6 us (or ST's transient thermal data for the LQFP100 with board B's copper)
+     step at 1.3144 W: pass at most 3.65 K/W at 122.6 us (3.05 K/W if the reset loop's 0.806 K is carried), and at most 19.16 K/W at the
+     VOS1 step 1.2943 W at 122.6 us and 132.6 us (or ST's transient thermal data for the LQFP100 with board B's copper); these limits hold
+     at the case's 76.25 C local air: above it, the limit of 5g's table at the T-H1 mock-up's measured air (C2, W150's F1)
    S2: the monitor's interval on the real VCAP ramp (W144's F11; TI prints tCTS at 1 V/us and 20 % overdrive only, tPD(MR) as NOM only):
      VCAP driven by the controller's own Scale 1 write and VOS0 entry, three supervisors, the chamber at 76 C and at -40 C: pass, from
      the Scale 1 write and from VCAP crossing the trip to NRST under VIL, at most 122.6 us; PWR_CSR1's ACTVOS reading Scale 3 at the
-     restart (a printed fact, F5)
+     restart (a printed fact, F5). EXTENDED for S-m (SESSION W152-3, 5i; W150's F3): the same three supervisors at 76 C and -40 C:
+     (a) the TPS37's shortest registered excursion on VCAP's own ramp to VOS1's and VOS0's bands, cut short by a software reset at
+     stepped delays after the Scale 1 write; (b) VCAP's fall after a reset to under the trip's least 1.0969 V; (c) 1000 self-reset
+     cycles per supervisor and temperature at the image's earliest reset: pass, the least excursion of (b) at least 2x the longest
+     unregistered one of (a), and every cycle of (c) asserting RESET1 with NRST low at least 14 ms (zero escapes)
    S3: VCAP in VOS3 with the divider fitted, under the controller's load steps: inside 0.95 to 1.05 V and under the trip's least 1.0969 V;
      for a revision X part (W144's F4), its VCAP in VOS3, VOS1 and VOS0 read on three parts against Table 112's revision V rows first
    S4: NRST held low from the hold stage's VPOR through both UVLOs, the TPS37's tSD and the hold at power-up, released 14.0 to 28.04 ms
@@ -522,10 +630,10 @@ printed thermal resistances, never a measured temperature
    the printed 20 % overdrive does not cover VOS0's bottom (S2 is owed, not assumed)                                                yes
    the hold stage's drain: its peak under TI's recommended maximum, its held current over the minimum, NRST held under VIL          yes
    the draft composes with and without W137's and W138's drafts, in either order, and reads DRAWN                                   yes
-   each of the nine mutations FAILS: W140's six, the hold removed, the hold stage bypassed, a hold under its printed minimum        yes
+   each of the ten mutations FAILS: W140's six, the hold removed, bypassed, under its printed minimum, R812 not fitted (no exception) yes
    the draft refuses a second application and the tree's own generator                                                              yes
    each monitor stays inside its controller's failure domain                                                                        yes
-   the VOS0 and VOS1 entries and the reset loop read CONDITIONAL, none HOLDS, and H-1 claims no hardware bar                        yes
+   the VOS0 and VOS1 entries, the reset loop and the self-reset loop read CONDITIONAL, none HOLDS, and H-1 claims no hardware bar   yes
    T10's bounded state (99.6 C, 0.1570 A) is reproduced at 3.3 V by T10's own model before it is read at one supply corner          yes
    VOS1's step takes the largest printed 125 C row of Tables 119 to 121 (Table 120's 544 mA, W144's F7)                             yes
    the hold is a printed minimum for any MR pulse of tMR_W (MIN column) and the loop's least pulse exceeds it: S-k on S1 and S2, not S5 yes
@@ -538,6 +646,11 @@ printed thermal resistances, never a measured temperature
    every TPS3703 page quoted is the page its text sits on (form feeds counted)                                                      yes
    no orderable TPS3703 window keeps VOS3's band inside it and trips under VOS1 (HS-2 needs a non-stock option)                     yes
    HS-1a's MR registration is TYPICAL only and HS-1b's tMR_W a MIN, and HS-1b's t_resp is the shorter (W148-1's reasons hold)       yes
-   W148-3's hold check reads the printed hold as PASSED and a CT-open hold as FAILED on an RTC clock within the tolerance           yes
+   W152-1's hold check on the LSI's printed band reads a healthy hold PASSED and leaves a CT-open hold's unprinted terms a budget   yes
+   board B draws no LSE crystal (PC14 and PC15 open on all three controllers), and the HSE is lost at a pin reset (p.426)           yes
+   the loop's mean is T10's model with its feedback: at zero duty it is the bounded state, and its rise exceeds the open-loop one   yes
+   C2's pair: the air where the loop leaves no limit lies between the case's air and the air where the bounded state reaches 105 C  yes
+   ES0392 Rev 15 Table 2 prints marking V as REV_ID 0x2003, X as 0x2001, Y and W as 0x1003 (C3)                                     yes
+   the 14 ms after MR is tD by reference: TPS3703 7.6 prints 'tD' in tD(MR)'s NOM column                                            yes
 
 l9t5_hoe: done
