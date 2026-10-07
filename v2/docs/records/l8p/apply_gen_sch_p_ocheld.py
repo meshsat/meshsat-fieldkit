@@ -40,13 +40,14 @@ low side, an OPA187 the kit carries), the parts (every type already in the kit),
 rounds 3 and 4) and the net names.
 
 ORDER: AFTER this record's apply_gen_sch_p_breaker.py and apply_gen_sch_p_idealdiode.py (it reads the breaker's BRK_PGD, BRK_VIN
-and PACK_P and takes the 100 block after round 4's designators; it refuses a target without them), released with them.
+and PACK_P and takes the 100 block after round 4's designators; it refuses a target without them), released with them: its own
+RELEASE-R11.md until L4-E9's change list gives it a row (L8P-BREAKER.md section 6 item 1), then the folder's one RELEASE.md.
 
 Usage:  apply_gen_sch_p_ocheld.py TARGET [--check | --write]     (default --check: nothing is written)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; no added designator or net may
 exist in the target; the result must parse.
 Exit 0: checked (or written); 3: refused (the target is not the expected text, the change is already applied, a designator or
-net is in use, the breaker or ideal-diode draft is not applied, or the repository's own generator is named before RELEASE.md
+net is in use, the breaker or ideal-diode draft is not applied, or the repository's own generator is named before RELEASE-R11.md
 releases it)."""
 import ast
 import difflib
@@ -182,23 +183,26 @@ def patched(text):
 
 
 # NOT RELEASED: record l8p drafts this change for board P's generator owner and never applies it. Writing the repository's own
-# gen_sch_p.py is refused until RELEASE.md beside this script reads "released: yes" on its first line and names an accepted check
+# gen_sch_p.py is refused until RELEASE-R11.md beside this script reads "released: yes" on its first line and names an accepted check
 # of this record ("check: <repository path whose first line is 'accepted: yes'>"). A copy elsewhere may be written (the tests do).
+# Its own release file until L4-E9's change list gives it a row (L8P-BREAKER.md section 6 item 1, "Not covered"); then the integrator
+# points RELEASE at the folder's one RELEASE.md, with the item's count and its register row. It refuses a board P without the
+# breaker and the ideal diode, so it can never be applied ahead of them.
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(HERE))))
 TREE_GEN = os.path.join(REPO, "v2", "ecad", "tools", "gen_sch_p.py")
-RELEASE = os.path.join(HERE, "RELEASE.md")
+RELEASE = os.path.join(HERE, "RELEASE-R11.md")
 
 
 def released():
     if not os.path.isfile(RELEASE):
-        refuse("NOT RELEASED: no RELEASE.md; l8p's drafts wait on an accepted check")
+        refuse("NOT RELEASED: no RELEASE-R11.md; l8p's round 11 draft waits on an accepted check")
     lines = [l.rstrip("\n") for l in open(RELEASE, encoding="utf-8")]
     if not lines or lines[0] != "released: yes":
-        refuse("NOT RELEASED: RELEASE.md's first line is not 'released: yes'")
+        refuse("NOT RELEASED: RELEASE-R11.md's first line is not 'released: yes'")
     rec = [l.split(":", 1)[1].strip() for l in lines if l.startswith("check:")]
     if len(rec) != 1:
-        refuse("NOT RELEASED: RELEASE.md names no single check")
+        refuse("NOT RELEASED: RELEASE-R11.md names no single check")
     path = os.path.join(REPO, rec[0])
     if ".." in rec[0].split("/") or not os.path.isfile(path):
         refuse("NOT RELEASED: check %s is not in this tree" % rec[0])

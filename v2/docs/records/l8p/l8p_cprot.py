@@ -286,6 +286,22 @@ def compute():
     l69 = flat(pdftext("lm5069"))
     need(l69, r"When the external MOSFET VDS increases above 2\.5 V the PGD indicator switches low", "LM5069 PGD")
     need(l69, r"If the voltage across RS reaches 55 mV the load current is limited and the fault timer activates", "LM5069 SENSE")
+    # 4h. the drawn UVLO node at a start (record l8p's own C-1b; not this round's circuit): UVLOHYS 12 to 30 uA PRINTED (enabled below
+    # the threshold, SNVS452G 8.3.4), R104 200 kOhm +1 %, D102's 0.715 V and UVLOTH's 2.55 V as record l9stk reads them, and the off
+    # leakage of Q104 and Q105 (2N7002, drains on BRK_UVLO) at 80 nA at 25 C PRINTED, doubled every 10 K (ASSUMED, the record's rule)
+    need(l69, r"UVLOHYS UVLO hysteresis current UVLO = 1 V 12 21 30", "LM5069 UVLOHYS")
+    need(l69, r"When VSYS is below the UVLO level, the internal 21-.A current source at UVLO is enabled", "LM5069 UVLO sink below the level")
+    need(prot, r"settles at 4\.6 V, over 2\.55 V and the diode's 0\.715 V", "record l9stk's H at 10.6 V (the sink alone)")
+
+    def uvlo_at(site, vin=PACK_LEAST, n=2, rf=1.01):
+        leak = 80e-9 * 2 ** ((site - 25.0) / DOUBLING_K)
+        h = vin - 200e3 * rf * (30e-6 + n * leak)
+        return h, h - 0.715
+    lo_t, hi_t = 25.0, 150.0
+    for _ in range(80):
+        mid = (lo_t + hi_t) / 2
+        lo_t, hi_t = (mid, hi_t) if uvlo_at(mid)[1] >= 2.55 else (lo_t, mid)
+    R.update(uvlo_air=uvlo_at(76.25), uvlo_site=uvlo_at(SITE), uvlo_t=lo_t, uvlo_sink_only=uvlo_at(-273.0, n=0, rf=1.0))
     return R
 
 
@@ -482,6 +498,17 @@ def render(R, K):
         fmt(I), fmt(100 * I / W["I_rr_air"], 1)))
     w("       the guard protects exposed: M-A holds the FETs at %s A); no automatic diagnostic is drawn: E-12f at commissioning and at each" % fmt(I))
     w("       service, and an automatic test is REMAINING ENGINEERING with HO-A's pattern")
+    w("   4h. A FINDING ON THE DRAWN UVLO NODE (L8P-R11-F1, this record's own C-1b of round 2; OPEN; not this round's circuit, which adds")
+    w("     nothing on UVLO): below its threshold U101 sinks UVLOHYS, 12 to 30 uA PRINTED, so at a start H settles under R104 with that sink and")
+    w("     every off leakage on BRK_UVLO; record l9stk counts the sink alone (H %s V at %s V, R104 nominal). Q104's and Q105's drains sit on BRK_UVLO: at" % (
+        fmt(R["uvlo_sink_only"][0], 2), fmt(PACK_LEAST, 1)))
+    w("     the 2N7002's 80 nA at 25 C (PRINTED) doubled every 10 K (ASSUMED, the record's own rule), R104 +1 %, D102's 0.715 V and UVLOTH's")
+    w("     2.55 V (RECORD): at %s V UVLO reaches %s V with both at the 76.25 C air (%s V of margin) and %s V at the %s C site: NOT RELEASED;" % (
+        fmt(PACK_LEAST, 1), fmt(R["uvlo_air"][1], 2), fmt(R["uvlo_air"][1] - 2.55, 2), fmt(R["uvlo_site"][1], 2), fmt(SITE)))
+    w("     the release at the pack's least fails above a site of %s C on that rule: a docking with board P warm and the pack low would not" % fmt(R["uvlo_t"], 1))
+    w("     start the breaker (the service, not a protection). Smallest corrections, for this record's next round (none drafted here): R104")
+    w("     lowered with C103 raised to keep the hold's 0.110 to 0.907 s, or inverters whose maker prints the hot off leakage, or both;")
+    w("     evidence: Q104's and Q105's IDSS at 86.25 and 101 C on board P's specimen (E-12's bench)")
     w("")
     w("5. THE DRAFT COMPOSED IN L4-E9'S ORDER (board P; INFERRED from the regenerated netlist)")
     for name, r in K["steps"]:
@@ -672,6 +699,8 @@ def predicates(R, K):
         ("the draft refuses without its predecessors, twice, and on the tree's generator", all(rc == 3 for rc, _m in K["refusals"])),
         ("the battery FETs stay at or under 150 C with the trip intact and failed", R["tj_trip_bar"] <= 150.0 + 1e-9 and W["TJ_bar"] <= 150.0 + 1e-9),
         ("the allowance read from 10c is 40 uA cold and 50 uA tripped", R["ALLOW"] == (40.0, 50.0)),
+        ("record l9stk's H at 10.6 V with the sink alone reproduces 4.6 V (R104 nominal)", abs(R["uvlo_sink_only"][0] - 4.6) < 0.05),
+        ("L8P-R11-F1: the drawn UVLO node is not released at 10.6 V with its inverters at the 86.25 C site (the rule ASSUMED)", R["uvlo_site"][1] < 2.55),
     ]
 
 

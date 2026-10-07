@@ -4,11 +4,11 @@ printed figures and the records' own; nothing was built, bought or measured. LAB
 INFERRED; MODEL; RECORD; ASSUMED.
 
 0. PINS (sha256/16)
-   5988e5603a96b27f  v2/docs/records/l8p/l8p_rowc.out
+   c76da0aaf84b0e07  v2/docs/records/l8p/l8p_rowc.out
    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
    46f3c6cd9ea6b638  v2/docs/records/l9stk/l9stk_protection.out
    3a23036c57859f1d  v2/docs/records/l9stk/L9-STACKUPS.md
-   255ef270409e8908  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
+   39fd1b4c3f38c2cb  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
    e8f1294bb0f76c75  v2/docs/records/l8p/apply_gen_sch_p_breaker.py
    4174af5851fe1be0  v2/docs/records/l8p/apply_gen_sch_p_idealdiode.py
    d0d538f802b4af97  v2/docs/records/l8p/check_l8p_och.py
@@ -115,6 +115,15 @@ INFERRED; MODEL; RECORD; ASSUMED.
      so a latent first failure returns the design to round 10's rows at 23.93 A held (the blades at 103.6 % of their rerated current, no part
        the guard protects exposed: M-A holds the FETs at 23.93 A); no automatic diagnostic is drawn: E-12f at commissioning and at each
        service, and an automatic test is REMAINING ENGINEERING with HO-A's pattern
+   4h. A FINDING ON THE DRAWN UVLO NODE (L8P-R11-F1, this record's own C-1b of round 2; OPEN; not this round's circuit, which adds
+     nothing on UVLO): below its threshold U101 sinks UVLOHYS, 12 to 30 uA PRINTED, so at a start H settles under R104 with that sink and
+     every off leakage on BRK_UVLO; record l9stk counts the sink alone (H 4.60 V at 10.6 V, R104 nominal). Q104's and Q105's drains sit on BRK_UVLO: at
+     the 2N7002's 80 nA at 25 C (PRINTED) doubled every 10 K (ASSUMED, the record's own rule), R104 +1 %, D102's 0.715 V and UVLOTH's
+     2.55 V (RECORD): at 10.6 V UVLO reaches 2.70 V with both at the 76.25 C air (0.15 V of margin) and 1.57 V at the 86.25 C site: NOT RELEASED;
+     the release at the pack's least fails above a site of 78.0 C on that rule: a docking with board P warm and the pack low would not
+     start the breaker (the service, not a protection). Smallest corrections, for this record's next round (none drafted here): R104
+     lowered with C103 raised to keep the hold's 0.110 to 0.907 s, or inverters whose maker prints the hot off leakage, or both;
+     evidence: Q104's and Q105's IDSS at 86.25 and 101 C on board P's specimen (E-12's bench)
 
 5. THE DRAFT COMPOSED IN L4-E9'S ORDER (board P; INFERRED from the regenerated netlist)
    l8p/apply_gen_sch_p_breaker.py                             OK
@@ -136,7 +145,7 @@ INFERRED; MODEL; RECORD; ASSUMED.
      the gain at 10 kOhm (the window off),                                                                OCH FAIL: R133 value '10.0k 0.1% 25ppm' does not start '19.3k 0.1% 25ppm'
      the crowbar's drain on DOCK_EN_OUT (a sink on the enable loop),                                      OCH FAIL: R140 on ['DOCK_EN_OUT', 'PACK_P'], wanted PACK_P and OCH_CD
    the draft refuses a board P without the breaker and the ideal diode (exit 3: apply_gen_sch_p_ocheld: this record's breaker and ideal-diode drafts a), a second application (exit 3: apply_gen_sch_p_ocheld: designator U106 is already in use in) and the
-     repository's own generator while unreleased (exit 3: apply_gen_sch_p_ocheld: NOT RELEASED: no RELEASE.md; l8p's drafts wait on an acc)
+     repository's own generator while unreleased (exit 3: apply_gen_sch_p_ocheld: NOT RELEASED: no RELEASE-R11.md; l8p's round 11 draft wa)
 
 6. L4A-67: C-PROT REV 1 FOR THE GUARD ON THE CORRECTED CIRCUIT (the delta of round 9, M-A of round 10, the trip of this round)
    the states: (i) the trip intact: no current is HELD over 21.52 A; above it one event per recovery as 4c; (ii) the trip latently failed
@@ -246,3 +255,5 @@ INFERRED; MODEL; RECORD; ASSUMED.
    the draft refuses without its predecessors, twice, and on the tree's generator                                         yes
    the battery FETs stay at or under 150 C with the trip intact and failed                                                yes
    the allowance read from 10c is 40 uA cold and 50 uA tripped                                                            yes
+   record l9stk's H at 10.6 V with the sink alone reproduces 4.6 V (R104 nominal)                                         yes
+   L8P-R11-F1: the drawn UVLO node is not released at 10.6 V with its inverters at the 86.25 C site (the rule ASSUMED)    yes
