@@ -148,7 +148,7 @@ Old text:
 ```
 New text:
 ```text
-| Adopted | `__ADOPTION__` | set 33's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 33 records as adopted (set 32's was `9a0a0f6a`, kept as dated history; set 31's was
+| Adopted | `1936e548` | set 33's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 33 records as adopted (set 32's was `9a0a0f6a`, kept as dated history; set 31's was
 ```
 Basis: `v2/docs/records/int33/RESULT.md`, section 1 (the ADOPTED row); the token is the fill's second run's.
 
@@ -232,7 +232,7 @@ Old text:
 ```
 New text:
 ```text
-| Adopted | `__ADOPTION__` | set 33's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 33 records as adopted (set 32's was `9a0a0f6a`, kept as dated history; set 31's was
+| Adopted | `1936e548` | set 33's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 33 records as adopted (set 32's was `9a0a0f6a`, kept as dated history; set 31's was
 ```
 Basis: as S-07.
 
