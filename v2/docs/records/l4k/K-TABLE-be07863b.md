@@ -189,5 +189,10 @@ names, held by `test_l4k.py`).
   record l4e11 states the same as its finding for record l9stk (`be07863b:v2/docs/records/l4e11/README.md:118` "record l9stk's E-1 bar
   45.88 K/W is the even split's"). K-06 cites L4-E9's page only, so this record does not widen to it: a K row or a line in register
   task L4A-71 (the selection gate on the 40.78 K/W bar) is the coordinator's choice.
+- **F-3 (K-03's neighbour, Layer 5's contract).** `be07863b:v2/docs/HW-FW-CONTRACT.md:101` "the outlets and the heater off while
+  keyed" is FW-A05's off-list, while R-28 reads K4's off-list as before round 8 with the standby card on it,
+  `be07863b:v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:134` "the outlets, the heater and the standby WiFi card off while keyed".
+  Not a K row and not a fan: `apply_l4k_lh12.py` adds nothing to FW-A05 and points LH-12 at R-28. Whether FW-A05 gains the
+  standby card is Layer 5's contract owner's (R-28's owner, the firmware owner); left to the coordinator.
 - **F-2 (the register's count).** The register's L4A-87 row reads 19 standing on `dd1aed00` with 6 unrestated; on `be07863b` it is 7
   standing, of which 5 are resolved by this record's apply scripts only once set 33 applies them; until then the 7 stand on main.
