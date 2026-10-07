@@ -1,0 +1,306 @@
+l9t5_hoe: Layer 4 task L4A-59, the ledger's HO-E: the supervisor's STM32H743 past its own 105 C VOS0 junction limit under the
+protection; at most three approaches compared, the selection and its draft (record l9t5; MESHSAT-1357, W140)
+prototype design; nothing built, bought, powered or measured; nothing applied to the tree; every junction figure is a MODEL on
+printed thermal resistances, never a measured temperature
+
+1. INPUTS, pinned by sha256
+   9ba54135736a47a3 v2/vendor/st/st-rm0433-rev8.pdf
+   f6e620179006c8c4 v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf
+   217b5dcbfdd27cec v2/vendor/st/st-an4938-rev7.pdf
+   d6aed9d98fbf7f16 v2/vendor/ti/ti-tps37-snvsbj1e.pdf
+   541db9bdd2336905 v2/docs/records/l9t5/apply_gen_sch_b_vcoremon.py
+   6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
+   be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
+   3ebf58a134fe046c v2/docs/records/l9t5/l9t5_t10.out
+   8071ceab8b54a9d7 v2/docs/records/l9t5/l9t5_t10.py
+   3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+   f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
+   37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
+   336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
+   3b6eb8be505a5c85 v2/docs/records/l9t5/inputs/l4reg-L4REG-3b6eb8be.md
+   9fbda7a6e79430c2 v2/docs/records/l9t5/inputs/l4reg-l4reg_compare-9fbda7a6.out
+   469594bb5b4fa6be v2/docs/records/l9t5/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py
+   0a94dd2c444e2b89 v2/docs/records/l9t5/inputs/l4canmb-T10-ROUND6-0a94dd2c.md
+   8fb8815ac815d870 v2/docs/records/l9t5/inputs/l4canmb-apply_gen_sch_b_canmb-8fb8815a.py
+   cf216d4c1162798b v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py
+   ea3b0cb6d96b12b9 v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py
+   c2dd2d711142bb57 v2/vendor/st/pdftext/st-an4938-rev7.layout.p10.txt
+   54de699f9a727164 v2/vendor/st/pdftext/st-an4938-rev7.layout.p19.txt
+   f7f41ca2ef1f5d5e v2/vendor/st/pdftext/st-rm0433-rev8.layout.f215.l216.txt
+   83afa06e5d67b1bf v2/vendor/st/pdftext/st-rm0433-rev8.layout.f262.l264.txt
+   f4190c5b80dedafc v2/vendor/st/pdftext/st-rm0433-rev8.layout.f279.l280.txt
+   9f5d20b27d35986f v2/vendor/st/pdftext/st-rm0433-rev8.layout.f307.l309.txt
+   7335d8c4f0c8e0e9 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p1896.txt
+   5b9234079e915cbb v2/vendor/st/pdftext/st-rm0433-rev8.layout.p260.txt
+   c549b896ed5fd25e v2/vendor/st/pdftext/st-rm0433-rev8.layout.p560.txt
+   2c5d1288b4bd811f v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.f208.l210.txt
+   5cec8bd005323df6 v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.f344.l345.txt
+   d77c15f6c6d6e627 v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p212.txt
+   1827ebde1398be87 v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p215.txt
+   5fb9ce4646b5e1e1 v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p241.txt
+   127ce3e43e52f0ca v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p248.txt
+   bacf4b71a3afaebc v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.p29.txt
+   0667290f86625994 v2/vendor/ti/pdftext/ti-tps37-snvsbj1e.layout.txt
+
+2. THE FAILED CASE, REPRODUCED, AND WHAT THE PROTECTION NOW ADMITS
+   T10 10j (c) and (e) (record l9t5, l9t5_t10.out): 'VOS0 under the trip takes the controller past its own 105 C VOS0 limit from 0.1936 A',
+     '(112.7 C at 0.2452 A)'; cx46 finding 17: 'the MCU reaches its 105 C VOS0 PRINTED LIMIT at approximately 0.1936 A, MODEL'
+   reproduced (MODEL on PRINTED): the junction at 76.25 C inside air (L4-E12 E5, the case's) on LQFP100's 45.0 C/W (DS12110 Rev 11
+     Table 222, p.344) at 3.3 V: 105 C at 0.1936 A; 112.7 C at 0.2452 A (the removed rail trip's average maximum)
+   the 105 C itself: DS12110 Rev 11 Table 112 note 5, p.210: "5. TJMax = 105 °C.", on the VOS0 rows; Table 113, p.210: VOS0 LDO, Max TJ 105 C,
+     480 MHz, VDDLDO from 1.7 V; VOS1 to VOS3: 125 C. Table 111 (absolute maximum ratings), p.208: TJ 125 C
+   the VOS0 rows ST prints (Table 119, p.215, revision V, LDO ON, maxima 'Guaranteed by characterization results'; mA):
+     480 MHz, all peripherals disabled    typ 148 (TYPICAL)   max 226 / 307 / 390 at TJ 25 / 85 / 105 C (PRINTED)
+     480 MHz, all peripherals enabled     typ 226 (TYPICAL)   max 348 / 439 / 550 at TJ 25 / 85 / 105 C (PRINTED)
+   the operating point on the printed maxima (TJ = air + theta x VDD x Imax(TJ), linear between the printed columns; MODEL):
+     peripherals disabled: none at or under 105 C (the least excess over the column's own TJ +29.2 K; 134.2 C at the 105 C column)
+     peripherals enabled:  none at or under 105 C (the least excess +52.9 K; 157.9 C at the 105 C column)
+   the protection now: W138's selection (record l4reg, SESSION W138-1, filed in inputs/) puts a TPS2553-1 ahead of each supervisor's
+     regulator with IOS 0.4702 to 0.5704 A and removes round 6's rail trip (W138-2); its finding L4REG-F7 hands the controller's protection
+     to this task. At 0.5704 A (all of it in the controller, the brief's convention) the junction would read 161.0 C; the controller's own
+     VOS0 maximum at 105 C, 0.550 A, lies inside the limiter's band, so whether the limiter ever acts on a VOS0 state is not printed,
+     and from 0.1936 A to the band's bottom it never does
+   so HO-E is not a current limit's problem: no printed VOS0 row has an operating point inside 105 C at this air, at any current a
+   regulator stage passes. W127's finding 2 stands (0.1855 A served against 0.1936 A, a 4.4 % band) and is not the whole of it: VOS0
+   must be kept out, or ended before the junction moves. The approaches below are judged on that.
+
+3. H-1, A HARDWARE-FORCED VOLTAGE SCALE: what the maker's documents print (each sentence matched in its pinned text)
+   RM0433 Rev 8 p.264, 6.4.2:                     "The regulator output voltage can be scaled by software to different voltage levels (VOS0(a), VOS1, VOS2, and VOS3) that are configured through VOS bits in PWR D3 domain control register (PWR_D3CR)."
+   RM0433 Rev 8 p.264:                            "By default VOS3 is selected after system reset. VOS can be changed on-the-fly to adapt to the required system performance."
+   RM0433 Rev 8 p.279, 6.6.2:                     "After reset, the system starts on the lowest Run mode voltage scaling (VOS3). The voltage scaling can then be changed on-the-fly by software by programming VOS bits in PWR D3 domain control register (PWR_D3CR)"
+   RM0433 Rev 8 p.279:                            "The system maximum frequency can be reached by boosting the voltage scaling level to VOS0. This is done through the ODEN bit in the SYSCFG_PWRCR register."
+   RM0433 Rev 8 p.280, Note:                      "VOS0 can be enabled only when VOS1 is programmed in PWR D3 domain control register (PWR_D3CR) VOS bits."
+   RM0433 Rev 8 p.309, 6.8.6 PWR_D3CR:            "Bits 15:14 VOS: Voltage scaling selection according to performance"
+   RM0433 Rev 8 p.309:                            "01: Scale 3 (default)"
+   RM0433 Rev 8 p.560, 12.3.10 SYSCFG_PWRCR:      "Bit 0 ODEN: Overdrive enable, this bit allows to activate the LDO regulator overdrive mode."
+   RM0433 Rev 8 p.560:                            "This bit must be written only in VOS1 voltage scaling mode."
+   RM0433 Rev 8 p.560:                            "1: Overdrive mode enabled (the LDO generates VOS0 for VCORE)"
+   RM0433 Rev 8 p.260, Table 34 (LDO Bypass):     "VCORE supplied from external source"
+   RM0433 Rev 8 p.262:                            "Due to the LDO default state after power-up (enabled by default), the external VCORE voltage must remain higher than 1.1 V until the LDO is disabled by software."
+   RM0433 Rev 8 p.307, 6.8.4 PWR_CR3:             "The lower byte of this register is written once after POR and shall be written before changing VOS level or ck_sys clock frequency."
+   DS12110 Rev 11 p.29, 3.5.3:                    "Scale 0: boosted performance (available only with LDO regulator)"
+   DS12110 Rev 11 p.210, Table 112 note 4:        "4. VOS0 is available only when the LDO regulator is ON."
+   AN4938 Rev 7 p.10, 2.1.4:                      "The LDO voltage regulator is always enabled after reset with a default output level set to power scale 3 (VOS3)."
+   AN4938 Rev 7 p.19, 2.3.7:                      "The power management unit can be bypassed. This feature can be configured by software."
+   AN4938 Rev 7 p.19:                             "In Bypass mode, the internal voltage scaling is not managed internally, and the external voltage value must be consistent with the targeted maximum frequency"
+   the option bytes (RM0433 Rev 8 p.215 to 216, 4.9.9 FLASH_OPTSR_PRG, the user option word a part keeps across resets): 11 fields,
+     SWAP_BANK_OPT, IO_HSLV, SECURITY, ST_RAM_SIZE[1:0], IWDG_FZ_SDBY, IWDG_FZ_STOP, RDP, NRST_STDY_D1, NRST_STOP_D1, IWDG1_SW, BOR_LEV; a field that selects a voltage scale or the supply configuration: NONE
+   READING: the voltage scale is a software choice made after every reset (PWR_D3CR's VOS bits, then ODEN for VOS0); no pin, strap or
+   option byte selects or caps it. The one hardware means the documents print is the Bypass supply (an external regulator on VCAP; VOS0
+   'available only with LDO regulator'), and that configuration is itself written by software once after every POR, with the LDO enabled
+   by default until then; in Bypass the clock is still the firmware's ('must be consistent with the targeted maximum frequency').
+   VERDICT H-1: DROPS OUT (the register's end condition: the documents show no hardware means). Not claimed: any hardware bar on VOS0.
+   The Bypass route would only move the firmware dependency to the first write after POR, at the cost of three external core
+   regulators, and ST's run-current rows are printed with the 'LDO regulator ON' (Table 119's title): not pursued.
+
+4. H-3, A THERMAL-HEADROOM PART OR HEAT PATH: the junction-to-ambient VOS0 would need at 76.25 C air (MODEL on PRINTED)
+   VOS0 480 MHz, all peripherals enabled, 0.550 A at 105 C:  at most 15.84 C/W
+   VOS0 480 MHz, all peripherals disabled, 0.390 A at 105 C: at most 22.34 C/W
+   the protection's largest admitted current, 0.5704 A (the brief's convention, all in the controller): at most 15.27 C/W
+   printed (DS12110 Rev 11 Table 222, p.344 to 345; JESD51-2 still air, its reference 8.10.1):
+     LQFP100        ThetaJA  45.0   ThetaJB  36.3   ThetaJC  11.5 C/W
+     TFBGA100       ThetaJA  39.3   ThetaJB  21.1   ThetaJC  17.1 C/W
+     LQFP144        ThetaJA  43.7   ThetaJB  38.3   ThetaJC  11.3 C/W
+     UFBGA169       ThetaJA  37.7   ThetaJB  17.3   ThetaJC  11.0 C/W
+     LQFP176        ThetaJA  43.0   ThetaJB  39.4   ThetaJC  11.2 C/W
+     LQFP208        ThetaJA  42.4   ThetaJB  40.3   ThetaJC  11.1 C/W
+     UFBGA176+25    ThetaJA  37.4   ThetaJB  19.3   ThetaJC  23.9 C/W
+     TFBGA240+25    ThetaJA  36.6   ThetaJB  24.3   ThetaJC   7.4 C/W
+   the least ThetaJA of any package is TFBGA240+25's 36.6 C/W, 2.3x the need; the fitted LQFP100 reads 45.0 C/W
+   a heat path through the case top: ThetaJC 11.5 C/W leaves 4.34 C/W for the interface and a heat sink to the 76.25 C air inside the
+     sealed case; no heat sink or interface material is held in v2/vendor/ and none prints a figure for board B's pockets
+   the air at which VOS0's enabled maximum holds 105 C on the printed 45.0 C/W: 23.3 C, against the case's 76.25 C
+   the regulator's own theta (W138's TPS73733DCQRM3, 76.0 C/W PRINTED, record l4reg) moves the REGULATOR's junction; the controller's
+     105 C current, (105 - air) / (theta x VDD) = 0.1936 A, does not depend on it: no regulator part acts on HO-E
+   VERDICT H-3: FAILS on printed figures (no package and no printed heat path reaches 15.84 C/W at this air).
+
+5. H-2, A FIRMWARE BOUND WITH AN INDEPENDENT ENDING
+   5a. THE FIRMWARE BOUND (FW-B20, DRAFTED in record l9t5, unapplied): 'Run each supervisor at VOS3 with HCLK at most 144 MHz (no PLL above it)'. It is a property of an image that does not exist
+       yet; it is verified, not enforced: the image's writes to PWR_D3CR (p.309) and SYSCFG_PWRCR (p.560) read by a static check. Alone
+       it ends nothing: a corrupted or wrong image can still select VOS0 (section 3)
+   5b. THE IWDG (RM0433 Rev 8 p.1896, 45.3.4): "If the “Hardware watchdog” feature is enabled through the device option bits, the watchdog is automatically enabled at power-on, and generates a reset unless the IWDG key register (IWDG_KR) is written by the software before the counter reaches end of count or if the downcounter is reloaded inside the window."
+       a running firmware that selects VOS0 and keeps writing IWDG_KR is never reset by it: NOT AN ENDING for HO-E (it ends hangs)
+   5c. THE PEERS (W137's M-B vote, fnd/l4canmb 0d079eaf, T10-ROUND6.md filed in inputs/): each peer observes the other controllers' TXD
+       lines and votes their transceivers' SHDN (W137-D3: 'the vote acts on SHDN, not on the LDO's EN'). A controller in VOS0 can still
+       send good frames, and a silenced transceiver leaves its controller running: NOT AN ENDING for HO-E. Their use here is detection
+       of a missed self-test (5e), through the state frame they already read
+   5d. THE VCORE MONITOR, DRAFTED (apply_gen_sch_b_vcoremon.py): a TI TPS37 per supervisor, channel 1 overvoltage (option 01, 800 mV,
+       an external divider), open-drain active-low RESET1 to that controller's NRST through 750R 1%, VDD on the controller's own 3.3 V.
+       What it reads: VCAP, the core voltage ST prints per scale (DS12110 Rev 11 Table 112, p.209, LDO ON, min/typ/max):
+         VOS3 0.95 / 1.00 / 1.05 V
+         VOS2 1.05 / 1.10 / 1.15 V
+         VOS1 1.15 / 1.20 / 1.26 V
+         VOS0 1.26 / 1.35 / 1.40 V
+       TPS37 rows (SNVSBJ1E): VITP 0.792 / 0.800 / 0.808 V at VIT 800 mV (7.5, p.7); ISENSE at most 100 nA (p.7); hysteresis options VHYS Range = 2% to 13%,
+       VHYS between Hyst% x 0.985 and x 1.015 of VIT+(OV)MIN (Figure 7-1, p.10); the 2 % option is the draft's
+       the divider: the E96 top over 100k 0.1% 25ppm that keeps the trip band inside (VOS3's top 1.05 V, VOS1's bottom 1.15 V) and the release
+       over VOS3's top, with the largest least margin (SESSION W140-2; resistors at 0.1 % plus 25 ppm/K over 65 K, ISENSE either way):
+         top 34.8k 0.1% 25ppm  trip 1.0627 to 1.0942 V, release from 1.0410 V, least margin -0.0090 V
+         top 35.7k 0.1% 25ppm  trip 1.0697 to 1.1016 V, release from 1.0479 V, least margin -0.0021 V
+         top 36.5k 0.1% 25ppm  trip 1.0759 to 1.1081 V, release from 1.0540 V, least margin +0.0040 V
+         top 37.4k 0.1% 25ppm  trip 1.0829 to 1.1155 V, release from 1.0608 V, least margin +0.0108 V
+         top 38.3k 0.1% 25ppm  trip 1.0899 to 1.1229 V, release from 1.0677 V, least margin +0.0177 V
+         top 39.2k 0.1% 25ppm  trip 1.0969 to 1.1303 V, release from 1.0746 V, least margin +0.0197 V   SELECTED
+         top 40.2k 0.1% 25ppm  trip 1.1047 to 1.1386 V, release from 1.0822 V, least margin +0.0114 V
+         top 41.2k 0.1% 25ppm  trip 1.1125 to 1.1468 V, release from 1.0898 V, least margin +0.0032 V
+         top 42.2k 0.1% 25ppm  trip 1.1202 to 1.1550 V, release from 1.0974 V, least margin -0.0050 V
+         top 43.2k 0.1% 25ppm  trip 1.1280 to 1.1632 V, release from 1.1050 V, least margin -0.0132 V
+       so every VCAP in VOS3's printed band leaves the monitor released (1.0969 V over 1.05 V), and every VCAP in VOS1's or VOS0's band
+       trips it (1.1303 V under 1.15 V): any VOS1 entry, and so any VOS0 entry (RM0433 p.280's note), resets the controller to VOS3
+       (p.279). VOS2's band (1.05 to 1.15 V) straddles the trip: a VOS2 entry is caught only above 1.1303 V (section 6, S-f)
+       the ending's timing, VCAP over the trip to the controller in reset:
+         TPS37 sense delay tCTS 8 us typ, 17 us max at VIT 800 mV with CTS open, '20% Overdrive from VIT' (7.6, p.9, PRINTED);
+           VOS0's bottom 1.26 V is 11.5 % over the trip's top, VOS1's 1.15 V is 1.7 %: under 20 %, so the printed maximum does NOT cover
+           these entries (supplier task S2); 17 us is carried below as the figure S2 must confirm, never as a bound
+         NRST pulled from the rail to VIL 0.3 x VDD (Table 147, p.241: '0.3VDD', NRST with the I/O rows) through 750R 1% and the open drain
+           (VOL 300 mV at 5 mA, p.7: at most 60 Ohm, MODEL) against NRST's 10 k (+-5 %, ASSUMPTION) and RPU 30 to 50 kOhm (Table 152, p.248)
+           and the 100 nF reset capacitor (+-20 %, ASSUMPTION): at most 130.2 us (MODEL); the peak sink 4.52 mA under the recommended 5 mA
+           (7.3, p.6) and the absolute 10 mA (7.1, p.6)
+         NRST's 'Input not filtered pulse' at least 300 ns (Table 152, p.248, guaranteed by design)
+         t_resp = 17 + 130.2 + 0.3 us = 147.5 us (CONDITIONAL on S2's sense delay)
+       power-up: 'When the voltage on VDD is less than the UVLO voltage, but greater than the power-on reset voltage (VPOR), the output pins will be in reset, regardless of the voltage at SENSE pins.' (8.3.1.1, p.18), VPOR 1.4 V; the H743 leaves its own BOR0 reset from 1.62 to 1.71 V rising (Table 116, p.212), so
+         NRST is held until the TPS37's VDD reaches its 2.7 V minimum; then 'During the power-on sequence, VDD must be at or above VDD (MIN) for at least tSD before the output is in the correct state based on VSENSE.' (7.6 note 4, p.9), tSD 2 ms (p.9);
+         Figure 7-3 (p.12) marks the first release at 'tSD + tCTRx' (DIAGRAM): no unmonitored start if the drawing holds (supplier task S4)
+       the rails: the TPS37 runs from 2.7 V (7.3, p.6) on a rail of 3.2422 to 3.3577 V; its IDD at most 2.6 uA (p.7); the divider loads VCAP
+         with at most 10.1 uA: ST prints no figure for a load on VCAP (ASSUMPTION, supplier task S3); no case row changes
+   5e. ITS OWN FAULTS AND THEIR SELF-TEST (SESSION W140-3, the firmware rows for L4A-61, nothing applied): at every start and then once
+       every 3600 s, at HCLK at most 144 MHz, the controller writes VOS = Scale 1, waits for VOSRDY at most 1.0 ms (RM0433 p.309: '1: Ready,
+       voltage level at or above VOS selected level'), then at most 2.0 ms for its own reset; a return is MONITOR FAILED (Scale 3
+       restored, reported in its state frame); after the reset, RCC_RSR's pin-reset flag with a marker kept over reset reads PASSED.
+       Scale 1 (VCAP 1.15 V and up) is over the trip's top by 1.7 %: the test drives the whole real path, VCAP to divider to SENSE1 to
+       RESET1 to NRST. One supervisor tests at a time and only while the other two serve (IOHA row 3); the peers flag a supervisor
+       whose test counter has not moved for 2 x 3600 s (FW-B22's state frame).
+         divider top open or bottom shorted                 SENSE1 at 0 V: never trips                                 found: the next test (no reset)
+         divider bottom open or top shorted                 SENSE1 at VCAP (1.0 V and up) over 0.808 V: held in reset  found: at once (the controller silent, IOHA row 3)
+         a divider value drifted                            the band moves                                             found: the test if the trip passes VOS1's bottom; else at once (held in reset)
+         RESET1 stuck released, or the series resistor open never resets                                               found: the next test
+         RESET1 stuck low, or MONRST shorted to ground      held in reset                                              found: at once
+         the TPS37 unpowered (VDD open)                     output undefined under VPOR                                found: the next test, or at once if it rests low
+         SENSE1 and SENSE2 exchanged or shorted (assembly)  SENSE1 at the rail: held in reset                          found: at once
+         a firmware that skips the test                     a latent monitor fault stays latent                        found: the peers, within 2 x 3600 s
+       the residual: a monitor fault latent since the last test, then a firmware VOS0 entry: a double fault, its window at most 3600 s
+   5f. THE CONTROLLER'S THERMAL TIME: DS12110 Rev 11 prints steady resistances only (Table 222: ThetaJA, ThetaJB, ThetaJC; no transient
+       impedance, no heat capacity, in the pages read); NOT PRINTED. What the ending needs instead (MODEL on PRINTED):
+         from the bounded state (revision V, 0.1570 A, junction 99.6 C at 76.25 C air: T10 10c), VOS0's enabled maximum 0.550 A at 3.3577 V
+         adds at most 1.320 W; to stay inside 105 C (5.4 K) the junction-to-ambient transient impedance at t_resp must be at most 4.09 K/W
+         the self-test with a dead monitor holds Scale 1 for at most 3.0 ms (5e); VOS1's enabled maximum at 125 C, 0.536 A (Table 119, a
+         bound for any VOS1 clock and peripheral set, ASSUMPTION: monotonic), adds at most 1.273 W; inside VOS1's 125 C (25.4 K): at most
+         19.96 K/W at 3.0 ms
+         for scale only (ASSUMPTION, a handbook figure, credited nothing): 1.63 J/(cm3 K) of silicon makes 5.4 K in 147.5 us at 1.320 W need
+         0.0221 mm3 of silicon heated adiabatically; ST prints no die size
+   VERDICT H-2: NOT SUPPORTED ON PRINTED FIGURES AS A PROOF: the register's end condition ('no printed timing bounds the entry-to-reset
+   interval, or the thermal time cannot be bounded on printed figures') is met, since neither the sense delay at VOS0's overdrive (S2)
+   nor the controller's transient impedance (S1) is printed. It STANDS as the one drafted design that ends every VOS1 and VOS0 entry
+   whatever the firmware does, on printed thresholds: PROVISIONAL under amendment 1, S1 and S2 supplier tasks with pass limits, not a
+   closure. Not claimed: a hardware bar, or a printed interval.
+
+6. THE ACCEPTANCE, STATE BY STATE ('the controller inside 105 C in every served state and every state the protection admits'; 105 C is
+   VOS0's limit, 125 C VOS1 to VOS3's, Table 113; every figure MODEL on PRINTED unless marked)
+   S-a  the bounded served state (FW-B20, FW-B21, rev V)         105 C     99.6 C (T10 10c)                                                   HOLDS
+   S-b  VOS3 at its printed maximum (200 MHz, all peripherals)   125 C     119.4 C (T10 section 4)                                            HOLDS
+   S-c  a VOS0 entry by any firmware                             105 C     ended within t_resp 147.5 us; needs ZthJA(t_resp) <= 4.09 K/W      CONDITIONAL (S1, S2)
+   S-d  a VOS1 entry by any firmware, the self-test included     125 C     ended within t_resp; needs ZthJA(t_resp) <= 19.96 K/W              CONDITIONAL (S1, S2)
+   S-e  the self-test with a dead monitor                        125 C     at most 3.0 ms (firmware); needs ZthJA(3.0 ms) <= 19.96 K/W        CONDITIONAL (S1)
+   S-f  VOS2 with VCAP under the trip's top (1.05 to 1.1303 V)   125 C     not surely ended by the monitor                                    OPEN (FW-B20's verification; L4REG-F7)
+   S-g  VOS3 above its printed 200 MHz                           125 C     no printed current                                                 OPEN (FW-B20's verification; L4REG-F7)
+   S-h  power-up before the monitor is valid                     105 C     NRST held under UVLO (p.18); release at tSD + tCTRx (DIAGRAM)      CONDITIONAL (S4)
+   S-i  a latent monitor fault, then a firmware VOS0 entry       105 C     a double fault; window at most 3600 s                              RESIDUAL (single-fault)
+   S-j  any current up to the limiter's 0.5704 A                 as above  a VOS3 state is S-a or S-b; a VOS1 or VOS0 state is S-c or S-d     no state outside S-a to S-i
+   HO-E's ACCEPTANCE: CONDITIONAL. The served state holds 105 C; every VOS0 state the protection admits is ended by the drafted monitor,
+   and whether the junction stays inside 105 C during the ending rests on S1 and S2. Nothing is upgraded: cx46 CORRECTIONS NOT
+   CLOSED and Layer 4's DESK gate NOT PASSED stand; this task closes no cx46 item before its own check (L4A-100).
+
+7. THE SELECTION
+   SESSION W140-1: H-2 with the drafted VCORE monitor (apply_gen_sch_b_vcoremon.py) and the firmware rows of 5e, PROVISIONAL on S1 to S4.
+     authority: SESSION, under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026
+     authority_why: an engineering selection inside the drafted circuit; no requirement, protected class, case row, purchase or
+       publication changes; one approach stands after the reading (H-1 drops out on the documents, H-3 fails on printed figures), so
+       the ruling's second half (more than one option standing) fails; the residuals are measurable on a specimen (S1 to S4), so
+       the selection accepts no risk a measurement cannot remove: amendment 1's supplier tasks, not an owner's risk acceptance
+     ruled_by: W140 (Claude), MESHSAT-1357; ruled_on: 7 October 2026; reversed_by: none
+     to reverse: drop apply_gen_sch_b_vcoremon.py; HO-E returns to REMAINING ENGINEERING with the owner item below
+     end condition: S1 reads the controller's ZthJA at t_resp over 4.09 K/W on board B; or S2 reads the sense delay at VOS0's overdrive
+       long enough that S1's reading fails at the longer interval; or two negative independent checks of this selection
+   the owner item, PREPARED AND NOT RAISED (it would be raised only if the selection's end condition is met): 'The I/O supervisors'
+     STM32H743 cannot hold its 105 C VOS0 limit in the case's air, and no hardware means bars VOS0. Either accept that the 105 C limit
+     during a firmware fault rests on the controller's measured transient thermal response, or change the supervisor part to one whose
+     printed rows hold at this air (a part change and its cost).'
+
+8. THE DRAFT COMPOSED, READ BY PIN, MUTATED AND REFUSED
+   board B in L4-E9's change-list order, this draft straight after iocguard (R-245), the efuse record's R-236 and R-237 after it,
+   Layer 6's three last; the generator run to its end through record l8p's gen_netlist.py:
+     l8gnd/apply_gen_sch_b_gnd002.py                    OK
+     l8r2/apply_gen_sch_b_fans12.py                     OK
+     l8r2/apply_gen_sch_b_fandec.py                     OK
+     l8r2/apply_gen_sch_b_panel5v.py                    OK
+     l8r2/apply_gen_sch_b_ph4.py                        OK
+     l8r2/apply_gen_sch_b_rt500.py                      OK
+     l8r2/apply_gen_sch_b_gndret.py                     OK
+     l8r2/apply_gen_sch_b_gndrtn.py                     OK
+     l9t5/apply_gen_sch_b_iocbuck.py                    OK
+     l9t5/apply_gen_sch_b_iocpre.py                     OK
+     l9t5/apply_gen_sch_b_canshdn.py                    OK
+     l9t5/apply_gen_sch_b_iocset.py                     OK
+     l9t5/apply_gen_sch_b_iocguard.py                   OK
+     l9t5/apply_gen_sch_b_vcoremon.py                   OK
+     efuse/apply_gen_sch_b_u23ilm.py                    OK
+     efuse/apply_gen_sch_b_u24ilm.py                    OK
+     l6r2/apply_gen_sch_b_xal_land.py                   OK
+     l6r2/apply_gen_sch_b_lcsc.py                       OK
+     l6r2/apply_gen_sch_b_intent.py                     OK
+   19 drafts: every step OK; 1530 parts and 1093 nets with the draft, 1515 and 1087 without it (iocguard's state)
+   added 15: C810, C811, C812, R810, R811, R812, R820, R821, R822, R830, R831, R832, U810, U820, U830; removed 0; kept with new nets or values 0
+   the monitors read by pin (own rail, SENSE1 on a node fed only by the divider from the controller's own VCAP, SENSE2 on the rail,
+   RESET1 through 750R 1% to the controller's own pin 14, the other pins open, the bypass at VDD, every part inside its controller's
+   domain, the band off the netlist's values inside (1.05, 1.15) V): DRAWN; before the draft: FAIL
+   with W137's canmb and W138's regstage (inputs/, after iocguard), this draft after them and before them: every step OK; the monitors
+     DRAWN; the two netlists identical
+     the two drafts add 18 parts of their own, none of them a designator of this draft (none shared); an old text of this draft inside
+     any old or new text of theirs: none
+   the mutations (each must FAIL the reading):
+     the monitor's output on a peer's NRST (A's and B's series resistors exchanged at the NRST end):    FAIL
+     the divider's top from the rail, not VCAP:                                                         FAIL
+     the divider's top and bottom exchanged (the trip at the other ratio):                              FAIL
+     SENSE1 and SENSE2 exchanged (the overvoltage channel on the rail):                                 FAIL
+     the monitor on a peer's rail:                                                                      FAIL
+     RESET1 on ground and the ground pin on the output (pins 4 and 10 exchanged):                       FAIL
+   the draft on the tree's generator as it stands (no other draft): applies (order-free: it edits only the reset block and the class table);
+   a second time: refused; on the tree's own generator: refused (NOT RELEASED)
+   CON-004's failure domains ('own regulator branch, reset supervisor, watchdog, crystal and SWD pads'): each monitor touches its own
+   controller's nets and ground only: yes; no controller pin added (CON-017's count unchanged)
+
+9. FINDINGS FOR OTHER AUTHORS AND THE SUPPLIER'S TASKS (amendment 1: none is a gate of this desk round)
+   W140-F1 (L4A-61, Layer 5): FW-B20 restated: VOS3 only; SYSCFG_PWRCR.ODEN never written; the one other VOS write is 5e's self-test
+     (Scale 1 at HCLK at most 144 MHz, VOSRDY within 1.0 ms, the reset within 2.0 ms, MONITOR FAILED reported); a static check of the
+     image for those writes; FW-B22's state frame carries the test counter, the peers flag one stalled for 2 x 3600 s
+   W140-F2 (Layer 6): the TPS37 option (channel 1 OV, 01, open drain active low, 2 % hysteresis) needs an orderable code and a stock
+     line; TI: 'Contact TI sales representatives or consult TI's E2E forum for details and availability; minimum order quantities may apply.'
+   W140-F3 (Layer 10): the WSON-10 land id is this draft's ASSUMPTION; the divider sits at the VCAP pins, its sense node short; the series
+     resistor at the NRST end
+   W140-F4 (L4REG-F7, W138): VOS1 and VOS0 entries are ended by the monitor; VOS2 under the trip and VOS3 above 200 MHz are not (S-f,
+     S-g): they rest on FW-B20's verification
+   W140-F5 (the register, L4A-100): the check reads this comparison and the draft; H-1's reading and H-3's arithmetic are on the pages
+     quoted in sections 3 and 4
+   S1: the controller's junction-to-ambient transient impedance on board B, three first-article supervisors, a junction step at
+     1.320 W: pass at most 4.09 K/W at 147.5 us and 19.96 K/W at 3.0 ms (or ST's transient thermal data for the LQFP100 with board B's copper)
+   S2: the monitor's entry-to-NRST interval at a VOS0 entry and at the self-test's Scale 1 entry, three supervisors, the chamber at
+     76 C: pass at most 147.5 us
+   S3: VCAP in VOS3 with the divider fitted, under the controller's load steps: inside 0.95 to 1.05 V and under the trip's least 1.0969 V
+   S4: NRST held low from the TPS37's VPOR through tSD + tCTR at power-up (scope, ten power cycles each supervisor)
+
+10. THE PREDICATES
+   every quoted sentence of H-1 is in its pinned text, with its page                                                      yes
+   no option-byte field of FLASH_OPTSR_PRG selects a voltage scale or the supply configuration                            yes
+   T10's 0.1936 A and 112.7 C are reproduced from T10's own air and theta                                                 yes
+   no printed VOS0 row has an operating point at or under 105 C at the case's air                                         yes
+   no package in Table 222 reaches the ThetaJA H-3 needs                                                                  yes
+   the selected divider's band lies inside VOS3's top and VOS1's bottom, its release over VOS3's top                      yes
+   the printed 20 % overdrive does not cover VOS0's bottom (S2 is owed, not assumed)                                      yes
+   the open drain's peak current is under the recommended maximum                                                         yes
+   the draft composes with and without W137's and W138's drafts, in either order, and reads DRAWN                         yes
+   each of the six mutations FAILS                                                                                        yes
+   the draft refuses a second application and the tree's own generator                                                    yes
+   each monitor stays inside its controller's failure domain                                                              yes
+   the VOS0 and VOS1 entries read CONDITIONAL, none HOLDS, and H-1 claims no hardware bar                                 yes
+
+l9t5_hoe: done
