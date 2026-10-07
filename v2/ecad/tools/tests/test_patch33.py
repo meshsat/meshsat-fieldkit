@@ -90,7 +90,7 @@ def p_rows(text):
         toks = TOK.findall(r["new"])
         if any(t not in ALLOWED for t in toks):
             bad.append("%s carries a token outside %s: %s" % (r["id"], ALLOWED, toks))
-        if ("ADOPTION" in toks) != (r["id"] in ADOPTED_ROWS):
+        if "__ADOPTION__" in text and ("ADOPTION" in toks) != (r["id"] in ADOPTED_ROWS):   # before the fill's second run
             bad.append("%s: ADOPTION belongs to the Adopted rows %s only" % (r["id"], ADOPTED_ROWS))
     for k, ns in seen.items():
         if ns != sorted(ns) or len(set(ns)) != len(ns) or len(ns) != COUNTS[k]:
@@ -105,8 +105,8 @@ def p_rows(text):
         for ln in p01[0]["new"].split("\n"):
             if "__GATE__" in ln and not any(w in ln for w in GATE_WORDS):
                 bad.append("P-01's GATE line %r carries none of the words the fill tool and the adoption script key on" % ln[:60])
-        for w in GATE_WORDS:
-            if not [ln for ln in p01[0]["new"].split("\n") if w in ln and "__GATE__" in ln]:
+        for w in GATE_WORDS:   # the words stay after the fill; the token with them before it
+            if not [ln for ln in p01[0]["new"].split("\n") if w in ln and ("__GATE__" in ln or "__GATE__" not in p01[0]["new"])]:
                 bad.append("P-01 has no GATE line carrying %r" % w)
     return bad
 
@@ -176,7 +176,8 @@ def t_the_rows_are_well_formed():
     assert not p_rows(text), p_rows(text)
     assert not p_hygiene(text), p_hygiene(text)
     _mutant_refused(p_rows, text, "### U-10. ", "### U-11. ")
-    _mutant_refused(p_rows, text, "| Adopted | `__ADOPTION__` | set 33's adoption commit", "| Adopted | `__PROMOTED__` | set 33's adoption commit")
+    _mutant_refused(p_rows, text, "set 33's promoted revision (set 32's was", "set 33's promoted revision `__ADOPTION__` (set 32's was")
+    _mutant_refused(p_rows, text, "set 33's promoted revision (set 32's was", "set 33's promoted revision `__PROMOTED__` (set 32's was")
     _mutant_refused(p_rows, text, "Gated by suite_gate with G7 (`_bin/suite_gate.py`)", "Gated by the suite gate (`_bin/suite_gate.py`)")
     _mutant_refused(p_hygiene, text, "**NOT DONE:**", "**NOT DONE:** —")
 
