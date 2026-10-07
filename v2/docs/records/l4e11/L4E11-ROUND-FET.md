@@ -43,8 +43,8 @@ closure. Checkpoint: one focused independent check.
   SQS415ENW, SQS401EN; a sample of the range from its own product pages) and eight parts of the -30 V row of Infineon's 2023 P-channel
   selection guide (BSC030P03NS3 G, BSC060P03NS3E G, BSC084P03NS3 G, BSZ086P03NS3 G, BSZ120P03NS3 G, BSZ180P03NS3 G, IPD042P03L3 G,
   BSO301SP H); the record's earlier parts restated (Nexperia BUK6Y10-30P and PXP9R1-30QL, AOS AONS21357). Eighteen parts. The guide's
-  other -30 V parts (SPD50P03L G, the IR HEXFET parts IRF9310, IRFH9310, IRF9317, IRF9321, IRF9388 and the duals) were not read. **An N-channel FET is outside the drive the design has**: BATDRV pulls the
-  gate 10 V below VSYS (p.5), a high-side N-channel part needs a gate above its source, and TI's BATDRV loops are P-channel loops.
+  other -30 V parts (SPD50P03L G, the IR HEXFET parts IRF9310, IRFH9310, IRF9317, IRF9321, IRF9388 and the duals) were not read.
+  **An N-channel FET is outside the drive the design has**: BATDRV pulls the gate 10 V below VSYS (p.5), a high-side N-channel part needs a gate above its source, and TI's BATDRV loops are P-channel loops.
   Not read: makers whose sheets print typical capacitances only (the class's usual practice; a typical gives no limit), and TI's own
   P-channel NexFET range, which this round did not open (a search line for the supplier's phase 1).
 - **G, TI's 5 nF on PRINTED maxima.** The count's summed Ciss maximum under 5 nF at the maker's own VDS (-15 to -25 V; near 0 V is not
@@ -57,13 +57,13 @@ closure. Checkpoint: one focused independent check.
   and the coupling confirms it (`t_the_worst_split_factor_is_the_largest_of_a_search_over_split_and_coupling`). The set's own bar on
   (Zself + (n - 1) Zmut) per FET is B n^2 / (I^2 R F0) and must be at least 40.78 K/W.
 - **H, the held 23.93 A on printed figures.** The bar is computed at E-1's current with R the allowance at -8.5 V and the part's limit
-  (25 K under its rating) by 15c's two chords on printed maxima. A sheet with no printed hot maximum (the six Infineon parts) gives no
+  (25 K under its rating) by 15c's two chords on printed maxima. A sheet with no printed hot maximum (the eight Infineon parts) gives no
   allowance: the screen then uses its -10 V, 25 C maximum, under any hot -8.5 V figure, which can show a FAIL and never a PASS.
 - **D, information.** The docking pulse against the printed body-diode pulse rating, whole in one FET (E11-30's rule).
 
 The rows the screen uses are read back from each sheet's cited page (pdftotext); five Infineon sheets of 16 November 2009 carry no usable
 text layer, so their rows are this record's READING of the rendered pages (`inputs/fet-search-readings-2026-10-07.json`, each with its
-sha256). The eleven sheets new to the tree are held back by their terms (`fetch_held_back_fet.py`, sha256 pinned).
+sha256). The thirteen sheets new to the tree are held back by their terms (`fetch_held_back_fet.py`, sha256 pinned).
 
 ## 3. The candidates ([OUT 3]; MAKER rows, INFERRED figures; the best set each part allows under G)
 
@@ -89,8 +89,8 @@ sha256). The eleven sheets new to the tree are held back by their terms (`fetch_
 | BSO301SP H (Infineon, Rev 1.32 2010; SO-8) | 150 C, 125 C | 8.0 bound | 4.43 / 5.89 at -25 V; 136 nC | 0; 0 | no set | | RthJS 35 K/W; 60 A | no G |
 
 "Bound" is the favourable -10 V, 25 C maximum: an upper bound on the bar, so each such FAIL holds at any hot figure. Every printed ISM above is
-under the 242.9 A docking pulse except the BUK6Y10-30P's 320 A and the SQJQ131EL's 1100 A; the PXP9R1-30QL and the AONS21357 print
-none (D, information).
+under the 242.9 A docking pulse except the BUK6Y10-30P's 320 A, the SQJQ131EL's 1100 A and the IPD042P03L3 G's 280 A (each at its own
+printed pulse width and case temperature); the PXP9R1-30QL and the AONS21357 print none (D, information).
 
 ## 4. The class bound ([OUT 4]; INFERRED)
 
@@ -134,7 +134,7 @@ a fallback is not the baseline, as record l4e7's `apply_gen_sch_e_p0sol_b2.py` i
 - `fallback/apply_check_dd7_fetpair.py`: DD-7's check names the three in its BODY group; on adopting the pair its tuple becomes Q39 and Q40.
 - **Composition and mutations** (`t_the_fallback_composes_runs_reads_the_pair_and_its_mutations_fail`): board A composed in main's L4-E9
   order with record l8p's PTC, this record's DD-7, record l8p's thermal guard and its fail-safe delta before d8dec31's mainpb, then the
-  fallback: the generator runs to its end (781 parts, one fewer than the three's 782), the pair reads DRAWN, DD-7's check reads DRAWN on the
+  fallback: the generator runs to its end (one part fewer than the three's composition), the pair reads DRAWN, DD-7's check reads DRAWN on the
   pair; refused on a board without the charger draft, a second time and on the tree's own generator; five mutations each fail (the
   three left drawn, a third P-channel gate on BATDRV, Q40 reversed, Q40's gate off BATDRV: the pair's check FAILS; CH_BATQ's intent still
   naming Q42: the generator refuses). A mutation of the draft's comment that states the pair's 4.72 nF as a maximum fails the text check.
@@ -189,7 +189,7 @@ removed by a named measurement or vendor statement (E-05, E11-29, E11-36).
   ruled_by: "SESSION (W136) under the owner's rulings of 21 and 26 September 2026"
   ruled_on: 2026-10-07
   reversed_by: "M-A's end condition below, which enters M-B; or an independent check that finds M-A's FET part unsupported on the same printed figures (two negative checks end M-A by the constitution's section 5)"
-  outcome: "M-A first, M-B second. M-A (L4A-66, released by this decision): every series part of the pack path held indefinitely at the breaker's held 23.93 A from 76.25 C inside its PRINTED limits, so a latent guard failure no longer removes protection and path 2's retries never exceed a current the parts hold (HO-A's consequence and HO-B closed together when L4A-66's acceptance holds); its FET part is (i)(a) at the 40.78 K/W bar, CONDITIONAL on E-05, E11-29 and E11-36; L4A-66 drafts and checks the other series parts (R17, F1, the pours and the pack-path contacts). M-A's END CONDITION, any one of: (1) E11-29's coupon reads the three's hottest junction over 150 C at 23.93 A held from 76.25 C at the 40.78 K/W bar, or E11-36 reverses the allowance beyond what the bar absorbs; (2) E-05 is negative AND the pair's coupon refuses 20.39 K/W, so no FET set both satisfies TI and holds 23.93 A on a pour; (3) L4A-66 finds a series part over its printed limit at 23.93 A held with no supported correction after two negative checks of that correction. Then M-B. M-B: an automatic self-checking diagnostic with a bounded detection and response interval covering faults after start-up and faults of the diagnostic itself (the owner's part 24), the breaker never opened by the test in service, answering L8P-BREAKER.md's objection (a test of a shunt opens the breaker in service; a cross-check of the two VTEMP outputs sees the switches, not the gate networks or the shunts), with an observer off board A (a board B supervisor or the panel RP2040) over new inter-board lines; drafted, composed, mutations failing; HO-B then stays L4A-65's. M-B's END CONDITION: two negative checks of the same diagnostic end it; the item is then handed over as the receiving company's fault-tolerant redesign (RE-10's own words) with the cases named, and an owner item is prepared only if the evidence shows a requirement change is necessary."
+  outcome: "M-A first, M-B second. M-A (L4A-66, released by this decision): every series part of the pack path held indefinitely at the breaker's held 23.93 A from 76.25 C inside its PRINTED limits, so a latent guard failure no longer removes protection and path 2's retries never exceed a current the parts hold (HO-A's consequence and HO-B closed together when L4A-66's acceptance holds); its FET part is (i)(a) at the 40.78 K/W bar, CONDITIONAL on E-05, E11-29 and E11-36; L4A-66 drafts and checks the other series parts (R17, F1, the pours and the pack-path contacts). M-A's END CONDITION, any one of: (1) E11-29's coupon reads the three's hottest junction over 150 C at 23.93 A held from 76.25 C at the 40.78 K/W bar, or E11-36 reverses the allowance beyond what the bar absorbs; (2) E-05 refuses the three AND either the pair's coupon refuses 20.39 K/W or Q-TI-17 (e) refuses the pair, so no FET set both satisfies TI and holds 23.93 A on a pour; (3) L4A-66 finds a series part over its printed limit at 23.93 A held with no supported correction after two negative checks of that correction. Then M-B. M-B: an automatic self-checking diagnostic with a bounded detection and response interval covering faults after start-up and faults of the diagnostic itself (the owner's part 24), the breaker never opened by the test in service, answering L8P-BREAKER.md's objection (a test of a shunt opens the breaker in service; a cross-check of the two VTEMP outputs sees the switches, not the gate networks or the shunts), with an observer off board A (a board B supervisor or the panel RP2040) over new inter-board lines; drafted, composed, mutations failing; HO-B then stays L4A-65's. M-B's END CONDITION: two negative checks of the same diagnostic end it; the item is then handed over as the receiving company's fault-tolerant redesign (RE-10's own words) with the cases named, and an owner item is prepared only if the evidence shows a requirement change is necessary."
 ```
 
 ## 8. What stays open, and findings for other records
@@ -207,8 +207,7 @@ removed by a named measurement or vendor statement (E-05, E11-29, E11-36).
 - **For REMAINING-ENGINEERING HO-L (record l4close):** "(ii) two FETs, the BUK6Y10-30P pair ... a draft then owed" is now drafted
   (`fallback/apply_gen_sch_a_fetpair.py`), still conditional.
 - **For the supplier's phase 1:** TI's P-channel range, the rest of Infineon's and Vishay's -30 V P-channel parts and the makers that print typical
-  capacitances only were not read; a part found there
-  enters the same screen (`l4e11_fet.py`), and the class bound says what it must beat.
+  capacitances only were not read; a part found there enters the same screen (`l4e11_fet.py`), and the class bound says what it must beat.
 
 ## 9. Status
 
