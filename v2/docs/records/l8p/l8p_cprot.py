@@ -60,6 +60,7 @@ def refuse(msg):
 
 RECS = {
     "rowc": "v2/docs/records/l8p/l8p_rowc.out",
+    "e11": "v2/docs/records/l4e11/l4e11_power.out",
     "c4": "v2/docs/records/l8p/l8p_c4.out",
     "prot": "v2/docs/records/l9stk/l9stk_protection.out",
     "stk": "v2/docs/records/l9stk/L9-STACKUPS.md",
@@ -191,8 +192,12 @@ def compute():
     l9g = flat(read(RECS["l9g"]))
     need(l9g, r"The switch and the regulator draw 18\.25 uA at their printed maxima, against the 30 uA this round allows the guard\.",
          "record l9stk 15.9's allowance sentence (inputs copy at bb6d2c8f)")
+    e11 = flat(read(RECS["e11"]))
+    m = need(e11, r"overcurrent ([\d.]+) / ([\d.]+) / ([\d.]+) A \(the printed row, the 0\.1 % parts.*?short circuit ([\d.]+) / ([\d.]+) / ([\d.]+) A",
+             "the entry's overcurrent and short-circuit rows (record l4e11 3c)")
+    ENTRY = (float(m.group(1)), float(m.group(3)), float(m.group(4)), float(m.group(6)))
     R.update(LIM=LIM, VCL=VCL, CB=CB, CLEAR=CLEAR, TCL_TYP=TCL_TYP, PULSE=PULSE, VSNS_I=VSNS_I, PGD_VDS=PGD_VDS, CU50=CU50, RS=RS,
-             DRAW=DRAW, ALLOW=ALLOW)
+             DRAW=DRAW, ALLOW=ALLOW, ENTRY=ENTRY)
 
     # 2A. a fuse or a holder arrangement (Littelfuse's printed rerating; record l9stk's copper)
     need_f = I / 25.0
@@ -225,6 +230,8 @@ def compute():
     need(t37, r"tCTSx \(max\) = -ln \(0\.25\) x RCTSx \(max\) x CCTSx_EXT \(max\)", "TPS37 Equation 6")
     need(t37, r"VIT = 800 mV CCTS1 = CCTS2 = Open 8 17 [µμ]s", "TPS37 tCTS without a capacitor")
     need(t37, r"tSD Startup Delay \(4\) 2 ms", "TPS37 tSD")
+    need(t37, r"tCTR \(CTR1/MR, CTR2/MR\) \(2\) VIT = 800 mV CCTR1 = CCTR2 = Open 40 [\u00b5\u03bc]s", "TPS37 tCTR without a capacitor")
+    need(cs_pre := flat(pdftext("csd")), r"Ciss Input capacitance 8770 11400 pF", "CSD18510Q5B Ciss")
     need(t37, r"VRESET = 5\.5 V 300 nA Open-Drain leakage", "TPS37 open-drain leakage")
     need(t37, r"Current IRESET1, IRESET2, IRESET1, IRESET2 0 ±5 mA", "TPS37 recommended RESET current")
     need(t37, r"Voltage VDD 2\.7 65 V", "TPS37 VDD range")
@@ -263,6 +270,8 @@ def compute():
     # the sequence: the trip's sense delay, the gate drive, the -1's clearing; the arming's delay after PGD falls
     t_gate = 75e-9 / ((PACK_LEAST - 4.5) / R142)                  # Qg(4.5 V) 75 nC at most through R142 from BRK_VIN
     R.update(t_gate=t_gate, t_event=tcts1[1] + t_gate + CLEAR, arm_margin=tcts2[0] - (t_gate + CLEAR))
+    t_off = 40e-6 + 5 * R138 * 11.4e-9                            # tCTR1 without a capacitor at most (800 mV row); 5 time constants of R138 and Ciss
+    R.update(t_off=t_off, t_src=R["t_event"] + t_off)
     # 4d. ratings and leakages
     vgs110 = (PACK_LEAST * R136 / (R136 + R137), CLAMP * R136 / (R136 + R137))
     leak_n = 80e-9 * 2 ** ((SITE - 25.0) / DOUBLING_K)             # 2N7002 80 nA at 25 C (PRINTED), doubled (ASSUMED)
@@ -488,6 +497,17 @@ def render(R, K):
     w("     low, so Q112 is off and the crowbar disarmed whenever the breaker is not running: at a gauge's wake, at a docking (the RC hold's")
     w("     0.110 s and the start), during a start (PGD low while VDS is high) and once latched; the trip touches neither the enable loop nor")
     w("     UVLO (check_l8p_och's APART): L4-E11 20c's window, its readings and the RC hold's 0.110 to 0.907 s are unchanged")
+    w("     EACH SOURCE PRESENT OR ABSENT (C-PROT rev 1): with a source holding VSYS and board A's battery FETs on, the crowbar also loads the")
+    w("       source through those FETs, CELL+, the dock and the lead, for the event and the crowbar's turn-off after the latch (RESET1's")
+    w("       release at most 40 us without a capacitor, PRINTED, and R138 with Q111's 11.4 nF: %s ms), %s ms at most; that current returns" % (
+        fmt(R["t_off"] * 1e3, 2), fmt(R["t_src"] * 1e3, 2)))
+    w("       through board A's ground, not R10, so it never holds the trip; board E's entry meets it as a short on VSYS, its overcurrent %s to" % fmt(R["ENTRY"][0], 3))
+    w("       %s A and its short-circuit %s to %s A (record l4e11 3c, RECORD), its own fault behaviour, the case its own record judges; the" % (
+        fmt(R["ENTRY"][1], 3), fmt(R["ENTRY"][2], 2), fmt(R["ENTRY"][3], 2)))
+    w("       battery FETs carry at most that source current, reversed, inside their held rows; afterwards a charge through the latched")
+    w("       breaker's body diodes is route R1's (round 3: the detector holds the return, board A's inhibit sets), as after any latch")
+    w("     THE GAUGE: R10 carries the event, so the gauge's AFE reads it as it reads any short on PACK_P (IF-6); its levels are unchanged")
+    w("       (IF-4), and if its ASCD acts Q2 opens behind the latched breaker; the gauge's recovery is the battery stream's")
     w("   4f. THE STANDING CURRENT from BRK_VIN: U106 %s uA, U107 %s uA, R139 with R141 %s uA at %s V (PRINTED maxima): beside the detector's" % (
         fmt(R["stand"][0] * 1e6, 0), fmt(R["stand"][1] * 1e6, 1), fmt(R["stand"][2] * 1e6, 1), fmt(PACK_MOST, 1)))
     w("     0.47 mA (record l8p round 3), a standby load on the pack for the battery stream")

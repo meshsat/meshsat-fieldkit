@@ -9,7 +9,7 @@ INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, r
    36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
    aa05cdaac67f9fee  v2/docs/records/l4e11/l4e11_fet.out
    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
-   09f5080e3c0274a6  v2/docs/records/l8p/L8P-BREAKER.md
+   fa69b524f3ca24e9  v2/docs/records/l8p/L8P-BREAKER.md
    6a136feec6c9cf4e  v2/ecad/tools/gen_sch_a.py
    f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
    740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py

@@ -1894,6 +1894,12 @@ figures or the missing figure named. Checkpoint: one focused independent check (
   under the 116.8 A where VIN to SENSE passes 0.3 V: no row of l9stk 15.6 is newly reached. The arming's least delay leaves 3.30 ms for
   tCL past the gate and the clearing, so the crowbar stays until the latch; recovery is the -1's own (redocking, an input's return, the
   guard's cycle); no retry train.
+- **Each source present or absent.** With a source holding VSYS and board A's battery FETs on, the crowbar also loads the source
+  through those FETs, CELL+, the dock and the lead, for the event and the crowbar's turn-off after the latch, 2.46 ms at most; that
+  current returns through board A's ground, not R10, so it never holds the trip; board E's entry meets it as a short on VSYS (its
+  overcurrent 6.364 to 7.136 A, its short-circuit 10.36 to 13.87 A, record l4e11 3c), its own fault behaviour; afterwards a charge
+  through the latched breaker's body diodes is route R1's, as after any latch. The gauge's AFE reads the event on R10 as it reads any
+  short on PACK_P (IF-6); its levels are unchanged (IF-4) and its recovery, if its ASCD acts, is the battery stream's.
 - **Kept off.** Q110 under RESET1's 300 nA and Q112's off leakage (5.58 uA at the record's 86.25 C site, the doubling ASSUMED) through
   R136: 0.277 V against its least 0.5 V threshold; the crowbar under Q110's off leakage (43.6 uA at the site) through R138: 0.205 V
   (0.570 V at a 101 C site) against Q111's least 1.2 V at 25 C (its threshold falls with temperature, TYPICAL: the layout keeps U106,

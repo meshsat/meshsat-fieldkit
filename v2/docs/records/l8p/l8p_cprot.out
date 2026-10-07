@@ -4,7 +4,8 @@ printed figures and the records' own; nothing was built, bought or measured. LAB
 INFERRED; MODEL; RECORD; ASSUMED.
 
 0. PINS (sha256/16)
-   c76da0aaf84b0e07  v2/docs/records/l8p/l8p_rowc.out
+   649a1f8ce5ff59c4  v2/docs/records/l8p/l8p_rowc.out
+   36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
    46f3c6cd9ea6b638  v2/docs/records/l9stk/l9stk_protection.out
    3a23036c57859f1d  v2/docs/records/l9stk/L9-STACKUPS.md
@@ -102,6 +103,15 @@ INFERRED; MODEL; RECORD; ASSUMED.
      low, so Q112 is off and the crowbar disarmed whenever the breaker is not running: at a gauge's wake, at a docking (the RC hold's
      0.110 s and the start), during a start (PGD low while VDS is high) and once latched; the trip touches neither the enable loop nor
      UVLO (check_l8p_och's APART): L4-E11 20c's window, its readings and the RC hold's 0.110 to 0.907 s are unchanged
+     EACH SOURCE PRESENT OR ABSENT (C-PROT rev 1): with a source holding VSYS and board A's battery FETs on, the crowbar also loads the
+       source through those FETs, CELL+, the dock and the lead, for the event and the crowbar's turn-off after the latch (RESET1's
+       release at most 40 us without a capacitor, PRINTED, and R138 with Q111's 11.4 nF: 0.31 ms), 2.46 ms at most; that current returns
+       through board A's ground, not R10, so it never holds the trip; board E's entry meets it as a short on VSYS, its overcurrent 6.364 to
+       7.136 A and its short-circuit 10.36 to 13.87 A (record l4e11 3c, RECORD), its own fault behaviour, the case its own record judges; the
+       battery FETs carry at most that source current, reversed, inside their held rows; afterwards a charge through the latched
+       breaker's body diodes is route R1's (round 3: the detector holds the return, board A's inhibit sets), as after any latch
+     THE GAUGE: R10 carries the event, so the gauge's AFE reads it as it reads any short on PACK_P (IF-6); its levels are unchanged
+       (IF-4), and if its ASCD acts Q2 opens behind the latched breaker; the gauge's recovery is the battery stream's
    4f. THE STANDING CURRENT from BRK_VIN: U106 150 uA, U107 2.6 uA, R139 with R141 8.4 uA at 16.8 V (PRINTED maxima): beside the detector's
      0.47 mA (record l8p round 3), a standby load on the pack for the battery stream
    4g. ITS OWN SINGLE FAILURES (INFERRED from the circuit as drawn):
