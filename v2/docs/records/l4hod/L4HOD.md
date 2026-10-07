@@ -1,4 +1,4 @@
-**L4A-58 (W146, branch `fnd/l4hod` from `664d4019` with fnd/l4reg `86dbcdff` merged, 7 October 2026): DONE: the peers' in-service test of each supervisor's TPS2553-1 drafted on board B as `apply_gen_sch_b_hodtest.py` (a 3.0 Ohm test load, two series AO3400A switches one per peer, each peer's own FAULT and output reads, a diode that holds the tested regulator off while the load conducts; 54 parts, pins 15, 16 and 42 to 45), composed with canmb, regstage and canen in all five orders they admit (identical netlists), read by pin with seven netlist mutations that FAIL; the test's acceptance (J0 to J9) on printed figures with five mutations that FAIL; the procedure, its interval out of the quorum (5.945 s), the service lost and the detection interval of a lost limit (3602.341 s; 102.341 s for one present at start-up); the test path's 35 fault rows and five procedure mutations that FAIL; the tests. NOT DONE: no independent check; nothing applied; the transient dip of +5V_IOC at the test's load step is not bounded on printed figures (PROVISIONAL, W146-F10); nothing physical. NEXT: the coordinator's reading, then row (b)'s check (L4A-62) with L4A-61's propagation.**
+**L4A-58 (W146, branch `fnd/l4hod` from `664d4019` with fnd/l4reg `86dbcdff` merged, 7 October 2026): DONE: the peers' in-service test of each supervisor's TPS2553-1 drafted on board B as `apply_gen_sch_b_hodtest.py` (a 3.0 Ohm test load, two series AO3400A switches one per peer, each peer's own FAULT and output reads, a diode that holds the tested regulator off while the load conducts; 54 parts, pins 15, 16 and 42 to 45), composed with canmb, regstage and canen in all five orders they admit (identical netlists), read by pin with seven netlist mutations that FAIL; the test's acceptance (J0 to J9) on printed figures with five mutations that FAIL; the procedure, its interval out of the quorum (5.945 s), the service lost and the detection interval of a lost limit (3602.341 s; 102.341 s for one present at start-up); the test path's 35 fault rows and five procedure mutations that FAIL; the tests (seven modules, 122 passed, 0 failed, 0 skipped). NOT DONE: no independent check; nothing applied; the transient dip of +5V_IOC at the test's load step is not bounded on printed figures (PROVISIONAL, W146-F10: a 26.3 us hold-up for the supplier to measure); nothing physical. NEXT: the coordinator's reading, then row (b)'s check (L4A-62) with L4A-61's propagation.**
 
 # Record l4hod: HO-D under the limiter, the peers' in-service test of each supervisor's TPS2553-1 (a draft, not applied)
 
@@ -48,7 +48,7 @@ B, C 20 s apart), then each supervisor every 3600 s, the three 1200 s apart.
 | 1 | 2.190 s | assert their restart votes (record l4canen's route): the output falls under 2.0 V within 1.384 s; release: it is back over 3.3 V within 0.804 s | RESTORE ROUTE: abort, nothing latched |
 | settle | 0.020 s | the output at 3.3 V for 20 ms | (none) |
 | 2 | 0.012 s | the upper half alone for 4 ms, then the lower alone for 4 ms: no drop under 2.5 V | SWITCH STUCK ON (the other half); under the 5 ms least deglitch, nothing latches |
-| 3 | 0.019 s | the upper closes, then the lower (the load's moment); the closer checks the output under 2.5 V 0.2 ms after closing, the other peer 3.2 ms after its own; each reads I = V / 3.0 Ohm 1 to 4 ms after the drop it sees, FAULT's fall 4.75 to 10.25 ms after it, the output under 0.3 V 1 ms after FAULT; both open by 12 ms; the output stays under 0.3 V for 5 ms | LIMIT NOT SHOWN (the limit lost, or the test path open); LIMIT HIGH; LIMIT LOW; FAULT NOT SEEN; NO LATCH; the peers disagree |
+| 3 | 0.019 s | the upper closes, then the lower (the load's moment); the closer checks the output under 2.5 V 0.2 ms after closing, the other peer 3.2 ms after its own; each reads I = V / 3.0 Ohm 1 to 4 ms after the drop it sees, FAULT's fall 4.75 to 10.25 ms after it, the output under 0.3 V 1 ms after FAULT; both open by 12 ms; the output stays under 0.3 V for 5 ms | LIMIT NOT SHOWN (the limit lost, or the test path open); LIMIT HIGH; LIMIT LOW; FAULT NOT SEEN; FAULT EARLY; NO LATCH; the peers disagree |
 | 4 | 3.604 s | restart votes for 2.0 s, release: the output back over 3.3 V, FAULT high; the target boots and rejoins within 0.800 s (W139) | RESTORE FAILED: canen's automatic restart retries every 10 s |
 
 Any failure: both peers open their halves, report the verdict (state frames, the kit's status path), restore the target if latched,
@@ -123,7 +123,11 @@ half); the restore route is exercised 2.222 s before the load. The one row that 
 TPS2553-1 whose latch does not clear on EN (against 9.3.1's description), which any real overload would show the same way; found at
 once (step 4), canen retries every 10 s, RAIL_EN returns it. Double faults, named: the load shorted and the limit lost (the test then
 asks up to U601's own limit for the closer's 0.2 ms; the first found ends that supervisor's tests); both halves stuck on (the target
-held off, a node out); a common firmware fault in both peers, outside the single-fault scope as for every 2-of-2 vote of this plane.
+held off, a node out); a common firmware fault in both peers, outside the single-fault scope as for every 2-of-2 vote of this plane; a half stuck on and the
+limit lost (step 2's single closure then loads the lost limit's current for its 4 ms, inside J2 and J3; step 3 reads LIMIT NOT SHOWN).
+The FAULT window's lower edge assumes the limiter's die does not reach its thermal shutdown inside the deglitch (no transient thermal
+impedance printed, the term W138 left open for an output short): a trip there asserts FAULT at once and the test reads FAULT EARLY, a
+failure, never a pass.
 
 Procedure mutations, each FAILS: a stuck test switch left undetected (step 2 omitted: three rows NOT FOUND); the lower half's partner
 not checked; the restore route not exercised first (a restore-route fault then leaves its supervisor latched); one peer alone judging
@@ -144,7 +148,13 @@ The tests, as run.py printed them (7 October 2026, this branch, the held sheets 
 
 | Module | run.py's line |
 |---|---|
-| test_l4hod | (filled below) |
+| test_l4hod | tests: 12 passed, 0 failed, 0 skipped |
+| test_pdftext_input | tests: 19 passed, 0 failed, 0 skipped |
+| test_l4reg | tests: 8 passed, 0 failed, 0 skipped |
+| test_l4canen | tests: 11 passed, 0 failed, 0 skipped |
+| test_l9t5_canmb | tests: 10 passed, 0 failed, 0 skipped |
+| test_applier_state | tests: 20 passed, 0 failed, 0 skipped |
+| test_l9t5 | tests: 42 passed, 0 failed, 0 skipped |
 
 ## 8. The four acceptance states (constitution section 2)
 
