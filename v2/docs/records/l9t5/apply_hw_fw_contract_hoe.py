@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """apply_hw_fw_contract_hoe.py: DRAFT apply script on v2/docs/HW-FW-CONTRACT.md (record l9t5, Layer 4 task L4A-59, the ledger's HO-E,
-corrected on its focused check L4A-100; MESHSAT-1357, W145, 7 October 2026). UNAPPLIED: the integrator runs it; record l9t5 runs it
+corrected on its focused check L4A-100; MESHSAT-1357, W145, 7 October 2026; restated by W148 the same day for the hold stage that
+replaces W145's CTR1 capacitor). UNAPPLIED: the integrator runs it; record l9t5 runs it
 only on scratch copies (l9t5_hoe.py section 8, test_l9t5_hoe).
 
 WHAT IT IS: one Layer 5 row and its verification item, drafted for the register's firmware task L4A-61 (HO-E-REGISTER-ROWS.md, R-3):
@@ -10,8 +11,11 @@ WHAT IT IS: one Layer 5 row and its verification item, drafted for the register'
     the ending a VOS0 entry relies on. The row reads PASSED only on Table 56's row 2 ("Pin reset (NRST)": PINRSTF and CPURSTF set,
     every other flag clear) after clearing the flags (RMVF), keeps its marker where NRST does not reach (Table 55, p.330: "Debug
     features, Flash memory, RTC and backup RAM are not reset"), and times the window from the Scale 1 write at t_resp (174.7 us,
-    record l9t5 `l9t5_hoe.out` 5d), so every unit in service shows its own ending inside the interval S1's limit is read at.
-  V-B24, its first-article verification (the S2 and S5 measurements the record names).
+    record l9t5 `l9t5_hoe.out` 5d; 122.6 us since W148's hold stage, 174.7 us in W145's draft), so every unit in service shows its own
+    ending inside the interval S1's limit is read at; and (W148-3) it times the hold stage: the restart must come at least 7 ms after the
+    write (the hold's printed minimum is 14 ms, TI SBVS249B 7.6; its CT-open delay at most 1.3 ms), read on the RTC, which NRST does
+    not reset.
+  V-B24, its first-article verification (the S2 measurement the record names and the hold's confirmation; S5 retired by W148-1).
 It applies AFTER apply_hw_fw_contract_t10.py (it extends that draft's FW-B20 to FW-B22 and V-B20 to V-B23 and its change record) and
 refuses a file where those rows are absent. The rows cite record l9t5's drafts and are written OWED (DRAFTED): no supervisor firmware
 exists (v2/firmware holds the panel's).
@@ -32,25 +36,28 @@ TREE = os.path.join(REPO, "v2", "docs", "HW-FW-CONTRACT.md")
 HEAD_OLD = "### 3.3 Board B: modules, supervisors and board B's devices (FW-B01 to FW-B22)\n"
 HEAD_NEW = "### 3.3 Board B: modules, supervisors and board B's devices (FW-B01 to FW-B23)\n"
 FW_B23 = ("| FW-B23 | the three supervisors `B:U41`, U51, U61 and their VCORE monitors U810, U820, U830 (TI TPS37, record l9t5 "
-          "`apply_gen_sch_b_vcoremon.py`, DRAFTED: each holds its own controller's NRST while VCAP is over 1.0969 to 1.1303 V and for its "
-          "CTR1 hold after) | The self-test is the one write of PWR_D3CR's VOS other than Scale 3, and SYSCFG_PWRCR.ODEN is never written "
+          "`apply_gen_sch_b_vcoremon.py`, DRAFTED: each pulls its hold stage U811, U821, U831 (TI TPS3703F6050) while VCAP is over 1.0969 to "
+          "1.1303 V, and the hold stage holds the controller's NRST then and at least 14 ms after) | The self-test is the one write of PWR_D3CR's VOS other than Scale 3, and SYSCFG_PWRCR.ODEN is never written "
           "(W140-F1). At every start and then once every 3600 s, one supervisor at a time and only while the other two serve: set "
-          "RCC_RSR.RMVF; write a test marker to the backup RAM or an RTC backup register; at HCLK at most 144 MHz write VOS = Scale 1 and "
-          "wait 174.7 us from that write, with no wait on VOSRDY; still running, write VOS = Scale 3 within 10 us, clear the marker and "
+          "RCC_RSR.RMVF; write a test marker and the RTC's time (sub-second counter at 1 ms resolution or finer) to the backup RAM or the RTC "
+          "backup registers; at HCLK at most 144 MHz write VOS = Scale 1 and wait 122.6 us from that write, with no wait on VOSRDY; still running, write VOS = Scale 3 within 10 us, clear the marker and "
           "report MONITOR FAILED in the state frame. After a reset with the marker set: PASSED only when RCC_RSR reads ST's Table 56 row 2, "
           "PINRSTF and CPURSTF set with LPWRRSTF, WWDG1RSTF, IWDG1RSTF, SFTRSTF, PORRSTF, BORRSTF, D2RSTF and D1RSTF clear; any other "
-          "pattern is MONITOR FAILED; clear the marker; count the test in FW-B22's state frame, the peers flagging a count that has not "
+          "pattern is MONITOR FAILED; PASSED also needs the RTC's time from the write to the restart at least 7 ms, else HOLD FAILED (the "
+          "hold stage's CT pull-up lost), on an RTC clock within +-40 % of nominal; clear the marker; count the test in FW-B22's state frame, the peers flagging a count that has not "
           "moved for 7200 s | HO-E (record l9t5 `l9t5_hoe.out` 5e; L4A-59 and its focused check L4A-100, findings F3 and F11): ST RM0433 "
-          "Rev 8 8.4.4 Table 56 (p.332), 8.4.2 and Table 55 (pp.329 and 330), 6.8.6 (p.309); the window is t_resp, the interval S1's limit "
-          "is read at | V-B24 | OWED (DRAFTED, record l9t5 W145; PROVISIONAL on S2: a healthy regulator ramp longer than the window is "
-          "read on the first article, then the window and S1 are re-read together) |\n")
+          "Rev 8 8.4.4 Table 56 (p.332), 8.4.2 and Table 55 (pp.329 and 330), 6.8.6 (p.309); TI SBVS249B 7.6 (p.7: tD 14 ms minimum, CT open "
+          "1.3 ms maximum); the window is t_resp, the interval S1's limit is read at | V-B24 | OWED (DRAFTED, record l9t5 W145 and W148; "
+          "PROVISIONAL on S2: a healthy regulator ramp longer than the window is read on the first article, then the window and S1 are "
+          "re-read together; the hold check assumes NRST's rise and the restart under 3.6 ms, read by V-B24) |\n")
 V_B24 = ("| V-B24 | FW-B23 | on three first-article supervisors in a 76 C chamber at the rail's top: the self-test run 100 times on each; "
          "every run PASSED with Table 56's row 2 read back; the interval from the Scale 1 write to NRST under 0.3 VDD scoped on every run, "
-         "at most 174.7 us (S2, on the real VCAP ramp); each monitor's divider opened in turn: MONITOR FAILED reported; NRST's low time "
-         "after each pass scoped and reported against the CTR1 hold's 82.2 ms (S5) |\n")
+         "at most 122.6 us (S2, on the real VCAP ramp); each monitor's divider opened in turn: MONITOR FAILED reported; each hold stage's CT "
+         "pull-up opened in turn: HOLD FAILED reported; NRST's low time after each pass scoped against the hold's printed 14 ms minimum (a "
+         "confirmation; S5 retired) and the time from NRST's release to the restart read |\n")
 CHANGE = ("| 2 (HO-E, P0) | 7 October 2026 | By Layer 4 task L4A-59's correction on its focused check L4A-100 (MESHSAT-1357, W145, "
           "`records/l9t5/HO-E-COMPARISON.md`, `apply_hw_fw_contract_hoe.py`, applied after `apply_hw_fw_contract_t10.py`): FW-B23, the VCORE "
-          "monitors' self-test (findings F3 and F11), with V-B24; OWED (DRAFTED) |\n")
+          "monitors' self-test (findings F3 and F11) with the hold stage's timing (W148-3), with V-B24; OWED (DRAFTED) |\n")
 
 
 def refuse(msg):
