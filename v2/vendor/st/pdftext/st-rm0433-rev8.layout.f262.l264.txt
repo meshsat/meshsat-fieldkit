@@ -1,0 +1,192 @@
+Power control (PWR)                                                                                                       RM0433
+
+
+                     Figure 21. Device startup with VCORE supplied from voltage regulator
+
+
+
+                                                  POR threshold
+
+                     VDD, VDDLDO
+
+                    pwr_por_rst
+
+                                   1.0V (VOS3)
+
+
+                           VCORE
+
+                  ACTVOSRDY
+
+                       VOSRDY
+                                                                                                              Wait
+                                   Power                            Wait
+                Operating mode                    Reset                          HW system Init   Run*(1)   ACTVOS          Run
+                                   down                           Oscillator
+                                                                                                             RDY(2)
+
+
+                        ck_sys
+
+                                                                                                               Supply configuration
+            Supply configuration                                Default configuration
+                                                                                                                  programmed
+
+
+
+                       BYPASS
+
+                        LDOEN
+
+                        SCUEN
+                                            (1)           (2)        (3)                (4)             (5a)               (5b)
+
+                                                                                                                          MSv41900V3
+
+           1. In Run* mode, write operations to RAM are not allowed.
+           2. Write operations to RAM are allowed and VOS can be changed only when ACTVOSRDY is valid.
+           When exiting from Standby mode, the supply configuration is known by the system since the
+           PWR control register 3 (PWR_CR3) register content is retained. However the software shall
+           still wait for the ACTVOSRDY bit to be set in PWR control status register 1 (PWR_CSR1) to
+           indicate VCORE voltage levels are valid, before performing write accesses to RAM or
+           changing VOS.
+           For packages where VDDLDO is internally connected to VDD, when VCORE is supplied in
+           Bypass mode (LDO OFF), the VCORE voltage must first settle at a default level higher than
+           1.1 V. Due to the LDO default state after power-up (enabled by default), the external VCORE
+           voltage must remain higher than 1.1 V until the LDO is disabled by software.
+           When the LDO is disabled, the external VCORE voltage can be adjusted according to the
+           user application needs (refer to section General operating conditions of the datasheet for
+           details on VCORE level versus the maximum operating frequency).
+
+
+
+
+262/3353                                          RM0433 Rev 8
+RM0433                                                                                           Power control (PWR)
+
+
+                      Figure 22. Device startup with VCORE supplied in Bypass mode
+                                          from external regulator
+
+
+                                                POR threshold
+                 VDD, VDDLDO
+
+
+
+                pwr_por_rst
+
+                                                         Min V12 at startup 1.1V
+
+
+
+                   VCAP/V12
+
+
+
+                      1.2 V
+
+
+
+                      VCORE
+
+
+                               Power                    Wait
+             Operating mode            Reset                                    HW system Init   Run*       Run
+                               down                   Oscillator
+
+
+
+
+                     ck_sys
+
+                     Supply
+                                                               Default configuration                    BYPASS mode
+               configuration
+
+                   BYPASS
+
+                    LDOEN
+
+                    SCUEN
+
+
+
+
+                                                                                                                  MSv62411V2
+
+
+Note:    Before accessing the RAM, it is strongly recommended to switch to the correct VOS setting
+         depending on the external voltage level as soon as possible.
+
+6.4.2    Core domain
+         The VCORE core domain supply can be provided by the voltage regulator or by an external
+         supply (VCAP). VCORE supplies all the digital circuitries except for the backup domain and
+         the Standby circuitry. The VCORE domain is split into 3 sections:
+         •    D1 domain containing the CPU (Cortex®-M7), Flash memory and peripherals.
+         •    D2 domain containing peripherals.
+         •    D3 domain containing the system control, I/O logic and low-power peripherals.
+         When a system reset occurs, the voltage regulator is enabled and supplies VCORE. This
+         allows the system to start up in any supply configurations (see Figure 20).
+
+
+
+
+                                               RM0433 Rev 8                                                       263/3353
+                                                                                                                               312
+Power control (PWR)                                                                                         RM0433
+
+
+           After a system reset, the software shall configure the used supply configuration in PWR
+           control register 3 (PWR_CR3) register before changing VOS in PWR D3 domain control
+           register (PWR_D3CR) or the RCC ck_sys frequency. The different system supply
+           configurations are controlled as shown in Table 34.
+
+           Voltage regulator
+           The embedded voltage regulator (LDO) requires external capacitors to be connected to
+           VCAP pins.
+           The voltage regulator provides three different operating modes: Main (MR), Low-power (LP)
+           or Off. These modes will be used depending on the system operating modes (Run, Stop and
+           Standby).
+           •    Run mode
+                The LDO regulator is in Main mode and provides full power to the VCORE domain (core,
+                memories and digital peripherals). The regulator output voltage can be scaled by
+                software to different voltage levels (VOS0(a), VOS1, VOS2, and VOS3) that are
+                configured through VOS bits in PWR D3 domain control register (PWR_D3CR). The
+                VOS voltage scaling allows optimizing the power consumption when the system is
+                clocked below the maximum frequency. By default VOS3 is selected after system
+                reset. VOS can be changed on-the-fly to adapt to the required system performance.
+           •    Stop mode
+                The voltage regulator supplies the VCORE domain to retain the content of registers and
+                internal memories.
+                The regulator can be kept in Main mode to allow fast exit from Stop mode, or can be set
+                in LP mode to obtain a lower VCORE supply level and extend the exit-from-Stop latency.
+                The regulator mode is selected through the SVOS and LPDS bits in PWR control
+                register 1 (PWR_CR1). Main mode and LP mode are allowed if SVOS3 voltage scaling
+                is selected, while only LP mode is possible for SVOS4 and SVOS5 scaling. Due to a
+                lower voltage level for SVOS4 and SVOS5 scaling, the Stop mode consumption can be
+                further reduced.
+           •    Standby mode
+                The voltage regulator is OFF and the VCORE domains are powered down. The content
+                of the registers and memories is lost except for the Standby circuitry and the backup
+                domain.
+Note:      For more details, refer to the voltage regulator section in the datasheets.
+
+6.4.3      PWR external supply
+           When VCORE is supplied from an external source, different operating modes can be used
+           depending on the system operating modes (Run, Stop or Standby):
+           •    In Run mode
+                The external source supplies full power to the VCORE domain (core, memories and
+                digital peripherals). The external source output voltage is scalable through different
+                voltage levels (VOS0, VOS1, VOS2 and VOS3). The externally applied voltage level
+                shall be reflected in the VOS bits of PWR_D3CR register. The RAMs shall only be
+
+
+
+           a. VOS0 corresponds to VCORE boost allowing to reach the system maximum frequency (refer to Section :
+              VOS0 activation/deactivation sequence)
+
+
+
+264/3353                                         RM0433 Rev 8
+

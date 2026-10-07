@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 10 -l 10 v2/vendor/st/st-an4938-rev7.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "10",
+  "-l",
+  "10"
+ ],
+ "pdf": "v2/vendor/st/st-an4938-rev7.pdf",
+ "pdf_sha256": "217b5dcbfdd27cec4f6013cf1f51930bf81c338ccbaf7bf8dce3fa69592bb8b3",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/st/pdftext/st-an4938-rev7.layout.p10.txt",
+ "text_bytes": 3037,
+ "text_sha256": "c2dd2d711142bb577bf328395484407d0c3169716adbf0710996bcbcb788a249"
+}

@@ -1,0 +1,41 @@
+STM32H742xI/G STM32H743xI/G                                                   Functional overview
+
+
+3.5.2     Power supply supervisor
+          The devices have an integrated power-on reset (POR)/ power-down reset (PDR) circuitry
+          coupled with a Brownout reset (BOR) circuitry:
+          •   Power-on reset (POR)
+              The POR supervisor monitors VDD power supply and compares it to a fixed threshold.
+              The devices remain in Reset mode when VDD is below this threshold,
+          •   Power-down reset (PDR)
+              The PDR supervisor monitors VDD power supply. A reset is generated when VDD drops
+              below a fixed threshold.
+              The PDR supervisor can be enabled/disabled through PDR_ON pin.
+          •   Brownout reset (BOR)
+              The BOR supervisor monitors VDD power supply. Three BOR thresholds (from 2.1 to
+              2.7 V) can be configured through option bytes. A reset is generated when VDD drops
+              below this threshold.
+
+3.5.3     Voltage regulator
+          The same voltage regulator supplies the 3 power domains (D1, D2 and D3). D1 and D2 can
+          be independently switched off.
+          Voltage regulator output can be adjusted according to application needs through 6 power
+          supply levels:
+          •   Run mode (VOS0 to VOS3)
+              –    Scale 0: boosted performance (available only with LDO regulator)
+              –    Scale 1: high performance
+              –    Scale 2: medium performance and consumption
+              –    Scale 3: optimized performance and low-power consumption
+          •   Stop mode (SVOS3 to SVOS5)
+              –    Scale 3: peripheral with wakeup from Stop mode capabilities (UART, SPI, I2C,
+                   LPTIM) are operational
+              –    Scale 4 and 5 where the peripheral with wakeup from Stop mode is disabled
+                   The peripheral functionality is disabled but wakeup from Stop mode is possible
+                   through GPIO or asynchronous interrupt.
+
+
+
+
+                                         DS12110 Rev 11                                       29/357
+                                                                                                       54
+
