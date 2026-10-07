@@ -9,7 +9,8 @@ the rows break (C6), the candidate_guard line (C7), set 31's adoption dated (C8)
 `v2/ecad/tools/tests/test_patch32.py` holds every row against the pages as set 32's integration holds them (the paragraph "What the
 rows are read against"); applied to the four pages on branch fnd/adopt32 by worker W105 (7 October
 2026), each by its old text, the tokens left for the fill, and the tests of set 31's pages they break restated there with
-`test_adopt32` new (the paragraph "The rows applied and the tests restated"). **NOT DONE:** the tokens in the rows' new texts, in this
+`test_adopt32` new (the paragraph "The rows applied and the tests restated"); restated by worker W113 on W110's read (its B1, B2, C2
+and C3) and W106's N-c, with the fill stages on the chain's own tree (the paragraph "The stages on the chain's own tree"). **NOT DONE:** the tokens in the rows' new texts, in this
 file and on the four pages, are filled by the coordinator's fill tool (`<worktrees>/_bin/fill_res.py --set 32`, which reaches this
 file because `records/int32/RESULT.md` names it, and the four pages since W103's extension, queue item Q-124); the adoption.
 **NEXT:** at set 32's adoption, after its promotion, in this order: (1) fnd/adopt32 merged into set 32's lineage (set 31's step 12a
@@ -91,7 +92,7 @@ work, not a qualified review; no page of the tree was edited.
 
 **How the rows were checked again (W102, 7 October 2026, from 00:18 CEST).** On this branch `test_patch32` reads main's pages at
 `ad757edb` with the pins and step a5 in memory; those four pages equal, byte for byte, the pages of a scratch clone of W102's own
-built as set 32's chain builds them (set 31's promoted `5f25daf3`, main `ad757edb` merged as step a1, the five pins with this
+built as set 32's chain was then planned to build them (set 31's promoted `5f25daf3`, main `ad757edb` merged as step a1, the five pins with this
 branch's checkpoint `57634a8e` for fnd/res32, fnd/w34pdftext's one conflict in the annex taken as ours in the clone only, step a5
 run), where U-16's old text stands on line 414. In that clone, with stand-in commits for the re-key, the candidate and the
 adoption: before the fill `test_patch32`, `test_res32` and `test_public_hygiene` read 11, 15 and 4 passed; the fill tool's template
@@ -135,7 +136,7 @@ outside set 31's and set 32's blocks. The working tree's four pages are held by 
 adopted page at `ad757edb` with the own change of each pinned branch the judged revision holds, step a5 where the page carries its
 sentence, and these 38 rows, nothing else (so the eight texts of set 31's rows no set 32 row replaces, W106's N-d, are held there),
 the tokens as the fill's stage leaves them, and set 32's added text without a dash, an acceptance word or a percentage; it judges
-the newest revision whose START-HERE line 3 names set 32, so a later set's rows never fail it. In a scratch clone of W105's own, built as set 32's chain builds the tree (set 31's promoted `5f25daf3`, main
+the newest revision whose START-HERE line 3 names set 32, so a later set's rows never fail it. In a scratch clone of W105's own, built as set 32's chain was then planned to build the tree (set 31's promoted `5f25daf3`, main
 `ad757edb` merged as step a1, W103's `33a7b7d5`, the five pins with fnd/res32 at `607cd157`, fnd/w34pdftext's one conflict in the
 annex taken as ours in the clone only, step a5 run), with stand-in commits for the re-key and the candidate, fnd/adopt32 at
 `564dc7f6` merged clean as set 31's step 12a merged its branch (U-16's paragraph follows its old text, which stands at line 427 of
@@ -148,6 +149,23 @@ with 5 ADOPTION occurrences deferred, and the ten read 113 passed; with a stand-
 refused (exit 2); with START-HERE's line 3 then rewritten as a later set's rows would, `test_adopt32` judged the newest commit naming
 set 32 and read 4 passed. The 43 mutants of the restated predicates (the bytes read at either adoption commit, or the tree's page,
 changed in memory) were each refused, on fnd/adopt32 and in that clone after the second run. AI work, not a qualified review.
+
+**The stages on the chain's own tree (W113, 7 October 2026, from 01:43 CEST, on W110's B1, B2 and C3).** W105's clone and W102's
+were not the tree set 32's chain builds: since W104 (W100's S1) the chain's base is main's tip at its start, `be07863b`
+(`<worktrees>/_runs/int32/real-0115.log:1`), and on that tree W110 read the ten modules as 116 passed, 1 failed before the fill and
+114 passed, 3 failed after each run (test_res31's W98 test and test_res32's `p_filled`, its B1 and B2). W113 merged main `be07863b`
+into fnd/adopt32, restated those two tests (test_res31 reads LAYER-STATUS and the plan at set 31's adoption commits through git;
+test_res32 places set 31's promoted revision as an ancestor of the re-key and the chain's base on its first-parent line) and named
+the lineage's start beside the BASE row in rows L-01, L-02 and P-01 (C3). In a scratch clone of W113's own, built as W110 built it
+(main's tip at the chain's start `be07863b`, the five pins with fnd/res32 at `607cd157` merged with `--no-ff`, fnd/w34pdftext's
+one conflict in the annex taken as ours in the clone only, step a5 run, stand-in commits for the re-key and the candidate (the
+candidate's with a stand-in paragraph 0a in WP-B's words, so that the known item's value is a clause set 31's paragraph does not
+print), then fnd/adopt32 at its commit c1c67169 merged clean), the ten modules read 117 passed, 0 failed, 0 skipped before
+the fill; the fill tool's template read 122 rows (this file 25, RESULT.md 70, CLASSIFICATION.md 2, START-HERE.md 8,
+SUPPLIER-HANDOVER.md 8, LAYER-STATUS.md 3, EXECUTION-PLAN.md 6), its first run applied 101 lines with 5 ADOPTION occurrences deferred
+and printed no NOTE (P-01's candidate_guard value three PASS lines), and the ten read 117 passed; with a stand-in adoption commit its
+second run applied 5 lines, no token was left in the seven files, and the ten read 117 passed; a third run refused (exit 2); with
+START-HERE's line 3 rewritten as a later set's rows would, `test_adopt32` read 4 passed. AI work, not a qualified review.
 
 ## START-HERE.md
 
