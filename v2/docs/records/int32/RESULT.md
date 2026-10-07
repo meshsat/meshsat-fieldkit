@@ -575,7 +575,11 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   lines (the record's three files deferred and recounted; the four pages' tokens, which the fill fills, not deferred: a refusal on both
   trees alike). The known step's script on W154's tree: exit 0, CORRECTED, six files restated, row 33's KNOWN ITEM already filled,
   where adopt32.sh's KNOWN_NFILES expects seven (W123's count, made while row 33 still carried its fill-in cell): W154's finding for the
-  coordinator, who sets that count to six for the real run or restates the script.
+  coordinator, who sets that count to six for the real run or restates the script. On W154's tree, with the real commits and
+  stand-in GATE text, the fill's first run applied 101 lines with 5 ADOPTION occurrences deferred, the second 5 lines and a third was
+  refused (exit 2); `test_res32` read 14 passed, 0 failed, 3 skipped before the fill and after each run (the three skips its tests of
+  the coordinator's files, which run in the runner pass), and `test_patch32` refused the stand-in GATE text where its two tests read a
+  value (the known item's clause and the guard lines), as it must.
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.
