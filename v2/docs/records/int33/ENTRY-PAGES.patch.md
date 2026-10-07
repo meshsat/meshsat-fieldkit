@@ -62,7 +62,7 @@ Old text:
 ```
 New text:
 ```text
-**Current revision: set 33, the revision `__CANDIDATE__`, an integration of Layer 4's AI work as record text, record tooling and release-guarded drafts over set 32's `f08e3961`. Read section 0 first.**
+**Current revision: set 33, the revision `b5b4b2a0`, an integration of Layer 4's AI work as record text, record tooling and release-guarded drafts over set 32's `f08e3961`. Read section 0 first.**
 ```
 Basis: `v2/docs/records/int33/RESULT.md`, section 1 (the candidate's row; set 32's promoted revision `f08e3961`) and its paragraph "What set 33 is".
 
@@ -88,7 +88,7 @@ New text:
 ```text
 draft, board generator or netlist changed.
 
-**Set 33** (the revision `__CANDIDATE__`). An integration of Layer 4's AI work of 7 October 2026 over set 32: the DESK-gate assessment's K table re-read (record l4k);
+**Set 33** (the revision `b5b4b2a0`). An integration of Layer 4's AI work of 7 October 2026 over set 32: the DESK-gate assessment's K table re-read (record l4k);
 HO-E compared and selected with a drafted VCORE monitor and hold stage; row (b), the supervisors' CAN containment by method M-B
 with the regulator stage and the in-service limiter test; row (c), the pack path's series parts on printed limits with the
 held-overcurrent trip on board P; each item's verdict as its check gave it, an AI review, none an acceptance of the power design
@@ -136,7 +136,7 @@ Old text:
 ```
 New text:
 ```text
-| Tested | `__CANDIDATE__` | set 33's promoted revision (set 32's was `f08e3961`, set 31's `5f25daf3` and set 30's
+| Tested | `b5b4b2a0` | set 33's promoted revision (set 32's was `f08e3961`, set 31's `5f25daf3` and set 30's
 ```
 Basis: `v2/docs/records/int33/RESULT.md`, section 1 (the candidate's and the promotion's rows: the same commit).
 
@@ -160,7 +160,7 @@ Old text:
 ```
 New text:
 ```text
-| Documents and editable artifacts | on main as a DESK candidate (`__CANDIDATE__`, set 33) |
+| Documents and editable artifacts | on main as a DESK candidate (`b5b4b2a0`, set 33) |
 ```
 Basis: `v2/docs/records/int33/RESULT.md`, section 6 ("a DESK candidate once set 33 is promoted").
 
@@ -220,7 +220,7 @@ Old text:
 ```
 New text:
 ```text
-| Tested | `__CANDIDATE__` | set 33's promoted revision (set 32's was `f08e3961`, set 31's `5f25daf3` and set 30's
+| Tested | `b5b4b2a0` | set 33's promoted revision (set 32's was `f08e3961`, set 31's `5f25daf3` and set 30's
 ```
 Basis: as S-06.
 
@@ -244,7 +244,7 @@ Old text:
 ```
 New text:
 ```text
-| Documents and editable artifacts | on main as a DESK candidate (`__CANDIDATE__`, set 33) |
+| Documents and editable artifacts | on main as a DESK candidate (`b5b4b2a0`, set 33) |
 ```
 Basis: as S-11.
 
@@ -299,13 +299,13 @@ New text:
 ```text
 (compute and storage apart, no total).
 
-### Milestone: integration set 33 promoted as a DESK candidate (main `__CANDIDATE__`)
+### Milestone: integration set 33 promoted as a DESK candidate (main `b5b4b2a0`)
 
-**Promoted:** main `__CANDIDATE__`, the candidate on set 33's integration branch, by fast-forward, the promotion log's line: `__GATE__`.
+**Promoted:** main `b5b4b2a0`, the candidate on set 33's integration branch, by fast-forward, the promotion log's line: `GitHub main at b5b4b2a01e54231d17201082f1ecdf25612440fa (_runs/int33/promote-0059.log)`.
 INTEGRATED = CANDIDATE = PROMOTED. REVIEWED: `4d0ff8a2` (cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."), unchanged. The base: set 32's
 adopted main over its promoted `f08e3961` (`records/int33/RESULT.md`, section 1), with record l4e7's results cache re-keyed ONCE.
-Gated by suite_gate with G7 (`_bin/suite_gate.py`), its verdict line over the four pass logs: `__GATE__`.
-The candidate_guard check, every host, its PASS line on each host in one value: `__GATE__`.
+Gated by suite_gate with G7 (`_bin/suite_gate.py`), its verdict line over the four pass logs: `suite_gate: candidate b5b4b2a01e54; totals tests: 3094 passed, 0 failed, 2 skipped + tests: 26 passed, 0 failed, 0 skipped + tests: 296 passed, 0 failed, 0 skipped + tests: 235 passed, 0 failed, 1 skipped; result lines 3654 (3651 PASS, 3 SKIP, 0 FAIL); modules 286 of 286 ran; suite_gate: PASS`.
+The candidate_guard check, every host, its PASS line on each host in one value: `candidate_guard: PASS candidate b5b4b2a01e54231d17201082f1ecdf25612440fa: 1176 evidence file(s) present and unchanged, every output binds but the 8 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate b5b4b2a01e54231d17201082f1ecdf25612440fa: 1176 evidence file(s) present and unchanged, every output binds but the 8 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate b5b4b2a01e54231d17201082f1ecdf25612440fa: 1176 evidence file(s) present and unchanged, every output binds but the 8 declared, 1 results cache(s) frozen`.
 
 **What it closes:** no power item. "Set 33 closes NO power item." (`records/int33/RESULT.md`, section 6). Set 33 adopts an integration of Layer 4's AI work of 7 October 2026 over set 32: the DESK-gate assessment's K table re-read (record l4k);
 HO-E compared and selected with a drafted VCORE monitor and hold stage; row (b), the supervisors' CAN containment by method M-B
