@@ -1,0 +1,64 @@
+                                          STM32H742xI/G, STM32H743xI/G, STM32H750xB, STM32H753xI
+                                                                                                               Description of device errata
+
+
+
+
+                  Workaround
+                  Apply one of the following measures:
+                  •      Ensure that only one Tx FIFO element is pending for transmission at any time:
+                         The Tx FIFO elements may be filled at any time with messages to be transmitted, but their transmission
+                         requests are handled separately. Each time a Tx FIFO transmission has completed and the Tx FIFO gets
+                         empty (TFE bit of FDACN_IR set to 1) the next Tx FIFO element is requested.
+                  •      Use only a Tx FIFO:
+                         Send both messages from a Tx FIFO, including the message with the higher priority. This message has to
+                         wait until the preceding messages in the Tx FIFO have been sent.
+                  •      Use two dedicated Tx buffers (for example, use Tx buffer 4 and 5 instead of the Tx FIFO). The following
+                         pseudo-code replaces the function in charge of filling the Tx FIFO:
+                         Write message to Tx Buffer 4
+                         Transmit Loop:
+                             Request Tx Buffer 4 - write AR4 bit in FDCAN_TXBAR
+                             Write message to Tx Buffer 5
+                             Wait until transmission of Tx Buffer 4 complete (IR bit in FDCAN_IR),
+                             read TO4 bit in FDCAN_TXBTO
+                             Request Tx Buffer 5 - write AR5 bit of FDCAN_TXBAR
+                             Write message to Tx Buffer 4
+                             Wait until transmission of Tx Buffer 5 complete (IR bit in FDCAN_IR),
+                             read TO5 bit in FDCAN_TXBTO
+
+
+2.24.5            DAR mode transmission failure due to lost arbitration
+
+                  Description
+                  In DAR mode, the transmission may fail due to lost arbitration at the first two identifier bits.
+
+                  Workaround
+                  Upon failure, clear the corresponding Tx buffer transmission request bit TRPx of the FDCAN_TXBRP register and
+                  set the corresponding cancellation finished bit CFx of the FDCAN_TXBCF register, then restart the transmission.
+
+
+2.25              OTG_HS
+
+2.25.1            Possible drift of USB PHY pull-up resistor
+
+                  Description
+                  When VDDUSB33 is present, and the USB idle resistor (pull-up 1 connected between VDDUSB and the ground)
+                  remains activated for a long period of time, the pull-up resistor value may drift, reaching the maximum value
+                  defined in the USB Specification.
+                  This issue occurs only during device transmit and reset states in device mode. Other device states are not
+                  impacted.
+                  The degradation can be observed after USB PHY pull-up continuous activation in the following conditions:
+                  •      10 years of continuous transmit operations, or
+                  •      An 86 million reset operations (from the USB host) provided that the reset period is 2.5 ms (duration might
+                         vary depending on host reset duration).
+                  The above results are based on design simulation.
+
+                  Workaround
+                  For USB OTG_HS1, use the external USB PHY instead of the internal PHY.
+                  For USB OTG_HS2: no workaround is available.
+
+
+
+
+ES0392 - Rev 15                                                                                                                  page 48/73
+

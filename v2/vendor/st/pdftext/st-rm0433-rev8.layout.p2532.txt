@@ -1,0 +1,63 @@
+Controller area network with flexible data rate (FDCAN)                                                                      RM0433
+
+
+56.5.12           FDCAN error counter register (FDCAN_ECR)
+                  Address offset: 0x0040
+                  Reset value: 0x0000 0000
+
+  31       30       29      28      27       26        25       24     23     22     21     20        19       18       17       16
+
+ Res.     Res.     Res.    Res.    Res.      Res.     Res.      Res.                          CEL[7:0]
+
+                                                                       rc_r   rc_r   rc_r   rc_r     rc_r      rc_r     rc_r     rc_r
+  15       14       13      12      11       10        9         8      7      6      5      4        3         2        1        0
+
+  RP                              REC[6:0]                                                    TEC[7:0]
+
+  r         r        r      r        r        r         r        r      r      r      r      r         r        r        r        r
+
+
+
+ Bits 31:24 Reserved, must be kept at reset value.
+ Bits 23:16 CEL[7:0]: CAN error logging
+             The counter is incremented each time when a CAN protocol error causes the transmit error counter
+             or the receive error counter to be incremented. It is reset by read access to CEL. The counter stops
+             at 0xFF; the next increment of TEC or REC sets interrupt flag FDCAN_IR.ELO.
+        Bit 15 RP: Receive error passive
+                0: The receive error counter is below the error passive level of 128
+                1: The receive error counter has reached the error passive level of 128
+   Bits 14:8 REC[6:0]: Receive error counter
+              Actual state of the receive error counter, values between 0 and 127.
+       Bits 7:0 TEC[7:0]: Transmit error counter
+                 Actual state of the transmit error counter, values between 0 and 255.
+                 When FDCAN_CCCR.ASM is set, the CAN protocol controller does not increment TEC and REC
+                 when a CAN protocol error is detected, but CEL is still incremented.
+
+56.5.13           FDCAN protocol status register (FDCAN_PSR)
+                  Address offset: 0x0044
+                  Reset value: 0x0000 0707
+
+  31       30       29      28      27       26        25       24     23     22     21     20        19       18       17       16
+
+ Res.     Res.     Res.    Res.    Res.      Res.     Res.      Res.   Res.                        TDCV[6:0]
+
+                                                                               r      r      r         r        r        r        r
+  15       14       13      12      11       10        9         8      7      6      5      4        3         2        1        0
+
+ Res.     PXE      REDL    RBRS    RESI             DLEC[2:0]          BO     EW     EP       ACT[1:0]                LEC[2:0]
+
+           rc_r     rc_r   rc_r     rc_r     rs_r     rs_r      rs_r    r      r      r      r         r       rs_r     rs_r     rs_r
+
+
+
+ Bits 31:23 Reserved, must be kept at reset value.
+ Bits 22:16 TDCV[6:0]: Transmitter delay compensation value
+             Position of the secondary sample point, defined by the sum of the measured delay from FDCAN_TX
+             to FDCAN_RX and FDCAN_TDCR.TDCO. The SSP position is, in the data phase, the number of
+             minimum time quanta (mtq) between the start of the transmitted bit and the secondary sample point.
+             Valid values are 0 to 127 mtq.
+
+
+
+2532/3353                                                    RM0433 Rev 8
+

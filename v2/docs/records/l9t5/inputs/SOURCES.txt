@@ -41,3 +41,11 @@ cases-cdev-rev2-20261005.md sha256 85156e936ce21bcce6dc372ebdc70fcc16e47bb3fb733
   b2dfb4a643f9f99741d7027dd1fca4f4632d68b639ab21b66685b19c684a6104), copied verbatim with its 16:25 CEST clarification, 5 October
   2026, by Slot C's T10 round 5 (fnd/p0t10 ed021fac); the whole file at that sha is record l8r2's
   inputs/coordinator-cases-2026-10-05-cdev-rev2.md. Read by l9t5_t10.py; the case row is the coordinator's.
+l4canmb-l9t5_canmb-5d14cc85.out sha256 5d14cc85213ad999efffce52859ead185833b8c000af0ae72a8ed8185c1633a3
+  W137's output v2/docs/records/l9t5/l9t5_canmb.out at fnd/l4canmb 0d079eaf (Layer 4 task L4A-54, method M-B: the buffered TXD
+  observation, the TXD pull-ups, the twelve 2-of-2 SHDN votes, the self-test and its residuals), copied verbatim by W139 (L4A-55,
+  fnd/l4canq) on 7 October 2026 so that l9t5_canq.py reads the draft's figures from its own tree. Unchecked, not applied.
+l4reg-l4reg_compare-9fbda7a6.out sha256 9fbda7a6e79430c2aea3986a3f20b256084b9d5d8f82f65072bf5ce16689ad7a
+  W138's output v2/docs/records/l4reg/l4reg_compare.out at fnd/l4reg 86dbcdff (Layer 4 task L4A-56 re-scoped: the TPS2553-1 limiter at
+  RILIM 49.9 kOhm ahead of a TPS73733DCQRM3, its latch-off after 5 to 10 ms as that record quotes SLVS841F 7.5), copied verbatim by
+  W139 on 7 October 2026 for row 8's latch and the recovery proof. Unchecked, not applied.

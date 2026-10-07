@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-sn74lvc1g08.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-sn74lvc1g08.pdf",
+ "pdf_sha256": "30b963cc44233cf3ca35c891ff987c8323a2244ecc765e23296ec96ca4b42666",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-sn74lvc1g08.layout.txt",
+ "text_bytes": 167068,
+ "text_sha256": "a84c416119cebf384a30cea732299d8568dc256e825120fa37cf1962c4f9f914"
+}
