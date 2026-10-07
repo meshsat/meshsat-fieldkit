@@ -46,14 +46,17 @@ LINE10_OLD = "and fills the promoted sha where section 6 reads `__INTEGRATED__`.
 LINE10_NEW = "and fills the promoted sha into section 6 (`dd1aed00`, filled in set 31)."   # W41's fill
 
 # (new citation, old citation, times on the page, the commit that wrote the old citation): lines moved unchanged
+# Restated by the coordinator (7 October 2026, set 33's integration; basis: row (c)'s rounds in L8P-BREAKER.md, merged with
+# fnd/l4rowc 653cb1bc, put six lines above every BRK passage the ledger cites; recite33.py re-cited the ledger's 25 BRK citations by
+# their text from 46d4fe58, each quotation checked): each BRK row's NEW citation is six lines later; its old citation is unchanged.
 LED_MOVED = [
-    ("[BRK:1339-1344]", "[BRK:1317-1322]", 1), ("[BRK:1343-1344]", "[BRK:1321-1322]", 2), ("[BRK:1345-1349]", "[BRK:1323-1327]", 1),
-    ("[BRK:1350-1355]", "[BRK:1328-1333]", 1), ("[BRK:1356-1367]", "[BRK:1334-1345]", 1), ("[BRK:1369-1422]", "[BRK:1347-1400]", 1),
-    ("[BRK:1381-1384]", "[BRK:1359-1362]", 1), ("[BRK:1391-1395]", "[BRK:1369-1373]", 1), ("[BRK:1398-1401]", "[BRK:1376-1379]", 1),
-    ("[BRK:1400-1402]", "[BRK:1378-1380]", 1), ("[BRK:1402]", "[BRK:1380]", 1), ("[BRK:1402-1403]", "[BRK:1380-1381]", 1),
-    ("[BRK:1402-1406]", "[BRK:1380-1384]", 2), ("[BRK:1403-1406]", "[BRK:1381-1384]", 1), ("[BRK:1406]", "[BRK:1384]", 1),
-    ("[BRK:1407]", "[BRK:1385]", 1), ("[BRK:1407-1409]", "[BRK:1385-1387]", 1), ("[BRK:1409-1413]", "[BRK:1387-1391]", 1),
-    ("[BRK:1413-1414]", "[BRK:1391-1392]", 1), ("[BRK:1417-1419]", "[BRK:1395-1397]", 1), ("[BRK:1420-1422]", "[BRK:1398-1400]", 3),
+    ("[BRK:1345-1350]", "[BRK:1317-1322]", 1), ("[BRK:1349-1350]", "[BRK:1321-1322]", 2), ("[BRK:1351-1355]", "[BRK:1323-1327]", 1),
+    ("[BRK:1356-1361]", "[BRK:1328-1333]", 1), ("[BRK:1362-1373]", "[BRK:1334-1345]", 1), ("[BRK:1375-1428]", "[BRK:1347-1400]", 1),
+    ("[BRK:1387-1390]", "[BRK:1359-1362]", 1), ("[BRK:1397-1401]", "[BRK:1369-1373]", 1), ("[BRK:1404-1407]", "[BRK:1376-1379]", 1),
+    ("[BRK:1406-1408]", "[BRK:1378-1380]", 1), ("[BRK:1408]", "[BRK:1380]", 1), ("[BRK:1408-1409]", "[BRK:1380-1381]", 1),
+    ("[BRK:1408-1412]", "[BRK:1380-1384]", 2), ("[BRK:1409-1412]", "[BRK:1381-1384]", 1), ("[BRK:1412]", "[BRK:1384]", 1),
+    ("[BRK:1413]", "[BRK:1385]", 1), ("[BRK:1413-1415]", "[BRK:1385-1387]", 1), ("[BRK:1415-1419]", "[BRK:1387-1391]", 1),
+    ("[BRK:1419-1420]", "[BRK:1391-1392]", 1), ("[BRK:1423-1425]", "[BRK:1395-1397]", 1), ("[BRK:1426-1428]", "[BRK:1398-1400]", 3),
     ("[B2:34-37]", "[B2:22-25]", 3), ("[B2:36-37]", "[B2:24-25]", 1), ("[B2:39-41]", "[B2:27-29]", 1),
     ("[B2:122-141]", "[B2:110-129]", 1), ("[B2:143-164]", "[B2:131-152]", 1), ("[B2:148-152]", "[B2:136-140]", 1),
     ("[B2:157-164]", "[B2:145-152]", 4), ("[B2:163]", "[B2:151]", 1), ("[B2:193-194]", "[B2:173-174]", 1),
@@ -92,12 +95,17 @@ LED_KEPT = [("[P11:89-92]", 2)]   # left as it was (named in the citation form):
 # so the annex's [REM:549-581] is re-cited to [REM:552-584] and [REM:669] to [REM:672]; the range no longer reads byte for byte what
 # [REM:520-552] read at W3A, so it moves from ANX_MOVED to ANX_READ and is held by its two headings, this module's anchors for it.
 W41_GONE = ("[REM:549-581]", "[REM:669]")    # W23's two ledger citations of the annex, re-cited by W41
+# set 33's re-cites (the coordinator, 7 October 2026, recite33.py): the citations they replaced, never left on their page
+SET33_ANX_GONE = ("[REM:672]",)
+SET33_LED_GONE = ("[BRK:1339-1344]", "[BRK:1343-1344]", "[BRK:1345-1349]", "[BRK:1350-1355]", "[BRK:1356-1367]", "[BRK:1369-1422]", "[BRK:1381-1384]", "[BRK:1391-1395]", "[BRK:1398-1401]", "[BRK:1400-1402]", "[BRK:1402]", "[BRK:1402-1403]", "[BRK:1402-1406]", "[BRK:1403-1406]", "[BRK:1406]", "[BRK:1407]", "[BRK:1407-1409]", "[BRK:1409-1413]", "[BRK:1413-1414]", "[BRK:1417-1419]", "[BRK:1420-1422]",)
 ANX_MOVED = [
     ("[OWN:681]", "[OWN:680]", 1, W3A), ("[OWN:702]", "[OWN:701]", 1, W3B),
     ("[P11:72]", "[P11:44]", 1, W3A), ("[P11:144]", "[P11:110]", 1, W3A), ("[P11:160]", "[P11:123]", 1, W3A),
 ]
 ANX_READ = [
-    ("[REM:672]", "[REM:585]", 1, ("Counts: remaining engineering 20; qualification 1; external architecture fact 3",)),
+    # set 33 (the coordinator, 7 October 2026): the ledger's three applies (L4K-4, L4S-3, ROWB-1) put eleven lines above its summary,
+    # so recite33.py re-cited the annex's [REM:672] to [REM:683] by its text from 503e86de
+    ("[REM:683]", "[REM:585]", 1, ("Counts: remaining engineering 20; qualification 1; external architecture fact 3",)),
     ("[REM:552-584]", "[REM:520-552]", 1, ("### HO-H: E11-29", "### HO-K: U-04")),
     ("[B2:183-186]", "[B2:170]", 3, ("Not computed here", "validation P1-1's S1 (row added)")),
     ("[P11:154-160]", "[P11:120-123]", 2, ("(b) the lower-source back-feed", "Q12's body-diode current inside its pulsed rating")),
@@ -234,7 +242,9 @@ def stale_fails(page, text):
     fails = ["%s is still on the page" % r[1] for r in list(moved) + list(read) if r[1] not in news and r[1] in text]
     if page == ANX:
         fails += ["%s is still on the page (re-cited by W41)" % c for c in W41_GONE if c in text]
+        fails += ["%s is still on the page (re-cited in set 33)" % c for c in SET33_ANX_GONE if c in text]
     if page == LED:
+        fails += ["%s is still on the page (re-cited in set 33)" % c for c in SET33_LED_GONE if c in text]
         for c, k in LED_KEPT:
             if text.count(c) != k:
                 fails.append("%s is on the ledger %d times, not %d (once in the text, once named in the citation form)" %
@@ -255,9 +265,11 @@ def rows_fails(text, base=None):
             fails.append("a Q-21 row's old text is still on the ledger: %r" % old[:50])
     # Restated by W41 (6 October 2026; basis: W38's F1): the coordinator's merge d5d9c252 brought main's adoption 836f711b, which put
     # three lines into the ledger (746 to 749 lines on main); so the ledger is its base plus W20-14's one plus those three.
-    if base is not None and text.count("\n") != base.count("\n") + 1 + 3:
-        fails.append("the ledger has %d lines against its base's %d plus W20-14's one and 836f711b's three" % (text.count("\n"),
-                                                                                                           base.count("\n")))
+    # Restated by the coordinator (7 October 2026; basis: set 33's chain applied L4K-4, L4S-3 and ROWB-1 to the ledger under the
+    # coordinator's APPLY rulings, 750 to 761 lines at C1 9df37826): plus those eleven.
+    if base is not None and text.count("\n") != base.count("\n") + 1 + 3 + 11:
+        fails.append("the ledger has %d lines against its base's %d plus W20-14's one, 836f711b's three and set 33's eleven" % (
+            text.count("\n"), base.count("\n")))
     return fails
 
 
@@ -325,10 +337,11 @@ def t_the_predicates_refuse_broken_pages():
     broken = [
         ("resolve", lambda: resolve_fails(LED, led.replace("[P11:72]", "[P11:9999]", 1))),
         ("resolve", lambda: resolve_fails(ANX, anx.replace("[B2:183-186]", "[B2:184-186]", 1))),
-        ("moved", lambda: moved_fails(LED, led.replace("[BRK:1402]", "[BRK:1401]"))[0]),
+        ("moved", lambda: moved_fails(LED, led.replace("[BRK:1408]", "[BRK:1407]"))[0]),   # set 33: [BRK:1402] re-cited to [BRK:1408]
+        ("stale", lambda: stale_fails(LED, led.replace("[BRK:1408]", "[BRK:1402]", 1))),   # set 33: the position it left
         ("read", lambda: read_fails(LED, led.replace("[P11:154-160]", "[P11:155-160]"))),
         ("read", lambda: read_fails(ANX, anx.replace("[REM:552-584]", "[REM:552-577]"))),
-        ("stale", lambda: stale_fails(ANX, anx.replace("[REM:672]", "[REM:669]", 1))),
+        ("stale", lambda: stale_fails(ANX, anx.replace("[REM:683]", "[REM:672]", 1))),
         ("quote", lambda: quote_fails(LED, led.replace("something must bound the current", "something must limit the current", 1))[0]),
         ("quote", lambda: quote_fails(ANX, anx.replace("A planned measurement alone does not", "A planned measurement does not", 1))[0]),
         ("stale", lambda: stale_fails(ANX, anx.replace("[P11:144]", "[P11:110]", 1))),
