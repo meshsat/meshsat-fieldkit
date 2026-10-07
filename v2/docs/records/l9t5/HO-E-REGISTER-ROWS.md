@@ -1,4 +1,4 @@
-**HO-E REGISTER ROWS (Layer 4 task L4A-59 corrected on its focused check L4A-100, 7 October 2026, W145, branch `fnd/l4hoe`): DONE: three row texts for the coordinator, R-1 and R-2 for W144's finding F6 (the states S-f and S-g, which the drafted monitor does not end and nobody owned after L4REG-F7) and R-3 for its finding F3 (the self-test's firmware row FW-B23, drafted in `apply_hw_fw_contract_hoe.py`). NOT DONE: no row is entered in `_runs/l4ai/register.tsv` (the coordinator is its one writer); nothing applied. NEXT: the coordinator assigns ids and enters the rows; the targeted recheck of L4A-100 reads them with condition C5.**
+**HO-E REGISTER ROWS (Layer 4 task L4A-59 corrected on its focused check L4A-100, 7 October 2026, W145, branch `fnd/l4hoe`; R-3 restated and R-4 added by W152 the same day on the targeted recheck W150's F3, F4 and F6): DONE: four row texts for the coordinator, R-1 and R-2 for W144's finding F6 (the states S-f and S-g, which the drafted monitor does not end and nobody owned after L4REG-F7), R-3 for its finding F3 (the self-test's firmware row FW-B23, drafted in `apply_hw_fw_contract_hoe.py`, its hold check on the LSI-clocked RTC at 12 ms and its marker rule since W152) and R-4 for W150's F3 (S-m, the self-reset loop, W148-F4's case). NOT DONE: no row is entered in `_runs/l4ai/register.tsv` (the coordinator is its one writer); nothing applied. NEXT: the coordinator assigns ids and enters the rows.**
 
 # HO-E: register rows for the coordinator
 
@@ -56,11 +56,37 @@ deliverable, acceptance, owner, dependency, checkpoint). Ids are proposals; the 
 - **Task:** take FW-B23 and V-B24 into L4A-61's propagation after T10's rows: clear the flags (RMVF), keep the marker where NRST does
   not reach (Table 55, p.330), write Scale 1 and wait t_resp (122.6 us since W148's hold stage; 174.7 us in W145's draft) from that
   write, write Scale 3 within 10 us if still running, and read PASSED only on Table 56's row 2 (PINRSTF and CPURSTF set, every other
-  flag clear) with the restart at least 7 ms after the write on the RTC (W148-3: the hold stage timed).
+  flag clear) with the restart at least 12 ms after the write on the RTC clocked by the LSI, never the HSE (W148-3 restated by W152-1
+  on W150's F4: RM0433 Rev 8 pp.426 and 428, DS12110 Rev 11 Table 136 p.233, PREDIV_A + 1 at most 8); a start with the marker set
+  evaluates the test it follows and does not test again (W150's F6).
 - **Deliverable:** HW-FW-CONTRACT.md with FW-B20 to FW-B23 and V-B20 to V-B24, applied by the integrator in that order.
 - **Acceptance:** both scripts apply in order on the tree's contract and re-parse (FW-B01 to FW-B23, V-B ending V-B24); FW-B23's
-  PASSED pattern equals Table 56's row 2, its window equals `l9t5_hoe.out`'s t_resp and its hold check reads 7 ms; test_l9t5_hoe
-  passes.
+  PASSED pattern equals Table 56's row 2, its window equals `l9t5_hoe.out`'s t_resp, its hold check reads 12 ms on the LSI and its
+  budget for VCAP's fall and the boot equals `l9t5_hoe.out` 5e's; test_l9t5_hoe passes.
 - **Owner:** L4A-61's author; the integrator applies.
 - **Dependency:** L4A-61, after L4A-100's targeted recheck; `apply_hw_fw_contract_t10.py` applied first.
 - **Checkpoint:** with L4A-61's first checkpoint.
+
+## R-4: S-m, the self-reset loop (W148-F4, given its own row by W150's F3)
+
+- **Class and state:** MISSING PHYSICAL EVIDENCE (a state with a printed current whose cadence no printed figure bounds), CONDITIONAL.
+- **Question:** an image that enters VOS1 or VOS0 and resets itself (a software or watchdog reset, RM0433 Rev 8 8.4.2, p.329) before
+  the TPS37 registers the excursion never reaches the hold stage; its cadence is the internal reset (20 us minimum, p.329), NRST's
+  recharge and the boot, none bounded by a printed figure beyond the 20 us; for scale (`l9t5_hoe.out` 5i, MODEL on T10's model) the
+  loop's mean reaches 105 C at a duty of 5.34 % at the case's air. It is a VOS1 or VOS0 state, not S-g's (row R-2): W148's filing
+  under R-2 is withdrawn.
+- **Inputs:** `l9t5_hoe.out` 5i and 6 (S-m), 9 (S2 extended); the draft `apply_gen_sch_b_vcoremon.py`; FW-B23 (row R-3).
+- **Requirement:** HO-E's acceptance, "the controller inside its junction limit in every state the protection admits".
+- **Task:** S2 extended (SESSION W152-3), on the three first-article supervisors of S2 at 76 C and at -40 C: (a) the TPS37's shortest
+  registered excursion on VCAP's own ramp to VOS1's and VOS0's bands, cut short by a software reset at stepped delays after the Scale 1
+  write; (b) VCAP's fall after a reset to under the trip's least 1.0969 V; (c) 1000 self-reset cycles per supervisor and temperature at
+  the image's earliest reset.
+- **Deliverable:** the measured figures with their specimens, conditions and instruments, and the row's verdict restated in record
+  l9t5 (or the first article's record).
+- **Acceptance:** the least excursion of (b) at least twice the longest unregistered excursion of (a), and every cycle of (c) asserts
+  RESET1 with NRST low at least 14 ms (zero escapes in 3000 per temperature): S-m becomes S-k's and is held by the hold stage's printed
+  minimum. Otherwise the row is OPEN and a design change is owed that registers every excursion an image can make (for example a capture
+  of VCAP's excursion that does not rest on the TPS37's sense delay), which no record has drafted.
+- **Owner:** the first article's test owner (S2's); a failed acceptance goes to board B's generator owner for the design change.
+- **Dependency:** the first article of board B with the drafted monitor applied; S2.
+- **Checkpoint:** with S2.

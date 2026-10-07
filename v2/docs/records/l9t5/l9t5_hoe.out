@@ -246,7 +246,8 @@ printed thermal resistances, never a measured temperature
        state frame. After the reset, PASSED needs the marker and RCC_RSR equal to Table 56's row 2, 'Pin reset (NRST)' (RM0433 8.4.4,
        p.332): PINRSTF and CPURSTF set, LPWRRSTF, WWDG1RSTF, IWDG1RSTF, SFTRSTF, PORRSTF, BORRSTF, D2RSTF, D1RSTF clear (W145-3),
        and (W148-3, restated by SESSION W152-1 on W150's F4) the RTC's time from the write to the restart at least 12 ms, else HOLD
-       FAILED. The time base: the RTC clocked by the LSI, which a pin reset does not stop: RCC_BDCR, "RCC_BDCR bits are only reset after a backup domain reset (see Section 8.4.6: Backup domain reset). Any other internal or external reset will not have any effect on these bits." (RM0433 8.7.26,
+       FAILED. The time base: the RTC clocked by the LSI, which a pin reset does not stop (PRINTED by reference, V-B24 confirms it):
+       RCC_BDCR, "RCC_BDCR bits are only reset after a backup domain reset (see Section 8.4.6: Backup domain reset). Any other internal or external reset will not have any effect on these bits." (RM0433 8.7.26,
        p.426), RTCSEL "10: LSI clock used as RTC clock"; LSIRDY "This bit can be set even when LSION is not enabled if there is a request for LSI clock by the Clock Security System on LSE or by the Low Speed Watchdog or by the RTC." (8.7.27, p.428); never the HSE: "If HSE is selected as RTC clock: this clock is lost when the system is in Stop mode or in case of a pin reset (NRST)." (p.426);
        board B draws no LSE crystal (each controller's PC14 and PC15, pins 8 and 9, open: section 8 reads them). The LSI runs at 29.4 to
        33.6 kHz over TJ -40 to 125 C, 32 kHz typical (DS12110 Rev 11 Table 136, p.233, PRINTED); the sub-second counter runs on
@@ -395,8 +396,8 @@ printed thermal resistances, never a measured temperature
    S-g  VOS3 above its printed 200 MHz                               125 C     no printed current                                                               OPEN (row R-2, HO-E-REGISTER-ROWS.md)
    S-h  power-up before the monitor is valid                         105 C     NRST held under both UVLOs, then tD (>= 14 ms) after MR rises (5d)               CONDITIONAL (S4)
    S-i  a latent monitor fault, then a firmware VOS0 entry           105 C     a double fault; window at most 3600 s                                            RESIDUAL (single-fault)
-   S-k  the reset loop: every excursion the monitor registers, at every boot 105 C     duty <= 0.876 %, rise <= 0.806 K with T10's feedback, any fault length; ZthJA(t_resp) <= 3.05 K/W CONDITIONAL (S1, S2; C2, C3)
-   S-l  a latent hold fault (CT's pull-up lost), then the reset loop 105 C     a double fault; W148-3's hold timing, window at most 3600 s                      RESIDUAL (single-fault)
+   S-k  the reset loop: every excursion the monitor registers, at every boot 105 C     duty <= 0.876 %, rise <= 0.806 K, any fault length; ZthJA(t_resp) <= 3.05 K/W    CONDITIONAL (S1, S2; C2, C3)
+   S-l  a latent hold fault (CT's pull-up lost), then the reset loop 105 C     a double fault; W148-3's hold timing (W152-1), window at most 3600 s             RESIDUAL (single-fault)
    S-m  the self-reset loop: an image resetting itself before the monitor registers (W148-F4) 105 C     no printed cadence; S-k's if every excursion registers (5i: S2 extended)         CONDITIONAL (S2 extended, S1; C2, C3; row R-4)
    S-j  any current up to the limiter's 0.5704 A                     as above  a VOS3 state is S-a, S-b or S-g; a VOS1 or VOS0 state S-c, S-d, S-k or S-m       no state outside S-a to S-m
    THE CONDITIONS OF THE FOCUSED CHECK (W144, L4A-100), RESTATED:
