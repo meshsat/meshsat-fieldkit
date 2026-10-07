@@ -25,14 +25,14 @@ one supervisor out (IOHA row 3), so the other two can test each supervisor's lim
   4. THE OUTPUT READ: each peer reads the limiter's output on its own ADC pin through its own 10 kOhm over 20 kOhm, 0.1 % 25 ppm
      (R807 and R808; R809 and R810), with 10 nF at the pin (C970, C971; C980, C981; C990, C991).
   5. THE PINS (per controller): PE12 and PE13 (pins 42 and 43, outputs) its half of the test switch on the next controller and on the
-     one after; PE14 and PE15 (pins 44 and 45, inputs) their FAULT; PC0 (pin 15, ADC123_INP10) and PB1 (pin 35, ADC12_INP5) their
-     output. Free on the composed map (43 of 100 used with canen; 49 with this draft).
+     one after; PE14 and PE15 (pins 44 and 45, inputs) their FAULT; PC0 (pin 15, ADC123_INP10) and PC1 (pin 16, ADC123_INP11) their
+     output, both FT pins (a shorted divider leaves the limiter's output on the pin, inside an FT pin's limit while it is powered). Free on the composed map (43 of 100 used with canen; 49 with this draft).
 The procedure (record l4hod section 9, DRAFTED for Layer 5's contract; L4A-61 propagates it): the two peers take the target out of the
 quorum; prove the restore route by pulling its EN low and releasing it (record l4canen's route); close each half alone for 4 ms (a
 stuck other half shows as a load, under the 5 ms printed least deglitch, so nothing latches); close both, read the output (the limit's
 current through the 3.0 Ohm) and FAULT (its 5 to 10 ms deglitch) and the latch; open; restore through the EN route; the target rejoins.
 Designators added: R800 to R810, R820 to R830, R840 to R850, Q590 to Q595, D404, D405, D414, D415, D424, D425, C970, C971, C980, C981,
-C990, C991 (51 parts); none removed; changed: U45, U55, U65 (pin 4, FAULT, from NC to IOC{t}_LIM_FLT); the controllers' pins 15, 35, 42
+C990, C991 (51 parts); none removed; changed: U45, U55, U65 (pin 4, FAULT, from NC to IOC{t}_LIM_FLT); the controllers' pins 15, 16 and 42
 to 45. Order codes owed (Layer 6): the 3.0 Ohm 2512, the two 0.1 % values, the 10 nF.
 Usage:  apply_gen_sch_b_hodtest.py TARGET [--check | --write]     (default --check: nothing is written)
 Exit 0: checked (or written); 3: refused (already applied, regstage absent, an old text missing, a designator or a pin in use, or the
@@ -51,8 +51,8 @@ REMOVES = ()
 CHANGED = tuple("U%d" % (45 + 10 * k) for k in range(3))
 # the pin plan, read by record l4hod (never typed there): LQFP-100 pin -> (port, use, which target: 1 the next controller, 2 the one after)
 TEST_PINS = {42: ("PE12", "switch", 1), 43: ("PE13", "switch", 2), 44: ("PE14", "fault", 1), 45: ("PE15", "fault", 2),
-             15: ("PC0", "adc", 1), 35: ("PB1", "adc", 2)}
-ADC_FUNC = {15: "ADC123_INP10", 35: "ADC12_INP5"}
+             15: ("PC0", "adc", 1), 16: ("PC1", "adc", 2)}
+ADC_FUNC = {15: "ADC123_INP10", 16: "ADC123_INP11"}
 R_LOAD, R_GS, R_GPD, R_FPU, R_TOP, R_BOT, C_ADC = "3R 1% 2512 1W", "1k", "100k", "10k", "10k 0.1% 25ppm", "20k 0.1% 25ppm", "10n"
 FET, FET_LCSC, DIODE, DIODE_LCSC = "AO3400A", "C20917", "BAT46W-7-F", "C83152"
 
@@ -89,10 +89,10 @@ _NEW_SYN = (
     "    # L4A-58 (record l4hod, W146; apply_gen_sch_b_hodtest.py, NOT APPLIED): the limiter's in-service test. PE12 and PE13 (pins 42 and 43,\n"
     "    # GPIO outputs) close this controller's half of the test switch on the next controller and on the one after (2 of 2 with the other\n"
     "    # peer); PE14 and PE15 (pins 44 and 45, inputs) read their limiters' FAULT through this controller's own Schottky and pull-up; PC0\n"
-    "    # (pin 15, ADC123_INP10) and PB1 (pin 35, ADC12_INP5) read their limiters' output through this controller's own 10k over 20k\n"
+    "    # (pin 15, ADC123_INP10) and PC1 (pin 16, ADC123_INP11), both FT, read their limiters' output through this controller's own 10k over 20k\n"
     '    m.update({42: "IOC%s_TSW%s" % ("ABC"[(_k + 1) % 3], _tag), 43: "IOC%s_TSW%s" % ("ABC"[(_k + 2) % 3], _tag),\n'
     '              44: "IOC%s_FLT%s" % ("ABC"[(_k + 1) % 3], _tag), 45: "IOC%s_FLT%s" % ("ABC"[(_k + 2) % 3], _tag),\n'
-    '              15: "IOC%s_VS%s" % ("ABC"[(_k + 1) % 3], _tag), 35: "IOC%s_VS%s" % ("ABC"[(_k + 2) % 3], _tag)})\n'
+    '              15: "IOC%s_VS%s" % ("ABC"[(_k + 1) % 3], _tag), 16: "IOC%s_VS%s" % ("ABC"[(_k + 2) % 3], _tag)})\n'
     + _OLD_SYN)
 EDITS = [(_OLD_FLT, _NEW_FLT), (_OLD_RL, _NEW_RL), (_OLD_SYN, _NEW_SYN)]
 PLANNED = tuple(TEST_PINS)
