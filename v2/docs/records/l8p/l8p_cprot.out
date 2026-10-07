@@ -4,15 +4,15 @@ printed figures and the records' own; nothing was built, bought or measured. LAB
 INFERRED; MODEL; RECORD; ASSUMED.
 
 0. PINS (sha256/16)
-   ee34240422273538  v2/docs/records/l8p/l8p_rowc.out
+   4b60c67f1686d4f3  v2/docs/records/l8p/l8p_rowc.out
    36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
    46f3c6cd9ea6b638  v2/docs/records/l9stk/l9stk_protection.out
    3a23036c57859f1d  v2/docs/records/l9stk/L9-STACKUPS.md
-   4656171f0157282e  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
+   27bf3e410e7a2597  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
    e8f1294bb0f76c75  v2/docs/records/l8p/apply_gen_sch_p_breaker.py
    4174af5851fe1be0  v2/docs/records/l8p/apply_gen_sch_p_idealdiode.py
-   1c8483adf23d070f  v2/docs/records/l8p/check_l8p_och.py
+   02b1cd90c4fdc1cf  v2/docs/records/l8p/check_l8p_och.py
    740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
    08a656ab0230986d  v2/docs/records/l8p/inputs/l9stk-section15.9-bb6d2c8f.md
    b8fe467eb18e7135  v2/docs/records/l8p/apply_pcb_interfaces_guard_allowance.py
@@ -67,7 +67,7 @@ INFERRED; MODEL; RECORD; ASSUMED.
    why: the one approach that ends every held current under the blades' printed rerated current at both readings without moving the
      breaker, the copper, the 18 A service or any printed margin; it adds a protection and lowers none; every part type is in the kit
    END CONDITION (any one): (1) R10's maker sheet (E-6) reads a tolerance with its temperature coefficient over 130 K outside -7.3 to 8.3 %;
-     (2) Layer 6 finds no R140 whose maker prints a single pulse of at least 3.32 J in 4.41 ms (round 12, 4c'; 0.40 J in 1.4 ms in round 11);
+     (2) Layer 6 finds no R140 whose maker prints a single pulse of at least 3.51 J in 4.41 ms (round 12, 4c'; 0.40 J in 1.4 ms in round 11);
      (3) a check of this round finds a held current over 22.75 A, a trip at or under 18.80 A, or a crowbar event that ends neither in
      the -1's latch nor within the on-time bound (round 12), and a second negative check of the same trip follows; then (C) with its
      band reading resolved, or the blades' evidence route (round 10's (c)) as the supplier's
@@ -124,7 +124,10 @@ INFERRED; MODEL; RECORD; ASSUMED.
        a source present, the -1 latched                                              1.437 J in 1.844 ms
        no source, the band of 4i, ended by the on-time bound                         0.996 J in 4.414 ms
        a source present, the -1 held out of its limit, ended by the on-time bound    3.315 J in 4.414 ms
-       E-6b RESTATED: a part whose maker prints a single pulse of at least 3.32 J in 4.41 ms (782 W held, 2208 W for 16.5 us at the clamp);
+       the voltage bound throughout (round 13, the recheck's F3: ONE basis)          3.515 J in 4.414 ms
+       E-6b RESTATED (round 12) ON ONE BASIS (round 13): VSYS's most 17.375 V on R140 at its least for the whole bounded on-time, 782 W
+       held and 2208 W for 16.5 us at the clamp: a part whose maker prints a single pulse of at least 3.51 J in 4.41 ms (round 12's 3.32 J
+       took PACK_P at most 16.8 V while the -1 conducts beside a 782 W held figure, two bases: replaced by this one);
        round 11's 0.40 J in 1.4 ms is withdrawn. A NAMED PART (Layer 6 selects): Vishay's CRCW2512-HP e3 pulse proof chip (1 Ohm
        to 1 MOhm, P70 1.5 W), its single-pulse line READ from its vector path (document 20043, page 5; the curve's own conditions: no
        preload, under 1000 pulses, the pulse voltage under its limit; its long-pulse end 1.50 W at 100 s meets the printed 1.5 W row);
@@ -137,6 +140,10 @@ INFERRED; MODEL; RECORD; ASSUMED.
        so the restated pulse needs 9 of them in parallel (each 3.51 Ohm for 0.39 Ohm), a power package whose maker prints the pulse, or
        E-12s's reading of a source's settling narrowing the bound (the chart states no ambient: the line's temperature basis at
        the 76.25 C air is Layer 6's question to Vishay); until Layer 6 selects, R140 stays CONDITIONAL on E-6b
+       THE COUNT'S BASIS (round 13, the recheck's F3): nine at the line's own basis (no ambient stated) with equal shares; with 1 %
+         parts the worst share is 88.4 W against the line's 97.3 W at 4.41 ms; Vishay's 70 to 155 C derating applied to the line (INFERRED)
+         holds nine to a part temperature of 77.7 C (0.926 of the line at the 76.25 C air); above it ten or more: Layer 6 states the part's
+         own temperature with the count
      Q111 (CSD18510Q5B, PRINTED): IDM 400 A against 99.6 A at the onset and 45.0 A held with a source; VDS 40 V against PACK_P's 29.2 V
        clamp; VGS 20 V against D105's 12.7 V; its own turn-off crosses at most V^2/4R: 57.5 W without a source (at 9.43 V), WITHIN the
        record's derated 71.1 W of the same part at 1.292 ms (l9stk 15.6) for at most 0.271 ms; 30.1 W on the settled source basis, WITHIN;
@@ -149,7 +156,8 @@ INFERRED; MODEL; RECORD; ASSUMED.
      U107's RESET1 sinks at most 0.199 mA and RESET2 0.029 mA (TI recommends 5 mA); U107's VDD and SENSE at most 29.2 V against 65 V;
        Q112's gate at most 14.6 V against 20 V; OCH_CG under D105's 12.7 V; R142 and D105 carry at most 17.8 mA for the event
    4e. POWER-UP, THE START AND A LATCHED BREAKER: U107 holds RESET1 and RESET2 asserted for tSD (2 ms at most) and RESET2 while PGD is
-     low (round 12: or while RESET1 is asserted, through D106), so Q112 is off and the crowbar disarmed whenever the breaker is not
+     low (round 12: or while RESET1 is asserted, through D106; round 13: OCH_S2 held low by Q114 while PGD is low, 4j: round 12's
+     2.2 MOhm node let leakage lift it), so Q112 is off and the crowbar disarmed whenever the breaker is not
      running: at a gauge's wake, at a docking (the RC hold's 0.110 s and the start), during a start (PGD low while VDS is high), once
      latched, and 3.92 ms at most after the trip asserts (4i); the trip touches neither the enable loop nor
      UVLO (check_l8p_och's APART): L4-E11 20c's window, its readings and the RC hold's 0.110 to 0.907 s are unchanged
@@ -164,7 +172,8 @@ INFERRED; MODEL; RECORD; ASSUMED.
      THE GAUGE: R10 carries the event, so the gauge's AFE reads it as it reads any short on PACK_P (IF-6); its levels are unchanged
        (IF-4), and if its ASCD acts Q2 opens behind the latched breaker; the gauge's recovery is the battery stream's
    4f. THE STANDING CURRENT from BRK_VIN: U106 150 uA, U107 2.6 uA, R139 with R141 8.4 uA at 16.8 V (PRINTED maxima): beside the detector's
-     0.47 mA (record l8p round 3), a standby load on the pack for the battery stream
+     0.47 mA (record l8p round 3), a standby load on the pack for the battery stream; round 13 adds R144 85 uA while PGD is high or
+     R143 51 uA while PGD is low (at 16.8 V): the trip's standing current at most 0.246 mA
    4g. ITS OWN SINGLE FAILURES (INFERRED from the circuit as drawn):
      U106 or U107 dead, Rin open, RESET1 stuck high       the trip lost, LATENT: round 10's rows (the blades over by 0.83 A)
      Q112, Q110, R142, Q111 or R140 open; D105 short      the crowbar lost, LATENT: as above
@@ -173,10 +182,15 @@ INFERRED; MODEL; RECORD; ASSUMED.
      Q112 shorted, RESET2 stuck high                      the arming and the on-time bound lost: a crowbar for tSD at a gauge's wake on a live PACK_P
      RESET2 stuck low, C120 shorted                       the crowbar disarmed, LATENT: as the first row
      C119 open                                            the sense delay 17 us at most: a trip on an excursion E-10 allows (found)
-     D106 or R143 open (round 12)                         the on-time bound lost, LATENT: round 11's state, 4i's band unbounded (E-12f reads TP112)
+     D106 open (rounds 12 and 13)                         the on-time bound lost, LATENT: round 11's state, 4i's band unbounded (E-12f reads TP112)
+     R143 open (round 13)                                 OCH_S2 without its pull-up: armed or disarmed on leakage alone while PGD is high, LATENT (E-12f: TP112 running)
      C120 open (round 12)                                 the bound at 17 us: the crowbar too short to latch the -1: the trip lost, LATENT (E-12f: TP111's pulse)
-     R143 shorted (round 12)                              D106 pulls BRK_PGD while the trip asserts: Q106 off, a hot pad's inhibit pulls UVLO (found, E-12b)
-     D106 shorted (round 12)                              OCH_S2 on OCH_R: armed at OCH_R's level, disarmed while RESET1 asserts: as drawn
+     R143 shorted (round 13)                              OCH_S2 on BRK_VIN: both disarms lost; Q114 at PGD's next fall, D106 and RESET1 at the next trip overstressed (E-12f)
+     D106 shorted (round 13; round 12's 'as drawn' withdrawn) OCH_S2 on OCH_R: both disarms still act; while armed a fall of PGD drives the crowbar through Q114 for
+                                                            the arming delay: one pulse inside E-6b at each breaker turn-off (the line's n < 1000), LATENT (E-12f: TP111 at a turn-off)
+     Q113 shorted, R144 open, D107 shorted, Q114 open (r13) the PGD-low disarm lost, LATENT: the crowbar armed through starts (E-12f: TP112 with the breaker off)
+     Q113 open, Q114 shorted (round 13)                   OCH_S2 held low: the trip disarmed, LATENT: as RESET2 stuck low (E-12f: TP112 while running)
+     D107 open (round 13)                                 Q114's gate at BRK_VIN while PGD is low: within 20 V to the pack's 16.8 V, over it only in a clamp surge
      so a latent first failure returns the design to round 10's rows at 23.93 A held (the blades at 103.6 % of their rerated current, no part
        the guard protects exposed: M-A holds the FETs at 23.93 A on a board whose path meets E-1's bar); no automatic diagnostic is
        drawn and THE TRIP'S SILENT FAILURES HAVE NO DETECTION INTERVAL beyond E-12f at commissioning and at each service: L4A-67's
@@ -207,31 +221,115 @@ INFERRED; MODEL; RECORD; ASSUMED.
    4i. THE BRK_VIN RANGE AND THE ON-TIME BOUND (round 12, the check's F2)
      the event can happen from BRK_VIN 7.6 V (C-PROT rev 1: the -1 runs from its power-on threshold, record l8p 12d; PORIT 7.6 V is
        a TYPICAL with an 8 V maximum and no minimum printed) to the pack's 16.8 V, the clamp's 29.2 V in a surge
-     from 9.43 V up (the most limit through R140 at +1 %) the crowbar's own current exceeds every unit's limit: the -1 limits and
+     from 9.43 V up (the most limit through R140 at +1 %; round 13, the recheck's F2: about 9.54 to 9.61 V with the loop, below) the
+       crowbar's own current exceeds every unit's limit: the -1 limits and
        latches whatever the load (no source). UNDER IT the latch rests on the faulted load persisting as PACK_P falls; if the load
        drops out (a constant-power load under its own UVLO, another protection acting) a unit whose limit is over the crowbar's own
        current leaves its limit, and the crowbar's own current through R10, over the window's least, HOLDS THE TRIP: the band
        7.71 to 9.43 V (the window's least through R140 at -1 %, the most limit through it at +1 %), 226 W in R140 held in round 11's
        drawing: a DEMONSTRATED DEFECT of the draft (no source); with a source's settled share on the record's B-R2 basis the -1 can
        stay out of its limit up to 13.00 V, and inside the event's unprinted transient up to the pack's 16.8 V (4c')
+     THE BAND'S UPPER EDGE WITH THE LOOP (round 13, the recheck's F2): the loop from BRK_VIN to PACK_N also holds the most-limit unit's
+       sense drop at its limit (VCL 61.5 mV PRINTED), its two FETs in parallel (0.96 mOhm at VGS 10 V and 25 C PRINTED: 0.48 mOhm) and
+       Q111 (1.6 mOhm at VGS 4.5 V and 25 C PRINTED; its gate at 7.9 V there): 9.54 V on those maxima; 9.61 V with both FETs at twice them
+       and 1 mOhm of copper (ASSUMED: TI prints the hot RDS(on) as a typical curve only; the loop's copper is Layer 9's): THE BAND RUNS
+       FROM 7.71 TO ABOUT 9.54 TO 9.61 V; the on-time bound acts at every BRK_VIN, so the design is unaffected; E-12s's 10.6 V lies over it
      three approaches (constitution section 4): (a) R140 under 7.6 V / (23.93 A x 1.01) = 0.3144 Ohm, so the crowbar alone exceeds the
        limit from 7.6 V: its peak at the clamp, 117.7 A with the most limit's load, passes the 116.8 A where VIN to SENSE exceeds its 0.3 V
        absolute maximum (a row newly reached), and a source can still hold the -1 out of its limit: NOT SELECTED; (b) the trip armed
        only above 9.43 V: the blades' held 23.93 A stays uncorrected under it, L8P-R10-F1 open in that band: NOT SELECTED; (c) THE
        ON-TIME BOUND, SELECTED (SESSION L8P-R12-D1): channel 2 also reads the trip, through D106 (BAT46W: VF at most 0.25 V at 0.1 mA,
-       PRINTED, with RESET1's VOL at most 0.3 V: OCH_S2 under 0.55 V against SENSE2's least 0.792 V) and R143 2.2 MOhm from BRK_PGD,
+       PRINTED, with RESET1's VOL at most 0.3 V: OCH_S2 under 0.55 V against SENSE2's least 0.792 V) and R143 2.2 MOhm from BRK_PGD
+       (round 13: R143 330 kOhm from BRK_VIN and Q114 holding OCH_S2 low while PGD is low, 4j),
        so RESET2 disarms the crowbar 2.15 to 3.92 ms after the trip asserts whatever the breaker does; it re-arms only once RESET1 has
        released (R10 under the window: the dropped load) and PGD is high, so no retry train; the least delay covers the gate and the
        -1's clearing with 0.85 ms for tCL; the crowbar conducts at most 4.41 ms
      its levels (check_l8p_och.py's arithmetic on the drawn R143): BRK_PGD stays over Q106's 2.5 V threshold maximum (JSCJ, PRINTED)
        at BRK_VIN 7.6 V while D106 pulls (so the restart inhibit stays gated during the event), and OCH_S2 armed stays over SENSE2's
-       release with RESET1's 300 nA and SENSE2's 100 nA through R143 (PRINTED)
+       release with RESET1's 300 nA and SENSE2's 100 nA through R143 (PRINTED) (round 12's levels; round 13's in 4j and section 5)
      WHAT STAYS: a held overload that persists through the bound with the -1 out of its limit leaves the trip disarmed until it falls
        under the window (round 10's rows meanwhile): it needs a source to carry (V / R140 + the window's least - the most limit) x V
        for 2.15 ms, on the record's settled basis only at BRK_VIN under 7.64 V (the -1's floor 7.6 V), otherwise only inside the source's
        unprinted settling: CONDITIONAL, evidence E-12s (new): board P with boards A and E, a source at its IIN_HOST, a held overload
        over the window at BRK_VIN 7.6, 10.6 and 16.8 V, ten events each: the -1 latched inside 2.15 ms, the source's current into the
        pack lead and R140's voltage recorded
+       (round 13, the recheck's F8) E-12s's specimens: three board P specimens with boards A and E, the -1's current limit read on each
+       first (E-9's method) and the events run on the specimen whose limit reads highest (a high-limit unit keeps out of its limit
+       longest: the worst case), the result transferring only to units whose limit reads at or under it; at 25 C and in a chamber at
+       the 76.25 C air; ten events at each BRK_VIN; pass: in every event the -1 latched inside 2.15 ms of the trip's assertion (TP110 to
+       the breaker's gate), and where it stays out of its limit TP111's pulse ended inside 4.41 ms; the timing read at 10 us or better
+       (a 1 MS/s record), an uncertainty of about 1 % of the 0.85 ms left for tCL
+   4j. THE PGD-LOW DISARM ON LEAKAGE (round 13, the targeted recheck's F1; leakages at the record's 86.25 C site, each off leakage
+     doubled every 10 K from its printed row: ASSUMED, the record's rule)
+     ROUND 12'S DRAWING, SHOWN FIRST: OCH_S2 was pulled toward BRK_PGD's low (PGD's VOL at most 0.150 V, PRINTED) through R143 2.2 MOhm
+       only, so any current into OCH_S2 lifts it by I x R143: 0.29 uA lifts it over SENSE2's least VITN 0.792 V with no sink, 0.69 uA
+       with RESET1's 300 nA and SENSE2's 100 nA (PRINTED maxima) as sinks. What reaches it, through D106 reversed (anode on OCH_S2,
+       cathode on OCH_R):
+         Q112 off (RESET2 asserted, PGD low): Q112's off leakage into OCH_R, 5.58 uA at the site (80 nA at 60 V and 25 C PRINTED); it
+           passes the two lifts at 43.5 C and 56.1 C on the rule
+         Q112 on (armed as PGD falls): OCH_R held near half BRK_VIN less Q112's VGS, so D106's own reverse current flows: PRINTED
+           0.3 uA at 1.5 V and 25 C (already over 0.29 uA), 5.0 uA at 1.5 V and 60 C, 7.5 uA at 10 V and 60 C, 15 uA at 50 V and 60 C;
+           92.5 uA at the site from the 50 V row
+         the PGD pin's printed off leakage (5 uA at 80 V) does not enter: PGD sinks while low (the recheck's F6)
+       so OCH_S2 sat up to 3.80 V (OCH_R's level, where D106's reverse bias collapses) while PGD was low: RESET2 released, Q112 armed:
+       the crowbar armed after tSD at power-up, through a start and on a latched breaker, from about 44 C on the rule and at any
+       temperature on BAT46W's printed maximum with Q112 on as PGD falls: round 12's 'never at power-up, during a start or on a latched
+       breaker' NOT SHOWN in its drawing (no protection lowered; the service at a start not shown). A shorted D106 there put OCH_S2 on
+       OCH_R, which Q112 holds near half BRK_VIN while PGD is low: the PGD-low disarm lost, LATENT (round 12's 4g 'as drawn' withdrawn)
+     THREE CORRECTIONS ON PRINTED FIGURES (constitution section 4: at most three, materially different):
+       (1) a disarm FET (2N7002) from OCH_S2 to PACK_N driven from the crowbar's gate, D106 removed, R143 2.2 MOhm from BRK_PGD kept: no
+         current flows into OCH_S2 while PGD is low, but the FET's off leakage sinks the ARMED level through R143 and BRK_PGD's
+         0.5 MOhm: -12.49 V at BRK_VIN 7.6 V at the site, under the release from a 55.3 C site on the rule; and its gate falls when the
+         disarm turns the crowbar off, so OCH_S2 rises while RESET1 is still asserted: a re-arm with the overload held, a pulse train
+         (round 12's 'no retry train' lost); from RESET1 instead it needs an inverter and keeps the armed-level failure: NOT SELECTED
+       (2) R143 from BRK_PGD lowered with a pull-down Rp, judged leniently (OCH_S2 at D106's 0.55 V in the event, no sink on the armed
+         level, PGD's VOL 0): BRK_PGD over Q106's 2.5 V while D106 pulls needs R143 of 0.750 MOhm or more; the armed level over the
+         release then needs Rp of 0.403 MOhm or more; the PGD-low level then tolerates at most 3.02 uA into OCH_S2, against Q112's 5.58 uA
+         at the site and BAT46W's printed 5.0 uA at 60 C: no pair meets the three levels together: NOT SUPPORTED
+       (3) OCH_S2 PULLED UP FROM BRK_VIN BY R143 330 kOhm AND HELD LOW WHILE PGD IS LOW BY A CONDUCTING FET: Q114 (2N7002) from OCH_S2
+         to PACK_N, its gate OCH_PN PGD inverted by Q113 (2N7002, gate on BRK_PGD) against R144 200 kOhm from BRK_VIN, the zener D107
+         (BZT52C12) keeping it under 12.7 V; D106 kept for the on-time bound: SELECTED (SESSION L8P-R13-D1)
+     THE SELECTION'S LEVELS (check_l8p_och.py on the composed netlist, section 5; BRK_VIN 7.6 V unless stated):
+       PGD low: Q114's gate at least 5.06 V with Q113's off leakage and D107's reverse current at the site through R144 at +1 %
+         (BZT52C12 0.1 uA at 8 V and 25 C PRINTED), at or over the 5 V where JSCJ prints 7 Ohm: OCH_S2 at most 1.27 mV with R143's
+         current at the clamp and D106's 92.5 uA through it; the level holds for any on-resistance up to 4.35 kOhm, so the hot rise of
+         the 7 Ohm (not printed) does not decide it: NO LEAKAGE INTO OCH_S2 CAN LIFT IT while PGD is low (a conducting FET, not a
+         2.2 MOhm node)
+       armed (PGD high, RESET1 released): OCH_S2 4.97 V with Q114's off leakage at the site, RESET1's 300 nA and SENSE2's largest
+         printed 2 uA (ASSUMED to bound the 0.8 V variant far over its threshold) through R143 at +1 %, over the release 0.927 V; Q113
+         holds OCH_PN low with BRK_PGD on its gate: its 7 Ohm PRINTED where BRK_PGD reaches 5 V (BRK_VIN 10.2 V up), under it the
+         record's convention for Q106 (a gate over the 2.5 V threshold maximum), whose failure direction is a disarm, never a crowbar
+       the trip asserted: OCH_S2 at most 0.64 V (RESET1's VOL 0.3 V at its 5 mA row, D106's VF 0.25 V at 0.1 mA for its 88 uA at the
+         clamp, 90 mV for -20 C INFERRED), under 0.792 V: the on-time bound as round 12's; RESET1 carries at most 0.289 mA
+       BRK_PGD carries only Q106's and Q113's gates (80 nA each PRINTED at 25 C and 20 V): 3.72 V in every state of the trip, over Q106's
+         2.5 V threshold maximum (round 12: 3.20 V while D106 pulled through R143): L8P-R12-D1's reversal 'BRK_PGD under Q106's
+         threshold during the event' can no longer come from the trip
+       THE PGD LEAKAGE BASIS OF BOTH LEVELS (the recheck's F6): the PGD-low level does not depend on the PGD pin's off leakage (PGD
+         sinks); the armed level needs BRK_PGD over Q113's 2.5 V as Q106 does, and on the pin's printed 5 uA (at 80 V, a loose bound
+         at 3.8 to 8.4 V) BRK_PGD's released level clears it from BRK_VIN 10.16 V up, for Q106 (the breaker's draft) and Q113 alike;
+         under it the trip disarms (a lost trip, never a crowbar); round 11 armed from about 6.8 V and round 12 from about 8.8 V on
+         that bound (W153, RECORD); evidence: the pin's off leakage at 3.8 to 8.4 V (a vendor fact for TI, or a reading on board P's
+         specimen with E-12b)
+     THE START (the recheck's 'service at a start'): the start's own current is at most 0.659 A for 40.7 ms (RECORD, record l9stk), under
+       the window's least 19.965 A, so a start never asserts the trip by itself; the disarm now holds whenever PGD has been low for the
+       arming delay: Q114's gate reaches its 2.5 V threshold maximum 0.138 ms after PGD falls (R144 into 1 nF, ASSUMED: JSCJ lists Ciss
+       as unverifiable and D107's capacitance is not printed), RESET2 asserts at most 4.06 ms after PGD's fall, inside the insertion
+       time's least 4.23 ms (record l9stk: it runs when VIN passes PORIT, the gate held low) and the RC hold's 0.110 s at a docking:
+       THE START SERVICE SHOWN on those figures (in round 12's drawing not shown, the recheck's F1); the LM5069 releases PGD itself
+       under about 5 V of VIN (SNVS452G 8.3.6, no figure printed): armed with the -1's gate held off, no discharge over the window
+       through R10, as in rounds 11 and 12
+     SNVSBJ1E 8.3.5.1 (the recheck's F5): a CTS capacitor not fully discharged when a fault returns gives a shorter next delay; TI asks
+       the time between faults over 10 % of the programmed delay: channel 1's least 0.460 ms exceeds 10 % of channel 2's most (0.392 ms),
+       and the -1's own timer discharges at 1.25 to 3.75 uA against 51 to 120 uA charging, so a repeated fault shortens the -1's
+       clearing more than channel 2's bound: covered
+     THE CYCLING LOAD (the recheck's F7): a load that drops out at each trip and returns over the window at each re-arm makes a train
+       of bounded pulses at least 2.61 ms apart (the trip's least sense delay and the arming's least; the turn-off and re-arm taken 0),
+       each at most 0.996 J in the band (no source) and 3.51 J on the voltage bound; Vishay's CONTINUOUS-PULSE line for the 2512 (page 5,
+       READ from its vector path; its long-pulse end 1.50 W at 100 s meets the printed P70) gives 48.7 W a part at 4.41 ms against the
+       band's 25.1 W a part, but its condition holds the mean under the rated dissipation at the ambient: nine parts at P70 1.5 W derated
+       to the air (0.926), 12.5 W: a train needs a period of 79.6 ms or more (281 ms with a source), against the 2.61 ms a load could make:
+       a faster train is NOT BOUNDED (named: the kit's loads, Layer 7's list, must show none re-enters the window within 281 ms of a
+       trip; the smallest correction for a next round, not drafted: a re-arm hold-off on U107's CTR2 longer than that period)
 
 5. THE DRAFT COMPOSED IN L4-E9'S ORDER (board P; INFERRED from the regenerated netlist)
    l8p/apply_gen_sch_p_breaker.py                             OK
@@ -239,11 +337,12 @@ INFERRED; MODEL; RECORD; ASSUMED.
    l8p/apply_gen_sch_p_ocheld.py                              OK
    l6r2/apply_gen_sch_p_intent.py                             OK
    l6r2/apply_gen_sch_p_lcsc.py                               OK
-   board P regenerated: 186 parts; netlist sha256/16 890eaedecf7493bc
+   board P regenerated: 190 parts; netlist sha256/16 d7922ce624c7b65b
    check_l8p_netlist.py on it: P BRK  DRAWN; P EN   DRAWN; P INH  DRAWN; P REV  DRAWN; P DIO  DRAWN
    check_l8p_och.py on it: OCH DRAWN; the window from the drawn values 19.965 to 21.521 A
      (round 12) the drawn delays: SENSE1's filter 10.0 us, the sense delay 0.460 to 0.852 ms, the arming and on-time delay 2.15 to 3.92 ms;
-     the bound's levels at BRK_VIN 7.6 V: OCH_S2 0.55 V with RESET1 asserted, BRK_PGD 3.20 V, OCH_S2 armed 2.92 V
+     the bound's levels at BRK_VIN 7.6 V: OCH_S2 0.64 V with RESET1 asserted, BRK_PGD 3.72 V, OCH_S2 armed 4.97 V; (round 13) OCH_S2
+       1.27 mV while PGD is low with every leakage at the site, Q114's gate 5.06 V
    the mutations, each read by check_l8p_och.py:
      the crowbar's resistor on BRK_VIN, upstream of the sense pair (the breaker could never end it),      OCH FAIL: R140 on ['BRK_VIN', 'OCH_CD'], wanted PACK_P and OCH_CD
      the amplifier's input and reference exchanged (R132 from PACK_N, R134 from GND),                     OCH FAIL: R132 on ['OCH_N', 'PACK_N'], wanted GND and OCH_N
@@ -259,8 +358,13 @@ INFERRED; MODEL; RECORD; ASSUMED.
      C117 at 100 nF (round 12: SENSE1's filter over its share of the sense delay),                        OCH FAIL: SENSE1's filter R135 x C117 100.0 us is over 5 % of the least sense delay 0.460 ms
      C120 at 47 nF (round 12: round 11's value, the on-time past R140's figure),                          OCH FAIL: C120 value '47n 50V C0G 5% (CTS2)' does not start '22n 50V C0G'
      D106 removed (round 12: the on-time bound lost),                                                     OCH FAIL: D106.1 on None, wanted OCH_R
-     R143 at 100 kOhm (round 12: BRK_PGD under Q106's threshold while the trip asserts),                  OCH FAIL: R143 value '100k 1%' does not start '2.2M'
-     SENSE2 back on BRK_PGD (round 12: round 11's arming, no on-time bound),                              OCH FAIL: U107.3 on 'BRK_PGD', wanted OCH_S2
+     R143 at 100 kOhm (round 12: BRK_PGD under Q106's threshold; round 13: D106's current past its 0.1 mA row), OCH FAIL: OCH_S2 at 0.840 V with RESET1 asserted (D106 at 292 uA, -20 C) is not under SENSE2's least
+     SENSE2 back on BRK_PGD (round 12: round 11's arming, no on-time bound),                              OCH FAIL: BRK_PGD reaches the trip's ['U107'] beyond Q113's gate (round 13: no resistor or diode of 
+     round 12's drawing (R143 2.2 MOhm from BRK_PGD, Q114 removed: OCH_S2 lifted by leakage while PGD is low), OCH FAIL: OCH_S2 at 3.80 V while PGD is low (every leakage at the 86.25 C site, BRK_VIN 7.6 V) is no
+     Q114 removed (round 13: OCH_S2 not held low while PGD is low),                                       OCH FAIL: OCH_S2 at 7.60 V while PGD is low (every leakage at the 86.25 C site, BRK_VIN 7.6 V) is no
+     R144 at 1 MOhm (round 13: Q114's gate under 5 V with Q113's and D107's leakage at the site),         OCH FAIL: OCH_S2 at 7.60 V while PGD is low (every leakage at the 86.25 C site, BRK_VIN 7.6 V) is no
+     D106 shorted (round 13: RESET1's node merged into OCH_S2),                                           OCH FAIL: RESET1's node is the PGD-low pull-down's node (a shorted D106: Q114 completes the crowbar'
+     R143 on BRK_PGD at 330 kOhm (round 13: a resistor of the trip on BRK_PGD again),                     OCH FAIL: OCH_S2 at 3.80 V while PGD is low (every leakage at the 86.25 C site, BRK_VIN 7.6 V) is no
    the draft refuses a board P without the breaker and the ideal diode (exit 3: apply_gen_sch_p_ocheld: this record's breaker and ideal-diode drafts a), a second application (exit 3: apply_gen_sch_p_ocheld: designator U106 is already in use in) and the
      repository's own generator while unreleased (exit 3: apply_gen_sch_p_ocheld: NOT RELEASED: no RELEASE-R11.md; l8p's round 11 draft wa)
 
@@ -307,15 +411,17 @@ INFERRED; MODEL; RECORD; ASSUMED.
        held: off (IDSS 1 uA at 25 C PRINTED) | the event: 99.6 A at the onset and 45.0 A held with a source (4c') against IDM 400 A PRINTED; its
          turn-off crossing 57.5 W without a source, WITHIN the same part's derated 71.1 W at 1.292 ms; 195 W with a source on the voltage
          bound (30.1 W on the settled basis) | WITHIN on current; the turn-off with a source NOT SHOWN (its SOA at 0.27 ms not read)
-   D106 (BAT46W) and R143 (2.2 MOhm; round 12, the on-time bound)
-       held: D106 reverse at most half the clamp's 29.2 V against its 100 V; R143 at most 14.6 V across 2.2 MOhm | WITHIN
+   D106 (BAT46W), R143 (330 kOhm since round 13), Q113, Q114 (2N7002), R144 (200 kOhm), D107 (BZT52C12; round 13)
+       held: D106 reverse at most the clamp's 29.2 V against 100 V, forward at most 89 uA against 150 mA; R143 2.61 mW and R144 4.31 mW at
+         the clamp; Q113 and Q114 VDS at most 29.2 V against 60 V, VGS at most 14.6 V (Q113) and 12.7 V (Q114) against 20 V, Q114 at
+         most 0.182 mA against 115 mA; D107 at most 90 uA, 1.14 mW | WITHIN
    R10 (2 mOhm 2512 2 W, the gauge's sense and the trip's)
        held: 0.93 W at 21.52 A | the event: the hot-short row's 16.5 us | NOT SHOWN: MISSING its maker's sheet (tolerance, temperature
          coefficient, derating at the band; E-6); the trip's window holds for R10 within -7.3 to +8.3 %
    R101, R102 (the breaker's sense pair; no part chosen)
        held: 0.78 and 0.42 W at 21.52 A | NOT SHOWN: MISSING the parts (Layer 6: 2 W each at the band's temperature, 1 %, at most 50 ppm/K; E-6)
    R140 (the crowbar's resistor; round 11, restated in round 12)
-       held: no current | the event: at most 3.32 J in 4.41 ms (4c': a source present, the -1 held out of its limit; 0.40 J without a source
+       held: no current | the event: at most 3.51 J in 4.41 ms (4c': a source present, the -1 held out of its limit; 0.40 J without a source
          and the -1 latched) | NOT SHOWN: MISSING a part whose maker prints that single pulse (E-6b restated; round 11's 0.40 J withdrawn)
    F2 (Eaton SCF9550, 30 A, -20 to +60 C PRINTED)
        held: 71.7 % of 30 A; its printed range ends 16.25 K under the 76.25 C air at any current: the pack's thermal environment (record
@@ -344,9 +450,13 @@ INFERRED; MODEL; RECORD; ASSUMED.
    the replay of L4-E11's 20f, 22 and 28 at these figures: record l4e11's round 19 (l4e11_rowc.py)
 
 8. VERDICTS
-   L8P-R10-F1: CORRECTED IN DRAFT by (B), SESSION L8P-R11-D1: composed in L4-E9's order, read DRAWN, 16 of 16 mutations FAIL; electrical
-     acceptance on printed figures: no current held over 21.52 A, 94.6 % of the blades' rerated current at the band, the service untouched;
-     CONDITIONAL on E-6 (R10's sheet within -7.3 to +8.3 %), E-6b (R140's printed pulse, RESTATED in round 12: 3.32 J in 4.41 ms), E-10
+   L8P-R10-F1: CORRECTED IN DRAFT by (B), SESSION L8P-R11-D1: composed in L4-E9's order, read DRAWN, 21 of 21 mutations FAIL; electrical
+     acceptance on printed figures: no current held over 21.52 A, 94.6 % of the blades' rerated current at the band, the held service
+     untouched (round 13 corrects round 12's 'the service untouched': at a start it was not shown in round 12's drawing, the recheck's
+     F1; with round 13's disarm it is shown, 4j); CONDITIONAL on E-6 (R10's sheet within -7.3 to +8.3 %), E-6b (R140's printed pulse,
+     RESTATED in round 12, on one basis in round 13: 3.51 J in 4.41 ms), L8P-R12-F1 (4g: R140 held near 118 W after a shorted crowbar with
+     a source, a single-failure hazard the trip itself adds; its series element named as Layer 6's, chosen with R140's part), the
+     PGD-low disarm of 4j (the recheck's F1, corrected in draft by round 13, UNVERIFIED until its one bounded check), E-10
      (the key-down excursions under 0.282 ms: a bench item, the check's F7), E-12f, E-12s (round 12, 4i) and the latent-failure
      residual of 4g; round 12 corrects the band of 4i (a demonstrated defect of round 11's drawing) by the on-time bound, composed,
      read DRAWN and mutated (section 5); UNVERIFIED until the targeted recheck (L4A-69); the approaches (A) NOT SUPPORTED and (C) NOT
@@ -399,3 +509,16 @@ INFERRED; MODEL; RECORD; ASSUMED.
    F1: Q111's turn-off without a source is within the same part's derated point                                           yes
    F3: the reader computes the window, the delays and the bound from the drawn values                                     yes
    F2: D106's low level is under SENSE2's least threshold                                                                 yes
+   R13 F1: round 12's PGD-low level is lifted over VITN by Q112's off leakage at the site                                 yes
+   R13 F1: BAT46W's printed 0.3 uA at 25 C already passes the no-sink lift of round 12's drawing                          yes
+   R13 F1: approach (1)'s armed level fails at the site                                                                   yes
+   R13 F1: approach (2) tolerates less leakage than BAT46W's printed 5.0 uA at 60 C                                       yes
+   R13 F1: the selection holds OCH_S2 under VITN while PGD is low, Q114's gate at 5 V or more at the site                 yes
+   R13 F1: the selection's armed level is over the release with Q114's leakage at the site                                yes
+   R13 F1: BRK_PGD carries no resistor or diode of the trip and stays over Q106's threshold                               yes
+   R13 F1: the disarm asserts inside the insertion time's least at a start                                                yes
+   R13 F1: the start's own current is under the window                                                                    yes
+   R13 F2: the band's upper edge with the loop lies over R140's alone and under E-12s's 10.6 V                            yes
+   R13 F3: E-6b on one basis is the largest case and nine parts' worst share is under the read line                       yes
+   R13 F7: the continuous-pulse mean condition needs a period longer than a load could make                               yes
+   R13 F7: the 2512's continuous-pulse line's long end meets its printed 1.5 W                                            yes

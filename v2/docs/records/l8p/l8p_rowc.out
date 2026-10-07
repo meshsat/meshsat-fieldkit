@@ -9,7 +9,7 @@ INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, r
    36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
    aa05cdaac67f9fee  v2/docs/records/l4e11/l4e11_fet.out
    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
-   fdc3cd4638b5188a  v2/docs/records/l8p/L8P-BREAKER.md
+   157deb605e720d71  v2/docs/records/l8p/L8P-BREAKER.md
    6a136feec6c9cf4e  v2/ecad/tools/gen_sch_a.py
    f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
    740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
@@ -159,7 +159,11 @@ INFERRED; MODEL (a record's conductor model); RECORD (another record's figure, r
      EACH BUILT BOARD's path, since E11-29's coupon qualifies the design, not a board with a void or a poor tab joint: at production,
      an X-ray of the three FETs' tab joints against the voiding E11-29's coupon was built with, and at commissioning a per-unit
      reading, the three FETs carrying a known current for a known time from a known air with the guard's die (or the pour's NTC)
-     read against E11-29's curve, pass: the bar met within the reading's stated uncertainty); on a board that misses the bar the
+     read against E11-29's curve, pass: the bar met within the reading's stated uncertainty; round 13, the recheck's F8: every built
+     board, one reading each, from a known air of 15 to 35 C with a heating of at least 40 K; the unit's limit is E-1's bar itself;
+     pass: the reading plus its expanded uncertainty (k = 2) at most the bar; the uncertainty budgeted at 6.2 % (2.54 K/W at the bar)
+     from two temperature sensors of 1.5 K each (IEC 60584-1 class 1, ASSUMED: the supplier states its instruments) and the heating
+     power within 1 %); on a board that misses the bar the
      guard is still needed and its silent failures, with no detection interval, stay a residual (REMAINING ENGINEERING, HO-A's pattern)
    M-B's entry condition (decision L4E11-FET-D2): (1) and (2) not met (E11-29, E11-36 and E-05 unanswered, none refused); (3) not met for
      the guard's parts; the blades' row is a part over its printed limit, but the guard does not assure its protection, nor would M-B:
