@@ -1,8 +1,8 @@
 # MeshSat field kit V2: start here
 
-**Current revision: set 31 (6 October 2026), the revision `5f25daf3`, an adoption of record text over set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`. Read section 0 first.** The paragraphs from here to
+**Current revision: set 32, the revision `f08e3961`, an adoption of record text and record tooling over set 31's `5f25daf3`. Read section 0 first.** The paragraphs from here to
 section 0 are edition H3's opening and this page's edition history, oldest first (H1 to H3 of 27 September 2026, the supplier packages of 3 and 4 October
-2026, set 30, set 31); sections 1 to 9 are edition H3's text of 27 September 2026 with its later edits, kept as history where section 0
+2026, set 30, set 31, set 32); sections 1 to 9 are edition H3's text of 27 September 2026 with its later edits, kept as history where section 0
 differs.
 
 **Engineering handover, edition H3, partial.** First written 27 September 2026 from the repository at commit
@@ -94,7 +94,16 @@ validation annex, Layer 5's contract restatement, the filed patch rows applied t
 re-takes), regenerated to convergence, with the coordinator's items and two tooling corrections. "Set 31 closes NO power item."
 (`v2/docs/records/int31/RESULT.md`, section 6); no baseline circuit draft, board generator or netlist changed.
 
-## 0. Set 30's revision (6 October 2026): what it hands over, and set 31 over it
+**Set 32** (the revision `f08e3961`). An adoption of record text and record tooling over set 31: 26 record generators read their
+makers' PDF text from committed verbatim extractions instead of running pdftotext (a held-back sheet's text is held back with the
+sheet and re-taken after the fetch: 57 texts, `v2/docs/records/int32/RESULT.md`, section 2a), and the tests' own reads of it are
+declared (W34, W37, W42, W55, W81); each verdict word is attributed to its check (W53: cx45's "NOT CONFIRMED", cx46's "NOT CLOSED"); the handover
+ZIP's cap is raised to 100 MiB (Q-53); N1a's phrase is carried into V-E16 row 3 of the firmware contract (Q-55); record l4e7's results
+cache is keyed on the sixteen numbers the record reads of `l4e11_power.out` (WP-B), with ONE re-key; with its integration record and
+the outputs these move, regenerated. "Set 32 closes NO power item." (`v2/docs/records/int32/RESULT.md`, section 6); no baseline circuit
+draft, board generator or netlist changed.
+
+## 0. Set 30's revision (6 October 2026): what it hands over, and sets 31 and 32 over it
 
 Added 6 October 2026 under MESHSAT-1357. A receiving company starts at the supplier entry page, `v2/docs/handover/supplier/SUPPLIER-HANDOVER.md`,
 whose section 0 states this revision in full; this section is the short form for a reader who opens this page first, and where the
@@ -110,14 +119,23 @@ adds its integration record to the list of what set 30 adds, and changes none of
 completion claims stand as the assessment gives them on set 30. Its classification counts 25 commits that change what cx46 read or
 carry another row's change into a file of the reviewed tree (set 30's rule, reading A), each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2).
 
+**Set 32 over set 31.** This section was written for set 30. Set 32 changes the Tested and Adopted revisions below again, adds its
+integration record to the list of what set 30 adds, and changes none of the states. Layer 4's DESK gate and the three completion
+claims stand in the assessment's words, of which set 32 changes no line: "Layer 4's DESK gate: NOT PASSED"; "Engineering-handover
+readiness: READY AS A DESK PACKAGE OF OPEN ITEMS"; "Power-design closure: BLOCKED. Fabrication release: BLOCKED."
+(`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6). "Set 32 closes NO power item." (`v2/docs/records/int32/RESULT.md`,
+section 6). Set 31's known item, record l4e7's paragraph 0a's history sentence (`v2/docs/records/int31/RESULT.md`, section 4a), is
+corrected by set 32's one re-key and the regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were
+written); the regenerated `v2/docs/records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `its key field is the key of its own parts and no part differs from this tree's`.
+
 **The revisions.**
 
 | Revision | Commit | What it is |
 |---|---|---|
-| Tested | `5f25daf3` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history): the commit the gated release suite and the promotion gate ran on (the package's `README.md`, section "What was tested, and how") |
-| Adopted | `73941afc` | set 31's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 31 records as adopted (set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
+| Tested | `f08e3961` | set 32's promoted revision (set 31's was `5f25daf3` and set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`, each kept as dated history): the commit the gated release suite and the promotion gate ran on (the package's `README.md`, section "What was tested, and how") |
+| Adopted | `9a0a0f6a` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `73941afc`, 6 October 2026, pushed 23:43:17 CEST, kept as dated history; set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
 | Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its difference from the tested revision and which checks cover it |
-| Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate cx46 read (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check of the engineering read a later revision (`v2/docs/records/int31/RESULT.md`, section 1) |
+| Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate cx46 read (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`); unchanged in set 31 and in set 32: no independent check of the engineering read a later revision (`v2/docs/records/int31/RESULT.md`, section 1; `v2/docs/records/int32/RESULT.md`, section 1: "no independent check of its engineering") |
 
 The owner's binding rule (part 25, `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:845`): "Use the existing integration gate to
 record the reviewed and integrated revisions and the intervening changes. If changes are only verified bindings or presentation, record
@@ -125,13 +143,13 @@ that equivalence. If they change a circuit, assumption, model, limit or substant
 verification before being credited. Passing the software suite alone cannot transfer an engineering verdict to altered claims." The
 integration record `v2/docs/records/int30/RESULT.md` binds the two revisions, and `v2/docs/records/int30/CLASSIFICATION.md` classifies
 every commit between them. What set 30's promoted revision is, and is not, in the integration record's words (its sections 1, 2 and 6):
-"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2); the candidate commit `5f25daf3` is one of the 106, that file's row 36.
+"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2); the candidate commit `5f25daf3` is one of the 106, that file's row 36. Set 32 adds its own: of the 34 commits of its five branches, 12 touch a file cx46 read, 2 of them REVIEWED-INPUT CHANGED under set 30's rule (reading A), each "UNREVIEWED since cx46" (`v2/docs/records/int32/CLASSIFICATION.md`, section 2), counted over the branch commits alone; the integration's own commits are that file's rows 31 to 33, the candidate commit `f08e3961` its row 33, classed at the adoption (its row 31 expects the regenerated outputs that carry row 14's lines to be REVIEWED-INPUT CHANGED too), unlike set 31's 25, counted over all 106 of its commits.
 
 **The states, each apart.**
 
 | What | State |
 |---|---|
-| Documents and editable artifacts | on main as a DESK candidate (`5f25daf3`, set 31) |
+| Documents and editable artifacts | on main as a DESK candidate (`f08e3961`, set 32) |
 | Design reviewed and accepted | NO |
 | Implemented | NONE |
 | Physical qualification | NONE |
@@ -169,6 +187,9 @@ power-design closure gate is BLOCKED**" (`v2/docs/records/l4e9/L4-POWER-ARCHITEC
   `v2/docs/records/int30/CLASSIFICATION.md`.
 - `v2/docs/records/int31/RESULT.md`: set 31's integration record, with `v2/docs/records/int31/CLASSIFICATION.md`, its classification
   of every commit after set 30's promoted revision.
+- `v2/docs/records/int32/RESULT.md`: set 32's integration record, with `v2/docs/records/int32/CLASSIFICATION.md`, its classification
+  of every commit of its five branches and of the integration's rows, and `v2/docs/records/int32/ENTRY-PAGES.patch.md`, the rows that
+  brought these pages to set 32.
 - `v2/docs/records/l4close/`, the four checks of 5 October 2026 (V6, cx44, cx45, cx46), each an AI review filed as received.
 
 **What a receiving company is asked to do, and not** (the entry page's section 0d in full). Asked: to confirm engineering scope,
@@ -180,14 +201,14 @@ desk check, an AI review or a passing suite as sign-off or qualification; to run
 engineering as qualification-only; to change a requirement or adopt the Saft MP 176065 xtd PROPOSAL without the owner's ruling.
 
 **How to reproduce** (the entry page's section 0e; section 6 below and `v2/docs/handover/REGENERATE.md` for the September formats).
-From a full git checkout at `5f25daf3`: a record's fetch script (`fetch_held_back.py`) fetches and checks the makers' sheets held
+From a full git checkout at `f08e3961`: a record's fetch script (`fetch_held_back.py`) fetches and checks the makers' sheets held
 back by their terms; `python3 v2/docs/records/<record>/<script>.py` prints a record's output, compared byte for byte with its committed `.out`, in the
 order of `v2/docs/records/l9t5/stability/regen_cascade.sh` for the P0 cascade; `python3 v2/docs/records/l8p/gen_netlist.py GENERATOR
 OUT.net` writes a generator's netlist without KiCad ("It is not KiCad's netlist", `v2/docs/records/l8p/gen_netlist.py:15`); and
 `python3 v2/ecad/tools/tests/run.py <name substring>` runs the tests.
 
 **What below is history.** The opening paragraphs' "This is handover H3" describes the edition of 27 September 2026; the current
-revision is set 31 (section 0 states set 30's revision and what set 31 changes). Sections 1a and 3 give the states at H3 and H2 (27 September 2026); Layer 3 was accepted again since, last at
+revision is set 32 (section 0 states set 30's revision and what sets 31 and 32 change). Sections 1a and 3 give the states at H3 and H2 (27 September 2026); Layer 3 was accepted again since, last at
 `3b4b92cf` (the entry page's section 2). Section 5's Layer 4 row names `v2/docs/ARCHITECTURE.md` first; for the power architecture the
 current record is `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` (`v2/docs/handover/LAYER-STATUS.md:330`). Section 4's registry counts
 are H3's, as that row says.
@@ -197,7 +218,7 @@ are H3's, as that row says.
 | Page | Read it for |
 |---|---|
 | `v2/docs/handover/START-HERE.md` (this page) | what is being built, how the repository is organised, the reading order, what you need outside the repository |
-| `v2/docs/handover/LAYER-STATUS.md` | the nine pre-PCB layers (its section "Status at handover H2" first, then each layer's acceptance table at H2, item by item, since after H2; **since set 29** the tables headed "After set 29" first, and **since set 30** the blocks headed "After set 30" before them, and **since set 31** the blocks headed "After set 31" before those); its Appendix A keeps, per layer, the audit at `e3aedb25` (scope, deliverables by revision, every acceptance item met or not with its evidence, unresolved decisions, gate cycles, the next closing actions, per-board lines) and the integrator line |
+| `v2/docs/handover/LAYER-STATUS.md` | the nine pre-PCB layers (its section "Status at handover H2" first, then each layer's acceptance table at H2, item by item, since after H2; **since set 29** the tables headed "After set 29" first, and **since set 30** the blocks headed "After set 30" before them, and **since set 31** the blocks headed "After set 31" before those, and **since set 32** the blocks headed "After set 32" before all of them); its Appendix A keeps, per layer, the audit at `e3aedb25` (scope, deliverables by revision, every acceptance item met or not with its evidence, unresolved decisions, gate cycles, the next closing actions, per-board lines) and the integrator line |
 | `v2/docs/handover/supplier/SUPPLIER-HANDOVER.md` | **since 3 October 2026** the supplier package's entry page; **set 30:** its section 0 names the revisions, the states, what set 30 adds, what a receiving company is asked to do and how to reproduce |
 | `v2/docs/handover/CONTINUATION-BRIEF.md` | the decisions an incoming PCB engineer must preserve, the remaining work in dependency order, the constraints known today, the approaches that failed and why, the experiments already specified |
 | `v2/docs/handover/ENGINEERING-QUESTIONS.md` | every blocked question, one compact block each: issue, evidence, attempts, options, recommendation, expertise, cost and lead time |

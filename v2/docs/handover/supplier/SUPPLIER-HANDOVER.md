@@ -5,7 +5,7 @@ Written 3 October 2026 under MESHSAT-1357, on the owner's instruction of the sam
 path below is a path in the public repository `https://github.com/meshsat/meshsat-fieldkit`, from its root; the package's
 `SOURCE.txt` names the commit every file was taken from, and its `MANIFEST.sha256` lists every file with its sha256.
 
-**Brought to set 31 on 6 October 2026: read section 0 first.** It names this revision, its states and what it adds; sections 1
+**Brought to set 32: read section 0 first.** It names this revision, its states and what it adds; sections 1
 to 10 are the page of 3 October 2026 with its later corrections, kept where still true and marked as history where set 30 differs.
 
 **What the kit is, and what it is not yet.** The MeshSat field kit V2 is an **unbuilt prototype design**: no V2 board has been
@@ -19,7 +19,7 @@ reviewed it. That is the work this package asks a supplier to quote for.
 (2) build and run the prototype qualification it needs; (3) complete the design and the manufacturing release. Physical
 qualification is part of the work requested; nothing in this package waits for it.
 
-## 0. This revision: set 31 over set 30 (6 October 2026)
+## 0. This revision: set 32 over set 31 and set 30
 
 Added 6 October 2026 under MESHSAT-1357. Where this section and a later one disagree, this section is the current statement.
 `path:N` is line N of that file at commit `6fe398e9` (`6fe398e9f624160429411e975c26564e553714d3`), the commit this section was written
@@ -35,17 +35,29 @@ the citation re-takes, regenerated to convergence. It changes the Tested and Ado
 0c, and changes none of the states of 0b: "Set 31 closes NO power item." (`records/int31/RESULT.md`, section 6). Its classification
 counts 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A), each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2).
 
+**Set 32 over set 31.** Set 32 is an adoption of record text and record tooling over set 31: 26 record generators read their makers'
+PDF text from committed verbatim extractions (a held-back sheet's text is held back with the sheet and re-taken after the fetch,
+as section 7 gives it: 57 texts), and the tests' own reads of it are declared; each verdict word is attributed to its check; the handover ZIP's cap is raised to 100 MiB; N1a's phrase is carried into V-E16 row 3 of the firmware contract; record l4e7's
+results cache is keyed on the sixteen numbers the record reads of `l4e11_power.out`, with ONE re-key; the outputs these move are
+regenerated. It changes the Tested and Adopted revisions of 0a, adds its integration record to 0c, and changes none of the states of
+0b: "Set 32 closes NO power item." (`records/int32/RESULT.md`, section 6). The DESK gate and the three completion claims, in the
+assessment's words, unchanged: "Layer 4's DESK gate: NOT PASSED"; "Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN
+ITEMS"; "Power-design closure: BLOCKED. Fabrication release: BLOCKED." (`records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6). Set
+31's known item, record l4e7's paragraph 0a's history sentence (`records/int31/RESULT.md`, section 4a), is corrected by set 32's one
+re-key and the regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were written); the regenerated
+`records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `its key field is the key of its own parts and no part differs from this tree's`.
+
 ### 0a. The revisions
 
 | Revision | Commit | What it is |
 |---|---|---|
-| Tested | `5f25daf3` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history): the commit the gated release suite and the promotion gate ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
-| Adopted | `73941afc` | set 31's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 31 records as adopted (set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
+| Tested | `f08e3961` | set 32's promoted revision (set 31's was `5f25daf3` and set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`, each kept as dated history): the commit the gated release suite and the promotion gate ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
+| Adopted | `9a0a0f6a` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `73941afc`, 6 October 2026, pushed 23:43:17 CEST, kept as dated history; set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
 | Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its difference from the tested revision and which checks cover it |
-| Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate the one targeted recheck cx46 read (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check of the engineering read a later revision (`records/int31/RESULT.md`, section 1) |
+| Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate the one targeted recheck cx46 read (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`); unchanged in set 31 and in set 32: no independent check of the engineering read a later revision (`records/int31/RESULT.md`, section 1; `records/int32/RESULT.md`, section 1: "no independent check of its engineering") |
 | Earlier reviewed | `06077cee` (`06077cee85d0ed44c74c2a06c9fbb2030a0dedbc`) | the candidate the one focused check cx45 read (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:20`); its verdict as given: "P0 CANDIDATE: NOT CONFIRMED." (`:10`) |
 
-**The reviewed revision is not the packaged revision, and no verdict moves between them by itself.** The records adopted after the promotion (RESULT.md, CLASSIFICATION.md, the P0 list revision 3, the assessment, LAYER-STATUS and these pages) are committed on main after the tested commit, first as adopted in set 30's adoption commit `836f711b` (the Adopted row's dated history) and, for set 31's records, in set 31's adoption commit (the Adopted row); a page cannot carry the sha of the commit that packages it, so the supplier delta's README.md names the packaged commit (the Packaged row) and states its difference from the tested revision (6 October 2026). Dated note (W33, 6 October 2026): the Packaged row named `dd1aed00` until W32's read of the adoption, which found RESULT.md and these pages' section 0 first in the adoption's commits, not at `dd1aed00`. The owner's binding rule (part 25,
+**The reviewed revision is not the packaged revision, and no verdict moves between them by itself.** The records adopted after the promotion (RESULT.md, CLASSIFICATION.md, the P0 list revision 3, the assessment, LAYER-STATUS and these pages) are committed on main after the tested commit, first as adopted in set 30's adoption commit `836f711b` (the Adopted row's dated history) and, for set 31's records, in set 31's adoption commit (the Adopted row's dated history) and, for set 32's records, in set 32's adoption commit (the Adopted row); a page cannot carry the sha of the commit that packages it, so the supplier delta's README.md names the packaged commit (the Packaged row) and states its difference from the tested revision (6 October 2026). Dated note (W33, 6 October 2026): the Packaged row named `dd1aed00` until W32's read of the adoption, which found RESULT.md and these pages' section 0 first in the adoption's commits, not at `dd1aed00`. The owner's binding rule (part 25,
 `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:845`): "Use the existing integration gate to record the reviewed and integrated
 revisions and the intervening changes. If changes are only verified bindings or presentation, record that equivalence. If they change a
 circuit, assumption, model, limit or substantive claim, the affected result needs targeted verification before being credited. Passing
@@ -54,13 +66,13 @@ binds `4d0ff8a2` and `dd1aed00d0a0a521063b5792550bc510c4707c59`, and `records/in
 as applying to the revision its checker read.
 
 **What set 30's promoted revision is, and is not**, in the integration record's words (`records/int30/RESULT.md`, sections 1, 2 and 6):
-"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2); the candidate commit `5f25daf3` is one of the 106, that file's row 36.
+"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2); the candidate commit `5f25daf3` is one of the 106, that file's row 36. Set 32 adds its own: of the 34 commits of its five branches, 12 touch a file cx46 read, 2 of them REVIEWED-INPUT CHANGED under set 30's rule (reading A), each "UNREVIEWED since cx46" (`records/int32/CLASSIFICATION.md`, section 2), counted over the branch commits alone; the integration's own commits are that file's rows 31 to 33, the candidate commit `f08e3961` its row 33, classed at the adoption (its row 31 expects the regenerated outputs that carry row 14's lines to be REVIEWED-INPUT CHANGED too), unlike set 31's 25, counted over all 106 of its commits.
 
 ### 0b. The states, each apart
 
 | What | State |
 |---|---|
-| Documents and editable artifacts | on main as a DESK candidate (`5f25daf3`, set 31) |
+| Documents and editable artifacts | on main as a DESK candidate (`f08e3961`, set 32) |
 | Design reviewed and accepted | NO |
 | Implemented | NONE |
 | Physical qualification | NONE |
@@ -99,6 +111,7 @@ closure, a qualification or a release." (`:1003`).
 | `v2/docs/handover/LAYER-STATUS.md`, the blocks headed "After set 30" | per layer, the items set 30's records move; a row not listed there keeps its earlier text |
 | `v2/docs/records/int30/RESULT.md`, with `v2/docs/records/int30/CLASSIFICATION.md` | the integration record: the reviewed and the integrated revisions bound, every intervening commit classified (the classification), the gate lines |
 | `v2/docs/records/int31/RESULT.md`, with `v2/docs/records/int31/CLASSIFICATION.md` | set 31's integration record: set 30's promoted revision and set 31's bound, every intervening commit classified, the gate lines |
+| `v2/docs/records/int32/RESULT.md`, with `v2/docs/records/int32/CLASSIFICATION.md` and `v2/docs/records/int32/ENTRY-PAGES.patch.md` | set 32's integration record: set 31's promoted revision and set 32's bound, every commit of its five branches classified and the integration's rows, the gate lines, and the rows that brought these pages to set 32 |
 | `v2/docs/records/l4close/CHECK-V6-POWER-DRAFTS-7a82e82a-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX44-F01-SELECTION-8c7c335f-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md`, `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` | the four independent checks of 5 October 2026, each an AI review filed as received, every negative verdict kept |
 | `v2/docs/records/l9t5/`, `v2/docs/records/l8r2/`, `v2/docs/records/l8p/`, `v2/docs/records/efuse/`, `v2/docs/records/l4e11/`, `v2/docs/records/l4e7/` | the records the P0 round changed (each with its `README.md`), with their scripts, committed outputs and tests; `v2/docs/records/l9t5/stability/` keeps the cascade's two passes and their digests |
 | `v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md` | the owner's instructions of 5 October 2026 as received, from part 12 (part 19: the deliverable is the desk package; part 24: an unsupported correction is handed over as remaining engineering; part 25: the binding rule of section 0a) |
@@ -137,9 +150,9 @@ We do NOT ask you:
   investigation ("Distinguish investigating or testing the Saft option from adopting its 4S1P pack. No pack change has been approved by
   this clarification.", `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:486`), without the owner's ruling.
 
-### 0e. How to reproduce set 31's figures
+### 0e. How to reproduce set 32's figures
 
-From a full git checkout at `5f25daf3` (section 7, item 2 says why the ZIP alone does not suffice):
+From a full git checkout at `f08e3961` (section 7, item 2 says why the ZIP alone does not suffice):
 
 1. **The makers' sheets held back by their terms.** A record that reads one fetches it with its own script (`fetch_held_back.py`, or
    a `fetch_*.py`, section 7 item 2), run from the repository root, for example `python3 v2/docs/records/l9t5/fetch_held_back.py` ("exit 0: present and checked; 3: a mismatch",
@@ -154,8 +167,8 @@ From a full git checkout at `5f25daf3` (section 7, item 2 says why the ZIP alone
    generator's part table as a KiCad-form netlist; "It is not KiCad's netlist" (`:15`), and KiCad's own export is the reading of record
    (`:17`). A schematic regenerates with KiCad 9.0.9 (`v2/docs/handover/REGENERATE.md`).
 4. **Tests.** `python3 v2/ecad/tools/tests/run.py <name substring>` runs the house fixtures; a test that needs `pcbnew` reports SKIP on a
-   host without KiCad. The gated release suite's line for `5f25daf3` is in the package's `README.md` and in
-   `records/int31/RESULT.md` (set 30's, for `dd1aed00`, in `records/int30/RESULT.md`).
+   host without KiCad. The gated release suite's line for `f08e3961` is in the package's `README.md` and in
+   `records/int32/RESULT.md` (set 31's, for `5f25daf3`, in `records/int31/RESULT.md`; set 30's, for `dd1aed00`, in `records/int30/RESULT.md`).
 
 ## 1. The product
 
@@ -411,4 +424,10 @@ minimum (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:44`).
 - **6 October 2026: set 31, the revision `5f25daf3`** (section 0). An adoption of record text over set 30: the authors'
   restatements written during set 30's integration, the filed patch rows applied, the citations re-taken, regenerated to convergence
   (`v2/docs/records/int31/RESULT.md`). No circuit change is applied, and nothing in it accepts, closes or promotes a design claim;
+  Layer 4's DESK gate and the three completion claims stand as set 30's assessment gives them.
+- **Set 32, the revision `f08e3961`, dated by its adoption commit** (section 0). An adoption of record text and record tooling
+  over set 31: the makers' PDF text as committed verbatim inputs of 26 record generators (a held-back sheet's text held back with the
+  sheet and re-taken after the fetch: 57 texts), the verdict words attributed to their checks, the ZIP's cap, N1a's phrase in V-E16
+  row 3, record l4e7's cache KEY on the sixteen numbers it reads, ONE re-key, regenerated
+  (`v2/docs/records/int32/RESULT.md`). No circuit change is applied, and nothing in it accepts, closes or promotes a design claim;
   Layer 4's DESK gate and the three completion claims stand as set 30's assessment gives them.
