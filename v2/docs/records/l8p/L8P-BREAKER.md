@@ -1760,6 +1760,9 @@ stays; this note supersedes the figure.
   property on 300 random networks and its tightness for a long on-time). So the peak is at most the held state: **150.00 C at E-1's
   bar, 136.79 C at E11-29's design target: BOUNDED against 150 C on printed device maxima, CONDITIONAL on E11-29, E11-36 and E-05**, as
   15a. No credit is taken for the train's mean loss (0.284 of the held one): the pour's own transient is no maker's figure.
+- **Currents over 23.93 A are single events outside the train**, judged in their records: a fault's onset up to the breaker's 50.59 A for
+  at most 16.5 us, after which the -1 latches off and a restart into the short is power-limited (record l9stk 15.3); the docking pulse,
+  242.9 A once per docking (L4-E11 16d, E11-30).
 - **The other parts under the train:** the breaker's own FETs restart under DD-8's restart inhibit (round 2; record l9stk 15.4b), not
   judged here; board P's Q1 and Q2 at most their held row (15b) by the same superposition.
 
