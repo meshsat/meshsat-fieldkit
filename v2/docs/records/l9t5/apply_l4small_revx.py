@@ -11,7 +11,7 @@ contract draft's FW-B20 row, which is a text to be applied to HW-FW-CONTRACT.md 
   T10-ROUND5.md       line 1, sections 3 (1), 3 (5), 3 (6) (the Layer 12 row), 5, 6 (row 1), 8 (L9T5-D7's reversal), 10 (L9T5-F23),
                       12 (f), and section W133 appended
   L9T5-CASES.md       the two lines that named the V-B20 route
-  l9t5_t10.py         10h (1), 10i, 10j (f), the 10j disposition, L9T5-F22 and the round 5 predicate's words (same printed lines)
+  l9t5_t10.py         10a, 10h (1), 10i, 10j (f), the 10j disposition, L9T5-F22 and the round 5 predicate's words (same printed lines)
   l9t5_connected.py   section 10's three revision X lines (same printed lines)
   apply_hw_fw_contract_t10.py  FW-B20's row and the docstring
 No figure, net, part, verdict or state changes; no cx46 item closes. Nothing in this kit has been built, bought, powered or measured.
@@ -72,6 +72,9 @@ EDITS = [
     (T10, "the revision whose printed rows hold; a rev X part is\")",
           "the revision whose printed rows hold; [SUPERSEDED 7 October 2026 by %s: %s; round 5's words kept as history:] "
           "a rev X part is\")" % (D, NA), True),
+    (T10, "settled at assembly: the fitted part is V or X. DS12110",
+          "settled at assembly: the fitted part is V or X [CON-017 (5)'s bound; the fitted part is revision V only, %s, 7 October "
+          "2026]. DS12110" % D, True),
     (T10, "admitted only by V-B20 (10h (1)); the proof above",
           "admitted only by V-B20 (10h (1)) [as written at round 5; SUPERSEDED by %s: %s]; the proof above" % (D, NA), True),
     (T10, "thermal acceptance it would rest on are REMAINING ENGINEERING ((e)); the rail trip's least",
@@ -117,10 +120,10 @@ changes, and nothing is accepted, closed or released. Nothing in this kit has be
 
 Rows restated, each by insertion with the earlier words kept as labelled history: on this page line 1, sections 3 (1), 3 (5), 3 (6)
 (the Layer 12 row), 5, 6 (the first row), 8 (L9T5-D7's reversal), 10 (L9T5-F23) and 12 (f); `L9T5-CASES.md` (two lines);
-`l9t5_t10.py` (10h (1), 10i, 10j (f), the disposition, L9T5-F22 and one predicate's words; the same printed lines);
+`l9t5_t10.py` (10a, 10h (1), 10i, 10j (f), the disposition, L9T5-F22 and one predicate's words; the same printed lines);
 `l9t5_connected.py` (three lines of section 10); `apply_hw_fw_contract_t10.py` (FW-B20's row now reads "revision X NOT ADMITTED",
-and the docstring). Layer 6's rows, by `apply_l4small_layer6.py`: `v2/docs/parts/STM32H743-COMPATIBILITY.md` (F1, the matrix rows
-that name revision V or X, HC6-SC-1) and `v2/docs/parts/PROCUREMENT.md` (U41, U51, U61), with CON-017's pin of the page rebound.
+and the docstring). Layer 6's rows, by `apply_l4small_layer6.py`: `v2/docs/parts/STM32H743-COMPATIBILITY.md` (F1, the five matrix rows
+on the erratum's revisions, HC6-SC-1) and `v2/docs/parts/PROCUREMENT.md` (U41, U51, U61), with CON-017's pin of the page rebound.
 The ledger's RE-8 and L4-E9's copy of its row: `records/l4close/apply_l4small_ledger.py`. Not restated, with the reason: CON-017 (5)
 and its trace and Layer 3 copies (the requirement's bound, which revision V meets; narrowing it would be a registry amendment the
 selection does not need), and the checks as received, the integration records and the K table (history).

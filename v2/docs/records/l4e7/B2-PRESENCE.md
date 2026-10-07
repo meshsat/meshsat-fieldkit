@@ -201,7 +201,7 @@ receiving company's remaining engineering item E-1. Nothing in this kit has been
 
 | Field | L4E7-D1 |
 |---|---|
-| decision | No presence-pair route is taken up. Route B2 stays UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline, with no protection credit and no owner item; no other presence-pair route is opened in its place. HO-G (P2, P3 and the latent P1, sections 5b and 7) is therefore outside the baseline with nothing in it resting on HO-G: it is owed only if a presence-pair route is ever taken up again, by reversing this decision, as a new route with its own check. The withdrawn draft `apply_gen_sch_e_p0sol_b2.py` refuses the repository's own generator always, whatever record l4e7's RELEASE.md says (`apply_l4small_b2.py`), and is composed only in its separate check `ORDER_E_B2`. |
+| decision | No presence-pair route is taken up. Route B2 stays UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline, with no protection credit and no owner item; no other presence-pair route is opened in its place. HO-G (P2, P3 and the latent P1, sections 5b and 7) is therefore outside the baseline with nothing in it resting on HO-G: it is owed only if a presence-pair route is ever taken up again, by reversing this decision, as a new route with its own check. The withdrawn draft `apply_gen_sch_e_p0sol_b2.py` refuses the repository's own generator always, whatever record l4e7's RELEASE.md says (`records/l4small/apply_l4small_b2.py`), and is composed only in its separate check `ORDER_E_B2`. |
 | authority | SESSION |
 | authority_why | It changes no line a class of `v2/ecad/tools/reserved.json` protects (section 1: none names a connector, an insert or a contact arrangement); it spends nothing; it changes no claim about the kit (the approved interface stands: the panel, an accessory of the owner's choice, on the shore plug's second pair); and it accepts no residual risk a measurement could remove, because it keeps out of the baseline a draft whose own faults P2 and P3 put INP over its 20 V absolute maximum (section 5b). After the measurement one option stands: the presence pair's cold-connection guarantee is withdrawn (section 5a) and its faults are not fail-safe (section 5b), so taking it up would need new drafted detection and INP protection before any credit, while D-10's correction is E-1's in any case (the register's HO-F names a current-limited entry ahead of the stage's capacitance as its first method, not a presence pair). |
 | ruled_by | SESSION (W133, Claude) under the owner's ruling of 21 September 2026 and his standing rule of 26 September 2026 |
@@ -209,9 +209,9 @@ receiving company's remaining engineering item E-1. Nothing in this kit has been
 | reversed_by | a ruling that takes up a presence-pair route as a new route with its own check: section 5b's monitored or fault-tolerant detection and INP held inside its absolute maximum drafted, composed in L4-E9's order and mutated, then section 5a's timing proof; and the RELEASE.md guard of `apply_gen_sch_e_p0sol_b2.py` restored from its history |
 
 The sweep of the remaining B2 wording (the P0 list's note, `records/l4close/P0-POWER-LIST.md` "Residual B2 wording"; the DESK gate
-assessment's A1.5): the B2 draft's refusal "P0-7's route B2 waits on the owner's ruling and an accepted check", the one owner-request
-wording left in record l4e7's files, restated by `apply_l4small_b2.py`, which also labels the "unapproved PARTIAL proposal" words of
-record l9t5's applied change-list draft as history; the ledger's RE-18 and HO-G and L4-E9's copy of the RE-18 row restated by
+assessment's A1.5): the B2 draft's refusal message, the one owner-request wording left in record l4e7's files (it made the route wait
+on a ruling), restated by `records/l4small/apply_l4small_b2.py`, which also labels the proposal words of record l9t5's applied change-list draft
+(5 October 2026) as history; the ledger's RE-18 and HO-G and L4-E9's copy of the RE-18 row restated by
 `records/l4close/apply_l4small_ledger.py`; record l4e7's test docstring by `records/l4small/apply_l4small_tests.py`. Every other
 mention of B2 in the tree already reads UNSELECTED and WITHDRAWN AS DRAFTED, or is history (the checks as received, the owner's
 instructions, the integration records), as `records/l4small/README.md` lists.

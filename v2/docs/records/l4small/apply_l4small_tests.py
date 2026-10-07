@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """apply_l4small_tests.py: the restated test expectations that go with stream l4small's apply scripts (MESHSAT-1357, worker W133,
 branch fnd/l4small, 7 October 2026). UNAPPLIED on its branch, like the scripts whose results these tests read: the set 33
-integrator runs it in the same step as `records/l9t5/apply_l4small_revx.py` and `records/l4e7/apply_l4small_b2.py`.
+integrator runs it in the same step as `records/l9t5/apply_l4small_revx.py` and `records/l4small/apply_l4small_b2.py`.
 
   v2/ecad/tools/tests/test_w11l9t5.py  t_the_generator_prints_the_restated_rows holds the connected generator to "the base with the
       two rows' literals and W20's three swapped". apply_l4small_revx.py inserts SESSION L9T5-D11 into three more literals of that
