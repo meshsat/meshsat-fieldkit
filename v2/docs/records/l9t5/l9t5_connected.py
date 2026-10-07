@@ -1120,7 +1120,7 @@ def rowb_section(w, FC, t14, FR, P):
                7: "bounded at constant maximum dissipation at the limiter's printed maximum, %.1f C on the printed theta, CONDITIONAL on E-17" % F["tj_bound"],
                5: "the peers' buffered TXD reads and 2-of-2 SHDN votes drafted (canmb), the quorum held on rows 3, 5 and 7 and the GPIO-toggled TX "
                   "silenced (canq), its self-test 2.60 s (W143); PROVISIONAL",
-               17: "unchanged by the limiter (its least over VOS0's current): HO-E, L4A-59 with its check L4A-100 (fnd/l4hoe, not in this tree)"}
+               17: "not bounded by the limiter (its least over VOS0's current); the rail trip's controller-protection role moves to HO-E (L4REG-F7, W159 on W157-F4): L4A-59 with its check L4A-100 (fnd/l4hoe, not in this tree)"}
     w("   (d) THE OPEN ROWS OF SECTION 11 UNDER ROW (b) (each keeps cx46's state; the row's draft, not its closure):")
     for row, item, cl, _aff, _op in FR:
         if item in restate:

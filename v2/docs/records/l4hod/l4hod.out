@@ -6,25 +6,28 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
 1. INPUTS (sha256/16)
    92e23993ab3f4c42 v2/docs/records/l8p/L8P-BREAKER.md
    1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
-   eba77cc1b0cbb32d v2/docs/records/l4canen/l4canen.out
+   e259573c92675988 v2/docs/records/l4canen/l4canen.out
    3a13d2bac53bbc67 v2/docs/records/l4canen/l4canen.py
    51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
-   bdc434bd67736487 v2/docs/records/l9t5/l9t5_canmb.out
-   7d870fa64359799d v2/docs/records/l9t5/l9t5_canq.out
+   438696d9ad02180d v2/docs/records/l9t5/l9t5_canmb.out
+   4708a4a280f2a297 v2/docs/records/l9t5/l9t5_canq.out
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    89576bfb472d983e v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
-   61b445de3595b845 v2/docs/records/l4reg/l4reg_compare.out
-   161f79300dc27748 v2/docs/records/l4reg/l4reg_compare.py
+   4eb5b3e75f76565a v2/docs/records/l4reg/l4reg_compare.out
+   c9dec1b3079d2393 v2/docs/records/l4reg/l4reg_compare.py
    7e473e35ac8efde0 v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md
    c4084ad21bcc6d2f v2/docs/records/l4hod/inputs/l4ai-register-L4A-58-row.tsv
    469594bb5b4fa6be v2/docs/records/l9t5/apply_gen_sch_b_regstage.py
    37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
-   e33a9e7f0e9f49e0 v2/docs/records/l9t5/l9t5_t10.out
+   83f5e6aaa9e28709 v2/docs/records/l9t5/l9t5_t10.out
    be3b47d2770da1c2 v2/vendor/diodes/pdftext/diodes-bat46w.layout.txt
    9e327f9bfd6f5a7c v2/vendor/passives/held/pdftext/uniroyal-series-11cd644d.layout.f4.l7.txt  (held back)
    39f205116896b7e2 v2/vendor/power/pdftext/aos-ao3400a-n-mosfet.layout.txt
+   effd7e3b13daebbf v2/vendor/st/pdftext/st-rm0433-rev8.layout.p1919.txt
+   2f564310c540626a v2/vendor/st/pdftext/st-rm0433-rev8.layout.p329.txt
+   250e2fbafb819570 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p333.txt
    227510d881e3f97a v2/vendor/st/pdftext/st-rm0433-rev8.layout.p533.txt
    8b51c389f0e8ace7 v2/vendor/st/pdftext/st-stm32h743xi-datasheet.layout.txt
    9a90d9411907d535 v2/vendor/ti/held/pdftext/ti-tps2553-slvs841f.layout.txt  (held back)
@@ -98,7 +101,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    described: SLVS841F 9.3.1 (page 13): "The device remains off until power is cycled or the device enable is toggled."; SBVS067W 6.3.4 (page 19): "To make sure that all charge is removed from the gate of the pass transistor, the EN pin must be driven low before the input voltage is removed."
    described: SLLSEQ7F 6.3.4 (page 19): "This protects the bus during an under voltage event on VCC by placing the bus into a high impedance biased to ground state"; RM0433 Rev 8 p.533: "During and just after reset, the alternate functions are not active and most of the I/O ports are configured in analog mode."
    DS12110 Table 186 note 1: "Data guaranteed by characterization for BGA packages. The values for LQFP packages might differ." (no maximum printed)
-   the limiter's band with the 1 % RILIM (MODEL on PRINTED, W138's): 0.4702 to 0.5704 A; the regulator's 125 C current at the corner: 0.7399 A (76.25 C air, 0.8669 V drop)
+   the limiter's band with the 1 % RILIM (MODEL on PRINTED, W138's): 0.4702 to 0.5878 A; the regulator's 125 C current at the corner: 0.7399 A (76.25 C air, 0.8669 V drop)
 
 4. THE COMPOSITION on board B in L4-E9's change-list order: record l9t5's iocpre, canshdn, iocset and iocguard, then W137's canmb, W138's
    regstage, W143's canen and this draft in every order they admit (canen after canmb and regstage; this draft after regstage), then the
@@ -178,12 +181,12 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    the loads the path adds: the two dividers 0.277 mA on each limiter's output; a peer's rail carries its two FAULT pull-ups
      only while FAULT is low (0.353 mA); the gates draw nothing static: no case row changes (a labelled scenario for the
      coordinator, W146-F6)
-   the tested target's regulator while the load conducts: the load's bottom at most 0.0785 V (IOSmax through both switches hot,
-     INFERRED), its EN through the BAT46W at most 0.4285 V (VF 0.25 V at 0.1 mA PRINTED, it carries 18 uA from the EN's 100 kOhm,
+   the tested target's regulator while the load conducts: the load's bottom at most 0.0809 V (IOSmax through both switches hot,
+     INFERRED), its EN through the BAT46W at most 0.4309 V (VF 0.25 V at 0.1 mA PRINTED, it carries 18 uA from the EN's 100 kOhm,
      and 0.10 V for the cold, ASSUMPTION) against the TPS737's 0.5 V low (SBVS067W 5.6, PRINTED): the regulator is off and blocks
      reverse current (6.3.4, DESCRIBED); with either half open the load carries nothing, its bottom sits at the output and the
      diode is off; with the limit lost the bottom rises to the lost current's drop and the test aborts anyway
-   the second barrier: while its limiter limits the output is 1.288 to 1.792 V, so the target's rail is under VBOR2's 2.25 V
+   the second barrier: while its limiter limits the output is 1.288 to 1.847 V, so the target's rail is under VBOR2's 2.25 V
      falling minimum (PRINTED) and with BOR at level 2 (DRAFTED, W146-D9) it is held in reset even with the EN diode open
    all levels hold: yes
 
@@ -194,34 +197,34 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
      (ASSUMPTION: Table 186's TYPICAL +10/-20 LSB at 16 bits, no maximum printed, characterised on BGA); what the output feeds besides the load, B, 0 to
      0.5 mA: the two dividers and the regulator's EN pull-up at the output's top (MODEL on the drawn resistors) and the regulator held off by the
      EN diode (ASSUMPTION 0.3 mA: ISHDN 20 nA TYPICAL only); with that diode open, the target held in reset by BOR level 2 (its rail under the
-     output, at most 1.7919 V, under VBOR2's 2.25 V falling minimum, PRINTED), B at most 20 mA (ASSUMPTION): the second barrier
+     output, at most 1.8467 V, under VBOR2's 2.25 V falling minimum, PRINTED), B at most 20 mA (ASSUMPTION): the second barrier
    record l9t5's supply path at board B (W138's reading of it): the least input 3.7579 V less 0.04252 Ohm times the lead's current; the served peak
      S3' 0.4240 A a supervisor (record l4reg's section 2)
-   the acceptance: a healthy limiter (0.4702 to 0.5704 A) reads 0.4345 to 0.6140 A over every corner: PASS inside, LIMIT LOW under, LIMIT HIGH over (DRAFTED)
-   a PASS admits IOS 0.4023 to 0.6620 A; the regulator's 125 C current is 0.7399 A, so every limit that passes keeps the regulator at 119.9 C or less (76.0 C/W PRINTED)
-     the margin: the guarantee holds for B up to 78.4 mA (0.5 mA with the EN diode, 20 mA assumed without it) and for an ADC error up to +-83 mV at
+   the acceptance: a healthy limiter (0.4702 to 0.5878 A) reads 0.4345 to 0.6326 A over every corner: PASS inside, LIMIT LOW under, LIMIT HIGH over (DRAFTED)
+   a PASS admits IOS 0.4023 to 0.6819 A; the regulator's 125 C current is 0.7399 A, so every limit that passes keeps the regulator at 121.2 C or less (76.0 C/W PRINTED)
+     the margin: the guarantee holds for B up to 58.5 mA (0.5 mA with the EN diode, 20 mA assumed without it) and for an ADC error up to +-64 mV at
      the pin (assumed 10 mV)
      the low side: a pass admits IOS from 0.4023 A, 0.0217 A under the largest served peak 0.4240 A (S3'): such a limit latches its supervisor at that peak in
      service, a node out that canen restarts and the next test reads LOW only under 0.4023 A: a service residual stated, not a protection one (W146-F8)
    J0 holds every figure used as a limit is PRINTED: yes
-   J1 holds the demand at the least input 1.0767 A against IOSmax 0.5704 A (R_T 3.142 Ohm at its top, both switches 0.0688
-      Ohm hot INFERRED, the limiter 0.135 Ohm, the others at 0.4240 A each): 1.89 times
+   J1 holds the demand at the least input 1.0767 A against IOSmax 0.5878 A (R_T 3.142 Ohm at its top, both switches 0.0688
+      Ohm hot INFERRED, the limiter 0.135 Ohm, the others at 0.4240 A each): 1.83 times
    J2 holds a lost limit draws at most 1.4396 A (the rail's top 4.1174 V on R_T's least 2.860 Ohm, nothing else counted);
       with all three at 0.4240 A U601 carries 2.7116 A against 3 A PRINTED; each survivor's input 3.5854 V against 3.4555 V
-   J3 holds the healthy test puts at most 1.022 W in R_T for at most 10 ms (rated 1 W at 70 C); a lost limit puts at most
+   J3 holds the healthy test puts at most 1.086 W in R_T for at most 10 ms (rated 1 W at 70 C); a lost limit puts at most
       4.1174 V across it for at most 0.2 ms (its closer's abort, 3.2 ms by the other peer), inside the series' short-time
       overload of 2.5 x RCWV = 4.330 V for 5 s (PRINTED)
-   J4 holds a healthy limiter reads 0.4345 to 0.6140 A; a pass admits IOS 0.4023 to 0.6620 A, under the regulator's 125 C
+   J4 holds a healthy limiter reads 0.4345 to 0.6326 A; a pass admits IOS 0.4023 to 0.6819 A, under the regulator's 125 C
       current 0.7399 A (76.0 C/W PRINTED, 0.8669 V drop): a lost limit (IOS over it) never passes
-   J5 holds the output while a healthy limiter limits is at most 1.7919 V and reads at most 1.8419 V; with the limit lost it
+   J5 holds the output while a healthy limiter limits is at most 1.8467 V and reads at most 1.8978 V; with the limit lost it
       is at least 3.3911 V (the least input less the lost current 1.4396 A and the target's 0.4240 A through the limiter's 0.135
       Ohm) and reads at least 3.3130 V; the abort at 2.5 V lies between them over every corner of the reading
    J6 holds each half alone for 4.0 ms, under the least deglitch 5.0 ms (PRINTED): a stuck other half loads the rail for at
       most that and nothing latches
    J7 holds the reading 1.0 to 4.0 ms after the drop each peer sees, before the least deglitch 5.0 ms; its start 1 ms after
       the drop is 500 times the TYPICAL 2 us response (ASSUMPTION that the limit has settled)
-   J8 holds the limiter dissipates at most 15.8 mJ in a test (its drop at most 2.7739 V at IOSmax for the 10 ms deglitch),
-      inside W138's 23.5 mJ latch case (an output short)
+   J8 holds the limiter dissipates at most 16.3 mJ in a test (its drop at most 2.7741 V at IOSmax for the 10 ms deglitch),
+      inside W138's 24.2 mJ latch case (an output short)
    J9 holds the gates at least 2.8141 V (VOH at -8 mA, 1 kOhm and 100 kOhm); the upper switch's VGS at least 2.7150 V with
       1.4396 A in the lower: over the 2.5 V RDS(on) row; 1.4396 A against ID 4.7 A at 70 C
    the judge: HOLDS
@@ -259,19 +262,22 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
      if latched (step 4) or simply readmitted if never latched; that supervisor's tests stop until the next start (DRAFTED, W146-D6); each peer
      writes the target and the step to its backup registers before step 3 and clears it after step 4, so a peer that boots with a step 3
      recorded (the survivors reset by the step's transient, W146-F10) takes that test as failed (LIMIT NOT SHOWN) and stops its tests: the
-     transient cannot repeat on every restart (DRAFTED; the registers' retention through a brown-out reset is RM0433's backup domain, not
-     read here: ASSUMPTION; DS12110 describes VBAT supplying that domain when VDD is absent)
+     transient cannot repeat on every restart (DRAFTED). The record's retention, read (W159 on W157-F6): a BOR reset is a system reset
+     (RM0433 Rev 8 p.329: "A reset from the brownout reset block (pwr_bor_rst)"), and "The backup registers (RTC_BKPxR) are not reset by system reset or when the device wakes up from Standby mode." (p.1919), so a survivor reset by BOR keeps it; but
+     "VSW voltage is outside the operating range. All RTC registers and the RCC_BDCR register are reset to their default values." (p.333), and board B ties each supervisor's VBAT to its own +3V3_IOCx (gen_sch_b.py), so a dip under
+     the power-down threshold may clear it: ASSUMPTION, bounded by V-B25 (each survivor's 3.3 V over 2.37 V, above DS12110's highest falling
+     PDR 1.68 V), with DBP set before each write and clear, tamper erase off, no BDRST at boot (ES0392 2.2.20's workaround not taken)
    THE INTERVAL THE TARGET IS OUT of the quorum: 5.945 s (the announcement 0.1 s, step 1 2.190 s, settle 0.020 s, step 2 0.012 s, step 3 0.019 s, step 4 3.604 s)
      (MODEL on PRINTED, DRAFTED and the boot and domain ASSUMPTIONs; record l4canen's recovery 5.603 s is step 4 plus its 2.0 s decision)
    THE SERVICE LOST: two of three serve for that interval (IOHA row 3: ownership unaffected); the quorum has no spare then (a
      second supervisor out is row 4's home assignment); 0.50 % of the time at 3600 s a supervisor. The survivors keep their
-     supply on the DC path (J2 and record l4reg's J4 (c)); the transient dip of +5V_IOC at the test's load step (at most 0.5704
+     supply on the DC path (J2 and record l4reg's J4 (c)); the transient dip of +5V_IOC at the test's load step (at most 0.5878
      A with a healthy limit, 1.4396 A with the limit lost, for the closer's 0.2 ms) is NOT bounded on printed figures (U601's
      load-transient response and the lead's inductance are not printed; the base design's own overload step of up to IOSmax has
      the same open term, W138's J7 being a DC row): PROVISIONAL, finding W146-F10. The hold-up it would need (MODEL on the
      drawn capacitors and the printed thresholds): board B's +5V_IOC carries 10.3 uF (C900, C940, C950, C960); from 3.7039 V
      before the step to the survivors' need 3.5127 V at their limiter's input it carries the lost limit's step 1.37 us, the
-     healthy step 3.45 us; each survivor's own 12.0 uF (B's: C421, C422, C423, C424, C425, C426, C432, C433, C953, C954, C955,
+     healthy step 3.35 us; each survivor's own 12.0 uF (B's: C421, C422, C423, C424, C425, C426, C432, C433, C953, C954, C955,
      C956) then holds its rail from the regulator's least 3.2505 V over VBOR2's highest falling 2.37 V (PRINTED) for 24.9 us at
      its 0.4240 A peak: the survivors stay out of reset if U601 and the lead carry the step within 26.3 us (12 of U601's
      switching periods at its printed least 450 kHz); its load-transient response is printed only as TYPICAL figures, so that

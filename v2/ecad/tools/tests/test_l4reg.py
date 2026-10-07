@@ -81,7 +81,7 @@ def t_the_committed_output_is_what_the_script_prints():
     assert r.returncode == 0, r.stderr.decode()[-400:]
     assert r.stdout == open(OUT, "rb").read(), "l4reg_compare.out is not what l4reg_compare.py prints; regenerate it with _bin/regen_out.py"
     t = r.stdout.decode()
-    for s in ("against 3.7486 V on the AP2112's rows: EQUAL to W135's printed figures", "TPS73733DCQRM3 (SOT-223, new silicon)         76.0     113.8",
+    for s in ("against 3.7486 V on the AP2112's rows: EQUAL to W135's printed figures", "TPS73733DCQRM3 (SOT-223, new silicon)         76.0     115.0",
               "SELECTED (SESSION W138-1): A", "A's verdict on its rows: HOLDS", "B's verdict: NOT SUPPORTED ON PRINTED FIGURES",
               "C's verdict: FAILS", "read by pin and value: DRAWN", "l4reg_compare: done"):
         assert s in t, s
@@ -91,12 +91,14 @@ def t_the_committed_output_is_what_the_script_prints():
 def t_the_band_and_the_requirement_reproduce_w135():
     m, S = _texts()
     lo, hi = m.band_of(m.R_ILIM, S)
-    assert abs(lo - 0.4702) < 5e-5 and abs(hi - 0.5704) < 5e-5, (lo, hi)
+    assert abs(lo - 0.4702) < 5e-5 and abs(hi - 0.5878) < 5e-5, (lo, hi)      # W159 (W157-F2): the envelope, TI's Equation 1 at 49.4 kOhm
+    w_lo, w_hi = m.band_row(S["ios49"][0], S["ios_eq"][0], m.R_TOL)
+    assert abs(w_lo - 0.4702) < 5e-5 and abs(w_hi - 0.5704) < 5e-5 and hi > w_hi, "W135's rule alone understates TI's printed maximum"
     assert m.band_of(m.R_ILIM, S) != m.band_row(S["ios49"][0], S["ios_eq"][0], 0.0), "the resistor's 1 % must widen the tested row"
     lo102, hi102 = m.band_of(102.0, S)
     assert hi102 < 0.31 and lo102 < 0.23, (lo102, hi102)       # W135's band under the AP2112K: no served peak fits under it
     W = m.w135()
-    assert abs(W["theta_need"] - 98.6) < 1e-9 and abs(W["ios"][1] - hi) < 5e-5
+    assert abs(W["theta_need"] - 98.6) < 1e-9 and abs(W["ios"][1] - w_hi) < 5e-5
 
 
 def t_the_judge_holds_and_its_mutations_refuse_or_fail():
@@ -204,10 +206,10 @@ def t_the_fetch_script_pins_exactly_the_held_sheets_declared():
 def t_the_page_carries_the_figures_no_dash_and_no_claim():
     t = open(need(PAGE, "the record's page"), encoding="utf-8").read()
     o = open(need(OUT, "the record's output"), encoding="utf-8").read()
-    for s in ("TPS73733DCQRM3", "TPS2553-1", "113.8 C", "98.6 C/W", "0.4702 to 0.5704 A", "SESSION W138-1", "authority_why", "ruled_by",
+    for s in ("TPS73733DCQRM3", "TPS2553-1", "115.0 C", "95.7 C/W", "0.4702 to 0.5878 A", "SESSION W138-1", "authority_why", "ruled_by",
               "ruled_on", "reversed_by", "End condition", "L4REG-F1", "L4REG-F7"):
         assert s in t, s
-    for s in ("113.8", "98.6", "0.4702 to 0.5704 A", "+0.1161 V"):
+    for s in ("115.0", "95.7", "0.4702 to 0.5878 A", "+0.1072 V"):
         assert s in o, s
     for p in (PAGE, SCRIPT, OUT, DRAFT, FETCH):
         x = open(p, encoding="utf-8").read()

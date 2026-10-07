@@ -131,7 +131,8 @@ def t_the_draft_refuses_the_tree_and_leaves_it_unchanged():
 
 
 def t_the_judge_is_re_solved_from_the_printed_values():
-    """re-solved from the values the output prints: the limiter's band 0.4702 to 0.5704 A (SLVS841F's 49.9 kOhm row with the 1 % RILIM);
+    """re-solved from the values the output prints: the limiter's band 0.4702 to 0.5878 A (SLVS841F's 49.9 kOhm row with the 1 % RILIM,
+    enveloped with TI's Equation 1 at the resistor's bounds, W159 on W157-F2);
     the test load 3.0 Ohm at 1 %, 200 ppm/C over 51.25 K and the load life's 1 % + 0.05 Ohm; the switches' 48 mOhm at 2.5 V scaled by the
     10 V rows' 38/26.5; the limiter's 0.135 Ohm; record l9t5's supply path (W138's); the rail's top 4.1174 V; U601's 3 A; the regulator's
     76.0 C/W at the 0.8669 V corner from 76.25 C air"""
@@ -154,7 +155,7 @@ def t_the_judge_is_re_solved_from_the_printed_values():
     r_sup = _num(r"V less ([\d.]+) Ohm times the lead's current", text_)
     dmin = (fixed - 2 * s3 * r_sup) / (rhi + 2 * rfet + 0.135 + r_sup)
     assert abs(_num(r"the demand at the least input ([\d.]+) A against IOSmax", text_) - round(dmin, 4)) < 2e-4, dmin
-    assert dmin > 1.8 * 0.5704
+    assert dmin > 1.8 * 0.5878
     v_ov = 2.5 * math.sqrt(1.0 * 3.0)
     assert abs(_num(r"short-time overload of 2\.5 x RCWV = ([\d.]+) V for 5 s", text_) - round(v_ov, 3)) < 1e-3 and 4.1174 < v_ov
     assert re.search(r"^   the judge: HOLDS$", text_, re.M)

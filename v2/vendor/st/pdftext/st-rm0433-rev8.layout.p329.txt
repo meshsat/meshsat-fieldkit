@@ -1,0 +1,58 @@
+RM0433                                                                 Reset and Clock Control (RCC)
+
+
+8.4.2    System reset
+         A system reset (nreset) resets all registers to their reset values unless otherwise specified
+         in the register description.
+         A system reset can be generated from one of the following sources:
+         •      A reset from NRST pin (external reset)
+         •      A reset from the power-on/off reset block (pwr_por_rst)
+         •      A reset from the brownout reset block (pwr_bor_rst)
+                Refer to Section 6.5.2: Brownout reset (BOR) for a detailed description of the BOR
+                function.
+         •      A reset from the independent watchdogs (iwdg1_out_rst)
+         •      A software reset from the Cortex®-M7 core
+                It is generated via the SYSRESETREQ signal issued by the Cortex®-M7 core. This
+                signal is also named SFTRESET in this document.
+         •      A reset from the window watchdogs depending on WWDG configuration
+                (wwdg1_out_rst)
+         •      A reset from the low-power mode security reset, depending on option byte
+                configuration (lpwr[2:1]_rst)
+Note:    The SYSRESETREQ bit in Cortex®-M7 Application Interrupt and Reset Control Register
+         must be set to force a software reset on the device. Refer to the Cortex®-M7 with FPU
+         technical reference manual for more details (see http://infocenter.arm.com).
+         As shown in Figure 43, some internal sources (such as pwr_por_rst, pwr_bor_rst,
+         iwdg1_out_rst) perform a system reset of the circuit, which is also propagated to the NRST
+         pin to reset the connected external devices. The pulse generator guarantees a minimum
+         reset pulse duration of 20 μs for each internal reset source. In case of an external reset, the
+         reset pulse is generated while the NRST pin is asserted Low.
+Note:    It is not recommended to let the NRST pin unconnected. When it is not used, connect this
+         pin to ground via a 10 to 100 nFcapacitor (CR in Figure 43).
+
+                                        Figure 43. System reset circuit
+
+
+                                                                                               RCC
+                                       VDD
+                                                              Filter               nreset (System Reset)
+
+                                          RPU
+                                                                            pwr_bor_rst
+                      NRST
+             (External reset)                                               pwr_por_rst
+                                CR                                          iwdg1_out_rst
+                                                  Pulse generator      OR
+                                                    (20 μs min)             wwdg1_out_rst
+                                                                            lpwr_rst
+                                                                            SFTRESET
+
+
+
+                                                                                                MSv41927V2
+
+
+
+
+                                             RM0433 Rev 8                                        329/3353
+                                                                                                             504
+

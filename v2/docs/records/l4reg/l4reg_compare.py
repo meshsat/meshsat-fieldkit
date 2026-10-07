@@ -362,11 +362,25 @@ def band_row(row, eq, tol):
     return row[0] * (1 + tol) ** -eq["min"][1], row[2] * (1 - tol) ** -eq["max"][1]
 
 
+def band_env(row, eq, tol, r_k):
+    """W159 on W157's finding F2 (7 October 2026): the band at a tested resistor is the ENVELOPE of W135's rule (the tested row through
+    the equations' exponents, band_row) and TI's own procedure, SLVS841F 10.2.1.2.3 with Table 2 ('Step three uses the upper and lower
+    resistor bounds in the IOS equations to calculate the threshold limits'; 9.5.1: the equations include 'variations caused by
+    temperature and process' and 'do not account for tolerance due to external resistor variation'): the lower of the two least values
+    and the larger of the two most (MODEL on PRINTED). At 49.9 kOhm 1 %: 0.4702 to 0.5878 A (the equation's most, 3.1 % over the
+    tested row's 0.5704 A). eq: {"min": (constant, exponent), "max": (constant, exponent)}."""
+    lo_r, hi_r = band_row(row, eq, tol)
+    (cmin, emin), (cmax, emax) = eq["min"], eq["max"]
+    lo_e, hi_e = cmin / (r_k * (1 + tol)) ** emin / 1000.0, cmax / (r_k * (1 - tol)) ** emax / 1000.0
+    return min(lo_r, lo_e), max(hi_r, hi_e)
+
+
 def band_of(r_k, S):
-    """the limiter's band for a resistor value: the tested row when it is 49.9 kOhm, else the maker's equations (both with the 1 %)"""
+    """the limiter's band for a resistor value: at 49.9 kOhm the envelope of the tested row and the maker's equations (band_env, W159),
+    else the maker's equations (both with the 1 %)"""
     eq = S["ios_eq"][0]
     if abs(r_k - R_ILIM) < 1e-9:
-        return band_row(S["ios49"][0], eq, R_TOL)
+        return band_env(S["ios49"][0], eq, R_TOL, r_k)
     (cmin, emin), (cmax, emax) = eq["min"], eq["max"]
     return cmin / (r_k * (1 + R_TOL)) ** emin / 1000.0, cmax / (r_k * (1 - R_TOL)) ** emax / 1000.0
 
@@ -527,12 +541,14 @@ def main():
     served = {"S1 the largest sustained served state": E["s1"][0], "S2 both transceivers dominant (normal service's peak)": E["bab_v"][0],
               "(f1) one fabric faulted, the 180 mA row (round 4's cover)": E["f1"][0]}
     served.update({"S3' %s with the healthy fabric's bit" % f: v for f, v in s3p.items()})
-    lo1, hi1 = band_of(R_ILIM, S)
+    lo1, hi1 = band_of(R_ILIM, S)       # W159 (W157-F2): the envelope of the tested row and TI's Equation 1 at the resistor's bounds
+    w_lo, w_hi = band_row(S["ios49"][0], S["ios_eq"][0], R_TOL)   # W135's rule (the tested row through the exponents), reproduced as W135 printed it
     i125 = lambda theta: (tjg - air) / (theta * drop)                       # noqa: E731
     theta_need = (tjg - air) / (drop * hi1)
-    reproduced = (abs(i125(P["theta_ldo"]) - W["i125"]) < 5e-5 and abs(max(s3p.values()) - W["s3p"]) < 5e-5 and abs(lo1 - W["ios"][0]) < 5e-5
-                  and abs(hi1 - W["ios"][1]) < 5e-5 and abs(round(theta_need, 1) - W["theta_need"]) < 1e-9
-                  and abs(avail(hi1, 3 * hi1, S["ron"][0]) - W["a3"][0]) < 5e-5 and abs(need_ap(P, hi1) - W["a3"][1]) < 5e-5)
+    w_theta = (tjg - air) / (drop * w_hi)
+    reproduced = (abs(i125(P["theta_ldo"]) - W["i125"]) < 5e-5 and abs(max(s3p.values()) - W["s3p"]) < 5e-5 and abs(w_lo - W["ios"][0]) < 5e-5
+                  and abs(w_hi - W["ios"][1]) < 5e-5 and abs(round(w_theta, 1) - W["theta_need"]) < 1e-9
+                  and abs(avail(w_hi, 3 * w_hi, S["ron"][0]) - W["a3"][0]) < 5e-5 and abs(need_ap(P, w_hi) - W["a3"][1]) < 5e-5)
     if not reproduced:
         refuse("W135's figures (inputs/%s) no longer reproduce from record l9t5's modules and the makers' rows" % os.path.basename(DOCS["lim_out"]))
     R = dict(air=air, tj=tjg, drop=drop, served=served, avail=avail, hi14=hi14, u601=E["u601"][0], vh=E["vh"][0])
@@ -570,8 +586,10 @@ def main():
         E["vos0"][0], E["vos0"][1], E["mcu125"][0], E["mcu125"][1]))
     w("   W135's figures reproduced from record l9t5's modules and the makers' rows (its output copied, %s):" % DOCS["lim_out"])
     w("     the AP2112K's 125 C current %.4f A; S3' largest %.4f A; TPS2553-1 at 49.9 kOhm IOS %.4f to %.4f A; theta at most %.1f C/W; T10-A3 %.4f V" % (
-        i125(P["theta_ldo"]), max(s3p.values()), lo1, hi1, theta_need, avail(hi1, 3 * hi1, S["ron"][0])))
-    w("     against %.4f V on the AP2112's rows: %s" % (need_ap(P, hi1), "EQUAL to W135's printed figures" if reproduced else "DIFFERENT"))
+        i125(P["theta_ldo"]), max(s3p.values()), w_lo, w_hi, w_theta, avail(w_hi, 3 * w_hi, S["ron"][0])))
+    w("     against %.4f V on the AP2112's rows: %s" % (need_ap(P, w_hi), "EQUAL to W135's printed figures" if reproduced else "DIFFERENT"))
+    w("     W159 on W157-F2: the band this record uses is the envelope of that rule and TI's Equation 1 at the 1 % resistor's bounds (SLVS841F")
+    w("     10.2.1.2.3 and Table 2): IOS %.4f to %.4f A, so the theta that holds 125 C at IOSmax is %.1f C/W (every figure below is on it)" % (lo1, hi1, theta_need))
     w("")
 
     # ---------------------------------------------------------------------------------------------------------------- 3
@@ -611,7 +629,7 @@ def main():
         R_ILIM, lo1, hi1, S["ios49"][0][0], S["ios49"][0][2]))
     w("     the equations' exponents, W135's band); latch-off after %.0f to %.0f ms (PRINTED); response %.0f us TYPICAL only (never used as a limit)" % (
         S["tlatch"][0][0] * 1e3, S["tlatch"][0][2] * 1e3, S["tios"][0] * 1e6))
-    w("   the regulator's requirements at the 14.0k corner (W135's, reproduced): junction-to-ambient at most %.1f C/W; output and current limit" % theta_need)
+    w("   the regulator's requirements at the 14.0k corner (W135's method on W159's envelope): junction-to-ambient at most %.1f C/W; output and current limit" % theta_need)
     w("     at least %.4f A; input to at least %.4f V; dropout at %.4f A that keeps T10-A3 with its own output band (below)" % (hi1, hi14, hi1))
     regs = [
         ("AP2112K-3.3 (SOT25), as drawn", P["theta_ldo"], "PRINTED", None, "AP2112: piecewise", P["vout_hi"] - 1, P["imax"], None, 6.0, "ap"),

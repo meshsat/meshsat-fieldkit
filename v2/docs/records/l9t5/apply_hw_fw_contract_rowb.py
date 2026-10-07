@@ -9,11 +9,14 @@ removed), `apply_gen_sch_b_regstage.py` (W138: a TPS2553-1 latch-off limiter ahe
 trips removed), `apply_gen_sch_b_canen.py` (W143: the peers' 2-of-2 route on the limiter's EN) and `apply_gen_sch_b_hodtest.py` (W146:
 the peers' in-service test of each limiter). The edits, all on the state `apply_hw_fw_contract_t10.py` then
 `apply_hw_fw_contract_canq.py` leave (it refuses a page without canq's change record):
-  FW-B20  restated: each supervisor's regulator and its limiter (the rail trip gone), its enabled set with TIM3 and an ADC (row (b)'s
+  FW-B20  restated (W159: in L9T5-D11's words, revision X NOT ADMITTED, whichever of apply_l4small_revx.py and this script runs first;
+          the limiter's band on the envelope 0.4702 to 0.5878 A; the rail trip's controller-protection role named as HO-E's):
+          each supervisor's regulator and its limiter (the rail trip gone), its enabled set with TIM3 and an ADC (row (b)'s
           captures and reads), BOR level 2; the sustained bound at the limiter's printed maximum (record l9t5 `l9t5_t10.out` 11a);
   FW-B21  restated: SHDN OR'd with the two peers' 2-of-2 vote (canmb) in place of the share limiter; W139's stop at the loss count kept;
   FW-B22  canq's RESTART rule kept as W143 worded it, with the in-service test's exception added (no automatic restart of a peer under
-          test: the test restores it itself); W143's DAR = 1 text (ES0392 2.24.5's workaround) and the self-test kept word for word;
+          test: the test restores it itself) and W159's hold-off after 3 failed restarts (W157-F7); W143's DAR = 1 text (ES0392 2.24.5's
+          workaround) and the self-test kept word for word;
   V-B20   restated: the regulator's site read by E-17 (its pass limit), the supply current under the limiter's least;
   V-B21   restated: the regulator named, its current against the limiter's least;
   V-B23   restated on the limiter (its band, its latch, the peers' restart); round 6's rail trip and its 0.2 s WITHDRAWN;
@@ -43,12 +46,19 @@ TREE = os.path.join(REPO, "v2", "docs", "HW-FW-CONTRACT.md")
 
 HEAD = re.compile(r"^### 3\.3 Board B: modules, supervisors and board B's devices \(FW-B01 to FW-B2[23]\)\n", re.M)
 HEAD_NEW = "### 3.3 Board B: modules, supervisors and board B's devices (FW-B01 to FW-B24)\n"
-OLD_B20 = ("| FW-B20 | the three supervisors `B:U41`, U51, U61 (STM32H743VIT6, silicon revision V only, record l9t5 L9T5-D7: revision X "
-           "held until its own qualification, V-B20), each on its private AP2112K-3.3 (U40, U50, U60) from `+5V_IOC` pre-regulated to ")
+# FW-B20's row as t10's script writes it. ANCHORED ON THE REVX-EDITED TEXT (W159, finding F1 of W157's check L4A-62): record l4small's
+# apply_l4small_revx.py (SESSION L9T5-D11, revision X NOT ADMITTED) restates t10's FW-B20 to its first form below; its second form is
+# t10's text before revx, which the contract carries when t10 is applied before revx. Either is replaced by this script's FW-B20, which
+# states L9T5-D11's words, so revx and this script apply in either order with the same page (test_l9t5_rowb). SESSION W159-D1.
+OLD_B20_FORMS = (
+    ("| FW-B20 | the three supervisors `B:U41`, U51, U61 (STM32H743VIT6, silicon revision V only, record l9t5 L9T5-D7: revision X "
+     "NOT ADMITTED, record l9t5 SESSION L9T5-D11), each on its private AP2112K-3.3 (U40, U50, U60) from `+5V_IOC` pre-regulated to "),
+    ("| FW-B20 | the three supervisors `B:U41`, U51, U61 (STM32H743VIT6, silicon revision V only, record l9t5 L9T5-D7: revision X "
+     "held until its own qualification, V-B20), each on its private AP2112K-3.3 (U40, U50, U60) from `+5V_IOC` pre-regulated to "))
 FW_B20 = (
-    "| FW-B20 | the three supervisors `B:U41`, U51, U61 (STM32H743VIT6, silicon revision V only, record l9t5 L9T5-D7: revision X held "
-    "until its own qualification, V-B20), each on its private TPS73733DCQRM3 (U40, U50, U60; new silicon only, the M3 suffix) behind its "
-    "TPS2553-1 latch-off limiter (U45, U55, U65; RILIM 49.9 kOhm 1 %: IOS 0.4702 to 0.5704 A, latched at most 10 ms after it limits; "
+    "| FW-B20 | the three supervisors `B:U41`, U51, U61 (STM32H743VIT6, silicon revision V only, record l9t5 L9T5-D7: revision X NOT "
+    "ADMITTED, record l9t5 SESSION L9T5-D11), each on its private TPS73733DCQRM3 (U40, U50, U60; new silicon only, the M3 suffix) behind its "
+    "TPS2553-1 latch-off limiter (U45, U55, U65; RILIM 49.9 kOhm 1 %: IOS 0.4702 to 0.5878 A, the envelope of TI's tested row and its Equation 1 at the resistor's bounds, record l9t5 `l9t5_t10.out` 11a (c); latched at most 10 ms after it limits; "
     "record l9t5 `apply_gen_sch_b_regstage.py`, DRAFTED, W138; round 6's rail trip removed) from `+5V_IOC` pre-regulated to 4.01 V by "
     "board A's U601 (R602 14.0 k; `apply_gen_sch_a_iocpre.py` with `apply_gen_sch_a_iocset.py`, DRAFTED); the regulator's junction "
     "bounded at constant maximum dissipation at the limiter's printed maximum (record l9t5 `l9t5_t10.out` 11a: CONDITIONAL on E-17, "
@@ -60,7 +70,9 @@ FW_B20 = (
     "run time; BOR at level 2 (FW-B24's second barrier) | L9T5-F06, L9T5-F13 (record l9t5 `l9t5_t10.out` sections 8, 10c and 11a: the "
     "regulator's junction at the bounded state and at the limiter's maximum, the enabled set's current against the limiter's window; "
     "ST DS12110 Rev 10 Tables 30, 39, 129, 137 and 184, TI SLVS841F 7.5, SBVS067W 5.4); a Layer 5 row brought forward as a named "
-    "prerequisite of the Layer 4 power gate; a VOS0 entry is HO-E's (L4A-59, its own row) | V-B20 | OWED (DRAFTED, record l9t5 rounds "
+    "prerequisite of the Layer 4 power gate; a VOS0 entry is HO-E's (L4A-59, its own row), and the removed rail trip's controller-protection "
+    "role (each controller's average under its 125 C current) moves to HO-E with it (record l4reg L4REG-F7) | V-B20 | OWED (DRAFTED, record "
+    "l9t5 rounds "
     "5 and 10) |\n")
 B21_OLD = ("through a 1N4148W, OR'd with each transceiver's transmit-share limiter (`apply_gen_sch_b_iocguard.py`, DRAFTED: SHDN high by "
            "hardware while the TXD's dominant share is over 4.7 to 12.3 %)")
@@ -73,7 +85,11 @@ B21_SRC_NEW = ("| L9T5-F13, F16, F17 (record l9t5 `l9t5_t10.out` sections 10d to
 B22_OLD = ("at most once in 10 s per peer, never on a message received over a fabric; the peer's limiter's EN is pulled low only while "
            "both other controllers vote.")
 B22_NEW = ("at most once in 10 s per peer, never on a message received over a fabric, and never on a peer under the in-service limiter test "
-           "(FW-B24), whose step 4 restores it; the peer's limiter's EN is pulled low only while both other controllers vote.")
+           "(FW-B24), whose step 4 restores it; HOLD-OFF (W159-D3, W157-F7: a short drawing under the limiter's least is never limited or "
+           "latched): after 3 consecutive failed restarts of one peer (it does not rejoin within 0.800 s of its restore) both other controllers "
+           "keep their restart votes for it (its limiter's EN low, that peer unpowered) and retry it once every 600 s, a rejoin clearing the "
+           "count, the hold-off reported in their state frames and the kit's status path (record l9t5 `l9t5_t10.out` 11a (f) (iii)); the "
+           "peer's limiter's EN is pulled low only while both other controllers vote.")
 OLD_VB20 = "| V-B20 | FW-B20 | at start, each supervisor's clock tree and voltage scale read over SWD equal the row and its REV_ID reads "
 V_B20 = (
     "| V-B20 | FW-B20 | at start, each supervisor's clock tree and voltage scale read over SWD equal the row and its REV_ID reads 0x2003 "
@@ -81,8 +97,8 @@ V_B20 = (
     "share, its enabled set as the row lists it and a supervisor junction of at least 105 C: at or under record l9t5's bounded figure "
     "(`l9t5_t10.out` 10c) and under the limiter's least 0.4702 A with the window `l9t5_t10.out` 11a (g) states; E-17 (record l9t5 "
     "`l9t5_t10.out` 11a (e)): on the first-article board B in still air at 76 C, each TPS73733's junction with its input current held at "
-    "the limiter's printed maximum 0.5704 A, its input at 4.1174 V and its output in regulation, from its case-top temperature by its "
-    "printed psi-JT, its ground current read: at most 125 C, and its rise in 10 ms of 2.348 W at most 36.2 K (or W151-1's exclusion kept); "
+    "the limiter's printed maximum 0.5878 A, its input at 4.1174 V and its output in regulation, from its case-top temperature by its "
+    "printed psi-JT, its ground current read: at most 125 C, and its rise in 10 ms of 2.420 W at most 35.0 K (or W151-1's exclusion kept); "
     "this reading decides the condition the sustained bound rests on (the printed theta is a JEDEC best case), the others confirm the "
     "firmware's implementation |\n")
 VB21_OLD = "and each AP2112K's output current averaged over 1 s is at or under record l9t5's response figure (`l9t5_t10.out` 10e)"
@@ -91,10 +107,13 @@ VB21_NEW = ("and each TPS73733's output current averaged over 1 s is at or under
 OLD_VB23 = "| V-B23 | FW-B20 | each supervisor's rail loaded to 0.30 A: its LDO's EN reads low and the supervisor is unpowered, the time "
 V_B23 = (
     "| V-B23 | FW-B20 | each supervisor's limiter (TPS2553-1, RILIM 49.9 kOhm 1 %) loaded from its bounded state through an external "
-    "load drawing over 0.5704 A: its output current read limited inside 0.4702 to 0.5704 A, its FAULT low and the limiter latched off 5 to "
+    "load drawing over 0.5878 A: its output current read limited inside 0.4702 to 0.5878 A (the envelope, `l9t5_t10.out` 11a (c)), its "
+    "FAULT low and the limiter latched off 5 to "
     "10 ms after it limits (TI SLVS841F 7.5 and 9.3.1), the supervisor unpowered, and the supervisor restarted by its two peers' 2-of-2 "
     "EN route within record l4canen's recovery bound; at the largest served state (0.4240 A, `l9t5_t10.out` 11a (g)) for 60 s the limiter "
-    "does not limit; round 6's rail trip and its 'within 0.2 s' are WITHDRAWN (the rail trip is removed, W138-2) |\n")
+    "does not limit; one supervisor's 3.3 V output loaded through 10 Ohm (0.33 A, under the limiter's least, never limited): its peers' "
+    "three failed restarts, then its limiter's EN read low between their retries 600 s apart (FW-B22's hold-off, W159-D3); round 6's rail "
+    "trip and its 'within 0.2 s' are WITHDRAWN (the rail trip is removed, W138-2) |\n")
 FW_B24 = (
     "| FW-B24 | the in-service test of each supervisor's TPS2553-1 (U45, U55, U65) by its two peers through the drafted test path (record "
     "l9t5 `apply_gen_sch_b_hodtest.py`, DRAFTED, W146: a 3.0 Ohm load on the limiter's output through two AO3400A in series, the upper "
@@ -108,7 +127,7 @@ FW_B24 = (
     "ROUTE and abort with nothing latched; then the output at 3.3 V for 20 ms; 2 the upper half alone for 4 ms, then the lower alone for "
     "4 ms: no drop under 2.5 V, else SWITCH STUCK ON; 3 the upper closes, then the lower; the closer finds the output under 2.5 V 0.2 ms "
     "after closing (the other peer 3.2 ms after its own), else LIMIT NOT SHOWN and both open; each peer reads I = V / 3.0 Ohm 1 to 4 ms "
-    "after the drop it sees, PASS 0.4345 to 0.6140 A, else LIMIT HIGH or LIMIT LOW; FAULT falls 4.75 to 10.25 ms after the drop, else "
+    "after the drop it sees, PASS 0.4345 to 0.6326 A, else LIMIT HIGH or LIMIT LOW; FAULT falls 4.75 to 10.25 ms after the drop, else "
     "FAULT NOT SEEN or FAULT EARLY; the output under 0.3 V 1 ms after FAULT, else NO LATCH; both halves open by 12 ms; the two peers' "
     "readings agree, else PEERS DISAGREE; 4 both restart votes for 2.0 s, then the output back over 3.3 V and FAULT high, the target "
     "rejoining within 0.800 s, else RESTORE FAILED (the restart rule then retries every 10 s). ANY FAILURE: both peers open their halves, "
@@ -121,7 +140,7 @@ FW_B24 = (
     "of the quorum 5.945 s a test, 0.50 % of the time, 35 fault rows of the test path each found); TI SLVS841F 7.5 (the deglitch 5 to "
     "10 ms), 9.3.1 and 9.3.3 | V-B25 | OWED (DRAFTED, record l4hod; PROVISIONAL: the supply's dip at the load step, W146-F10) |\n")
 V_B25 = (
-    "| V-B25 | FW-B24 | on the first-article board B, each supervisor's test run: PASS, the reading inside 0.4345 to 0.6140 A, FAULT 4.75 "
+    "| V-B25 | FW-B24 | on the first-article board B, each supervisor's test run: PASS, the reading inside 0.4345 to 0.6326 A, FAULT 4.75 "
     "to 10.25 ms after the drop, LATCHED, restored within 5.945 s; a lost limit injected on one supervisor (RILIM shorted): LIMIT NOT SHOWN "
     "or LIMIT HIGH at its next test, the two survivors' 3.3 V rails, reset flags and board B's +5V_IOC recorded through the step: no "
     "survivor resets, each survivor's 3.3 V stays over 2.37 V and +5V_IOC is back over 3.5127 V within 26.3 us (W146-F10), and the same "
@@ -129,7 +148,9 @@ V_B25 = (
     "opened, then shorted: LIMIT NOT SHOWN, LIMIT LOW; a FAULT read diode opened: PEERS DISAGREE; the restart route's RC capacitor "
     "shorted: step 1 aborts with nothing latched; the output's draw in the reading window at most 0.5 mA with the regulator's BAT46W "
     "fitted and at most 20 mA without it; each peer's reading against a reference at 1.3 to 1.8 V within 10 mV at its pin; the limiter "
-    "settled within 1 ms of the load's closure (record l4hod `L4HOD.md` section 11) |\n")
+    "settled within 1 ms of the load's closure (record l4hod `L4HOD.md` section 11); the limiter's own junction through the step (about "
+    "1.54 W for at most 10 ms, not bounded on printed figures, W157-F10): no FAULT EARLY on a healthy part at 76 C air, a FAULT EARLY "
+    "read as the safe outcome it is (the test fails, nothing is left latched) |\n")
 CHANGE = ("| 4 (row b) | 7 October 2026 | By record l9t5's round 10, Layer 4 task L4A-61 (MESHSAT-1357, W151, `records/l9t5/T10-ROUND10.md`, "
           "`apply_hw_fw_contract_rowb.py`), after `apply_hw_fw_contract_canq.py`: row (b)'s drafts propagated: FW-B20 (the regulator and "
           "its limiter, the rail trip gone, TIM3 and an ADC enabled, BOR level 2), FW-B21 (SHDN OR'd with the peers' 2-of-2 vote, the "
@@ -172,7 +193,10 @@ def patched(text):
     heads = HEAD.findall(text)
     if len(heads) != 1:
         refuse("section 3.3's heading is not the one this draft was written against")
-    b20, b21, b22 = one(text, OLD_B20), one(text, "| FW-B21 |"), one(text, "| FW-B22 |")
+    forms = [f for f in OLD_B20_FORMS if any(l.startswith(f) for l in text.splitlines())]
+    if len(forms) != 1:
+        refuse("FW-B20's row is in neither form t10's script writes (with or without apply_l4small_revx.py's restatement)")
+    b20, b21, b22 = one(text, forms[0]), one(text, "| FW-B21 |"), one(text, "| FW-B22 |")
     v20, v21, v23 = one(text, OLD_VB20), one(text, "| V-B21 |"), one(text, OLD_VB23)
     b_last = one(text, "| FW-B23 |") if "| FW-B23 |" in text else b22
     v_last = one(text, "| V-B24 |") if "| V-B24 |" in text else v23

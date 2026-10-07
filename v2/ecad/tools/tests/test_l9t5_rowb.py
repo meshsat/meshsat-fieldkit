@@ -48,8 +48,12 @@ from harness import need  # noqa: E402
 _C = {}
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
 # TI SLVS841F 9.5.1's printed equations (W135's reading, record l4reg's inputs): IOSmin = 25230 / R^1.016, IOSmax = 22980 / R^0.94 (mA,
-# R in kOhm); with a tested row at the nominal resistor, the resistor's 1 % moves the band by the exponents (W135's rule)
+# R in kOhm); with a tested row at the nominal resistor, the resistor's 1 % moves the band by the exponents (W135's rule); W159 on W157-F2:
+# the band is the envelope of that rule and the equations at the resistor's bounds (TI's own procedure, 10.2.1.2.3 and Table 2)
 EXP_MIN, EXP_MAX, R_TOL = 1.016, 0.94, 0.01
+C_MIN, C_MAX, RILIM = 25230.0, 22980.0, 49.9
+A_REVX = os.path.join(REC, "apply_l4small_revx.py")
+A_CL = os.path.join(REC, "apply_l4e9_changelist_rowb.py")
 
 
 def _text(p):
@@ -109,7 +113,9 @@ def t_the_stage_figures_are_re_solved_from_the_printed_rows():
     m = re.search(r"\bios49 ([\d.]+) / [\d.]+ / ([\d.]+) PRINTED SLVS841F 7\.5", s)
     assert m, "the tested IOS row at 49.9 kOhm"
     lo_r, hi_r = float(m.group(1)), float(m.group(2))
-    lo, hi = lo_r * (1 + R_TOL) ** -EXP_MIN, hi_r * (1 - R_TOL) ** -EXP_MAX
+    lo = min(lo_r * (1 + R_TOL) ** -EXP_MIN, C_MIN / (RILIM * (1 + R_TOL)) ** EXP_MIN / 1000)
+    hi = max(hi_r * (1 - R_TOL) ** -EXP_MAX, C_MAX / (RILIM * (1 - R_TOL)) ** EXP_MAX / 1000)
+    assert abs(hi - 0.5878) < 6e-5 and hi > hi_r * (1 - R_TOL) ** -EXP_MAX, "the envelope's most is TI's Equation 1 at 49.4 kOhm (W157-F2)"
     assert abs(lo - _f(r"IOS ([\d.]+) to [\d.]+ A", s)) < 6e-5 and abs(hi - _f(r"IOS [\d.]+ to ([\d.]+) A", s)) < 6e-5, (lo, hi)
     rja = float(re.search(r"\brja ([\d.]+) PRINTED SBVS067W 5\.4", s).group(1))
     acc = float(re.search(r"\bacc ([\d.]+) PRINTED", s).group(1))
@@ -143,7 +149,7 @@ def t_the_stage_figures_are_re_solved_from_the_printed_rows():
 def t_the_judge_holds_and_fails_each_mutant():
     m = _mod(T10, "l9t5_t10_rowb_test")
     s = " ".join(_t11a().split())
-    st = {"ios_lo": (0.4702, "PRINTED", "x"), "ios_hi": (0.5704, "PRINTED", "x"), "rja": (76.0, "PRINTED", "x"), "ron": (0.135, "PRINTED", "x"),
+    st = {"ios_lo": (0.4702, "PRINTED", "x"), "ios_hi": (0.5878, "PRINTED", "x"), "rja": (76.0, "PRINTED", "x"), "ron": (0.135, "PRINTED", "x"),
           "t_latch": ((0.005, 0.0075, 0.010), "PRINTED", "x"), "vdo1a": (0.25, "PRINTED", "x"), "acc": (0.015, "PRINTED", "x"),
           "iout": (1.0, "PRINTED", "x"), "icl_min": (1.05, "PRINTED", "x"), "vin_max": (5.5, "PRINTED", "x"), "lim_rja": (182.6, "PRINTED", "x"),
           "tj_op": (125.0, "PRINTED", "x"), "short": ("Indefinite", "PRINTED", "x")}
@@ -231,7 +237,11 @@ def t_the_contract_rows_apply_once_after_canq():
         assert "more than 3 windows (300 ms, FW-B22's loss count" in b21                     # W139's stop kept
         assert "ES0392 Rev 15 2.24.5's printed workaround (page 48/73" in b22                  # W143's DAR text kept
         assert "never on a peer under the in-service limiter test (FW-B24)" in b22
-        assert "0.30 A" not in vb23 and "WITHDRAWN" in vb23 and "0.4702 and 0.5704 A" not in vb23 and "0.4702 to 0.5704 A" in vb23
+        assert "0.30 A" not in vb23 and "WITHDRAWN" in vb23 and "0.5704" not in vb23 and "0.4702 to 0.5878 A" in vb23
+        # W159: FW-B20 in L9T5-D11's words (W157-F1), the hold-off in FW-B22 (W157-F7), HO-E named (W157-F4)
+        assert "revision X NOT ADMITTED, record l9t5 SESSION L9T5-D11" in b20 and "until its own qualification" not in b20
+        assert "0.4702 to 0.5878 A" in b20 and "moves to HO-E" in b20
+        assert "HOLD-OFF" in b22 and "once every 600 s" in b22 and "hold-off" in vb23
         assert "| 4 (row b) |" in t.rstrip("\n").splitlines()[-1]
         # only the rows this draft names changed
         changed = {l.split(" | ")[0] for l in set(t.splitlines()) ^ set(before.splitlines()) if l.startswith("| ")}
@@ -260,7 +270,7 @@ def t_the_ioha_rows_apply_once():
         assert nums == list(range(1, 25)), nums
         old = tree_before.split("\n## 12. FMEA\n", 1)[1].split("\n## 13.", 1)[0]
         assert all(l in sec for l in old.splitlines() if re.match(r"^\| \d+ \|", l))          # rows 1 to 20 word for word
-        for w in ("L9T5-F21", "1.310 ms", "0.4702 to 0.5704 A", "3602.341 s", "2.60 s", "V-B25"):
+        for w in ("L9T5-F21", "1.310 ms", "0.4702 to 0.5878 A", "3602.341 s", "2.60 s", "V-B25", "hold-off"):
             assert w in sec, w
         assert t.split("\n## 12. FMEA\n", 1)[0] == tree_before.split("\n## 12. FMEA\n", 1)[0]
     assert _run(A_IOHA).returncode == 0 and _text(IOHA) == tree_before                    # --check only on the tree
@@ -326,6 +336,129 @@ def t_record_hygiene():
         if p != os.path.abspath(__file__):
             mm = CLAIM.search(re.sub(r"\"[^\"\n]*\"", "", t))
             assert not mm, "a claim word %r in %s" % (mm.group(0), os.path.basename(p))
+
+
+def _revx_root(d):
+    """a scratch root carrying the files apply_l4small_revx.py edits (the tree's text, before it)"""
+    sp = importlib.util.spec_from_file_location("revx_for_rowb", A_REVX)
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    for rel in sorted({e[0] for e in m.EDITS} | {a[0] for a in m.APPENDS}):
+        os.makedirs(os.path.dirname(os.path.join(d, rel)), exist_ok=True)
+        shutil.copy(os.path.join(ROOT, rel), os.path.join(d, rel))
+    return d
+
+
+def t_rowb_and_revx_apply_in_either_order_with_one_page():
+    """W157-F1: record l4small's apply_l4small_revx.py (L9T5-D11) restates t10's FW-B20; rowb's FW-B20 is anchored on that text and on t10's
+    text before it, and states L9T5-D11's words, so the two apply in either order with the same contract page; each refuses a second
+    run. MUTANT: rowb's FW-B20 back to 'held until its own qualification' fails the page's predicate."""
+    with tempfile.TemporaryDirectory(prefix="t_rowb_revx_") as d:
+        pre = _run(A_REVX, ROOT, "--check").returncode == 0               # the tree is before revx (set 33 applies it)
+        pages = []
+        for order in ("revx first", "rowb first"):
+            root = _revx_root(os.path.join(d, order.replace(" ", "_")))
+            page = os.path.join(root, "HW-FW-CONTRACT.md")
+            shutil.copy(CONTRACT, page)
+            if order == "revx first" and pre:
+                assert _run(A_REVX, root, "--write").returncode == 0
+                assert _run(A_REVX, root, "--write").returncode == 3                          # a second run refused
+            t10 = os.path.join(root, "v2", "docs", "records", "l9t5", "apply_hw_fw_contract_t10.py")
+            for a in (t10, A_CANQ, A_ROWB):
+                r = _run(a, page, "--write")
+                assert r.returncode == 0, (order, os.path.basename(a), r.stderr.decode()[-300:])
+            assert _run(A_ROWB, page, "--write").returncode == 3                              # a second run refused
+            if order == "rowb first" and pre:
+                assert _run(A_REVX, root, "--write").returncode == 0
+                assert _run(A_REVX, root, "--write").returncode == 3
+            pages.append(open(page, encoding="utf-8").read())
+        assert pages[0] == pages[1], "the two orders give different contract pages"
+        b20 = [l for l in pages[0].splitlines() if l.startswith("| FW-B20 |")]
+        assert len(b20) == 1 and "revision X NOT ADMITTED, record l9t5 SESSION L9T5-D11" in b20[0]
+        bad = ("until its own qualification", "V or X", "waits on V-B20", "admitted only by V-B20")
+        assert not any(b in b20[0] for b in bad), b20[0][:200]
+        # the anchor's two forms: t10's page with either FW-B20 gives the same rowb page
+        p1 = os.path.join(d, "forms.md")
+        shutil.copy(CONTRACT, p1)
+        for a in (A_T10, A_CANQ):
+            assert _run(a, p1, "--write").returncode == 0
+        base = open(p1, encoding="utf-8").read()
+        rowb = _mod(A_ROWB, "rowb_forms")
+        outs = []
+        for form in rowb.OLD_B20_FORMS:
+            line = [l for l in base.splitlines(True) if l.startswith("| FW-B20 |")][0]
+            other = [f for f in rowb.OLD_B20_FORMS if line.startswith(f)][0]
+            outs.append(rowb.patched(base.replace(line, line.replace(other, form))))
+        assert outs[0] == outs[1]
+        # the mutant: FW-B20 with the admission route back
+        mut = pages[0].replace("revision X NOT ADMITTED, record l9t5 SESSION L9T5-D11", "revision X held until its own qualification, V-B20")
+        mb = [l for l in mut.splitlines() if l.startswith("| FW-B20 |")][0]
+        assert any(b in mb for b in bad), "the predicate does not catch the admission route"
+
+
+def t_canq_applies_after_hoe_and_rowb_after_both():
+    """W151-F3 (W157-F8): HO-E's apply_hw_fw_contract_hoe.py (fnd/l4hoe) refuses unless t10's change record is the page's last row and
+    appends its own; canq now takes either as the last row, so t10, hoe, canq, rowb apply in that order (a stand-in for HO-E's rows:
+    FW-B23, V-B24, its change record and its heading, fnd/l4hoe's text not being in this tree). MUTANT: a page whose last row is neither
+    t10's nor HO-E's is refused."""
+    with tempfile.TemporaryDirectory(prefix="t_rowb_hoe_") as d:
+        p = os.path.join(d, "HW-FW-CONTRACT.md")
+        shutil.copy(CONTRACT, p)
+        assert _run(A_T10, p, "--write").returncode == 0
+        t = open(p, encoding="utf-8").read()
+        b22 = [l for l in t.splitlines(True) if l.startswith("| FW-B22 |")][0]
+        v23 = [l for l in t.splitlines(True) if l.startswith("| V-B23 |")][0]
+        t = t.replace(b22, b22 + "| FW-B23 | stand-in | stand-in | stand-in | V-B24 | stand-in |\n")
+        t = t.replace(v23, v23 + "| V-B24 | FW-B23 | stand-in |\n").replace("(FW-B01 to FW-B22)\n", "(FW-B01 to FW-B23)\n")
+        t = t + "| 2 (HO-E, P0) | 7 October 2026 | stand-in |\n"
+        open(p, "w", encoding="utf-8").write(t)
+        r = _run(A_CANQ, p, "--write")
+        assert r.returncode == 0, r.stderr.decode()[-300:]
+        assert _run(A_CANQ, p, "--write").returncode == 3
+        assert _run(A_ROWB, p, "--write").returncode == 0
+        t2 = open(p, encoding="utf-8").read()
+        assert [l.split(" | ")[0][2:] for l in t2.splitlines() if l.startswith("| FW-B")][-3:] == ["FW-B22", "FW-B23", "FW-B24"]
+        assert t2.rstrip("\n").splitlines()[-1].startswith("| 4 (row b) |")
+        q = os.path.join(d, "mut.md")
+        shutil.copy(CONTRACT, q)
+        assert _run(A_T10, q, "--write").returncode == 0
+        open(q, "a", encoding="utf-8").write("| 9 (other) | 7 October 2026 | a foreign last row |\n")
+        assert _run(A_CANQ, q, "--write").returncode == 3
+
+
+def t_the_change_list_rows_for_the_four_drafts():
+    """W151-F1 (W157-F8): apply_l4e9_changelist_rowb.py adds R-247 to R-250 (canmb, regstage, canen, hodtest) after R-245 and before
+    R-236 in L4-E9's own change list (--check on the tree, nothing written); each row names one apply script; a second application
+    (the rows already in the register) is refused."""
+    r = _run(A_CL, "--check")
+    assert r.returncode == 0, r.stderr.decode()[-300:]
+    assert "R-247 to R-250 after R-245 and before R-236" in r.stdout.decode()
+    m = _mod(A_CL, "changelist_rowb")
+    reg = _text(os.path.join(ROOT, "v2", "docs", "records", "l4e9", "DOWNSTREAM-REGISTER.md"))
+    new = m.patch_register(reg)
+    for rid, script in zip(m.IDS, ("canmb", "regstage", "canen", "hodtest")):
+        row = [l for l in new.splitlines() if l.startswith("| %s |" % rid)]
+        assert len(row) == 1 and re.findall(r"apply_[a-z0-9_]+\.py", row[0]) == ["apply_gen_sch_b_%s.py" % script], rid
+        assert row[0].split(" | ")[8:] == ["SETTLED WORK", "DO: step B (DRAFTED), no open question; it continues while the open items are worked |"]
+        assert "PROVISIONAL until row (b)'s check L4A-62" in row[0]
+    try:
+        m.patch_register(new)
+    except SystemExit as e:
+        assert e.code == 3
+    else:
+        raise AssertionError("a second application was not refused")
+
+
+def t_the_hold_off_bounds_a_short_under_iosmin():
+    """W157-F7: the peers' hold-off after 3 failed restarts (SESSION W159-D3) holds; MUTANTS: no hold-off, a hold-off retried at the restart
+    rule's period, a hold-off one peer's vote holds: each FAILS (re-run here on the record's judge, and read in the output)"""
+    m = _mod(T10, "l9t5_t10_rowb_test")
+    v, base, held = m.r10_holdoff(m.R10_HOLDOFF)
+    assert v == "HOLDS" and abs(base - 0.8) < 1e-9 and held * 10 <= base
+    for pol in (dict(m.R10_HOLDOFF, n=None), dict(m.R10_HOLDOFF, retry=m.R10_RESTART), dict(m.R10_HOLDOFF, holders=1)):
+        assert m.r10_holdoff(pol)[0] == "FAILS", pol
+    s = " ".join(_t11a().split())
+    assert "Judge HOLDS; mutated, no hold-off (the restart rule alone): FAILS; the hold-off retried at the restart rule's period: FAILS; a hold-off one peer's vote holds: FAILS" in s
 
 
 # pytest aliases

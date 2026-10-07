@@ -63,7 +63,8 @@ PDFTEXT = {
     "v2/vendor/diodes/diodes-bat46w.pdf": [["-layout"]],
     "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf": [["-layout", "-f", "4", "-l", "7"]],
     "v2/vendor/power/aos-ao3400a-n-mosfet.pdf": [["-layout"]],
-    "v2/vendor/st/st-rm0433-rev8.pdf": [["-layout", "-f", "533", "-l", "533"]],
+    "v2/vendor/st/st-rm0433-rev8.pdf": [["-layout", "-f", "533", "-l", "533"], ["-layout", "-f", "329", "-l", "329"], ["-layout", "-f", "333", "-l", "333"],
+                                        ["-layout", "-f", "1919", "-l", "1919"]],   # W159 (W157-F6): the backup registers through a brown-out
     "v2/vendor/st/st-stm32h743xi-datasheet.pdf": [["-layout"]],
     "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf": [["-layout"]],
     "v2/vendor/ti/held/ti-tps737-sbvs067w.pdf": [["-layout"]],
@@ -144,6 +145,18 @@ def pdf(key):
 
 def rm_page533():
     return PDFT.pdf_text(ROOT, SHEETS["rm"], ["-layout", "-f", "533", "-l", "533"], PDFTEXT, REC)
+
+
+def rm_page329():
+    return PDFT.pdf_text(ROOT, SHEETS["rm"], ["-layout", "-f", "329", "-l", "329"], PDFTEXT, REC)
+
+
+def rm_page333():
+    return PDFT.pdf_text(ROOT, SHEETS["rm"], ["-layout", "-f", "333", "-l", "333"], PDFTEXT, REC)
+
+
+def rm_page1919():
+    return PDFT.pdf_text(ROOT, SHEETS["rm"], ["-layout", "-f", "1919", "-l", "1919"], PDFTEXT, REC)
 
 
 def uni_pages4to7():
@@ -300,6 +313,12 @@ def figures():
     S["rm_reset"] = " ".join(need(r533, r"(During and just after reset, the alternate functions are not active and most of the I/O ports\s*\n\s*are configured in analog mode\.)",
                                   "RM0433 11.3.1").group(1).split())
     S["debug_pins"] = re.findall(r"(P[AB]\d+): N?J", r533)
+    # W159 (W157-F6): the step record's retention, read on RM0433 Rev 8 (8.4.2 p.329, 8.4.6 p.333, 46.4.? p.1919)
+    S["rm_bor"] = " ".join(need(rm_page329(), r"(A reset from the brownout reset block \(pwr_bor_rst\))", "RM0433 p.329, a system reset source").group(1).split())
+    S["rm_bkp"] = " ".join(need(rm_page1919(), r"(The backup registers \(RTC_BKPxR\) are not reset by system reset or when the device\s*\n\s*wakes up from Standby mode\.)",
+                                "RM0433 p.1919, the backup registers").group(1).split())
+    S["rm_vsw"] = " ".join(need(rm_page333(), r"(VSW voltage is outside the operating range\. All RTC registers and the RCC_BDCR\s*\n\s*register are reset to their default values\.)",
+                                "RM0433 p.333, the backup domain reset").group(1).split())
     # --- TI TCAN334, SLLSEQ7F: the tested supervisor's transceivers as its rail falls
     t = pdf("tcan")
     S["tcan_rev"] = need(t, r"(SLLSEQ7F) %s DECEMBER 2015 %s REVISED MAY 2025" % (EN, EN), "SLLSEQ7F's revision").group(1)
@@ -783,7 +802,7 @@ def main():
     # the served rows and record l9t5's supply path, as W138 reads them (record l4reg)
     Erows = REG.rows()
     avail, (lo14, nom14, hi14), r_sup, fixed = REG.path(Erows, None, D.figures(), D.gndret())
-    S["ios"] = REG.band_row(S["ios49"][0], {"min": (0, S["ios_eq"][0]["min"][1]), "max": (0, S["ios_eq"][0]["max"][1])}, 0.01)
+    S["ios"] = REG.band_env(S["ios49"][0], S["ios_eq"][0], 0.01, 49.9)   # W159 (W157-F2): the tested row and TI's Equation 1, enveloped
     s3 = max(float(x) for x in re.findall(r"S3' B\d with the healthy fabric's bit\s+([\d.]+) A", text(DOCS["l4reg_out"])))
     drop = Erows["drop"][0]
     i125 = (125.0 - Erows["air"][0]) / (S["ldo_rja"][0] * drop)
@@ -1022,8 +1041,11 @@ def main():
         w("     if latched (step 4) or simply readmitted if never latched; that supervisor's tests stop until the next start (DRAFTED, W146-D6); each peer")
         w("     writes the target and the step to its backup registers before step 3 and clears it after step 4, so a peer that boots with a step 3")
         w("     recorded (the survivors reset by the step's transient, W146-F10) takes that test as failed (LIMIT NOT SHOWN) and stops its tests: the")
-        w("     transient cannot repeat on every restart (DRAFTED; the registers' retention through a brown-out reset is RM0433's backup domain, not")
-        w("     read here: ASSUMPTION; DS12110 describes VBAT supplying that domain when VDD is absent)")
+        w("     transient cannot repeat on every restart (DRAFTED). The record's retention, read (W159 on W157-F6): a BOR reset is a system reset")
+        w("     (RM0433 Rev 8 p.329: \"%s\"), and \"%s\" (p.1919), so a survivor reset by BOR keeps it; but" % (S["rm_bor"], S["rm_bkp"]))
+        w("     \"%s\" (p.333), and board B ties each supervisor's VBAT to its own +3V3_IOCx (gen_sch_b.py), so a dip under" % S["rm_vsw"])
+        w("     the power-down threshold may clear it: ASSUMPTION, bounded by V-B25 (each survivor's 3.3 V over %.2f V, above DS12110's highest falling" % S["vbor2"][0][2])
+        w("     PDR %.2f V), with DBP set before each write and clear, tamper erase off, no BDRST at boot (ES0392 2.2.20's workaround not taken)" % S["vpdr"][0][2])
         w("   THE INTERVAL THE TARGET IS OUT of the quorum: %.3f s (the announcement %.1f s, step 1 %.3f s, settle %.3f s, step 2 %.3f s, step 3 %.3f s, step 4 %.3f s)" % (
             T["out"], WINDOW, T["step1"], T_SETTLE, T["step2"], T["step3"], T["step4"]))
         w("     (MODEL on PRINTED, DRAFTED and the boot and domain ASSUMPTIONs; record l4canen's recovery %.3f s is step 4 plus its %.1f s decision)" % (

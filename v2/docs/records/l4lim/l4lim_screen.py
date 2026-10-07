@@ -20,10 +20,10 @@ _bin/regen_out.py). It imports record l9t5's T10 and drafts modules for the AP21
 T10 reads them, and reproduces T10-A3's printed figure before substituting anything. Labels: PRINTED (a maker's limit or tested
 row), TYPICAL, DECLARED, MODEL, ASSUMPTION, SESSION, INFERRED."""
 import hashlib
+import importlib.util
 import math
 import os
 import re
-import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +41,21 @@ SHEETS = {"ap2112": ("v2/vendor/diodes/diodes-ap2112-ldo.pdf", False), "tcan": (
           "tps2553": ("v2/vendor/ti/held/ti-tps2553-slvs841f.pdf", True), "ap2265": ("v2/vendor/diodes/held/diodes-ap22652-53-ds41186.pdf", True),
           "tps25200": ("v2/vendor/ti/held/ti-tps25200-slvscj0f.pdf", True), "tps2596": ("v2/vendor/power/tps2596.pdf", False)}
 FETCH = "v2/docs/records/l4lim/fetch_held_back.py"
+REL = "v2/docs/records/l4lim"
+# W34's rule (Q-41 item 1), carried here by W159 on W157's finding F3 (7 October 2026, the composition of fnd/l4hod with fnd/l4lim): a
+# generator never runs pdftotext; every maker's text this screen reads is the committed (or, for a held-back sheet, the held) text the
+# re-take takes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4lim
+PDFTEXT = {
+    "v2/vendor/diodes/diodes-ap2112-ldo.pdf": [["-layout"]],
+    "v2/vendor/diodes/held/diodes-ap22652-53-ds41186.pdf": [["-layout"]],
+    "v2/vendor/power/tps2596.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps25200-slvscj0f.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps2553-slvs841f.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 
 # the session's choices (SESSION under the owner's standing rule of 26 September 2026), each printed with its reason
 R_TOL = 0.01          # the limit resistor at 1 % (the makers' recommended range is stated for 1 % parts; a 0.1 % part only narrows the band)
@@ -76,11 +91,7 @@ def pdf(key):
         path, held = SHEETS[key]
         if not os.path.isfile(os.path.join(ROOT, path)):
             refuse("%s is not present%s" % (path, " (held back: run %s)" % FETCH if held else ""))
-        try:
-            r = subprocess.run(["pdftotext", "-layout", os.path.join(ROOT, path), "-"], capture_output=True, check=True)
-        except (OSError, subprocess.CalledProcessError) as e:
-            refuse("pdftotext could not read %s (%s)" % (path, e))
-        _PDF[key] = r.stdout.decode("utf-8", "replace")
+        _PDF[key] = PT.pdf_text(ROOT, path, ["-layout"], PDFTEXT, REL)
     return _PDF[key]
 
 
@@ -323,6 +334,10 @@ def main():
     w("1. INPUTS, pinned by sha256")
     for p in [T10_OUT] + list(DOCS.values()) + [v[0] for v in SHEETS.values()] + [FETCH]:
         w("   %s %s%s" % (sha(p), p, "  (held back; %s)" % FETCH if any(p == v[0] and v[1] for v in SHEETS.values()) else ""))
+    for rel_, h_, held_ in PT.inputs(ROOT, PDFTEXT):   # the makers' texts read through pdftext.py (W159, W157-F3)
+        if h_ is None:
+            refuse("%s is not taken: python3 v2/docs/records/_lib/retake_pdf_text.py %s" % (rel_, REL))
+        w("   %s %s%s" % (h_[:16], rel_, "  (held back with its sheet)" if held_ else ""))
     w("   not read: ADI's MAX4995A (latch-off, 50 to 600 mA class): analog.com refused this host and the Internet Archive answered")
     w("   'Temporarily Offline' on 7 October 2026; nothing is claimed from it")
     w("")
