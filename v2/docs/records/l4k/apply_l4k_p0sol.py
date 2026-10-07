@@ -16,8 +16,12 @@ K-23, standing on main be07863b in the generator alone:
   be07863b:v2/docs/records/l4e7/l4e7_p0sol.py:1353),
 against the pages' reading, be07863b:v2/docs/records/l4e7/B2-PRESENCE.md:184 "REMAINING ENGINEERING inside E-1" and
 be07863b:v2/docs/records/l4e7/B2-PRESENCE.md:185-186 "P1-1's S1 row (b) is the later validation of that computation, not a
-substitute for it", and the ledger's HO-F (section 6, item E: the narrower reading). The new sentence places both open cases of section 5g inside E-1, S1's rows (a) and (b) their later
-validation; 6 printed lines before and after (simulated), so nothing below moves.
+substitute for it", and the ledger's HO-F (section 6, item E: the narrower reading). The new sentence, "Validation: P1-1's S1
+rows (a) and (b), after the first two are computed as REMAINING ENGINEERING inside E-1", places both open cases of section 5g
+inside E-1 with S1's rows their later validation; it keeps the words "Validation: P1-1's S1" at the place on output line 403 that
+the supplier validation annex quotes (its section 6.4, [SOLO:403], held by test_w3annex), and the paragraph keeps its 6 printed
+lines (simulated), so nothing below moves. A first wording that dropped those words failed test_w3annex in the verification run
+(record l4k's README, section Verification).
 
 Both edits are in place (one source line each, no line of l4e7_p0sol.py moves); the dated attribution is a trailing comment on
 the same source line, so the printed text stays the record's.
@@ -28,7 +32,9 @@ by record l9t5's l9t5_connected.out (its input line 26 at be07863b), which set 3
 
 Outputs that move after the apply (named for set 33's regeneration, not regenerated here: the generator reads makers' held curves
 for its section 0d and its output is in the l9t5 stability cascade): v2/docs/records/l4e7/l4e7_p0sol.out (the two paragraphs' words;
-line count unchanged by these edits) and every output that pins it or l4e7_p0sol.py (l9t5_connected.out's input lines). No figure,
+line count unchanged by these edits) and every output or table that pins it or l4e7_p0sol.py: l9t5_connected.out's input lines,
+and L4-E9's pin of l4e7_p0sol.out (l4e9_power_path.py's PINS entry l4e7p0, printed at l4e9_power_path.out line 106 on be07863b),
+which the verification run found refusing once the output was regenerated (a tool-moved pin, re-pinned by the L4 chain). No figure,
 verdict, state or citation target of the output changes; no test reads either sentence (searched: v2/ecad/tools/tests and
 v2/docs/records, *.py, 7 October 2026).
 """
@@ -49,9 +55,10 @@ NEW_13 = ('         "Independent of E-1, ADDRESSED IN DRAFTS and PROVISIONAL: D-
 
 OLD_23 = ('         "and the pair\'s fault detection and INP\'s protection (5f). Validation: P1-1\'s S1 (the first two added to its rows); '
           'the "\n         "last two are REMAINING ENGINEERING outside the baseline')
-NEW_23 = ('         "and the pair\'s fault detection and INP\'s protection (5f). The first two are REMAINING ENGINEERING inside E-1, '
-          'P1-1\'s S1 rows (a) and (b) their later validation; the "  # K-23, record l4k, 7 October 2026: B2-PRESENCE.md section 7 '
-          'since set 31, in place of the validation-only reading\n         "last two are REMAINING ENGINEERING outside the baseline')
+NEW_23 = ('         "and the pair\'s fault detection and INP\'s protection (5f). Validation: P1-1\'s S1 rows (a) and (b), after the first '
+          'two are computed as REMAINING ENGINEERING inside E-1; the "  # K-23, record l4k, 7 October 2026: B2-PRESENCE.md section 7 '
+          'since set 31, in place of the validation-only reading; the words the annex quotes at this line, Validation: P1-1\'s S1, '
+          'stay where they were\n         "last two are REMAINING ENGINEERING outside the baseline')
 
 EDITS = [(GEN, OLD_13, NEW_13), (GEN, OLD_23, NEW_23)]
 
