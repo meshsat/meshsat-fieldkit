@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 1 -l 2 v2/vendor/power/littelfuse-smcj-series-tvs.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "1",
+  "-l",
+  "2"
+ ],
+ "pdf": "v2/vendor/power/littelfuse-smcj-series-tvs.pdf",
+ "pdf_sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/littelfuse-smcj-series-tvs.layout.f1.l2.txt",
+ "text_bytes": 19549,
+ "text_sha256": "01fad6aa75fbcb83a225a47e36d8673e1220b3e1e7c7465e70228d5361c7041b"
+}

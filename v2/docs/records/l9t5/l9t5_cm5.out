@@ -5,9 +5,17 @@ prototype design; nothing built, bought, powered or measured; a case row's chang
    80070fefd8db6e8a v2/vendor/cm5/cm5-datasheet.pdf
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
-   afae23c87c38302b v2/docs/records/l9pwr/l9pwr_budget.py
-   d4fa665447fc7a71 v2/docs/records/l9pwr/l9pwr_budget.out
+   9b251b7d3be2aca7 v2/docs/records/l9pwr/l9pwr_budget.py
+   a4ea167cb0585283 v2/docs/records/l9pwr/l9pwr_budget.out
    0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
+   429ef814b81dbed7 v2/vendor/cm5/pdftext/cm5-datasheet.layout.txt
+   c59cee8614dfb14b v2/vendor/diodes/pdftext/diodes-ap2112-ldo.plain.l1.txt
+   86e6d8baf3f2bd0f v2/vendor/diodes/pdftext/diodes-ap63200-series-buck.plain.l1.txt
+   523141f25b1ce791 v2/vendor/diodes/pdftext/diodes-ap64500.plain.l1.txt
+   0645dd67a4e97ebd v2/vendor/power/pdftext/ti-tlv755p-ldo.plain.l1.txt
+   6830354f577b4bad v2/vendor/power/pdftext/tps2596.plain.txt
+   6399dcdabf2895da v2/vendor/ti/pdftext/lm5176-datasheet.layout.txt
+   a4965834fb931ea9 v2/vendor/ti/pdftext/ti-tps62933.plain.l1.txt
 
 2. WHAT THE SHEET PRINTS (Raspberry Pi Compute Module 5 datasheet, Release 3)
    appendix B, 'CM4 and CM5 differences', B.3 'Power budget': 'CM5 delivers significantly more performance than CM4, and therefore consumes more power. Power supply designs should accommodate 5 V at up to 2.5 A. If this creates an issue with an existing board design, lowering the CPU clock rate can reduce the peak power consumption.'

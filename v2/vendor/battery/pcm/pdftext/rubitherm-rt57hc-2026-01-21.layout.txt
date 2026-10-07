@@ -1,0 +1,58 @@
+     Data sheet
+.
+RT57HC
+.                                            RUBITHERM® RT is a pure PCM, this heat storage material utilising the processes
+                                             of phase change between solid and liquid (melting and congealing) to store and
+                                             release large quantities of thermal energy at nearly constant temperature.
+                                             The RUBITHERM® phase change materials (PCM’s) provide a very effective means
+                                             for storing heat and cold, even when limited volumes and low differences in
+                                             operating temperature are applicable.
+
+                                            Properties for RT-line:
+                                            - high thermal energy storage capacity
+                                            - heat storage and release take place at relatively constant temperatures
+                                            - no supercooling effect, chemically inert
+                                            - long life product, with stable performance through the phase change cycles
+                                            - melting temperature range between -9 °C and 125 °C available
+
+
+
+.
+    The most important data:                         Typical Values
+    Melting area                                     55 - 58 [°C]
+                                                     main peak: 57
+    Congealing area                                  53 - 57         [°C]
+                                                     main peak: 57
+    Heat storage capacity ± 7,5%                     240             [kJ/kg]*
+    Combination of latent and sensible heat in a
+    temperatur range of 49 °C to64 °C.               67              [Wh/kg]*
+    Specific heat capacity                           2               [kJ/kg·K]
+    Density solid                                    ~ 0,9           [kg/l]
+    at 20°C
+    Density liquid                                   ~ 0,8           [kg/l]
+    at 60 °C
+    Heat conductivity (both phases)                   0,2            [W/(m·K)]
+    Volume expansion                                  n.a.           [%]
+    Flash point                                       170            [°C]
+    Max. operation temperature                        90             [°C]
+
+
+
+
+                                                                                          Rubitherm Technologies GmbH
+                                                                                          Sperenberger Straße 5a
+                                                                                          D-12277 Berlin
+                                                                                          Tel: +49 (30) 7109622-0
+                                                                                          E-Mail: info@rubitherm.com
+                                                                                          Internet: www.rubitherm.com
+
+                                                                                          The product information given is a non-
+                                                                                          binding planning aid, subject to technical
+                                                                                          changes without notice.
+                                                                                          Version: 21.01.2026
+
+
+
+
+      *Measured with 3-layer-calorimeter.
+

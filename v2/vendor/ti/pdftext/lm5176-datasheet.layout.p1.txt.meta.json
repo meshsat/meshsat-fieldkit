@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 1 -l 1 v2/vendor/ti/lm5176-datasheet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "1",
+  "-l",
+  "1"
+ ],
+ "pdf": "v2/vendor/ti/lm5176-datasheet.pdf",
+ "pdf_sha256": "98191bec36d43771affa3e1540f6e1737347c19a1602747ffb4327509550a820",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/lm5176-datasheet.layout.p1.txt",
+ "text_bytes": 7485,
+ "text_sha256": "bd8d17d77c5a0d0609e81fd212713d4d391f4c4942221bdf90ac0ac7ecb2a5cc"
+}

@@ -1,0 +1,55 @@
+                                                                                                                         CSD19532Q5B
+www.ti.com                                                                                   SLPS414B – DECEMBER 2013 – REVISED MAY 2017
+
+
+5 Specifications
+5.1 Electrical Characteristics
+(TA = 25°C unless otherwise stated)
+                    PARAMETER                                           TEST CONDITIONS                     MIN     TYP     MAX        UNIT
+STATIC CHARACTERISTICS
+BVDSS         Drain-to-Source Voltage                    VGS = 0 V, ID = 250 μA                              100                        V
+IDSS          Drain-to-Source Leakage Current            VGS = 0 V, VDS = 80 V                                                     1    μA
+IGSS          Gate-to-Source Leakage Current             VDS = 0 V, VGS = 20 V                                               100        nA
+VGS(th)       Gate-to-Source Threshold Voltage           VDS = VGS, ID = 250 μA                              2.2      2.6     3.2       V
+                                                         VGS = 6 V, ID = 17 A                                         4.6     5.7       mΩ
+RDS(on)       Drain-to-Source On Resistance
+                                                         VGS = 10 V, ID = 17 A                                         4      4.9       mΩ
+gfs           Transconductance                           VDS = 50 V, ID = 17 A                                        84                S
+DYNAMIC CHARACTERISTICS
+Ciss          Input Capacitance                                                                                     3700    4810        pF
+Coss          Output Capacitance                         VGS = 0 V, VDS = 50 V, ƒ = 1 MHz                            706     918        pF
+Crss          Reverse Transfer Capacitance                                                                            14       18       pF
+RG            Series Gate Resistance                                                                                  1.2     2.4       Ω
+Qg            Gate Charge Total (10 V)                                                                                48       62       nC
+Qgd           Gate Charge Gate to Drain                                                                               8.7               nC
+                                                         VDS = 50 V, ID = 17 A
+Qgs           Gate Charge Gate to Source                                                                              13                nC
+Qg(th)        Gate Charge at Vth                                                                                      9.5               nC
+Qoss          Output Charge                              VDS = 50 V, VGS = 0 V                                       128                nC
+td(on)        Turn On Delay Time                                                                                       7                ns
+tr            Rise Time                                  VDS = 50 V, VGS = 10 V,                                       6                ns
+td(off)       Turn Off Delay Time                        IDS = 17 A, RG = 0 Ω                                         22                ns
+tf            Fall Time                                                                                                6                ns
+DIODE CHARACTERISTICS
+VSD           Diode Forward Voltage                      ISD = 17 A, VGS = 0 V                                        0.8          1    V
+Qrr           Reverse Recovery Charge                    VDS= 50 V, IF = 17 A,                                       249                nC
+trr           Reverse Recovery Time                      di/dt = 300 A/μs                                             80                ns
+
+
+5.2 Thermal Information
+(TA = 25°C unless otherwise stated)
+                                            THERMAL METRIC                                                 MIN     TYP      MAX        UNIT
+RθJC        Junction-to-Case Thermal Resistance (1)                                                                          0.8
+                                                                                                                                       °C/W
+RθJA        Junction-to-Ambient Thermal Resistance (1) (2)                                                                   50
+
+(1)    RθJC is determined with the device mounted on a 1-inch2 (6.45-cm2), 2-oz. (0.071-mm thick) Cu pad on a 1.5-inches × 1.5-inches (3.81-
+       cm × 3.81-cm), 0.06-inch (1.52-mm) thick FR4 PCB. RθJC is specified by design, whereas RθJA is determined by the user’s board design.
+(2)    Device mounted on FR4 material with 1-inch2 (6.45-cm2), 2-oz. (0.071-mm thick) Cu.
+
+
+
+
+Copyright © 2013–2017, Texas Instruments Incorporated                                              Submit Documentation Feedback              3
+                                                        Product Folder Links: CSD19532Q5B
+

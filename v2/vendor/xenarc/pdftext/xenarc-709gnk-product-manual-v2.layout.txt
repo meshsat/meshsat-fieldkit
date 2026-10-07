@@ -1,0 +1,656 @@
+709 INSTALLATION MANUAL
+2 │ Table of Contents
+
+
+   Features ……………………………………………03
+
+
+
+   Specifications ……………………………………04
+
+
+
+   Quick – Start ……………………………………..05
+
+
+
+   Remote Control ………………………………….07
+
+
+
+   Capacitive Touch ………………………………..10
+
+
+
+   Hardware Installation …………………………11
+   709CNH /   709GNK Models
+
+
+   Additional Info .…………………………………..15
+
+
+
+   Owner’s Record .…….………………………….16
+3 │ Features
+
+Model Comparison Chart
+                                 709CNH                    709GNK
+
+
+VGA     ( D-SUB 15 Pin )
+                                    1                         ○
+Input
+
+
+VIDEO ( RCA ) Inputs                2                         ○
+
+
+High Quality Scaling                ●                         ●
+
+
+High Quality Anti - Aliasing        ●                         ●
+
+
+Auto Power On                       ●                         ●
+
+
+Touch Screen                    Capacitive                Capacitive
+
+
+HDMI Input                          ●                         ●
+
+
+IP grade                          IP65                      IP67
+
+
+                               ●Standard ○Not Available
+
+
+Features
+● IP67 / NEMA6P (709GNK) IP65 / NEMA4 (709CNH) Rated Water and
+   Dust Resistance (Whole Unit)
+● 1,000NIT Sunlight Readable with Long Life LED Backlight
+● Automatic Backlight Adjustment through Built-in Ambient Light
+● Projected Capacitive Multi-Touch Touchscreen (USB)
+● Mitsubishi Mosmite Anti-Fogging Film (709GNK)
+● Anti-Reflective & Anti-Fingerprint Coating
+● Plug-N-Play with Windows 7 and up and Android devices
+   (Downloadable drivers for other OS)
+● Multi-Monitor Touchscreen Support
+● HDMI Input x 1 (HDCP)
+● VGA Input (15 pin D-SUB) x 1 & Video Input x 2 (709CNH)
+● DVI Input through included DVI to HDMI adaptor
+● Audio Input x 1 (709GNK) x 3 (709CNH) / Built-In Waterproof Speaker
+● NTSC / PAL Multi-System
+● 1024x600 Native Resolution, 16x9 Aspect Ratio
+● Solid Capacitors for improved durability
+● High Performance Image and Video Signal Processor
+● AISS - Advanced Image-Scaling and Shaping
+● Last Input and Power setting memory
+● IR Remote Control
+● Auto power-on upon signal detection
+● Mirror and Vertical Image Flip
+● Function to disable front button(s) and On Screen Text
+● AV2 Auto Switching for Backup Camera
+● 360° Copper Monitor Stand
+● VESA 50mm Mounting Holes
+● M16 Military Grade IP67 Connector with Connector Locking
+(709GNK)
+● 26-Pin heavy-duty connector with connector locking (709CNH)
+● Ruggedized Aluminum Casing
+● Supports 10V DC ~ 35V DC
+● "E" Mark Certified for Automotive use
+● FCC, CE, E13 Certification
+● ROHS, REACH, ECE R118-03 Compliant
+● 36 Month/3 Year Warranty
+● 30 Day No dead Pixel Guarantee
+4 │ Specifications
+Specifications
+
+● Screen Size : Diagonal 7” ( 16 : 9 )
+● Physical Resolution : 1024 ( H ) x 600 ( V ) WXGA
+● Supported Resolution : 640 x 480 ~ 1920 x 1080
+● Dot Resolution : 3072 x 600 = 1,843,200 ( dots )
+● Brightness : 1000 cd/m²
+● Contrast Ratio : 700 : 1
+● Viewing Angle: 150° Horizontal, 145° Vertical
+● Response Time (Tr/Tf): 10/15ms (Typ.)
+● Touch Screen Interface: USB port
+● Operating Voltage Range : DC 10V ~ 35V
+● Power Supply : DC 12V
+● Power Consumption: ≤ 10W
+● Operating Temperature: -4°F ~ 158°F (-20°C ~ 70°C)
+● Storage Temperature: -22°F ~ 176°F (-30°C ~ 80°C)
+● MTBF (Mean Time Between Failures): > 55,000 Hours
+● Dimension (mm): 205.2W x 139.5H x 28.7D
+● Weight ( lb ) : 2.64
+5 │ Quick - Start
+
+
+
+          Attach the 26-Pin connector (709CNH) / M16
+          connector (709GNK) to the monitor
+
+
+
+
+          Attach the D-Sub 15-Pin connector to your
+          computer’s analog VGA output connector (CNH
+Only)
+
+
+
+
+          Attach the HDMI connector to your computer’s
+          HDMI output connector
+
+
+
+
+          Attach your “ Video source one “
+          (e.g. VCR, Video Game Console)
+          to the Yellow RCA connector marked Video 1
+          (CNH Only)
+
+
+
+
+          Attach your “ Video source two “
+          (e.g. Rear View Camera)
+          to the Yellow RCA connector marked CCD
+         (CNH Only)
+6 │ Quick - Start
+
+
+         Attach the USB plug to your USB connector
+
+
+
+
+         Touchscreen Installation
+
+         Please download and install the Touchscreen driver
+         for your operating system from our website
+         WWW.XENARC.COM.
+
+
+
+
+         Slide Monitor into optional mounting stand
+
+
+
+
+         Secure “Height” position by adjusting knob
+
+
+
+
+         Secure “Tilt” position by adjusting knob
+
+
+
+
+         Insert Power Adapter as shown
+7 │ Remote Control
+
+
+
+
+1. Power Button : Turn the monitor ON or OFF.
+
+2. Mirror Button : Enable or Disable the mirroring of the display.
+Continue to press it and choose the mirroring you want.
+
+3. Dimmer Button : Dim the brightness of the display by pressing this
+key continuously to set the brightness level of the display.
+( Only available when auto sensor is disabled. )
+
+4. Mute Button : Mute the speaker. Press again to restore the sound of
+the speaker.
+
+5. Display Button : Display the current input signal on the screen.
+
+6. Sleep Button : Enable or Disable the sleep timer. Press this button to
+select and set the time to turn off the monitor automatically.
+
+7. Picture Button : Enable or select the picture mode you prefer.
+Press this button and then you can select standard, user, bright,
+or soft.
+
+8. PC auto Button : Enable to adjust the picture automatically, only
+available in VGA mode.
+
+9. Menu Button : Enable the OSD menu. Press this button again to exit.
+
+10. Source Button : Enable to switch to different source input.
+
+11. Vol+ / Vol- Button : Increase or Decrease the Volume.
+
+12. Up / Down Button ( ▲ / ▼ ) : Navigate Up or Down in OSD menu.
+
+13. Left / Right Button ( ◄ / ► ) : Navigate Left or Right in OSD menu, as
+well as decreasing or increasing the value of setting in OSD.
+
+14. Enter Button : Confirm the setting or selection.
+8 │ Remote Control
+
+  Instructions for remote control shortcuts
+
+1. Dimmer ( Adjust the brightness )
+
+By pressing the Dimmer button, it will adjust the brightness level from 0,
+20, 40, 60, 80 and 100.
+Default is 100 ( Only available when auto sensor is disabled )
+
+
+
+
+2. Sleep ( Set the sleep time out )
+
+Select the time to automatically turn off the monitor.
+The minimum is 15 minutes and the maximum is 120 minutes.
+
+
+
+
+3. Picture ( Set the modes of the picture )
+
+
+Enable to select the picture modes you prefer.
+Press this button and then you can select standard, user, bright, or soft.
+
+
+
+
+4. PC AUTO ( Auto adjust, only on VGA )
+
+By pressing PC AUTO, it will auto adjust the image.
+
+
+5. Source ( Select the source )
+
+Press this button to select the input signal to display.
+If one of these modes is disabled in OSD menu, please setup under
+( Function → Source Enable )
+9 │ Remote Control
+6. Mirror ( Image mirror )
+
+Enable or Disable the mirroring of the display. Continue to press it and
+choose the mirroring mode you wish to display.
+
+
+
+
+7. Mute
+
+Mute the speaker.
+Press again to restore the sound of the speaker.
+
+
+
+
+8. Display ( Display mode )
+
+Display the current input signal on the screen.
+
+
+
+
+9. VOL- / VOL+
+
+Volume adjustment.
+10 │Capacitive Touch
+1. Supports plug and play ( WINDOWS OS )
+2. Supports below operating systems
+               OS                                   Touch Function
+
+                     10                         Available for multi-touch
+
+                      8                         Available for multi-touch
+
+                      7                         Available for multi-touch
+  WINDOWS
+                     XP                    Only supports single mouse point
+
+                    VISTA                  Only supports single mouse point
+
+                     CE                    Only supports single mouse point
+
+                     OS9                   Only supports single mouse point
+    MAC
+                      X                    Only supports single mouse point
+
+                                      Available for multi-touch if kernel version is
+            Kernel 2.6.24 Upwards    2.6.36 above. If kernel version below 2.6.35, it
+                                             will only support single point.
+    Linux   Kernel 2.6.23 Downward         Only supports single mouse point
+
+                 Kernel 2.4.X              Only supports single mouse point
+
+
+3. Touch Calibration is not required.
+4. Operation
+Touch & type
+To select or activate something, touch it.
+To type something, such as a name, password, or search terms, just
+touch where you want to type. A keyboard pops up that lets you type
+into the field.
+Other common gestures include:
+• Touch & hold. Touch & hold an item on the screen by touching it and
+  not lifting your finger until an action occurs.
+• Drag. Touch & hold an item for a moment and then, without lifting your
+  finger, move your finger on the screen until you reach the target
+  position. For example, you can move object or icon around on the Home
+  screen.
+• Swipe or slide. Quickly move your finger across the surface of the
+  screen, without pausing when you first touch (so you don’t drag
+  something instead). For example, you can slide a Home screen left or
+  right to view the other Home screens.
+• Double-tap. Tap quickly twice on a webpage, map, or other screen to
+  zoom. For example, double-tap a picture in Chrome to zoom in, and
+  double-tap again to zoom out.(This function depends on Win7 or Win8
+  function)
+• Pinch. In some apps (such as Maps, Chrome, and Gallery), you can
+  zoom in and out by placing two fingers on the screen at once and
+  pinching them together (to zoom out) or spreading them apart (to
+  zoom in). (This function depends on Win7, Win8 or Win10 function)
+11 │ Hardware Installation
+Buttons description:
+1.        Power Button : Press to turn ON or OFF the monitor.
+
+2.        Select Button : Press to select the input signal to display.
+     Press the left ( ◄ ) or right ( ► ) to highlight the input source desired
+
+     and then press menu button to make the selection.
+
+3.        Menu Button : Press the button to show the OSD menu. And
+     then press the left ( ◄ ) or right ( ► ) to navigate through the menu.
+
+     Press “ Select “ button to go through a list of settings and options.
+
+     Press the left ( ◄ ) or right ( ► ) buttons to change the values of
+
+     settings. Press Menu button again to leave the OSD menu.
+
+4.        Right Button : Press this button to the value of settings inside
+     the OSD menu.
+
+5.        Left Button : Press this button to the value of settings inside
+     the OSD menu.
+
+
+
+
+Ambient Light Sensor
+Ambient light sensor can be enabled or disabled in the OSD by going
+
+into the “ MISC ” category, and selecting the option “ Auto Sensor ”.
+
+When Auto Sensor is enabled, the LCD backlight brightness will be
+
+adjusted automatically according to the ambient lighting condition.
+
+
+
+
+Note
+The brightness cannot be adjusted manually through the dimmer button
+
+or through the OSD menu when the Auto Sensor function is enabled.
+
+
+
+
+OSD      ( On-screen display ) Menu
+Press MENU to display the OSD on the screen, then press
+
+UP / DOWN ( or LEFT / RIGHT from the front control panel )
+
+to highlight a different category. Press ENTER ( or Source ) to adjust the
+
+selected highlighted category. Under the selected item page, press UP /
+
+DOWN ( or Source ) to select the item from the list, use LEFT / RIGHT to
+
+adjust. To select the sub-menu, please press LEFT to enter to the sub-
+
+menu.
+12 │ Hardware Installation
+OSD ( On-Screen Display ) Menu
+The settings and options in the OSD menu are categorized into 6
+
+Categories : Color, Adjust, OSD, Setup, Function, Sound
+
+
+
+
+1. Colors
+• Brightness : Adjust brightness by pressing Left ( ◄ ) or Right ( ► )
+
+buttons. Increase the number for a higher level of brightness. Decrease
+
+the number for a lower level of brightness.
+
+• Contrast : Adjust contrast by pressing Left ( ◄ ) or Right ( ► ) buttons.
+
+Increase the number for a higher level of contrast. Decrease the number
+
+for a lower level of contrast.
+
+• Sharpness : Adjust sharpness by pressing left or right buttons. Press
+
+left to decrease sharpness and right to increase the level of sharpness.
+
+• Color Temp : Set the color temp to the desired setting : 6500K, 9300K
+
+and User.
+
+• Backlight : Adjust backlight intensity by pressing Left ( ◄ ) or Right ( ►
+
+) buttons. Increase the number for a higher level of backlight output.
+
+Decrease the number for a lower level of backlight output. Only works
+
+when Auto sensor is turned off.
+
+
+
+
+2. Adjust
+• Auto Config : Adjust display automatically.
+
+• H Position : Adjust the Horizontal position by pressing the left or right
+
+buttons.
+
+• V Position : Adjust the Vertical position by pressing the left or right
+
+buttons.
+
+• Phase : Phase ( fine ) adjustment. Image flickering can be removed
+through changing this setting (only valid for VGA setting )
+
+• Clock : Adjust the horizontal sync width of the screen image.
+
+
+
+13 │ Hardware Installation
+
+
+
+
+3. OSD
+• H Position : Adjust the OSD Horizontal position by pressing the left or
+
+right buttons.
+
+• V Position : Adjust the OSD Vertical position by pressing the left or
+
+right buttons.
+
+• OSD Timeout : Adjust the time out of the OSD.
+
+• Transparent : Adjust the transparency of the OSD screen image.
+
+• Key Backlight : Adjust the button's backlight intensity.
+
+
+
+
+4. Setup
+• CCD First : Set whether to have monitor switch to CCD signal
+
+automatically if a signal is present. ( Default is OFF )
+
+• Auto sensor : Enable or disable the auto sensor of surrounding
+
+environment.
+─“ On ” means the monitor can automatically adjust the brightness of
+
+the display according to the surrounding environment.
+─Please note : While auto sensor is enabled, the option of dimmer or
+
+backlight inside the OSD can not work until auto sensor is disabled.
+
+• Source Info : Select to turn OFF or turn ON displaying of On Screen
+
+Source Information.
+
+• Source Name : Display the source of input signal. If it is ON, it will
+
+display the information on the left corner of the screen when Display
+
+button is pressed on remote control. ( Default ON )
+
+• Mirror Hor : Adjust the horizontal mirroring position. If it is ON, the
+
+image will be on the left and right side. ( Default OFF )
+• Mirror Ver : Adjust the vertical mirroring position. If it is ON, the image
+
+will be on the upper and lower side. ( Default OFF )
+
+14 │ Hardware Installation
+
+
+
+
+5. Function
+• Reset : Reset to factory default setting.
+
+• Display Ratio : Select the display mode ( 16:9, 4:3 and Auto )
+
+• Sleep : Select the time to automatically turn off the monitor. The
+
+minimum is 15 minutes and the maximum is 120 minutes.
+
+• Keypad : Allows you to disable or enable the buttons on the front of
+
+the monitor. Power, Menu, Select, Left, and Right buttons can be
+
+disabled or enabled.
+
+• Source Enable : Select to enable or disable the input signal. If an input
+
+signal is turned off, the source will automatically be disabled.
+
+• Touch Controller : Switch the power source for touch control board.
+
+
+
+
+6. Sound
+• Volume : Adjust the audio volume of built-in speaker.
+
+• Mute : Enable or disable muting of built-in speaker.
+
+• HDMI Input : Select the audio source while in HDMI input mode. When
+
+set   to HDMI, the built-in speaker will output the digital audio signal
+
+from HDMI.
+
+When set to Analog, the built-in speaker will output the analog audio
+signal from the mini stereo jack marked as “ PC Audio ” ※The HDMI
+
+output option is only available for CSH / TSH models
+15 │Additional Info
+NOTES
+NOTE 1 :
+If you are trying to connect the monitor to a laptop computer, please
+make sure to enable the 15-PIN D-SUB external monitor output located
+at the back of your laptop computer. Some laptop computers have three
+modes: Laptop Display Only, Laptop Display plus External Monitor, and
+External Monitor Only. If this is the case, please switch to the External
+Monitor Only mode.
+
+NOTE 2 :
+Touch Screen device driver must be installed onto your computer in
+order for the Touch Screen to become operational. Touch Screen driver
+and software for different operating systems can be downloaded from
+our website at WWW.XENARC.COM.
+
+NOTE 3 :
+The maximum voltage supported by the monitor is 35V DC. Feeding the
+monitor with higher voltage will damage the monitor and void the
+warranty. Please use a fused power source if you decide to wire the
+monitor directly to your vehicle’s electrical system. It is also crucial
+that you check the polarity on the connection.
+
+NOTE 4 :
+If the monitor is not displaying the VGA signal properly, the VGA signal
+might be out of range. Please try changing your display refresh rate to
+60, 70, 72, or 75 Hertz.
+
+NOTE 5 :
+Please note that the LCD screen is made with high-precision technology.
+However black points or bright points of light ( red, blue, or green ) may
+appear constantly on the LCD screen, and irregular colored stripes or
+brightness may appear on the LCD screen.
+This is not malfunction. ( Effective dots : more the 99.999% )
+
+For Technical Support , please contact us at:
+Xenarc Technologies Corp.
+Toll Free : 888 - 656 - 6536
+E - Mail : support @ xenarc.com
+Website : www.xenarc.com
+
+
+
+
+Length of the mounting screw. 【 M4 x 6 mm (max) 】
+
+( common between right side and left side )
+16 │Additional Info
+Owner’s Record
+The model and serial number are located on the rear of the unit. Please
+
+record these numbers in the spaces provided below, as well as the
+
+dealer name, address, and telephone number.
+
+Please refer to these records whenever speaking to your dealer
+
+regarding this product.
+
+
+
+Model Number :
+
+Serial Number :
+
+Dealer Name :
+
+Street Address :
+
+City :
+
+State :
+
+Zip :
+
+Phone Number :
+
+Purchase Date :
+All rights reserved. Reproduction in whole or in part without permission is prohibited.
+

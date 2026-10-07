@@ -13,6 +13,9 @@ sys.path.insert(0, TOOLS)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from harness import Skip  # noqa: E402
 
+# The fixture's max_zip_bytes (1000000) is the throwaway repository's own cap: its ZIPs are a few kilobytes, so no fixture
+# build comes near it. It is not the tree's cap and never held it: no test before 6 October 2026 expected pack.yaml's value
+# (52,428,800 then). The tree's cap is held by t_the_cap_is_100_mib_and_the_estimate_at_this_tree_is_under_it (Q-53).
 SPEC = """schema: 1
 title: fixture
 max_zip_bytes: 1000000
@@ -251,6 +254,45 @@ def t_the_committed_spec_classifies_every_file_of_this_tree():
         g.close()
     assert not pl["loose"], "%d file(s) at HEAD are classified by no rule, first: %s" % (len(pl["loose"]), pl["loose"][:5])
     assert pl["boards"], "the spec resolved no board phase directory"
+
+
+CAP_Q53 = 104857600     # 100 MiB: the coordinator's Q-53 of 6 October 2026, its reason the comment above the key in pack.yaml
+
+
+def t_the_cap_is_100_mib_and_the_estimate_at_this_tree_is_under_it():
+    """pack.yaml's max_zip_bytes is 104,857,600 bytes (100 MiB), the value decided on 6 October 2026 (Q-53, by the
+    coordinator under the owner's standing rule of 26 September 2026, authority SESSION; the reason is written above the
+    key in pack.yaml), and the size estimator v2/docs/records/h3/zip_size_estimate.py, run on this tree's HEAD, prints a
+    positive margin under it and exits 0. The estimator classifies HEAD with the packer's own plan, reads the cap of that
+    commit and writes nothing, so a ZIP that outgrows the cap fails here before a build exits 3.
+
+    Basis of the expectation: at main eff28be3 the estimator read 70,175,272 bytes, over H1's and H2's cap of 52,428,800
+    by 17,746,472 bytes (W36's F-S1) and under 104,857,600 by 34,682,328. Before 6 October 2026 no test held the tree's cap
+    (the fixture's 1000000 is the fixture's own). A failure here is answered by a pack decision written in pack.yaml with
+    its reason, never by changing CAP_Q53 alone. Skipped where the tree is not a git checkout or lacks the estimator or
+    H2.zip and H2.MANIFEST.tsv (its reference for unchanged files), as in an extracted snapshot."""
+    import re
+    hp = _hp()
+    root = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
+    spec = os.path.join(root, "v2", "docs", "handover", "pack.yaml")
+    if not os.path.exists(spec): raise Skip("no v2/docs/handover/pack.yaml in this tree")
+    cap = int((hp.load_yaml(open(spec, encoding="utf-8").read(), spec) or {}).get("max_zip_bytes") or 0)
+    assert cap == CAP_Q53, "pack.yaml's max_zip_bytes is %d, not Q-53's %d" % (cap, CAP_Q53)
+    if not shutil.which("git") or subprocess.run(["git", "-C", root, "rev-parse", "HEAD"], capture_output=True,
+                                                   timeout=30).returncode != 0:
+        raise Skip("this tree is not a git checkout")
+    est = os.path.join(root, "v2", "docs", "records", "h3", "zip_size_estimate.py")
+    for need in (est, os.path.join(root, "v2", "release", "handover", "H2.zip"),
+                 os.path.join(root, "v2", "release", "handover", "H2.MANIFEST.tsv")):
+        if not os.path.exists(need): raise Skip("%s is not in this tree" % os.path.relpath(need, root))
+    r = subprocess.run([sys.executable, "-B", est], cwd=root, capture_output=True, text=True, timeout=600)
+    m = re.search(r"^ESTIMATE: (\d+) bytes; H2 was \d+; cap (\d+); margin (-?\d+) bytes", r.stdout, re.M)
+    assert m, "the estimator printed no ESTIMATE line (exit %d): %s" % (r.returncode, (r.stdout + r.stderr)[-600:])
+    e, c, margin = (int(x) for x in m.groups())
+    assert c == cap, "the estimator read a cap of %d at HEAD where the tree's pack.yaml says %d (commit the spec)" % (c, cap)
+    assert margin == c - e, (margin, c, e)
+    assert margin > 0, "the estimated ZIP at HEAD is %d bytes, %d over the cap of %d" % (e, -margin, c)
+    assert r.returncode == 0, "the estimator exited %d with a positive margin" % r.returncode
 
 
 def t_source_names_the_public_repository_the_commits_the_pages_cite_and_the_candidates():

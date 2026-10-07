@@ -84,6 +84,22 @@ ORDER = {
 SLOT = {"a": 16, "b": 8}
 ROUND7 = (("l8r2", "fandec"), ("l8r2", "gndret"), ("l8r2", "gndrtn"))   # record l8r2's rounds 7 and 8 on board B: without them, the tree before T5b
 RETURN = (("l8r2", "gndrtn"),)                        # record l8r2's round 8 return draft: without it the return is as drawn
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 1 prints each text's sha256 among the inputs, l9t5_case.py's, l9t5_paloop.py's and record l9pwr's with them.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9t5
+PDFTEXT = {
+    "v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout"]],
+    "v2/vendor/diodes/diodes-ap2112-ldo.pdf": [["-layout"]],
+    "v2/vendor/st/st-stm32h743xi-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tps62933.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 SHEETS = {"tps62933": "v2/vendor/ti/ti-tps62933.pdf", "vh": "v2/vendor/connectors/jst-vh-catalogue.pdf",
           "xal60": "v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf", "ap2112": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
           "lm5176": "v2/vendor/ti/lm5176-datasheet.pdf", "h743": "v2/vendor/st/st-stm32h743xi-datasheet.pdf"}
@@ -128,11 +144,7 @@ _PDF = {}
 
 def pdf(key):
     if key not in _PDF:
-        try:
-            r = subprocess.run(["pdftotext", "-layout", os.path.join(ROOT, SHEETS[key]), "-"], capture_output=True, check=True)
-        except (OSError, subprocess.CalledProcessError) as e:
-            refuse("pdftotext could not read %s (%s)" % (SHEETS[key], e))
-        _PDF[key] = r.stdout.decode("utf-8", "replace")
+        _PDF[key] = PT.pdf_text(ROOT, SHEETS[key], ["-layout"], PDFTEXT, "v2/docs/records/l9t5")
     return _PDF[key]
 
 
@@ -406,6 +418,7 @@ def main():
     others = sorted({draft(r, n, b) for b in "ab" for r, n in ORDER[b]})
     inputs = [GEN["a"], GEN["b"]] + [os.path.join(ROOT, p) for p in ENGINE] + others + [NET["a"], NET["b"]]
     inputs += [os.path.join(ROOT, p) for p in SHEETS.values()] + [os.path.join(ROOT, p) for p in OWN] + [os.path.join(ROOT, p) for p in OTHERS]
+    inputs += [os.path.join(ROOT, t) for t, _h, _held in PT.inputs(ROOT, PT.merge(PDFTEXT, *(PT.declared_in(os.path.join(ROOT, x)) for x in ("v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l9t5/l9t5_paloop.py", "v2/docs/records/l9pwr/l9pwr_budget.py"))))]
     for p in inputs:
         if not os.path.isfile(p):
             refuse("input %s is missing" % rel(p))

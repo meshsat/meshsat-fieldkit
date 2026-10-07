@@ -1,0 +1,17 @@
+{
+ "command": "pdftotext -l 1 v2/vendor/power/ti-tlv755p-ldo.pdf -",
+ "held_back": false,
+ "options": [
+  "-l",
+  "1"
+ ],
+ "pdf": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+ "pdf_sha256": "7eb7bc6935bf6c1d247b2fce62c9e5a49a474fd94359ddc390a4baf0ac1f5293",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/ti-tlv755p-ldo.plain.l1.txt",
+ "text_bytes": 3354,
+ "text_sha256": "0645dd67a4e97ebd1ff8ad711586f6c385ad51d34744f3782d1f979dcbb509ad"
+}

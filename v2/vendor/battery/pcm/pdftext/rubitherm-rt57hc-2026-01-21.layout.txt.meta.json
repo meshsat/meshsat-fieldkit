@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/battery/pcm/rubitherm-rt57hc-2026-01-21.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/battery/pcm/rubitherm-rt57hc-2026-01-21.pdf",
+ "pdf_sha256": "74a5c20c8cc472d913b7e13865a12ee6aa18b1b065962d3d3527467fc7c2642b",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pcm/pdftext/rubitherm-rt57hc-2026-01-21.layout.txt",
+ "text_bytes": 3655,
+ "text_sha256": "1b16c0d47f32340d90c534013d291816f2062c43fb6a99b900ff6a5fe4e5b80b"
+}

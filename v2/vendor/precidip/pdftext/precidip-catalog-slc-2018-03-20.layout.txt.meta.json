@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/precidip/precidip-catalog-slc-2018-03-20.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/precidip/precidip-catalog-slc-2018-03-20.pdf",
+ "pdf_sha256": "638a0debaf507825f6925e3dcdaa0eff765761d9202d2e0fbdde4f41923104b4",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/precidip/pdftext/precidip-catalog-slc-2018-03-20.layout.txt",
+ "text_bytes": 33695,
+ "text_sha256": "d7934279f420d87927d9245a9d33deabf716c42d4c3bd66d4587cc5b1bc3b86a"
+}

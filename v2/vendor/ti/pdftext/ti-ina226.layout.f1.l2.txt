@@ -1,0 +1,101 @@
+                                                                                                                                        INA226
+                                                                                               SBOS547C – JUNE 2011 – REVISED AUGUST 2026
+
+INA226 36V, 16-Bit, Ultra-Precise I2C Output Current, Voltage, and Power Monitor With
+                                         Alert
+1 Features                                                               3 Description
+•    Senses bus voltages from 0V to 36V                                  The INA226 is a current shunt and power monitor
+•    High-side or low-side sensing                                       with an I2C™- or SMBUS-compatible interface. The
+•    Reports current, voltage, and power                                 device monitors both a shunt voltage drop and
+•    High accuracy:                                                      bus supply voltage. Programmable calibration value,
+     – Gain error: 0.1% (maximum)                                        conversion times, and averaging, combined with an
+     – Offset: 10μV (maximum)                                            internal multiplier, enable direct readouts of current in
+•    Configurable averaging options                                      amperes and power in watts.
+•    16 programmable addresses                                           The INA226 senses current on common-mode bus
+•    Operates from 2.7V to 5.5V power supply                             voltages that can vary from 0V to 36V, independent
+•    10-pin DGS (VSSOP) package                                          of the supply voltage. The device operates from
+2 Applications                                                           a single 2.7V to 5.5V supply, drawing a typical of
+                                                                         330μA of supply current. The device is specified
+•    Rack servers                                                        over the operating temperature range between –40°C
+•    Wireless infrastructure                                             and 125°C and features up to 16 programmable
+•    High performance computing                                          addresses on the I2C-compatible interface.
+•    Power management
+•    Battery cell monitors and balancers                                                     Package Information
+•    Power Supplies                                                            PART NUMBER           PACKAGE(1)               PACKAGE SIZE(2)
+•    Test Equipment                                                      INA226                 DGS (VSSOP, 10)           3.00mm × 4.90mm
+
+                                                                         (1)    For all available packages, see the orderable addendum at
+                                                                                the end of the data sheet.
+                                                                         (2)    The package size (length × width) is a nominal value and
+                                                                                includes pins, where applicable.
+                                                                                                 Supply Voltage
+                                                                                                 (2.7V to 5.5V)
+
+                                                                                                C BYPASS
+     Bus Voltage                                                                                0.1µF
+     (0V to 36V)
+
+
+
+                                      VBUS                         TI Device
+    High-
+                                                                                                           VS
+     Side
+    Shunt
+                                                                                                                        SDA
+
+                                                                                                                        SCL
+        Load
+                                                               x         Power Register
+
+                                       V                                                           I2C-, SMBus-,
+                         IN+                                             Current Register       Compatible Interface
+     Low-                                        ADC
+     Side
+                                        I                                                                              ALERT
+    Shunt                 IN-                                            Voltage Register
+                                                                                                                         A0
+
+                                                                          Alert Register                                 A1
+
+
+
+                                 GND
+
+                                            High-Side or Low-Side Sensing Application
+
+
+
+
+       An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+       intellectual property matters and other important disclaimers. PRODUCTION DATA.
+INA226
+SBOS547C – JUNE 2011 – REVISED AUGUST 2026                                                                                                                       www.ti.com
+
+
+                                                                        Table of Contents
+1 Features............................................................................1   7 Registers........................................................................ 22
+2 Applications..................................................................... 1       7.1 Register Maps...........................................................22
+3 Description.......................................................................1     8 Application and Implementation.................................. 29
+4 Pin Configuration and Functions...................................3                       8.1 Application Information............................................. 29
+5 Specifications.................................................................. 4        8.2 Typical Applications.................................................. 29
+  5.1 Absolute Maximum Ratings........................................ 4                    8.3 Power Supply Recommendations.............................31
+  5.2 ESD Ratings............................................................... 4          8.4 Layout....................................................................... 31
+  5.3 Recommended Operating Conditions.........................4                          9 Device and Documentation Support............................32
+  5.4 Thermal Information....................................................4              9.1 Device Support......................................................... 32
+  5.5 Electrical Characteristics.............................................5              9.2 Receiving Notification of Documentation Updates....32
+  5.6 Typical Characteristics................................................ 7             9.3 Support Resources................................................... 32
+6 Detailed Description......................................................10              9.4 Trademarks............................................................... 32
+  6.1 Overview................................................................... 10        9.5 Electrostatic Discharge Caution................................32
+  6.2 Functional Block Diagram......................................... 10                  9.6 Glossary....................................................................32
+  6.3 Feature Description...................................................10            10 Revision History.......................................................... 32
+  6.4 Device Functional Modes..........................................13                 11 Mechanical, Packaging, and Orderable
+  6.5 Programming............................................................ 15            Information.................................................................... 33
+
+
+
+
+2       Submit Document Feedback                                                                                         Copyright © 2026 Texas Instruments Incorporated
+
+                                                                       Product Folder Links: INA226
+

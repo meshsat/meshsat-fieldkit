@@ -9,8 +9,13 @@ prototype design; nothing built, bought, powered or measured; the sheets are hel
    fa9c4ece6d2584dc v2/docs/records/l9t5/fetch_held_back.py
    24d8a027f9367137 v2/docs/records/s99a/codec_floor.out
    54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
-   eeb1296c913ccba0 v2/docs/records/l9t5/l9t5_case.out
+   feef12bdceb5340c v2/docs/records/l9t5/l9t5_case.out
    9fda757ab1acfb6b v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf
+   3a6adc73a6caea65 v2/vendor/adi/held/pdftext/adi-adl5513-revb.layout.txt
+   3a9e16da6937bc10 v2/vendor/adi/held/pdftext/adi-adl5902-revb.layout.txt
+   02cd2612936ce67f v2/vendor/adi/held/pdftext/adi-ltc5582-revd.layout.txt
+   e1ad9f624efd2d98 v2/vendor/mitsubishi/pdftext/ra30h1317m1-datasheet.layout.txt
+   2c1eb8ad537ceb0b v2/vendor/ti/held/pdftext/ti-lmh2110-snws022d.layout.txt
 
 2. THE PRINTED TEMPERATURE ROW NEAREST THE KIT'S 144 TO 146 MHz, PER DETECTOR (deviation from the 25 C output; the column it is printed in)
    ADI ADL5902 TruPwr (Rev. B)        100 MHz -45: -0.22/+0.15 dB; 100 MHz 0: -0.11/+0.25 dB; 700 MHz -45: -0.10/+0.00 dB; 700 MHz 0: -0.20/+0.30 dB; supply 4.5 to 5.5 V

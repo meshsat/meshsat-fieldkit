@@ -23,6 +23,9 @@ ASSUMPTION a stated assumption, NOT READ a figure no held document prints.
    cutouts     v2/vendor/d38999/glenair-series-iii-iv-panel-cutouts.pdf  sha256 4acc4442db4bc194
    cooler      v2/vendor/cm5/rpi-cm5-cooler-product-brief-2024-12.pdf  sha256 98fd27302cffd3a6
    wurth_hdr   v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf  sha256 dbaa4765e57457ac
+   pdftext     v2/vendor/bulgin/pdftext/bulgin-px0833-sealed-rj45-coupler.layout.txt  sha256 2764d670dcd3e7c2
+   pdftext     v2/vendor/d38999/pdftext/amphenol-d38999-iii-federal.layout.txt  sha256 599a2845437782f1
+   pdftext     v2/vendor/d38999/pdftext/glenair-series-iii-iv-panel-cutouts.layout.txt  sha256 65016055b6207081
 
 1. THE SEALED RJ45 AND ITS SHIELD PATH (record l8gnd F01; IF-EXT-ETH)
    the need: a coupler whose body or backshell carries the patch cable's shield to the connector plate (GND-002 point 3), rated for the PoE feed

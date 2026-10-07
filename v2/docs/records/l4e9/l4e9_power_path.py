@@ -65,14 +65,14 @@ PINS = {
     "l4e4": ("v2/docs/records/l4e4/l4e4_limits.out", "f68bf6951a6361caf6c41db14d86d735f9e3e9736723984ef61234aa10a80694"),
     "l4e5": ("v2/docs/records/l4e5/l4e5_source_control.out", "f9c98ec5c43ada0e1a5a033a794c98b45f110ffcb0a67ff8c81a31fede134e71"),
     "l4e6": ("v2/docs/records/l4e6/l4e6_fault_handling.out", "4f7cefb270f326d1956a7c5b1e11c8901e4f21a0ff3feb4fcb6d66fb78728c66"),
-    "l4e8": ("v2/docs/records/l4e8/ripple_dense.out", "c6181037bede1fec6b183bcb1d8eab66e0023bc23ae5e5374be4d22eedaf4333"),
+    "l4e8": ("v2/docs/records/l4e8/ripple_dense.out", "a3784d9b74461fe4000a8d08470a2ab512f8f5ce36d6d46c1abf44b95797aa17"),
     "replay": ("v2/docs/records/l4e/l4e_replay.out", "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d"),
     "s120": ("v2/docs/records/s120/vbus20_bound.out", "35c3e2e30fc637e0321daa1111e02aba84ab94fe789c59466e1f12c61470f823"),
     "budget": ("v2/docs/records/rv-pwr/pwr_budget.out", "58e40cf604804cc9d70c7fbeb1012be4552563fcc8ae7ef6755003c33acb902f"),
     "trace": ("v2/docs/records/l3batt/load_trace.out", "e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218"),
     "packprot": ("v2/ecad/tools/pcb_pack_protection.yaml", "ab1dbc3f3f69aa4687a4fa9745c0cbdc96d0521146dc5d3f84698656e33c484b"),
     "envelope": ("v2/ecad/tools/pcb_envelope.yaml", "35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864"),
-    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "f26757c7c5004cddc6c725e10c713e2338256fb464cd916b33f579f4771ab49b"),
+    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "12b6ea059a68b5c5f0eb4d67513283af2bd8a011f9e80bea7d047e5955b1e99a"),
     "ifaces": ("v2/ecad/tools/pcb_interfaces.yaml", "b0ea9ce43308e78996d21de802e7ec3700a77d9224c2fe294f86e13030a79be2"),
     "lm5176": ("v2/vendor/ti/lm5176-datasheet.pdf", "98191bec36d43771affa3e1540f6e1737347c19a1602747ffb4327509550a820"),
     "lm74700": ("v2/vendor/ti/ti-lm74700-q1.pdf", "e16b3a8c0023201fafa5825436f5f2dd6f885b92b84e65602b3f50d741c58b6f"),
@@ -109,7 +109,7 @@ PINS = {
     "l8p_breaker": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-6eeb6cfe.txt", "e8f1294bb0f76c75d146332e41d3783256474804905faa296bcdca8bc0cf2693"),
     "l8p_enable": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-69b8c3bb.txt", "c1fa1713c6e5fe291984e8f31e8a47eff447743c38dfc364d05b9e80dcfe5912"),
     "l8p_ptc": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-8e6a938c.txt", "cedae4eb4572a6a5b137dfc151b07d96ac9004e332317dba1c6d703941ce95c0"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "30228a3a971405b0c120502b528ac63480382f19f56dbebf958db7758f9d8300"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "0da5839e5b806211067861b6fb9b074990de2f07f66bcedf66a8c0f8ed927244"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -119,10 +119,10 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "36141414a1b60011353db8749fef37201f12804bf2f38f408360753645d44a10"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "cb09152d6f8e796bf94c7b2c72d6b0c6bae605f137c47f71c1c814b0afa80f40"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "101b9896de5195619dda7fb97eafd24fd349abaeb879bb79edc4456ced6bf4b3"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "68d3df24f9e105cd2e062c3ef4b23fe572e98489186fee4c0e5194df9a8fb51a"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "e307beba45d9120fd5703066efd69bc2638ef04759ea61e0c548dcd241eff08d"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
@@ -139,7 +139,7 @@ PINS = {
     "cl_bulgin": ("v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt", "c7accd3dd6dc1d8993de6ffc37e4febba71302e878b3cdf0f3f2f30bc2a4457e"),
     # update rounds 3 and 4: L4-E13 (U-03), accepted by the coordinator's check 3 at fae419d1 and, after set 25 (L4-E7R
     # accepted), check 4 at 33b6b7be; read from the tree
-    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "14cb2c48d9796c3f9d7559749c7a150eacb086add2a53c73d16980dce94b8755"),
+    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "6215000e6e16732315830a01413ff855bb4eeb06909a5c16abf73eb992f5b6bc"),
     "l4e13md": ("v2/docs/records/l4e13/L4E13-PANEL.md", "1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191"),
     "l4e13chk": ("v2/docs/records/l4e13/checks/check-l4e13-3.md", "88539c7aeaf2f99d8ed0364ac86f0cb312b9322eeeb6ac860ffa3d35e53ec306"),
     "l4e13chk4": ("v2/docs/records/l4e13/checks/check-l4e13-4.md", "5a08480af4695e61752d04852d8647e0276f292771596281968acf8903bc73e8"),
@@ -177,11 +177,39 @@ PINS = {
     "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "eda720a68db60cd314547a8552c09952a6a7a8803de9e07b63af9a0d09b5851f"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # set 30 (6 October 2026): the P0 round's solar record output, read by the D-10 / D-16 citation check (the applied change-list text cites its figures)
-    "l4e7p0": ("v2/docs/records/l4e7/l4e7_p0sol.out", "3acf4672e3c85c03d3c0fdc444f1c8a6617d217188a67833ddf4b680c30730c6"),
+    "l4e7p0": ("v2/docs/records/l4e7/l4e7_p0sol.out", "04594e7019226117f1486964bc0ffe298557705432acf8fd2fa1ac0275ec4245"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
     "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47"),
     "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "04025bca610844ddc0910c7cd96528cb2345a8d9d3cf2c979ac1d8c87214bc4d"),
 }
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 after the PDFs' own pins, which stay.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4e9
+PDFTEXT = {
+    "v2/vendor/battery/amass-xt60-spec-tme.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout", "-f", "1", "-l", "1"]],
+    "v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf": [[]],
+    "v2/vendor/d38999/amphenol-d38999-iii-federal.pdf": [["-layout"]],
+    "v2/vendor/infineon/infineon-bsc039n06ns-rev2.4-c534330.pdf": [["-layout", "-f", "1", "-l", "1"]],
+    "v2/vendor/keystone/M65p42.pdf": [["-raw"]],
+    "v2/vendor/keystone/littelfuse-297-ficcorp.pdf": [["-layout"]],
+    "v2/vendor/passives/yageo-cc-series.pdf": [["-layout"]],
+    "v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/power/littelfuse-smcj-series-tvs.pdf": [["-layout"], ["-raw"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/power/ti-csd19532q5b-n-fet.pdf": [["-f", "1", "-l", "1"], ["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "1", "-l", "2"], ["-layout", "-f", "3", "-l", "3"], ["-layout", "-f", "6", "-l", "6"]],
+    "v2/vendor/power/tps2596.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/ti/bq25731-datasheet.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"], ["-layout", "-f", "14", "-l", "14"], ["-layout", "-f", "8", "-l", "8"]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"], ["-layout", "-f", "5", "-l", "5"]],
+    "v2/vendor/ti/ti-ina226.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/ti/ti-lm5069.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"]],
+    "v2/vendor/ti/ti-lm74700-q1.pdf": [["-layout"], ["-layout", "-f", "1", "-l", "2"], ["-layout", "-f", "5", "-l", "5"]],
+}
+import importlib.util  # noqa: E402  (the helper's loader; W34)
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TOP, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
 # accepted, check 4 at 91e9a4b5), L4-E10's final record (fnd/l4e10, closing check 573c8b8f), L4-E11's (fnd/l4e11, accepted,
 # closing check a15ab384) and L4-E12's (fnd/l4e12, accepted, closing check db41c95d)
@@ -298,13 +326,10 @@ def load_inputs():
 
 def pdf_text(key, first=None, last=None):
     rel = PINS[key][0]
-    cmd = ["pdftotext", "-layout"]
+    cmd = ["-layout"]
     if first:
         cmd += ["-f", str(first), "-l", str(last or first)]
-    r = subprocess.run(cmd + [os.path.join(TOP, rel), "-"], capture_output=True)
-    if r.returncode != 0:
-        refuse(3, "pdftotext failed on %s" % rel)
-    return r.stdout.decode("utf-8", "replace")
+    return PT.pdf_text(TOP, rel, cmd, PDFTEXT, "v2/docs/records/l4e9")
 
 
 def need(text, pat, what, flags=re.M):
@@ -774,7 +799,7 @@ def compute():
     need(t, r"AWG #16 with the standard type header", "VH AWG 16 condition")
     F["vh_18"] = f(need(t, r"^\s+(\d+)A\s+AC/DC", "VH AWG 18 shrouded rating"))
     need(t, r"AWG #18 with the shrouded type header", "VH AWG 18 condition")
-    t = subprocess.run(["pdftotext", os.path.join(TOP, PINS["millmax"][0]), "-"], capture_output=True).stdout.decode()
+    t = PT.pdf_text(TOP, PINS["millmax"][0], [], PDFTEXT, "v2/docs/records/l4e9")
     F["millmax_a"] = f(need(t, r"carrying (\d+) amps continuous current", "Mill-Max continuous current"))
     t = pdf_text("xt60")
     F["xt60_a"] = f(need(t, r"额定电流\s+(\d+)A", "XT60 rated current"))
@@ -2502,7 +2527,7 @@ def derived(F):
 # ------------------------------------------------------------------------------------------- part A: Q1, F1 and U17
 def source_only(F, D):
     """B4: what the BQ25731 sheet and the charger state record establish about a source with no usable pack."""
-    t = subprocess.run(["pdftotext", "-layout", os.path.join(TOP, PINS["bq25731"][0]), "-"], capture_output=True).stdout.decode("utf-8", "replace")
+    t = PT.pdf_text(TOP, PINS["bq25731"][0], ["-layout"], PDFTEXT, "v2/docs/records/l4e9")
     out = {}
     out["conv"] = need(t, r"Corresponding the default value of ChargeVoltage register .*?\n\s*•\s+(Converter powers up)\.", "9.3.1 converter powers up", re.S).group(1)
     out["nobatt"] = need(t, r"(\d-cell without battery)", "the power-up figures without battery").group(1)
@@ -2546,7 +2571,7 @@ def soa_lines():
     idm = [pts for col, pts in paths if col == "rgb(0%,0%,0%)" and len(pts) == 3]
     if not idm or abs(10 ** li(idm[0][0][1]) - 400.0) > 4.0 or abs(10 ** lv(idm[0][1][0]) - 100.0) > 1.0:
         refuse(3, "Figure 10's IDM and 100 V boundary do not read 400 A and 100 V")
-    txt = subprocess.run(["pdftotext", "-f", "6", "-l", "6", "-layout", pdf, "-"], capture_output=True).stdout.decode("utf-8", "replace")
+    txt = PT.pdf_text(TOP, PINS["csd19532"][0], ["-f", "6", "-l", "6", "-layout"], PDFTEXT, "v2/docs/records/l4e9")
     rows = [re.findall(r"(10us|100us|1ms|10ms|DC)\b", ln) for ln in txt.splitlines() if re.search(r"\b(10us|100us)\b", ln)]
     if len(rows) != 2:
         refuse(3, "Figure 10's legend")
@@ -2578,7 +2603,7 @@ def partA(F, D, T):
     A = {}
     flat = lambda t: re.sub(r"\s+", " ", t)
     # ---- the makers' rows
-    c1 = flat(subprocess.run(["pdftotext", "-f", "1", "-l", "1", os.path.join(TOP, PINS["csd19532"][0]), "-"], capture_output=True).stdout.decode())
+    c1 = flat(PT.pdf_text(TOP, PINS["csd19532"][0], ["-f", "1", "-l", "1"], PDFTEXT, "v2/docs/records/l4e9"))
     m = need(c1, r"Gate-to-Source Voltage ±(\d+) V", "CSD19532Q5B VGS")
     A["vgs_max"] = f(m)
     m = need(c1, r"Continuous Drain Current (\d+) Pulsed Drain Current\(2\) (\d+) Power Dissipation\(1\) ([\d.]+)", "CSD19532Q5B ID, IDM, PD")
@@ -2641,7 +2666,7 @@ def partA(F, D, T):
             refuse(3, "0997 time-current row %d %%" % pct)
         tc[pct] = (float(mm.group(1).replace(" ", "")), None if mm.group(2) == "-" else float(mm.group(2)))
     A["f_tc"] = tc
-    ks = flat(subprocess.run(["pdftotext", "-raw", os.path.join(TOP, PINS["keystone"][0]), "-"], capture_output=True).stdout.decode())
+    ks = flat(PT.pdf_text(TOP, PINS["keystone"][0], ["-raw"], PDFTEXT, "v2/docs/records/l4e9"))
     need(ks, r"CAT\. NO\. 3568", "Keystone 3568")
     need(ks, r"For Littelfuse Mini 297 or 997 series/Bussmann ATM series or equivalent", "Keystone MINI holder text")
     ina = pdf_text("ina226")
@@ -2652,7 +2677,7 @@ def partA(F, D, T):
     need(ina, r"the bus voltage can be present with the supply\s+voltage off", "INA226 supply independence")
     need(ina, r"0\.00512", "INA226 Equation 1")
     A["ina_cal_k"] = 0.00512
-    tv = flat(subprocess.run(["pdftotext", "-raw", os.path.join(TOP, PINS["smcj"][0]), "-"], capture_output=True).stdout.decode())
+    tv = flat(PT.pdf_text(TOP, PINS["smcj"][0], ["-raw"], PDFTEXT, "v2/docs/records/l4e9"))
     m = need(tv, r"VBR @ TJ ?= VBR ?@25°C x \(1\+αT x \(TJ - 25\)\) \(αT:Temperature Coefficient, typical value is ([\d.]+)%\)", "SMCJ VBR temperature coefficient")
     A["tvs_alpha"] = f(m) / 100.0
     m = need(pdf_text("lm5176"), r"VCS\(BUCK\)\s+(\d+)\s+(\d+)\s+(\d+)\s+mV", "LM5176 VCS(BUCK)")
@@ -4616,6 +4641,8 @@ def main():
     for key, (rel, _) in PINS.items():
         w, h = where[key]
         p("   %-9s %s  %s%s" % (key, h[:16], rel, "" if w == "tree" else "  (" + w + (", fnd/l4e8 accepted)" if key in FROM_L4E8 else ", " + FROM_LABEL[key] + ")")))
+    for t, h, _held in PT.inputs(TOP, PDFTEXT):
+        p("   %-9s %s  %s" % ("pdftext", (h or "ABSENT")[:16], t))
     p("   pending: %s" % L4E7R)
     p("   L4-E13 (U-03, the panel) accepted by the coordinator's check 3 at fae419d1 and, after set 25, check 4 at 33b6b7be: section 13")
     p("   this record's own figures: copper %s ohm mm2/m at 20 C and %s /K, 18 AWG %s mm2 (ASSUMPTION, constants); the cold end %s C (REQ-024);"

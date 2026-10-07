@@ -1,0 +1,83 @@
+常州市艾迈斯电子有限公司                     Changzhou Amass Electronics CO.LTD.
+
+
+                                  AMASS 规格书                                     版本号:V1.2
+
+产品型号（Item No）：XT60-F
+专利号（Patent）：200920043518.8
+
+客户图纸（Drawing）
+
+
+
+
+产品材质及基本参数（Material & Parameter）
+
+产品型号                   XT60-F                  接触电阻                 0.55mΩ
+Item No.                                       CR
+颜色                                             额定电压                 DC 500V
+COLOR
+
+金属材质                   铜镀金                     额定电流                 30A
+Metal Material         Brass Gold Plated       RC
+
+绝缘材质                   PA                      瞬时电流                 60A
+Plastic Material                               MC
+阻燃等级                   UL94 V0                 推荐使用次数               1000 TIMES
+FR LEVEL                                       USE TIMES
+推荐应用                   电池                      推荐线规                 12AWG
+Recommend USE          BATTERY                 Cable SPEC.
+安规认证                   . ---                   工作温度                 .-20℃ to 120℃
+CERTIFICATION                                  TEMPERATURE
+
+
+★注意：用户的使用及环境有可能与我司测试方法有出入
+（Data sheet will change according with the test background）
+
+常州市艾迈斯电子有限公司（Changzhou AMASS Electronics Co., Ltd)
+地址(Add)：江苏省常州市武进区礼嘉镇青洋南路6公里处
+           (QingYang Road，Lijia Town,Wujin Dis. Changzhou City, Jiangsu Pro.)
+电话(Tel)：86-519-86731695     传真(Fax)：86-519-86735861
+邮编(Zip)：213176                 E-mail:hzy@china-amass.com    网址(Web)： www.china-amass.com
+常州市艾迈斯电子有限公司                     Changzhou Amass Electronics CO.LTD.
+
+
+                                  AMASS 规格书                                     版本号:V1.2
+
+产品型号（Item No）：XT60-M
+专利号（Patent）：200920043518.8
+
+客户图纸（Drawing）
+
+
+
+
+产品材质及基本参数（Material & Parameter）
+
+产品型号                   XT60-M                  接触电阻                 0.55mΩ
+Item No.                                       CR
+颜色                                             额定电压                 DC 500V
+COLOR
+
+金属材质                   铜镀金                     额定电流                 30A
+Metal Material         Brass Gold Plated       RC
+
+绝缘材质                   PA                      瞬时电流                 60A
+Plastic Material                               MC
+阻燃等级                   UL94 V0                 推荐使用次数               1000 TIMES
+FR LEVEL                                       USE TIMES
+推荐应用                   控制器                     推荐线规                 12AWG
+Recommend USE          CONTROLLER              Cable SPEC.
+安规认证                   . ---                   工作温度                 .-20℃ to 120℃
+CERTIFICATION                                  TEMPERATURE
+
+
+★注意：用户的使用及环境有可能与我司测试方法有出入
+（Data sheet will change according with the test background）
+
+常州市艾迈斯电子有限公司（Changzhou AMASS Electronics Co., Ltd)
+地址(Add)：江苏省常州市武进区礼嘉镇青洋南路6公里处
+           (QingYang Road，Lijia Town,Wujin Dis. Changzhou City, Jiangsu Pro.)
+电话(Tel)：86-519-86731695     传真(Fax)：86-519-86735861
+邮编(Zip)：213176                 E-mail:hzy@china-amass.com    网址(Web)： www.china-amass.com
+

@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/bosch/bosch-bme688.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/bosch/bosch-bme688.pdf",
+ "pdf_sha256": "fce73ae028a985b3265ce3dbc17ab5b7bea1ae31b7ea84c6698c7694083e2478",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/bosch/pdftext/bosch-bme688.layout.txt",
+ "text_bytes": 185285,
+ "text_sha256": "17b97295bdeeb79af0f03e6dea289ce718ac2598c23f04c2e76904f7d917f9c7"
+}

@@ -1,0 +1,114 @@
+                                                                                                                                                      VH CONNECTOR
+
+   Retainer
+
+                                                                                                         No. of                                            Dimensions (mm)
+                                                                                                                             Model No.                                                            Q'ty/bag
+                                                                                                         circuits                                           A                       B
+                                                                                                             2                    VHS-2V                   3.7                     6.9                 1,000
+                                                                                                             3                    VHS-3V                   7.52                10.72                   1,000
+                                                                                                             5                    VHS-5V               15.44                   18.64                   1,000
+                                    A
+                                          B
+
+
+
+                                                                                                             7                    VHS-7V               23.36                   26.56                   1,000
+                                                                                                             8                    VHS-8V               27.32                   30.52                   1,000
+                                                                                                             9                    VHS-9V               31.28                   34.48                   1,000
+
+                                                            7.1
+                                                                                                                                    Material and Surface ﬁnish, etc.
+
+                                                                                                                                         PA (GF), natural (ivory)
+
+                                                                                                      Note: For ﬂame retardant grade of resin material used, please refer to
+                                                                                                            the "List of Registered Overseas Standards" on our website (listed in
+                                                                                                            the "Technical Documents" column on the Product Information page).
+
+
+
+   Header (Standard type)
+
+         Top entry type                                                                                            Side entry type
+                                    B                                                                                                     B
+
+
+
+
+                                                                                                                                                                                                 8.5
+                                                             8.5
+
+
+
+
+                      1                           8                                                                         1                          8
+          No. 1     H JST                                                                                     No. 1       H JST
+          circuit                                                                                             circuit
+                                     3.96                                   10.9             3.7                                                                            10.9
+                                    A
+
+
+
+
+                                                                                                                                                                                                 3.6
+                                                                                                                                               3.96
+                                                                                                                                          A
+
+
+
+         Top entry type with PBT                                                                                   Side entry type with stopper
+                              B                                                                                                     B                                10.9          4.5
+
+
+
+                                                                                                                                                                                           8.5
+                                                      8.5
+
+
+
+
+    No. 1                                                                                                No. 1
+    circuit                                                                                              circuit
+                                  3.96                              10.9               3.7
+                                                                                                                                                                                           3.6
+
+
+
+
+                              A                                                                                                         3.96
+                                                                                                                                    A
+
+
+
+
+                                                                   Model No.                                                                  Dimensions (mm)                              Q'ty/box
+ No. of
+ circuits                         Note2                            Note2           Top entry type         Side entry type                                                     Top entry          Side entry
+              Top entry type                  Side entry type                                                                                  A                 B
+                                                                                     with PBT              with stopper                                                         type                type
+     2              B2P-VH                       B2PS-VH                            B2P-VH-B                     S2P-VH                        3.96              7.86               1,000              1,000
+     3              B3P-VH                       B3PS-VH                            B3P-VH-B                     S3P-VH                        7.92         11.82                   1,000                500
+     4              B4P-VH                       B4PS-VH                            B4P-VH-B                     S4P-VH                   11.88             15.78                        500             500
+     5              B5P-VH                       B5PS-VH                            B5P-VH-B                     S5P-VH                   15.84             19.74                        500             250
+     6              B6P-VH                       B6PS-VH                            B6P-VH-B                     S6P-VH                   19.80             23.70                        250             250
+     7              B7P-VH                       B7PS-VH                            B7P-VH-B                     S7P-VH                   23.76             27.66                        250             250
+     8              B8P-VH                       B8PS-VH                            B8P-VH-B                        -                     27.72             31.62                        200             200
+     9              B9P-VH                       B9PS-VH                            B9P-VH-B                        -                     31.68             35.58                        200             200
+   10               B10P-VH                      B10PS-VH                           B10P-VH-B                       -                     35.64             39.54                        200             100
+   11                     -                           -                             B11P-VH-B                       -                     39.60             43.50                        200             -
+
+                                                                                    Material and Surface ﬁnish, etc.
+
+                                                                           Post: Copper alloy, tin-plated
+                                                                           Base housing: Non-PBT/ PA, natural (white)
+                                                                                         PBT/ PBT (GF), natural (white)
+
+Note: 1. This product displays (LF)(SN) on a label.
+      2. Headers with posts omitted are also available. Please contact JST for further details.
+      3. For flame retardant grade of resin material used, please refer to the "List of Registered Overseas Standards" on our website
+         (listed in the “Technical Documents” column on the Product Information page).
+
+
+                                                                                                   ‑3‑
+

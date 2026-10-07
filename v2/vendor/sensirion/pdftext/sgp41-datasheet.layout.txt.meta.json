@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/sensirion/sgp41-datasheet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/sensirion/sgp41-datasheet.pdf",
+ "pdf_sha256": "331f35ed1f027a74ec79b302763f7adb920759bc055b3d2ada17822bb0005bec",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/sensirion/pdftext/sgp41-datasheet.layout.txt",
+ "text_bytes": 61899,
+ "text_sha256": "143f0715a72f7e45574a47e1a505c62703c58f4a48177040d6519210c5615790"
+}

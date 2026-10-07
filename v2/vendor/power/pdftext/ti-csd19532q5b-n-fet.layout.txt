@@ -1,0 +1,783 @@
+                                                                          Product           Order              Technical                                            Tools &               Support &
+                                                                          Folder            Now                Documents                                            Software              Community
+
+
+
+                                                                                                                                                                                                                CSD19532Q5B
+                                                                                                                                                                                SLPS414B – DECEMBER 2013 – REVISED MAY 2017
+
+                                                                CSD19532Q5B 100 V N-Channel NexFET™ Power MOSFET
+1 Features
+                                                                                                                                                                                  Product Summary
+•
+1   Low Qg and Qgd
+                                                                                                                                  TA = 25°C                                                              TYPICAL VALUE                 UNIT
+•   Low Thermal Resistance                                                                                                        VDS                              Drain-to-Source Voltage                      100                       V
+•   Avalanche Rated                                                                                                               Qg                               Gate Charge Total (10 V)                     48                     nC
+•   Pb-Free Terminal Plating                                                                                                      Qgd                              Gate Charge Gate to Drain                    8.7                    nC
+
+•   RoHS Compliant                                                                                                                RDS(on)                          Drain-to-Source On Resistance
+                                                                                                                                                                                                        VGS = 6 V           4.6        mΩ
+                                                                                                                                                                                                        VGS = 10 V           4         mΩ
+•   Halogen Free
+                                                                                                                                  VGS(th)                          Threshold Voltage                            2.6                       V
+•   SON 5-mm × 6-mm Plastic Package
+
+2 Applications                                                                                                                                                                            .
+                                                                                                                                                                               Ordering Information(1)
+•   Synchronous Rectifier for Offline and Isolated DC-                                                                                                    Device                  Media          Qty       Package                Ship
+    DC Converters                                                                                                                             CSD19532Q5B                      13-Inch Reel      2500   SON 5 x 6 mm             Tape and
+•   Motor Control                                                                                                                    CSD19532Q5BT                              13-Inch Reel      250    Plastic Package            Reel
+
+                                                                                                                                  (1) For all available packages, see the orderable addendum at
+3 Description                                                                                                                         the end of the data sheet.
+This 100 V, 4 mΩ, SON 5-mm × 6-mm NexFET™
+power MOSFET is designed to minimize losses in                                                                                                                            Absolute Maximum Ratings
+power conversion applications.                                                                                                    TA = 25°C                                                                         VALUE           UNIT
+                                                                                                                                  VDS                          Drain-to-Source Voltage                                100              V
+                                                                    Top View                                                      VGS                          Gate-to-Source Voltage                                 ±20              V
+                                                                                                                                                               Continuous Drain Current (Package limited)             100
+                                            S       1                                      8      D                                                            Continuous Drain Current (Silicon limited),
+                                                                                                                                  ID                                                                                  140              A
+                                                                                                                                                               TC = 25°C
+                                                                                                                                                                                           (1)
+                                                                                                                                                               Continuous Drain Current                               17
+                                            S       2                                      7      D                               IDM                          Pulsed Drain Current(2)                                400              A
+                                                                                                                                                               Power Dissipation(1)                                   3.1
+                                                                                                                                  PD                                                                                                   W
+                                            S       3                                      6      D                                                            Power Dissipation, TC = 25°C                           195
+                                                                                                                                  TJ,                          Operating Junction and
+                                                                                                                                                                                                                –55 to 150             °C
+                                                                                                                                  Tstg                         Storage Temperature Range
+                                                                      D
+                                           G        4                                      5      D                               EAS
+                                                                                                                                                               Avalanche Energy, single pulse
+                                                                                                                                                                                                                      274              mJ
+                                                                                                                                                               ID = 74 A, L = 0.1 mH, RG = 25 Ω
+                                                                                               P0093-01
+                                                                                                                                  (1) Typical RθJA = 40°C/W on a 1-inch2, 2-oz. Cu pad on a 0.06-
+                                                                                                                                      inch thick FR4 PCB.
+                                                                                                                                  (2) Max RθJC = 0.8°C/W, Pulse duration ≤100 µs, duty cycle ≤1%
+
+
+
+                                                                 RDS(on) vs VGS                                                                                                  Gate Charge
+                                           20                                                                                                             10
+                                                                                        TC = 25°C, I D = 17A                                                       ID = 17A
+    RDS(on) - On-State Resistance (mΩ)
+
+
+
+
+                                           18                                                                                                             9
+                                                                                                                       VGS - Gate-to-Source Voltage (V)
+
+
+
+
+                                                                                        TC = 125°C, I D = 17A                                                      VDS = 50V
+                                           16                                                                                                             8
+                                           14                                                                                                             7
+                                           12                                                                                                             6
+                                           10                                                                                                             5
+                                            8                                                                                                             4
+                                            6                                                                                                             3
+                                            4                                                                                                             2
+                                            2                                                                                                             1
+                                            0                                                                                                             0
+                                                0       2   4      6      8     10   12    14    16       18   20                                              0      5    10     15    20   25   30   35       40      45        50
+                                                                VGS - Gate-to- Source Voltage (V)               G001
+                                                                                                                                                                                   Qg - Gate Charge (nC)                           G001
+
+
+1
+
+
+
+
+                                         An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+                                         intellectual property matters and other important disclaimers. PRODUCTION DATA.
+CSD19532Q5B
+SLPS414B – DECEMBER 2013 – REVISED MAY 2017                                                                                                                                    www.ti.com
+
+
+                                                                        Table of Contents
+    1   Features .................................................................. 1                      6.2    Community Resources.............................................. 7
+    2   Applications ........................................................... 1                         6.3    Trademarks ............................................................... 7
+    3   Description ............................................................. 1                        6.4    Electrostatic Discharge Caution ................................ 7
+                                                                                                           6.5    Glossary .................................................................... 7
+    4   Revision History..................................................... 2
+    5   Specifications......................................................... 3                   7     Mechanical, Packaging, and Orderable
+                                                                                                          Information ............................................................. 8
+         5.1 Electrical Characteristics........................................... 3
+                                                                                                           7.1    Q5B Package Dimensions ........................................ 8
+         5.2 Thermal Information .................................................. 3
+                                                                                                           7.2    Recommended PCB Pattern..................................... 9
+         5.3 Typical MOSFET Characteristics.............................. 4
+                                                                                                           7.3    Recommended Stencil Pattern ................................. 9
+    6   Device and Documentation Support.................... 7
+                                                                                                           7.4    Q5B Tape and Reel Information ............................. 10
+         6.1 Receiving Notification of Documentation Updates.... 7
+
+
+
+4 Revision History
+Changes from Revision A (June 2014) to Revision B                                                                                                                                       Page
+
+•   Added the Receiving Notification of Documentation Updates and Community Resources sections to Device and
+    Documentation Support. ........................................................................................................................................................ 7
+•   Changed the dimension between pads 3 and 4 from 0.028 inches: to 0.050 inches in the Recommended PCB
+    Pattern section diagram ......................................................................................................................................................... 9
+
+
+Changes from Original (December 2013) to Revision A                                                                                                                                     Page
+
+•   Added small reel option to ordering information table. .......................................................................................................... 1
+•   Increased silicon limit for continuous drain current to 140 A. ................................................................................................ 1
+•   Increased max pulsed current to 400 A. ............................................................................................................................... 1
+•   Added max power rating when the case temperature is held to 25°C. ................................................................................. 1
+•   Updated pulsed current conditions to specify Max RθJC. ....................................................................................................... 1
+•   Updated Figure 10. ................................................................................................................................................................ 6
+•   Updated mechanical drawing. ............................................................................................................................................... 8
+
+
+
+
+2        Submit Documentation Feedback                                                                                 Copyright © 2013–2017, Texas Instruments Incorporated
+
+                                                                   Product Folder Links: CSD19532Q5B
+                                                                                                                         CSD19532Q5B
+www.ti.com                                                                                   SLPS414B – DECEMBER 2013 – REVISED MAY 2017
+
+
+5 Specifications
+5.1 Electrical Characteristics
+(TA = 25°C unless otherwise stated)
+                    PARAMETER                                           TEST CONDITIONS                     MIN     TYP     MAX        UNIT
+STATIC CHARACTERISTICS
+BVDSS         Drain-to-Source Voltage                    VGS = 0 V, ID = 250 μA                              100                        V
+IDSS          Drain-to-Source Leakage Current            VGS = 0 V, VDS = 80 V                                                     1    μA
+IGSS          Gate-to-Source Leakage Current             VDS = 0 V, VGS = 20 V                                               100        nA
+VGS(th)       Gate-to-Source Threshold Voltage           VDS = VGS, ID = 250 μA                              2.2      2.6     3.2       V
+                                                         VGS = 6 V, ID = 17 A                                         4.6     5.7       mΩ
+RDS(on)       Drain-to-Source On Resistance
+                                                         VGS = 10 V, ID = 17 A                                         4      4.9       mΩ
+gfs           Transconductance                           VDS = 50 V, ID = 17 A                                        84                S
+DYNAMIC CHARACTERISTICS
+Ciss          Input Capacitance                                                                                     3700    4810        pF
+Coss          Output Capacitance                         VGS = 0 V, VDS = 50 V, ƒ = 1 MHz                            706     918        pF
+Crss          Reverse Transfer Capacitance                                                                            14       18       pF
+RG            Series Gate Resistance                                                                                  1.2     2.4       Ω
+Qg            Gate Charge Total (10 V)                                                                                48       62       nC
+Qgd           Gate Charge Gate to Drain                                                                               8.7               nC
+                                                         VDS = 50 V, ID = 17 A
+Qgs           Gate Charge Gate to Source                                                                              13                nC
+Qg(th)        Gate Charge at Vth                                                                                      9.5               nC
+Qoss          Output Charge                              VDS = 50 V, VGS = 0 V                                       128                nC
+td(on)        Turn On Delay Time                                                                                       7                ns
+tr            Rise Time                                  VDS = 50 V, VGS = 10 V,                                       6                ns
+td(off)       Turn Off Delay Time                        IDS = 17 A, RG = 0 Ω                                         22                ns
+tf            Fall Time                                                                                                6                ns
+DIODE CHARACTERISTICS
+VSD           Diode Forward Voltage                      ISD = 17 A, VGS = 0 V                                        0.8          1    V
+Qrr           Reverse Recovery Charge                    VDS= 50 V, IF = 17 A,                                       249                nC
+trr           Reverse Recovery Time                      di/dt = 300 A/μs                                             80                ns
+
+
+5.2 Thermal Information
+(TA = 25°C unless otherwise stated)
+                                            THERMAL METRIC                                                 MIN     TYP      MAX        UNIT
+RθJC        Junction-to-Case Thermal Resistance (1)                                                                          0.8
+                                                                                                                                       °C/W
+RθJA        Junction-to-Ambient Thermal Resistance (1) (2)                                                                   50
+
+(1)    RθJC is determined with the device mounted on a 1-inch2 (6.45-cm2), 2-oz. (0.071-mm thick) Cu pad on a 1.5-inches × 1.5-inches (3.81-
+       cm × 3.81-cm), 0.06-inch (1.52-mm) thick FR4 PCB. RθJC is specified by design, whereas RθJA is determined by the user’s board design.
+(2)    Device mounted on FR4 material with 1-inch2 (6.45-cm2), 2-oz. (0.071-mm thick) Cu.
+
+
+
+
+Copyright © 2013–2017, Texas Instruments Incorporated                                              Submit Documentation Feedback              3
+                                                        Product Folder Links: CSD19532Q5B
+CSD19532Q5B
+SLPS414B – DECEMBER 2013 – REVISED MAY 2017                                                                                                                                 www.ti.com
+
+
+
+                                   GATE      Source                                                                          GATE      Source
+
+
+
+
+                                                                                               N-Chan 5x6 QFN TTA MIN Rev3
+    N-Chan 5x6 QFN TTA MAX Rev3
+
+
+
+
+                                                                  Max RθJA = 50°C/W                                                                          Max RθJA = 125°C/W
+                                                                  when mounted on                                                                            when mounted on a
+                                                                  1 inch2 (6.45 cm2) of                                                                      minimum pad area of
+                                                                  2-oz. (0.071-mm thick)                                                                     2-oz. (0.071-mm thick)
+                                                                  Cu.                                                                                        Cu.
+
+
+                                            DRAIN                                                                                     DRAIN
+                                                       M0137-01                                                                                   M0137-02
+
+
+
+
+5.3 Typical MOSFET Characteristics
+(TA = 25°C unless otherwise stated)
+
+
+
+
+                                                                            Figure 1. Transient Thermal Impedance
+
+
+
+
+4                                 Submit Documentation Feedback                                                                     Copyright © 2013–2017, Texas Instruments Incorporated
+
+                                                                            Product Folder Links: CSD19532Q5B
+                                                                                                                                                                                                                                                       CSD19532Q5B
+www.ti.com                                                                                                                                                                                                           SLPS414B – DECEMBER 2013 – REVISED MAY 2017
+
+
+Typical MOSFET Characteristics (continued)
+(TA = 25°C unless otherwise stated)
+                                             200                                                                                                                                                200
+                                                                                                                                                                                                           VDS = 5V
+                                             180                                                                                                                                                180
+
+
+
+
+                                                                                                                                                            IDS - Drain-to-Source Current (A)
+         IDS - Drain-to-Source Current (A)
+
+
+
+
+                                             160                                                                                                                                                160
+                                             140                                                                                                                                                140
+                                             120                                                                                                                                                120
+                                             100                                                                                                                                                100
+                                             80                                                                                                                                                  80
+                                             60                                                                                                                                                  60
+                                             40                                                              VGS = 10V                                                                           40                TC = 125°C
+                                                                                                             VGS = 8V                                                                                              TC = 25°C
+                                             20                                                              VGS = 6V                                                                            20
+                                                                                                                                                                                                                   TC = −55°C
+                                              0                                                                                                                                                   0
+                                                   0          0.2          0.4      0.6     0.8      1        1.2     1.4                                                                              0     0.5      1     1.5    2     2.5   3    3.5    4    4.5       5
+                                                                         VDS - Drain-to-Source Voltage (V)                G001                                                                                            VGS - Gate-to-Source Voltage (V)                G001
+
+
+
+
+                                                           Figure 2. Saturation Characteristics                                                                                                                   Figure 3. Transfer Characteristics
+                                             10                                                                                                                                10000
+                                                       ID = 17A
+                                              9
+         VGS - Gate-to-Source Voltage (V)
+
+
+
+
+                                                       VDS = 50V
+                                              8
+                                                                                                                                 C − Capacitance (pF)
+                                                                                                                                                                                                1000
+                                              7
+                                              6
+                                              5                                                                                                                                                 100
+                                              4
+                                              3
+                                                                                                                                                                                                 10
+                                              2                                                                                                                                                                    Ciss = Cgd + Cgs
+                                                                                                                                                                                                                   Coss = Cds + Cgd
+                                              1                                                                                                                                                                    Crss = Cgd
+                                              0                                                                                                                                                   1
+                                                   0      5         10      15    20   25   30   35      40      45   50                                                                               0     10      20      30    40     50   60    70    80   90    100
+                                                                             Qg - Gate Charge (nC)                        G001                                                                                            VDS - Drain-to-Source Voltage (V)               G001
+
+
+
+
+                                                                          Figure 4. Gate Charge                                                                                                                            Figure 5. Capacitance
+                                             3.2                                                                                                                                                 20
+                                                                                                             ID = 250uA                                                                                                                           TC = 25°C, I D = 17A
+                                                                                                                                                        RDS(on) - On-State Resistance (mΩ)
+
+
+
+
+                                              3                                                                                                                                                  18
+                                                                                                                                                                                                                                                  TC = 125°C, I D = 17A
+      VGS(th) - Threshold Voltage (V)
+
+
+
+
+                                                                                                                                                                                                 16
+                                             2.8
+                                                                                                                                                                                                 14
+                                             2.6                                                                                                                                                 12
+                                             2.4                                                                                                                                                 10
+
+                                             2.2                                                                                                                                                  8
+                                                                                                                                                                                                  6
+                                              2
+                                                                                                                                                                                                  4
+                                             1.8                                                                                                                                                  2
+                                             1.6                                                                                                                                                  0
+                                                −75             −25              25        75         125             175                                                                              0     2        4      6      8     10   12    14    16   18    20
+                                                                           TC - Case Temperature (ºC)                     G001                                                                                            VGS - Gate-to- Source Voltage (V)               G001
+
+
+
+
+                                                       Figure 6. Threshold Voltage vs Temperature                                                                                     Figure 7. On-State Resistance vs Gate-to-Source Voltage
+
+
+
+
+Copyright © 2013–2017, Texas Instruments Incorporated                                                                                                                                                                         Submit Documentation Feedback                      5
+                                                                                                       Product Folder Links: CSD19532Q5B
+CSD19532Q5B
+SLPS414B – DECEMBER 2013 – REVISED MAY 2017                                                                                                                                                                                                                                www.ti.com
+
+
+Typical MOSFET Characteristics (continued)
+(TA = 25°C unless otherwise stated)
+                                                2.2                                                                                                                                                               100
+                                                              VGS = 6V                                                                                                                                                          TC = 25°C
+                                                 2
+
+
+
+
+                                                                                                                                                            ISD − Source-to-Drain Current (A)
+     Normalized On-State Resistance
+
+
+
+
+                                                              VGS = 10V                                                                                                                                                         TC = 125°C
+                                                                                                                                                                                                                   10
+                                                1.8
+                                                1.6                                                                                                                                                                 1
+                                                1.4
+                                                                                                                                                                                                                   0.1
+                                                1.2
+                                                 1                                                                                                                                                                0.01
+                                                0.8
+                                                                                                                                                                                                          0.001
+                                                0.6
+                                                                                                                                          ID =17A
+                                                0.4                                                                                                                                      0.0001
+                                                   −75          −25         25        75         125                                            175                                                                      0        0.2        0.4         0.6         0.8            1
+                                                                      TC - Case Temperature (ºC)                                                    G001                                                                             VSD − Source-to-Drain Voltage (V)              G001
+
+
+
+
+                           Figure 8. Normalized On-State Resistance vs Temperature                                                                                                                                           Figure 9. Typical Diode Forward Voltage
+                               10000                                                                                                                                                                              100
+                                                              10us          1ms                                            DC                                                                                                                                          TC = 25ºC
+
+
+                                                                                                                                                                               IAV - Peak Avalanche Current (A)
+           IDS - Drain-to-Source Current (A)
+
+
+
+
+                                                              100us         10ms                                                                                                                                                                                       TC = 125ºC
+                                               1000
+
+
+                                                100
+
+
+                                                10
+
+
+                                                 1
+                                                         Single Pulse Width
+                                                         Max RthetaJC = 0.8ºC/W
+                                                0.1                                                                                                                                                                10
+                                                   0.1              1              10           100                                             1000                                                                0.01                             0.1                            1
+                                                                   VDS - Drain-to-Source Voltage (V)                                                G001                                                                                TAV - Time in Avalanche (mS)                G001
+
+
+
+
+                                                         Figure 10. Maximum Safe Operating Area                                                                                                                   Figure 11. Single Pulse Unclamped Inductive Switching
+                                                                                                                           120
+                                                                                     IDS - Drain- to- Source Current (A)
+
+
+
+
+                                                                                                                           100
+
+                                                                                                                           80
+
+                                                                                                                           60
+
+                                                                                                                           40
+
+                                                                                                                           20
+
+                                                                                                                            0
+                                                                                                                             −50    −25     0     25    50    75    100 125                                                       150    175
+                                                                                                                                                TC - Case Temperature (ºC)                                                                G001
+
+
+
+
+                                                                                                                            Figure 12. Maximum Drain Current vs Temperature
+
+
+
+
+6                                              Submit Documentation Feedback                                                                                                                                                    Copyright © 2013–2017, Texas Instruments Incorporated
+
+                                                                                                                                   Product Folder Links: CSD19532Q5B
+                                                                                                                       CSD19532Q5B
+www.ti.com                                                                                  SLPS414B – DECEMBER 2013 – REVISED MAY 2017
+
+
+6 Device and Documentation Support
+
+6.1 Receiving Notification of Documentation Updates
+To receive notification of documentation updates, navigate to the device product folder on ti.com. In the upper
+right corner, click on Alert me to register and receive a weekly digest of any product information that has
+changed. For change details, review the revision history included in any revised document.
+
+6.2 Community Resources
+The following links connect to TI community resources. Linked contents are provided "AS IS" by the respective
+contributors. They do not constitute TI specifications and do not necessarily reflect TI's views; see TI's Terms of
+Use.
+TI E2E™ Online Community TI's Engineer-to-Engineer (E2E) Community. Created to foster collaboration
+           among engineers. At e2e.ti.com, you can ask questions, share knowledge, explore ideas and help
+           solve problems with fellow engineers.
+Design Support TI's Design Support Quickly find helpful E2E forums along with design support tools and
+           contact information for technical support.
+
+6.3 Trademarks
+NexFET, E2E are trademarks of Texas Instruments.
+6.4 Electrostatic Discharge Caution
+          These devices have limited built-in ESD protection. The leads should be shorted together or the device placed in conductive foam
+          during storage or handling to prevent electrostatic damage to the MOS gates.
+
+
+6.5 Glossary
+SLYZ022 — TI Glossary.
+   This glossary lists and explains terms, acronyms, and definitions.
+
+
+
+
+Copyright © 2013–2017, Texas Instruments Incorporated                                            Submit Documentation Feedback           7
+                                                        Product Folder Links: CSD19532Q5B
+CSD19532Q5B
+SLPS414B – DECEMBER 2013 – REVISED MAY 2017                                                                                                 www.ti.com
+
+
+7 Mechanical, Packaging, and Orderable Information
+The following pages include mechanical packaging and orderable information. This information is the most
+current data available for the designated devices. This data is subject to change without notice and revision of
+this document. For browser-based versions of this data sheet, refer to the left-hand navigation.
+
+7.1 Q5B Package Dimensions
+
+                                                                                                                     K
+
+                                                                  c1                H                                          L
+                                E1
+
+
+
+
+                                                                                                                                   b (8x)
+                                                                                       8
+
+
+
+
+                                                                                                                           1
+                                              8
+                                                    •
+                 1
+
+
+
+
+                                                                                       7
+
+
+
+
+                                                                                                                           2
+                                                                             D2
+                                              7
+
+
+
+
+                                                                                  D3
+                 2
+
+
+
+
+                                                                       D1
+           E
+
+
+
+
+                                                                                       6
+
+
+
+
+                                                                                                                           3
+                                              6
+                 3
+
+
+
+
+                                                                                                                                   e
+                                                                                       5
+
+
+
+
+                                                                                                                           4
+                                              5
+                 4
+
+
+
+
+                                                                                                                     d1
+                                                                                                        d2
+            •              Top View                       Side View                            Bottom View
+
+
+
+
+                           Front View
+
+
+                                                                            MILLIMETERS
+                         DIM
+                                                  MIN                             NOM                        MAX
+                          A                       0.80                            1.00                       1.05
+                          b                       0.36                            0.41                       0.46
+                          c                       0.15                            0.20                       0.25
+                          c1                      0.15                            0.20                       0.25
+                          c2                      0.20                            0.25                       0.30
+                          D1                      4.90                            5.00                       5.10
+                          D2                      4.12                            4.22                       4.32
+                          D3                      3.90                            4.00                       4.10
+                          d                       0.20                            0.25                       0.30
+                          d1                                                 0.085 TYP
+                          d2                      0.319                           0.369                      0.419
+                          E                       4.90                            5.00                       5.10
+                          E1                      5.90                            6.00                       6.10
+                          E2                      3.48                            3.58                       3.68
+                          e                                                   1.27 TYP
+                          H                       0.36                            0.46                       0.56
+                          L                       0.46                            0.56                       0.66
+                          L1                      0.57                            0.67                       0.77
+                          θ                        0°                              —                          —
+                          K                                                   1.40 TYP
+
+
+
+8      Submit Documentation Feedback                                                       Copyright © 2013–2017, Texas Instruments Incorporated
+
+                                              Product Folder Links: CSD19532Q5B
+                                                                                                                      CSD19532Q5B
+www.ti.com                                                                                   SLPS414B – DECEMBER 2013 – REVISED MAY 2017
+
+
+7.2 Recommended PCB Pattern
+
+
+
+
+For recommended circuit layout for PCB designs, see application note SLPA005 – Reducing Ringing Through
+PCB Layout Techniques.
+
+7.3 Recommended Stencil Pattern
+
+                   (0.020)
+                                                (0.014)
+                    0.508                                                                                 (0.022)
+                                (0.011)          0.350                        (0.029)
+                      x4                                                                                 0.562 x 4
+                                 0.286                                       0.746 x 8
+
+
+
+
+                                                                                                          2.186 (0.086)
+
+
+
+                4.318 (0.170)
+
+
+                                                                              0.300
+                           1.270 (0.050)                                      (0.012)
+                                                                                                          1.270 (0.050)
+
+
+                                                  (0.051)
+                        (0.030)
+                                                   1.294                      (0.060)
+                         0.766                                                 1.525     (0.042)
+                                                    x8
+                                                                                          1.072
+
+                                                                 (0.259)
+                                                                  6.586
+
+
+Copyright © 2013–2017, Texas Instruments Incorporated                                              Submit Documentation Feedback      9
+                                                        Product Folder Links: CSD19532Q5B
+CSD19532Q5B
+SLPS414B – DECEMBER 2013 – REVISED MAY 2017                                                                                                    www.ti.com
+
+
+7.4 Q5B Tape and Reel Information
+
+
+
+
+                                                                                                                    1.75 ±0.10
+                  K0
+                  0.30 ±0.05                         4.00 ±0.10 (See Note 1)
+                                                                                           +0.10
+                           2.00 ±0.05                                              Ø 1.50 –0.00
+
+
+
+
+                                                                                                                                              12.00 ±0.30
+                               B0
+
+
+
+
+                                                                                                                                 5.50 ±0.05
+                                              A0                  8.00 ±0.10
+            R 0.30 MAX
+                                                                                          Ø 1.50 MIN
+
+                                                              A0 = 6.50 ±0.10                                             R 0.30 TYP
+                                                              B0 = 5.30 ±0.10
+                                                              K0 = 1.40 ±0.10
+                                                                                                                                                 M0138-01
+
+
+Notes:
+1. 10-sprocket hole-pitch cumulative tolerance ±0.2.
+2. Camber not to exceed 1 mm in 100 mm, noncumulative over 250 mm.
+3. Material: black static-dissipative polystyrene.
+4. All dimensions are in mm (unless otherwise specified).
+5. A0 and B0 measured on a plane 0.3 mm above the bottom of the pocket.
+
+
+
+
+10     Submit Documentation Feedback                                                Copyright © 2013–2017, Texas Instruments Incorporated
+
+                                               Product Folder Links: CSD19532Q5B
+                                                                                                                                                                      PACKAGE OPTION ADDENDUM
+
+       www.ti.com                                                                                                                                                                                                   10-Nov-2025
+
+
+
+
+PACKAGING INFORMATION
+
+       Orderable part number          Status     Material type      Package | Pins      Package qty | Carrier        RoHS             Lead finish/              MSL rating/               Op temp (°C)          Part marking
+                                        (1)            (2)                                                             (3)            Ball material             Peak reflow                                           (6)
+                                                                                                                                            (4)                      (5)
+
+           CSD19532Q5B                Active      Production     VSON-CLIP (DNK) | 8     2500 | LARGE T&R        ROHS Exempt               SN              Level-1-260C-UNLIM              -55 to 150            CSD19532
+          CSD19532Q5B.B               Active      Production     VSON-CLIP (DNK) | 8     2500 | LARGE T&R        ROHS Exempt               SN              Level-1-260C-UNLIM              -55 to 150            CSD19532
+          CSD19532Q5BT                Active      Production     VSON-CLIP (DNK) | 8      250 | SMALL T&R        ROHS Exempt               SN              Level-1-260C-UNLIM              -55 to 150            CSD19532
+         CSD19532Q5BT.B               Active      Production     VSON-CLIP (DNK) | 8      250 | SMALL T&R        ROHS Exempt               SN              Level-1-260C-UNLIM              -55 to 150            CSD19532
+
+(1)
+      Status: For more details on status, see our product life cycle.
+
+(2)
+   Material type: When designated, preproduction parts are prototypes/experimental devices, and are not yet approved or released for full production. Testing and final process, including without limitation quality assurance,
+reliability performance testing, and/or process qualification, may not yet be complete, and this item is subject to further changes or possible discontinuation. If available for ordering, purchases will be subject to an additional
+waiver at checkout, and are intended for early internal evaluation purposes only. These items are sold without warranties of any kind.
+
+(3)
+      RoHS values: Yes, No, RoHS Exempt. See the TI RoHS Statement for additional information and value definition.
+
+(4)
+   Lead finish/Ball material: Parts may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead finish/Ball material values may wrap to two lines if the finish value exceeds the maximum
+column width.
+
+(5)
+  MSL rating/Peak reflow: The moisture sensitivity level ratings and peak solder (reflow) temperatures. In the event that a part has multiple moisture sensitivity ratings, only the lowest level per JEDEC standards is shown.
+Refer to the shipping label for the actual reflow temperature that will be used to mount the part to the printed circuit board.
+
+(6)
+      Part marking: There may be an additional marking, which relates to the logo, the lot trace code information, or the environmental category of the part.
+
+Multiple part markings will be inside parentheses. Only one part marking contained in parentheses and separated by a "~" will appear on a part. If a line is indented then it is a continuation of the previous line and the two
+combined represent the entire part marking for that device.
+
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information provided by third parties, and
+makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and continues to take reasonable steps to provide representative
+and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals. TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers
+and other limited information may not be available for release.
+
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+
+
+
+
+                                                                                                          Addendum-Page 1
+                                         IMPORTANT NOTICE AND DISCLAIMER
+TI PROVIDES TECHNICAL AND RELIABILITY DATA (INCLUDING DATASHEETS), DESIGN RESOURCES (INCLUDING REFERENCE
+DESIGNS), APPLICATION OR OTHER DESIGN ADVICE, WEB TOOLS, SAFETY INFORMATION, AND OTHER RESOURCES “AS IS”
+AND WITH ALL FAULTS, AND DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION ANY
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD
+PARTY INTELLECTUAL PROPERTY RIGHTS.
+These resources are intended for skilled developers designing with TI products. You are solely responsible for (1) selecting the appropriate
+TI products for your application, (2) designing, validating and testing your application, and (3) ensuring your application meets applicable
+standards, and any other safety, security, regulatory or other requirements.
+These resources are subject to change without notice. TI grants you permission to use these resources only for development of an
+application that uses the TI products described in the resource. Other reproduction and display of these resources is prohibited. No license
+is granted to any other TI intellectual property right or to any third party intellectual property right. TI disclaims responsibility for, and you fully
+indemnify TI and its representatives against any claims, damages, costs, losses, and liabilities arising out of your use of these resources.
+TI’s products are provided subject to TI’s Terms of Sale, TI’s General Quality Guidelines, or other applicable terms available either on
+ti.com or provided in conjunction with such TI products. TI’s provision of these resources does not expand or otherwise alter TI’s applicable
+warranties or warranty disclaimers for TI products. Unless TI explicitly designates a product as custom or customer-specified, TI products
+are standard, catalog, general purpose devices.
+TI objects to and rejects any additional or different terms you may propose.
+IMPORTANT NOTICE
+
+                                                Copyright © 2025, Texas Instruments Incorporated
+                                                                Last updated 10/2025
+

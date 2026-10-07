@@ -43,6 +43,24 @@ import l9t5_drafts as D  # noqa: E402  (its compositions, netlists, sheets' figu
 CHK = D.CHK
 
 PRE = {b: os.path.join(HERE, "apply_gen_sch_%s_iocpre.py" % b) for b in "ab"}
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 1 prints each text's sha256 after the inputs, l9t5_drafts.py's, l9t5_case.py's, l9t5_paloop.py's and record l9pwr's with them (PDFT: PT names a local table here).
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9t5
+PDFTEXT = {
+    "v2/vendor/diodes/diodes-ap2112-ldo.pdf": [["-layout"]],
+    "v2/vendor/diodes/diodes-ap63200-series-buck.pdf": [["-layout"]],
+    "v2/vendor/st/st-rm0433-rev8.pdf": [["-layout", "-f", "2464", "-l", "2464"], ["-layout", "-f", "2470", "-l", "2470"], ["-layout", "-f", "2527", "-l", "2527"], ["-layout", "-f", "2534", "-l", "2534"], ["-layout", "-f", "279", "-l", "279"], ["-layout", "-f", "349", "-l", "349"]],
+    "v2/vendor/st/st-stm32h743xi-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-ina169-sbos181f.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tps62933.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PDFT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PDFT)
 SHEETS = {"h743": "v2/vendor/st/st-stm32h743xi-datasheet.pdf", "ap2112": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
           "ap632": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf", "tcan": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf",
           "tps62933": "v2/vendor/ti/ti-tps62933.pdf", "rm0433": "v2/vendor/st/st-rm0433-rev8.pdf",
@@ -91,11 +109,7 @@ _PDF = {}
 
 def pdf(key):
     if key not in _PDF:
-        try:
-            r = subprocess.run(["pdftotext", "-layout", os.path.join(ROOT, SHEETS[key]), "-"], capture_output=True, check=True)
-        except (OSError, subprocess.CalledProcessError) as e:
-            refuse("pdftotext could not read %s (%s)" % (SHEETS[key], e))
-        _PDF[key] = r.stdout.decode("utf-8", "replace")
+        _PDF[key] = PDFT.pdf_text(ROOT, SHEETS[key], ["-layout"], PDFTEXT, "v2/docs/records/l9t5")
     return _PDF[key]
 
 
@@ -262,11 +276,7 @@ def flat_(s):
 
 
 def rm_page(p):
-    try:
-        r = subprocess.run(["pdftotext", "-layout", "-f", str(p), "-l", str(p), os.path.join(ROOT, RM), "-"], capture_output=True, check=True)
-    except (OSError, subprocess.CalledProcessError) as e:
-        refuse("pdftotext could not read %s page %d (%s)" % (RM, p, e))
-    t = r.stdout.decode("utf-8", "replace")
+    t = PDFT.pdf_text(ROOT, RM, ["-layout", "-f", str(p), "-l", str(p)], PDFTEXT, "v2/docs/records/l9t5")
     if not re.search(r"\b%d/3353\b" % p, t):
         refuse("RM0433 page %d does not carry its own page number" % p)
     return flat_(t)
@@ -1365,7 +1375,7 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
           and at_trip >= need_at(i_max) and at_other >= need_at(serve_max) and dom_bound <= budget[500e3] and v6 == "DRAWN"
           and all(v == "FAIL" for _l, v in vm) and all(R6["refused"]) and ok6)
     R6["ok"] = ok
-    w("   DISPOSITION (10j, after cx46): cx45's Q3 NOT CLOSED. Drafted and reproducible: FW-B22's traffic MODEL and the containment circuits'")
+    w("   DISPOSITION (10j, after cx46): Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'. Drafted and reproducible: FW-B22's traffic MODEL and the containment circuits'")
     w("     composition (%s). OPEN or PROVISIONAL: CON-004's quorum service (OPEN), FW-B22 (PROVISIONAL), L9T5-F21 (OPEN), the limiter's and" % (
         "composed, read by pin, mutated" if ok else "NOT as drafted"))
     w("     the rail trip's response times (PROVISIONAL, no printed maximum for the comparator's delay), V-B23's response (WITHDRAWN), the sustained thermal")
@@ -1395,7 +1405,7 @@ def main():
     w("'verify its applicable operating conditions and give it a named correction and acceptance criterion'")
     w("")
     w("1. INPUTS, pinned by sha256")
-    for rel in list(SHEETS.values()) + list(DOCS.values()):
+    for rel in list(SHEETS.values()) + list(DOCS.values()) + [t for t, _h, _held in PDFT.inputs(ROOT, PDFT.merge(PDFTEXT, *(PDFT.declared_in(os.path.join(ROOT, x)) for x in ("v2/docs/records/l9t5/l9t5_drafts.py", "v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l9t5/l9t5_paloop.py", "v2/docs/records/l9pwr/l9pwr_budget.py"))))]:
         w("   %s %s" % (sha(rel), rel))
     w("")
     # 2. the applicable state

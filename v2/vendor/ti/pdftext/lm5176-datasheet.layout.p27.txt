@@ -1,0 +1,65 @@
+                                                                                                                             LM5176
+www.ti.com                                                                                  SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+                      1 §      2      ·
+      ¦p1(boost)        ¨             ¸                 +]
+                     2S © ROUT u COUT ¹                                                                                     (38)
+
+where ROUT = 2 Ω corresponds to the maximum load of 6 A.
+The boost power stage ESR zero location is given by:
+
+               1 §      1      ·
+      ¦ z1       ¨             ¸                  N+]
+              2S © RESR u COUT ¹                                                                                            (39)
+
+The boost power stage RHP zero location is given by:
+
+                 1 § ROUT u (1 DMAX )2 ·
+      ¦RHP          ¨                  ¸                     N+]
+                2S ¨©        L1        ¸
+                                       ¹                                                                                    (40)
+
+where DMAX is the maximum duty cycle at the minimum VIN.
+The buck power stage output pole location is given by:
+
+                     1 §      1      ·
+      ¦p1(buck)        ¨             ¸                  +]
+                    2S © ROUT u COUT ¹                                                                                      (41)
+
+The buck power stage ESR zero location is the same as the boost power stage ESR zero.
+It is clear from Equation 40 that RHP zero is the main factor limiting the achievable bandwidth. For a robust
+design, the crossover frequency should be less than 1/3 of the RHP zero frequency. Given the position of the
+RHP zero, a reasonable target bandwidth in boost operation is around 4 kHz:
+
+      ¦bw         N+]                                                                                                       (42)
+
+For some power stages, the boost RHP zero might not be as restrictive. This happens when the boost maximum
+duty cycle (DMAX) is small, or when a really small inductor is used. In those cases, compare the limits posed
+by the RHP zero (fRHP / 3) with 1/20 of the switching frequency and use the smaller of the two values as the
+achievable bandwidth.
+The compensation zero can be placed at 1.5 times the boost output pole frequency. Keep in mind that this
+locates the zero at three times the buck output pole frequency which results in approximately 30 degrees of
+phase loss before crossover of the buck loop and 15 degrees of phase loss at intermediate frequencies for the
+boost loop:
+
+      ¦ zc         +]                                                                                                       (43)
+
+If the crossover frequency is well below the RHP zero and the compensation zero is placed well below the
+crossover, the compensation gain resistor, Rc1, is calculated using the approximation:
+
+                S u ¦bw RFB1 RFB2 $ CS u 5SENSE u &OUT
+      Rc1              u         u                                           9.49 k:
+                gmEA       RFB1          1 DMAX                                                                             (44)
+
+where DMAX is the maximum duty cycle at the minimum VIN in boost mode and A CS is the current sense amplifier
+gain. The compensation capacitor Cc1 is then calculated from:
+
+                      1
+      Cc1                             27.9 nF
+                u S u ¦ zc u 5c1                                                                                            (45)
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                        Submit Document Feedback      27
+                                                             Product Folder Links: LM5176
+

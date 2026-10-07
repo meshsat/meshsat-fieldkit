@@ -128,6 +128,9 @@ ANCHORS = [
     (BASE, "v2/docs/records/l4e7/B2-PRESENCE.md", 4, 6, "UNSELECTED and WITHDRAWN AS DRAFTED"),
     (BASE, T10, 620, 620, "127.54 C, OVER 125 C"),
     (BASE, T10, 645, 645, "(f) THE ROWS MADE TO AGREE"),
+    # W53 (6 October 2026): kept. Basis: this anchor is read with git at BASE (bbba3e53), where the output printed these words, and
+    # RESULT.draft2.md quotes them as that revision's; W53 restates the generator (l9t5_t10.py 10j: "Q3: cx45 'P0-3: NOT CONFIRMED',
+    # cx46's items 5 to 8 'NOT CLOSED'", W38's F10), which moves the tree's output at set 32's regeneration, never BASE's bytes
     (BASE, T10, 662, 662, "DISPOSITION (10j, after cx46): cx45's Q3 NOT CLOSED"),
     (BASE, T10, 684, 684, "the B7b residual reads 120.0 C on rev V, inside 125 C"),
     (REVIEWED, T10, 655, 655, "the B7b residual is tolerated by SESSION decision L9T5-D5"),

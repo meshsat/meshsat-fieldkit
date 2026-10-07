@@ -1,0 +1,846 @@
+Datasheet SGP41
+Air Quality Sensor for VOC and NOx Measurements
+
+
+ MOx based gas sensor for air quality applications
+ Outstanding long-term stability and lifetime
+ I2C interface with digital output signals
+ Very small 6-pin DFN package: 2.44 x 2.44 x 0.85 mm3
+ Low power consumption: 3.0 mA at 3.3 V
+ Tape and reel packaged, reflow solderable
+
+
+ Product Summary
+ The SGP41 is a digital gas sensor designed for easy                  world applications enabling a unique long-term stability
+ integration into air purifiers or demand-controlled                  as well as low drift. The very small 2.44 x 2.44 x 0.85
+ ventilation systems. Sensirion’s CMOSens® technology                 mm3 DFN package enables applications in limited
+ offers a complete, easy-to-use sensor system on a single             spaces. Sensirion’s state-of-the-art production process
+ chip featuring a digital I2C interface and temperature-              guarantees high reproducibility and reliability. Tape and
+ controlled micro hotplates, providing one VOC and one                reel packaging together with suitability for standard
+ NOx based indoor air quality signal. Both sensing element            SMD assembly processes make the SGP41
+ and Gas Index Algorithm feature an unmatched                         predestined for high-volume applications.
+ robustness against contaminating gases present in real-
+
+
+
+
+                    Figure 1 Functional block diagram of the SGP41.
+
+
+
+
+www.sensirion.com                                  version 1.0 – December 2021                                              1/22
+Table of Contents
+1 Sensor Performance................................................................................................................................................................3
+2 Specifications ..........................................................................................................................................................................5
+    2.1 Electrical Specifications .....................................................................................................................................................5
+    2.2 Timing Specifications .........................................................................................................................................................5
+    2.3 Recommended Operating and Storage Conditions ...........................................................................................................6
+    2.4 Absolute Minimum and Maximum Ratings .........................................................................................................................7
+    2.5 Interface Specifications ......................................................................................................................................................7
+    2.6 Environmental Stability ......................................................................................................................................................8
+    2.7 Material Contents ...............................................................................................................................................................8
+3 Sensor Output Signal Description .........................................................................................................................................9
+    3.1 Conditioning .......................................................................................................................................................................9
+    3.2 Raw Signal Measurement ..................................................................................................................................................9
+    3.3 VOC and NOx Index Measurement ..................................................................................................................................10
+    3.4 Built-in Self-Test...............................................................................................................................................................11
+    3.5 Reading out The Sensor Serial Number ..........................................................................................................................11
+    3.6 Sensor Start-up Behavior .................................................................................................................................................11
+4 Digital Interface Description .................................................................................................................................................12
+    4.1 General Considerations ...................................................................................................................................................12
+    4.2 I2C Address ......................................................................................................................................................................12
+    4.3 I2C Voltage Levels............................................................................................................................................................12
+    4.4 I2C Protocol Speed...........................................................................................................................................................12
+    4.5 I2C Sequences .................................................................................................................................................................12
+    4.6 Checksum Calculation .....................................................................................................................................................13
+    4.7 I2C Commands .................................................................................................................................................................13
+5 Mechanical Specifications ....................................................................................................................................................18
+    5.1 Traceability.......................................................................................................................................................................18
+    5.2 Package Outline...............................................................................................................................................................18
+    5.3 Land Pattern ....................................................................................................................................................................19
+    5.4 Soldering Instructions ......................................................................................................................................................19
+6 Ordering Information .............................................................................................................................................................20
+    6.1 Packaging Information .....................................................................................................................................................20
+
+
+
+
+www.sensirion.com                                                         version 1.0 – December 2021                                                                                  2/22
+1 Sensor Performance
+Table 1 lists specifications characterizing the gas sensing performance. The SGP41 chip provides two digital raw signals which
+are sensitive to most VOCs typically present in indoor environments and oxidizing gases such as NOx or O3, respectively. The
+raw signals are proportional to the logarithm of the resistance of the sensing material. For the specifications given below, ethanol
+in clean air has been used as proxy gas for typical VOC based indoor air events and NO2 in clean air has been used as proxy
+gas for typical oxidizing gas based indoor air events.
+
+                                                                                              Values1
+ Parameter                   Conditions                                                       Min.           Typ.           Max.           Units
+ Output signal               VOC Index, processed value from SRAW_VOC                         1              –              500            VOC Index points
+ range2                      NOx Index, processed value from SRAW_NOX                         1              –              500            NOx Index points
+                             SRAW_VOC, digital raw value from VOC pixel                       0              –              65’535         ticks3
+                             SRAW_NOX, digital raw value from NOx pixel                       0              –              65’535         ticks
+ Measurement                 Ethanol in clean air                                             0              –              1’000’000      ppb
+ range                       NO2 in clean air                                                 0              –              10’000         ppb
+ Specified range             Ethanol in clean air                                             500            –              10’000         ppb
+                             NO2 in clean air                                                 50             –              650            ppb
+ Device-to-device            VOC Index                                                        –              <±15           –              VOC Index points
+ variation4                                                                                                                                or
+                                                                                                             <±15                          % m.v.
+                                                                                                                                           (the larger)
+                             NOx Index                                                        –              <±50           –              NOx Index points
+                                                                                                                                           or
+                                                                                                             <±50                          % m.v.
+                                                                                                                                           (the larger)
+ Repeatability4              VOC Index                                                        –              <±5            –              VOC Index points
+                                                                                                                                           or
+                                                                                                             <±5                           % m.v.
+                                                                                                                                           (the larger)
+                             NOx Index                                                        –              <±5            –              NOx Index points
+                                                                                                                                           or
+                                                                                                             <±5                           % m.v.
+                                                                                                                                           (the larger)
+ Limit of detection5,6 Ethanol in 500 ppb of ethanol7 and 0 ppb of NO2 in –                                  –              <50            ppb
+                       else clean air                                                                                       or             or
+                                                                                                                            <10            % of concentration setpoint
+                             NO2 in 500 ppb of ethanol7 in else clean air                     –              –              <20            (the larger)
+                                                                                                                            or
+                                                                                                                            <10
+ Response time 63           SRAW_VOC, changing concentration from 5’000 –                                   <10            –              s
+                             to 10’000 ppb of ethanol at sampling interval of 1 s
+                             SRAW_NOX, changing concentration from 150 to –                                  <250           –              s
+                             300 ppb of NO2 at sampling interval of 1 s
+
+
+
+
+1 99 % of the sensors will be within the minimum–maximum tolerance. Typical tolerance refers to the mean of the distribution for ≥100 sensors.
+2 Humidity compensated when actual humidity value is provided as input to the sensor (see section 3.2 Raw Signal Measurement).
+3 Signal in ticks is proportional to the logarithm of the resistance of the sensing layer.
+4 Evaluated using the calibration and test sequence according to the application note SGP41 – Testing Guide.
+5 Limit of detection is defined as the minimum change of concentration required to obtain a raw signal change 3 times higher than the noise at the given concentration setpoint.
+6 Parameter tested over simulated lifetime of 10 years in an indoor environment. Test conditions: continuous operation in 250 ppm of Decamethylcyclopentasiloxane (D5) for
+
+200 h.
+7 A concentration of 500 ppb of ethanol corresponds to the equivalent of a typical VOC background present in an application environment, e.g., a typical OEM device.
+
+
+
+
+www.sensirion.com                                                       version 1.0 – December 2021                                                                       3/22
+                                                                                          Values
+ Parameter                  Conditions                                                    Min.           Typ.          Max.          Units
+ Switch-on behavior Time until reliably detecting VOC or NOx events8                      –              <60           –             s
+                    Time until specifications in this SRAW_VOC                            –              <1            –             h
+                    table are met                     VOC Index                           –              <1.5          –             h
+                                                      SRAW_NOX                            –              <7            –             d
+                                                      NOx Index                           –              <6            –             h
+ Sensitivity6       SRAW_VOC, doubling VOC            Ethanol in                          –              −870          –             ticks
+                    concentration in else clean air specified range
+                                                      5’000 to 10’000                     −710           −870          −1’030        ticks
+                                                      ppb of ethanol
+                    SRAW_NOX, doubling NO2            NO2 in specified                    –              +1’480        –             ticks
+                    concentration in else clean air range
+                                                      150 to 300 ppb of                   +950           +1’480        +2’010        ticks
+                                                      NO2
+ Sampling interval  –                                                                     0.5            1             10            s
+
+Table 1 Gas sensing specifications at 25 °C and 50 % RH in zero air (considered as clean air for indoor air quality applications) and a power
+supply of VDD of 3.3 V.
+
+
+Figure 2 and Figure 3 display the typical response of the VOC and NOx raw signals, respectively, of SGP41 to ethanol, NO2,
+and O3 as a function of their concentrations in otherwise clean air and a background consisting of 500 ppb of H2 + 500 ppb of
+ethanol.
+
+
+
+
+Figure 2 Typical sensor response by the VOC signal to ethanol,                        Figure 3 Typical sensor response by the NOx signal to ethanol,
+NO2, and O3 normalized to 500 ppb of H2 + 500 ppb of ethanol. Data                    NO2, and O3 normalized to 500 ppb of H2 + 500 ppb of ethanol. Data
+were recorded at 25 °C and 50 % RH and a power supply of VDD of                       were recorded at 25 °C and 50 % RH and a power supply of VDD of
+3.3 V.                                                                                3.3 V.
+
+
+
+
+8 Signal change during 60-s event of 5’000 to 10’000 ppb of ethanol or of 100 to 300 ppb of NO2 is three times larger than signal drift of SRAW_VOC or SRAW_NOX,
+
+respectively, without this event during the same duration.
+
+
+www.sensirion.com                                                 version 1.0 – December 2021                                                                      4/22
+2 Specifications
+2.1 Electrical Specifications
+Table 2 lists electrical specifications of the SGP41. Default conditions of 25 °C and 3.3 V supply voltage apply to values in the
+table below, unless otherwise stated. The SGP41 supports both I2C “standard-mode” and “fast-mode” (see NXP I2C-bus
+specification and user manual).
+
+                                                     Values
+ Parameter                                    Symbol Min.               Typ.         Max.          Unit      Comments
+ Supply voltage, hotplate supply              VDD,        1.7           3.3          3.6           V         Minimal voltage must be guaranteed also for the
+ voltage9                                     VDDH                                                           maximum supply current specified in this table.
+                                                                                                             VDD and VDDH must be connected to the same
+                                                                                                             power supply, see Figure 6.
+ Idle current                                 IDD         –             34           105           A        The idle mode is activated after power-up, after
+                                                                                                             calling the sgp4x_turn_heater_off command, or
+                                                                                                             after a soft reset.
+ Supply current during conditioning                       –             6.5          7.2           mA        Average current consumption while the sensor is
+ mode10                                                                                                      continuously operated at VDD, VDDH = 1.8 V.
+                                                          –             4.2          4.6           mA        Average current consumption while the sensor is
+                                                                                                             continuously operated at VDD, VDDH = 3.3 V.
+ Supply current during VOC+NOx                            –             4.3          4.8           mA        Average current consumption while the sensor is
+ measurement mode10                                                                                          continuously operated at VDD, VDDH = 1.8 V.
+                                                          –             3.0          3.4           mA        Average current consumption while the sensor is
+                                                                                                             continuously operated at VDD, VDDH = 3.3 V.
+ Communication                                –           Digital 2-wire interface, I2C
+
+Table 2 Electrical specifications.
+
+
+2.2 Timing Specifications
+Timings in Table 3 refer to the power up and reset of the ASIC part and do not reflect the usefulness of the readings.
+
+ Parameter                       Symbol                  Condition                                            Min.           Typ.              Max.          Unit
+ Power-up time                   tPU                     After hard reset, VDD ≥ VPOR                         –              0.4               0.6           ms
+ Soft reset time                 tSR                     After soft reset                                     –              0.4               0.6           ms
+ SCL clock frequency             fSCL                    –                                                    –              –                 400           kHz
+
+Table 3 System timing specifications.
+
+
+
+
+9 Any supply voltage as defined by the min./max. range may be used for continuous operation of the sensor. The typical value specifies the supply voltage at which outgoing
+
+quality control is performed.
+10 Sending the sgp41_execute_conditioning and sgp41_measure_raw_signals command enables continuous operation of the sensor. A 20 % higher current is drawn during
+
+5 ms on VDDH after sending either of the two commands.
+
+
+www.sensirion.com                                                  version 1.0 – December 2021                                                                       5/22
+2.3 Recommended Operating and Storage Conditions
+Gas Sensing Specifications as detailed in Table 1 are guaranteed only when the sensor is stored and operated under the
+recommended conditions as specified in Table 4 and displayed in Figure 4 and Figure 5. Prolonged exposure to conditions
+outside these conditions may reduce sensor performance. The sensor must not be exposed towards condensing conditions (i.e.,
+>90 % relative humidity) at any time.
+
+Condition                  Parameter                  Min.                         Max.                Unit
+Operating conditions       Relative humidity          0                            90                  % RH
+                           Temperature                −10                          50                  °C
+Operating conditions of     Humidity                  1.5 (−13)                    30 (+31)            g m−3 (°C dew point)
+humidity compensation                                                                                  or
+                                                      –                            90                  % RH
+                                                                                   (the smaller)
+                           Temperature                −10                          50                  °C
+Storage conditions         Relative humidity          0                            80                  % RH
+                           Temperature                5                            30                  °C
+
+Table 4 Recommended humidity and temperature conditions for storing and operating the SGP41. Dew point refers to maximum humidity
+allowed at minimum and maximum temperature, respectively.
+
+
+
+
+Figure 4 Recommended relative humidity and temperature for           Figure 5 Recommended relative humidity and temperature for
+operating the SGP41. Green area marks conditions for which           storing the SGP41.
+humidity compensation has been optimized. Additionally, gray areas
+mark operating conditions without using the humidity compensation
+feature.
+
+To ensure an optimal performance of the SGP41, Handling and Assembly Instructions for SGPxx Gas Sensors as well as the
+Design-in Guide for Integrating SGP4x Gas Sensors need to be followed.
+
+
+
+
+www.sensirion.com                                    version 1.0 – December 2021                                              6/22
+2.4 Absolute Minimum and Maximum Ratings
+Stress levels beyond those listed in Table 5 may cause permanent damage to the device. Exposure to minimum/maximum
+rating conditions for extended periods may affect sensor performance and reliability of the device.
+
+  Parameter                                                                         Rating
+
+  Supply voltage VDD                                                                −0.3 to +3.6 V
+
+  Supply voltage VDDH                                                               −0.3 to +3.6 V
+
+  Short-term storage temperature range11                                            −40 to +70 °C
+
+  Operating temperature range                                                       −20 to +55 °C
+
+  Short-term storage humidity range12                                               0 to 80 % (non-condensing)
+
+  Operating humidity range                                                          0 to 90 % (non-condensing)
+
+  ESD HBM                                                                           2 kV
+
+  ESD CDM                                                                           500 V
+
+  Latch up, JESD78 Class II, 125 °C                                                 100 mA
+
+Table 5 Absolute minimum and maximum ratings.
+
+
+2.5 Interface Specifications
+The SGP41 comes in a 6-pin DFN package, see Table 6. Figure 6 shows a typical application circuit. The VDD pin must be
+decoupled with an RC element. The required decoupling for VDDH depends on the power supply network connected to the
+sensor, a capacitor of 1 F is recommended. VDD and VDDH must be connected to one single supply VDD. The external pull-
+up resistors (e.g., Rp = 10 k) are required to pull the SDA and SCL signal lines high. For dimensioning resistor sizes please
+take bus capacity and communication frequency into account (see section 7.1 of NXP I2C-bus specification and user manual for
+more details). It should be noted that pull-up resistors may be included in I/O circuits of microcontrollers. The die pad or center
+pad is electrically connected to GND. Hence, electrical considerations do not impose constraints on the wiring of the die pad.
+However, for mechanical stability it is recommended to solder the die pad to the PCB.
+
+  Pin            Name                      Comments
+  1              VDD                       Supply voltage
+  2              VSS                       Ground
+  3              SDA                       Serial data, bidirectional
+  4              n/a                       Connect to ground (no electrical function)
+  5              VDDH                      Supply voltage, hotplate
+  6              SCL                       Serial clock, bidirectional
+
+Table 6 Pin assignment (transparent top view). Dashed lines are only visible from the bottom.
+
+
+
+
+11 Short-term storage refers to temporary conditions during, e.g., transport.
+
+
+
+
+www.sensirion.com                                                     version 1.0 – December 2021                             7/22
+                             Figure 6 Typical application circuit.
+
+
+2.6 Environmental Stability
+The SGP41 has been qualified based on the JEDEC JESD47 qualification test method. The Moisture Sensitivity Level
+classification of the SGP41 is MSL1, according to IPC/JEDEC J-STD-020. At the same time, it is recommended to further
+process the sensors within 1 year after date of delivery. The SGP41 should not be exposed to bright illumination by either
+sunlight or artificial light sources during operation.
+
+2.7 Material Contents
+The device is fully RoHS, REACH, Halogen-free, and WEEE compliant, e.g., free of Pb, Cd, and Hg.
+
+
+
+
+www.sensirion.com                                  version 1.0 – December 2021                                        8/22
+3 Sensor Output Signal Description
+3.1 Conditioning
+After each restart of the sensor or when the hotplates have been switched off, the sgp41_execute_conditioning command must
+be called from idle mode before the master calls the first sgp41_measure_raw_signals command (Figure 7). The conditioning
+heats the hotplate of the NOx pixel to a different temperature compared to the measurement mode enabling a faster switch-on
+(as specified in Table 1) thereafter. It is recommended to execute the conditioning for 10 s, but 10 s must not be exceeded to
+avoid damage to the sensing material. Thereafter, the VOC+NOx measurement mode can be entered by following the
+instructions given in 3.2 Raw Signal Measurement. The conditioning command requires to send default input parameters (2
+words + respective CRC bytes).
+
+
+
+
+                       Figure 7 Standard process flow for executing the conditioning of SGP41.
+
+Optionally, the master may already read out the raw signal of the VOC pixel (SRAW_VOC) during conditioning (Figure 8) since
+the hotplate of the VOC pixel will already be set to the temperature used in the VOC+NOx measurement mode. After calling the
+sgp41_execute_conditioning command and after a subsequent minimum waiting time of 50 ms, SRAW_VOC is returned as one
+16-bit word followed by a CRC byte. The sgp41_execute_conditioning command can be called consecutively multiple times
+during the conditioning period.
+
+
+
+
+          Figure 8 Optional process flow for executing the conditioning of SGP41 and reading out the VOC raw signal.
+
+
+3.2 Raw Signal Measurement
+Calling the sgp41_measure_raw_signals command launches/continues the VOC+NOx measurement mode. The first call of this
+command should be performed after the conditioning (see 3.1 Conditioning). This command starts one measurement of the raw
+signals of the VOC and the NOx pixel (SRAW_VOC, SRAW_NOX) which are returned after 50 ms. The two raw signal values in
+ticks are provided as two 16-bit words each followed by one CRC byte (Figure 9). The raw signals in ticks are proportional each
+to the logarithm of the corresponding sensor resistance. These tow signals are used as input for Sensirion’s Gas Index Algorithm
+to provide processed VOC and NOx Indices (see section 3.3 VOC and NOx Index Measurement). In case the Gas Index Algorithm
+is not used, discard the first measured value of each signal. Typically, a measurement is performed every second by calling the
+sgp41_measure_raw_signals command again every second without turning the heater off. To exit the VOC+NOx measurement
+mode, the master calls the sgp4x_turn_heater_off command which switches off the hotplates and puts the sensor in idle mode.
+In order to avoid prolonged run-in of the NOx signal, it is recommended to keep the measurement running whenever possible.
+
+
+
+
+www.sensirion.com                                  version 1.0 – December 2021                                             9/22
+           Figure 9 Process flow for performing a raw signal measurement with the SGP41. For enabling on-chip humidity
+           compensation, current relative humidity and temperature values have to be supplied as part of the measurement
+           command.
+
+The SGP41 features an automatic on-chip humidity compensation of both raw signals. The feature remains disabled as long as
+default values for both humidity and temperature are sent together with the sgp41_measure_raw_signals command. For
+enabling the compensation, the measurement command includes two words (+ respective CRC bytes) where the first word
+represents the relative humidity and the second one represents the temperature.
+
+3.3 VOC and NOx Index Measurement
+
+
+
+
+                    Figure 10 Schematic of the driver and Gas Index Algorithm implementation on a microcontroller.
+
+For best performance in indoor-air-quality use cases, Sensirion recommends processing the (humidity-compensated) raw
+signals SRAW_VOC and SRAW_NOX through Sensirion’s powerful Gas Index Algorithm. This algorithm (Figure 10)
+automatically adapts its outputs to any indoor environment and maps all VOC and NOx events to a VOC (Figure 11) and NOx
+Index (Figure 12) scale, respectively, ranging from 1 to 500 index points. In case of the VOC Index, a value of 100 refers to the
+average indoor gas composition over the past 24 h. While values between 100 and 500 indicate a deterioration, values between
+1 and 100 inform about improvement of the VOC based air quality. In case of the NOx Index, the average condition is mapped
+to a value of 1 and therefore, the NOx Index displays values between 2 and 500 when NOx events are present. The Gas Index
+Algorithm is available on github (see SGP41 product page on Sensirion’s webpage). SGP41 raw signals need to be provided to
+the Gas Index Algorithm at a sampling rate of 1 s.
+
+
+
+
+    Figure 11 Explanation of the VOC Index scale.                    Figure 12 Explanation of the NOx Index scale.
+
+
+
+
+www.sensirion.com                                   version 1.0 – December 2021                                            10/22
+3.4 Built-in Self-Test
+With the sgp41_execute_self_test command, users can perform an on-chip self-test for, e.g., in-line or end-of-line production
+testing. If this command is called when the sensor is in idle mode, the sensor returns to idle mode after the test (Figure 13). In
+case this command is called during VOC+NOx measurement mode (i.e., after calling the sgp41_measure_raw_signals
+command), the hotplate remains switched on thereafter. It is not recommended to call this command during conditioning mode
+(i.e., after calling the sgp41_execute_conditioning command). After 320 ms, the master can read a fixed data pattern (1 word +
+CRC byte) to check if the test was successful or not.
+
+
+
+
+            Figure 13 Process flow for performing the built-in self-test.
+
+
+3.5 Reading out The Sensor Serial Number
+Every SGP41 sensor carries a unique serial number for identification purposes which is hard coded during sensor production.
+This number can be read out by using the sgp4x_get_serial_number command at any time in idle mode (Figure 14). After 1 ms,
+the chip responds with 3 words (each word followed by one CRC byte) which together constitute the serial number.
+
+
+
+
+                  Figure 14 Process flow for reading out the serial number of the SGP41 sensor.
+
+
+3.6 Sensor Start-up Behavior
+The sensor starts powering-up after reaching the power-up threshold voltage of 1.7 V and enters idle mode after max. 0.6 ms.
+In this state, the sensor is ready to receive commands from the master.
+
+
+
+
+www.sensirion.com                                      version 1.0 – December 2021                                          11/22
+4 Digital Interface Description
+4.1 General Considerations
+For detailed information about the I2C protocol itself and its detailed implementation, please, consult the document NXP I2C-bus
+specification and user manual. All SGP41 commands consist of two bytes (16 bits). The commands must not be followed by a
+CRC. Additionally, data sent to and returned from the sensor is transferred in packets of two bytes (16 bits) followed by a 1-byte
+(8 bit) CRC.
+
+4.2 I2C Address
+The sensor’s I2C address is 89 (decimal; hex.: 0x59). The I2C header is formed by the I2C address followed by a read or write
+bit.
+
+4.3 I2C Voltage Levels
+Input and output voltage levels are specified in section 6.1 of NXP I2C-bus specification and user manual. The sensor’s interface
+is compatible with 1.7–3.6 V I2C bus voltage levels depending on the supply voltage level.
+
+4.4 I2C Protocol Speed
+The sensor supports I2C “standard-mode” and “fast-mode”, with a maximum clock frequency of 100 or 400 kHz, respectively.
+
+4.5 I2C Sequences
+The typical communication sequence between the I2C master (e.g., a microcontroller in a host device) and the sensor is
+described as follows and visualized in Figure 15:
+1. The sensor is powered up.
+2. The I2C master periodically calls the measurement command and reads data in the following sequence:
+    a. I2C master sends a measurement command.
+    b. I2C master waits until the measurement is finished either by waiting for the maximum execution time or by waiting for the
+       expected duration and then poll data until the read header is acknowledged by the sensor (expected durations are listed
+       in Table 8).
+    c. I2C master reads out the measurement result.
+
+
+
+
+Figure 15 Possible I2C command sequences for communicating with the SGP41. Dark areas indicate that the sensor controls the SDA (data)
+line. First, the I2C master sends the write header writing a 16-bit command, potentially followed by two words of data with CRC bytes. For
+reading the measured data, the I2C master sends the read header and receives one word of data with CRC byte in case of the built-in self-
+test and in case of conditioning or two words with CRC bytes in case of measuring the raw signals of the two pixels. In case of reading out
+the serial number of the sensor, the master receives three words with CRC bytes.
+
+With the acknowledgement of the measurement command, the SGP41 starts measuring. When the measurement is in progress,
+no communication with the sensor is possible and the sensor aborts the communication with a NACK condition. After the sensor
+has completed the measurement, the master can read the measurement results by sending an I2C read header. The sensor will
+acknowledge the reception of the read header and responds with data. The response data length is listed in Table 8 and is
+
+www.sensirion.com                                     version 1.0 – December 2021                                                    12/22
+structured in data words, where one word consists of two bytes of data (most significant bit first) followed by a one-byte CRC
+checksum. Each byte must be acknowledged by the master with an ACK condition for the sensor to continue sending data. If
+the sensor does not receive an ACK from the master after any byte of data, it will not continue sending data.
+After receiving the checksum for the last word of data, a NACK and STOP condition have to be sent (see Figure 15). The I2C
+master can abort the read transfer with a NACK followed by a STOP condition after any data byte if it is not interested in
+subsequent data, e.g., the CRC byte or following data bytes, in order to save time. Note that the data cannot be read more than
+once, and access to data beyond the specified amount will return a pattern of high bits.
+
+4.6 Checksum Calculation
+The 8-bit CRC checksum transmitted after each data word is generated by the CRC algorithm according to the properties as
+stated in Table 7. The CRC covers the contents of the two previously transmitted data bytes.
+
+ Property                     Value                            Example code
+ Name                         CRC-8                            uint8_t CalcCrc(uint8_t data[2]) {
+                                                                 uint8_t crc = 0xFF;
+ Width                        8 bit
+                                                                 for(int i = 0; i < 2; i++) {
+ Protected Data               read and/or write data                crc ^= data[i];
+ Polynomial                   0x31 (x8 + x5 + x4 + 1)               for(uint8_t bit = 8; bit > 0; --bit) {
+                                                                      if(crc & 0x80) {
+ Initialization               0xFF                                       crc = (crc << 1) ^ 0x31u;
+ Reflect input                False                                   } else {
+                                                                         crc = (crc << 1);
+ Reflect output               False
+                                                                      }
+ Final XOR                    0x00                                  }
+ Examples                     CRC (0xBE 0xEF) = 0x92             }
+                                                                 return crc;
+                                                               }
+
+Table 7 Checksums are used for the 2-byte data packets only. The command codes themselves already contain a 3-bit CRC and therefore,
+a checksum must not be appended.
+
+
+4.7 I2C Commands
+The available measurement commands of the SGP41 are listed in Table 8.
+
+ Command                              Command hex.         Parameter length       Response length      Measurement duration
+                                      code                 including CRC          including CRC        [ms]
+                                                           [bytes]                [bytes]
+                                                                                                       Typ.           Max.
+ sgp41_execute_conditioning           0x26 0x12            6                      3                    45             50
+ sgp41_measure_raw_signals            0x26 0x19            6                      6                    45             50
+ sgp41_execute_self_test              0x28 0x0E            –                      3                    300            320
+ sgp4x_turn_heater_off                0x36 0x15            –                      –                    0.1            1
+ sgp4x_get_serial_number              0x36 0x82            –                      9                    0.1            1
+
+Table 8 I2C commands available for SGP41.
+
+
+
+
+www.sensirion.com                                       version 1.0 – December 2021                                           13/22
+Conditioning
+ Command                        Command hex. code                      Description
+ sgp41_execute_conditioning     0x26 0x12 0x80 0x00 0xA2 0x66          This command starts the conditioning, i.e., the VOC pixel will be
+                                0x66 0x93                              operated at the same temperature as it is by calling the
+                                                                       sgp41_measure_raw_signals command while the NOx pixel will
+                                                                       be operated at a different temperature for conditioning. This
+                                                                       command returns only the measured raw signal of the VOC pixel
+                                                                       SRAW_VOC as 2 bytes (+ 1 CRC byte).
+
+Table 9 Description of the I2C conditioning command.
+
+
+
+
+ Byte number                    Description                            Value
+ 0, 1                           two bytes                              u16 unsigned integer directly provides the raw signal
+                                                                       SRAW_VOC in ticks which is proportional to the logarithm of the
+                                                                       resistance of the sensing element.
+ 2                              CRC byte for bytes 0, 1                –
+
+Table 10 Returned values by the I2C conditioning command.
+
+
+Measure Raw Signals
+ Command                        Subcommand             Command hex. code             Description
+ sgp41_measure_raw_signals      Without humidity       0x26 0x19 0x80 0x00 0xA2      This command starts/continues the VOC+NOx
+                                compensation           0x66 0x66 0x93                measurement       mode,     leaves     humidity
+                                                                                     compensation disabled by sending the default
+                                                                                     values (see Table 12) and returns the measured
+                                                                                     raw signals SRAW_VOC and SRAW_NOX as 2x2
+                                                                                     bytes (+ 1 CRC byte).
+                                With humidity          0x26 0x19 0xXX 0xXX 0xXX      In order to enable the humidity compensation, the
+                                compensation           0xYY 0xYY 0xYY                master has to specify the relative humidity 0xXX
+                                                                                     0xXX 0xXX and temperature 0xYY 0xYY 0xYY
+                                                                                     input (incl. corresponding CRC bytes) in the format
+                                                                                     as given in Table 12.
+
+Table 11 Description of the I2C measurement command.
+
+
+
+
+www.sensirion.com                                      version 1.0 – December 2021                                                 14/22
+                           Relative Humidity                                     Temperature
+                           Value / %                    Hex. code                Value / °C                    Hex. code
+ Conversion into ticks                                        65'535                                                 65'535
+                                          RH/ticks=RH/%×                                      T/ticks=(T/°C + 45)×
+                                                               100                                                    175
+ Default                   50                           0x80 0x00 + CRC 0xA2     25                            0x66 0x66 + CRC 0x93
+ Minimum                   0                            0x00 0x00 + CRC 0x81     −45                           0x00 0x00 + CRC 0x81
+ Maximum                   100                          0xFF 0xFF + CRC 0xAC     130                           0xFF 0xFF + CRC 0xAC
+
+Table 12 Conversion of relative humidity in % and temperature in °C into ticks as the input parameters of the measurement command. Note:
+minimum and maximum values do not reflect the range of conditions for which the humidity compensation feature has been optimized (see
+Table 4).
+
+
+
+
+ Byte number                      Description                          Value
+ 0, 1                             two bytes                            u16 unsigned integer directly provides the raw signal
+                                                                       SRAW_VOC in ticks which is proportional to the logarithm of the
+                                                                       resistance of the sensing element.
+ 2                                CRC byte for bytes 0, 1              –
+ 3, 4                             two bytes                            u16 unsigned integer directly provides the raw signal
+                                                                       SRAW_NOX in ticks which is proportional to the logarithm of the
+                                                                       resistance of the sensing element.
+ 5                                CRC byte for bytes 3, 4              –
+
+Table 13 Returned values by the I2C measurement command.
+
+
+Built-in Self-Test
+ Command                          Command hex. code                    Description
+ sgp41_execute_self_test          0x28 0x0E                            This command triggers the built-in self-test checking for integrity
+                                                                       of both hotplate and MOX material and returns the result of this
+                                                                       test as 2 bytes (+ 1 CRC byte).
+
+Table 14 Description of the I2C built-in self-test command.
+
+
+
+
+www.sensirion.com                                      version 1.0 – December 2021                                                   15/22
+ Byte number                     Description                          Value
+ 0, 1                            two bytes                            0xXX 0xYY: ignore most significant byte 0xXX. The four least
+                                                                      significant bits of the least significant byte 0xYY provide
+                                                                      information if the self-test has or has not passed for each
+                                                                      individual pixel:
+                                                                          bit   3              2              1               0
+                                                                                ignore         ignore         NOx pixel       VOC pixel
+                                                                      Possible results for each bit:
+                                                                      0: all tests passed successfully
+                                                                      1: one or more tests have failed
+ 2                               CRC byte for bytes 0, 1              –
+
+Table 15 Returned values by the I2C built-in self-test command.
+
+
+Turn Heater off and Return to Idle Mode
+ Command                         Command hex. code                    Description
+ sgp4x_turn_heater_off           0x36 0x15                            This command turns the hotplate off and stops the measurement.
+                                                                      Subsequently, the sensor enters the idle mode.
+
+Table 16 Description of the I2C heater off command.
+
+
+Read out The Sensor Serial Number
+ Command                         Command hex. code                    Description
+ sgp4x_get_serial_number         0x36 0x82                            This command provides the decimal serial number of the SGP41
+                                                                      chip by returning 3x2 bytes (+ 1 CRC byte).
+
+Table 17 Description of the I2C get serial number command.
+
+
+
+
+ Byte number                     Description                          Value
+ 0, 1                            two bytes                            First (i.e., most significant) and second byte of the serial number.
+ 2                               CRC byte for bytes 0, 1              –
+ 3, 4                            two bytes                            Third and fourth byte of the serial number.
+ 5                               CRC byte for bytes 3, 4              –
+ 6, 7                            two bytes                            Fifth and sixth (i.e., least significant) byte of the serial number.
+ 8                               CRC byte for bytes 6, 7              –
+
+Table 18 Returned values by the I2C get serial number command.
+
+
+
+
+www.sensirion.com                                     version 1.0 – December 2021                                                       16/22
+Soft Reset
+ Command                         Command hex. code                   Description
+ soft_reset                      0x00 0x06                           This command is a general call resetting all devices connected to
+                                                                     the same I2C bus. The first byte refers to the general call address
+                                                                     and the second byte refers to the reset command. After calling
+                                                                     this command, the SGP41 will restart entering the idle mode.
+
+Table 19 Description of the I2C general soft reset command.
+
+
+
+
+www.sensirion.com                                    version 1.0 – December 2021                                                   17/22
+5 Mechanical Specifications
+SGP41 sensors are provided in a DFN (dual flat no leads) package with an outline of 2.44 × 2.44× 0.85 mm3 and a terminal pitch
+of 0.8 mm. The sensor opening with a typical diameter of 0.8 mm is offset to the bottom right corner on the top side of the
+package. The sensor chip is assembled on a Ni/Pd/Au plated copper lead frame. Sensor chip and lead frame are over-molded
+by a black, epoxy-based mold compound. Please note that the side walls of the package are diced and therefore the lead frame
+sidewall surfaces are not plated.
+
+5.1 Traceability
+All SGP41 sensors are laser marked for easy identification and traceability (Figure 16). The marking on the sensor top side
+consists of a pin-1 indicator and three lines of text. The top line consists of the pin-1 indicator which is located in the top left
+corner and the product name. The two lines at the bottom consist of 2 alphanumeric digits each. That code can be decoded by
+Sensirion only and allows for tracking on batch level through production, calibration, and testing – and will be provided upon
+justified request.
+If viewed from below pin 1 is indicated by triangular shaped cut in the otherwise rectangular die pad. The dimensions of the
+triangular cut are shown in Figure 17, right. The sensor opening on the top side is not recommended for optical alignment.
+
+
+
+
+                                              Figure 16 Top view of the SGP41
+                                              illustrating the laser marking.
+
+
+5.2 Package Outline
+
+
+
+
+Figure 17 Package outline drawing of the SGP41. Dimensions are given in millimeters.
+
+
+
+
+www.sensirion.com                                   version 1.0 – December 2021                                               18/22
+5.3 Land Pattern
+Recommended land pattern of the SGP41 is shown in Figure 18. Pads on PCB are recommended to be non-solder mask
+defined (NSMD). Recommended solder paste stencil thickness is 125–150 m.
+
+
+
+
+                           Figure 18 Recommended land pattern.
+
+
+5.4 Soldering Instructions
+Standard reflow soldering ovens and “no clean” type 3 solder paste (as specified in IPC J-STD-005A) should be used for
+soldering the SGP41. The sensors are designed to withstand a soldering profile according to IPC/JEDEC J-STD-020. Peak
+temperatures of TP = 245 °C during up to tp = 30 s for Pb-free assembly in IR/Convection reflow ovens (see Figure 19) are
+recommended. In addition, we also recommend a maximum ramp-down rate of <4 °C s−1. Vapor phase or manual soldering
+should not be used in order to avoid damaging of the sensor. In case the PCB hosting the SGP41 chip passes through multiple
+solder cycles, it is recommended to assemble the SGP41 during the last solder cycle. Board wash and ultrasonic cleaning should
+be avoided. For general information (such as conformal coating), please also refer to the Handling and Assembly Instructions
+for SGPxx Gas Sensors.
+
+
+
+
+                              Figure 19 Soldering profile according to JEDEC standard. Recommended
+                              conditions are TP = 245°C and tP ≤ 30 s for Pb-free assembly, TL < 220°C
+                              and tL < 150 s. Ramp-up rate <3°C s−1 and ramp-down rate <4°C s−1.
+
+
+
+
+www.sensirion.com                                  version 1.0 – December 2021                                          19/22
+6 Ordering Information
+Use the part names and product numbers shown in the following table when ordering the SGP41 gas sensor and accessories.
+For the latest product information and local distributors, visit www.sensirion.com.
+
+ Part Name                       Description                                                        Ordering size         Product Number
+ SGP41-D-R4                      SGP41 sensor components as tape on reel                            2’500 pcs             3.000.060
+ SEK-SVM4x Evaluation Kit        1 SVM41 PCB equipped with SGP41, an SHT40, and an                  1 pc                  3.000.630
+                                 MCU; 1 USB cable; 1 jumper wire cable; direct humidity
+                                 compensated VOC and NOx Index output via UART or I2C
+                                 interface
+                                 www.sensirion.com/my-sgp-ek
+
+Table 20 SGP41 ordering options.
+
+
+6.1 Packaging Information
+
+
+
+
+  Figure 20 Technical drawing of the packaging tape with sensor orientation in tape. Header tape is to the right and trailer tape to the left
+  on this drawing. Dimensions are given in millimeters.
+
+
+
+
+www.sensirion.com                                      version 1.0 – December 2021                                                       20/22
+Important Notices
+Warning, Personal Injury
+Do not use this product as safety or emergency stop devices or in any other application where failure of the product could result in personal
+injury. Do not use this product for applications other than its intended and authorized use. Before installing, handling, using or servicing this
+product, please consult the data sheet and application notes. Failure to comply with these instructions could result in death or serious injury.
+
+If the Buyer shall purchase or use SENSIRION products for any unintended or unauthorized application, Buyer shall defend, indemnify and hold harmless
+SENSIRION and its officers, employees, subsidiaries, affiliates and distributors against all claims, costs, damages and expenses, and reasonable attorney
+fees arising out of, directly or indirectly, any claim of personal injury or death associated with such unintended or unauthorized use, even if SENSIRION shall
+be allegedly negligent with respect to the design or the manufacture of the product.
+
+ESD Precautions
+The inherent design of this component causes it to be sensitive to electrostatic discharge (ESD). To prevent ESD-induced damage and/or degradation, take
+customary and statutory ESD precautions when handling this product. See application note “ESD, Latchup and EMC” for more information.
+
+Warranty
+SENSIRION warrants solely to the original purchaser of this product for a period of 12 months (one year) from the date of delivery that this product shall be
+of the quality, material and workmanship defined in SENSIRION’s published specifications of the product. Within such period, if proven to be defective,
+SENSIRION shall repair and/or replace this product, in SENSIRION’s discretion, free of charge to the Buyer, provided that:
+  • notice in writing describing the defects shall be given to SENSIRION within fourteen (14) days after their appearance;
+  • such defects shall be found, to SENSIRION’s reasonable satisfaction, to have arisen from SENSIRION’s faulty design, material, or workmanship;
+  • the defective product shall be returned to SENSIRION’s factory at the Buyer’s expense; and
+  • the warranty period for any repaired or replaced product shall be limited to the unexpired portion of the original period.
+This warranty does not apply to any equipment which has not been installed and used within the specifications recommended by SENSIRION for the intended
+and proper use of the equipment. EXCEPT FOR THE WARRANTIES EXPRESSLY SET FORTH HEREIN, SENSIRION MAKES NO WARRANTIES, EITHER
+EXPRESS OR IMPLIED, WITH RESPECT TO THE PRODUCT. ANY AND ALL WARRANTIES, INCLUDING WITHOUT LIMITATION, WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, ARE EXPRESSLY EXCLUDED AND DECLINED.
+SENSIRION is only liable for defects of this product arising under the conditions of operation provided for in the data sheet and proper use of the goods.
+SENSIRION explicitly disclaims all warranties, express or implied, for any period during which the goods are operated or stored not in accordance with the
+technical specifications.
+SENSIRION does not assume any liability arising out of any application or use of any product or circuit and specifically disclaims any and all liability, including
+without limitation consequential or incidental damages. All operating parameters, including without limitation recommended parameters, must be validated
+for each customer’s applications by customer’s technical experts. Recommended parameters can and do vary in different applications.
+SENSIRION reserves the right, without further notice, (i) to change the product specifications and/or the information in this document and (ii) to improve
+reliability, functions and design of this product.
+
+Copyright© 2021, by SENSIRION.
+CMOSens® is a trademark of Sensirion
+All rights reserved
+
+
+
+
+www.sensirion.com                                               version 1.0 – December 2021                                                                 21/22
+Revision History
+ Date                 Version   Page(s)     Changes
+ December 2021        1.0       All         Initial release
+
+
+
+
+Headquarters and Subsidiaries
+ Sensirion AG                     Sensirion Inc., USA                   Sensirion Korea Co. Ltd.
+ Laubisruetistr. 50               phone: +1 312 690 5858                phone: +82 31 337 7700~3
+ CH-8712 Staefa ZH                info-us@sensirion.com                 info-kr@sensirion.com
+ Switzerland                      www.sensirion.com                     www.sensirion.com/kr
+
+ phone: +41 44 306 40 00          Sensirion Japan Co. Ltd.              Sensirion China Co. Ltd.
+ fax:   +41 44 306 40 30          phone: +81 3 3444 4940                phone: +86 755 8252 1501
+ info@sensirion.com               info-jp@sensirion.com                 info-cn@sensirion.com
+ www.sensirion.com                www.sensirion.com/jp                  www.sensirion.com/cn
+
+ Sensirion Taiwan Co. Ltd
+ phone: +886 3 5506701
+ info@sensirion.com               To find your local representative, please visit
+ www.sensirion.com                http://www.sensirion.com/distributors
+
+
+
+
+www.sensirion.com                         version 1.0 – December 2021                              22/22
+

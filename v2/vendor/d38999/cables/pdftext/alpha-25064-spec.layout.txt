@@ -1,0 +1,175 @@
+                                                                                                                 2200 US Highway 27 South
+                                                                                                                       Richmond, IN 47374
+                                                                                                                       Tel: 1-800-52 ALPHA
+                                                                                                                  Web: www.alphawire.com
+
+
+
+
+Customer Specification
+
+PART NO. 25064
+
+
+
+Construction
+
+                                                      Diameters (In)
+1) Component 1                                        4 X 1 COND
+a) Conductor                                          18 (16/30) AWG Tinned Copper                                  0.047
+b) Insulation                                         0.016" Wall, Nom. PVC                                         0.079
+(1) Color Code                                        Alpha Wire Color Code D
+
+Cond         Color   Cond   Color   Cond    Color
+1            BLACK   3      WHITE
+2            RED     4      GREEN
+2) Cable Assembly                                     4 Components Cabled
+a) Twists:                                            4.4 Twists/foot (min)
+                                                      Components to be arranged from INSIDE LAYER to
+b) Orientation:
+                                                      OUTSIDE LAYER
+c) Core Wrap                                          Nonwoven Polyester Tape, 25% Overlap, Min.
+3) Jacket                                             0.032" Wall, Nom.,Polyurethane (TPU)                          0.259 (0.270 Max.)
+                                                      Slate, Black, Yellow, Orange, Blue, Green, Red, Sand Beige,
+a) Color(s)
+                                                      White
+b) Ripcord                                            1 End 810 Denier Nylon
+                                                      ALPHA WIRE-* P/N 25064
+                                                      XTRAGUARD(R) 2 RU AWM 20668 VW-1 OR CRU
+c) Print                                              AWM I/II A/B 90C 300 VOLTS FT1 CE
+                                                      ROHS (SEQ FOOTAGE)
+                                                      * = Factory Code
+
+
+
+
+Applicable Specifications
+
+1) UL
+a) Component 1                       AWM/STYLE 1569                                            105°C / 300 VRMS
+b) Overall                           AWM/STYLE 20668                                           90°C / 300 VRMS
+                                     VW-1
+2) CSA International                 C(RU) AWM I/II A/B                                        90°C / 300 VRMS
+                                     FT1
+3) CE:                               EU Low Voltage Directive 2014/35/EU
+Environmental
+
+1) CE: EU Directive 2011/65/EU(RoHS2), EU Directive 2015/863/EU
+(RoHS3):
+                                                                  This product complies with European Directive 2011/65/EU (RoHS
+                                                                  Directive) of the European Parliament and of the Council of 8 June
+                                                                  2011 and the amending Directive 2015/863/EU of 4 June 2015 . No
+                                                                  Exemptions are required for RoHS Compliance on this item.
+                                                                  This product may contain substances known to the State of
+                                                                  California to cause Cancer or Reproductive Harm, but is exempt
+2) California Proposition 65:
+                                                                  from labeling based on the Consent Judgement. See the Alpha
+                                                                  Wire website for more information.
+
+
+
+
+Properties
+
+             Physical & Mechanical Properties
+
+1) Temperature Range                                     -30 to 90°C
+2) Bend Radius                                           10X Cable Diameter
+3) Pull Tension                                          50 Lbs, Maximum
+4) Sunlight Resistance                                   Yes
+                    Electrical Properties                (For Engineering purposes only)
+
+1) Voltage Rating                                        300 VRMS
+2) Capacitance                                           30 pF/ft @1 kHz, Nominal Conductor to Conductor
+3) Inductance                                            0.18 μH/ft, Nominal
+4) Conductor DCR                                         7 Ω/1000ft @20°C, Nominal
+
+
+
+
+Other
+
+Packaging                                                   Flange x Traverse x Barrel (inches)
+a) 1000 FT                                                  13.5 x 10 x 4 Continuous length
+b) 500 FT                                                   11 x 8.5 x 5 Continuous length
+c) Bulk(Made-to-order)
+                                                            [Spool dimensions may vary slightly]
+www.alphawire.com
+
+Alpha Wire
+2200 US Highway 27 South
+Richmond, IN 47374
+
+Tel: 1-800-52 ALPHA
+
+Although Alpha Wire (“Alpha”) makes every reasonable effort to ensure there accuracy at the time of publication, information and
+specifications described herein are subject to errors or omissions and to changes without notice, and the listing of such information and
+specifications does not ensure product availability.
+Alpha provides the information and specifications herein on an “AS IS” basis, with no representations or warranties, whether express,
+statutory or implied. In no event will Alpha be liable for any damages (including consequential, indirect, incidental, special, punitive, or
+exemplary) whatsoever, even if Alpha had been advised of the possibility of such damages, whether in an action under contract, negligence
+or any other theory, arising out of or in connection with the use, or inability to use, the information or specifications described herein.
+ALPHA WIRE - CONFIDENTIAL AND PROPRIETARY Notice to persons receiving this document and/or technical information. This document
+is confidential and is the exclusive property of ALPHA WIRE, and is merely on loan and subject to recall by ALPHA WIRE at any time. By
+taking possession of this document, the recipient acknowledges and agrees that this document cannot be used in any manner adverse to
+the interests of ALPHA WIRE, and that no portion of this document may be copied or otherwise reproduced without the prior written
+consent of ALPHA WIRE. In the case of conflicting contractual provisions, this notice shall govern the status of this document. ©2026
+ALPHA WIRE - all rights reserved.
+2200 US Highway 27 South
+Richmond, IN 47374
+Tel: 1-800-52 ALPHA
+Web: www.alphawire.com
+
+
+EU/UK/China ROHS CERTIFICATE OF COMPLIANCE
+To Whom It May Concern:
+
+
+Alpha Wire Part Number: 25064
+
+
+
+
+25064, RoHS-Compliant Commencing With 8/1/2005 Production
+
+ Note: all colors and put-ups
+This document certifies that the Alpha part number cited above, including all packaging materials, is manufactured in accordance with
+Directive 2011/65/EU of the European Parliament, better known as the RoHS Directive (commonly known as RoHS 2), with regards to
+restrictions of the use of certain hazardous substances used in the manufacture of electrical and electronic equipment. This certification
+extends to amending Directive 2015/863/EU which expanded the list of restricted substances to 10 items (commonly known as RoHS 3).
+This product also complies with UK - RoHS. The reader is referred to these Directives for the specific definitions and extents of the
+Directives. No Exemptions are required for RoHS Compliance on this item. Additionally, Alpha certifies that the listed part number is
+in compliance with China RoHS “Marking for Control of Pollution by Electronic Information Products” standard SJ/T 11364-2014. This
+product is also in compliance with China RoHS 2 per GB/T 26572-2011.
+
+ Substance                                                                           Maximum Control Value
+ Lead                                                                                0.1% by weight (1000 ppm)
+ Mercury                                                                             0.1% by weight (1000 ppm)
+ Cadmium                                                                             0.01% by weight (100 ppm)
+ Hexavalent Chromium                                                                 0.1% by weight (1000 ppm )
+ Polybrominated Biphenyls (PBB)                                                      0.1% by weight (1000 ppm)
+ Polybrominated Diphenyl Ethers (PBDE) ,
+ Including Deca-BDE                                                                  0.1% by weight (1000 ppm)
+ Bis(2-ethylhexyl) phthalate (DEHP)                                                  0.1% by weight (1000 ppm)
+ Butyl benzyl phthalate (BBP)                                                        0.1% by weight (1000 ppm)
+ Dibutyl phthalate (DBP)                                                             0.1% by weight (1000 ppm)
+ Diisobutyl phthalate (DIBP)                                                         0.1% by weight (1000 ppm)
+
+The information provided in this document and disclosure is correct to the best of Alpha Wire's knowledge, information and belief at the
+date of its release. The information provided is designed only as a general guide for the safe handling, storage, and any other operation
+of the product itself or the one that it will become part of. The intent of this document is not to be considered a warranty or quality
+specification. Regulatory information is for guidance purposes only. Product users are responsible for determining the applicability of
+legislation and regulations based on their individual usage of the product.
+Authorized Signatory for the Alpha Wire:
+
+
+
+
+Dave Watson, Director of Engineering       9/4/2026
+
+
+ Alpha Wire
+ 2200 US Highway 27 South
+ Richmond, IN 47374
+Tel: 1-908-925-8000
+

@@ -3,11 +3,11 @@ DESIGN, DESK ARITHMETIC: nothing has been built, bought, powered or measured. La
 MODEL, ASSUMPTION, MISSING.
 
 0. PINS (path  sha256/16; the INA250 sheet is held back, fetched and checked by record l4e7's fetch_held_back.py, never committed)
-   a1_out     v2/docs/records/l9t5/l9t5_a1.out  sha256 08383e838300e716
+   a1_out     v2/docs/records/l9t5/l9t5_a1.out  sha256 7863f8e54bc67878
    bq4050     v2/vendor/battery/ti-bq4050.pdf  sha256 2664e33fe6d6ebed
-   budget     v2/docs/records/l9pwr/l9pwr_budget.py  sha256 afae23c87c38302b
-   case_out   v2/docs/records/l9t5/l9t5_case.out  sha256 eeb1296c913ccba0
-   case_py    v2/docs/records/l9t5/l9t5_case.py  sha256 2b9fb0459e0cdfd1
+   budget     v2/docs/records/l9pwr/l9pwr_budget.py  sha256 9b251b7d3be2aca7
+   case_out   v2/docs/records/l9t5/l9t5_case.out  sha256 feef12bdceb5340c
+   case_py    v2/docs/records/l9t5/l9t5_case.py  sha256 ada5c44d7c9e33f7
    cases      v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md  sha256 0be579949c22eab1
    csd18510   v2/vendor/battery/ti-csd18510q5b.pdf  sha256 cb747de812f66859
    cx44       v2/docs/records/l9t5/inputs/cx44-astra-f01-selection-as-received.md  sha256 63faa4dcbd4b0f4e
@@ -20,7 +20,29 @@ MODEL, ASSUMPTION, MISSING.
    lcsc_fill  v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
    lm5176     v2/vendor/ti/lm5176-datasheet.pdf  sha256 98191bec36d43771
    millmax    v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf  sha256 8ef40cd98d95c653
-   paloop     v2/docs/records/l9t5/l9t5_paloop.py  sha256 d1192fcfd0c734ac
+   paloop     v2/docs/records/l9t5/l9t5_paloop.py  sha256 6542173666aa02f2
+   pdftext 01 v2/vendor/battery/pdftext/amass-xt60-spec-2021v1-lcsc-c98733.layout.txt  sha256 1ec5ff7ded53acbd
+   pdftext 02 v2/vendor/battery/pdftext/samsung-35e-orbtronic.layout.txt  sha256 d2eed21ecffdff2b
+   pdftext 03 v2/vendor/battery/pdftext/ti-bq4050.layout.txt  sha256 f83f141c39e09df2
+   pdftext 04 v2/vendor/battery/pdftext/ti-csd18510q5b.layout.txt  sha256 5ecf7f639ea2bf4c
+   pdftext 05 v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt  sha256 9d315dec55a94ab8
+   pdftext 06 v2/vendor/connectors/pdftext/millmax-rugged-power-spring-pins-page28.layout.txt  sha256 0f9b89190d6415b1
+   pdftext 07 v2/vendor/diodes/pdftext/diodes-ap2112-ldo.plain.l1.txt  sha256 c59cee8614dfb14b
+   pdftext 08 v2/vendor/diodes/pdftext/diodes-ap63200-series-buck.plain.l1.txt  sha256 86e6d8baf3f2bd0f
+   pdftext 09 v2/vendor/diodes/pdftext/diodes-ap64500.plain.l1.txt  sha256 523141f25b1ce791
+   pdftext 10 v2/vendor/mitsubishi/pdftext/ra30h1317m1-datasheet.layout.txt  sha256 e1ad9f624efd2d98
+   pdftext 11 v2/vendor/passives/pdftext/milliohm-hojlr2512-series.layout.txt  sha256 0b4d12cc2a1a1455
+   pdftext 12 v2/vendor/power/pdftext/ti-tlv755p-ldo.plain.l1.txt  sha256 0645dd67a4e97ebd
+   pdftext 13 v2/vendor/power/pdftext/tps2596.plain.txt  sha256 6830354f577b4bad
+   pdftext 14 v2/vendor/precidip/pdftext/precidip-813-spring-loaded-connector-pages-31-34.layout.txt  sha256 7945661d94b48117
+   pdftext 15 v2/vendor/ti/held/pdftext/ti-ina250-sbos511c.layout.txt  sha256 23961b85e31fdbb3
+   pdftext 16 v2/vendor/ti/pdftext/lm5176-datasheet.layout.txt  sha256 6399dcdabf2895da
+   pdftext 17 v2/vendor/ti/pdftext/ti-ina226.layout.txt  sha256 234fbb73ef374502
+   pdftext 18 v2/vendor/ti/pdftext/ti-tlv758p.layout.txt  sha256 da725d6f1fcac1bd
+   pdftext 19 v2/vendor/ti/pdftext/ti-tlv9062-op-amp.layout.txt  sha256 dae07174ea3a294c
+   pdftext 20 v2/vendor/ti/pdftext/ti-tps62933.layout.txt  sha256 010f30f3bffdad5f
+   pdftext 21 v2/vendor/ti/pdftext/ti-tps62933.plain.l1.txt  sha256 a4965834fb931ea9
+   pdftext 22 v2/vendor/vishay/pdftext/vishay-wsl-power-metal-strip.layout.txt  sha256 3a3efdb44c14796b
    precidip   v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf  sha256 d630c8a92e7f65fc
    ra30       v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf  sha256 9fda757ab1acfb6b
    tlv758p    v2/vendor/ti/ti-tlv758p.pdf  sha256 4a86306d6734f1f4

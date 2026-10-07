@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-tlv758p.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-tlv758p.pdf",
+ "pdf_sha256": "4a86306d6734f1f4212e897c29787a93b56724c06adf87d926cc7b603a694d12",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tlv758p.layout.txt",
+ "text_bytes": 170259,
+ "text_sha256": "da725d6f1fcac1bdd225ec8d0e2c1642244105d2e2a1cadf5a7ff4a808f26e5e"
+}

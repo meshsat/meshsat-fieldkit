@@ -1,0 +1,66 @@
+                                                                                                                                       LM5176
+www.ti.com                                                                                        SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+6 Specifications
+6.1 Absolute Maximum Ratings
+(1)
+
+                                                                                                              MIN          MAX        UNIT
+ VIN, EN/UVLO, VISNS, VOSNS, ISNS(+), ISNS(–)                                                                 –0.3            60        V
+ BIAS                                                                                                         –0.3            40        V
+ FB, SS, DITH, RT/SYNC, SLOPE, COMP                                                                           –0.3           3.6        V
+ SW1, SW2                                                                                                         –1          60        V
+ SW1, SW2 (20 ns transient)                                                                                   –5.0            65        V
+ VCC, MODE, PGOOD                                                                                             –0.3           8.5        V
+ LDRV1, LDRV2                                                                                                 –0.3           8.5        V
+ BOOT1, HDRV1 with respect to SW1                                                                             –0.3           8.5        V
+ BOOT2, HDRV2 with respect to SW2                                                                             –0.3           8.5        V
+ BOOT1, BOOT2                                                                                                 –0.3            68        V
+ ISNS(+) with respect to ISNS(-)                                                                              -0.3           0.3        V
+ CS, CSG                                                                                                      –0.3           0.3        V
+ Operating junction temperature                                                                                –40          150
+                                                                                                                                       °C
+ Storage temperature, Tstg                                                                                     –65          150
+
+(1)     Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress
+        ratings only, which do not imply functional operation of the device at these or any other conditions beyond those indicated under
+        Recommended Operating Conditions. Exposure to absolute-maximum-rated conditions for extended periods may affect device
+        reliability.
+
+6.2 ESD Ratings
+                                                                                                                           VALUE        UNIT
+                 Human body model (HBM) ESD stress voltage(2)                                                              ±2000
+ VESD (1)                                                                                                                                   V
+                 Charged device model (CDM) ESD stress voltage(3)                                                           ±750
+
+(1)     Electrostatic discharge (ESD) to measure device sensitivity and immunity to damage caused by assembly line electrostatic discharges
+        into the device.
+(2)     Level listed above is the passing level per ANSI/ESDA/JEDEC JS-001. JEDEC document JEP155 states that 500 V HBM allows safe
+        manufacturing with a standard ESD control process.
+(3)     Level listed above is the passing level per EIA-JEDEC JESD22-C101. JEDEC document JEP157 states that 250 V CDM allows safe
+        manufacturing with a standard ESD control process.
+
+6.3 Recommended Operating Conditions
+over operating free-air temperature range (unless otherwise noted)(1)
+                                                                                                           MIN              MAX       UNIT
+ VIN                          Input bias voltage                                                            4.2                55       V
+ VISNS                        Input power stage voltage with external bias (BIAS ≥ 5 V or VIN ≥             2.5                55
+                                                                                                                                        V
+                              4.5 V)
+ BIAS                         Bias supply voltage (when VCC in regulation)                                    8                36       V
+ VOSNS                        Output voltage range                                                          0.8                55       V
+ EN/UVLO                      Enable voltage range                                                            0                55       V
+ ISNS(+), ISNS(–)             Average current sense common mode range                                         0                55       V
+ TJ                           Operating temperature(2)                                                      –40              125        °C
+ fsw                          Operating frequency                                                           100              600       kHz
+
+(1)     Recommended Operating Conditions are conditions under the device is intended to be functional. For specifications and test
+        conditions, see Section 6.5.
+(2)     High junction temperatures degrade operating lifetimes. Operating lifetime is de-rated for junction temperatures greater than 125°C.
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                               Submit Document Feedback          5
+                                                         Product Folder Links: LM5176
+

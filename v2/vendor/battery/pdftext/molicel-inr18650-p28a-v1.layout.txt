@@ -1,0 +1,124 @@
+                                                                                                                              PRODUCT DATA SHEET
+LITHIUM-ION RECHARGEABLE BATTERY                                                 MODEL INR-18650-P28A
+  CELL CHARACTERISTICS                                                                                Charge Characteristics
+                                                                                                     10.0                     5.0                                                                                 120
+                                                                                                                                      Charge:
+                                                                                                                                      CC-CV Charge to 4.2V, 50mA cut at 23oC.
+                                 Typical            2800 mAh                                                                                                                                                      100
+                                                                                                      8.0                     4.0
+                                                    10.3 Wh
+  Capacity                                                                                                                                                                                                        80
+                                 Minimum            2600 mAh
+
+
+
+
+                                                                                                                                                                                                                        Capacity (%)
+                                                                                                      6.0                     3.0
+
+
+
+
+                                                                                                                Voltage (V)
+                                                                                      Current (A)
+                                                                                                                                                                                                                  60
+                                                    9.56 Wh
+                                                                                                      4.0                     2.0
+                                 Nominal            3.6 V                                                                                                                                     2.8A charge         40
+                                                                                                                                                                                              5.6A charge
+
+  Cell Voltage                   Charge             4.2 V                                             2.0                     1.0
+                                                                                                                                                                                                                  20
+                                 Discharge          2.5 V
+                                                                                                      0.0                     0.0                                                                                 0
+                                 Standard           2.8 A                                                                           0.0                 0.5                     1.0                         1.5
+  Charge Current                                                                                                                                                 Time (hrs)
+                                 Maximum            6.0 A                                             Discharge Rate Characteristics
+                                                                                                      5.0
+  Charge Time                    Standard           1.5 hr
+  Discharge Current              Maximum            35 A                                              4.0
+
+  Internal                       AC (1 KHz)         20 mΩ (Max)
+  Resistance                                                                                          3.0
+
+                                                                                      Voltage (V)
+                                 DC (10A/1s)        20 mΩ
+                                                                                                                                                                                  0.56A
+  Ambient                        Charge             0°C to 60°C                                       2.0                                                                         2.8A
+                                                                                                                                                                                  10A
+  Temperature                    Discharge          -40°C to 60°C                                                                                                                 20A
+                                                                                                                                                                                  30A
+                                                                                                      1.0
+  Energy Density                 Volumetric         610 Wh/l                                                                  Charge: CC-CV, 2.8A, 4.2V, 50mA.
+                                                                                                                              Discharge: Cut 0ff at 2.5V.
+                                                                                                                              Temperature: 23oC.
+                                 Gravimetric        220 Wh/kg                                         0.0
+                                                                                                            0             300         600     900    1200 1500 1800           2100      2400     2700       3000
+                                                                                                                                                      Capacity (mAh)
+  PHYSICAL CHARACTERISTICS                                                                            Discharge Temperature Characteristics
+                                                                                                      5.0
+
+
+
+                                                                                                      4.0
+
+
+
+                                                                                                      3.0
+                                                                                      Voltage (V)
+
+
+
+
+                                 Shape         Cylindrical                                                                                                                            -40oC
+                                                                                                      2.0
+                                 Can           Steel                                                                                                                                  -30oC
+                                                                                                                                                                                      -20oC
+                                                                                                                                                                                      0oC
+                                 Diameter      18.6 mm (Max)                                          1.0                                                                             23oC
+                                                                                                                          Charge: CC-CV, 2.8A, 4.2V, 50mA at 23 oC.                   45oC
+                                 Height        65.2 mm (Max)                                                              Discharge: 2.8A, Cut off at 2.5V.                           60oC
+
+                                                                                                      0.0
+                                 Weight        46 g (Typical)                                               0             300         600     900    1200 1500 1800           2100      2400     2700       3000
+                                                                                                                                                      Capacity (mAh)
+                                                                                                      Cycle Characteristics
+                                                                                                     120
+
+
+                                                                                                     100
+
+
+                                                                                                      80
+                                                                                                                                                       10A discharge
+                                                                                      Capacity (%)
+
+
+
+
+The information contained herein is for reference only and does not                                                                                    20A discharge
+                                                                                                      60
+imply a performance guarantee or a product warranty. Specifications
+and characteristics are subject to change without prior notice.
+                                                                                                      40
+                                                                                                                                    Charge: Constant Current-Constant Voltage, 2.8A, 4.2V, 50mA
+For application specific information, please contact E-One Moli Energy                                                              Discharge: Constant Current, 10A, 20A, Cut off at 2.5V,
+                                                                                                                                              Rest 10min after 10A, Rest 30min after 20A
+Sales and Applications or the nearest MOLICEL® recognized agent.                                      20
+                                                                                                                                    Temperature: 23oC
+
+
+                                                                                                       0
+                                                                                                            0                         100            200            300                  400                500
+                                                                                                                                                    Cycle Number (times)
+
+
+
+   Taiwan Facility                                 Canada Facility                                                                        Headquarters
+   10 Dali 2nd Rd., Shan-Hwa,                      20 000 Stewart Crescent                                                                10F, 113, Sec.2, Zhung Shan N Rd.,
+   Tainan City, Taiwan, R.O.C.                     Maple Ridge, BC, Canada, V2X 9E7                                                       Taipei, Taiwan, R.O.C.
+   Tel: 886-6-505-0666                             Tel: 1-604-466-6654                                                                    Tel: 886-2-2567-3500
+   Fax: 886-6-505-0777                             Fax: 1-604-466-6600                                                                    Fax: 886-2-2567-6500
+   mailto:service@molicel.com                      mailto:molicel@molicel.com
+   http://www.molicel.com                          http://www.molicel.com
+

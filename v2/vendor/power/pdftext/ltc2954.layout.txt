@@ -1,0 +1,1195 @@
+                                                                                                           LTC2954
+                                                                                              Pushbutton On/Off
+                                                                                       Controller with µP Interrupt
+FEATURES                                                                               DESCRIPTION
+n Adjustable Power On/Off Timers                                                       The LTC®2954 is a pushbutton on/off controller that
+n Low Supply Current: 6μA                                                              manages system power via a pushbutton interface. An
+n Wide Operating Voltage Range: 2.7V to 26.4V                                          enable output toggles system power while an interrupt
+n Low Leakage EN Output (LTC2954-1) Allows DC/DC                                       output provides debounced pushbutton status. The inter-
+  Converter Control                                                                    rupt output can be used in menu driven applications to
+n High Voltage EN Output (LTC2954-2) Allows Circuit                                    request a system power-down. A power kill input allows
+  Breaker Control                                                                      a microprocessor or system to reset the enable output,
+n Simple Interface Allows Graceful μP Shutdown                                         effectively powering down the system. Independently
+n High Input Voltage PB Pin with Internal Pull-Up                                      adjustable on and off timers allow dependable pushbutton
+  Resistor                                                                             control of the enable output and resistance to accidental
+n ±10kV ESD HBM on PB Input                                                            toggling of system power.
+n Accurate 0.6V Threshold on KILL Comparator Input
+n 8-Pin 3mm × 2mm DFN and ThinSOT™ Packages
+                                                                                       The LTC2954 operates over a wide 2.7V to 26.4V input volt-
+                                                                                       age range to accommodate a wide variety of input power
+                                                                                       supplies. Very low quiescent current (6μA typical) makes
+APPLICATIONS                                                                           the LTC2954 ideally suited for battery powered applications.
+n
+                                                                                       Two versions of the part are available to accommodate
+  Pushbutton PowerPath™ Control
+n
+                                                                                       either positive or negative enable polarities.
+  Portable Instrumentation Meters
+                                                                                       L, LT, LTC, LTM, Linear Technology and the Linear logo are registered trademarks and
+n Blade Servers                                                                        PowerPath and ThinSOT are trademarks of Linear Technology Corporation. All other trademarks
+n Portable Customer Service PDA                                                        are the property of their respective owners.
+
+n Desktop and Notebook Computers
+
+
+
+
+TYPICAL APPLICATION
+                                                                                                              Pushbutton On/Off with Interrupt
+
+                                                  VIN       VOUT
+                                                                                                  TURN-ON PULSE             SHORT PULSE                   LONG PULSE
+                                                        DC/DC
++                                                                                        PB
+                       100k                100k
+    9V
+
+
+                                                                                         EN                 TURNS ON            STAYS ON                TURNS OFF
+
+           VIN                 EN                  10k
+
+                 LTC2954-2    INT                               INT                     INT
+                                                                       μP/μC
+                                                                                                                              INTERRUPT                   INTERRUPT
+           PB                 KILL                              KILL
+                                                                                                                                                                            2954 TA01b
+           GND   ONT          PDT
+                                                                          2954 TA01a
+
+                                     1μF
+
+
+                                     tPDT = 6.4 SECONDS
+
+
+
+
+                                                                                                                                                                            2954fb
+
+
+
+
+                                                                                                                                                                            1
+LTC2954
+ABSOLUTE MAXIMUM RATINGS (Note 1)
+Supply Voltage (VIN) .................................. –0.3V to 33V             Operating Temperature Range
+Input Voltages                                                                     LTC2954C-1 ............................................. 0°C to 70°C
+   PB ............................................................ –6V to 33V      LTC2954C-2 ............................................. 0°C to 70°C
+   ONT ...................................................... –0.3V to 2.7V        LTC2954I-1 ..........................................–40°C to 85°C
+   PDT ....................................................... –0.3V to 2.7V       LTC2954I-2 ..........................................–40°C to 85°C
+   KILL ......................................................... –0.3V to 7V    Storage Temperature Range
+Output Voltages                                                                    DFN Package ..................................... –65°C to 125°C
+   INT ......................................................... –0.3V to 10V      TSOT-23 ............................................. –65°C to 150°C
+   EN/EN .................................................... –0.3V to 33V       Lead Temperature (Soldering, 10 sec)................... 300°C
+
+
+PIN CONFIGURATION
+                                    TOP VIEW
+
+                                                                                                              TOP VIEW
+                           GND 1               8   INT
+                                                                                                     VIN 1                   8 KILL
+                           ONT 2               7   EN/EN
+                                       9                                                             PB 2                    7 PDT
+                            PB 3               6   PDT                                              ONT 3                    6 EN/EN
+                            VIN 4              5   KILL                                             GND 4                    5 INT
+
+                                                                                                            TS8 PACKAGE
+                                DDB PACKAGE                                                            8-LEAD PLASTIC TSOT-23
+                       8-LEAD (3mm s 2mm) PLASTIC DFN                                                    TJMAX = 125°C, θJA = 140°C/W
+                          TJMAX = 125°C, θJA = 165°C/W
+                EXPOSED PAD (PIN 9) PCB GND CONNECTION OPTIONAL
+
+
+
+
+ORDER INFORMATION
+LEAD FREE FINISH             TAPE AND REEL                 PART MARKING*             PACKAGE DESCRIPTION                            TEMPERATURE RANGE
+LTC2954CDDB-1#PBF            LTC2954CDDB-1#TRPBF           LCJG                      8-Lead (3mm × 2mm) Plastic DFN                 0°C to 70°C
+LTC2954CDDB-2#PBF            LTC2954CDDB-2#TRPBF           LCNJ                      8-Lead (3mm × 2mm) Plastic DFN                 0°C to 70°C
+LTC2954IDDB-1#PBF            LTC2954IDDB-1#TRPBF           LCJG                      8-Lead (3mm × 2mm) Plastic DFN                 –40°C to 85°C
+LTC2954IDDB-2#PBF            LTC2954IDDB-2#TRPBF           LCNJ                      8-Lead (3mm × 2mm) Plastic DFN                 –40°C to 85°C
+LTC2954CTS8-1#PBF            LTC2954CTS8-1#TRPBF           LTCJH                     8-Lead Plastic TSOT-23                         0°C to 70°C
+LTC2954CTS8-2#PBF            LTC2954CTS8-2#TRPBF           LTCNK                     8-Lead Plastic TSOT-23                         0°C to 70°C
+LTC2954ITS8-1#PBF            LTC2954ITS8-1#TRPBF           LTCJH                     8-Lead Plastic TSOT-23                         –40°C to 85°C
+LTC2954ITS8-2#PBF            LTC2954ITS8-2#TRPBF           LTCNK                     8-Lead Plastic TSOT-23                         –40°C to 85°C
+LEAD BASED FINISH            TAPE AND REEL                 PART MARKING*             PACKAGE DESCRIPTION                            TEMPERATURE RANGE
+LTC2954CDDB-1                LTC2954CDDB-1#TR              LCJG                      8-Lead (3mm × 2mm) Plastic DFN                 0°C to 70°C
+LTC2954CDDB-2                LTC2954CDDB-2#TR              LCNJ                      8-Lead (3mm × 2mm) Plastic DFN                 0°C to 70°C
+LTC2954IDDB-1                LTC2954IDDB-1#TR              LCJG                      8-Lead (3mm × 2mm) Plastic DFN                 –40°C to 85°C
+LTC2954IDDB-2                LTC2954IDDB-2#TR              LCNJ                      8-Lead (3mm × 2mm) Plastic DFN                 –40°C to 85°C
+LTC2954CTS8-1                LTC2954CTS8-1#TR              LTCJH                     8-Lead Plastic TSOT-23                         0°C to 70°C
+LTC2954CTS8-2                LTC2954CTS8-2#TR              LTCNK                     8-Lead Plastic TSOT-23                         0°C to 70°C
+LTC2954ITS8-1                LTC2954ITS8-1#TR              LTCJH                     8-Lead Plastic TSOT-23                         –40°C to 85°C
+LTC2954ITS8-2                LTC2954ITS8-2#TR              LTCNK                     8-Lead Plastic TSOT-23                         –40°C to 85°C
+Consult LTC Marketing for parts specified with wider operating temperature ranges. *The temperature grade is identified by a label on the shipping container.
+For more information on lead free part marking, go to: http://www.linear.com/leadfree/
+For more information on tape and reel specifications, go to: http://www.linear.com/tapeandreel/
+                                                                                                                                                       2954fb
+
+
+
+
+2
+                                                                                                                       LTC2954
+ELECTRICAL CHARACTERISTICS                                The l denotes the specifications which apply over the full operating
+temperature range, otherwise specifications are at TA = 25°C. VIN = 2.7V to 26.4V, unless otherwise noted. (Note 2)
+SYMBOL            PARAMETER                          CONDITIONS                                          MIN    TYP     MAX      UNITS
+VIN               Supply Voltage Range               Steady State Operation                          l   2.7            26.4         V
+IIN               VIN Supply Current                 System Power-On, VIN = 2.7V to 24V              l           6       12         μA
+VUVL              VIN Undervoltage Lockout           VIN Falling                                     l   2.2    2.3     2.5          V
+VUVL(HYST)        VIN Undervoltage Lockout                                                               50     400     700        mV
+                  Hysteresis
+Pushbutton, Enable (PB, EN/EN))
+VPB(MIN, MAX)     PB Voltage Range                   Single-Ended                                    l   –1             26.4         V
+IPB               PB Input Current                   2.5V < VPB < 26.4V                              l                   ±1         μA
+                                                     VPB = 1V                                        l   –1     –6      –12         μA
+                                                     VPB = 0.6V                                      l   –3     –9      –15         μA
+VPB(VTH)          PB Input Threshold                 PB Falling                                      l   0.6    0.8      1           V
+VPB(VOC)          PB Open Circuit Voltage            IPB = –1μA                                           1     1.6      2           V
+t EN, LOCKOUT     EN/EN Lockout Time (Note 5)        Enable Released → Enable Asserted               l   200    256     325        ms
+IEN(LKG)          EN/EN Leakage Current              VEN/ EN = 1V, Sink Current Off                  l                  ±0.1        μA
+                                                     VEN/ EN = 26.4V, Sink Current Off               l                   ±1         μA
+VEN(VOL)          EN/EN Voltage Output Low           IEN/ EN = 500μA                                 l          0.11    0.4          V
+Power-On Timing Pin (ONT)
+IONT(PU)          ONT Pull-Up Current                VONT = 0V                                       l   –2.4   –3      –3.6        μA
+IONT(PD)          ONT Pull-Down Current              VONT = 1.3V                                     l   2.4     3      3.6         μA
+tDB, ON           Internal Turn-On Debounce Time     ONT Pin Float, PB Falling → Enable Asserted     l   26     32       41        ms
+tONT              Additional Adjustable Turn-On Time CONT = 1500pF                                   l    9     11.5    13.5       ms
+Power-Down Timing Pin (PDT)
+IPDT(PU)          PDT Pull-Up Current                VPDT = 0V                                       l   –2.4   –3      –3.6        μA
+IPDT(PD)          PDT Pull-Down Current              VPDT = 1.3V                                     l   2.4     3      3.6         μA
+t DB, OFF         Turn-Off Interrupt Debounce Time   PB Falling → INT Falling                        l   26     32       41        ms
+t PD,MIN          Internal PB Power-Down Debounce PDT Pin Float, PB Falling → Enable Released        l   52     64       82        ms
+                  Time (Note 4)
+t PDT             Additional Adjustable PB           CPDT = 1500pF                                   l    9     11.5    13.5       ms
+                  Power-Down Debounce Time
+t INT,MIN         Minimum INT Pulse Width            INT Asserted → INT Released                     l   26     32       41        ms
+t INT,MAX         Maximum INT Pulse Width            CPDT = 1500pF, INT Asserted → INT Released      l   35     43.5    54.5       ms
+μP Handshake Pins (INT, KILL)
+IINT(LKG)         INT Leakage Current                VINT = 3V                                       l                   ±1         μA
+VINT(VOL)         INT Output Voltage Low             IINT = 3mA                                      l          0.11    0.4          V
+VKILL(TH)         KILL Input Threshold Voltage       KILL Falling                                    l   0.57   0.6     0.63         V
+VKILL(HYST)       KILL Input Threshold Hysteresis                                                    l   10     30       50        mV
+IKILL(LKG)        KILL Leakage Current               V KILL = 0.6V                                   l                  ±0.1        μA
+t KILL(PW)        KILL Minimum Pulse Width                                                           l   30                         μs
+t KILL(PD)        KILL Propagation Delay             KILL Falling → Enable Released                  l                   30         μs
+t KILL,ON BLANK   KILL Turn-On Blanking (Note 3)     KILL = Low, Enable Asserted → Enable Released   l   400    512     650        ms
+
+
+
+                                                                                                                                 2954fb
+
+
+
+
+                                                                                                                                  3
+LTC2954
+ELECTRICAL CHARACTERISTICS
+  Note 1: Stresses beyond those listed under Absolute Maximum Ratings                                                                           thus turning off system power. This time delay does not include t DB,ON
+  may cause permanent damage to the device. Exposure to any Absolute                                                                            or t ONT.
+  Maximum Rating condition for extended periods may affect device                                                                               Note 4: To manually force an immediate release of the EN/EN pin, the
+  reliability and lifetime.                                                                                                                     pushbutton input must be held low for at least tPD,MIN (internal default
+  Note 2: All currents into pins are positive; all voltages are referenced to                                                                   power-down timer) + t PDT (adjustable by placing external capacitor at
+  GND unless otherwise noted.                                                                                                                   PDT pin).
+  Note 3: The KILL turn-on blanking timer period is the waiting period                                                                          Note 5: The enable lockout time is designed to allow an application to
+  immediately after the enable output is asserted. This blanking time allows                                                                    properly power-down such that the next power-up sequence starts from a
+  sufficient time for the DC/DC converter and the μP to perform power-up                                                                        consistent powered-down configuration. PB is ignored during this lockout
+  tasks. The KILL and PB inputs are ignored during this period. If KILL                                                                         time. This time delay does not include tDB,ON or tONT.
+  remains low at the end of this time period, the enable output is released,
+
+
+
+
+TYPICAL PERFORMANCE CHARACTERISTICS
+
+                                                                                                                                                                                                       Internal Default Turn-On
+                               Supply Current vs Temperature                                                             Supply Current vs Supply Voltage                                              Debounce Time (tDB, ON) vs VIN
+                          10                                                                                       15                                                                             50
+                                          VIN = 26.4V                                                                                                                                                      TA = 25°C
+
+                           8                                                                                       12                              T = 25°C                                       40
+                                                                                                                                        T = 85°C
+                                                   VIN = 3.3V
+                           6                                                                                        9                                                             tDB, ON (ms)    30
+             IVIN (μA)
+
+
+
+
+                                                                                                      IVIN (μA)
+
+
+
+
+                                                                VIN = 2.7V                                                                              T = –40°C
+                           4                                                                                        6                                                                             20
+
+
+                           2                                                                                        3                                                                             10
+
+
+                           0                                                                                        0                                                                             0
+                            –50        –25       0    25     50     75        100                                        0   5     10      15      20     25      30         35                        0        5      10     15      20   25         30
+                                                TEMPERATURE (°C)                                                                            VIN (V)                                                                         VIN (V)
+                                                                         2954 G01                                                                                      2954 G02                                                                 2954 G03
+
+
+
+
+                               Turn-On Debounce Time (tDB, ON +                                                          ONT Pull-Up Current                                                           Turn-Off Debounce Time (tDB, OFF)
+                               tONT) vs ONT External Capacitance                                                         vs Temperature                                                                vs VIN
+                  10000                                                                                           –3.4                                                                            50
+                                   TA = 25°C                                                                                                                                                               TA = 25°C
+                                   VIN = 3.3V
+                                                                                                                                                                                                  40
+                                                                                    ONT PULL-UP CURRENT (μA)
+
+
+
+
+                                                                                                                  –3.2
+tDB, ON + tONT (ms)
+
+
+
+
+                      1000
+                                                                                                                                                                                  tDB, OFF (ms)
+
+
+
+
+                                                                                                                                                    VIN = 26.4V                                   30
+                                                                                                                  –3.0
+                                                                                                                                          VIN = 2.7V                                              20
+                         100
+                                                                                                                  –2.8
+                                                                                                                                                                                                  10
+
+
+                          10                                                                                      –2.6                                                                             0
+                               1             10          100                 1000                                     –50    –25     0    25     50               75        100                        0        5      10     15      20   25         30
+                                       ONT EXTERNAL CAPACITANCE (nF)                                                                TEMPERATURE (°C)                                                                        VIN (V)
+                                                                         2954 G04                                                                                      2954 G05                                                                 2954 G06
+
+
+
+
+                                                                                                                                                                                                                                                 2954fb
+
+
+
+
+4
+                                                                                                                                                                                                                                                                                          LTC2954
+ TYPICAL PERFORMANCE CHARACTERISTICS
+                                                                                                                                            PB Power-Down Debounce Time
+                                    Internal Default PB Power-Down                                                                          (tPD,MIN + tPDT) vs PDT External                                                                                PDT Pull-Up Current
+                                    Debounce Time (t PD,MIN) vs VIN                                                                         Capacitance                                                                                                     vs Temperature
+                              70                                                                                               10000                                                                                                            –3.4
+                                                                                                                                               TA = 25°C
+                                                                                                                                               VIN = 3.3V
+                              60
+                                        TA = 25°C
+
+
+
+
+                                                                                                                                                                                                                   PDT PULL-UP CURRENT (μA)
+                                                                                                                                                                                                                                                –3.2
+                              50
+
+
+
+
+                                                                                                            tPD, MIN + tPDT (ms)
+                                                                                                                                   1000
+tPD, MIN (ms)
+
+
+
+
+                                                                                                                                                                                                                                                                                              VIN = 26.4V
+                              40
+                                                                                                                                                                                                                                                –3.0
+                              30                                                                                                                                                                                                                                                  VIN = 2.7V
+                                                                                                                                    100
+                              20
+                                                                                                                                                                                                                                                –2.8
+
+                              10
+
+                               0                                                                                                      10                                                                                                        –2.6
+                                    0        5                     10       15      20     25         30                                   1                10          100                                 1000                                    –50            –25        0    25     50                75        100
+                                                                          VIN (V)                                                                     PDT EXTERNAL CAPACITANCE (nF)                                                                                          TEMPERATURE (°C)
+                                                                                                2954 G07                                                                                               2954 G08                                                                                                  2954 G09
+
+
+
+
+                                                                                                                                                                                               PB Voltage vs External PB
+                                                                           PB Current vs PB Voltage                                                                                            Resistance to Ground
+                                                                   –250                                                                                                                  300
+                                                                                                                                   TA = 25°C                                                       VIN = 3.3V
+                                                                                                                                   VIN = 3.3V
+                                                                                                                                                                                         250
+                                                                   –200
+                                                                                                                                                                       PB VOLTAGE (mV)
+                                                 PB CURRENT (μA)
+
+
+
+
+                                                                                                                                                                                         200
+                                                                                                                                                                                                                                              TA = 100°C
+                                                                   –150
+                                                                                                                                                                                         150                                                                        TA = 25°C
+                                                                   –100
+                                                                                                                                                                                                                                                           TA = –45°C
+                                                                                                                                                                                         100
+
+                                                                    –50
+                                                                                                                                                                                          50
+
+
+                                                                        0                                                                                                                  0
+                                                                        –10    –5    0     5    10 15                       20          25       30                                            0        5         10       15       20
+                                                                                         PB VOLTAGE (V)                                                                                         EXTERNAL PB RESISTANCE TO GROUND (kΩ)
+                                                                                                                                           2954 G10                                                                                                                          2954 G11
+
+
+
+
+                                    EN/EN VOL vs Current Load                                                                               EN (LTC2954-1) Voltage vs VIN                                                                                   EN (LTC2954-2) Voltage vs VIN
+                              600                                                                                                    1.0                                                                                                               4
+                                        TA = 25°C                                                                                              TA = 25°C                                                                                                       TA = 25°C
+                                        VIN = 3.3V                                                                                             100k PULL-UP FROM EN TO VIN                                                                                     100k PULL-UP FROM EN TO VIN
+                              500
+                                                                                                                                     0.8
+                                                                                                                                                                                                                                                       3
+         EN/EN VOLTAGE (mV)
+
+
+
+
+                              400
+                                                                                                                                     0.6
+                                                                                                                          EN (V)
+
+
+
+
+                                                                                                                                                                                                                                              EN (V)
+
+
+
+
+                              300                                                                                                                                                                                                                      2
+                                                                                                                                     0.4
+                              200
+                                                                                                                                                                                                                                                       1
+                                                                                                                                     0.2
+                              100
+
+
+                                0                                                                                                      0                                                                                                               0
+                                 0.0          0.5     1.0    1.5    2.0                               2.5                                  0              1        2                           3               4                                           0             1                2           3                 4
+                                               EN/EN CURRENT LOAD (mA)                                                                                           VIN (V)                                                                                                                VIN (V)
+                                                                                                2954 G12                                                                                                2954 G13                                                                                                 2954 G14
+
+
+
+
+                                                                                                                                                                                                                                                                                                                   2954fb
+
+
+
+
+                                                                                                                                                                                                                                                                                                                   5
+LTC2954
+PIN FUNCTIONS (TSOT-23/DFN)
+VIN (Pin 1/Pin 4): Power Supply Input: 2.7V to 26.4V.          and held low (tPD,MIN + tPDT) during normal operation. This
+                                                               pin can connect directly to a DC/DC converter shutdown
+PB (Pin 2/Pin 3): Pushbutton Input. Connecting PB to
+                                                               pin that provides an internal pull-up. Otherwise a pull-up
+ground through a momentary switch provides on/off
+                                                               resistor to an external supply is required. The operating
+control via the EN/EN and INT outputs. An internal 100k
+                                                               range for this low leakage pin is 0V to 26.4V.
+pull-up resistor connects to an internal 1.9V bias voltage.
+The rugged PB input withstands ±10kV ESD HBM and               EN (LTC2954-2, Pin 6/Pin 7): Open Drain Enable Bar
+can be pulled up to 26.4V externally without consuming         Output. This pin is intended to enable system power. EN is
+extra current.                                                 asserted low after a valid PB turn-on event (t DB,ON + t ONT).
+                                                               EN releases high if: a) KILL is not driven high (by μP) within
+ONT (Pin 3/Pin 2): Turn-On Time Input. Placing an external
+                                                               512ms of the initial valid PB power turn-on event, b) KILL
+capacitor to ground determines the additional time (6.4
+                                                               is driven low during normal operation, c) PB is pressed
+seconds/μF) the PB pin must be held low before the enable
+                                                               and held low (tPD,MIN + tPDT) during normal operation. This
+output is asserted. Floating this pin results in a default
+                                                               pin can connect directly to a DC/DC converter shutdown
+turn on debounce time of 32ms.
+                                                               pin that provides an internal pull-up. Otherwise a pull-up
+GND (Pin 4/Pin 1): Device Ground.                              resistor to an external supply is required. The operating
+INT (Pin 5/Pin 8): Open Drain Interrupt Output. After a        range of this pin is 0V to 26.4V.
+pushbutton turn-off event is detected (tDB,OFF), the LTC2954   PDT (Pin 7/Pin 6): Power-Down Time Input. A capacitor
+interrupts the system (μP) by asserting the INT pin low.       to ground determines the additional time (6.4 seconds/μF)
+The μP would perform power-down and housekeeping               that the pushbutton must be held low before immediately
+tasks and then assert the KILL pin low, thus releasing the     releasing the EN/EN and INT outputs. Floating this pin
+enable output. The INT pulse width is a minimum of 32ms        results in a pushbutton power-down time of 64ms.
+and stays low as long as PB is asserted. If PB is asserted
+for longer than tPD,MIN + tPDT, the INT and EN/EN outputs      KILL (Pin 8/Pin 5): Kill Input. Forcing KILL low releases the
+are immediately released.                                      enable output. During system turn-on, this pin is blanked by
+                                                               a 512ms internal timer (tKILL,ON BLANK) to allow the system
+EN (LTC2954-1, Pin 6/Pin 7): Open Drain Enable Output.         to pull KILL high. This pin has an accurate 0.6V threshold
+This pin is intended to enable system power. EN is asserted    and can be used as a voltage monitor input. If unused,
+high after a valid PB turn-on event (tDB,ON + tONT). EN is     connect to a low voltage output supply (see Figure 6).
+released low if: a) KILL is not driven high (by μP) within
+512ms of the initial valid PB power turn-on event, b) KILL     Exposed Pad (Pin 9 DFN Only): Exposed Pad may be left
+is driven low during normal operation, c) PB is pressed        open or connected to device ground.
+
+
+
+
+                                                                                                                        2954fb
+
+
+
+
+6
+                                                                                                                    LTC2954
+BLOCK DIAGRAM
+
+                                                                                                                      EN (–1)
+                                                                                                                      EN (–2)
+                                                                                                              HIGH VOLTAGE
+     VIN                 1.5k
+                                          REGULATOR               2.4V
+     2.7V TO 26.4V
+                                29V
+            2.4V                ZENER
+
+
+
+                                              OSCILLATOR                                                                KILL
+                  100k
+     PB
+                                                                                 LOGIC
+                                 10μS
+                                FILTER        DEBOUNCE                                                                   0.6V
+
+           0.8V
+                                                                                                                         INT
+                                                                               OSCILLATOR
+
+
+
+
+     GND
+
+
+                                                                         ONT                            PDT
+                                                                                                                             2954 BD
+
+
+
+
+TIMING DIAGRAMS
+
+                                                      tKILL(PW)
+
+                                   KILL
+
+
+                                                           tKILL(PD)
+
+                                  EN/EN
+
+                                                                                            2954 TD01
+
+
+
+
+                                                                                                                                       2954fb
+
+
+
+
+                                                                                                                                       7
+LTC2954
+TIMING DIAGRAMS
+              PB                                                                   PB & KILL IGNORED
+
+
+                                      tDB, ON                tONT                   tKILL, ON BLANK
+
+
+              ONT
+
+                                                           16 CYCLES
+
+
+              EN
+      (LTC2954-1)
+
+                                                                                                       2954 TD02
+
+
+                                                     Power-On Timing
+
+
+
+
+              PB                                                    PB IGNORED
+
+
+                                                  tDB, OFF                          t < tPDT
+
+
+             PDT
+
+
+                                                             tPD,MIN
+
+
+              INT
+
+
+                                                                       tINT,MIN
+                                                                                                       2954 TD03
+
+
+
+
+                        Off Interrupt Timing, PB Pressed and Released, Enable Remains Active
+
+
+
+
+                                                              PB
+              PB                                           IGNORED
+
+                                                tDB, OFF
+                                                                       16 CYCLES
+
+             PDT
+
+
+                                                     tPD,MIN               tPDT
+
+
+              INT
+
+
+                                                                     tINT,MAX
+
+
+              EN
+      (LTC2954-1)
+
+                                                                                                       2954 TD04
+
+
+                    Forced Off, Power-Down Timing, PB Pressed and Held Low for t > (tPD,MIN + tPDT)
+                                                                                                                   2954fb
+
+
+
+
+8
+                                                                                                       LTC2954
+APPLICATIONS INFORMATION
+Description                                                   maximum time required to power up the DC/DC converter
+                                                              and the μP. If KILL is not brought high during this 512ms
+The LTC2954 is a pushbutton on/off controller that provides
+                                                              time window, the enable output is released. The assump-
+control of system power via a pushbutton interface. An
+                                                              tion is that 512ms is sufficient time for the system to
+enable output toggles system power while an interrupt
+                                                              power up.
+output provides debounced pushbutton status. The inter-
+rupt output can be used in menu driven applications to        Turn Off
+request a system power-down. A power kill input allows
+a microprocessor or system to release the enable output,      To initiate a power-down sequence, assert the INT output
+effectively powering down the system. Independently ad-       low by pressing the pushbutton for a minimum of 32ms
+justable on and off timers allow dependable pushbutton        (tDB,OFF). The interrupt signal serves as a power-down
+control of the enable output and resistance to accidental     request to the μP. The μP would then perform power-down
+toggling of system power.                                     and housekeeping tasks and assert KILL low when done.
+                                                              This in turn releases the enable output, thus shutting off
+The length of time the pushbutton input (PB) must be held     system power.
+low in order to toggle the enable (EN/EN) output on and
+off is independently adjustable with external capacitors      Adjustable Power-Down Timer
+at the ONT/PDT pins, respectively. During normal opera-
+tion, the interrupt output (INT) is asserted 32ms after PB    The LTC2954 provides a failsafe feature that allows the
+goes low. INT then tracks PB until either PB or EN/EN is      user to turn off system power (via PB) under system fault
+released. See Timing Diagrams on page 8.                      conditions. For cases when the μP fails to respond to the
+                                                              interrupt signal, the user can force an immediate power-
+The KILL input is used to immediately release the enable      down by pressing and holding down the pushbutton. The
+output. During a normal power-down sequence, INT re-          length of time that PB must be held low is given by a fixed
+quests a system power-down. The μP then performs its          internal 64ms delay (tPD,MIN) plus an adjustable power-
+housekeeping tasks and then sets KILL low. If the μP fails    down timer delay (tPDT, see Timing Diagrams on page 8).
+to set KILL low, the user can force a system shutdown by      The adjustable delay is set by placing an optional external
+pressing and holding the pushbutton until the PDT timer       capacitor on the PDT pin. Use the following equation to
+expires.                                                      calculate the capacitance for the desired delay. CPDT is the
+                                                              PDT external capacitor (μF):
+Turn On
+                                                                CPDT = 1.56 × 10-4 [μF/ms] • (tPDT – 1ms)
+When power is first applied to the LTC2954, the part ini-
+tializes the output pins. Any DC/DC converters connected      Simplified Power On/Off Sequence
+to the EN/EN pin will therefore be held off. To assert the
+enable output, PB must be held low for a minimum of           Figure 1 shows a simplified LTC2954-1 power-on and
+32ms (tDB, ON). The LTC2954 provides additional turn-on       power-off sequence. A high to low transition on PB (t1)
+debounce time (tONT) via an optional capacitor connected      initiates the power on sequence. In order to assert the
+to the ONT pin. The following equation describes the ad-      enable output, the PB pin must stay low continuously (PB
+ditional time that PB must be held low before asserting the   high resets timers) for a time controlled by the default
+enable output. CONT is the ONT external capacitor (μF):       32ms and the external ONT capacitor (t2 –t1). Once EN
+                                                              goes high (t2), an internal 512ms blanking timer is started.
+ CONT = 1.56 × 10–4 [μF/ms] • (tONT – 1ms)                    This blanking timer is designed to give sufficient time for
+Once the enable output is asserted, any DC/DC converters      the DC/DC converter to reach its final voltage, and to allow
+connected to this pin are turned on. The KILL input from      the μP enough time to perform power-on tasks.
+the μP is ignored during a succeeding 512ms blanking          The KILL pin must be pulled high within 512ms of the EN
+time (t KILL,ON BLANK). This blanking time represents the     pin going high. Failure to do so results in the EN pin going
+                                                                                                                     2954fb
+
+
+
+
+                                                                                                                     9
+LTC2954
+APPLICATIONS INFORMATION
+                 t1                        t2        t3              t4             t5              t6           t7   t8     t9
+
+
+       PB                                       PB & KILL IGNORED                                   PB IGNORED
+
+
+                      tDB, ON                     t KILL, ON BLANK                       tDB, OFF
+
+
+      ONT
+
+
+                                   tONT
+
+      PDT
+
+
+
+                                                                                                     tPD, MIN
+
+
+      INT
+
+
+                                                                                                    t < tPDT
+
+
+      KILL   XXX DON'T CARE                                                                                      μP DRIVES
+                                                                                                                  KILL LOW
+
+
+
+
+       EN
+
+                                                                                                                                  2954 F01
+
+
+
+             Figure 1. Simplified Power On/Off Sequence for LTC2954-1. μP Asserts KILL After an Interrupt
+
+
+
+                                                                                         tABORT
+
+
+                                          PB
+
+
+                                                            tDB,ON + tONT         512ms
+                                                                                INTERNAL
+                                                                                  TIMER
+
+
+                                POWER-ON
+                                   TIMING
+
+
+                                                                                                         POWER
+                                                                                                         TURNED OFF
+
+                                          EN
+
+
+                                                                     μP FAILED TO SET
+                                                                            KILL HIGH
+
+                                     KILL
+
+                                                                                                                  2954 F02
+
+
+
+                           Figure 2. KILL Remaining Low Aborts Power-On Sequence for LTC2954-1
+
+
+
+
+                                                                                                                                             2954fb
+
+
+
+
+10
+                                                                                                                       LTC2954
+APPLICATIONS INFORMATION
+low 512ms after it went high. Note that the LTC2954 does                  Aborted Power-On Sequence
+not sample KILL and PB until after the 512ms internal timer               The power-on sequence is aborted when the KILL remains
+has expired. The reason PB is ignored is to ensure that                   low at the end of the 512ms blanking time. Figure 2 is a
+the system is not forced off while powering on. Once the                  simplified version of an aborted power-on sequence. At
+512ms timer expires (t4), the release of the PB pin is then               time tABORT, since KILL is still low, EN pulls low (thus
+debounced with an internal 32ms timer. The system has                     turning off the DC/DC converter).
+now properly powered on and the LTC2954 monitors PB
+and KILL for a turn-off command while consuming only                      μP Turns Off Power During Normal Operation
+6μA of supply current.
+                                                                          Once the system has powered on and is operating nor-
+A high to low transition on PB (t5) starts the power-off                  mally, the μP can turn off power by setting KILL low, as
+sequence debounce timer. In order to assert the interrupt                 shown in (Figure 3). At time t KILL, KILL is set low by the
+output (INT), PB must stay low continuously (PB high                      μP. This immediately pulls EN low, thus turning off the
+resets debounce timer) for 32ms (t6–t5). At the comple-                   DC/DC converter.
+tion of the power-down debounce timer (t6), an internal
+interrupt timer keeps the interrupt output low for at least               DC/DC Turn Off Blanking
+32ms, even if PB is released between t6 and t7. If PB is
+low at the end of this 32ms internal timer (t7), the external             When the DC/DC converter is turned off, it can take a sig-
+adjustable power-down timer is started. The capacitor                     nificant amount of time for its output to decay to ground. It
+placed at the PDT pin will determine the time period of                   is desirable to wait until the output of the DC/DC converter
+this timer. If the pushbutton is released prior to 16 cycles              is near ground before allowing the user (via PB) to restart
+of the PDT pin, the interrupt output will go high (t8). Note              the converter. This condition guarantees that the μP has
+that the enable output is not directly changed by this                    always powered down completely before it is restarted.
+interrupt pulse. The function of the interrupt signal is to               Figure 4 shows the μP turning power off. After a low on
+initiate a software shutdown. At t9, the μP has performed                 KILL releases enable, the internal 256ms timer ignores the
+its power-down functions and asserted the KILL input                      PB pin. This is shown as tEN/EN, LOCKOUT in (Figure 4).
+low. This releases the enable output, which in turn shuts
+down system power. Note that if the pushbutton is held
+long enough to count 16 cycles at the PDT pin, the enable
+pin would be released immediately after the 16th cycle.
+The system is now in its reset state where the LTC2954 is
+in low power mode (6μA) and PB is monitored for a high                                                                     tEN/EN, LOCKOUT
+
+to low transition.                                                            PB        POWER ON                            PB IGNORED
+
+
+                                                  tKILL
+                                                                                                                  DC/DC
+                                                                                                               TURNS OFF
+   PB                                                                                                                          256ms
+                                                                     PB BLANKING
+                                                                       (INTERNAL
+                                                    DC/DC                 SIGNAL)
+                                                  TURNS OFF
+
+                                                                              EN
+   EN
+
+                                                μP SETS
+                                               KILL LOW                                                                          μP SETS
+                                                                                                                                 KILL LOW
+
+  KILL        XXX DON’T CARE                                                 KILL    XXX DON’T CARE
+
+                                                          2954 F03                                                                           2954 F04
+
+
+
+
+           Figure 3. μP Turns Off Power (LTC2954-1)                                 Figure 4. DC/DC Turn-Off Blanking (LTC2954-1)
+                                                                                                                                             2954fb
+
+
+
+
+                                                                                                                                    11
+LTC2954
+APPLICATIONS INFORMATION
+LTC2954-1, LTC2954-2 Versions                                                            without latching up the device. PB has an ESD HBM rating
+The LTC2954-1 (high true EN) and LTC2954-2 (low true                                     of ±10kV. If the pushbutton switch connected to PB exhib-
+EN) differ only by the polarity of the high voltage (33V ABS                             its high leakage current, then an external pull-up resistor
+MAX), enable pin. The LTC2954-1 EN pin is a low leakage                                  to VIN is recommended. Furthermore, if the pushbutton
+                                                                                         switch is physically located far from the LTC2954 PB pin,
+high true open drain output designed to drive the shutdown
+                                                                                         parasitic capacitances may couple onto the high imped-
+pin of DC/DC converters. The LTC2954-2 is a low leakage,
+                                                                                         ance PB input. Additionally, parasitic series inductance
+low true open drain enable output designed to drive the
+                                                                                         may cause unpredictable ringing at the PB pin. Placing
+gate of an external PFET. The LTC2954-2 provides a user
+                                                                                         a 5.1k resistor from the PB pin to the pushbutton switch
+manual power path control.
+                                                                                         would mitigate parasitic inductance problems. Placing a
+High Voltage Pins                                                                        0.1μF capacitor on the PB pin would lessen the impact of
+                                                                                         parasitic capacitive coupling.
+The VIN, PB and EN/EN pins can operate at voltages up to
+26.4V. PB can, additionally, operate below ground (–6V)
+
+
+
+TYPICAL APPLICATIONS
+Voltage Monitoring with KILL Input                                                       enough to keep leakage currents from tripping the 0.6V
+                                                                                         KILL comparator.
+The KILL pin can be used as a voltage monitor. Figure 5
+shows an application where the KILL pin has a dual func-                                 The DC/DC converter shown has an internal pull-up cur-
+tion. It is driven by a low leakage open drain output of the                             rent on its SHDN pin. A pull-up resistor on EN is thus not
+μP. It is also connected to a resistive divider that monitors                            needed.
+battery voltage (VIN). When the battery voltage falls be-
+low the set value, the voltage at the KILL pin falls below                               Operation Without μP
+0.6V and the EN pin is quickly pulled low. Note that the                                 Figure 6 shows how to connect the KILL pin when there
+resistor values should be as large as possible, but small                                is no circuitry available to drive it. The minimum pulse
+     VIN = 9V                                                                                 VIN = 9V
+
+                                                      VIN         VOUT          3.3V                                                           VIN      VOUT               3.3V
+                                                       LT1767-3.3                                                                               LT1767-3.3
+                        R3
+                      806k                            SHDN**                                                                                   SHDN**
+                       1%
+                        R2
+                      100k
+                       1%
+                                                                                                                                                                     R1
+                                                                                                                                                                     100k
+                                                            R1
+                VIN                    EN                                                                VIN                  EN
+    C4                                                      10k                              C4
+                        LTC2954-1                                                                              LTC2954-1
+ 0.1μF                                                                                    0.1μF
+                                       INT                         INT                                                        INT
+                                                                         μP
+                PB                  KILL                           KILL                                  PB                  KILL
+                                                                   (OPEN DRAIN)
+                GND ONT             PDT                                                                  GND ONT             PDT                                 +     C3*
+                                                                              2954 F05
+                                                                                                                   CONT*            CPDT*                              0.01μF
+                             CONT*           CPDT*    * OPTIONAL                                                   0.033μF          1μF      * OPTIONAL
+                             0.033μF         1μF     ** SHDN INTERNALLY PULLED                                                              ** SHDN INTERNALLY       2954 F06
+
+                                                        UP BY THE LT1767-3.3                                                                   PULLED UP BY
+                                                                                                                                               THE LT1767-3.3
+
+         Figure 5. Input Voltage Monitoring with KILL Input                                                    Figure 6. No μP Application
+                                                                                                                                                                         2954fb
+
+
+
+
+12
+                                                                                                                                                   LTC2954
+TYPICAL APPLICATIONS
+width detected is 30μs. If there are glitches on the resis-                         PFET through a resistive divider. The KILL pin serves as
+tor pull-up voltage that are wider than 30μs and transition                         a voltage monitor. When VOUT drops below 6V, causing a
+below 0.6V, then an appropriate bypass capacitor should                             KILL voltage below VKILL(TH), the EN pin becomes an open
+be connected to the KILL pin. The optional CPDT external                            circuit 30μs later. Since the PDT pin is open-circuited, the
+capacitor extends the length of time (beyond 64ms) that                             power-down debounce time defaults to 64ms.
+the PB input must be held low before releasing the enable
+output.                                                                             PB Pin in a Noisy Environment
+                                                                                    The rugged PB pin is designed to operate in noisy environ-
+High Voltage PowerPath Switching
+                                                                                    ments. Transients below ground (>–6V) and above VIN
+The high voltage EN open drain output of the LTC2954-2                              (<33V) will not damage the rugged PB pin. Additionally,
+is designed to switch on/off an external power PFET. This                           the PB pin can withstand ESD HBM strikes up to ±10kV.
+allows a user to connect/disconnect a power supply (or                              In order to keep external noise from coupling inside the
+battery) to its load by toggling the PB pin. Figure 7 shows                         LTC2954, place an R-C network close to the PB pin. A 5.1k
+the LTC2954-2 controlling a two cell Li-Ion battery ap-                             resistor and a 0.1μF capacitor should suffice for most noisy
+plication. The KILL pin is connected to the output of the                           applications (see Figure 8).
+
+
+                                                                                                                               VOUT
+                                                                    R5                         M1
+                                                                    100k                                                 VOUT,TRIP POINT = 6V
+                                                                                          R9
+                                                                                          100k                           R1
+                               4.2V   +                                                                                  909k
+                      SINGLE CELL
+                    Li-Ion BATTERY                                                                                       1%
+
+                                            C4         VIN                    EN
+                                         0.1μF
+                                      CERAMIC                  LTC2954-2     INT
+                                                                                                                         OPTIONAL GLITCH
+                               4.2V   +                PB                    KILL                                        FILTER CAPACITOR
+                      SINGLE CELL                                                    VTH = 0.6V INPUT
+                    Li-Ion BATTERY                     GND ONT               PDT
+                                                                                                              R4
+                                                                                                            100k                      C3*
+                                                                   CONT*                                     1%                       0.1μF
+                                                                   0.033μF
+                                                                                                *OPTIONAL                               2954 F07
+
+
+
+
+                                          Figure 7. PowerPath Control with 6V Undervoltage Detect
+
+                                                                                    VIN
+                                      PARASITICS
+                                                    TRACE
+                                                                     R6                   VIN                      EN
+                                                 CAPACITANCE
+                                                                    5.1k
+                                                                                          PB        LTC2954-1      INT
+                                             NOISE
+
+                                                   TRACE                C5                                      KILL
+                                              INDUCTANCE             0.1μF                GND         ONT       PDT
+
+
+
+
+                                                                                                 DETAILS OMITTED
+                                                                                                   FOR CLARITY
+
+                                                                                                                         2954 F08
+
+
+
+                                                             Figure 8. Noisy PB Trace
+                                                                                                                                                        2954fb
+
+
+
+
+                                                                                                                                                      13
+LTC2954
+TYPICAL APPLICATIONS
+External Pull-Up Resistor On PB                                      Reverse Battery Protection
+An internal pull-up resistor on the PB pin makes an ex-              To protect the LTC2954 from a reverse battery connec-
+ternal pull-up resistor unnecessary. Leakage current on              tion, place a 1k resistor in series with the VIN pin (see
+the PB board trace, however, will affect the open circuit            Figure 10).
+voltage on the PB pin. If the leakage is too large (>2μA),
+the PB voltage may fall close to the threshold window. To
+mitigate the effect of the board leakage, a 10k resistor to
+VIN is recommended (see Figure 9).
+
+
+                                                                             LTC2954-1/
+                                      VIN                            VIN     LTC2954-2
+                                                                              2.4V
+
+                                                   R7
+                                                   10k
+                                                                                 100k
+                                                                     PB
+                                             EXTERNAL BOARD
+                                            LEAKAGE CURRENT
+                                                              >2μA             GND
+                                                                                     PINS OMITTED
+                                                                                      FOR CLARITY
+                                                                                            2954 F09
+                                               IF EXTERNAL PARASITIC BOARD
+                                                LEAKAGE >2μA, USE EXTERNAL
+                                                     PULL-UP RESISTOR
+
+
+
+                                        Figure 9. External Pull-Up Resistor On PB Pin
+
+
+
+
+                                                                                                                         2954fb
+
+
+
+
+14
+                                                                                                                                             LTC2954
+PACKAGE DESCRIPTION
+                                                                     DDB Package
+                                                           8-Lead Plastic DFN (3mm × 2mm)
+                                                          (Reference LTC DWG # 05-08-1702 Rev B)
+
+
+             0.61 ±0.05                                                                                                     R = 0.115                 0.40 ± 0.10
+                                                                              3.00 ±0.10
+             (2 SIDES)                                                                                      R = 0.05              TYP
+                                                                              (2 SIDES)
+                                                                                                                TYP                5              8
+                                             0.70 ±0.05
+2.55 ±0.05
+                                                                                               2.00 ±0.10
+       1.15 ±0.05                                             PIN 1 BAR                                                                                      PIN 1
+                                                                                               (2 SIDES)
+                                                             TOP MARK                                                                                        R = 0.20 OR
+                                                           (SEE NOTE 6)                                                                                      0.25 × 45°
+                                                PACKAGE                                                       0.56 ± 0.05
+                                                OUTLINE                                                        (2 SIDES)                                     CHAMFER
+                                                                                                                                   4              1          (DDB8) DFN 0905 REV B
+          0.25 ± 0.05                                             0.200 REF                    0.75 ±0.05                   0.25 ± 0.05
+                                  0.50 BSC                                                                                                        0.50 BSC
+                          2.20 ±0.05                                                                                                 2.15 ±0.05
+                          (2 SIDES)                                                                                                  (2 SIDES)
+                                                                                                       0 – 0.05
+      RECOMMENDED SOLDER PAD PITCH AND DIMENSIONS                                                                       BOTTOM VIEW—EXPOSED PAD
+
+      NOTE:
+      1. DRAWING CONFORMS TO VERSION (WECD-1) IN JEDEC PACKAGE OUTLINE M0-229
+      2. DRAWING NOT TO SCALE
+      3. ALL DIMENSIONS ARE IN MILLIMETERS
+      4. DIMENSIONS OF EXPOSED PAD ON BOTTOM OF PACKAGE DO NOT INCLUDE
+         MOLD FLASH. MOLD FLASH, IF PRESENT, SHALL NOT EXCEED 0.15mm ON ANY SIDE
+      5. EXPOSED PAD SHALL BE SOLDER PLATED
+      6. SHADED AREA IS ONLY A REFERENCE FOR PIN 1 LOCATION ON THE TOP AND BOTTOM OF PACKAGE
+
+
+
+
+                                                                                                                                                                        2954fb
+
+
+
+
+                                                                                                                                                              15
+LTC2954
+PACKAGE DESCRIPTION
+                                                                 TS8 Package
+                                                            8-Lead Plastic TSOT-23
+                                                    (Reference LTC DWG # 05-08-1637 Rev A)
+
+
+
+                      0.40                  0.65                                                          2.90 BSC
+                      MAX                   REF                                                           (NOTE 4)
+
+
+
+
+                                                      1.22 REF
+
+
+
+
+                                                                  2.80 BSC    1.50 – 1.75
+  3.85 MAX 2.62 REF                                   1.4 MIN                  (NOTE 4)
+
+                                                                                                   PIN ONE ID
+
+
+
+
+                      RECOMMENDED SOLDER PAD LAYOUT                                                                            0.22 – 0.36
+                                                                                        0.65 BSC
+                           PER IPC CALCULATOR                                                                                  8 PLCS (NOTE 3)
+
+
+                                                                                    0.80 – 0.90
+
+       0.20 BSC
+                                                                                                                              0.01 – 0.10
+                                                                             1.00 MAX
+               DATUM ‘A’
+
+
+
+                                  0.30 – 0.50 REF
+                                                            0.09 – 0.20                                   1.95 BSC   TS8 TSOT-23 0710 REV A
+
+                                                             (NOTE 3)
+        NOTE:
+        1. DIMENSIONS ARE IN MILLIMETERS
+        2. DRAWING NOT TO SCALE
+        3. DIMENSIONS ARE INCLUSIVE OF PLATING
+        4. DIMENSIONS ARE EXCLUSIVE OF MOLD FLASH AND METAL BURR
+        5. MOLD FLASH SHALL NOT EXCEED 0.254mm
+        6. JEDEC PACKAGE REFERENCE IS MO-193
+
+
+
+
+                                                                                                                                                 2954fb
+
+
+
+
+16
+                                                                                                                                            LTC2954
+REVISION HISTORY (Revision history begins at Rev B)
+ REV   DATE   DESCRIPTION                                                                                                                    PAGE NUMBER
+ B     2/11   Revised Pin Descriptions for EN and EN pins                                                                                         6
+              Revised notes for Figures 5 and 6 in Typical Applications                                                                          12
+
+
+
+
+                                                                                                                                                      2954fb
+
+
+
+
+                                                                                                                                                 17
+                                 Information furnished by Linear Technology Corporation is believed to be accurate and reliable. However,
+                                 no responsibility is assumed for its use. Linear Technology Corporation makes no representation that
+                                 the interconnection of its circuits as described herein will not infringe on existing patent rights.
+LTC2954
+TYPICAL APPLICATION
+                                                                                                 VIN        VOUT
+                                        9V    +
+                                                        R8                            R5
+                                   BATTERY                                                        LT1761-1.8
+                                                        1k                          910k
+                                                                                                 SHDN
+
+                                                                                                                       1.8V
+                                                                                                    R1
+                                                             VIN                  EN
+                                                 C4                                                10k
+                                              0.1μF
+                                                                   LTC2954-1     INT                           INT
+                                                                                                                      μP
+                                                             PB                  KILL                          KILL
+                                                             GND ONT             PDT
+
+
+                                                                       CONT*            CPDT*
+                                                                       0.033μF          1μF
+                                                                                                *OPTIONAL                  2954 TA02
+
+
+
+
+                                                      Figure 10. Reverse Battery Protection
+
+
+
+RELATED PARTS
+PART NUMBER          DESCRIPTION                                         COMMENTS
+LTC2900              Programmable Quad Supply Monitor                    Adjustable RESET, 10-Lead MSOP and 3mm × 3mm DFN Packages
+LTC2904/LTC2905      Pin-Programmable Dual Supply Monitors               Adjustable RESET and Tolerance, 8-Lead SOT-23 and
+                                                                         3mm × 2mm DFN Packages
+LTC2909              Precision Triple/Dual Input UV, OV and Negative     6.5V Shunt Regulator for High Voltage Operation
+                     Voltage Monitor
+LTC2910              Octal Positive/Negative Voltage Monitor             Eight Adjustable Inputs (0.5V)
+LTC2914              Quad UV/OV Positive/Negative Voltage Monitor        Adjustable UV and OV Trip Values
+LTC2950/LTC2951      Pushbutton On/Off Controllers                       High Voltage, Low Power Pushbutton Controller with
+                                                                         Power-Down Fault Detect KILL Timer
+LTC4411              2.6A Low Loss Ideal Diode in ThinSOT                 No External MOSFET, Automatic Switching Between DC Sources
+LTC4412HV            Power Path Controller in ThinSOT                     Efficient Diode-ORing, Automatic Switching Between DC Sources, 3V to 36V
+LTC4055              USB Power Controller and Li-Ion Charger              Automatic Switchover, Charges 1-Cell Li-Ion Batteries
+LT4351               MOSFET Diode-OR Controller                          Wide Input Range: 1.2V to 18V
+LTC2952              Pushbutton PowerPath™ Controller with               Automatic Low Loss Switchover Between DC Sources
+                     Supervisor
+LTC2953              Pushbutton ON/OFF Controller with Voltage           High Voltage Pushbutton Controller with 200ms Voltage Reset Monitor
+                     Monitoring
+
+
+
+
+                                                                                                                                                                    2954fb
+
+                                                                                                                                            LT 0211 REV B • PRINTED IN USA
+
+
+18 Linear Technology Corporation
+            1630 McCarthy Blvd., Milpitas, CA 95035-7417
+            (408) 432-1900 ● FAX: (408) 434-0507 ● www.linear.com                                                                  © LINEAR TECHNOLOGY CORPORATION 2006
+

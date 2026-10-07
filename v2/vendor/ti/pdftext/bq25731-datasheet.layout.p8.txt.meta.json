@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 8 -l 8 v2/vendor/ti/bq25731-datasheet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "8",
+  "-l",
+  "8"
+ ],
+ "pdf": "v2/vendor/ti/bq25731-datasheet.pdf",
+ "pdf_sha256": "3e5e927fdf63cf6a2397630987c58e947ebc80d5a1cfc93fb1fb58d98bb58973",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/bq25731-datasheet.layout.p8.txt",
+ "text_bytes": 6221,
+ "text_sha256": "b29163af44e2715448c94a9be39f67de2a3fec2f41107feeedd047d78e6d41a2"
+}

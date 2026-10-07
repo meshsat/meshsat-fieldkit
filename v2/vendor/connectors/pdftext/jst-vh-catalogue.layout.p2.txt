@@ -1,0 +1,107 @@
+                                                                                                                               VH CONNECTOR
+
+   Contact
+
+                                                                                                                               Applicable wire range                  Q'ty/
+                                                                                         Model No.
+                                                                                                                 Conductor size AWG (mm2) Insulation O.D.(mm)         reel
+                   3                        10.6
+                                                                                       SVH-21T-P1.1             #22 to #18 (0.33 to 0.83)           1.7 to 3.0        4,500
+                                                                                       SVH-41T-P1.1             #20 to #16 (0.5 to 1.25)            1.7 to 3.0        3,500
+                           3.8
+
+
+
+
+                                                                                                                 Material and Surface ﬁnish, etc.
+
+                                                                                                                     Copper alloy, tin-plated
+
+                                                                                     Note: When using the retainer mountable type housing, the applicable
+                                                                                           wire insulation outer diameter is φ 1.7 to φ 2.2.
+
+
+                                                                                     Crimping machine
+                                                                                          Contact               Crimping machine Applicator Crimp applicator with dies
+                                                                                       SVH-21T-P1.1                                                 APLMK SVH21-11
+                                                                                                                    AP-K2N             MKS-L
+                                                                                       SVH-41T-P1.1                                                 APLMK SVH41-11
+                                                                                     Note: Contact JST for fully automatic crimping applicator.
+
+
+
+
+   Housing
+
+
+     N type                                              M type                                                       Retainer compatible type
+                                                          13.3
+         13.3
+
+
+
+
+                                                                                                                        15
+
+
+
+
+                                    No. 1circuit                                             No. 1circuit
+                                                                                                                                                           No. 1circuit
+         10.5
+
+
+
+
+                                                          10.6
+
+
+
+
+                                                                                                                        10.5
+
+
+
+
+                       3.96                                                   3.96
+                                                                                                                                           3.96
+                       A                                                     A
+                                                                                                                                          A
+                       B                                                     B
+                                                                                                                                          B
+
+
+
+
+                                             Model No.                                                      Dimensions (mm)                             Qʼty/bag
+ No. of
+ circuits                                                                                                                                      N type          Retainer
+                    N type                     M type               Retainer compatible type                A                    B                          compatible type
+                                                                                                                                               M type
+     2             VHR-2N                      VHR-2M                       VHRR-2NNote 2               3.96                    7.86           1,000               1,000
+     3             VHR-3N                      VHR-3M                       VHRR-3N                     7.92                   11.82           1,000                500
+     4             VHR-4N                      VHR-4M                            -                    11.88                    15.78           1,000               1,000
+     5             VHR-5N                      VHR-5M                       VHRR-5N                   15.84                    19.74           1,000                500
+     6             VHR-6N                      VHR-6M                            -                    19.80                    23.70              500               500
+     7             VHR-7N                      VHR-7M                       VHRR-7N                   23.76                    27.66              500               500
+     8             VHR-8N                          -                        VHRR-8N                   27.72                    31.62              500               500
+     9             VHR-9N                      VHR-9M                       VHRR-9N                   31.68                    35.58              500               500
+   10              VHR-10N                         -                             -                    35.64                    39.54              500               500
+   11              VHR-11N                         -                             -                    39.60                    43.50              500               500
+
+                                                                 Material and Surface ﬁnish, etc.
+
+                                                                       PA, natural (white)
+
+Note: 1. With the M type, the exposed contact lances from the N type are covered by resin which is integrally formed and molded into the housing body
+         as a single unit, further improving electrical safety.
+      2. Please note that the retainer mountable type housing for 2 circuits can only be used with the standard type header. It cannot be used with
+         the shrouded type header.
+      3. For flame retardant grade of resin material used, please refer to the "List of Registered Overseas Standards" on our website
+        (listed in the “Technical Documents” column on the Product Information page).
+
+
+
+
+                                                                             ‑2‑
+

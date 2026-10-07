@@ -94,6 +94,23 @@ LCSC_FILL = "v2/ecad/tools/lcsc_fill.py"
 UNIROYAL = "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf"     # held back by the maker's terms (installed with the held evidence)
 HOJLR = "v2/vendor/passives/milliohm-hojlr2512-series.pdf"
 JLC_HOJLR = "v2/docs/records/l4e4/inputs/jlc-search-hojlr2512-3w-2026-10-01.json"
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script's own page() reads (listed from its source) never run pdftotext; section 0 prints each text's sha256 after
+# the pins. L4-E4's compute(), run here, still reaches r11dep/r11_dep.py, which extracts at run time (the l4e7 KEY's group, not
+# converted by W34)
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4e8
+PDFTEXT = {
+    "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf": [["-layout", "-f", "6", "-l", "6"]],
+    "v2/vendor/passives/milliohm-hojlr2512-series.pdf": [["-layout", "-f", "2", "-l", "2"]],
+    "v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "2", "-l", "2"], ["-layout", "-f", "5", "-l", "5"], ["-layout", "-f", "6", "-l", "6"], ["-layout", "-f", "7", "-l", "7"]],
+    "v2/vendor/ti/bq25731-datasheet.pdf": [["-layout", "-f", "2", "-l", "2"], ["-layout", "-f", "16", "-l", "16"], ["-layout", "-f", "27", "-l", "27"], ["-layout", "-f", "43", "-l", "43"], ["-layout", "-f", "85", "-l", "85"]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "6", "-l", "6"], ["-layout", "-f", "17", "-l", "17"], ["-layout", "-f", "23", "-l", "23"], ["-layout", "-f", "24", "-l", "24"], ["-layout", "-f", "27", "-l", "27"], ["-layout", "-f", "30", "-l", "30"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TOP, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {   # the files this record reads; after any of them changes (a regeneration of board A, above all) it refuses by design
     GEN_A: "6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b",
     NET_A: "6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5",
@@ -176,8 +193,7 @@ _PAGES = {}
 def page(rel, n):
     key = (rel, n)
     if key not in _PAGES:
-        _PAGES[key] = subprocess.run(["pdftotext", "-layout", "-f", str(n), "-l", str(n), os.path.join(TOP, rel), "-"],
-                                     capture_output=True, text=True, check=True).stdout
+        _PAGES[key] = PT.pdf_text(TOP, rel, ["-layout", "-f", str(n), "-l", str(n)], PDFTEXT, "v2/docs/records/l4e8", universal_newlines=True)
     return _PAGES[key]
 
 
@@ -2157,6 +2173,8 @@ def render(R):
     P("0. INPUTS AND REPRODUCTIONS")
     for rel, want in PINS.items():
         P("   %-48s sha256 %s (pinned)" % (rel, want[:16]))
+    for t, h, _held in PT.inputs(TOP, PDFTEXT):
+        P("   %-48s sha256 %s (pinned)" % (t, (h or "ABSENT")[:16]))
     P("   (the two recovered drafts are pinned as cited inputs; their code is not run here)")
     P("   L4-E4's l4e4_limits.compute(), run in this process (it reproduces r11_dep.out in a child and prints nothing): band(r)[2], the")
     P("     highest permitted current, which l4e6_fault_handling.py takes as o['hi'] for its two R11 values (its source parsed):")

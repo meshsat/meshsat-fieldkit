@@ -7,8 +7,8 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
 
 0. PINS (path  sha256/16)
    board_p          v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb  sha256 d79865e7b1aceb95
-   copper           v2/docs/records/l9stk/l9stk_copper.py  sha256 896a14dc5b4df123
-   copper_out       v2/docs/records/l9stk/l9stk_copper.out  sha256 dbd34a1e1ab42efe
+   copper           v2/docs/records/l9stk/l9stk_copper.py  sha256 b7811328f95724f9
+   copper_out       v2/docs/records/l9stk/l9stk_copper.out  sha256 1da8da138d47843f
    csd17570         v2/vendor/battery/ti-csd17570q5b.pdf  sha256 596555c33dce1fca
    csd18510         v2/vendor/battery/ti-csd18510q5b.pdf  sha256 cb747de812f66859
    d4148            v2/vendor/power/st-semtech-1n4148w-c81598.pdf  sha256 54de8e4089bb8221
@@ -17,7 +17,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    gen_sch_e        v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
    gen_sch_p        v2/ecad/tools/gen_sch_p.py  sha256 740817ada5c8e14a
    jscj_2n7002      v2/vendor/power/jscj-2n7002-c8545.pdf  sha256 7941fb423af7c6c6
-   l4e11_out        v2/docs/records/l4e11/l4e11_power.out  sha256 36141414a1b60011
+   l4e11_out        v2/docs/records/l4e11/l4e11_power.out  sha256 cb09152d6f8e796b
    l8r2_vbus20ov    v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py  sha256 c2d16dba8dc5204f
    lcsc_fill        v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
    lm5069           v2/vendor/ti/ti-lm5069.pdf  sha256 d60d8106a6e81139
@@ -25,6 +25,19 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    murata_prf       v2/vendor/battery/murata-prf-series.pdf  sha256 a29cd6200c656636
    ntc              v2/vendor/battery/murata-nxrt15xh103fa1b.pdf  sha256 81a99339fb677f38
    pack_protection  v2/ecad/tools/pcb_pack_protection.yaml  sha256 ab1dbc3f3f69aa46
+   pdftext 01       v2/vendor/battery/pdftext/amass-xt60-spec-tme.layout.txt  sha256 ffd3fbf0c0712133
+   pdftext 02       v2/vendor/battery/pdftext/murata-nxrt15xh103fa1b.layout.txt  sha256 b32d1ad9c1100d12
+   pdftext 03       v2/vendor/battery/pdftext/murata-prf-series.layout.txt  sha256 b4335bd9c4282976
+   pdftext 04       v2/vendor/battery/pdftext/ti-csd17570q5b.layout.txt  sha256 9cf26dd0b17dd0d3
+   pdftext 05       v2/vendor/battery/pdftext/ti-csd18510q5b.layout.txt  sha256 5ecf7f639ea2bf4c
+   pdftext 06       v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt  sha256 9d315dec55a94ab8
+   pdftext 07       v2/vendor/keystone/pdftext/littelfuse-297-ficcorp.layout.txt  sha256 c994655b76916585
+   pdftext 08       v2/vendor/power/pdftext/jscj-2n7002-c8545.layout.txt  sha256 8f457be6865e4d72
+   pdftext 09       v2/vendor/power/pdftext/littelfuse-smcj-series-tvs.layout.txt  sha256 cae1fb371bf220b4
+   pdftext 10       v2/vendor/power/pdftext/mdd-smbj-series-tvs.layout.txt  sha256 bde264cad0d137ed
+   pdftext 11       v2/vendor/power/pdftext/st-semtech-1n4148w-c81598.layout.txt  sha256 1b0093a4cb0764e4
+   pdftext 12       v2/vendor/ti/held/pdftext/ti-slva673a.layout.txt  sha256 66394e5b9382b749
+   pdftext 13       v2/vendor/ti/pdftext/ti-lm5069.layout.txt  sha256 4fdfb817af936bbf
    readings         v2/docs/records/l9stk/inputs/csd18510q5b-figure-readings-2026-10-04.json  sha256 323b46b47965d263
    slva673a         v2/vendor/ti/held/ti-slva673a.pdf  sha256 ea1604c5c8ed02ac
    smcj             v2/vendor/power/littelfuse-smcj-series-tvs.pdf  sha256 6e610db955ed8763

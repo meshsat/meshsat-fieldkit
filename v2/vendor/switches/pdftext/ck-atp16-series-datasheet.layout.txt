@@ -1,0 +1,370 @@
+              ATP16 Series
+              Anti-Vandal Sealed Pushbutton Switch
+              Features/Benefits                             Typical Applications
+   A          •	
+                Momentary or Lock version                   •	
+                                                              Alarm, safety and security
+              •	
+                IP67 sealed                                   systems
+Pushbutton
+
+
+
+
+              • Rated at 2A / 36 Vdc                        • Intercom "push-to-talk"
+                                                              devices
+              •	
+                1,000,000 life cycle
+                                                            • Automatic food and drink
+              •	
+                Various colors of LED illuminate indicator    vending machines
+              •	
+                Choices of actuator with ring or power logo • Parking lot ticket machines
+              •	
+                RoHS compliant                                & ticket paying stations
+                                                            • Industrial Instruments
+              Specifications                                                Materials
+              FUNCTION: SPST                                                BUSHING: Stainless steel / Aluminum alloy, anodized
+              CONTACT ARRANGEMENT: N.O.                                     BASE: PBT (UL 94-A0), Nylon 6/6 (lock version)
+              MOUNTING TYPE: Threaded front panel mount                     ACTUATOR: PC (UL 94-V2); POM (lock version)
+              TORQUE FOR THREADED BODY: 11.5 kgf/cm                         INTERNAL ASSEMBLY: POM / PA66
+                                                                            SPRING: Steel
+              Mechanical                                                    SEALING / O-ring: Silicone (Translucent) / Silicone
+              OPERATING LIFE: Momentary 1,000,000 cycles                    TERMINALS / CONTACT: Brass, Silver or gold plated
+              		              Lock 100,000 cycles                           HEX NUT: Brass (Nickel plated)
+              TOTAL TRAVEL: Momentary 2.0 mm; Lock 2.3 mm
+              OPERATING FORCE: 4.5 ± 1.5N                                   Operating Environment
+                                                                            OPERATING TEMPERATURE: -20˚C to +70˚C
+                                                                            SEALING / PROTECTION: IP67
+              Electrical
+                                                                            NOTE: Specifications and materials listed above are for switches with standard options.
+              CONTACT RATING: 2A / 36Vdc                                    For information on specific and custom switches, please contact Customer Service.
+              OPERATING LIFE: Make-and-break cycles at full load
+              		              200,000 (Momentary)
+              		              100,000 (Lock)
+              DIELECTRIC STRENGTH: 2,000 V RMS @ sea level
+              INSULATION RESISTANCE: 1,000 MΩ min. @ 500 VDC
+              INITIAL CONTACT RESISTANCE : 50 mΩ max @1A 12VDC
+
+              Build-A-Switch
+              To order, simply select desired option from each category and place in the appropriate box.
+
+                         A    T     P    1     6                                                           S                                         G
+
+  Designation                                                                                                                                                         Terminal plating
+  ATP16 Series                                                                                                                                                        G     Gold flash
+
+       Actuator Style
+       D      Dome*                                                                                                                                 Termination
+       S      Standard**                                                                                                                            04    Solder lug
+                                                                                                                                                    W1    Wire lead 500mm ****
+             Actuator Indicator
+             L1     Ring
+             L5     Ring & Power logo                                                                                                    Mechanical function
+                                                                                                                                         A    Momentary (Double D bushing)
+                         LED Illumination                                                                                                E    Lock (D shape bushing)
+              Color               Dual color                                                                               Contact arrangement
+              0 Without LED       A Red & Green                                                                            S     SPST
+              2 White             R RGB***
+                                                                                                         Bushing type
+              3 Red
+                                                     LED voltage DC                                       B3 Al alloy (Black anodized)
+              4 Orange***                            00    Without LED
+                                                     03    3V                                             B4 Al alloy (Natural anodized)
+              5 Yellow
+                                                     06    6V                                             M0 Stainless (Natural), Round***
+              6 Green                                12    12V
+              7 Blue                                 24    24V                                            M4 Stainless (Natural), Double D***
+   * For bushing type B3 and B4 only.
+   ** Available on bushing type M0 & M4 only.
+   *** Available on momentary function only.
+   **** Available upon request, please consult your sales representative for details.
+
+                                  5 Jul 22
+
+                                                                            A-131
+                                                                                                                         ATP16 Series
+St an da r d vi ew                                                                               Anti-Vandal Sealed Pushbutton Switch
+                                          ATP1 6              Mom entar y)             (     STANDARD VIEW                                                     ATP 16 (L ock)
+                                                                                                                                                                                                                  A
+                      D OM E               MOMENTARYS t a nd a r d /F la t                                                                                              LOCK
+
+
+
+
+                                                                                                                                                                                                                 Pushbutton
+                      DOME                                                           STANDARD / FLAT
+
+
+             .09                                                                     .06                                                               .09
+             (2.2)                                                                   (1.5)                      M16x1.0                                (2.2)
+
+
+                                                    M16x1.0
+                                                                                                                                                                                                     FLAT
+
+                                                                                                                                                M16x1.0
+                                                                          .60
+                                                                          (15.3)
+                                                   .54
+.79                                                                                                                                           .77
+                                                   (13.8)                                                                                                                                   1.04
+(20)                                                                                                                                          (19.6)
+                                                                                                                                                                                            (26.3)
+
+
+
+
+                                                                               .16                      .02
+
+
+
+
+                                          A c t u a to r s ty l e
+                                                                               (4)                      (0.5)
+
+                                        .02                                                  .11
+       .16
+                                        (0.5)                                                (2.74)
+       (4)
+                                                                                                                                                                .02
+                                                                                                                                                                (0.5)              .18
+                                                                                                                                                                                   (4.5)
+                                                                                                                                                                        .08
+                                                                                                                                                                        (2)
+
+
+
+                                                      D - DOME                                                            S - S ta n d a rd / F la t
+                                                                                             ACTUATOR STYLE
+                                                 D DOME                                                                                     S STANDARD / FLAT
+
+                                                                                                .09                                                                                        .06
+                                                                                                (2.2)                                                                                      (1.5)
+
+
+
+
+                             Ac t ua to r in di c at or
+                               L1 - Dome / Rin g                                                                                 L5- Dome / Ring & Po wer
+                                                                                     ACTUATOR INDICATOR
+
+                                                 L1 RING                                                                                    L5 RING & POWER
+                                           .73
+                                                                                                                                             .73
+                                           (ø18.5)
+                                                                                                                                             (ø18.5)
+
+
+
+
+                                                                       .47                                                                                                    .47
+                                                                       (ø11.9)                                                                                                (ø11.9)
+
+
+
+
+                                                                                                                                             .41
+                                                .41                                                                                          (ø10.5)
+                                                (ø10.5)
+
+
+
+
+                                                                     .73
+                           .47                                       (ø18.5)
+                           (ø12)
+
+
+
+
+                     CAP
+
+
+
+
+                                                                                                                                             .47
+                                                                                                                                             (ø12)                          Dimensions are shown: mm (inches)
+                             5 Jul 22                                                                                                                          Specifications and dimensions subject to change
+
+                                                                                                        A-132                                                                   www.ckswitches.com
+                ATP16 Series
+                Anti-Vandal Sealed Pushbutton Switch
+                                                                                           CIRCUIT
+      A
+                                                                                         MOMENTARY
+   Pushbutton
+
+
+
+
+                                                                                                        R
+                            SINGLE COLOR LED                       DUAL COLOR LED                                                      RGB LED
+                                                                                            R
+
+
+
+
+                                     R                                                                                                                    R
+                                                                     R
+
+
+                    R                                                                                                                      R
+                                                           R
+                                                                                                                        6 / 12 / 24V LED                               3V LED
+
+
+                                                                                                            6 / 12 / 24V LED                                  3V LED
+           W      it hout Led               i nglSe dColor Le                Dua l Col odr Le                                                  RG B Col or Le d
+
+                                                                                            LOCK
+t hout Led                 i nglSe(L    ork)
+                                   dCoolc  Le                   Dua l Col odr Le                                                RG B Col or Le d
+                                                                                      SINGLE COLOR LED
+
+                 (Lock)
+
+
+                                                                                                                                                                  R
+
+
+
+                                                                                                                                                      R
+                                                3V LED                                                                   6 / 12 / 24V LED
+                                                                                       DUAL COLOR LED
+
+
+                                3V LED                                                                       6 / 12 / 24V LED
+
+
+
+                                                                                                                                                                  R
+
+
+
+
+                                                3V LED                                                                    6 / 12 / 24V LED
+                                                                                                                                                     R
+
+                R: Resistor value is according to the LED voltage applied.
+
+                                3V LED                                                                        6 / 12 / 24V LED
+                 Resistor value
+                 (Apply LED Voltage)
+                 LED input 3 VDC, 47 ohms
+                 (Red/Yellow/Orange LED type only)
+                 LED input 6 VDC, 180 ohms
+                 LED input 12 VDC, 470 ohms
+                 LED input 24 VDC, 1000 ohms
+                Ohms value of resistance tolerance: ±5%
+
+
+
+
+                                                                                                                                                            Dimensions are shown: mm (inches)
+                                                                                                                                               Specifications and dimensions subject to change
+                                         5 Jul 22
+                                                                                                A-133                                                             www.ckswitches.com
+             TermiTneartmiinoatnion            04 - Solder lug                                     Anti-Vandal Sealed
+                                                                                                                             ATP16 Series
+                                                                                                                  (Lock)Pushbutton Switch
+               04 - Solder lug                                                                     TERMINATION                                         (Lock)
+   A
+                              04 SOLDER LUG
+                                                                               .02
+                                                                               (0.5)                                                         .18
+Pushbutton
+
+
+
+                                                                                                                                             (4.5)
+
+                                                            MOMENTARY                                                                                                 LOCK
+
+
+                                                                .02                       .11                                                        .08
+                                                                (0.5)                     (2.74)                                                     (2)                          .18
+                                                                                                                                            .02                                   (4.5)
+                                                                                                                                            (0.5)
+                                                                                 .130
+                                                                                 (3.30)
+
+
+
+
+                                                                           .11                                                                                                            .08
+                                                                           (2.74)                                                                                                         (2)
+
+
+                                               W1 - Wire lead 500mm                                                                                                           .02
+                                                                                                                                                                              (0.5)
+                                                                  .130
+                                                                  (3.30)
+
+
+
+                             W1 WIRE LEAD 500MM*
+
+
+
+                W1 - Wire lead 500mm
+
+                                                                 Heat shrink tube
+                                                                 (with/without resistor for LED)
+                                                                                                                                                                                            LOCK
+              P a n e l cu t o u t
+              * Available upon request, please consult your sales representative for details.
+
+
+
+                B3, B4 & M4 Bushing                                                                PANEL
+                                                                                                     M0 BuCUTOUT
+                                                                                                          shing                                      D shape bushing
+                                   B3, B4 & M4                                                               M0                                               B3 & B4
+                                     DOUBLE D                                                            ROUND                                                       D SHAPE
+
+                                                                                                                                                                         .606
+                                     .584                                                                                                                                (15.4)
+                                     (14.83)
+
+
+
+                                                   Heat shrink tube
+                                                   (with/without resistor for LED)
+
+
+
+                                                                                                   .630                                                    .630
+                         .584                                                                      (16.00)                                                 (16.00)
+                         (16.00)
+
+
+
+
+                                               HARDWARE
+                                                                                                      HARDWARE
+                                                     ex NUT
+                                                    HEX  nHut                                                                   O -ORRING
+                                                                                                                                     ing
+                                                  Order PN: ATP16-HN                                                            Order PN: ATP16-OR
+
+                                                                              .11
+                                                                              (2.9)
+                                                                                                                     .5
+                                                                                                                     (ø12.85)                                  .04
+                                                                                                                                                               (ø1)
+
+
+
+
+                                     .75
+                                     (19)
+
+
+
+
+                                                                                                                                                       Dimensions are shown: Inches (mm)
+                                      5 Jul 22                                                                                            Specifications and dimensions subject to change
+
+                                                                                                             A-134                                                      www.ckswitches.com
+

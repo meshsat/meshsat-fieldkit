@@ -240,8 +240,8 @@ AMENDMENT_CITES = (
     # the adoption of 6 October 2026 moved revision 3 onto the list's path and kept revision 2 at its dated name; the ledger's
     # statements about the list describe revision 2 and cite P0L2 (the key added to the ledger's table); the lines are revision 2's
     ("P0L2", 25, 25, "| P0-8 | E11-37"), ("P0L2", 11, 11, "missing evidence boundable at the desk"),
-    ("E11", 508, 508, "E11-37 | EVIDENCE"), ("E11", 1110, 1116, "E11-37 REBOUND TO THE THREE-DEVICE NETWORK"),
-    ("E11", 1459, 1459, "E11-37 STAYS OPEN"), ("E11", 1465, 1465, "E11-37 OPEN (TI or the bench)"),
+    ("E11", 576, 576, "E11-37 | EVIDENCE"), ("E11", 1178, 1184, "E11-37 REBOUND TO THE THREE-DEVICE NETWORK"),
+    ("E11", 1527, 1527, "E11-37 STAYS OPEN"), ("E11", 1533, 1533, "E11-37 OPEN (TI or the bench)"),
     ("E11P", 1551, 1551, "| Row E11-37 |"), ("E11P", 1673, 1690, "Block E11-37"),
     ("TIQ", 74, 74, "Q-TI-17 (E11-37"), ("TIQ", 96, 110, "Q-TI-17, extended"), ("TIQ", 112, 125, "Q-TI-17 (f)"),
     ("ANX", 73, 73, "E11-37"), ("L4E9", 1134, 1134, "with E11-37 OPEN"), ("L4E9", 1401, 1401, "R-183"),

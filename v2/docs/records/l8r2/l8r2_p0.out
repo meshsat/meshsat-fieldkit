@@ -3,8 +3,8 @@ of. PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or measure
 ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional choice with its validation task).
 
 0. PINS (sha256/16  path)
-   3a4225fa409cb0cf v2/docs/records/l8r2/l8r2_gndret.py
-   24722259a30363c5 v2/docs/records/l8r2/l8r2_gndret.out
+   3cfc55ce5d6711a9 v2/docs/records/l8r2/l8r2_gndret.py
+   29f313c17d6f8283 v2/docs/records/l8r2/l8r2_gndret.out
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
    3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
    6949727d3bc42a67 v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf
@@ -15,6 +15,14 @@ ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional cho
    b0ea9ce43308e789 v2/ecad/tools/pcb_interfaces.yaml
    58e26c67987b1daa v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb
    2e64b5bf2d9cd3bc v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb
+   1ec5ff7ded53acbd v2/vendor/battery/pdftext/amass-xt60-spec-2021v1-lcsc-c98733.layout.txt
+   ffd3fbf0c0712133 v2/vendor/battery/pdftext/amass-xt60-spec-tme.layout.txt
+   9553878588234be8 v2/vendor/connectors/pdftext/jst-ph-catalogue.layout.txt
+   9d315dec55a94ab8 v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt
+   eef7675bf24fdcb7 v2/vendor/connectors/pdftext/wurth-wr-bhd-box-header-61202621621.layout.txt
+   7e2f408892ad65c7 v2/vendor/connectors/pdftext/wurth-wr-bhd-idc-socket-61202623021.layout.txt
+   394ad1917142ad01 v2/vendor/connectors/pdftext/wurth-wr-cab-ribbon-63912615521cab.layout.txt
+   a4ade27c0353b1c5 v2/vendor/hirose/pdftext/hirose-ufl-series-catalogue-2009-02-digikey-copy.layout.txt
 
 1. THE SOLVER: l8r2_gndret.py's conductors, contact box and monotone vertex, imported unchanged; ONE term added, Rs in series with
    the dedicated return's bundle. At Rs = 0 it reproduces the record's enumerated extremes on every case and both copper ends: yes

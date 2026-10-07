@@ -1,0 +1,92 @@
+Transient Voltage Suppression Diodes
+Surface Mount – 1500W > SMCJ series
+
+SMCJ Series                                                                                                                            RoHS         Pb e3
+
+
+
+ Uni-directional                                                                                Description
+
+                                                                                                The SMCJ series is designed specifically to protect
+                                                                         Bi-directional         sensitive electronic equipment from voltage transients
+                                                                                                induced by lightning and other transient voltage events.
+
+                                                                                                Features
+
+                                                                                                • 1500W peak pulse power        • Fast response time:
+                                                                                                    capability at 10/1000μs         typically less than 1.0ps
+                                                                                                    waveform, repetition rate       from 0V to BV min
+                                                                                                    (duty cycles):0.01%         • Glass passivated chip
+                                                                                                • Excellent clamping                junction
+   Agency Approvals                                                                                 capability                  • High temperature
+    AGENCY                                  AGENCY FILE NUMBER                                  • Low incremental surge            to reflow soldering
+                                                                                                    resistance                     guaranteed: 260°C/40sec
+                                                       E230531
+                                                                                                • Typical IR less than 1μA     • VBR @ TJ= VBR@25°C
+                                                                                                   when VBR min>12V                x (1+αT x (TJ - 25))
+   Maximum Ratings and Thermal Characteristics                                                                                     (αT:Temperature
+                                                                                                • For surface mounted
+   (TA=25OC unless otherwise noted)                                                                                                Coefficient, typical value
+                                                                                                    applications to optimize
+                                                                                                    board space                    is 0.1%)
+   Parameter                                             Symbol           Value        Unit
+                                                                                                • Low profile package           • Plastic package is
+   Peak Pulse Power Dissipation at
+                                                                                                • Built-in strain relief            flammability rated V-0 per
+   TA=25ºC by 10/1000µs Waveform                           PPPM           1500           W
+   (Fig.2)(Note 1), (Note 2), (Note 5)                                                                                              Underwriters Laboratories
+                                                                                                • Typical failure mode is
+   Power Dissipation on Infinite Heat                                                              short from over-specified    • Meet MSL level1, per
+                                                            PD             6.5           W                                         J-STD-020, LF maximun
+   Sink at TL=50OC                                                                                 voltage or current
+                                                                                                                                   peak of 260°C
+   Peak Forward Surge Current, 8.3ms
+                                                            IFSM           200           A
+                                                                                                • Whisker test is conducted
+   Single Half Sine Wave (Note 3)                                                                  based on JEDEC               • Matte tin lead–free plated
+   Maximum Instantaneous Forward                                                                   JESD201A per its table 4a    • Halogen free and RoHS
+   Voltage at 100A for Unidirectional                       VF           3.5/5.0         V         and 4c                           compliant
+   Only (Note 4)
+                                                                                                • IEC-61000-4-2 ESD            • Pb-free E3 means 2nd
+   Operating Temperature Range                              TJ        -65 to 150         °C
+                                                                                                   30kV(Air), 30kV (Contact)        level interconnect is
+   Storage Temperature Range                                TSTG        -65 to 175       °C                                         Pb-free and the terminal
+                                                                                                • ESD protection of data
+   Typical Thermal Resistance Junction                                                             lines in accordance with         finish material is tin(Sn)
+                                                            RθJL           15           °C/W
+                                                                                                                                    (IPC/JEDEC J-STD-
+   to Lead                                                                                         IEC 61000-4-2
+   Typical Thermal Resistance Junction                                                          • EFT protection of data           609A.01)
+                                                            RθJA           75           °C/W
+   to Ambient                                                                                       lines in accordance with
+Notes:                                                                                              IEC 61000-4-4
+1. Non-repetitive current pulse , per Fig. 4 and derated above TJ (initial) =25OC per Fig. 3.
+2. Mounted on copper pad area of 0.31x0.31” (8.0 x 8.0mm) to each terminal.
+                                                                                                Applications
+3. Measured on 8.3ms single half sine wave or equivalent square wave for unidirectional         TVS devices are ideal for the protection of I/O Interfaces,
+   device only, duty cycle=4 per minute maximum.
+                                                                                                VCC bus and other vulnerable circuits used in Telecom,
+4. VF < 3.5V for single die parts and VF< 5.0V for stacked-die parts.
+                                                                                                Computer, Industrial and Consumer electronic
+5. The PPPM of stacked-die parts is 2000W and please contact littelfuse for the detail
+   stacked-die parts.                                                                           applications.
+
+   Functional Diagram                                                                           Additional Infomarion
+
+
+
+
+                                           Bi-directional
+                                                                                                     Datasheet         Resources          Samples
+
+               Cathode                                                    Anode
+
+                                           Uni-directional
+
+
+
+
+© 2015 Littelfuse, Inc.
+Specifications are subject to change without notice.
+Revised: 11/20/15
+

@@ -87,6 +87,21 @@ PACKRTN = "v2/docs/records/l8r2/apply_gen_sch_a_packrtn.py"
 SHEETS = {"vh": "v2/vendor/connectors/jst-vh-catalogue.pdf", "cab": "v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf",
           "xt_old": "v2/vendor/battery/amass-xt60-spec-tme.pdf", "xt_new": "v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf",
           "sock": "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf", "hdr": "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf"}
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options. Each text is a
+# verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its PDF; _lib/pdftext.py returns it byte
+# for byte and refuses when it is absent, so this script never runs pdftotext (section 0 prints each text's sha256 after the PDFs').
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8r2
+PDFTEXT = {
+    "v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf": [["-layout"]],
+    "v2/vendor/battery/amass-xt60-spec-tme.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 MINE = {"gndret": "v2/docs/records/l8r2/apply_gen_sch_b_gndret.py", "fandec": "v2/docs/records/l8r2/apply_gen_sch_b_fandec.py",
         "gndrtn": "v2/docs/records/l8r2/apply_gen_sch_b_gndrtn.py"}
 MINE_A = {"gndrtn_a": "v2/docs/records/l8r2/apply_gen_sch_a_gndrtn.py"}
@@ -154,11 +169,7 @@ _PDF = {}
 
 def pdf(key):
     if key not in _PDF:
-        try:
-            r = subprocess.run(["pdftotext", "-layout", P(SHEETS[key]), "-"], capture_output=True, check=True)
-        except (OSError, subprocess.CalledProcessError) as e:
-            refuse("pdftotext could not read %s (%s)" % (SHEETS[key], e))
-        _PDF[key] = r.stdout.decode("utf-8", "replace")
+        _PDF[key] = PT.pdf_text(ROOT, SHEETS[key], ["-layout"], PDFTEXT, "v2/docs/records/l8r2")
     return _PDF[key]
 
 
@@ -556,7 +567,8 @@ def main():
     w("\n0. INPUTS (sha256/16)\n")
     ins = [GEN_B, GEN_A, NET_A, NET_B, INT_B, L4E9_PAGE, BUDGET, L9T5_OUT, L9T5_DRAFT_A, V3, CASES, "v2/docs/records/l8r2/inputs/SOURCES.txt",
            L4E12_OUT, L9STK_PAGE, ASSEMBLY, IFACES, PACKRTN, MAINPB, L6_A] + ENGINE + sorted(set(DRAFT.values()) | set(MINE_A.values())) + L6_HELP \
-        + sorted(SHEETS.values()) + ["v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn for rn in ROUND_A]
+        + sorted(SHEETS.values()) + [t for t, _h, _held in PT.inputs(ROOT, PDFTEXT)] \
+        + ["v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn for rn in ROUND_A]
     for p in ins:
         w("   %s %s\n" % (sha(p), p))
     w("   the session's choices (authority SESSION, each reversible by editing the constant and regenerating):\n"

@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-tps22810-load-switch.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-tps22810-load-switch.pdf",
+ "pdf_sha256": "10450eedecbc454291088e3c8cf0e177555814ac83be021448d1d16cba126c98",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tps22810-load-switch.layout.txt",
+ "text_bytes": 134066,
+ "text_sha256": "0b02e8bbb48046cd49d4f0bc95a5bf814ac91ba0d8be02e2b2824e6e1f70ba79"
+}

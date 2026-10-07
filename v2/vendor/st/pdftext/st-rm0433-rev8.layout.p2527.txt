@@ -1,0 +1,56 @@
+RM0433                                           Controller area network with flexible data rate (FDCAN)
+
+
+     Bit 12 PXHD: Protocol exception handling disable
+             0: Protocol exception handling enabled
+             1: Protocol exception handling disabled
+ Bits 11:10 Reserved, must be kept at reset value.
+      Bit 9 BRSE: FDCAN bitrate switching
+             0: Bitrate switching for transmissions disabled
+             1: Bitrate switching for transmissions enabled
+      Bit 8 FDOE: FD operation enable
+             0: FD operation disabled
+             1: FD operation enabled
+      Bit 7 TEST: Test mode enable
+             0: Normal operation, register TEST holds reset values
+             1: Test mode, write access to register TEST enabled
+      Bit 6 DAR: Disable automatic retransmission
+             0: Automatic retransmission of messages not transmitted successfully enabled
+             1: Automatic retransmission disabled
+      Bit 5 MON: Bus monitoring mode
+             Bit MON can only be set by software when both CCE and INIT are set to 1. The bit can be reset by
+             the user at any time.
+             0: Bus monitoring mode is disabled
+             1: Bus monitoring mode is enabled
+      Bit 4 CSR: Clock stop request
+             0: No clock stop is requested
+             1: Clock stop requested. When clock stop is requested, first INIT and then CSA is set
+             after all pending transfer requests have been completed and the CAN bus reached idle.
+      Bit 3 CSA: Clock stop acknowledge
+             0: No clock stop acknowledged
+             1: FDCAN may be set in power down by stopping APB clock and kernel clock
+      Bit 2 ASM: ASM restricted operation mode
+             The restricted operation mode is intended for applications that adapt themselves to different CAN
+             bitrates. The application tests different bitrates and leaves the restricted operation mode after it has
+             received a valid frame. In the optional restricted operation mode the node is able to transmit and
+             receive data and remote frames and it gives acknowledge to valid frames, but it does not send active
+             error frames or overload frames. In case of an error condition or overload condition, it does not send
+             dominant bits, instead it waits for the occurrence of bus idle condition to resynchronize itself to the
+             CAN communication. The error counters are not incremented. Bit ASM can only be set by software
+             when both CCE and INIT are set to 1. The bit can be reset by the software at any time. This bit is set
+             automatically set to 1 when the Tx handler was not able to read data from the message RAM in time.
+             If the FDCAN is connected to a clock calibration on CAN unit, ASM bit is set by hardware as long as
+             the calibration is not completed.
+             0: Normal CAN operation
+             1: Restricted operation mode active
+      Bit 1 CCE: Configuration change enable
+             0: The CPU has no write access to the protected configuration registers
+             1: The CPU has write access to the protected configuration registers (while FDCAN_CCCR.INIT = 1
+             CCE bit is automatically cleared when INIT bit is cleared)
+
+
+
+
+                                                 RM0433 Rev 8                                             2527/3353
+                                                                                                                        2589
+

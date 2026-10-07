@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/d38999/amphenol-d38999-iii-federal.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/d38999/amphenol-d38999-iii-federal.pdf",
+ "pdf_sha256": "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/d38999/pdftext/amphenol-d38999-iii-federal.layout.txt",
+ "text_bytes": 856534,
+ "text_sha256": "599a2845437782f1bf6ccdf69cf1af6ca499121b682fefe13b5ee65544372e55"
+}

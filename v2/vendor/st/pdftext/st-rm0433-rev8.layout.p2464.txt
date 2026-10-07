@@ -1,0 +1,54 @@
+Controller area network with flexible data rate (FDCAN)                                         RM0433
+
+
+            Tx handler
+            Controls the message transfer from the message RAM to the CAN core. A maximum of 32
+            Tx buffers can be configured for transmission. Tx buffers can be used as dedicated Tx
+            buffers, as Tx FIFO, part of a Tx queue, or as a combination of them. A Tx event FIFO
+            stores Tx timestamps together with the corresponding message ID. Transmit cancellation is
+            also supported.
+            On FDCAN1, the Tx handler also implements the frame synchronization entity (FSE) which
+            controls time-triggered communication according to ISO11898-4. It synchronizes itself with
+            the reference messages on the CAN bus, controls cycle time and global time, and handles
+            transmissions according to the predefined message schedule, the system matrix. It also
+            handles the time marks of the system matrix that are linked to the messages in the message
+            RAM. Stop watch trigger, event trigger, and time mark interrupt are synchronization
+            interfaces.
+
+            Rx handler
+            Controls the transfer of received messages from the CAN core to the external message
+            RAM. The Rx handler supports two receive FIFOs, each of configurable size, and up to 64
+            dedicated Rx buffers for storage of all messages that have passed acceptance filtering. A
+            dedicated Rx buffer, in contrast to a receive FIFO, is used to store only messages with a
+            specific identifier. An Rx timestamp is stored together with each message. Up to 128 filters
+            can be defined for 11-bit IDs and up to 64 filters for 29-bit IDs.
+
+            APB Interface
+            Connects the FDCAN to the APB bus.
+
+            Message RAM Interface
+            Connects the FDCAN access to an external 10 Kbytes message RAM through a RAM
+            controller/arbiter.
+
+56.4.1      Operating modes
+            Software initialization
+            Software initialization is started by setting INIT bit in FDCAN_CCCR register, either by
+            software or by a hardware reset, or by going Bus_Off. While INIT bit in FDCAN_CCCR
+            register is set, message transfer from and to the CAN bus is stopped, the status of the CAN
+            bus output FDCAN_TX is recessive (high). The counters of the error management logic
+            (EML) are unchanged. Setting INIT bit in FDCAN_CCCR does not change any configuration
+            register. Clearing INIT bit in FDCAN_CCCR finishes the software initialization. Afterwards
+            the bit stream processor (BSP) synchronizes itself to the data transfer on the CAN bus by
+            waiting for the occurrence of a sequence of 11 consecutive recessive bits (Bus_Idle) before
+            it can take part in bus activities and start the message transfer.
+            Access to the FDCAN configuration registers is only enabled when both INIT bit in
+            FDCAN_CCCR register and CCE bit in FDCAN_CCCR register are set.
+            CCE bit in FDCAN_CCCR register can only be set/cleared while INIT bit in FDCAN_CCCR
+            is set. CCE bit in FDCAN_CCCR register is automatically cleared when INIT bit in
+            FDCAN_CCCR is cleared.
+
+
+
+
+2464/3353                                    RM0433 Rev 8
+

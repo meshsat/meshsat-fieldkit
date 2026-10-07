@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/cm5/cm5-datasheet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/cm5/cm5-datasheet.pdf",
+ "pdf_sha256": "80070fefd8db6e8abc6e146c8b7b5fb318ba129cc1e28826936d547fde79c863",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/cm5/pdftext/cm5-datasheet.layout.txt",
+ "text_bytes": 122355,
+ "text_sha256": "429ef814b81dbed7080ed836c1eea541ef25ff94d6d1b3636e282004f0833567"
+}

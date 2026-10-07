@@ -30,6 +30,24 @@ import subprocess
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; it prints no output: its importers print its texts' sha256 with theirs.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9t5
+PDFTEXT = {
+    "v2/vendor/battery/ti-csd18510q5b.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-ina250-sbos511c.pdf": [["-layout"]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-ina226.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tlv758p.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tlv9062-op-amp.pdf": [["-layout"]],
+    "v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf": [["-layout"]],
+}
+import importlib.util  # noqa: E402  (the helper's loader; W34)
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 SHEETS = {
     "ina250": "v2/vendor/ti/held/ti-ina250-sbos511c.pdf",
     "tlv758p": "v2/vendor/ti/ti-tlv758p.pdf",
@@ -76,10 +94,7 @@ def _pdf(key):
     p = os.path.join(ROOT, SHEETS[key])
     if not os.path.isfile(p):
         raise SystemExit("l9t5_paloop: %s is not in the tree%s" % (SHEETS[key], " (held back: v2/docs/records/l4e7/fetch_held_back.py)" if "held" in SHEETS[key] else ""))
-    r = subprocess.run(["pdftotext", "-layout", p, "-"], capture_output=True)
-    if r.returncode != 0:
-        raise SystemExit("l9t5_paloop: pdftotext could not read %s" % SHEETS[key])
-    return r.stdout.decode("utf-8", "replace")
+    return PT.pdf_text(ROOT, SHEETS[key], ["-layout"], PDFTEXT, "v2/docs/records/l9t5")
 
 
 def _need(t, pat, what, flags=re.M):

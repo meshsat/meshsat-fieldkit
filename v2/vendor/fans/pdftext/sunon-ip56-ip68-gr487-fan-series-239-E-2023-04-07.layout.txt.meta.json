@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/fans/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/fans/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.pdf",
+ "pdf_sha256": "902af71be894edda5e78d2f3514547dc203fc2e56bdc355d198c84eb82164386",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/fans/pdftext/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.layout.txt",
+ "text_bytes": 21222,
+ "text_sha256": "247450b0bb4de1e2bb5b90017d8e612080b6a39ed6cbbe7b40043eb489d5f044"
+}

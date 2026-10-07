@@ -114,8 +114,13 @@ def t_the_power_on_reading_rests_on_the_held_datasheet():
     """F-15: the sentences the power-on reading rests on, read from the held RP2040 datasheet page by page (PDF pages, one each)."""
     pdf = os.path.join(ROOT, "v2", "vendor", "rp2040", "rpi-rp2040-datasheet.pdf")
     need(pdf, "the held RP2040 datasheet")
-    if shutil.which("pdftotext") is None:
-        raise Skip("pdftotext is needed")
+    # W81: each page's committed extraction (record l5r4's PDFTEXT in l5r4_pdftext.py, re-taken by retake_pdf_text.py beside the
+    # datasheet), read through the records' helper; never this host's pdftotext
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("l5r4_records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+    PT = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(PT)
+    table = PT.declared_in(os.path.join(ROOT, "v2", "docs", "records", "l5r4", "l5r4_pdftext.py"))
     want = {164: "This happens at initial power-on, during a power supply brown-out event or when the chip\u2019s RUN pin is taken low",
             169: "The source of the most recent chip-level reset can be determined by reading the state of the HAD_POR, HAD_RUN and "
                  "HAD_PSM_RESTART fields in the CHIP_RESET register",
@@ -123,9 +128,8 @@ def t_the_power_on_reading_rests_on_the_held_datasheet():
             545: "The watchdog is a countdown timer that can restart parts of the chip if it reaches zero",
             549: "Logs the reason for the last reset. Both bits are zero for the case of a hardware reset."}
     for page, sentence in want.items():
-        r = subprocess.run(["pdftotext", "-f", str(page), "-l", str(page), pdf, "-"], capture_output=True)
-        assert r.returncode == 0, page
-        assert sentence in _flat(r.stdout.decode("utf-8", "replace")), "the datasheet's page %d no longer says %r" % (page, sentence[:60])
+        t = PT.pdf_text(ROOT, "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf", ["-f", str(page), "-l", str(page)], table, "v2/docs/records/l5r4")
+        assert sentence in _flat(t), "the datasheet's page %d no longer says %r" % (page, sentence[:60])
     s5 = _panel5()
     for s in ("the controller reads one as `CHIP_RESET`'s `HAD_POR` set and the watchdog's `REASON` zero",
               "a watchdog reset is not one (2.12.1, 4.7.1)", "never inside its journal (the panel firmware's S-37"):
