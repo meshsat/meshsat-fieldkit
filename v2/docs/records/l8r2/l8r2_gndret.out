@@ -11,14 +11,14 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
    3ef9b8c49a01b728 v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
    6e46bc5651e17d8d v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
-   d8882cd01e9df691 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   0081f048d4d0f72c v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    b57b1ec493540f6e v2/docs/records/l8r2/inputs/l9pwr_budget-841e6c7e.txt
    a17be97cb9f813f4 v2/docs/records/l8r2/inputs/l9t5_drafts-841e6c7e.txt
    69e6ac4fc0417d3c v2/docs/records/l8r2/inputs/l9t5-apply_gen_sch_a_iocbuck-841e6c7e.py
    b30615af5e6b4507 v2/docs/records/l8r2/checks/astra-check-t5-recheck-cx41.md
    0be579949c22eab1 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-04-rev3.md
    9fc459cada3dbad2 v2/docs/records/l8r2/inputs/SOURCES.txt
-   68d3df24f9e105cd v2/docs/records/l4e12/l4e12_thermal.out
+   e307beba45d9120f v2/docs/records/l4e12/l4e12_thermal.out
    3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
    b0ea9ce43308e789 v2/ecad/tools/pcb_interfaces.yaml
@@ -36,7 +36,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    a533c3262b835db7 v2/docs/records/l8r2/check_l8r2_netlist.py
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    fe9e3979b8a18d33 v2/docs/records/l8gnd/check_gnd002_netlist.py
-   d4495c6d51895288 v2/docs/records/l8r2/l8r2_drafts.py
+   49a78bfb4eff2207 v2/docs/records/l8r2/l8r2_drafts.py
    6b9d1d051c21e052 v2/docs/records/l6r2/apply_gen_sch_b_intent.py
    a96c72c07fca8671 v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py
    8016267ff0da3889 v2/docs/records/l6r2/apply_gen_sch_b_xal_land.py
@@ -59,6 +59,12 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    38509e478ba394d0 v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf
    6f7254b5bcf6f837 v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf
    fdee657377aed9ac v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf
+   1ec5ff7ded53acbd v2/vendor/battery/pdftext/amass-xt60-spec-2021v1-lcsc-c98733.layout.txt
+   ffd3fbf0c0712133 v2/vendor/battery/pdftext/amass-xt60-spec-tme.layout.txt
+   9d315dec55a94ab8 v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt
+   eef7675bf24fdcb7 v2/vendor/connectors/pdftext/wurth-wr-bhd-box-header-61202621621.layout.txt
+   7e2f408892ad65c7 v2/vendor/connectors/pdftext/wurth-wr-bhd-idc-socket-61202623021.layout.txt
+   394ad1917142ad01 v2/vendor/connectors/pdftext/wurth-wr-cab-ribbon-63912615521cab.layout.txt
    7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
    0e215988ba2a929b v2/docs/records/l4e11/apply_gen_sch_a_charger.py

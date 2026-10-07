@@ -1,0 +1,5290 @@
+TPS37
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+TPS37 Wide VIN 65 V Dual Channel Overvoltage & Undervoltage (OV & UV) Detector
+with Programmable Sense and Reset Delay Function
+1 Features
+
+3 Description
+
+•
+
+The TPS37 is a family of wide input range and
+low quiescent current window supervisors for fast
+detection of overvoltage (OV) and undervoltage
+(UV) conditions. Each device includes a precision
+internal reference, two independent and configurable
+voltage comparators and integrated resistor dividers.
+The TPS37 can be connected directly to and
+monitor 12 V / 24 V supply rails in a variety of
+industrial applications including factory automation,
+motor drives, building automation and others. Built-in
+hysteresis on the SENSE pins prevents false reset
+signals when monitoring a supply voltage rail.
+
+•
+
+•
+•
+•
+•
+
+The separate VDD and SENSE pins allow
+redundancy sought by high-reliability systems.
+SENSE is decoupled from VDD and can monitor
+higher and lower voltages than VDD. Optional use
+of external resistors are supported by the high
+impedance input of the SENSE pins. CTSx and CTRx
+pins allow delay adjustability on the rising and falling
+edges of the RESET signals. Also, CTSx functions
+as a debouncer by ignoring voltage glitches on the
+monitored voltage rails; CTRx operates as a manual
+reset (MR) that can be used to force a system reset.
+
+2 Applications
+•
+•
+•
+•
+•
+•
+
+Analog input module
+CPU (PLC controller)
+Servo drive control module
+Servo drive power stage module
+Servo drive functional safety module
+HVAC valve and actuator control
+
+TPS37 is available in a WSON or SOT-23 package.
+The central pad is non-conductive to increase the
+creepage between VDD and GND per guidelines in
+IEC60664. TPS37 operates over –40°C to +125°C TA.
+Device Information
+PART NUMBER
+
+PACKAGE (1)
+
+BODY SIZE (NOM)
+
+TPS37
+
+WSON (10) (DSK)
+
+2.5 mm × 2.5 mm
+
+TPS37
+
+SOT-23 (14) (DYY)
+
+4.1 mm × 1.9 mm
+
+(1)
+
+0.95
+
+Power Switch
+or
+DC/DC
+EN
+
+24V
+
+0.90
+
+VDD
+
+VDD
+SENSE1
+
+RESET1
+
+MCU
+
+TPS37
+SENSE2
+
+RESET2
+
+For package details, see the mechanical drawing addendum
+at the end of the data sheet.
+
+LDO
+
+Quiescent Current (μA)
+
+•
+•
+•
+•
+
+Functional Safety - Capable
+– Documentation available to functional safety
+system design
+Wide supply voltage range: 2.7 V to 65 V
+SENSE and RESET pins are 65 V graded
+Low quiescent current: 1 µA (typical)
+Flexible and wide voltage threshold options
+Table 11-1
+– 2.7 V to 36 V (1.5% maximum accuracy)
+– 800 mV option (1% maximum accuracy)
+Built-in hysteresis (VHYS)
+– Percentage options: 2% to 13% (1% steps)
+– Fixed options: VTH < 8 V = 0.5 V, 1 V, 1.5 V,
+2 V, 2.5 V
+Programmable reset time delay
+– 10 nF = 12.8 ms, 10 μF = 12.8 s
+Programmable sense time delay
+– 10 nF = 1.28 ms, 10 μF = 1.28 s
+Manual Reset (MR) feature
+Output topology: Open-Drain or Push-Pull
+
+0.85
+0.80
+0.75
+0.70
+0.65
+0.60
+
+-40oC
+25oC
+125oC
+
+0.55
+
+SENSE1 = Overvoltage monitor
+SENSE2 = Undervoltage monitor
+
+Typical Application Circuit
+
+0.50
+0
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+Typical IDD vs VDD
+
+An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+intellectual property matters and other important disclaimers. PRODUCTION DATA.
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+Table of Contents
+1 Features............................................................................1
+2 Applications..................................................................... 1
+3 Description.......................................................................1
+4 Revision History.............................................................. 2
+5 Device Comparison......................................................... 3
+6 Pin Configuration and Functions...................................4
+7 Specifications.................................................................. 6
+7.1 Absolute Maximum Ratings........................................ 6
+7.2 ESD Ratings .............................................................. 6
+7.3 Recommended Operating Conditions.........................6
+7.4 Thermal Information ...................................................6
+7.5 Electrical Characteristics.............................................7
+7.6 Timing Requirements.................................................. 9
+7.7 Timing Diagrams ...................................................... 10
+7.8 Typical Characteristics.............................................. 13
+8 Detailed Description......................................................17
+
+8.1 Overview................................................................... 17
+8.2 Functional Block Diagram......................................... 17
+8.3 Feature Description...................................................18
+9 Device Functional Modes............................................. 26
+10 Application and Implementation................................ 27
+10.1 Adjustable Voltage Thresholds............................... 27
+10.2 Application Information........................................... 28
+10.3 Power Supply Recommendations...........................31
+10.4 Layout..................................................................... 31
+11 Device and Documentation Support..........................34
+11.1 Device Nomenclature..............................................34
+11.2 Support Resources................................................. 35
+11.3 Trademarks............................................................. 35
+11.4 Electrostatic Discharge Caution.............................. 35
+11.5 Glossary.................................................................. 35
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+Changes from Revision D (December 2021) to Revision E (August 2023)
+Page
+• Add Funtional safety statement and removed latch functionality....................................................................... 1
+• Added Vit and Vhyst timing diagram.................................................................................................................10
+• Added CTS and CTR value plots......................................................................................................................13
+Changes from Revision C (September 2021) to Revision D (December 2021)
+Page
+• Advanced Information to Production Data release............................................................................................. 1
+
+2
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+5 Device Comparison
+Contact TI sales representatives or consult TI's E2E forum for details and availability; minimum order quantities
+may apply.
+Voltage Threshold
+
+Hysteresis
+
+CH 2
+
+CH 1 CH 2
+
+CH 1
+
+TPS37 X XX XX X X XXX R
+
+DYY
+
+Large
+
+1.
+2.
+3.
+4.
+
+Sense logic: OV = overvoltage; UV = undervoltage
+Reset topology: PP = Push-Pull; OD = Open-Drain
+Reset logic: L = Active-Low; H = Active-High
+A to I hysteresis options are only available for 2.7 V to 8 V threshold options
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+3
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+VDD
+
+1
+
+SENSE1
+
+2
+
+SENSE2
+
+3
+
+*
+
+4
+
+**
+
+5
+
+NC
+(No Internal Connection)
+
+6 Pin Configuration and Functions
+10
+
+GND
+
+9
+
+CTR2/MR
+
+8
+
+CTS2
+
+7
+
+CTS1
+
+6
+
+CTR1/MR
+
+* Pin 4 Options
+
+** Pin 5 Options
+
+1. RESET1_OV##
+2. RESET1_OV##
+
+1. RESET2_UVOD
+2. RESET2_UVOD
+
+## OD (Open-Drain) or PP (Push-Pull)
+
+Figure 6-1. DSK Package,
+10-Pin WSON,
+TPS37 (Top View)
+
+VDD
+
+1
+
+14
+
+NC
+
+NC
+
+2
+
+13
+
+GND
+
+SENSE1
+
+3
+
+12
+
+CTR2/MR
+
+SENSE2
+
+4
+
+11
+
+CTS2
+
+NC
+
+5
+
+10
+
+CTS1
+
+*
+
+6
+
+9
+
+CTR1/MR
+
+**
+
+7
+
+8
+
+GND
+
+* Pin 6 Options
+
+** Pin 7 Options
+
+1. RESET1_OV##
+2. RESET1_OV##
+
+1. RESET2_UVOD
+2. RESET2_UVOD
+
+## OD (Open-Drain) or PP (Push-Pull)
+
+Figure 6-2. DYY Package,
+14-Pin SOT-23,
+TPS37 (Top View)
+
+4
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+Table 6-1. Pin Functions
+PIN
+NAME
+VDD
+
+SENSE1
+
+SENSE2
+
+RESET1/
+RESET1
+
+RESET2/
+RESET2
+
+CTR1/ MR
+
+WSON
+(DSK)
+
+SOT23
+(DYY)
+
+PIN
+NUM.
+
+PIN
+NUM.
+
+1
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+I/O
+
+DESCRIPTION
+
+I
+
+Input Supply Voltage: Bypass with a 0.1 µF capacitor to GND.
+
+I
+
+This pin is connected to the voltage that will be monitored for fixed variants or to a resistor divider for
+the adjustable variant. When the voltage on SENSE1 pin transitions above the upper threshold voltage
+of VIT+, RESET1/RESET1 asserts after the sense time delay, set by CTS1. When the voltage on the
+SENSE1 pin transitions below the upper threshold voltage of VIT+ - VHYS, RESET1/RESET1 deasserts
+after the reset time delay, set by CTR1. For noisy applications, placing a 10 nF to 100 nF ceramic
+capacitor close to this pin may be needed for optimum performance.
+
+4
+
+I
+
+This pin is connected to the voltage that will be monitored for fixed variants or to a resistor divider for
+the adjustable variant. When the voltage on SENSE2 pin transitions below the lower threshold voltage
+of VIT-, RESET2/RESET2 asserts after the sense time delay, set by CTS2. When the voltage on the
+SENSE2 pin transitions above the lower threshold voltage of VIT- + VHYS, RESET2/RESET2 deasserts
+after the reset time delay, set by CTR2. For noisy applications, placing a 10 nF to 100 nF ceramic
+capacitor close to this pin may be needed for optimum performance.
+
+6
+
+Output Reset Signal For Channel 1: See Section 5 for output topology options. RESET1/RESET1
+asserts when SENSE1 rises outside of the upper voltage threshold. RESET1/RESET1 remains
+asserted for the reset time delay period after SENSE1 transitions out of an overvoltage (OV) fault
+condition. For active low open-drain reset output, an external pullup resistor is required. Do not place
+O
+external pullup resistors on push-pull outputs.
+Reset output signal for: SENSE1
+Sensing Topology: Overvoltage (OV)
+Output topology: Open Drain or Push Pull, Active Low or Active High
+
+7
+
+Output Reset Signal For Channel 2: See Section 5 for output topology options. RESET2/RESET2
+asserts when SENSE2 falls outside of the lower voltage threshold. RESET2/RESET2 remains
+asserted for the reset time delay period after SENSE2 transitions out of an undervoltage (UV) fault
+O condition. For active low open-drain reset output, an external pullup resistor is required.
+Reset output signal for: SENSE2
+Sensing Topology: Undervoltage (UV)
+Output topology: Open Drain, Active Low or Active High
+
+3
+
+9
+
+-
+
+Channel 1 RESET Time Delay: User-programmable reset time delay for RESET1/RESET1. Connect
+an external capacitor for adjustable time delay or leave the pin floating for the shortest delay.
+Manual Reset: If this pin is driven low, the RESET1/RESET1 output will reset and become asserted.
+The pin can be left floating or be connected to a capacitor. This pin should not be driven high.
+
+CTR2/ MR
+
+9
+
+12
+
+-
+
+Channel 2 RESET Time Delay: User-programmable reset time delay for RESET2/RESET2. Connect
+an external capacitor for adjustable time delay or leave the pin floating for the shortest delay.
+Manual Reset: If this pin is driven low, the RESET2/RESET2 output will reset and become asserted.
+The pin can be left floating or be connected to a capacitor. This pin should not be driven high.
+
+GND
+
+10
+
+8, 13
+
+-
+
+Ground. All GND pins must be electrically connected to the board ground.
+
+NC
+
+PAD
+
+2, 5, 14
+
+-
+
+The PAD for the DSK package is not internally connected, the PAD can be connected to GND or be
+left floating. For the DYY package, NC stands for “No Connect”. The pins are to be left floating.
+
+CTS1
+
+7
+
+10
+
+Channel 1 SENSE Time Delay: Capacitor programmable sense delay: CTS1 pin offers a userO adjustable sense delay time when asserting a reset condition. Connecting this pin to a groundreferenced capacitor sets the RESET1/RESET1 delay time to assert.
+
+CTS2
+
+8
+
+11
+
+Channel 2 SENSE Time Delay: Capacitor programmable sense delay: CTS2 pin offers a userO adjustable sense delay time when asserting a reset condition. Connecting this pin to a groundreferenced capacitor sets the RESET2/RESET2 delay time to assert.
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+5
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+7 Specifications
+7.1 Absolute Maximum Ratings
+over operating free-air temperature range, unless otherwise noted (1)
+MIN
+
+MAX
+
+UNIT
+
+Voltage
+
+VDD, VSENSE1,VSENSE2, VRESET1, VRESET2, VRESET1, VRESET2
+
+–0.3
+
+70
+
+V
+
+Voltage
+
+VCTS1, VCTS2, VCTR1, VCTR2
+
+–0.3
+
+6
+
+V
+
+Current
+
+IRESET1, IRESET2, IRESET1, IRESET2
+
+10
+
+mA
+
+Temperature (2)
+
+Operating junction temperature, TJ
+
+–40
+
+150
+
+°C
+
+Temperature (2)
+
+Operating Ambient temperature, TA
+
+–40
+
+150
+
+°C
+
+Temperature (2)
+
+Storage, Tstg
+
+–65
+
+150
+
+°C
+
+(1)
+
+(2)
+
+Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress
+ratings only, which do not imply functional operation of the device at these or any other conditions beyond those indicated under
+Recommended Operating Conditions. Exposure to absolute-maximum-rated conditions for extended periods may affect device
+reliability.
+As a result of the low dissipated power in this device, it is assumed that TJ = TA.
+
+7.2 ESD Ratings
+VALUE
+
+V(ESD)
+
+(1)
+(2)
+
+Electrostatic discharge
+
+Human body model (HBM), per ANSI/ESDA/JEDEC
+JS-001 (1)
+
+± 2000
+
+Charged device model (CDM), per JEDEC specification
+JESD22-C101 (2)
+
+± 750
+
+UNIT
+
+V
+
+JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process.
+JEDEC document JEP157 states that 250-V CDM allows safe manufacturing with a standard ESD control process.
+
+7.3 Recommended Operating Conditions
+over operating free-air temperature range (unless otherwise noted)
+MIN
+Voltage
+
+VDD
+
+Voltage
+
+VSENSE1,VSENSE2, VRESET1, VRESET2, VRESET1, VRESET2
+
+Voltage
+
+VCTS1, VCTS2, VCTR1, VCTR2
+
+Current
+
+IRESET1, IRESET2, IRESET1, IRESET2
+
+TJ
+
+Junction temperature (free air temperature)
+
+NOM
+
+MAX
+
+UNIT
+
+65
+
+V
+
+0
+
+65
+
+V
+
+0
+
+5.5
+
+V
+
+0
+
+±5
+
+mA
+
+–40
+
+125
+
+°C
+
+2.7
+
+7.4 Thermal Information
+TPS37
+THERMAL METRIC
+
+(1)
+
+DSK
+
+DYY
+
+10-PIN
+
+14-PIN
+
+UNIT
+
+RθJA
+
+Junction-to-ambient thermal resistance
+
+87.4
+
+131.5
+
+°C/W
+
+RθJC(top)
+
+Junction-to-case (top) thermal resistance
+
+76.3
+
+61.1
+
+°C/W
+
+RθJB
+
+Junction-to-board thermal resistance
+
+54.2
+
+56.6
+
+°C/W
+
+ψJT
+
+Junction-to-top characterization parameter
+
+4.8
+
+3.4
+
+°C/W
+
+ψJB
+
+Junction-to-board characterization parameter
+
+54.2
+
+56.5
+
+°C/W
+
+RθJC(bot)
+
+Junction-to-case (bottom) thermal resistance
+
+34.8
+
+N/A
+
+°C/W
+
+(1)
+
+For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+report.
+
+6
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+7.5 Electrical Characteristics
+At VDD(MIN) ≤ VDD ≤ VDD (MAX), CTR1/MR = CTR2/MR = CTS1 = CTS2 = open, output reset pull-up resistor RPU = 10 kΩ,
+voltage VPU = 5.5 V, and load CLOAD = 10 pF. The operating free-air temperature range TA = – 40°C to 125°C, unless
+otherwise noted. Typical values are at TA = 25°C and VDD = 16 V and VIT = 6.5 V (VIT refers to VITN or VITP).
+PARAMETER
+
+TEST CONDITIONS
+
+MIN
+
+TYP
+
+MAX
+
+UNIT
+
+65
+
+V
+
+VDD
+VDD
+
+Supply Voltage
+
+UVLO (1)
+
+Undervoltage Lockout
+
+VDD Falling below VDD (MIN)
+
+2.7
+
+V
+
+VPOR
+
+Power on Reset Voltage (2)
+RESET, Active Low
+(Open-Drain, Push-Pull )
+
+VOL(MAX) = 300 mV
+IOUT (Sink) = 15 µA
+
+1.4
+
+V
+
+VPOR
+
+Power on Reset Voltage (2)
+RESET, Active High
+(Push-Pull )
+
+VOH(MIN) = 0.8 x VDD
+IOUT (Source) = 15 µA
+
+1.4
+
+V
+
+IDD
+
+Supply current into VDD pin
+
+2.7
+
+VIT = 800 mV
+VDD (MIN) ≤ VDD ≤ VDD (MAX)
+
+1
+
+2.6
+
+µA
+
+VIT = 2.7 V to 36 V
+VDD (MIN) ≤ VDD ≤ VDD (MAX)
+
+1
+
+2
+
+µA
+
+VIT = 800 mV
+
+100
+
+nA
+
+SENSE (Input)
+ISENSE
+
+Input current
+(SENSE1, SENSE2)
+
+ISENSE
+
+Input current
+(SENSE1, SENSE2)
+
+VIT < 10 V
+
+0.8
+
+µA
+
+ISENSE
+
+Input current
+(SENSE1, SENSE2)
+
+10 V < VIT < 26 V
+
+1.2
+
+µA
+
+ISENSE
+
+Input current
+(SENSE1, SENSE2)
+
+VIT > 26 V
+
+2
+
+µA
+
+VITN
+
+Input Threshold Negative
+(Undervoltage)
+
+VIT = 2.7 V to 36 V
+
+-1.5
+
+VIT = 800 mV (3)
+
+0.792
+
+Input Threshold Positive
+(Overvoltage)
+
+VIT = 2.7 V to 36 V
+
+-1.5
+
+VITP
+
+= 800 mV (3)
+
+0.792
+
+VHYS
+
+Hysteresis Accuracy (4)
+
+VIT
+
+0.800
+
+0.800
+
+1.5
+
+%
+
+0.808
+
+V
+
+1.5
+
+%
+
+0.808
+
+V
+
+VIT = 0.8 V and 2.7 V to 36 V
+VHYS Range = 2% to 13%
+(1% step)
+
+-1.5
+
+1.5
+
+%
+
+VIT = 2.7 V to 8 V
+VHYS = 0.5 V, 1 V, 1.5 V, 2 V,
+2.5 V
+(VITP - VHYS) ≥ 2.4 V, OV Only
+
+-1.5
+
+1.5
+
+%
+
+VRESET = 5.5 V
+VITN < VSENSE < VITP
+
+300
+
+nA
+
+VRESET = 65 V
+VITN < VSENSE < VITP
+
+300
+
+nA
+
+2.7 V ≤ VDD ≤ 65 V
+IRESET = 5 mA
+
+300
+
+mV
+
+2.7 V ≤ VDD ≤ 65 V
+IRESET = 500 uA
+
+100
+
+mV
+
+RESET (Output)
+
+Ilkg(OD)
+
+VOL (5)
+
+VOH_DO
+
+VOH (5)
+
+Open-Drain leakage
+(RESET1, RESET2)
+
+Low level output voltage
+High level output voltage
+dropout
+(VDD - VOH = VOH_DO)
+(Push-Pull only)
+High level output voltage
+(Push-Pull only)
+
+2.7 V ≤ VDD ≤ 65 V
+IRESET = 5 mA
+
+0.8VDD
+
+V
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+7
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+7.5 Electrical Characteristics (continued)
+At VDD(MIN) ≤ VDD ≤ VDD (MAX), CTR1/MR = CTR2/MR = CTS1 = CTS2 = open, output reset pull-up resistor RPU = 10 kΩ,
+voltage VPU = 5.5 V, and load CLOAD = 10 pF. The operating free-air temperature range TA = – 40°C to 125°C, unless
+otherwise noted. Typical values are at TA = 25°C and VDD = 16 V and VIT = 6.5 V (VIT refers to VITN or VITP).
+PARAMETER
+
+TEST CONDITIONS
+
+MIN
+
+TYP
+
+MAX
+
+UNIT
+
+Capacitor Timing (CTS, CTR)
+RCTR
+
+Internal resistance
+(CTR1 / MR , CTR2 / MR )
+
+877
+
+1000
+
+1147
+
+Kohms
+
+RCTS
+
+Internal resistance
+(CTS1, CTS2)
+
+88
+
+100
+
+122
+
+Kohms
+
+Manual Reset (MR)
+VMR_IH
+
+CTR1 / MR and
+CTR2 / MR pin
+logic high input
+
+VDD = 2.7 V
+
+2200
+
+mV
+
+VMR_IH
+
+CTR1 / MR and
+CTR2 / MR pin
+logic high input
+
+VDD = 65 V
+
+2500
+
+mV
+
+VMR_IL
+
+CTR1 / MR and
+CTR2 / MR pin
+logic low input
+
+VDD = 2.7 V
+
+1300
+
+mV
+
+VMR_IL
+
+CTR1 / MR and
+CTR2 / MR pin
+logic low input
+
+VDD = 65 V
+
+1300
+
+mV
+
+(1)
+(2)
+(3)
+(4)
+(5)
+
+When VDD voltage falls below UVLO, reset is asserted for Output 1 and Output 2. VDD slew rate ≤ 100 mV / µs
+VPOR is the minimum VDD voltage for a controlled output state. Below VPOR, the output cannot be determined. VDD dv/dt ≤ 100mV/µs
+For adjustable voltage guidelines and resistor selection refer to Adjustable Voltage Thresholds in Application and Implementation
+section
+Hysteresis is with respect to VITP and VITN voltage threshold. VITP has negative hysteresis and VITN has positive hysteresis.
+For VOH and VOL relation to output variants refer to Timing Figures after the Timing Requirement Table
+
+8
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+7.6 Timing Requirements
+At VDD(MIN) ≤ VDD ≤ VDD (MAX), CTR1/MR = CTR2/MR = CTS1 = CTS2 = open (1), output reset pull-up resistor RPU = 10 kΩ,
+voltage VPU = 5.5V, and CLOAD = 10 pF. VDD and SENSE slew rate = 1V / µs. The operating free-air temperature range TA =
+– 40°C to 125°C, unless otherwise noted. Typical values are at TA = 25°C and VDD = 16 V and VIT = 6.5 V (VIT refers to
+either VITN or VITP).
+PARAMETER
+
+TEST CONDITIONS
+
+MIN
+
+TYP
+
+MAX
+
+UNIT
+
+VIT = 2.7 V to 36 V
+CCTR1 = CCTR2 = Open
+20% Overdrive from Hysteresis
+
+100
+
+µs
+
+VIT = 800 mV
+CCTR1 = CCTR2 = Open
+20% Overdrive from Hysteresis
+
+40
+
+µs
+
+Common timing parameters
+
+tCTR
+
+tCTS
+
+tSD
+(1)
+(2)
+
+(3)
+
+(4)
+
+Reset release time delay
+(CTR1/MR, CTR2/MR) (2)
+
+Sense detect time delay
+(CTS1, CTS2) (3)
+
+Startup Delay (4)
+
+VIT = 2.7 V to 36 V
+CCTS1 = CCTS2 = Open
+20% Overdrive from VIT
+
+34
+
+90
+
+µs
+
+VIT = 800 mV
+CCTS1 = CCTS2 = Open
+20% Overdrive from VIT
+
+8
+
+17
+
+µs
+
+2
+
+ms
+
+CCTR1/MR = CCTR2/MR = Open
+
+CCTR1 = Reset delay channel 1, CCTR2 = Reset delay channel 2,
+CCTS1 = Sense delay channel 1, CCTS2 = Sense delay channel 2
+CTR Reset detect time delay:
+Overvoltage active-LOW output is measure from VITP - HYS to VOH
+Undervoltage active-LOW output is measure from VITN + HYS to VOH
+Overvoltage active-HIGH output is measure from VITP - HYS to VOL
+Undervoltage active-HIGH output is measure from VITN + HYS to VOL
+CTS Sense detect time delay:
+Active-low output is measure from VIT to VOL (or VPullup)
+Active-high output is measured from VIT to VOH
+VIT refers to either VITN or VITP
+During the power-on sequence, VDD must be at or above VDD (MIN) for at least tSD before the output is in the correct state based on
+VSENSE.
+tSD time includes the propagation delay (CCTR1 = CCTR2 = Open). Capaicitor in CCTR1 or CCTR2 will add time to tSD.
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+9
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+7.7 Timing Diagrams
+Highest Absolute Limit for the Monitored Voltage Rail
+[1%]
+VIT+(OV)MAX
+Accuracy band across
+(-40ºC to 125ºC)
+
+VIT+(OV)
+VIT+(OV)MIN
+
+[VHYSMIN=Hyst%*.985 * (VIT+(OV)MIN)]
+[VHYSMAX = Hyst%*1.015 * (VIT+(OV)MIN )]
+
+Hys band for VIT+(OV)
+
+Power
+Supply
+Tolerance
+Window
+
+[VHYSMAX = Hyst%*1.015 * (VIT-(UV)MIN )]
+
+[1%]
+[0.25%
+]
+[-0.25%]
+
+[VHYSMIN=Hyst%*.985 * (VIT-(UV)MIN)]
+
+Hys band for VIT-(UV)
+
+VIT-(UV)MIN
+VIT-(UV)
+
+Accuracy band across
+(-40ºC to 125ºC)
+
+VIT-(UV)MAX
+
+Lowest Absolute Limit for the Monitored Voltage Rail
+Figure 7-1. Voltage Threshold and Hysteresis Accuracy
+
+10
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+VDD(MIN)
+VDD
+
+UVLO(MIN)
+
+VPOR
+
+SENSEx
+VSENSEx
+VITN (UV) + VHYS
+VITN (UV)
+
+*See
+Note C
+
+t < tCTSx
+
+tSD + tCTRx
+
+tCTSx
+
+tCTRx
+
+tSD + tCTRx
+
+tCTSx
+
+tCTRx
+
+Undefined
+
+*See
+Note C
+
+Undefined
+
+A.
+B.
+C.
+
+Undefined
+
+RESETx_UVxx
+
+Undefined
+
+RESETx_UVxx
+
+Hysteresis
+
+For open-drain output option, the timing diagram assumes the RESETx_UVOD / RESETx_UVOD pin is connected via an external pull-up resistor to VDD.
+Be advised that this diagram shows the VDD falling slew rate is slow or the VDD decay time is much larger than the propagation detect delay (tCTRx) time.
+RESETx_UVxx / RESETx_UVxx is asserted when VDD goes below the UVLO(MIN) threshold after the time delay, tCTRx, is reached.
+
+Figure 7-2. SENSEx Undervoltage (UV) Timing Diagram
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+11
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+VDD(MIN)
+VDD
+
+UVLO(MIN)
+
+VPOR
+
+VITP (OV)
+SENSEx
+VITP (OV) - VHYS
+
+Hysteresis
+
+VSENSEx
+
+tSD + tCTRx
+
+tCTSx
+
+tCTRx
+
+tSD + tCTRx
+
+tCTSx
+
+tCTRx
+
+Undefined
+
+*See
+Note C
+
+Undefined
+
+A.
+B.
+C.
+
+Undefined
+
+RESETx_OVxx
+
+Undefined
+
+RESETx_OVxx
+
+*See
+Note C
+
+t < tCTSx
+
+For open-drain output option, the timing diagram assumes the RESETx_OVOD / RESETx_OVOD pin is connected via an external pull-up resistor to VDD.
+Be advised that this diagram shows the VDD falling slew rate is slow or the VDD decay time is much larger than the propagation detect delay (tCTRx) time.
+RESETx_OVxx / RESETx_OVxx is asserted when VDD goes below the UVLO(MIN) threshold after the time delay, tCTRx, is reached.
+
+Figure 7-3. SENSEx Overvoltage (OV) Timing Diagram
+
+12
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+7.8 Typical Characteristics
+
+0.95
+
+0.90
+
+0.90
+
+0.85
+
+0.85
+
+Quiescent Current (μA)
+
+Quiescent Current (μA)
+
+Typical characteristics show the typical performance of the TPS37 device. Test conditions are TA = 25°C, RPU = 100 kΩ,
+CLoad = 50 pF, unless otherwise noted.
+
+0.80
+0.75
+0.70
+0.65
+0.60
+
+-40oC
+25oC
+125oC
+
+0.55
+
+0.80
+0.75
+0.70
+0.65
+0.60
+-40oC
+25oC
+125oC
+
+0.55
+
+0.50
+
+0.50
+0
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+0
+
+5
+
+RESET = High, VIT = 2.7 V
+
+RESET = Low, VIT = 2.7 V
+Figure 7-5. VDD vs IDD (RESET = Low, VIT = 2.7 V)
+
+1.30
+
+1.40
+
+1.25
+
+1.35
+
+1.20
+
+1.30
+Quiescent Current (μA)
+
+Quiescent Current (μA)
+
+Figure 7-4. VDD vs IDD (RESET = High, VIT = 2.7 V)
+
+1.15
+1.10
+1.05
+1.00
+0.95
+0.90
+
+1.25
+1.20
+1.15
+1.10
+1.05
+1.00
+
+-40C
+25oC
+125C
+
+0.85
+
+-40oC
+25oC
+125oC
+
+0.95
+
+0.80
+
+0.90
+0
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+0
+
+5
+
+RESET = High, VIT = 0.8 V
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+RESET = Low, VIT = 0.8 V
+
+Figure 7-6. VDD vs IDD (RESET = High, VIT = 0.8 V)
+
+Figure 7-7. VDD vs IDD (RESET = Low, VIT = 0.8 V)
+
+1600
+
+1600
+
+1400
+
+1400
+
+1200
+
+1200
+
+Sense Current (nA)
+
+Sense Current (nA)
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+1000
+800
+600
+400
+
+1000
+800
+600
+400
+
+-40oC
+25oC
+125oC
+
+200
+0
+
+-40oC
+25oC
+125oC
+
+200
+0
+
+0
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Sense Voltage (V)
+
+0
+
+VDD = 2.7 V
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Sense Voltage (V)
+
+VDD = 65 V
+
+Figure 7-8. VSENSE vs ISENSE
+
+Figure 7-9. VSENSE vs ISENSE
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+13
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+7.8 Typical Characteristics (continued)
+Typical characteristics show the typical performance of the TPS37 device. Test conditions are TA = 25°C, RPU = 100 kΩ,
+CLoad = 50 pF, unless otherwise noted.
+0.21
+
+0.21
+-40oC
+25oC
+125oC
+
+0.18
+
+0.15
+
+0.15
+
+0.12
+
+0.12
+
+VOL (V)
+
+VOL (V)
+
+0.18
+
+0.09
+
+0.09
+
+0.06
+
+0.06
+
+0.03
+
+0.03
+
+0
+0.0
+
+0.5
+
+1.0
+
+-40oC
+25oC
+125oC
+
+1.5
+
+2.0 2.5 3.0
+IRESET (mA)
+
+3.5
+
+4.0
+
+4.5
+
+0.00
+0.0
+
+5.0
+
+0.5
+
+1.0
+
+1.5
+
+VDD = 2.7 V
+
+0.15
+
+0.15
+
+0.12
+
+0.12
+
+VOL (V)
+
+VOL (V)
+
+5.0
+
+0.09
+
+0.09
+
+0.06
+
+0.06
+
+0.03
+
+0.03
+
+0.5
+
+1.0
+
+-40oC
+25oC
+125oC
+
+0.18
+
+1.5
+
+2.0 2.5 3.0
+IRESET (mA)
+
+3.5
+
+4.0
+
+4.5
+
+0
+0.0
+
+5.0
+
+0.5
+
+1.0
+
+1.5
+
+VDD = 2.7 V
+
+2.0 2.5 3.0
+IRESET (mA)
+
+3.5
+
+4.0
+
+4.5
+
+5.0
+
+VDD = 65 V
+
+Figure 7-12. Open-Drain Active High VOL vs IRESET
+
+Figure 7-13. Open-Drain Active High VOL vs IRESET
+
+0.21
+
+0.21
+-40oC
+25oC
+125oC
+
+0.18
+0.15
+
+0.15
+
+0.12
+
+0.12
+
+0.09
+
+0.09
+
+0.06
+
+0.06
+
+0.03
+
+0.03
+
+0.5
+
+1.0
+
+-40oC
+25oC
+125oC
+
+0.18
+
+VOL (V)
+
+VOL (V)
+
+4.5
+
+0.21
+-40oC
+25oC
+125oC
+
+0.18
+
+1.5
+
+2.0 2.5 3.0
+IRESET (mA)
+
+3.5
+
+4.0
+
+4.5
+
+5.0
+
+0
+0.0
+
+VDD = 2.7 V
+
+0.5
+
+1.0
+
+1.5
+
+2.0 2.5 3.0
+IRESET (mA)
+
+3.5
+
+4.0
+
+4.5
+
+5.0
+
+VDD = 65 V
+
+Figure 7-14. Push-Pull Active High VOL vs IRESET
+
+14
+
+4.0
+
+Figure 7-11. Open-Drain Active Low VOL vs IRESET
+
+0.21
+
+0
+0.0
+
+3.5
+
+VDD = 65 V
+
+Figure 7-10. Open-Drain Active Low VOL vs IRESET
+
+0
+0.0
+
+2.0 2.5 3.0
+IRESET (mA)
+
+Figure 7-15. Push-Pull Active High VOL vs IRESET
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+7.8 Typical Characteristics (continued)
+
+0.21
+
+0.21
+
+0.18
+
+0.18
+
+0.15
+
+0.15
+
+0.12
+
+0.12
+
+VOL (V)
+
+VOL (V)
+
+Typical characteristics show the typical performance of the TPS37 device. Test conditions are TA = 25°C, RPU = 100 kΩ,
+CLoad = 50 pF, unless otherwise noted.
+
+0.09
+0.06
+
+0.09
+0.06
+
+o
+
+-40 C
+25oC
+125oC
+
+0.03
+0
+
+0
+0
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+0
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+Figure 7-17. Open-Drain Active High VOL vs VDD
+
+0.21
+
+0.21
+
+0.18
+
+0.18
+
+0.15
+
+0.15
+
+0.12
+
+0.12
+
+VOL (V)
+
+VOL (V)
+
+Figure 7-16. Open-Drain Active Low VOL vs VDD
+
+0.09
+0.06
+
+0.09
+0.06
+
+-40oC
+25oC
+125oC
+
+0.03
+
+-40oC
+25oC
+125oC
+
+0.03
+
+0
+
+0
+0
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+0
+
+Figure 7-18. Push-Pull Active Low VOL vs VDD
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+Figure 7-19. Push-Pull Active High VOL vs VDD
+
+70
+
+70
+
+60
+
+60
+
+50
+
+50
+
+40
+
+40
+
+VOH (V)
+
+VOH (V)
+
+-40oC
+25oC
+125oC
+
+0.03
+
+30
+20
+
+30
+20
+
+o
+
+-40 C
+25oC
+125oC
+
+10
+0
+
+-40oC
+25oC
+125oC
+
+10
+0
+
+0
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+Figure 7-20. Push-Pull Active Low VOH vs VDD
+
+0
+
+5
+
+10 15 20 25 30 35 40 45 50 55 60 65
+Supply Voltage (V)
+
+Figure 7-21. Push-Pull Active High VOH vs VDD
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+15
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+7.8 Typical Characteristics (continued)
+Typical characteristics show the typical performance of the TPS37 device. Test conditions are TA = 25°C, RPU = 100 kΩ,
+CLoad = 50 pF, unless otherwise noted.
+20000
+10000
+
+TCTR(ms)
+
+1000
+
+100
+
+10
+
+1
+25oC
+0.1
+0.0001
+
+0.001
+
+0.01
+0.1
+CCTR_EXT (F)
+
+1
+
+10
+
+Figure 7-22. TCTR vs CCTR
+
+16
+
+Figure 7-23. TCTS vs CCTS
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+8 Detailed Description
+8.1 Overview
+The TPS37 is a family of high voltage and low quiescent current reset IC with fixed threshold voltage. Voltage
+divider is integrated to eliminate the need for external resistors and eliminate leakage current that comes with
+resistor dividers. However, it can also support external resistor if required by application, the lowest threshold
+800 mV (bypass internal resistor ladder) is recommenced for external resistors use case to take advantage of
+faster detection time and lower ISENSE current.
+VDD, SENSE and RESET pins can support 65 V continuous operation; both VDD and SENSE voltage levels can
+be independent of each other, meaning VDD pin can be connected at 2.7 V while SENSE pins are connected
+to a higher voltage. One thing of note, the TPS37 does not have clamps within the device so external circuits or
+devices must be added to limit the voltages to the absolute max limit.
+Additional features include programmable sense time delay (CTS1, CTS2) and reset delay time and manual
+reset (CTR1 / MR, CTR2 / MR).
+
+8.2 Functional Block Diagram
+VDD
+*Device Opons
+Boxes shaded in blue
+See Device Nomenclature
+
+CTS1
+
+CTR1 / MR
+
+IQ
+SubReg
+
+POR
+VDD
+
+Voltage
+Divider
+
+-
+
+VRef Divider1
+
++
+
+SENSE1
+
+OV or UV
+Select
+
+Sense
+Delay
+
+Manual
+Reset
+
+Reset
+Delay
+
+Output
+Logic select
+(High/Low)
+
+RESET1
+
+REFERENCE
+RESET2
+VRef Divider2
+Voltage
+Divider
+
+SENSE2
+
++
+OV or UV
+Select
+
+Sense
+Delay
+
+Manual
+Reset
+
+CTS2
+
+CTR2 / MR
+
+Reset
+Delay
+
+-
+
+GND
+
+Output
+Logic select
+(High/Low)
+
+Figure 8-1. Functional Block Diagram 1
+
+1
+
+Refer to Section 5 for complete list of topologies and output logic combination
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+17
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+8.3 Feature Description
+8.3.1 Input Voltage (VDD)
+VDD operating voltage ranges from 2.7 V to 65 V. An input supply capacitor is not required for this device;
+however, if the input supply is noisy good analog practice is to place a 0.1 µF capacitor between the VDD and
+GND.
+VDD needs to be at or above VDD(MIN) for at least the start-up time delay (tSD) for the device to be fully functional.
+VDD voltage is independent of VSENSE and VRESET, meaning that VDD can be higher or lower than the other
+pins.
+8.3.1.1 Undervoltage Lockout (VPOR < VDD < UVLO)
+When the voltage on VDD is less than the UVLO voltage, but greater than the power-on reset voltage (VPOR),
+the output pins will be in reset, regardless of the voltage at SENSE pins.
+8.3.1.2 Power-On Reset (VDD < VPOR )
+When the voltage on VDD is lower than the power on reset voltage (VPOR), the output signal is undefined and is
+not to be relied upon for proper device function.
+SENSE VOLTAGE OUTSIDE OF THRESHOLD
+VITN > VSENSEx > VITP
+
+VSENSEx
+
+VDD(MIN)
+VDD
+
+UVLO(MIN)
+VPOR
+
+RESETx
+Active Low
+
+Output stays low since VSENSEx
+is outside of threshold
+VOL
+
+RESETx
+Active High
+VOL
+
+Undefined
+
+tSD+tCTRx
+
+Undefined
+
+Figure 8-2. Power Cycle (SENSE Outside of Nominal voltage) 2
+
+2
+
+18
+
+Figure assumes an external pull-up resistor is connected to the reset pin via VDD
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+SENSE VOLTAGE WITH IN THRESHOLD
+VITN < VSENSEx < VITP
+
+VSENSEx
+
+VDD(MIN)
+VDD
+
+UVLO(MIN)
+VPOR
+
+RESETx
+Active Low
+VOL
+
+RESETx
+Active High
+VOL
+
+Undefined
+
+tSD+tCTRx
+
+Undefined
+
+Figure 8-3. Power Cycle (SENSE Within Nominal voltage) 3
+
+3
+
+Figure assumes an external pull-up resistor is connected to the reset pin via VDD
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+19
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+8.3.2 SENSE
+The TPS37 high voltage family integrates two voltage comparators, a precision reference voltage and trimmed
+resistor divider. This configuration optimizes device accuracy because all resistor tolerances are accounted for
+in the accuracy and performance specifications. Device also has built-in hysteresis that provides noise immunity
+and ensures stable operation.
+Channels are independent of each other, meaning that SENSE1 and SENSE2 and respective outputs can be
+connected to different voltage rails.
+Although not required in most cases, for noisy applications good analog design practice is to place a 10 nF to
+100 nF bypass capacitor at the SENSEx inputs in order to reduce sensitivity to transient voltages on the
+monitored signal. SENSE1 and SENSE2 pins can be connected directly to VDD pin.
+8.3.2.1 SENSE Hysteresis
+Built-in hysteresis to avoid erroneous output reset release. The hysteresis is opposite to the threshold voltage;
+for overvoltage options the hysteresis is subtracted from the positive threshold (VITP), for undervoltage options
+hysteresis is added to the negative threshold (VITN).
+VRESETx
+
+VRESETx
+
+VSENSEx
+
+VSENSEx
+
+VITP - VHYS VITP
+
+VITP - VHYS VITP
+
+Figure 8-4. Hysteresis (Overvoltage Active-Low)
+VRESETx
+
+Figure 8-5. Hysteresis (Overvoltage Active-High)
+VRESETx
+
+VSENSEx
+VITN
+
+VITN
+
+VITN+VHYS
+
+Figure 8-6. Hysteresis (Undervoltage Active-High)
+
+20
+
+VSENSEx
+VITN+VHYS
+
+Figure 8-7. Hysteresis (Undervoltage Active-Low)
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+Table 8-1. Common Hysteresis Lookup Table
+TARGET
+
+DEVICE ACTUAL HYSTERESIS OPTION
+
+DETECT THRESHOLD
+
+TOPOLOGY
+
+RELEASE VOLTAGE (V)
+
+18.0 V
+
+Overvoltage
+
+17.5 V
+
+-3%
+
+18.0 V
+
+Overvoltage
+
+16.0 V
+
+-11%
+
+17.0 V
+
+Overvoltage
+
+16.5 V
+
+-3%
+
+16.0 V
+
+Overvoltage
+
+15.0 V
+
+-6%
+
+15.0 V
+
+Overvoltage
+
+14.0 V
+
+-7%
+
+6.0 V
+
+Undervoltage
+
+6.5 V
+
+0.5 V
+
+5.5 V
+
+Undervoltage
+
+6V
+
+0.5 V
+
+8V
+
+Undervoltage
+
+9V
+
+1V
+
+5V
+
+Undervoltage
+
+7.5 V
+
+2.5 V
+
+Table 8-1 shows a sample of hysteresis and voltage options for the TPS37. For threshold voltages ranging from
+2.7 V to 8 V, one option is to select a fixed hysteresis value ranging from 0.5 V to 2.5 V in increments of
+0.5 V. Additionally, a second option can be selected where the hysteresis value is a percentage of the threshold
+voltage. The percentage of voltage hysteresis ranges from 2% to 13%.
+Knowing the amount of hysteresis voltage, the release voltage for the undervoltage (UV) channel is
+(VITN(UV) + VHYS) and for the overvoltage (OV) channel is (VITP(OV) - VHYS). For a visual understanding of the
+UV and OV release voltage, see SENSEx Undervoltage (UV) Timing Diagram and SENSEx Overvoltage (OV)
+Timing Diagram. The accuracy of the release voltage, or stated in the Section 7.5 as Hysteresis Accuracy is
+±1.5%. Expanding what is shown in Table 8-1, below are a few voltage hysteresis examples that include the
+hysteresis accuracy:
+Undervoltage (UV) Channel
+VITN = 0.8 V
+Voltage Hysteresis (VHYS) = 5% = 40 mV
+Hysteresis Accuracy = ±1.5% = 39.4 mV or 40.6 mV
+Release Voltage = VITN + VHYS = 839.4 mV to 840.6 mV
+Overvoltage (OV) Channel
+VITP = 8 V
+Voltage Hysteresis (VHYS) = 2 V
+Hysteresis Accuracy = ±1.5% = 1.97 V or 2.03 V
+Release Voltage = VITP - VHYS = 5.97 V to 6.03 V
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+21
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+8.3.3 Output Logic Configurations
+TPS37 has two channels with separate sense pins and reset pins that can be configured independently of each
+other. Channel 1 is available as Open-Drain and Push-Pull while channel 2 is only available as Open-Drain
+topology.
+The available output logic configuration combinations are shown in Table 8-2.
+Table 8-2. TPS37 Output Logic
+DESCRIPTION
+
+NOMENCLATURE
+
+GPN
+
+TPS37 (+ topology)
+
+CHANNEL 1
+
+CHANNEL 2
+
+Topology (OV and UV only)
+both channels are either OV or
+UV
+
+TPS37A
+
+OV OD L
+
+UV OD L
+
+TPS37B
+
+OV PP H
+
+UV OD L
+
+TPS37C
+
+OV OD L
+
+UV OD H
+
+TPS37D
+
+OV PP H
+
+UV OD H
+
+TPS37E
+
+OV OD H
+
+UV OD H
+
+•
+•
+•
+•
+•
+•
+
+UV = Undervoltage
+OV = Overvoltage
+PP = Push-Pull
+OD = Open-Drain
+L = Active low
+H = Active high
+
+VALUE
+
+TPS37F
+
+OV OD H
+
+UV OD L
+
+TPS37G
+
+OV PP L
+
+UV OD H
+
+TPS37H
+
+OV PP L
+
+UV OD L
+
+8.3.3.1 Open-Drain
+Open-drain output requires an external pull-up resistor to hold the voltage high to the required voltage logic.
+Connect the pull-up resistor to the proper voltage rail to enable the output to be connected to other devices at
+the correct interface voltage levels.
+To select the right pull-up resistor consider system VOH and the (Ilkg) current provided in the electrical
+characteristics, high resistors values will have a higher voltage drop affecting the output voltage high. The
+open-drain output can be connected as a wired-AND logic with other open-drain signals such as another TPS37
+open-drain output pin.
+8.3.3.2 Push-Pull
+Push-Pull output does not require an external resistor since is the output is internally pulled-up to VDD during
+VOH condition and output will be connected to GND during VOH condition.
+8.3.3.3 Active-High (RESET)
+RESET (active-high), denoted with no bar above the pin label. RESET remains low (VOL, deasserted) as long as
+sense voltage is in normal operation within the threshold boundaries and VDD voltage is above UVLO. To assert
+a reset sense pins needs to meet the condition below:
+•
+•
+
+For undervoltage variant the SENSE voltage need to cross the lower boundary (VITN).
+For overvoltage variant the SENSE voltage needs to cross the upper boundary (VITP).
+
+8.3.3.4 Active-Low (RESET)
+RESET (active low) denoted with a bar above the pin label. RESET remains high voltage (VOH, deasserted)
+(open-drain variant VOH is measured against the pullup voltage) as long as sense voltage is in normal operation
+within the threshold boundaries and VDD voltage is above UVLO. To assert a reset sense pins needs to meet
+the condition below:
+• For undervoltage variant the SENSE voltage need to cross the lower boundary (VITN).
+• For overvoltage variant the SENSE voltage needs to cross the upper boundary (VITP).
+
+22
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+8.3.4 User-Programmable Reset Time Delay
+TPS37 has adjustable reset release time delay with external capacitors. Channel timing are independent of each
+other.
+•
+•
+•
+
+A capacitor in CTR1 / MR program the reset time delay of Output 1.
+A capacitor in CTR2 / MR program the reset time delay of Output 2.
+No capacitor on these pins gives the fastest reset delay time indicated in the Section 7.6.
+
+8.3.4.1 Reset Time Delay Configuration
+The time delay (tCTR) can be programmed by connecting a capacitor between CTR1 pin and GND, CTR2 for
+channel 2. In this section CTRx represent either channel 1 or channel 2.
+The relationship between external capacitor CCTRx_EXT (typ) and the time delay tCTRx (typ) is given by Equation 1.
+tCTRx (typ) = -ln (0.28) x RCTRx (typ) x CCTRx_EXT (typ) + tCTRx (no cap)
+
+(1)
+
+RCTRx (typ) = is in kilo ohms (kOhms)
+CCTRx_EXT (typ) = is given in microfarads (μF)
+tCTRx (typ) = is the reset time delay (ms)
+The reset delay varies according to three variables: the external capacitor (CCTRx_EXT), CTR pin internal
+resistance (RCTRx) provided in Section 7.5, and a constant. The minimum and maximum variance due to the
+constant is show in Equation 2 and Equation 3:
+tCTRx (min) = -ln (0.31) x RCTRx (min) x CCTRx_EXT (min) + tCTRx (no cap (min))
+
+(2)
+
+tCTRx (max) = -ln (0.25) x RCTRx (max) x CCTRx_EXT (max) + tCTRx (no cap (max))
+
+(3)
+
+The recommended maximum reset delay capacitor for the TPS37 is limited to 10 μF as this ensures enough
+time for the capacitor to fully discharge when a voltage fault occurs. Also, having a too large of a capacitor value
+can cause very slow charge up (rise times) and system noise can cause the the internal circuit to trip earlier or
+later near the threshold. This leads to variation in time delay where it can make the delay accuracy worse in the
+presence of system noise.
+When a voltage fault occurs, the previously charged up capacitor discharges and if the monitored voltage
+returns from the fault condition before the delay capacitor discharges completely, the delay will be shorter than
+expected. The capacitor will begin charging from a voltage above zero and resulting in shorter than expected
+time delay. A larger delay capacitor can be used so long as the capacitor has enough time to fully discharge
+during the duration of the voltage fault. To ensure the capacitor is fully discharged, the time period or duration of
+the voltage fault needs to be greater than 5% of the programmed reset time delay.
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+23
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+8.3.5 User-Programmable Sense Delay
+TPS37 has adjustable sense release time delay with external capacitors. Channel timing are independent of
+each other. Sense delay is used as a de-glitcher or ignoring known transients.
+•
+•
+•
+
+A capacitor in CTS1 program the excursion detection on SENSE1.
+A capacitor in CTS2 program the excursion detection on SENSE2.
+No capacitor on these pins gives the fastest detection time indicated in the Section 7.6.
+
+8.3.5.1 Sense Time Delay Configuration
+The time delay (tCTS) can be programmed by connecting a capacitor between CTS1 pin and GND, CTS2 for
+channel 2. In this section CTSx represent either channel 1 or channel 2.R
+The relationship between external capacitor CCTSx_EXT (typ) and the time delay tCTSx (typ) is given by Equation 4.
+tCTSx (typ) = -In (0.28) x RCTSx (typ) x CCTSx_EXT (typ) + tCTSx (no cap)
+
+(4)
+
+RCTSx = is in kilo ohms (kOhms)
+CCTSX_EXT = is given in microfarads (μF)
+tCTSx = is the sense time delay (ms)
+The sense delay varies according to three variables: the external capacitor (CCTSx_EXT), CTS pin internal
+resistance (RCTSx) provided in Section 7.5, and a constant. The minimum and maximum variance due to the
+constant is show in Equation 5 and Equation 6:
+tCTSx (min) = -ln (0.31) x RCTSx (min) x CCTSx_EXT (min) + tCTSx (no cap (min))
+
+(5)
+
+tCTSx (max) = -ln (0.25) x RCTSx (max) x CCTSx_EXT (max) + tCTSx (no cap (max))
+
+(6)
+
+The recommended maximum sense delay capacitor for the TPS37 is limited to 10 μF as this ensures enough
+time for the capacitor to fully discharge when a voltage fault occurs. Also, having a too large of a capacitor value
+can cause very slow charge up (rise times) and system noise can cause the the internal circuit to trip earlier or
+later near the threshold. This leads to variation in time delay where it can make the delay accuracy worse in the
+presence of system noise.
+When a voltage fault occurs, the previously charged up capacitor discharges and if the monitored voltage
+returns from the fault condition before the delay capacitor discharges completely, the delay will be shorter than
+expected. The capacitor will begin charging from a voltage above zero and resulting in shorter than expected
+time delay. A larger delay capacitor can be used so long as the capacitor has enough time between fault events
+to fully discharge during the duration of the voltage fault. To ensure the capacitor is fully discharged, the time
+period or time duration between fault events needs to be greater than 10% of the programmed sense time delay.
+
+24
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+8.3.6 Manual RESET (CTR1 / MR) and (CTR2 / MR) Input
+The manual reset input allows a processor or other logic circuits to initiate a reset. In this section MR is a generic
+reference to (CTR1 / MR) and (CTR2 / MR). A logic low on MR causes RESET1 to assert on reset output.
+After MR is left floating, RESET1 will release the reset if the voltage at SENSE1 pin is at nominal voltage. MR
+should not be driven high, this pin should be left floating or connected to a capacitor to GND, this pin can be left
+unconnected if is not used.
+If the logic driving the MR cannot tri-state (floating and GND) then a logic-level FET should be used as illustrated
+in Figure 8-8.
+Low Voltage
+High Voltage
+VDD
+
+MCU
+CTRx
+GPIO
+Low or Floating
+
+Reset
+Delay
+
+Active low
+Logic
+
+Figure 8-8. Manual Reset Implementation
+SENSE VOLTAGE WITH IN THRESHOLD
+VITN < VSENSEx < VITP
+
+VSENSEx
+
+CTRx/MR
+
+< VMR
+MR floating or
+connected to capacitor
+
+MR floating or
+connected to capacitor
+
+RESETx
+Active-High
+
+RESETx
+Active-Low
+
+Figure 8-9. Manual Reset Timing Diagram
+Table 8-3. MR Functional Table
+MR
+
+SENSE ON NOMINAL VOLTAGE
+
+RESET STATUS
+
+Low
+
+Yes
+
+Reset asserted
+
+Floating
+
+Yes
+
+Fast reset release when SENSE
+voltage goes back to nominal
+voltage
+
+Capacitor
+
+Yes
+
+Programmable reset time delay
+
+High
+
+Yes
+
+NOT Recommended
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+25
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+9 Device Functional Modes
+Table 9-1. Undervoltage Detect Functional Mode Truth Table
+SENSE
+CTR (1) / MR PIN
+
+VDD PIN
+
+OUTPUT (2)
+(RESET PIN)
+
+SENSE > VITN(UV)
+
+Open or capacitor
+connected
+
+VDD > VDD(MIN)
+
+High
+
+SENSE > VITN(UV)
+
+SENSE < VITN(UV)
+
+Open or capacitor
+connected
+
+VDD > VDD(MIN)
+
+Low
+
+Undervoltage
+Detection
+
+SENSE < VITN(UV)
+
+SENSE > VITN(UV)
+
+Open or capacitor
+connected
+
+VDD > VDD(MIN)
+
+Low
+
+Normal Operation
+
+SENSE < VITN(UV)
+
+SENSE > VITN(UV) + HYS
+
+Open or capacitor
+connected
+
+VDD > VDD(MIN)
+
+High
+
+Manual Reset
+
+SENSE > VITN(UV)
+
+SENSE > VITN(UV)
+
+Low
+
+VDD > VDD(MIN)
+
+Low
+
+VPOR < VDD < VDD(MIN)
+
+Low
+
+VDD < VPOR
+
+Undefined
+
+DESCRIPTION
+
+PREVIOUS
+CONDITION
+
+CURRENT CONDITION
+
+Normal Operation
+
+SENSE > VITN(UV)
+
+Undervoltage
+Detection
+
+UVLO Engaged
+
+SENSE > VITN(UV)
+
+SENSE > VITN(UV)
+
+Open or capacitor
+connected
+
+Below VPOR,
+Undefined Output
+
+SENSE > VITN(UV)
+
+SENSE > VITN(UV)
+
+Open or capacitor
+connected
+
+(1)
+(2)
+
+Reset time delay is ignored in the truth table.
+Open-drain active low output requires an external pull-up resistor to a pull-up voltage.
+
+Table 9-2. Overvoltage Detect Functional Mode Truth Table
+SENSE
+CTR (1) / MR PIN
+
+VDD PIN
+
+OUTPUT (2)
+(RESET PIN)
+
+SENSE < VITN(OV)
+
+Open or capacitor
+connected
+
+VDD > VDD(MIN)
+
+High
+
+SENSE < VITN(OV)
+
+SENSE > VITN(OV)
+
+Open or capacitor
+connected
+
+VDD > VDD(MIN)
+
+Low
+
+Overvoltage
+Detection
+
+SENSE > VITN(OV)
+
+SENSE < VITN(OV)
+
+Open or capacitor
+connected
+
+VDD > VDD(MIN)
+
+Low
+
+Normal Operation
+
+SENSE > VITN(OV)
+
+SENSE < VITN(OV) - HYS
+
+Open or capacitor
+connected
+
+VDD > VDD(MIN)
+
+High
+
+Manual Reset
+
+SENSE < VITN(OV)
+
+SENSE < VITN(OV)
+
+Low
+
+VDD > VDD(MIN)
+
+Low
+
+VPOR < VDD < UVLO
+
+Low
+
+VDD < VPOR
+
+Undefined
+
+DESCRIPTION
+
+PREVIOUS
+CONDITION
+
+CURRENT CONDITION
+
+Normal Operation
+
+SENSE < VITN(OV)
+
+Overvoltage
+Detection
+
+UVLO Engaged
+
+SENSE < VITN(OV)
+
+SENSE < VITN(OV)
+
+Open or capacitor
+connected
+
+Below VPOR,
+Undefined Output
+
+SENSE < VITN(OV)
+
+SENSE < VITN(OV)
+
+Open or capacitor
+connected
+
+(1)
+(2)
+
+Reset time delay is ignored in the truth table.
+Open-drain active low output requires an external pull-up resistor to a pull-up voltage.
+
+26
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+10 Application and Implementation
+Note
+Information in the following applications sections is not part of the TI component specification,
+and TI does not warrant its accuracy or completeness. TI’s customers are responsible for
+determining suitability of components for their purposes, as well as validating and testing their design
+implementation to confirm system functionality.
+
+10.1 Adjustable Voltage Thresholds
+Equation 7 illustrates an example of how to adjust the voltage threshold with external resistor dividers. The
+resistors can be calculated depending on the desired voltage threshold and device part number. TI recommends
+using the 0.8 V voltage threshold device when using an adjustable voltage variant. This variant bypasses the
+internal resistor ladder.
+For example, consider a 12 V rail being monitored VMON for undervoltage (UV) using channel 2 of the
+TPS37A010122DSKR variant. Using Equation 7 and shown in Figure 10-1, R1 is the top resistor of the resistor
+divider that is between VMON and VSENSE2, R2 is the bottom resistor that is between VSENSE2 and GND, VMON is
+the voltage rail that is being monitored and VSENSE2 is the input threshold voltage. The monitored UV threshold,
+denoted as VMON-, where the device will assert a reset signal occurs when VSENSE2 = VIT-(UV) or, for this
+example, VMON- = 10.8V which is 90% from 12 V. Using Equation 7 and assuming R2 = 10kΩ, R1 can be
+calculated shown in Equation 8 where IR1 is represented in Equation 9:
+VSENSE2 = VMON- × (R2 ÷ (R1 + R2))
+
+(7)
+
+R1 = (VMON- - VSENSE2) ÷ IR1
+
+(8)
+
+IR1 = IR2 = VSENSE2 ÷ R2
+
+(9)
+
+Substituting Equation 9 into Equation 8 and solving for R1 in Equation 7, R1 = 125kΩ. The TPS37A010122DSKR
+is typically meant to monitor a 0.8 V rail with ±2% voltage threshold hysteresis. For the reset signal to become
+deasserted, VMON would need to go above VIT- + VHYS. For this example, V MON = 11.016 V when the reset signal
+becomes deasserted.
+There are inaccuracies that must be taken into consideration while adjusting voltage thresholds. Aside from the
+tolerance of the resistor divider, there is an internal resistance of the SENSE pin that may affect the accuracy
+of the resistor divider. Although expected to be very high impedance, users are recommended to calculate the
+values for the design specifications. The internal SENSE resistance RSENSE can be calculated by the SENSE
+voltage VSENSE divided by the SENSE current ISENSE as shown in Equation 11. VSENSE can be calculated using
+Equation 7 depending on the resistor divider and monitored voltage. ISENSE can be calculated using Equation 10.
+ISENSE = [(VMON - VSENSE) ÷ R1] - (VSENSE ÷ R2)
+
+(10)
+
+RSENSE = VSENSE ÷ ISENSE
+
+(11)
+VMON
+VDD
+
+VMON
+
+VDD
+
+VDD
+10 k
+
+R3
+R1
+VSENSE1
+VSENSE2
+
+VDD
+SENSE1
+
+10 k
+RESET1
+RESET2
+
+SENSE2
+
+TPS37A
+CTR1
+
+CTS1
+R2
+
+R4
+
+CTS2
+
+CTR2
+GND
+
+Figure 10-1. Adjustable Voltage Threshold with External Resistor Dividers
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+27
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+10.1.1 Application Curves
+
+V_SENSE
+
+RESET_B
+
+Figure 10-2. Undervoltage Reset Waveform
+
+V_SENSE
+
+RESET_B
+
+Figure 10-3. Undervoltage Recovery Waveform
+
+10.2 Application Information
+The following sections describe in detail how to properly use this device, depending on the requirements of the
+final application.
+10.2.1 Typical Application
+10.2.1.1 Design 1: High Voltage – Fast AC Signal Monitoring For Power Fault Detection
+In many industrial and factory automation applications, there are multiple power rails that power various
+subsystems within the application. Some of these power rails include 24 / 48 VAC AC sources with a known
+28
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+operating frequency that requires a full-bridge rectifier and capacitors to convert its signal to a DC voltage where
+it can be monitored by a voltage supervisor. One drawback with the described conversion is the response time of
+the DC voltage when the AC power rail experiences a change of operating frequency or voltage amplitude. Due
+to the output filter of the full-bridge rectifier, the detection in the change of voltage or operating frequency may
+require several AC cycles before the voltage supervisor outputs a fault condition. The direct monitoring of the
+AC source by using a “Resistive-Drop” supply topology circuit provides the user a fast transient fault detection.
+In this design example, the TPS37A is being highlighted with the ability to offer a unique “window operating”
+solution by monitoring the output of the AC source for over or undervoltage operation.
+
+DC Supply
+(Rec ed)
+2.7V to 65V
+
+VPull-Up
+
+"Resisve-Drop"
+supply topology circuit
+
+VDD
+OV SENSE1
+
+TPS37A
+
+R1
+
+UV SENSE2
+
+24 VAC
+
+RESET1
+
+RPull-Up
+DC Fault Flag
+RPull-Up
+AC Early Fault Flag
+
+RESET2
+
+R2
+
+CTS1
+R3
+
+GND
+
+CTS2
+
+D1
+
+C1
+
+* The circuit soluon is not isolated and one must take into account when planning to use in high power systems.
+
+Figure 10-4. Sensing an AC Signal for Power Fault Detection
+10.2.1.1.1 Design Requirements
+
+This design requires voltage supervision on an AC, with a known operating frequency, power supply rail. The
+overvoltage fault sensing is achieved by monitoring the DC output of a full bridge rectifier while the undervoltage
+fault is detected by inputting a half wave signal and its voltage frequency and magnitude are being monitored.
+The target output of this TPS37A application is for 5 V reset logic.
+PARAMETER
+
+DESIGN REQUIREMENT
+
+DESIGN RESULT
+
+Power Rail Voltage Supervision
+
+Monitor 24 VAC 800 Hz power supply for
+undervoltage and overvoltage conditions. Trigger
+undervoltage fault at 5 V and overvoltage fault at
+24 V.
+
+TPS37A provides voltage monitoring with 1.5%
+max accuracy with adjustable/non-adjustable
+variations.
+
+Maximum Input Voltage
+
+Operate with power supply input up to 34 V.
+
+The TPS37A can support a VDD of up to 65 V.
+
+Output logic voltage
+
+Open-Drain Output Topology
+
+An open-drain output is recommended to provide
+the a 5 V reset signal.
+
+SENSE Delay when a fault is
+detected
+
+RESET delay of at least 0.625 ms which is the time
+CCTS2 = 5.6 nF sets 717 µs delay
+between half wave cycles
+
+Voltage Monitor Accuracy
+
+Maximum voltage monitor accuracy of 1.5%.
+
+The TPS37A has 1.5% maximum voltage monitor
+accuracy.
+
+10.2.1.1.2 Detailed Design Procedure
+
+The main advantage of this unique application is being able to monitor a single AC source with a known
+operating frequency AC source rail. Because the TPS37A is an over and undervoltage detector with delay
+function, detecting faults either from a change of operating frequency range or voltage amplitude of the AC
+source is achievable.
+Figure 10-4 illustrates an example of how the TPS37A is monitoring an AC source. Input to SENSE1 of TPS37A
+is monitoring a full wave rectifier DC signal. The DC signal is the result from the rectification of the 24 VAC
+source and monitors the AC source for overvoltage events due to a change of voltage amplitude or an increase
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+29
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+to operating frequency. Input to SENSE2 of TPS37A will monitor the AC source by using a "resistive-drop"
+supply topology circuit. The unique circuit resistively divides the AC voltage signal and provides only the positive
+half wave Figure 10-5 into SENSE2 input. The half wave signal does not go through any output filter and hence
+any change to the AC voltage or operating frequency can be rapidly detected. Knowing the operating frequency
+of the AC source and converting to the time domain, the TPS37A SENSE2 delay can be programmed, by the
+capacitor on CTS2 pin, to equal or be greater than one-half of the operating period (the frequency of the half
+wave rectification signal) or the half cycle shown in Figure 10-5. When the half wave voltage amplitude falls
+below the SENSE2 threshold voltage, the SENSE2 time delay counter begins to increment. If the next half wave
+voltage amplitude exceeds the SENSE2 threshold voltage, the SENSE2 time delay counter will reset and the
+TPS37A RESET2 pin will indicate no fault was detected. Conversely, if the voltage amplitude of the half wave
+does not reach the SENSE2 threshold voltage within the programmed time delay of tCTS, a fault will occur.
+Also, a fault can occur if the operating frequency from the AC source decreases, resulting in lower AC voltage
+amplitude at the programmed time delay tCTS.
+Full Cycle
+
+Half Cycle
+
+tFC = 1.25 ms
+
+tHC = 0.625 ms
+
+Half Wave (SENSE2)
+AC Early Fault Flag (RESET2)
+tCTS
+
+tCTS ≤ tHC
+
+Figure 10-5. Design 2 Timing Diagram
+The TPS37A, with its ability of having a wide VDD range from 2.7 V to 65 V and under and overvoltage
+detection, offers a unique “window operating” AC power rail monitoring solution. Combining SENSE delay
+feature with the "resistive-drop" supply circuitry, detecting an undervoltage event on the half cycle of the AC
+power rail provides a fast power fault response. Likewise, the TPS37A provides an overvoltage monitoring and
+SENSE delay fault detection for the same AC power rail. With under and overvoltage supervision of the AC
+power rail, applications needing a specific operating DC range to protect its subsystems is achieve through
+TPS37A. Good design practice recommends using a 0.1-µF capacitor on the VDD pin and this capacitance may
+need to increase if using an adjustable version with a resistor divider.
+Note that this design solution is not isolated and one must take into account when planning to use in high power
+systems.
+
+30
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+10.3 Power Supply Recommendations
+These devices are designed to operate from an input supply with a voltage range between 1.4 V (VPOR) to 65 V
+(max operation). Good analog design practice recommends placing a minimum 0.1 µF ceramic capacitor as near
+as possible to the VDD pin.
+10.3.1 Power Dissipation and Device Operation
+The permissible power dissipation for any package is a measure of the capability of the device to pass heat from
+the power source, the junctions of the IC, to the ultimate heat sink, the ambient environment. Thus, the power
+dissipation is dependent on the ambient temperature and the thermal resistance across the various interfaces
+between the die junction and ambient air.
+The maximum continuous allowable power dissipation for the device in a given package can be calculated using
+Equation 12:
+PD-MAX = ((TJ-MAX – TA) / RθJA)
+
+(12)
+
+The actual power being dissipated in the device can be represented by Equation 13:
+PD = VDD × IDD + pRESET
+
+(13)
+
+pRESET is calculated by Equation 14 or Equation 15
+pRESET (PUSHPULL) = VDD - VRESET x IRESET
+
+(14)
+
+pRESET (OPEN-DRAIN) = VRESET x IRESET
+
+(15)
+
+Equation 12 and Equation 13 establish the relationship between the maximum power dissipation allowed due to
+thermal consideration, the voltage drop across the device, and the continuous current capability of the device.
+These two equations should be used to determine the optimum operating conditions for the device in the
+application.
+In applications where lower power dissipation (PD) and/or excellent package thermal resistance (RθJA) is
+present, the maximum ambient temperature (TA-MAX) may be increased.
+In applications where high power dissipation and/or poor package thermal resistance is present, the maximum
+ambient temperature (TA-MAX) may have to be de-rated. TA-MAX is dependent on the maximum operating junction
+temperature (TJ-MAX-OP = 125°C), the maximum allowable power dissipation in the device package in the
+application (PD-MAX), and the junction-to ambient thermal resistance of the part/package in the application (RθJA),
+as given by Equation 16:
+TA-MAX = (TJ-MAX-OP – (RθJA × PD-MAX))
+
+(16)
+
+10.4 Layout
+10.4.1 Layout Guidelines
+•
+•
+•
+•
+•
+
+Make sure that the connection to the VDD pin is low impedance. Good analog design practice is to place a
+greater than 0.1 µF ceramic capacitor as near as possible to the VDD pin.
+To further improve the noise immunity on the SENSEx pins, placing a 10 nF to 100 nF capacitor between the
+SENSEx pins and GND can reduce the sensitivity to transient voltages on the monitored signal.
+If a capacitor is used on CTS1, CTS2, CTR1, or CTR2, place these components as close as possible to the
+respective pins. If the capacitor adjustable pins are left unconnected, make sure to minimize the amount of
+parasitic capacitance on the pins to less than 5 pF.
+For open-drain variants, place the pull-up resistors on RESET1 and RESET2 pins as close to the pins as
+possible.
+When laying out metal traces, separate high voltage traces from low voltage traces as much as possible. If
+high and low voltage traces need to run close by, spacing between traces should be greater than 20 mils
+(0.5 mm).
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+31
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+•
+
+Do not have high voltage metal pads or traces closer than 20 mils (0.5 mm) to the low voltage metal pads or
+traces.
+
+10.4.2 Layout Example
+The DSK layout example in Figure 10-6 shows how the TPS37 is laid out on a printed circuit board (PCB) with
+user-defined delays.
+
+CVDD
+VDD
+
+1
+
+10
+
+2
+
+Monitored Voltage
+CSENSE1
+Monitored Voltage
+
+9
+TPS37
+
+CSENSE2
+GND
+
+3
+
+8
+DSK Package
+
+Overvoltage Flag
+
+4
+
+7
+
+Undervoltage Flag
+
+5
+
+6
+
+RPU1
+VPULL-UP
+
+GND
+
+RPU2
+
+VPULL-UP
+
+Vias used to connect pins for application-specific connections
+
+Figure 10-6. TPS37 DSK Package Recommended Layout
+
+32
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+The DYY layout example in Figure 10-7 shows how the TPS37 is laid out on a printed circuit board (PCB) with
+user-defined delays.
+
+CVDD
+1
+
+VDD
+NC
+
+14
+
+2
+
+13
+
+NC
+GND
+
+TPS37
+3
+
+Monitored Voltage
+
+12
+DYY Package
+
+Monitored Voltage
+CSENSE1
+
+CSENSE2
+NC
+
+GND
+Overvoltage Flag
+Undervoltage Flag
+RPU1
+VPULL-UP
+
+4
+
+11
+
+5
+
+10
+
+6
+
+9
+
+7
+
+8
+
+GND
+
+RPU2
+
+VPULL-UP
+
+Vias used to connect pins for application-specific connections
+
+Figure 10-7. TPS37 DYY Package Recommended Layout
+10.4.3 Creepage Distance
+Per IEC 60664 Creepage is the shortest distance between two conductive parts or as shown in Figure 10-8 the
+distance between high voltage conductive parts and grounded parts, the floating conductive part is ignored and
+subtracted from the total distance.
+
+b
+
+a
+A
+
+B
+
+C
+
+Figure 10-8. Creepage Distance
+Figure 10-8 details:
+•
+•
+•
+•
+
+A = Left pins (high voltage)
+B = Central pad (not internally connected, can be left floating or connected to GND)
+C = Right pins (low voltage)
+Creepage distance = a + b
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+33
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+11 Device and Documentation Support
+11.1 Device Nomenclature
+Section 5 shows how to decode the function of the device based on its part number
+Table 11-1 shows TPS37 possible voltage options per channel. Contact TI sales representatives or on TI's E2E
+forum for details and availability of other options; minimum order quantities apply.
+Table 11-1. Voltage Options
+100 mV STEPS
+
+400 mV STEPS
+
+500 mV STEPS
+
+1 V STEPS
+
+NOMENCLATURE
+
+VOLTAGE
+OPTIONS
+
+NOMENCLATURE
+
+VOLTAGE
+OPTIONS
+
+NOMENCLATURE
+
+VOLTAGE
+OPTIONS
+
+NOMENCLATURE
+
+VOLTAGE
+OPTIONS
+
+NOMENCLATURE
+
+VOLTAGE
+OPTIONS
+
+01
+
+800 mV
+(divider
+bypass)
+
+70
+
+7.0 V
+
+A0
+
+10.4 V
+
+D0
+
+20.5 V
+
+F0
+
+31.0 V
+
+27
+
+2.7 V
+
+71
+
+7.1 V
+
+A1
+
+10.8 V
+
+D1
+
+21.0 V
+
+F1
+
+32.0 V
+
+28
+
+2.8 V
+
+72
+
+7.2 V
+
+A2
+
+11.2 V
+
+D2
+
+21.5 V
+
+F2
+
+33.0 V
+
+29
+
+2.9 V
+
+73
+
+7.3 V
+
+A3
+
+11.6 V
+
+D3
+
+22.0 V
+
+F3
+
+34.0 V
+
+30
+
+3.0 V
+
+74
+
+7.4 V
+
+A4
+
+12.0 V
+
+D4
+
+22.5 V
+
+F4
+
+35.0 V
+
+31
+
+3.1 V
+
+75
+
+7.5 V
+
+A5
+
+12.4 V
+
+D5
+
+23.0 V
+
+F5
+
+36.0 V
+
+32
+
+3.2 V
+
+76
+
+7.6 V
+
+A6
+
+12.8 V
+
+D6
+
+23.5 V
+
+33
+
+3.3 V
+
+77
+
+7.7 V
+
+A7
+
+13.2 V
+
+D7
+
+24.0 V
+
+34
+
+3.4 V
+
+78
+
+7.8 V
+
+A8
+
+13.6 V
+
+D8
+
+24.5 V
+
+35
+
+3.5 V
+
+79
+
+7.9 V
+
+A9
+
+14.0 V
+
+D9
+
+25.0 V
+
+36
+
+3.6 V
+
+80
+
+8.0 V
+
+B0
+
+14.4 V
+
+E0
+
+25.5 V
+
+37
+
+3.7 V
+
+81
+
+8.1 V
+
+B1
+
+14.8 V
+
+E1
+
+26.0 V
+
+38
+
+3.8 V
+
+82
+
+8.2 V
+
+B2
+
+15.2 V
+
+E2
+
+26.5 V
+
+39
+
+3.9 V
+
+83
+
+8.3 V
+
+B3
+
+15.6 V
+
+E3
+
+27.0 V
+
+40
+
+4.0 V
+
+84
+
+8.4 V
+
+B4
+
+16.0 V
+
+E4
+
+27.5 V
+
+41
+
+4.1 V
+
+85
+
+8.5 V
+
+B5
+
+16.4 V
+
+E5
+
+28.0 V
+
+42
+
+4.2 V
+
+86
+
+8.6 V
+
+B6
+
+16.8 V
+
+E6
+
+28.5 V
+
+43
+
+4.3 V
+
+87
+
+8.7 V
+
+B7
+
+17.2 V
+
+E7
+
+29.0 V
+
+44
+
+4.4 V
+
+88
+
+8.8 V
+
+B8
+
+17.6 V
+
+E8
+
+29.5 V
+
+45
+
+4.5 V
+
+89
+
+8.9 V
+
+B9
+
+18.0 V
+
+E9
+
+30.0 V
+
+46
+
+4.6 V
+
+90
+
+9.0 V
+
+C0
+
+18.4 V
+
+47
+
+4.7 V
+
+91
+
+9.1 V
+
+C1
+
+18.8 V
+
+48
+
+4.8 V
+
+92
+
+9.2 V
+
+C2
+
+19.2 V
+
+49
+
+4.9 V
+
+93
+
+9.3 V
+
+C3
+
+19.6 V
+
+50
+
+5.0 V
+
+94
+
+9.4 V
+
+C4
+
+20.0 V
+
+51
+
+5.1 V
+
+95
+
+9.5 V
+
+52
+
+5.2 V
+
+96
+
+9.6 V
+
+53
+
+5.3 V
+
+97
+
+9.7 V
+
+54
+
+5.4 V
+
+98
+
+9.8 V
+
+55
+
+5.5 V
+
+99
+
+9.9 V
+
+56
+
+5.6 V
+
+00
+
+10.0 V
+
+57
+
+5.7 V
+
+58
+
+5.8 V
+
+59
+
+5.9 V
+
+60
+
+6.0 V
+
+61
+
+6.1 V
+
+34
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+TPS37
+
+www.ti.com
+
+SNVSBJ1E – OCTOBER 2020 – REVISED AUGUST 2023
+
+Table 11-1. Voltage Options (continued)
+100 mV STEPS
+NOMENCLATURE
+
+VOLTAGE
+OPTIONS
+
+62
+
+6.2 V
+
+63
+
+6.3 V
+
+64
+
+6.4 V
+
+65
+
+6.5 V
+
+66
+
+6.6 V
+
+67
+
+6.7 V
+
+68
+
+6.8 V
+
+69
+
+6.9 V
+
+NOMENCLATURE
+
+400 mV STEPS
+VOLTAGE
+OPTIONS
+
+NOMENCLATURE
+
+VOLTAGE
+OPTIONS
+
+500 mV STEPS
+NOMENCLATURE
+
+VOLTAGE
+OPTIONS
+
+1 V STEPS
+NOMENCLATURE
+
+VOLTAGE
+OPTIONS
+
+11.2 Support Resources
+TI E2E™ support forums are an engineer's go-to source for fast, verified answers and design help — straight
+from the experts. Search existing answers or ask your own question to get the quick design help you need.
+Linked content is provided "AS IS" by the respective contributors. They do not constitute TI specifications and do
+not necessarily reflect TI's views; see TI's Terms of Use.
+
+11.3 Trademarks
+TI E2E™ is a trademark of Texas Instruments.
+All trademarks are the property of their respective owners.
+
+11.4 Electrostatic Discharge Caution
+This integrated circuit can be damaged by ESD. Texas Instruments recommends that all integrated circuits be handled
+with appropriate precautions. Failure to observe proper handling and installation procedures can cause damage.
+ESD damage can range from subtle performance degradation to complete device failure. Precision integrated circuits may
+be more susceptible to damage because very small parametric changes could cause the device not to meet its published
+specifications.
+
+11.5 Glossary
+TI Glossary
+
+This glossary lists and explains terms, acronyms, and definitions.
+
+Submit Document Feedback
+
+Copyright © 2023 Texas Instruments Incorporated
+
+Product Folder Links: TPS37
+
+35
+
+PACKAGE OPTION ADDENDUM
+www.ti.com
+
+18-Aug-2026
+
+PACKAGING INFORMATION
+Orderable part number
+
+(1)
+
+Status
+
+Material type
+
+(1)
+
+(2)
+
+Package | Pins
+
+Package qty | Carrier
+
+RoHS
+(3)
+
+Lead finish/
+Ball material
+
+MSL rating/
+Peak reflow
+
+(4)
+
+(5)
+
+Op temp (°C)
+
+Part marking
+(6)
+
+TPS37A010122DSKR
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+SN
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+2KAL
+
+TPS37A010122DSKR.A
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+SN
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+2KAL
+
+TPS37B010122DSKR
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+NIPDAU
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+2K8L
+
+TPS37B010122DSKR.A
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+NIPDAU
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+2K8L
+
+TPS37E010122DSKR
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+SN
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+32HL
+
+TPS37E010122DSKR.A
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+SN
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+32HL
+
+TPS37F010122DSKR
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+SN
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+2K9L
+
+TPS37F010122DSKR.A
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+SN
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+2K9L
+
+TPS37F010122DSKRG4
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+NIPDAU
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+2K9L
+
+TPS37F010122DSKRG4.A
+
+Active
+
+Production
+
+SON (DSK) | 10
+
+3000 | LARGE T&R
+
+Yes
+
+NIPDAU
+
+Level-1-260C-UNLIM
+
+-40 to 125
+
+2K9L
+
+Status: For more details on status, see our product life cycle.
+
+(2)
+
+Material type: When designated, preproduction parts are prototypes/experimental devices, and are not yet approved or released for full production. Testing and final process, including without limitation quality assurance,
+reliability performance testing, and/or process qualification, may not yet be complete, and this item is subject to further changes or possible discontinuation. If available for ordering, purchases will be subject to an additional
+waiver at checkout, and are intended for early internal evaluation purposes only. These items are sold without warranties of any kind.
+(3)
+
+RoHS values: Yes, No, RoHS Exempt. See the TI RoHS Statement for additional information and value definition.
+
+(4)
+
+Lead finish/Ball material: Parts may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead finish/Ball material values may wrap to two lines if the finish value exceeds the maximum
+column width.
+(5)
+
+MSL rating/Peak reflow: The moisture sensitivity level ratings and peak solder (reflow) temperatures. In the event that a part has multiple moisture sensitivity ratings, only the lowest level per JEDEC standards is shown.
+Refer to the shipping label for the actual reflow temperature that will be used to mount the part to the printed circuit board.
+(6)
+
+Part marking: There may be an additional marking, which relates to the logo, the lot trace code information, or the environmental category of the part.
+
+Multiple part markings will be inside parentheses. Only one part marking contained in parentheses and separated by a "~" will appear on a part. If a line is indented then it is a continuation of the previous line and the two
+combined represent the entire part marking for that device.
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information provided by third parties, and
+makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and continues to take reasonable steps to provide representative
+Addendum-Page 1
+
+PACKAGE OPTION ADDENDUM
+www.ti.com
+
+18-Aug-2026
+
+and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals. TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers
+and other limited information may not be available for release.
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+OTHER QUALIFIED VERSIONS OF TPS37 :
+
+• Automotive : TPS37-Q1
+NOTE: Qualified Version Definitions:
+
+• Automotive - Q100 devices qualified for high-reliability automotive applications targeting zero defects
+
+Addendum-Page 2
+
+PACKAGE MATERIALS INFORMATION
+www.ti.com
+
+3-Sep-2026
+
+TAPE AND REEL INFORMATION
+REEL DIMENSIONS
+
+TAPE DIMENSIONS
+K0
+
+P1
+
+B0 W
+Reel
+Diameter
+Cavity
+A0
+B0
+K0
+W
+P1
+
+A0
+
+Dimension designed to accommodate the component width
+Dimension designed to accommodate the component length
+Dimension designed to accommodate the component thickness
+Overall width of the carrier tape
+Pitch between successive cavity centers
+
+Reel Width (W1)
+QUADRANT ASSIGNMENTS FOR PIN 1 ORIENTATION IN TAPE
+Sprocket Holes
+
+Q1
+
+Q2
+
+Q1
+
+Q2
+
+Q3
+
+Q4
+
+Q3
+
+Q4
+
+User Direction of Feed
+
+Pocket Quadrants
+
+*All dimensions are nominal
+
+Device
+
+Package Package Pins
+Type Drawing
+
+SPQ
+
+Reel
+Reel
+A0
+Diameter Width (mm)
+(mm) W1 (mm)
+
+B0
+(mm)
+
+K0
+(mm)
+
+P1
+(mm)
+
+W
+Pin1
+(mm) Quadrant
+
+TPS37A010122DSKR
+
+SON
+
+DSK
+
+10
+
+3000
+
+180.0
+
+8.4
+
+2.8
+
+2.8
+
+1.0
+
+4.0
+
+8.0
+
+Q2
+
+TPS37B010122DSKR
+
+SON
+
+DSK
+
+10
+
+3000
+
+180.0
+
+8.4
+
+2.8
+
+2.8
+
+1.0
+
+4.0
+
+8.0
+
+Q2
+
+TPS37E010122DSKR
+
+SON
+
+DSK
+
+10
+
+3000
+
+180.0
+
+8.4
+
+2.8
+
+2.8
+
+1.0
+
+4.0
+
+8.0
+
+Q2
+
+TPS37F010122DSKR
+
+SON
+
+DSK
+
+10
+
+3000
+
+180.0
+
+8.4
+
+2.8
+
+2.8
+
+1.0
+
+4.0
+
+8.0
+
+Q2
+
+TPS37F010122DSKRG4
+
+SON
+
+DSK
+
+10
+
+3000
+
+180.0
+
+8.4
+
+2.8
+
+2.8
+
+1.0
+
+4.0
+
+8.0
+
+Q2
+
+Pack Materials-Page 1
+
+PACKAGE MATERIALS INFORMATION
+www.ti.com
+
+3-Sep-2026
+
+TAPE AND REEL BOX DIMENSIONS
+
+Width (mm)
+
+W
+
+L
+
+H
+
+*All dimensions are nominal
+
+Device
+
+Package Type
+
+Package Drawing
+
+Pins
+
+SPQ
+
+Length (mm)
+
+Width (mm)
+
+Height (mm)
+
+TPS37A010122DSKR
+
+SON
+
+DSK
+
+10
+
+3000
+
+210.0
+
+185.0
+
+35.0
+
+TPS37B010122DSKR
+
+SON
+
+DSK
+
+10
+
+3000
+
+210.0
+
+185.0
+
+35.0
+
+TPS37E010122DSKR
+
+SON
+
+DSK
+
+10
+
+3000
+
+210.0
+
+185.0
+
+35.0
+
+TPS37F010122DSKR
+
+SON
+
+DSK
+
+10
+
+3000
+
+210.0
+
+185.0
+
+35.0
+
+TPS37F010122DSKRG4
+
+SON
+
+DSK
+
+10
+
+3000
+
+210.0
+
+185.0
+
+35.0
+
+Pack Materials-Page 2
+
+GENERIC PACKAGE VIEW
+
+DSK 10
+2.5 x 2.5 mm, 0.5 mm pitch
+
+WSON - 0.8 mm max height
+PLASTIC SMALL OUTLINE - NO LEAD
+
+Images above are just a representation of the package family, actual package may vary.
+Refer to the product data sheet for package details.
+4225304/A
+
+PACKAGE OUTLINE
+
+DSK0010A
+
+WSON - 0.8 mm max height
+SCALE 4.000
+
+PLASTIC SMALL OUTLINE - NO LEAD
+
+2.6
+2.4
+
+B
+
+A
+
+PIN 1 INDEX AREA
+2.6
+2.4
+
+0.8
+0.7
+C
+SEATING PLANE
+0.05
+0.00
+
+0.08 C
+
+(0.2) TYP
+EXPOSED
+THERMAL PAD
+
+1.2 0.1
+6
+5
+
+2X
+2
+
+11
+
+2 0.1
+
+1
+10
+
+8X 0.5
+PIN 1 ID
+(OPTIONAL)
+
+10X
+
+0.5
+0.3
+
+10X
+
+0.3
+0.2
+0.1
+0.05
+
+C A B
+C
+4218903/C 09/2025
+
+NOTES:
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. The package thermal pad must be soldered to the printed circuit board for thermal and mechanical performance.
+
+www.ti.com
+
+EXAMPLE BOARD LAYOUT
+
+DSK0010A
+
+WSON - 0.8 mm max height
+PLASTIC SMALL OUTLINE - NO LEAD
+
+10X (0.6)
+(1.2)
+10
+
+1
+10X (0.25)
+
+SYMM
+
+11
+
+(2)
+8X (0.5)
+
+(R0.05) TYP
+
+(0.75)
+
+5
+6
+(0.35)
+
+( 0.2) VIA
+TYP
+
+SYMM
+(2.3)
+
+LAND PATTERN EXAMPLE
+SCALE:20X
+
+0.07 MIN
+ALL AROUND
+
+0.07 MAX
+ALL AROUND
+
+SOLDER MASK
+OPENING
+
+METAL
+
+METAL UNDER
+SOLDER MASK
+
+NON SOLDER MASK
+DEFINED
+(PREFERRED)
+
+SOLDER MASK
+OPENING
+SOLDER MASK
+DEFINED
+
+SOLDER MASK DETAILS
+
+4218903/C 09/2025
+NOTES: (continued)
+4. This package is designed to be soldered to a thermal pad on the board. For more information, see Texas Instruments literature
+number SLUA271 (www.ti.com/lit/slua271).
+5. Vias are optional depending on application, refer to device data sheet. If some or all are implemented, recommended via locations are shown.
+
+www.ti.com
+
+EXAMPLE STENCIL DESIGN
+
+DSK0010A
+
+WSON - 0.8 mm max height
+PLASTIC SMALL OUTLINE - NO LEAD
+
+10X (0.6)
+
+SYMM
+
+10
+
+1
+
+METAL
+TYP
+
+10X (0.25)
+
+SYMM
+11
+8X (0.5)
+(0.89)
+(R0.05) TYP
+
+5
+
+6
+(1.13)
+(2.3)
+
+SOLDER PASTE EXAMPLE
+BASED ON 0.125 mm THICK STENCIL
+EXPOSED PAD 11
+84% PRINTED SOLDER COVERAGE BY AREA
+SCALE:20X
+
+4218903/C 09/2025
+
+NOTES: (continued)
+6. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+design recommendations.
+
+www.ti.com
+
+IMPORTANT NOTICE AND DISCLAIMER
+TI PROVIDES TECHNICAL AND RELIABILITY DATA (INCLUDING DATASHEETS), DESIGN RESOURCES (INCLUDING REFERENCE
+DESIGNS), APPLICATION OR OTHER DESIGN ADVICE, WEB TOOLS, SAFETY INFORMATION, AND OTHER RESOURCES “AS IS”
+AND WITH ALL FAULTS, AND DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION ANY
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD
+PARTY INTELLECTUAL PROPERTY RIGHTS.
+These resources are intended for skilled developers designing with TI products. You are solely responsible for (1) selecting the appropriate
+TI products for your application, (2) designing, validating and testing your application, and (3) ensuring your application meets applicable
+standards, and any other safety, security, regulatory or other requirements.
+These resources are subject to change without notice. TI grants you permission to use these resources only for development of an
+application that uses the TI products described in the resource. Other reproduction and display of these resources is prohibited. No license
+is granted to any other TI intellectual property right or to any third party intellectual property right. TI disclaims responsibility for, and you fully
+indemnify TI and its representatives against any claims, damages, costs, losses, and liabilities arising out of your use of these resources.
+TI’s products are provided subject to TI’s Terms of Sale, TI’s General Quality Guidelines, or other applicable terms available either on
+ti.com or provided in conjunction with such TI products. TI’s provision of these resources does not expand or otherwise alter TI’s applicable
+warranties or warranty disclaimers for TI products. Unless TI explicitly designates a product as custom or customer-specified, TI products
+are standard, catalog, general purpose devices.
+TI objects to and rejects any additional or different terms you may propose.
+IMPORTANT NOTICE
+Copyright © 2026, Texas Instruments Incorporated
+Last updated 10/2025
+
+

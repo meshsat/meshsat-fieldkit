@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-tlv9062-op-amp.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-tlv9062-op-amp.pdf",
+ "pdf_sha256": "18e67fa48b2a3c2e0a3d21abae8600e8cd864fe62f1b4c0d23d3fffe86a44dc4",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tlv9062-op-amp.layout.txt",
+ "text_bytes": 356517,
+ "text_sha256": "dae07174ea3a294cb09a8cffaf94baaaf67bd0b18a302d05010654f568e0c764"
+}

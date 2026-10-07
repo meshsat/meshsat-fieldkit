@@ -6,14 +6,14 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    reqs      8c8e26858293d6f7  v2/ecad/tools/pcb_requirements.yaml
    rules     14ea032a7fdd86ac  v2/ecad/tools/pcb_rules.yaml
    testplan  42a3dff33442c860  v2/docs/TEST-PLAN.md
-   hwfw      f26757c7c5004cdd  v2/docs/HW-FW-CONTRACT.md
+   hwfw      12b6ea059a68b5c5  v2/docs/HW-FW-CONTRACT.md
    panel     c4820a453aa7a159  v2/docs/PANEL.md
    assembly  29dbe3a0c4938274  v2/docs/ASSEMBLY.md
    gen_a     6a136feec6c9cf4e  v2/ecad/tools/gen_sch_a.py
    gen_e     f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
    gen_p     740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
    net_a     6c40250c47195ebb  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
-   l8p_c4    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
+   l8p_c4    5cc3eedafd987a74  v2/docs/records/l8p/l8p_c4.out
    l8p_thgfs 19af759a934be6cc  v2/docs/records/l8p/apply_gen_sch_a_thgfs.py
    l8p_thguard 544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    net_e     2ed95a0e8069ebf8  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
@@ -71,7 +71,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    spra953   8ab81b5a351132ae  v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf
    an11158   9e3211549d0bcd77  v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf
    gen_b     3698cc04d8eaf75b  v2/ecad/tools/gen_sch_b.py
-   arch      d8882cd01e9df691  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   arch      0081f048d4d0f72c  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    hollr2512 5dac9ede82062791  v2/vendor/passives/held/moolee-hollr2512-ho-a0-2022-01-06.pdf
    tps37     d6aed9d98fbf7f16  v2/vendor/ti/ti-tps37-snvsbj1e.pdf
    ltc2954   1e9e2567d15e569e  v2/vendor/power/ltc2954.pdf
@@ -125,6 +125,74 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    filed     6b248f9370bbd093  v2/docs/records/l4e11/inputs/nexperia-buk6y10-30p-figure-readings-2026-10-02.json
    filed     8c4a64b374e90b3c  v2/docs/records/l4e11/inputs/lcsc-C98734-2026-10-04.json
    filed     efe0a356afd6dab4  v2/docs/records/l4e11/inputs/jlc-search-xt60f-2026-10-04.json
+   pdftext   ffd3fbf0c0712133  v2/vendor/battery/pdftext/amass-xt60-spec-tme.layout.txt
+   pdftext   d2eed21ecffdff2b  v2/vendor/battery/pdftext/samsung-35e-orbtronic.layout.txt
+   pdftext   f83f141c39e09df2  v2/vendor/battery/pdftext/ti-bq4050.layout.txt
+   pdftext   9cf26dd0b17dd0d3  v2/vendor/battery/pdftext/ti-csd17570q5b.layout.txt
+   pdftext   5ecf7f639ea2bf4c  v2/vendor/battery/pdftext/ti-csd18510q5b.layout.txt
+   pdftext   3479a5a03a9ddc58  v2/vendor/battery/pdftext/ti-sluuaq3a-bq4050-trm.plain.txt
+   pdftext   0b5fe9a39d996e7a  v2/vendor/coilcraft/pdftext/coilcraft-xal60xx-series.layout.txt
+   pdftext   9d315dec55a94ab8  v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt
+   pdftext   28f0c06999839af6  v2/vendor/d38999/cables/pdftext/alpha-25064-spec.layout.txt
+   pdftext   fc6b5cdd6264c3c8  v2/vendor/d38999/cables/pdftext/lapp-olflex-robust-210-product-information.layout.txt
+   pdftext   599a2845437782f1  v2/vendor/d38999/pdftext/amphenol-d38999-iii-federal.layout.txt
+   pdftext   49387cdad04313c8  v2/vendor/d38999/pdftext/amphenol-d38999-iii-federal.plain.txt
+   pdftext   9d70a4b168ede1aa  v2/vendor/diodes/pdftext/diodes-ap63200-series-buck.plain.txt
+   pdftext   5c5d608aef7bce2a  v2/vendor/diodes/pdftext/diodes-ap64500.layout.txt
+   pdftext   6cf7cbd81b4e2df0  v2/vendor/diodes/pdftext/diodes-bzt52c-ds18004.layout.txt
+   pdftext   28da20d580d90342  v2/vendor/keystone/pdftext/M65p42.plain.txt
+   pdftext   21cea4fb6b039225  v2/vendor/nexperia/held/pdftext/nexperia-an11158-rev7.layout.txt
+   pdftext   825dff4930499e8a  v2/vendor/nexperia/held/pdftext/nexperia-buk6y10-30p-2020-04-17.layout.txt
+   pdftext   7e99c0ebc2a85010  v2/vendor/nexperia/held/pdftext/nexperia-buk6y10-30p-2020-04-17.plain.txt
+   pdftext   92c615ec29b08d26  v2/vendor/nexperia/held/pdftext/nexperia-pxp9r1-30ql.layout.txt
+   pdftext   5c7b90f7c7b4f9fb  v2/vendor/nexperia/held/pdftext/nexperia-pxp9r1-30ql.plain.txt
+   pdftext   bdec8ce23a6c22bb  v2/vendor/passives/held/pdftext/moolee-hollr2512-ho-a0-2022-01-06.plain.txt
+   pdftext   d4d6066343dbe8e9  v2/vendor/passives/held/pdftext/murata-grm3195c1h104ga05-01a-2026-06-11.layout.txt
+   pdftext   6719164c8ae0f73d  v2/vendor/passives/held/pdftext/murata-grm3195c1h683ja05-01a-2026-06-11.layout.txt
+   pdftext   64d5d2346d8c4a25  v2/vendor/passives/pdftext/yageo-cc-series.layout.txt
+   pdftext   223f025129ed1337  v2/vendor/passives/pdftext/yageo-rc-l-series-v12.layout.txt
+   pdftext   968aeb0c557fd998  v2/vendor/power/held/pdftext/adi-ltc3115-1-rev-e.layout.txt
+   pdftext   d848dac8ceab4d99  v2/vendor/power/held/pdftext/aos-aons21357-rev2.1-2023-11.layout.txt
+   pdftext   01e8c3f84c6e723c  v2/vendor/power/held/pdftext/aos-aons21357-rev2.1-2023-11.plain.txt
+   pdftext   8accb3dac8392047  v2/vendor/power/held/pdftext/diodes-b520c-b560c-ds13012-rev18-2.layout.txt
+   pdftext   c3f158d8e50bd113  v2/vendor/power/held/pdftext/littelfuse-997-mini58v-rev2025-11-18.layout.txt
+   pdftext   2405844172d817b3  v2/vendor/power/held/pdftext/vishay-sqj403ep-67109-reva.layout.txt
+   pdftext   ff7abd0aafed112d  v2/vendor/power/held/pdftext/vishay-sqj407ep-62806-revb.layout.txt
+   pdftext   fb56f2c99ddbf164  v2/vendor/power/pdftext/aos-ao3401a-p-mosfet.layout.txt
+   pdftext   718f1e9248674291  v2/vendor/power/pdftext/bourns-mf-msmf-pptc.layout.txt
+   pdftext   55c3adad0b6df444  v2/vendor/power/pdftext/bourns-srf1260-common-mode-choke.layout.txt
+   pdftext   5337008d742e4089  v2/vendor/power/pdftext/bourns-srf1260-common-mode-choke.plain.txt
+   pdftext   80e6619aa41e768e  v2/vendor/power/pdftext/bq25792.layout.txt
+   pdftext   2bfb900f1e48dfca  v2/vendor/power/pdftext/bq25798.layout.txt
+   pdftext   5582af1b4036777a  v2/vendor/power/pdftext/bq25798.plain.txt
+   pdftext   8f457be6865e4d72  v2/vendor/power/pdftext/jscj-2n7002-c8545.layout.txt
+   pdftext   9175123b73540e10  v2/vendor/power/pdftext/jscj-2n7002-c8545.plain.txt
+   pdftext   865b6dfd60811959  v2/vendor/power/pdftext/lcsc-panasonic-eehzk1v101xp.layout.txt
+   pdftext   cae1fb371bf220b4  v2/vendor/power/pdftext/littelfuse-smcj-series-tvs.layout.txt
+   pdftext   079f13e6379768d0  v2/vendor/power/pdftext/ltc2954.layout.txt
+   pdftext   1d2b80b0886c4900  v2/vendor/power/pdftext/ltc2954.plain.txt
+   pdftext   1b0093a4cb0764e4  v2/vendor/power/pdftext/st-semtech-1n4148w-c81598.layout.txt
+   pdftext   f82b7b38b3a991e1  v2/vendor/power/pdftext/ti-csd19532q5b-n-fet.layout.txt
+   pdftext   bab7479f34278e35  v2/vendor/power/pdftext/tps2596.layout.txt
+   pdftext   7183f7cf5bf812dc  v2/vendor/ti/held/pdftext/ti-bq25730-sluse65a.layout.txt
+   pdftext   83e3322e0fdf355b  v2/vendor/ti/held/pdftext/ti-bq25730-sluse65a.plain.txt
+   pdftext   e1a3435a97f880c1  v2/vendor/ti/held/pdftext/ti-csd19536ktt-slps540c.layout.txt
+   pdftext   8925e829bf61ab35  v2/vendor/ti/held/pdftext/ti-spra953c-thermal-metrics.layout.txt
+   pdftext   4a23ef7d828e15ee  v2/vendor/ti/held/pdftext/ti-spra953c-thermal-metrics.plain.txt
+   pdftext   391047e6ac0ae558  v2/vendor/ti/held/pdftext/ti-tps1663-slvset9g.layout.txt
+   pdftext   ea265c356c728f9d  v2/vendor/ti/held/pdftext/ti-tps4811-q1-slusee5e.layout.txt
+   pdftext   1241115c356ce662  v2/vendor/ti/held/pdftext/ti-tps55340-slvsbd4e.layout.txt
+   pdftext   e174690acb74a1c0  v2/vendor/ti/held/pdftext/ti-tps63070-slvsc58b.layout.txt
+   pdftext   81697733e5e61ffe  v2/vendor/ti/pdftext/bq25731-datasheet.layout.txt
+   pdftext   a8837d0165d873a3  v2/vendor/ti/pdftext/bq25731-datasheet.plain.txt
+   pdftext   6399dcdabf2895da  v2/vendor/ti/pdftext/lm5176-datasheet.layout.txt
+   pdftext   4fdfb817af936bbf  v2/vendor/ti/pdftext/ti-lm5069.layout.txt
+   pdftext   b1791d571b321c57  v2/vendor/ti/pdftext/ti-lm5069.plain.txt
+   pdftext   cfed06255b323b69  v2/vendor/ti/pdftext/ti-lm74700-q1.layout.txt
+   pdftext   454a09b2d1bc4f1d  v2/vendor/ti/pdftext/ti-lm74700-q1.plain.txt
+   pdftext   0667290f86625994  v2/vendor/ti/pdftext/ti-tps37-snvsbj1e.layout.txt
+   pdftext   099c20fd6054dea0  v2/vendor/ti/pdftext/ti-tps37-snvsbj1e.plain.txt
+   pdftext   010f30f3bffdad5f  v2/vendor/ti/pdftext/ti-tps62933.layout.txt
    this record's own figures: copper 0.01724 ohm mm2/m at 20 C and 0.00393 /K, 3.45 J/cm3K (ASSUMPTION, constants); AWG 14 2.081 mm2, AWG 12 3.309 mm2,
      AWG 18 0.823 mm2 (ASSUMPTION, constants); the cold end -20 C (REQ-024); the SESSION choices are named where they are used
 

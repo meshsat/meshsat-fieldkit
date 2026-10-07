@@ -1,0 +1,634 @@
+T
+PL
+IA
+N
+M
+CO
+*R
+oH
+S
+
+220
+
+Features
+
+Applications
+
+■ Multiple applications: parallel, series,
+
+■ SEPIC topology
+
+dual-inductor and transformer
+■ Magnetically shielded, low radiation
+■ Inductance range: 0.47 to 4000 μH
+■ Rated current up to 17.6 A
+■ RoHS compliant*
+
+■ Power supplies for:
+
+- Communication equipment
+- Notebooks, desktop computers,
+servers
+- LCDs, flat panels, backlights
+- Camcorders, HDTVs
+
+SRF1260 Series - Dual-Winding Shielded Power Inductors
+
+Parallel Rating
+
+L (μH)
+
+(%)
+
+DCR
+(Ω)
+Max.
+
+0.47
+1.0
+1.5
+2.2
+3.3
+4.7
+6.8
+8.2
+10
+15
+22
+33
+47
+68
+82
+100
+150
+220
+330
+470
+680
+820
+1000
+
+±30
+±30
+±30
+±30
+±30
+±30
+±30
+±30
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+
+0.0053
+0.0062
+0.0073
+0.0085
+0.0101
+0.0137
+0.0186
+0.0194
+0.0246
+0.0329
+0.0451
+0.0618
+0.086
+0.117
+0.15
+0.171
+0.254
+0.354
+0.574
+0.83
+1.212
+1.46
+1.854
+
+Inductance
+@ 100 KHz Tol.
+
+Bourns
+Part No.
+
+SRF1260-R47Y
+SRF1260-1R0Y
+SRF1260-1R5Y
+SRF1260-2R2Y
+SRF1260-3R3Y
+SRF1260-4R7Y
+SRF1260-6R8Y
+SRF1260-8R2Y
+SRF1260-100M
+SRF1260-150M
+SRF1260-220M
+SRF1260-330M
+SRF1260-470M
+SRF1260-680M
+SRF1260-820M
+SRF1260-101M
+SRF1260-151M
+SRF1260-221M
+SRF1260-331M
+SRF1260-471M
+SRF1260-681M
+SRF1260-821M
+SRF1260-102M
+
+Series Rating
+Irms
+(A)
+
+Isat
+(A)
+
+17.6
+15
+13.8
+10.9
+9.26
+7.18
+6.64
+5.54
+5.35
+4.27
+3.7
+3.28
+2.71
+2.22
+2.05
+1.78
+1.48
+1.19
+1.06
+0.87
+0.7
+0.6
+0.57
+
+33
+23.6
+18.3
+15
+12.7
+9.71
+8.68
+7.86
+7.17
+5.69
+4.71
+3.84
+3.24
+2.7
+2.39
+2.2
+1.81
+1.51
+1.22
+1.02
+0.85
+0.77
+0.7
+
+L (μH)
+
+(%)
+
+DCR
+(Ω)
+Max.
+
+1.88
+4
+6
+8.8
+13.2
+18.8
+27.2
+32.8
+40
+60
+88
+132
+188
+272
+328
+400
+600
+880
+1320
+1880
+2720
+3280
+4000
+
+±30
+±30
+±30
+±30
+±30
+±30
+±30
+±30
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+±20
+
+0.0212
+0.026
+0.0302
+0.0333
+0.0372
+0.0479
+0.0672
+0.0737
+0.0934
+0.125
+0.172
+0.256
+0.34
+0.444
+0.568
+0.656
+0.972
+1.416
+2.29
+3.197
+4.635
+5.363
+6.782
+
+Inductance
+@ 100 KHz Tol.
+
+Irms
+(A)
+
+Isat
+(A)
+
+8.8
+7.51
+6.89
+5.46
+4.63
+3.59
+3.32
+2.77
+2.67
+2.13
+1.84
+1.64
+1.35
+1.11
+1.03
+0.892
+0.739
+0.594
+0.53
+0.434
+0.35
+0.301
+0.283
+
+16.5
+11.8
+9.15
+7.5
+6.35
+4.86
+4.34
+3.93
+3.59
+2.85
+2.36
+1.92
+1.62
+1.35
+1.2
+1.1
+0.905
+0.755
+0.61
+0.51
+0.425
+0.385
+0.35
+
+Test Voltage ..................................0.25 V
+Hi-pot ................500 Vrms, 3 mA, 3 sec.
+.. 230 °C; 50 sec. max.
+Operating Temperature
+.................................-40 °C to +105 °C
+(Temperature rise included)
+Storage Temperature .. -40 °C to +125 °C
+Resistance to Solder Heat
+...............................+260 °C for 10 sec.
+Moisture Sensitivity Level ...................... 1
+.................. N/A
+Materials
+Core ..............................................Ferrite
+Wire ........................... Enameled copper
+Base ................................................ LCP
+Adhesive .............................. Epoxy resin
+Terminal ..............................................Sn
+Rated Current
+........... Inductance drops 30 % at Isat
+Temperature Rise .... 40 °C at rated Irms
+Packaging.......400 pcs. per 13-inch reel
+How to Order
+
+SRF1260 - 100M
+Model
+Value Code (see table)
+
+Product Dimensions
+
+Electrical Schematic
+1
+
+12.50
+MAX.
+(.492)
+
+2
+
+N1
+
+1
+
+N2
+
+3
+
+2
+
+N1
+
+4
+
+1
+
+N2
+
+3
+
+2
+
+N1
+
+4
+
+12.50
+(.492)
+MAX.
+
+N2
+
+4
+
+3
+
+PARALLEL
+
+DOT
+INDICATES
+TERMINAL 1
+
+SERIES
+6.00 ± 0.2
+(.236 ± .008)
+
+Recommended Layout
+4.50
+(.177)
+
+2.15
+(.085)
+
+1
+
+2
+
+4.50
+(.177)
+
+2.15
+(.085)
+
+1
+
+2
+13.00
+(.512)
+
+13.00
+(.512)
+
+4
+
+3
+
+1.28
+(.050)
+
+DUAL INDUCTOR MODE
+
+WARNING Cancer and Reproductive Harm
+www.P65Warnings.ca.gov
+
+5.00 ± 0.3
+(.197 ± .012)
+
+4
+
+4
+
+3
+
+1
+
+2
+
+5.00 ± 0.3
+(.197 ± .012)
+
+3
+
+1.28
+(.050)
+
+DIMENSIONS:
+
+SERIES MODE
+
+MM
+(INCHES)
+1.80 ± 0.2
+(.071 ± .008)
+
+*RoHS Directive 2002/95/EC Jan. 27, 2003 including annex and RoHS Recast 2011/65/EU June 8, 2011.
+Specifications are subject to change without notice. Users should verify actual device performance in their specific
+applications. The products described herein and this document are subject to specific legal disclaimers as set forth on the
+last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+
+SRF0504
+Series- Dual-Winding
+- Line Filter Shielded Power Inductors
+SRF1260 Series
+
+330
+DIA.
+(12.99)
+
+2.0 ± 0.5
+(.079 ± .020)
+
+30.4
+(1.197)
+13.0 ± 0.5
+(.512 ± .020)
+DIA.
+
+21.0 ± 0.8
+(.827 ± .031)
+
+50.0 -0
+(1.97 -0)
+13.0 ± 0.5
+DIA.
+(.512 ± .020)
+26 +0
+(1.024 +0)
+
+24.0
+(.945)
+
+16.0
+(.630)
+
+END
+
+NO COMPONENT
+
+4.0
+(.157)
+
+COMPONENTS
+
+START
+
+NO COMPONENT
+
+400
+(15.75)
+
+200
+(7.87)
+
+USER DIRECTION OF FEED
+
+QTY: 400 PCS. PER REEL
+
+DIMENSIONS:
+
+MM
+(INCHES)
+
+Tel: +886-2 2562-4117 • Email: asiacus@bourns.com
+EMEA: Tel: +36 88 520 390 • Email: eurocus@bourns.com
+The Americas: Tel: +1-951 781-5500 • Email: americus@bourns.com
+www.bourns.com
+
+REV. 03/18
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+
+Legal Disclaimer Notice
+This legal disclaimer applies to purchasers and users of Bourns® products manufactured by or on behalf of Bourns, Inc. and
+P[ZHɉSPH[LZJVSSLJ[P]LS`¸)V\YUZ¹
+Unless otherwise expressly indicated in writing, Bourns® products and data sheets relating thereto are subject to change
+^P[OV\[UV[PJL<ZLYZZOV\SKJOLJRMVYHUKVI[HPU[OLSH[LZ[YLSL]HU[PUMVYTH[PVUHUK]LYPM`[OH[Z\JOPUMVYTH[PVUPZJ\YYLU[
+and complete before placing orders for Bourns® products.
+The characteristics and parameters of a Bourns® product set forth in its data sheet are based on laboratory conditions, and
+statements regarding the suitability of products for certain types of applications are based on Bourns’ knowledge of typical
+requirements in generic applications. The characteristics and parameters of a Bourns®WYVK\J[PUH\ZLYHWWSPJH[PVUTH`]HY`
+MYVT[OLKH[HZOLL[JOHYHJ[LYPZ[PJZHUKWHYHTL[LYZK\L[VP[OLJVTIPUH[PVUVM[OL)V\YUZ® product with other components
+PU[OL\ZLY»ZHWWSPJH[PVUVYPP[OLLU]PYVUTLU[VM[OL\ZLYHWWSPJH[PVUP[ZLSM;OLJOHYHJ[LYPZ[PJZHUKWHYHTL[LYZVMH)V\YUZ®
+WYVK\J[HSZVJHUHUKKV]HY`PUKPɈLYLU[HWWSPJH[PVUZHUKHJ[\HSWLYMVYTHUJLTH`]HY`V]LY[PTL<ZLYZZOV\SKHS^H`Z]LYPM`
+the actual performance of the Bourns®WYVK\J[PU[OLPYZWLJPÄJKL]PJLZHUKHWWSPJH[PVUZHUKTHRL[OLPYV^UPUKLWLUKLU[
+Q\KNTLU[ZYLNHYKPUN[OLHTV\U[VMHKKP[PVUHS[LZ[THYNPU[VKLZPNUPU[V[OLPYKL]PJLVYHWWSPJH[PVU[VJVTWLUZH[LMVY
+KPɈLYLUJLZIL[^LLUSHIVYH[VY`HUKYLHS^VYSKJVUKP[PVUZ
+<USLZZ)V\YUZOHZL_WSPJP[S`KLZPNUH[LKHUPUKP]PK\HS)V\YUZ® product as meeting the requirements of a particular industry
+Z[HUKHYKLN0:6;:  VYHWHY[PJ\SHYX\HSPÄJH[PVULN<3SPZ[LKVYYLJVNUPaLK)V\YUZPZUV[YLZWVUZPISLMVYHU`
+MHPS\YLVMHUPUKP]PK\HS)V\YUZ®WYVK\J[[VTLL[[OLYLX\PYLTLU[ZVMZ\JOPUK\Z[Y`Z[HUKHYKVYWHY[PJ\SHYX\HSPÄJH[PVU<ZLYZ
+of Bourns® products are responsible for ensuring compliance with safety-related requirements and standards applicable to
+[OLPYKL]PJLZVYHWWSPJH[PVUZ
+Bourns®WYVK\J[ZHYLUV[YLJVTTLUKLKH\[OVYPaLKVYPU[LUKLKMVY\ZLPUU\JSLHYSPMLZH]PUNSPMLJYP[PJHSVYSPMLZ\Z[HPUPUN
+HWWSPJH[PVUZUVYPUHU`V[OLYHWWSPJH[PVUZ^OLYLMHPS\YLVYTHSM\UJ[PVUTH`YLZ\S[PUWLYZVUHSPUQ\Y`KLH[OVYZL]LYLWYVWLY[`
+VYLU]PYVUTLU[HSKHTHNL<USLZZL_WYLZZS`HUKZWLJPÄJHSS`HWWYV]LKPU^YP[PUNI`[^VH\[OVYPaLK)V\YUZYLWYLZLU[H[P]LZ
+on a case-by-case basis, use of any Bourns®WYVK\J[ZPUZ\JO\UH\[OVYPaLKHWWSPJH[PVUZTPNO[UV[ILZHMLHUK[O\ZPZH[
+[OL\ZLY»ZZVSLYPZR3PMLJYP[PJHSHWWSPJH[PVUZPUJS\KLKL]PJLZPKLU[PÄLKI`[OL<:-VVKHUK+Y\N(KTPUPZ[YH[PVUHZ*SHZZ000
+KL]PJLZHUKNLULYHSS`LX\P]HSLU[JSHZZPÄJH[PVUZV\[ZPKLVM[OL<UP[LK:[H[LZ
+)V\YUZL_WYLZZS`PKLU[PÄLZ[OVZL)V\YUZ®Z[HUKHYKWYVK\J[Z[OH[HYLZ\P[HISLMVY\ZLPUH\[VTV[P]LHWWSPJH[PVUZVUZ\JO
+WYVK\J[Z»KH[HZOLL[ZPU[OLZLJ[PVULU[P[SLK¸(WWSPJH[PVUZ¹<USLZZL_WYLZZS`HUKZWLJPÄJHSS`HWWYV]LKPU^YP[PUNI`[^V
+H\[OVYPaLK)V\YUZYLWYLZLU[H[P]LZVUHJHZLI`JHZLIHZPZ\ZLVMHU`V[OLY)V\YUZ®Z[HUKHYKWYVK\J[ZPUHUH\[VTV[P]L
+HWWSPJH[PVUTPNO[UV[ILZHMLHUK[O\ZPZUV[YLJVTTLUKLKH\[OVYPaLKVYPU[LUKLKHUKPZH[[OL\ZLY»ZZVSLYPZR0M)V\YUZ
+L_WYLZZS`PKLU[PÄLZHZ\IJH[LNVY`VMH\[VTV[P]LHWWSPJH[PVUPU[OLKH[HZOLL[MVYP[ZZ[HUKHYKWYVK\J[ZZ\JOHZPUMV[HPUTLU[
+VYSPNO[PUNZ\JOPKLU[PÄJH[PVUTLHUZ[OH[)V\YUZOHZYL]PL^LKP[ZZ[HUKHYKWYVK\J[HUKOHZKL[LYTPULK[OH[PMZ\JO)V\YUZ®
+Z[HUKHYKWYVK\J[PZJVUZPKLYLKMVYWV[LU[PHS\ZLPUH\[VTV[P]LHWWSPJH[PVUZP[ZOV\SKVUS`IL\ZLKPUZ\JOZ\IJH[LNVY`VM
+H\[VTV[P]LHWWSPJH[PVUZ(U`YLMLYLUJL[V)V\YUZ®Z[HUKHYKWYVK\J[PU[OLKH[HZOLL[HZJVTWSPHU[^P[O[OL(,*8Z[HUKHYK
+VY¸H\[VTV[P]LNYHKL¹KVLZUV[I`P[ZLSMTLHU[OH[)V\YUZOHZHWWYV]LKZ\JOWYVK\J[MVY\ZLPUHUH\[VTV[P]LHWWSPJH[PVU
+Bourns®Z[HUKHYKWYVK\J[ZHYLUV[[LZ[LK[VJVTWS`^P[O<UP[LK:[H[LZ-LKLYHS(]PH[PVU(KTPUPZ[YH[PVUZ[HUKHYKZNLULYHSS`
+VYHU`V[OLYNLULYHSS`LX\P]HSLU[NV]LYUTLU[HSVYNHUPaH[PVUZ[HUKHYKHWWSPJHISL[VWYVK\J[ZKLZPNULKVYTHU\MHJ[\YLKMVY
+\ZLPUHPYJYHM[VYZWHJLHWWSPJH[PVUZ)V\YUZL_WYLZZS`PKLU[PÄLZ)V\YUZ® standard products that are suitable for use in aircraft
+VYZWHJLHWWSPJH[PVUZVUZ\JOWYVK\J[Z»KH[HZOLL[ZPU[OLZLJ[PVULU[P[SLK¸(WWSPJH[PVUZ¹<USLZZL_WYLZZS`HUKZWLJPÄJHSS`
+HWWYV]LKPU^YP[PUNI`[^VH\[OVYPaLK)V\YUZYLWYLZLU[H[P]LZVUHJHZLI`JHZLIHZPZ\ZLVMHU`V[OLY)V\YUZ® standard
+WYVK\J[PUHUHPYJYHM[VYZWHJLHWWSPJH[PVUTPNO[UV[ILZHMLHUK[O\ZPZUV[YLJVTTLUKLKH\[OVYPaLKVYPU[LUKLKHUKPZH[
+the user’s sole risk.
+;OL\ZLHUKSL]LSVM[LZ[PUNHWWSPJHISL[V)V\YUZ® custom products shall be negotiated on a case-by-case basis by Bourns
+and the user for which such Bourns®J\Z[VTWYVK\J[ZHYLZWLJPHSS`KLZPNULK(IZLU[H^YP[[LUHNYLLTLU[IL[^LLU)V\YUZ
+HUK[OL\ZLYYLNHYKPUN[OL\ZLHUKSL]LSVMZ\JO[LZ[PUN[OLHIV]LWYV]PZPVUZHWWSPJHISL[V)V\YUZ® standard products shall
+also apply to such Bourns® custom products.
+Users shall not sell, transfer, export or re-export any Bourns®WYVK\J[ZVY[LJOUVSVN`MVY\ZLPUHJ[P]P[PLZ^OPJOPU]VS]L[OL
+KLZPNUKL]LSVWTLU[WYVK\J[PVU\ZLVYZ[VJRWPSPUNVMU\JSLHYJOLTPJHSVYIPVSVNPJHS^LHWVUZVYTPZZPSLZUVYZOHSS[OL`\ZL
+Bourns®WYVK\J[ZVY[LJOUVSVN`PUHU`MHJPSP[`^OPJOLUNHNLZPUHJ[P]P[PLZYLSH[PUN[VZ\JOKL]PJLZ;OLMVYLNVPUNYLZ[YPJ[PVUZ
+HWWS`[VHSS\ZLZHUKHWWSPJH[PVUZ[OH[]PVSH[LUH[PVUHSVYPU[LYUH[PVUHSWYVOPIP[PVUZPUJS\KPUNLTIHYNVZVYPU[LYUH[PVUHS
+YLN\SH[PVUZ-\Y[OLY)V\YUZ® products and Bourns technology and technical data may not under any circumstance be
+exported or re-exported to countries subject to international sanctions or embargoes. Bourns® products may not, without
+WYPVYH\[OVYPaH[PVUMYVT)V\YUZHUKVY[OL<:.V]LYUTLU[ILYLZVSK[YHUZMLYYLKVYYLL_WVY[LK[VHU`WHY[`UV[LSPNPISL
+[VYLJLP]L<:JVTTVKP[PLZZVM[^HYLHUK[LJOUPJHSKH[H
+;V[OLTH_PT\TL_[LU[WLYTP[[LKI`HWWSPJHISLSH^)V\YUZKPZJSHPTZPHU`HUKHSSSPHIPSP[`MVYZWLJPHSW\UP[P]LJVUZLX\LU[PHS
+PUJPKLU[HSVYPUKPYLJ[KHTHNLZVYSVZ[YL]LU\LZVYSVZ[WYVÄ[ZHUKPPHU`HUKHSSPTWSPLK^HYYHU[PLZPUJS\KPUNPTWSPLK^HYYHU[PLZ
+VMÄ[ULZZMVYWHY[PJ\SHYW\YWVZLUVUPUMYPUNLTLU[HUKTLYJOHU[HIPSP[`
+)RU\RXUFRQYHQLHQFHFRSLHVRIWKLV/HJDO'LVFODLPHU1RWLFHZLWK*HUPDQ6SDQLVK-DSDQHVH7UDGLWLRQDO&KLQHVHDQG6LPSOLÀHG&KLQHVH
+bilingual versions are available at:
+Web Page: http://www.bourns.com/legal/disclaimers-terms-and-policies
+PDF: http://www.bourns.com/docs/Legal/disclaimer.pdf
+*9
+
+

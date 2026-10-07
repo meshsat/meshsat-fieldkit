@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf",
+ "pdf_sha256": "9fda757ab1acfb6b29125429035d2361ad711db44b6f40773469527fe17c6da0",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/mitsubishi/pdftext/ra30h1317m1-datasheet.layout.txt",
+ "text_bytes": 50652,
+ "text_sha256": "e1ad9f624efd2d98b4777ce1890bffc2ecf681a76f144a1b053ca80c23c8d2d0"
+}

@@ -18,8 +18,9 @@ each test below names as its evidence basis:
     which W16's review of 2b (finding 3) found untested, with a mutant and the parent's draft read from history.
 
 Every fixture is a minimal repository root in a temporary directory: the three files under v2/docs/records/l4e9/ (the tree's own,
-or the committed ones at 3d2746c9 read from this repository's history) and `git init`, because L4-E9's generator finds its tree
-with `git rev-parse --show-toplevel` when it is imported. Nothing is written into the repository: every test compares the
+or the committed ones at 3d2746c9 read from this repository's history), the helper v2/docs/records/_lib/pdftext.py copied from
+this tree (the tree's generator loads it at import since W34's acdcb22e; see HELPER) and `git init`, because L4-E9's generator finds
+its tree with `git rev-parse --show-toplevel` when it is imported. Nothing is written into the repository: every test compares the
 repository's git status and the bytes of the three L4-E9 files and the draft before and after. Tests 1 to 8 hold the predicates on
 the draft as it is; tests m1 to m8 show each predicate failing on a mutant of the draft (one changed line each, the regression the
 predicate exists to catch). These are software predicates on a text draft and its reader: they establish no property of any board,
@@ -49,6 +50,14 @@ LISTED = sorted(ADDED + ["R-240"])   # the change list's rows R-220 to R-245: R-
 NOTE_HEAD = "**The P0 round (record l9t5"
 EDIT_OLD, EDIT_NEW = "Board B's three supervisor LDOs moved", "Board B's three supervisor LDOs (restated by a later round) moved"
 NOTE_OLD, NOTE_NEW = "Rows R-220 to R-245 add the drafts", "Rows R-220 to R-245 (restated by a later round) add the drafts"
+# The helper L4-E9's generator loads when it is imported. Basis: W34's acdcb22e (Q-41 item 1; in set 32 as fnd/w34pdftext 62300318,
+# merged as 834c86ae) made l4e9_power_path.py load TOP/v2/docs/records/_lib/pdftext.py at import (its line 210 at 4c8196a0), TOP
+# being `git rev-parse --show-toplevel`, so inside a fixture the fixture's root: without this file every fixture that imports the
+# tree's generator stopped at [Errno 2] (W132's check 8 on set 32's 4c8196a0: t_2, t_6, t_m4 and t_m5). Run in a fixture, the
+# generator's import and its cons_changes() open no other file of the fixture (the helper imports the standard library only; the
+# glob of v2/docs/records/l4e*/apply_*.py in cons_changes() predates acdcb22e and finds none there; W134, 7 October 2026). A
+# pristine generator (3d2746c9) does not load the helper, so the copy is inert there.
+HELPER = "v2/docs/records/_lib/pdftext.py"
 sys.dont_write_bytecode = True
 _N = [0]
 
@@ -96,9 +105,13 @@ def _write(root, texts):
 
 
 def _root(td, texts):
-    """a minimal repository root: the three files and `git init` (L4-E9's generator runs git rev-parse at import)"""
+    """a minimal repository root: the three files, this tree's HELPER and `git init` (L4-E9's generator runs git rev-parse and loads
+    HELPER at import)"""
     os.makedirs(os.path.join(td, L4))
     _write(td, texts)
+    os.makedirs(os.path.join(td, os.path.dirname(HELPER)))
+    with open(os.path.join(ROOT, HELPER), "rb") as src, open(os.path.join(td, HELPER), "wb") as dst:
+        dst.write(src.read())
     r = subprocess.run(["git", "init", "-q", td], capture_output=True)
     assert r.returncode == 0, "git init: %r" % r.stderr[-200:]
     return td

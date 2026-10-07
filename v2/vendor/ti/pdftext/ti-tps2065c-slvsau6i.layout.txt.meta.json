@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-tps2065c-slvsau6i.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-tps2065c-slvsau6i.pdf",
+ "pdf_sha256": "898c093489ac30dde4c62f1ccaeaf71573239021a93da4182eb8efadf4be3fcd",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tps2065c-slvsau6i.layout.txt",
+ "text_bytes": 229006,
+ "text_sha256": "b30465f7d3bf7a92fd5a29fd4e2e4a033665dbfcfce3e1737092f7def83a46ba"
+}

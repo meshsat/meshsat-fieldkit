@@ -1,0 +1,55 @@
+                                                                                                                  LM5176
+www.ti.com                                                                       SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+Applying the appropriate voltage to the MODE pin of the LM5176 enables hiccup mode fault protection (see
+Section 7.4.2). In hiccup mode, the controller shuts down after detecting cycle-by-cycle current limiting for 128
+consecutive cycles and the soft-start capacitor is discharged. The soft-start capacitor is automatically released
+after 4000 oscillator clock cycles and the controller restarts. If hiccup mode protection is not enabled through the
+MODE pin, the LM5176 will operate in cycle-by-cycle current limiting as long as the overload condition persists.
+7.3.6 Average Input/Output Current Limiting
+The LM5176 provides optional average current limiting capability to limit either the input or the output current of
+the DC/DC converter. The average current limiting circuit uses an additional current sense resistor connected in
+series with the input supply or output voltage of the converter. A current sense gm amplifier with inputs at the
+ISNS(+) and ISNS(-) pins monitors the voltage across the sense resistor and compares it with an internal 50-mV
+reference. If the drop across the sense resistor is greater than 50 mV, the gm amplifier gradually discharges
+the soft-start capacitor. When the soft-start capacitor discharges below the feedback reference voltage, VREF,
+the output voltage of the converter decreases to limit the input or output current. The average current limiting
+feature can be used in applications requiring a regulated current from the input supply or into the load. The target
+constant current is given by Equation 4:
+
+                    50 mV
+     ICL(AVG)
+                    RSNS                                                                                          (4)
+
+A filter network as shown in Figure 8-1 is often used across the ISNS(+) and ISNS(-) pins to filter the ripple in the
+average current sense signal.
+The average current loop can be disabled by shorting the ISNS(+) and ISNS(-) pins together to AGND.
+7.3.7 Operation Above 40-V Input
+For application where input voltage is higher than 40 V, a 2-kΩ resistor in series with the VISNS pin is required
+as shown in Figure 8-1.
+7.3.8 CCM Operation
+The LM5176 works in continuous conduction mode (CCM). In CCM operation, the inductor current can flow
+in either direction and the controller switches at a fixed frequency regardless of the load current. The CCM
+operation is useful for noise-sensitive applications where a fixed switching eases filter design.
+7.3.9 Frequency and Synchronization (RT/SYNC)
+The LM5176 switching frequency can be programmed between 100 kHz and 600 kHz using a resistor from the
+RT/SYNC pin to AGND. The RT resistor is related to the nominal switching frequency (Fsw) by Equation 5:
+
+             § 1 ·
+             ¨     ¸ 190 ns
+      RT     © Fsw ¹
+                 116 pF                                                                                           (5)
+
+Figure 6-3 in the Section 6.6 shows the relationship between the programmed switching frequency (Fsw) and the
+RT resistor.
+The RT/SYNC pin can also be used to synchronize the internal oscillator to an external clock signal. The
+external synchronization pulse is ac coupled using a capacitor to the RT/SYNC pin. The external synchronization
+pulse frequency range is 75% to 125% of the resistor programmed frequency. A 50% duty cycle is acceptable for
+external SYNC.
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                             Submit Document Feedback      17
+                                                  Product Folder Links: LM5176
+

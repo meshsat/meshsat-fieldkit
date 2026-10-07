@@ -1,0 +1,72 @@
+                                                                                                                                                                          ZK series
+  Characteristics list
+                                                                                                                                                          Endurance : 125 ℃ 4000 h
+                                      Case size                                                                                                                            Min.packaging
+                                                                                     Specification                                       Part number
+                                         (mm)                                                                                                                                q'ty (pcs)
+  Rated     Capacitance
+                                                   L               Size
+ voltage      (±20 %)                                                        Ripple
+   (V)
+                                                                   code                    ESR*2                           Standard                     Vibration-proof
+                (μF)           øD                                           current*1                  tan δ*3                                                                   Taping
+                                                       Vibration                             (mΩ)                           product                         product
+                                        Standard
+                                                        -proof
+                                                                            (mA rms)
+
+
+                   47         5.0         5.8             –         C             850          80       0.14         EEHZK1E470R                              –                   1000
+                   68         6.3         5.8            6.1        D           1300           50       0.14         EEHZK1E680P                    EEHZK1E680V                   1000
+                   82         6.3         5.8            6.1        D           1300           50       0.14         EEHZK1E820P                    EEHZK1E820V                   1000
+   25
+                 150          6.3         7.7            8.0       D8           1800           30       0.14         EEHZK1E151XP                   EEHZK1E151XV                    900
+                 270          8.0        10.2           10.5        F           2000           27       0.14         EEHZK1E271P                    EEHZK1E271V                     500
+                 470          10.0       10.2           10.5        G           2800           20       0.14         EEHZK1E471P                    EEHZK1E471V                     500
+                   33         5.0         5.8             –         C             750         100       0.12         EEHZK1V330R                              –                   1000
+                   56         6.3         5.8            6.1        D           1200           60       0.12         EEHZK1V560P                    EEHZK1V560V                   1000
+   35            100          6.3         7.7            8.0       D8           1700           35       0.12         EEHZK1V101XP                   EEHZK1V101XV                    900
+                 180          8.0        10.2           10.5        F           2000           27       0.12         EEHZK1V181P                    EEHZK1V181V                     500
+                 330          10.0       10.2           10.5        G           2800           20       0.12         EEHZK1V331P                    EEHZK1V331V                     500
+
+*1: Ripple current (100 kHz / +125 ℃)
+*2: ESR (100 kHz / +20 ℃)
+*3: tan δ (120 Hz / +20 ℃)
+◆ Please refer to the page of “Reflow profile” and “The taping dimensions”.
+◆ The dimensions of the vibration-proof products, please refer to the page of the mounting specification.
+
+ Frequency correction factor for ripple current
+  Rated capacitance (C)              Frequency (f)            100 Hz ≦ f < 200 Hz             200 Hz ≦ f < 300 Hz                300 Hz ≦ f < 500 Hz               500 Hz ≦ f < 1 kHz
+           C < 47 μF                                                 0.15                                0.20                               0.25                          0.35
+                                      Correction
+   47 μF ≦ C < 100 μF                                                0.15                                0.25                               0.30                          0.40
+                                        factor
+         100 μF ≦ C                                                  0.15                                0.25                               0.30                          0.40
+
+  Rated capacitance (C)              Frequency (f)             1 kHz ≦ f < 2 kHz               2 kHz ≦ f < 3 kHz                   3 kHz ≦ f < 5 kHz               5 kHz ≦ f < 10 kHz
+           C < 47 μF                                                 0.45                                0.55                               0.60                          0.65
+                                      Correction
+   47 μF ≦ C < 100 μF                                                0.50                                0.60                               0.65                          0.70
+                                        factor
+         100 μF ≦ C                                                  0.50                                0.60                               0.65                          0.70
+
+  Rated capacitance (C)              Frequency (f)            10 kHz ≦ f < 15 kHz             15 kHz ≦ f < 20 kHz                20 kHz ≦ f < 30 kHz              30 kHz ≦ f < 40 kHz
+           C < 47 μF                                                 0.70                                0.75                               0.75                          0.75
+                                      Correction
+   47 μF ≦ C < 100 μF                                                0.75                                0.75                               0.80                          0.80
+                                        factor
+         100 μF ≦ C                                                  0.75                                0.80                               0.85                          0.85
+
+  Rated capacitance (C)              Frequency (f)            40 kHz ≦ f < 50 kHz            50 kHz ≦ f < 100 kHz               100 kHz ≦ f < 500 kHz                 500 kHz ≦ f
+           C < 47 μF                                                 0.80                                0.85                               1.00                          1.05
+                                      Correction
+   47 μF ≦ C < 100 μF                                                0.85                                0.90                               1.00                          1.00
+                                        factor
+         100 μF ≦ C                                                  0.85                                0.90                               1.00                          1.00
+
+
+
+
+Design and specifications are each subject to change without notice. Ask factory for the current technical specifications before purchase and/or use.
+Should a safety concern arise regarding this product, please be sure to contact us immediately.                                                                              01-Apr-22
+

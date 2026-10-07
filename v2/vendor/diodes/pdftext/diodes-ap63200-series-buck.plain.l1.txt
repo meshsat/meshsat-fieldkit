@@ -1,0 +1,155 @@
+AP63200/AP63201/AP63203/AP63205
+3.8V TO 32V INPUT, 2A LOW IQ SYNCHRONOUS BUCK WITH ENHANCED EMI REDUCTION
+
+Description
+
+Pin Assignments
+
+The AP63200/AP63201/AP63203/AP63205 is a 2A, synchronous buck
+converter with a wide input voltage range of 3.8V to 32V and fully
+integrates a 125mΩ high-side power MOSFET and a 68mΩ low-side
+power MOSFET to provide high-efficiency step-down DC/DC
+conversion.
+
+TOP VIEW
+
+FB
+
+1
+
+6
+
+BST
+
+EN
+
+2
+
+5
+
+SW
+
+VIN
+
+3
+
+4
+
+GND
+
+The AP63200/AP63201/AP63203/AP63205 device is easily used by
+minimizing the external component count due to its adoption of peak
+current mode control along with its integrated compensation network.
+The AP63200/AP63201/AP63203/AP63205 has optimized designs for
+Electromagnetic Interference (EMI) reduction. The converter features
+Frequency Spread Spectrum (FSS) with a switching frequency jitter of
+±6%, which reduces EMI by not allowing emitted energy to stay in any
+one frequency for a significant period of time. It also has a proprietary
+gate driver scheme to resist switching node ringing without sacrificing
+MOSFET turn-on and turn-off times, which further erases highfrequency radiated EMI noise caused by MOSFET switching.
+
+TSOT26
+
+The device is available in a low-profile, TSOT26 package.
+
+Features
+•
+•
+•
+•
+•
+
+•
+•
+
+•
+
+•
+•
+•
+•
+
+•
+•
+•
+
+VIN 3.8V to 32V
+2A Continuous Output Current
+0.8V ±1% Reference Voltage
+22µA Ultralow Quiescent Current
+Switching Frequency
+o
+500kHz: AP63200 and AP63201
+o
+1.1MHz: AP63203 and AP63205
+Pulse Width Modulation (PWM) Regardless of Output Load
+o
+AP63201
+Supports Pulse Frequency Modulation (PFM)
+o
+AP63200, AP63203, and AP63205
+o
+Up to 80% Efficiency at 1mA Light Load
+o
+Up to 88% Efficiency at 5mA Light Load
+Fixed Output Voltage
+o
+3.3V: AP63203
+o
+5.0V: AP63205
+Proprietary Gate Driver Design for Best EMI Reduction
+Frequency Spread Spectrum (FSS) to Reduce EMI
+Precision Enable Threshold to Adjust UVLO
+Protection Circuitry
+o
+Overvoltage Protection
+o
+Cycle-by-Cycle Peak Current Limit
+o
+Thermal Shutdown
+Totally Lead-Free & Fully RoHS Compliant (Notes 1 & 2)
+Halogen and Antimony Free. “Green” Device (Note 3)
+An automotive-compliant part is available under separate
+datasheet (AP63200Q/AP63201Q/AP63203Q/AP63205Q)
+
+Notes:
+
+Applications
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+
+12V and 24V distributed power bus supplies
+Flat screen TV sets and monitors
+Power tools and laser printers
+White goods and small home appliances
+FPGA, DSP, and ASIC supplies
+Home audios
+Network systems
+Set top boxes
+Gaming consoles
+Consumer electronics
+
+1. No purposely added lead. Fully EU Directive 2002/95/EC (RoHS), 2011/65/EU (RoHS 2) & 2015/863/EU (RoHS 3) compliant.
+2. See https://www.diodes.com/quality/lead-free/ for more information about Diodes Incorporated’s definitions of Halogen- and Antimony-free, "Green" and
+Lead-free.
+3. Halogen- and Antimony-free "Green” products are defined as those which contain <900ppm bromine, <900ppm chlorine (<1500ppm total Br + Cl) and
+<1000ppm antimony compounds.
+
+AP63200/AP63201/AP63203/AP63205
+Document number: DS41326 Rev. 3 - 2
+
+1 of 18
+www.diodes.com
+
+November 2024
+© 2024 Copyright Diodes Incorporated. All Rights Reserved.
+
+

@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/st/st-stm32h743xi-datasheet.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/st/st-stm32h743xi-datasheet.pdf",
+ "pdf_sha256": "9b27d1d993a8bc5b095125c85dd71b61f8d31f4556d0552623841d529b959f21",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/st/pdftext/st-stm32h743xi-datasheet.layout.txt",
+ "text_bytes": 1707646,
+ "text_sha256": "8b51c389f0e8ace7011c9661f4eb3631d7e156b7d226cd1f4bb4fff69cbaff62"
+}

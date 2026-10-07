@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 7 -l 7 v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "7",
+  "-l",
+  "7"
+ ],
+ "pdf": "v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf",
+ "pdf_sha256": "5455014606c0b676ca1df345f1969ee1b056403b8ee424bb29245115facda389",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/lcsc-panasonic-eehzk1v101xp.layout.p7.txt",
+ "text_bytes": 5043,
+ "text_sha256": "1e8eed7e8144d396ec7f77cbb3e3295f75287e4558344ac654325c69bd47a0d2"
+}

@@ -7,30 +7,30 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
 
 0. PINS (sha256/16 path)
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
-   1a2b385049ef61fb v2/docs/records/l4e9/l4e9_power_path.py
+   959dfec8cbde2f87 v2/docs/records/l4e9/l4e9_power_path.py
    a2e63ac72de83586 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
-   d8882cd01e9df691 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   0081f048d4d0f72c v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    e90c11e00aeecbfb v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
    336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
-   d4fa665447fc7a71 v2/docs/records/l9pwr/l9pwr_budget.out
-   5af41751ab9322a1 v2/docs/records/l9t5/l9t5_drafts.out
-   de8b67820c1ee132 v2/docs/records/efuse/efuse_check.out
-   46f3c6cd9ea6b638 v2/docs/records/l9stk/l9stk_protection.out
-   3dbd9bda6bce760d v2/docs/records/l8p/l8p_c4.out
-   39a6e0cc37d960f4 v2/docs/records/l9t5/l9t5_t10.out
-   f1aa6ae62223e936 v2/docs/records/l9t5/l9t5_f01.out
-   6c2340c0796ee8ff v2/docs/records/l8r2/l8r2_p0.out
-   3acf4672e3c85c03 v2/docs/records/l4e7/l4e7_p0sol.out
-   1dea056092e418df v2/docs/records/l8r2/l8r2_dist.out
+   a4ea167cb0585283 v2/docs/records/l9pwr/l9pwr_budget.out
+   bd120fa8ed0157de v2/docs/records/l9t5/l9t5_drafts.out
+   cc9c9eefdd674fd5 v2/docs/records/efuse/efuse_check.out
+   33c6c695367f40de v2/docs/records/l9stk/l9stk_protection.out
+   5cc3eedafd987a74 v2/docs/records/l8p/l8p_c4.out
+   3ebf58a134fe046c v2/docs/records/l9t5/l9t5_t10.out
+   4dc36af23b2a2522 v2/docs/records/l9t5/l9t5_f01.out
+   ada2070a1c808ae1 v2/docs/records/l8r2/l8r2_p0.out
+   04594e7019226117 v2/docs/records/l4e7/l4e7_p0sol.out
+   c25750fe89956be9 v2/docs/records/l8r2/l8r2_dist.out
    f8960d36a62b8ee9 v2/docs/records/l8r2/l8r2_dist.py
-   34541a3d3a6c800a v2/docs/records/l4e7/l4e7_p0sol.py
-   e91265091bfd67b0 v2/docs/records/l9t5/l9t5_t10.py
-   aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
-   2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
-   872cbf961ddd515e v2/docs/records/l8r2/l8r2_p0.py
-   3a4225fa409cb0cf v2/docs/records/l8r2/l8r2_gndret.py
-   d1192fcfd0c734ac v2/docs/records/l9t5/l9t5_paloop.py
-   e03d39014a2b679a v2/docs/records/efuse/efuse_check.py
+   d39fde5caefe8960 v2/docs/records/l4e7/l4e7_p0sol.py
+   8071ceab8b54a9d7 v2/docs/records/l9t5/l9t5_t10.py
+   be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
+   ada5c44d7c9e33f7 v2/docs/records/l9t5/l9t5_case.py
+   ead614436cf77d00 v2/docs/records/l8r2/l8r2_p0.py
+   3cfc55ce5d6711a9 v2/docs/records/l8r2/l8r2_gndret.py
+   6542173666aa02f2 v2/docs/records/l9t5/l9t5_paloop.py
+   8176fa2fb5e1f88e v2/docs/records/efuse/efuse_check.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    9774d28415da3733 v2/docs/records/l9t5/check_f01_netlist.py
    b320ec96d2bfabcd v2/docs/records/l9t5/check_l9t5_netlist.py

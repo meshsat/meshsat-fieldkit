@@ -1,0 +1,128 @@
+                                                Product                  Order              Technical           Tools &          Support &
+                                                Folder                   Now                Documents           Software         Community
+
+
+
+                                                                                                                                                          TPS2596
+                                                                                                                            SLVSET8A – MAY 2019 – REVISED AUGUST 2019
+
+
+     TPS2596 2.7 to 19 V, 0.125 to 2-A, 89-mΩ eFuse With Accurate Current Monitor and Fast
+                                      Overvoltage Protection
+1 Features                                                                                          3 Description
+1•     Wide input voltage range: 2.7-V to 19-V                                                      The TPS2596xx family of eFuses (integrated FET
+                                                                                                    hot-swap devices) is a highly integrated circuit
+       – 21-V Absolute maximum                                                                      protection and power management solution in a small
+•      Low On-Resistance: Ron = 89-mΩ (typical)                                                     package. The devices provide multiple protection
+•      Active high enable input with adjustable                                                     modes using very few external components and are a
+       undervoltage lockout (UVLO)                                                                  robust defense against overloads, short circuits,
+                                                                                                    voltage surges, and excessive inrush current. Output
+•      Overvoltage protection options available:                                                    current limit level can be set with a single external
+       – Fast overvoltage clamp (3.8-V, 5.7-V and 13.8-                                             resistor. It is also possible to get an accurate sense
+          V pin-selectable thresholds) with a response                                              of the output load current by measuring the voltage
+          time of 5-μs (typical)                                                                    drop across the current limit resistor. Applications
+       – Adjustable overvoltage lockout (OVLO) with a                                               with particular inrush current requirements can set the
+          response time of 1.3-μs (typical)                                                         output slew rate with a single external capacitor. For
+                                                                                                    the TPS25962x variants, in case of an input
+•      Adjustable current limit with load current monitor                                           overvoltage condition, internal clamping circuits limit
+       output (ILM)                                                                                 the output to a safe fixed maximum voltage (pin
+       – Current range: 0.125-A to 2-A                                                              selectable), with no external components. The
+       – Current limit accuracy:                                                                    TPS25963x variants provide an option to set a user-
+                                                                                                    defined overvoltage cutoff threshold.
+          – ±10.4 % (maximum) across current range
+                                                                                                    The devices are characterized for operation over a
+          – ±5.5 % (maximum) at 1-A current limit
+                                                                                                    junction temperature range of –40 °C to +125 °C.
+•      Immune to Electrical Fast Transients (IEC 61000-
+       4-4)                                                                                                                Device Information(1)
+•      Adjustable output slew rate control (dVdt)                                                        PART NUMBER             PACKAGE         BODY SIZE (NOM)
+•      Overtemperature protection (OTP)                                                                 TPS259620DDA        SOIC (8)             4.91 mm x 3.9 mm
+•      Fault indication pin (FLT)                                                                       TPS259621DDA        SOIC (8)             4.91 mm x 3.9 mm
+
+•      UL 2367 recognition (pending)                                                                    TPS259630DDA        SOIC (8)             4.91 mm x 3.9 mm
+                                                                                                        TPS259631DDA        SOIC (8)             4.91 mm x 3.9 mm
+•      IEC 62368 CB certification (pending)
+•      Small footprint: 4.91 mm x 3.9 mm SOIC package                                                   (1) For all available packages, see the orderable addendum at
+                                                                                                            the end of the data sheet.
+
+2 Applications
+•      Energy meters
+•      UL 60335-1 15-W LPC in Appliances
+       – Refrigerators
+       – Dishwashers
+       – Washing machine and dryers
+•      Set-top boxes
+•      IP Network cameras
+                         Simplified Schematic                                                                      TPS25963x 1KV EFT Response
+     Power
+     Supply                      IN       TPS25963x      OUT
+                                                               VFLT
+                          R1
+                                 EN/UVLO                              RFLT
+
+                          R2                             FLT                 Fault
+                CIN              OVLO                    ILM                 IMON    COUT   ROUT
+                                         dVdt      GND
+
+                          R3                                          RILM
+                                 CdVdt
+
+
+
+
+1
+
+
+
+
+              An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+              intellectual property matters and other important disclaimers. PRODUCTION DATA.
+TPS2596
+SLVSET8A – MAY 2019 – REVISED AUGUST 2019                                                                                                                            www.ti.com
+
+
+                                                                          Table of Contents
+    1   Features .................................................................. 1              8.4 Device Functional Modes........................................ 25
+    2   Applications ........................................................... 1           9    Application and Implementation ........................ 27
+    3   Description ............................................................. 1                9.1 Application Information............................................ 27
+    4   Revision History..................................................... 2                    9.2 Typical Application ................................................. 27
+                                                                                                   9.3 System Examples ................................................... 31
+    5   Device Comparison Table..................................... 3
+    6   Pin Configuration and Functions ......................... 4                          10 Power Supply Recommendations ..................... 34
+                                                                                                   10.1 Transient Protection .............................................. 34
+    7   Specifications......................................................... 5
+                                                                                                   10.2 Output Short-Circuit Measurements ..................... 35
+        7.1    Absolute Maximum Ratings ...................................... 5
+        7.2    ESD Ratings.............................................................. 5   11 Layout................................................................... 36
+                                                                                                   11.1 Layout Guidelines ................................................. 36
+        7.3    Recommended Operating Conditions....................... 5
+                                                                                                   11.2 Layout Example .................................................... 37
+        7.4    Thermal Information .................................................. 6
+        7.5    Electrical Characteristics........................................... 6       12 Device and Documentation Support ................. 38
+        7.6    Timing Requirements ................................................ 8              12.1    Documentation Support ........................................ 38
+        7.7    Switching Characteristics .......................................... 8              12.2    Receiving Notification of Documentation Updates 38
+        7.8    Typical Characteristics ............................................ 10             12.3    Community Resources.......................................... 38
+                                                                                                   12.4    Trademarks ........................................................... 38
+    8   Detailed Description ............................................ 17
+                                                                                                   12.5    Electrostatic Discharge Caution ............................ 38
+        8.1 Overview ................................................................. 17
+                                                                                                   12.6    Glossary ................................................................ 38
+        8.2 Functional Block Diagram ....................................... 17
+        8.3 Feature Description................................................. 18          13 Mechanical, Packaging, and Orderable
+                                                                                                Information ........................................................... 38
+
+
+
+4 Revision History
+
+Changes from Original (May 2019) to Revision A                                                                                                                                Page
+
+•   Change from Advance Information to Production Data ......................................................................................................... 1
+
+
+
+
+2       Submit Documentation Feedback                                                                                 Copyright © 2019, Texas Instruments Incorporated
+
+                                                                        Product Folder Links: TPS2596
+

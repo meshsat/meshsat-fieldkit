@@ -13,14 +13,14 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l4e4      f68bf6951a6361ca  v2/docs/records/l4e4/l4e4_limits.out
    l4e5      f9c98ec5c43ada0e  v2/docs/records/l4e5/l4e5_source_control.out
    l4e6      4f7cefb270f326d1  v2/docs/records/l4e6/l4e6_fault_handling.out
-   l4e8      c6181037bede1fec  v2/docs/records/l4e8/ripple_dense.out
+   l4e8      a3784d9b74461fe4  v2/docs/records/l4e8/ripple_dense.out
    replay    59c6eeab16da98f8  v2/docs/records/l4e/l4e_replay.out
    s120      35c3e2e30fc637e0  v2/docs/records/s120/vbus20_bound.out
    budget    58e40cf604804cc9  v2/docs/records/rv-pwr/pwr_budget.out
    trace     e35e62483b67fbe7  v2/docs/records/l3batt/load_trace.out
    packprot  ab1dbc3f3f69aa46  v2/ecad/tools/pcb_pack_protection.yaml
    envelope  35cf43a2b7098a76  v2/ecad/tools/pcb_envelope.yaml
-   hwfw      f26757c7c5004cdd  v2/docs/HW-FW-CONTRACT.md
+   hwfw      12b6ea059a68b5c5  v2/docs/HW-FW-CONTRACT.md
    ifaces    b0ea9ce43308e789  v2/ecad/tools/pcb_interfaces.yaml
    lm5176    98191bec36d43771  v2/vendor/ti/lm5176-datasheet.pdf
    lm74700   e16b3a8c0023201f  v2/vendor/ti/ti-lm74700-q1.pdf
@@ -52,7 +52,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l8p_breaker e8f1294bb0f76c75  v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-6eeb6cfe.txt
    l8p_enable c1fa1713c6e5fe29  v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-69b8c3bb.txt
    l8p_ptc   cedae4eb4572a6a5  v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-8e6a938c.txt
-   l4e10     30228a3a971405b0  v2/docs/records/l4e10/l4e10_cell_thermal.out
+   l4e10     0da5839e5b806211  v2/docs/records/l4e10/l4e10_cell_thermal.out
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
    reqs      8c8e26858293d6f7  v2/ecad/tools/pcb_requirements.yaml
    chgseq    44fdf9a022c49337  v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
@@ -61,10 +61,10 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    ecss      576256819950c443  v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md
    chain     a09ca0293afd1f7c  v2/ecad/tools/pcb_energy_chain.yaml
    l4e10md   0be7bf53a380b58d  v2/docs/records/l4e10/L4E10-CELL-THERMAL.md
-   l4e11     36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
+   l4e11     cb09152d6f8e796b  v2/docs/records/l4e11/l4e11_power.out
    l4e11md   101b9896de519561  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
    e11entry  a859aa4a63339f3a  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
-   l4e12     68d3df24f9e105cd  v2/docs/records/l4e12/l4e12_thermal.out
+   l4e12     e307beba45d9120f  v2/docs/records/l4e12/l4e12_thermal.out
    l4e12md   b0e303a557e38898  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    cl_topwell 1ca762d83bbb58b2  v2/docs/records/l4e10/clarification/topwell-hl18650v.txt
    cl_eaton  9dffb95e8b4874fc  v2/docs/records/l4e10/clarification/eaton-scf9550.txt
@@ -78,7 +78,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    cl_gc     738245875bec70c5  v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt
    cl_nicerf 92324668c17d4f6c  v2/docs/records/l4e12/clarification/nicerf-sa868.txt
    cl_bulgin c7accd3dd6dc1d89  v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt
-   l4e13     14cb2c48d9796c3f  v2/docs/records/l4e13/l4e13_panel.out
+   l4e13     6215000e6e167323  v2/docs/records/l4e13/l4e13_panel.out
    l4e13md   1c7f11716db4c2f2  v2/docs/records/l4e13/L4E13-PANEL.md
    l4e13chk  88539c7aeaf2f99d  v2/docs/records/l4e13/checks/check-l4e13-3.md
    l4e13chk4 5a08480af4695e61  v2/docs/records/l4e13/checks/check-l4e13-4.md
@@ -103,9 +103,43 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l4e7md    8f6b173d8329c5dd  v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
    e7guard   eda720a68db60cd3  v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
    l4e7chk5  eec75531f82ced65  v2/docs/records/l4e7/checks/check-l4e7r-5.md
-   l4e7p0    3acf4672e3c85c03  v2/docs/records/l4e7/l4e7_p0sol.out
+   l4e7p0    04594e7019226117  v2/docs/records/l4e7/l4e7_p0sol.out
    e11aux    3d0a7b1d7d0bd8bf  v2/docs/records/l4e11/apply_gen_sch_e_aux.py
    e11dock   04025bca610844dd  v2/docs/records/l4e11/apply_pcb_interfaces_dock.py
+   pdftext   ffd3fbf0c0712133  v2/vendor/battery/pdftext/amass-xt60-spec-tme.layout.txt
+   pdftext   ed8ca38f0700137c  v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.p1.txt
+   pdftext   f36849fb9ead1e28  v2/vendor/connectors/pdftext/millmax-rugged-power-spring-pins-page28.plain.txt
+   pdftext   599a2845437782f1  v2/vendor/d38999/pdftext/amphenol-d38999-iii-federal.layout.txt
+   pdftext   8d805950a64b2111  v2/vendor/infineon/pdftext/infineon-bsc039n06ns-rev2.4-c534330.layout.p1.txt
+   pdftext   fb6f0c38dad4483d  v2/vendor/keystone/pdftext/M65p42.raw.txt
+   pdftext   c994655b76916585  v2/vendor/keystone/pdftext/littelfuse-297-ficcorp.layout.txt
+   pdftext   64d5d2346d8c4a25  v2/vendor/passives/pdftext/yageo-cc-series.layout.txt
+   pdftext   834a6cac9961cb70  v2/vendor/power/held/pdftext/littelfuse-997-mini58v-rev2025-11-18.layout.f1.l2.txt
+   pdftext   c3f158d8e50bd113  v2/vendor/power/held/pdftext/littelfuse-997-mini58v-rev2025-11-18.layout.txt
+   pdftext   01fad6aa75fbcb83  v2/vendor/power/pdftext/littelfuse-smcj-series-tvs.layout.f1.l2.txt
+   pdftext   cae1fb371bf220b4  v2/vendor/power/pdftext/littelfuse-smcj-series-tvs.layout.txt
+   pdftext   35fef3c3d474dfb0  v2/vendor/power/pdftext/littelfuse-smcj-series-tvs.raw.txt
+   pdftext   0c6aaa65caf93d84  v2/vendor/power/pdftext/ti-csd19532q5b-n-fet.layout.f1.l2.txt
+   pdftext   ccce4a788e572a3b  v2/vendor/power/pdftext/ti-csd19532q5b-n-fet.layout.p1.txt
+   pdftext   34b322a2d73d1d74  v2/vendor/power/pdftext/ti-csd19532q5b-n-fet.layout.p3.txt
+   pdftext   5e129098b19443d9  v2/vendor/power/pdftext/ti-csd19532q5b-n-fet.layout.p6.txt
+   pdftext   a21c06d47839d242  v2/vendor/power/pdftext/ti-csd19532q5b-n-fet.plain.p1.txt
+   pdftext   29a1664ffcb96fe8  v2/vendor/power/pdftext/tps2596.layout.f1.l2.txt
+   pdftext   bab7479f34278e35  v2/vendor/power/pdftext/tps2596.layout.txt
+   pdftext   8b0be06c44d11a23  v2/vendor/ti/pdftext/bq25731-datasheet.layout.f1.l2.txt
+   pdftext   4138d1c3823d51fc  v2/vendor/ti/pdftext/bq25731-datasheet.layout.p14.txt
+   pdftext   b29163af44e27154  v2/vendor/ti/pdftext/bq25731-datasheet.layout.p8.txt
+   pdftext   81697733e5e61ffe  v2/vendor/ti/pdftext/bq25731-datasheet.layout.txt
+   pdftext   0a80d9f377275fd5  v2/vendor/ti/pdftext/lm5176-datasheet.layout.f1.l2.txt
+   pdftext   2dc0d2452dd8bf05  v2/vendor/ti/pdftext/lm5176-datasheet.layout.p5.txt
+   pdftext   6399dcdabf2895da  v2/vendor/ti/pdftext/lm5176-datasheet.layout.txt
+   pdftext   9d8edf1b8b1914a9  v2/vendor/ti/pdftext/ti-ina226.layout.f1.l2.txt
+   pdftext   234fbb73ef374502  v2/vendor/ti/pdftext/ti-ina226.layout.txt
+   pdftext   d4bd6e609b4d0b19  v2/vendor/ti/pdftext/ti-lm5069.layout.f1.l2.txt
+   pdftext   4fdfb817af936bbf  v2/vendor/ti/pdftext/ti-lm5069.layout.txt
+   pdftext   8e9f3a730f61543a  v2/vendor/ti/pdftext/ti-lm74700-q1.layout.f1.l2.txt
+   pdftext   38b797855a7c1ea4  v2/vendor/ti/pdftext/ti-lm74700-q1.layout.p5.txt
+   pdftext   cfed06255b323b69  v2/vendor/ti/pdftext/ti-lm74700-q1.layout.txt
    pending: none: L4-E7R is accepted (the coordinator's check 4, fnd/l4e7 91e9a4b5; its figures at 675b8068): the CS101 correction moved the bulk ahead of the sense bank and filtered the trip input, so defect D-01 is resolved in design (drafted, not applied)
    L4-E13 (U-03, the panel) accepted by the coordinator's check 3 at fae419d1 and, after set 25, check 4 at 33b6b7be: section 13
    this record's own figures: copper 0.0172 ohm mm2/m at 20 C and 0.0039 /K, 18 AWG 0.823 mm2 (ASSUMPTION, constants); the cold end -20 C (REQ-024);

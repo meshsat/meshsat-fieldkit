@@ -30,6 +30,29 @@ import l9t5_paloop as PL  # noqa: E402
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 sys.dont_write_bytecode = True
 
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 among the pins (keys pdftext NN), l9t5_paloop.py's, l9t5_case.py's and record l9pwr's with them.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9t5
+PDFTEXT = {
+    "v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-bq4050.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-csd18510q5b.pdf": [["-layout"]],
+    "v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf": [["-layout"]],
+    "v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf": [["-layout"]],
+    "v2/vendor/passives/milliohm-hojlr2512-series.pdf": [["-layout"]],
+    "v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-ina250-sbos511c.pdf": [["-layout"]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-ina226.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tlv758p.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tlv9062-op-amp.pdf": [["-layout"]],
+    "v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {
     "cx44": "v2/docs/records/l9t5/inputs/cx44-astra-f01-selection-as-received.md",
     "case_py": "v2/docs/records/l9t5/l9t5_case.py",
@@ -93,10 +116,7 @@ def pdf(key):
         p = rel(PINS[key])
         if not os.path.isfile(p):
             refuse("%s is not in the tree%s" % (PINS[key], " (held back: run v2/docs/records/l4e7/fetch_held_back.py)" if key in HELD else ""))
-        r = subprocess.run(["pdftotext", "-layout", p, "-"], capture_output=True)
-        if r.returncode != 0:
-            refuse("pdftotext could not read %s" % PINS[key])
-        _PDF[key] = r.stdout.decode("utf-8", "replace")
+        _PDF[key] = PT.pdf_text(ROOT, PINS[key], ["-layout"], PDFTEXT, "v2/docs/records/l9t5")
     return _PDF[key]
 
 
@@ -189,7 +209,8 @@ def compute():
     pins_rt = 2 * I["pin_max"] / I["pin_n"]
     rx = max(0.0, pins_rt - I["w2"][4])                       # the dock contacts at their printed maximum over W2's inferred figure
     gu = U["gauge_uncal"]
-    R = {"S": S, "C": C, "rx": rx, "gu": gu, "V": V, "I": I18, "pins": {k: (p, sha(p)) for k, p in PINS.items()}}
+    R = {"S": S, "C": C, "rx": rx, "gu": gu, "V": V, "I": I18, "pins": dict({k: (p, sha(p)) for k, p in PINS.items()}, **{
+        "pdftext %02d" % i: (t, (h or "ABSENT")[:16]) for i, (t, h, _held) in enumerate(PT.inputs(ROOT, PT.merge(PDFTEXT, *(PT.declared_in(os.path.join(ROOT, x)) for x in ("v2/docs/records/l9t5/l9t5_paloop.py", "v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l9pwr/l9pwr_budget.py")))), 1)})}
 
     def row(pa=None, gi=0.0, r_extra=0.0, rc=None, eff=None, vv=None):
         v = dict(vals if vv is None else vv)

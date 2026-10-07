@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-lm5069.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-lm5069.pdf",
+ "pdf_sha256": "d60d8106a6e8113900ff8b9576dd959942fa7169742baf0beeb30684d4d64681",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-lm5069.layout.txt",
+ "text_bytes": 163660,
+ "text_sha256": "4fdfb817af936bbfa1eb101df4a6743c390f9c81f7d50b012aeb00839cf386b4"
+}

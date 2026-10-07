@@ -1,0 +1,653 @@
+Transient Voltage Suppression Diodes
+© 2015 Littelfuse, Inc.
+Specifications are subject to change without notice.
+Revised: 11/20/15
+Surface Mount – 1500W > SMCJ series
+TVS devices are ideal for the protection of I/O Interfaces,
+VCC
+bus and other vulnerable circuits used in Telecom,
+Computer, Industrial and Consumer electronic
+applications.
+Applications
+Features
+The SMCJ series is designed specifically to protect
+sensitive electronic equipment from voltage transients
+induced by lightning and other transient voltage events.
+Description
+Parameter Symbol Value Unit
+Peak Pulse Power Dissipation at
+TA
+=25ºC by 10/1000µs Waveform
+(Fig.2)(Note 1), (Note 2), (Note 5)
+PPPM
+1500 W
+Power Dissipation on Infinite Heat
+Sink at TL
+=50O
+C
+PD
+6.5 W
+Peak Forward Surge Current, 8.3ms
+Single Half Sine Wave (Note 3)
+IFSM
+200 A
+Maximum Instantaneous Forward
+Voltage at 100A for Unidirectional
+Only (Note 4)
+VF
+3.5/5.0 V
+Operating Temperature Range TJ
+-65 to 150 °C
+Storage Temperature Range TSTG
+-65 to 175 °C
+Typical Thermal Resistance Junction
+to Lead
+RθJL
+15 °C/W
+Typical Thermal Resistance Junction
+to Ambient
+RθJA
+75 °C/W
+Notes:
+1. Non-repetitive current pulse , per Fig. 4 and derated above TJ
+(initial) =25O
+C per Fig. 3.
+2. Mounted on copper pad area of 0.31x0.31” (8.0 x 8.0mm) to each terminal.
+3. Measured on 8.3ms single half sine wave or equivalent square wave for unidirectional
+device only, duty cycle=4 per minute maximum.
+4. VF
+< 3.5V for single die parts and VF
+< 5.0V for stacked-die parts.
+5. The PPPM
+of stacked-die parts is 2000W and please contact littelfuse for the detail
+stacked-die parts.
+Maximum Ratings andThermal Characteristics
+(TA
+=25O
+C unless otherwise noted)
+Agency Approvals
+AGENCY AGENCY FILE NUMBER
+E230531
+• 1500W peak pulse power
+capability at 10/1000μs
+waveform, repetition rate
+(duty cycles):0.01%
+• Excellent clamping
+capability
+• Low incremental surge
+resistance
+• Typical IR
+less than 1μA
+when VBR
+min>12V
+• For surface mounted
+applications to optimize
+board space
+• Low profile package
+• Built-in strain relief
+• 
+Typical failure mode is
+short from over-specified
+voltage or current
+• 
+Whisker test is conducted
+based on JEDEC
+JESD201A per its table 4a
+and 4c
+• 
+IEC-61000-4-2 ESD
+30kV(Air), 30kV (Contact)
+• 
+ESD protection of data
+lines in accordance with
+IEC 61000-4-2
+• 
+EFT protection of data
+lines in accordance with
+IEC 61000-4-4
+• Fast response time:
+typically less than 1.0ps
+from 0V to BV min
+• Glass passivated chip
+junction
+• 
+High temperature
+to reflow soldering
+guaranteed: 260°C/40sec
+• VBR
+@ TJ
+= VBR
+@25°C
+x (1+αT x (TJ
+- 25))
+(αT:Temperature
+Coefficient, typical value
+is 0.1%)
+• Plastic package is
+flammability rated V-0 per
+Underwriters Laboratories
+• 
+Meet MSL level1, per
+J-STD-020, LF maximun
+peak of 260°C
+• Matte tin lead–free plated
+• Halogen free and RoHS
+compliant
+• Pb-free E3 means 2nd
+level interconnect is
+Pb-free and the terminal
+finish material is tin(Sn)
+(IPC/JEDEC J-STD-
+609A.01)
+SMCJ Series
+Uni-directional
+Bi-directional
+Functional Diagram
+Bi-directional
+Uni-directional
+Cathode Anode
+RoHS Pb e3
+Datasheet
+Additional Infomarion
+Resources Samples
+Transient Voltage Suppression Diodes
+© 2015 Littelfuse, Inc.
+Specifications are subject to change without notice.
+Revised: 11/20/15
+Surface Mount – 1500W > SMCJ series
+Electrical Characteristics (TA
+=25°C unless otherwise noted)
+Part
+Number
+(Uni)
+Part
+Number
+(Bi)
+Marking
+Reverse
+Stand off
+Voltage
+VR
+(Volts)
+Breakdown
+Voltage VBR
+(Volts) @ IT
+Test
+Current
+IT
+(mA)
+Maximum
+Clamping
+Voltage VC
+@ Ipp
+(V)
+Maximum
+Peak
+Pulse
+Current Ipp
+(A)
+Maximum
+Reverse
+Leakage IR
+@ VR
+(µA)
+Agency
+Approval
+UNI BI MIN MAX
+SMCJ5.0A SMCJ5.0CA GDE BDE 5.0 6.40 7
+.00 10 9.2 163.0 800 X
+SMCJ6.0A SMCJ6.0CA GDG BDG 6.0 6.67 7
+.37 10 10.3 145.7 800 X
+SMCJ6.5A SMCJ6.5CA GDK BDK 6.5 7
+.22 7
+.98 10 11.2 134.0 500 X
+SMCJ7
+.0A SMCJ7
+.0CA GDM BDM 7
+.0 7
+.78 8.60 10 12.0 125.0 200 X
+SMCJ7
+.5A SMCJ7
+.5CA GDP BDP 7
+.5 8.33 9.21 1 12.9 116.3 100 X
+SMCJ8.0A SMCJ8.0CA GDR BDR 8.0 8.89 9.83 1 13.6 110.3 50 X
+SMCJ8.5A SMCJ8.5CA GDT BDT 8.5 9.44 10.40 1 14.4 104.2 20 X
+SMCJ9.0A SMCJ9.0CA GDV BDV 9.0 10.00 11.10 1 15.4 97
+.4 10 X
+SMCJ10A SMCJ10CA GDX BDX 10.0 11.10 12.30 1 17
+.0 88.3 5 X
+SMCJ11A SMCJ11CA GDZ BDZ 11.0 12.20 13.50 1 18.2 82.5 1 X
+SMCJ12A SMCJ12CA GEE BEE 12.0 13.30 14.70 1 19.9 75.4 1 X
+SMCJ13A SMCJ13CA GEG BEG 13.0 14.40 15.90 1 21.5 69.8 1 X
+SMCJ14A SMCJ14CA GEK BEK 14.0 15.60 17
+.20 1 23.2 64.7 1 X
+SMCJ15A SMCJ15CA GEM BEM 15.0 16.70 18.50 1 24.4 61.5 1 X
+SMCJ16A SMCJ16CA GEP BEP 16.0 17
+.80 19.70 1 26.0 57
+.7 1 X
+SMCJ17A SMCJ17CA GER BER 17
+.0 18.90 20.90 1 27
+.6 54.4 1 X
+SMCJ18A SMCJ18CA GET BET 18.0 20.00 22.10 1 29.2 51.4 1 X
+SMCJ20A SMCJ20CA GEV BEV 20.0 22.20 24.50 1 32.4 46.3 1 X
+SMCJ22A SMCJ22CA GEX BEX 22.0 24.40 26.90 1 35.5 42.3 1 X
+SMCJ24A SMCJ24CA GEZ BEZ 24.0 26.70 29.50 1 38.9 38.6 1 X
+SMCJ26A SMCJ26CA GFE BFE 26.0 28.90 31.90 1 42.1 35.7 1 X
+SMCJ28A SMCJ28CA GFG BFG 28.0 31.10 34.40 1 45.4 33.1 1 X
+SMCJ30A SMCJ30CA GFK BFK 30.0 33.30 36.80 1 48.4 31.0 1 X
+SMCJ33A SMCJ33CA GFM BFM 33.0 36.70 40.60 1 53.3 28.2 1 X
+SMCJ36A SMCJ36CA GFP BFP 36.0 40.00 44.20 1 58.1 25.9 1 X
+SMCJ40A SMCJ40CA GFR BFR 40.0 44.40 49.10 1 64.5 23.3 1 X
+SMCJ43A SMCJ43CA GFT BFT 43.0 47
+.80 52.80 1 69.4 21.7 1 X
+SMCJ45A SMCJ45CA GFV BFV 45.0 50.00 55.30 1 72.7 20.6 1 X
+SMCJ48A SMCJ48CA GFX BFX 48.0 53.30 58.90 1 77
+.4 19.4 1 X
+SMCJ51A SMCJ51CA GFZ BFZ 51.0 56.70 62.70 1 82.4 18.2 1 X
+SMCJ54A SMCJ54CA GGE BGE 54.0 60.00 66.30 1 87
+.1 17
+.3 1 X
+SMCJ58A SMCJ58CA GGG BGG 58.0 64.40 71.20 1 93.6 16.1 1 X
+SMCJ60A SMCJ60CA GGK BGK 60.0 66.70 73.70 1 96.8 15.5 1 X
+SMCJ64A SMCJ64CA GGM BGM 64.0 71.10 78.60 1 103.0 14.6 1 X
+SMCJ70A SMCJ70CA GGP BGP 70.0 77
+.80 86.00 1 113.0 13.3 1 X
+SMCJ75A SMCJ75CA GGR BGR 75.0 83.30 92.10 1 121.0 12.4 1 X
+SMCJ78A SMCJ78CA GGT BGT 78.0 86.70 95.80 1 126.0 11.9 1 X
+SMCJ85A SMCJ85CA GGV BGV 85.0 94.40 104.00 1 137
+.0 11.0 1 X
+SMCJ90A SMCJ90CA GGX BGX 90.0 100.00 111.00 1 146.0 10.3 1 X
+SMCJ100A SMCJ100CA GGZ BGZ 100.0 111.00 123.00 1 162.0 9.3 1 X
+SMCJ110A SMCJ110CA GHE BHE 110.0 122.00 135.00 1 177
+.0 8.5 1 X
+SMCJ120A SMCJ120CA GHG BHG 120.0 133.00 147
+.00 1 193.0 7
+.8 1 X
+SMCJ130A SMCJ130CA GHK BHK 130.0 144.00 159.00 1 209.0 7
+.2 1 X
+SMCJ150A SMCJ150CA GHM BHM 150.0 167
+.00 185.00 1 243.0 6.2 1 X
+SMCJ160A SMCJ160CA GHP BHP 160.0 178.00 197
+.00 1 259.0 5.8 1 X
+SMCJ170A SMCJ170CA GHR BHR 170.0 189.00 209.00 1 275.0 5.5 1 X
+SMCJ180A SMCJ180CA GHT BHT 180.0 201.00 222.00 1 292.0 5.1 1 X
+SMCJ200A SMCJ200CA GHV BHV 200.0 224.00 247
+.00 1 324.0 4.6 1 X
+SMCJ220A SMCJ220CA GHX BHX 220.0 246.00 272.00 1 356.0 4.2 1 X
+SMCJ250A SMCJ250CA GHZ BHZ 250.0 279.00 309.00 1 405.0 3.7 1 X
+SMCJ300A SMCJ300CA GJE BJE 300.0 335.00 371.00 1 486.0 3.1 1 X
+SMCJ350A SMCJ350CA GJG BJG 350.0 391.00 432.00 1 567
+.0 2.6 1 X
+SMCJ400A SMCJ400CA GJK BJK 400.0 447
+.00 494.00 1 648.0 2.3 1 X
+SMCJ440A SMCJ440CA GJM BJM 440.0 492.00 543.00 1 713.0 2.1 1 X
+For parts without A , the VBR
+is ± 10% and VC
+is 5% higher than with A parts
+For bidirectional type having VR
+of 10 volts and less, the IR
+limit is double.
+Transient Voltage Suppression Diodes
+© 2015 Littelfuse, Inc.
+Specifications are subject to change without notice.
+Revised: 11/20/15
+Surface Mount – 1500W > SMCJ series
+I-V Curve Characteristics
+Voltage Transients
+Time
+Voltage Across TVS
+Current Through TVS
+Voltage
+or
+Current
+Figure 1 -TVSTransients Clamping Waveform
+Ratings and Characteristic Curves (TA
+=25°C unless otherwise noted)
+td
+-Pulse Width (ms)
+P
+PPM
+-Peak
+Pulse
+Power
+(kW)
+0.1
+1
+10
+100
+0.001 0.01 0.1 1 10
+stacked-die, 2kW
+at 10x1000µs, 25°C
+TJ initial =Tamb
+Single die, 1.5kW
+at 10x1000µs, 25°C
+Figure 2 - Peak Pulse Power Rating
+Vc VBR VR
+IR
+IT
+Ipp
+V
+Uni-directional
+VF
+Vc VBR VR
+IR
+IT
+Ipp
+V
+Vc
+VBR
+VR
+Ipp
+IR
+IT
+Bi-directional
+PPPM
+Peak Pulse Power Dissipation -- Max power dissipation
+VR
+Stand-off Voltage -- Maximum voltage that can be applied to the TVS without operation
+VBR
+Breakdown Voltage -- Maximum voltage that flows though the TVS at a specified test current (IT
+)
+VC
+Clamping Voltage -- Peak voltage measured across the TVS at a specified Ippm (peak impulse current)
+IR
+Reverse Leakage Current -- Current measured at VR
+VF
+Forward Voltage Drop for Uni-directional
+continues on next page.
+Transient Voltage Suppression Diodes
+© 2015 Littelfuse, Inc.
+Specifications are subject to change without notice.
+Revised: 11/20/15
+Surface Mount – 1500W > SMCJ series
+I
+PPM
+-
+Peak
+Pulse
+Current,
+%
+I
+RSM
+0
+0
+50
+100
+150
+1.0 2.0 3.0 4.0
+tr=10µsec
+Peak Value
+IPPM
+IPPM
+2
+TJ=25°C
+Pulse Width(td) is defined
+as the point where the peak
+current decays to 50% of IPPM
+10/1000µsec. Waveform
+as defined by R.E.A
+td
+t-Time (ms)
+Half Value
+IPPM ( )
+1
+10
+100
+1000
+10000
+100000
+1 10 100 1000
+Uni-directionalV=0V
+Bi-directionalV=0V
+Bi-directionalV=VR
+Uni-directional V=VR
+Cj(pF)
+VBR - Reverse Breakdown Voltage(V)
+Figure 4 - Pulse Waveform
+Figure 5 -Typical Junction Capacitance
+0
+20
+40
+60
+80
+100
+120
+140
+160
+180
+200
+1 10 100
+Number of Cycles at 60 Hz
+I
+FSM
+-
+Peak
+Forward
+Surge
+Current
+(A)
+Figure 7 - Maximum Non-Repetitive Peak Forward
+Surge Current Uni-Directional Only
+Figure 3 - Peak Pulse Power Derating Curve
+Ratings and Characteristic Curves (TA
+=25°C unless otherwise noted) (Continued)
+0
+20
+40
+60
+80
+100
+0 25 50 75 100 125 175
+Peak
+Pulse
+Power
+(P
+PP
+)
+or
+Current
+(I
+PP
+)
+Derating
+in
+Percentage
+%
+150
+TJ
+- Initial Junction Temperature (ºC)
+0.01
+0.1
+1
+10
+100
+0.001 0.01 0.1 1 10 100 1000
+Transient
+Thermal
+Impedance
+(
+°
+C/W)
+T - Pulse Duration (s)
+P
+Figure 6 -TypicalTransientThermal Impedance
+I
+F
+-
+Peak
+Forward
+Current(A)
+VF-Peak Forward Voltage(V)
+0.1
+1.0
+10.0
+100.0
+0.0 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0
+Stacked-die
+Single die
+Figure 8 - Peak Forward Voltage Drop vs Peak Forward
+Current (Typical Values)
+Transient Voltage Suppression Diodes
+© 2015 Littelfuse, Inc.
+Specifications are subject to change without notice.
+Revised: 11/20/15
+Surface Mount – 1500W > SMCJ series
+Physical Specifications
+Weight 0.007 ounce, 0.21 grams
+Case
+JEDEC DO214AB. Molded plastic body
+over glass passivated junction
+Polarity
+Color band denotes positive end
+(cathode) except Bidirectional.
+Terminal
+Matte Tin-plated leads, Solderable per
+JESD22-B102
+Dimensions
+Soldering Parameters
+Temperature
+(T)
+Time (t)
+Ts(min)
+Ts(max)
+TL
+TP
+ts
+Preheat
+tL
+tp
+Ramp-up Critical Zone
+TL
+to TP
+Ramp-down
+t 25˚C to Peak
+25˚C
+Reflow Condition
+Lead–free
+assembly
+Pre Heat
+- Temperature Min (Ts(min)
+) 150°C
+- Temperature Max (Ts(max)
+) 200°C
+- Time (min to max) (ts
+) 60 – 180 secs
+Average ramp up rate (Liquidus Temp (TA
+)
+to peak
+3°C/second max
+TS(max)
+to TA
+- Ramp-up Rate 3°C/second max
+Reflow
+- Temperature (TA
+) (Liquidus) 217°C
+- Time (min to max) (ts
+) 60 – 150 seconds
+Peak Temperature (TP
+) 260+0/-5
+°C
+Time within 5°C of actual peak
+Temperature (tp
+)
+20 – 40 seconds
+Ramp-down Rate 6°C/second max
+Time 25°C to peak Temperature (TP
+) 8 minutes Max.
+Do not exceed 260°C
+Dimensions
+Inches Millimeters
+Min Max Min Max
+A 0.114 0.126 2.900 3.200
+B 0.260 0.280 6.600 7
+.110
+C 0.220 0.245 5.590 6.220
+D 0.079 0.103 2.060 2.620
+E 0.030 0.060 0.760 1.520
+F - 0.008 - 0.203
+G 0.305 0.320 7
+.750 8.130
+H 0.006 0.012 0.152 0.305
+I 0.129 - 3.300 -
+J 0.094 - 2.400 -
+K - 0.165 - 4.200
+L 0.094 - 2.400 -
+Environmental Specifications
+HighTemp. Storage JESD22-A103
+HTRB JESD22-A108
+Temperature Cycling JESD22-A104
+MSL JEDEC-J-STD-020, Level 1
+H3TRB JESD22-A101
+RSH JESD22-A111
+(all dimensions in mm)
+I
+L
+K
+J
+Solder Pads
+DO-214AB (SMC J-Bend)
+B
+F
+G
+H
+E
+C
+D
+A
+Cathode Band
+(for Uni-directional products only)
+Transient Voltage Suppression Diodes
+© 2015 Littelfuse, Inc.
+Specifications are subject to change without notice.
+Revised: 11/20/15
+Surface Mount – 1500W > SMCJ series
+Part Numbering System
+Packaging
+Part number
+Component
+Package
+Quantity
+Packaging
+Option
+Packaging
+Specification
+SMCJxxxXX DO-214AB 3000 Tape & Reel - 16mm tape/13” reel EIA STD RS-481
+Part Marking System
+VR
+VOLTAGE
+BI-DIRECTIONAL
+5% VBR
+VOLTAGETOLERANCE
+SERIES
+SMCJ XXX C A
+F
+XXX
+YMXXX
+Marking Code
+Trace Code Marking
+Y:Year Code
+M: Month Code
+XXX: Lot Code
+Littelfuse Logo
+Cathode Band
+(for Uni-directional products only)
+Tape and Reel Specification
+0.63
+(16.0)
+0.315
+(8.0)
+0.157
+(4.0)
+0.65
+(16.4)
+0.80 (20.2)
+Arbor Hole Dia.
+13.0 (330)
+Dimensions are in inches
+(and millimeters).
+Direction of Feed
+0.059 DIA
+(1.5)
+Cover tape
+Cathode
+

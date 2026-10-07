@@ -1,0 +1,243 @@
+1N4148W
+Silicon Epitaxial Planar Switching Diode
+
+                                                                            PINNING
+Features                                                                        PIN            DESCRIPTION
+• SOD-123 package                                                                   1          Cathode
+                                                                                    2          Anode
+• Fast switching
+• These diodes are also available in other case                                 1                        2
+
+  style including the DO-35 case with the type                                               W1
+
+  designation 1N4148, the MiniMELF case with the
+                                                                                Top View
+  type designation LL4148 and the MicroMELF case                                Marking Code: "W1"
+                                                                                Simplified outline SOD-123 and symbol
+  with the type designation MCL4148.
+
+
+
+
+Absolute Maximum Ratings (Ta = 25℃)
+                            Parameter                               Symbol                     Value                   Unit
+  Peak Reverse Voltage                                                VRM                         100                   V
+  Reverse Voltage                                                      VR                         75                    V
+  Average Rectified Forward Current                                   IF(AV)                      150                  mA
+  Non-repetitive Peak Forward Surge Current          at t = 1 s                                   0.5
+                                                     at t = 1 ms      IFSM                         1                    A
+                                                     at t = 1 μs                                   4
+  Power Dissipation                                                    Ptot                       400                  mW
+  Thermal Resistance from Junction to Ambient Air                     RθJA                        312                 ℃/W
+  Junction Temperature                                                     Tj                     150                   ℃
+  Storage Temperature Range                                            Tstg              - 65 to + 150                  ℃
+
+
+
+Characteristics at Ta = 25℃
+                            Parameter                              Symbol               Min.              Max.           Unit
+  Reverse Breakdown Voltage
+                                                                   V(BR)R               75                   -              V
+   at IR = 1 µA
+  Forward Voltage
+   at IF = 1 mA                                                                          -               0.715
+   at IF = 10 mA                                                     VF                  -               0.855              V
+   at IF = 50 mA                                                                         -                 1
+   at IF = 150 mA                                                                        -                1.25
+  Peak Reverse Current
+   at VR = 75 V                                                                          -                    1           µA
+   at VR = 20 V                                                      IR                  -                   25           nA
+   at VR = 75 V, TJ = 150℃                                                               -                   50           µA
+   at VR = 25 V, TJ = 150℃                                                               -                   30           µA
+  Total Capacitance
+                                                                    CT                   -                   2            pF
+   at VR = 0 V, f = 1 MHz
+  Reverse Recovery Time
+                                                                     trr                 -                   4              ns
+   at IF = 10 mA, Irr = 1 mA, VR = 6 V, RL = 100 Ω
+
+
+
+
+                SEMTECH ELECTRONICS LTD.
+            ®                                                                                           Dated: 20/09/2016 Rev: 05
+1N4148W
+
+
+
+                                                                                                                                                    Forward characteristics
+                                                                                                                                   3
+                                                                                                                                 10
+                                            VRF =2V
+
+
+
+
+                                                                     2nF
+                                60
+
+
+
+
+                                                                                        5K
+                                                                                                                                 102
+
+
+
+
+                                                                                                              Vo
+      ~
+      ~
+      ~
+
+
+
+
+                                                                                                                    I F ( m A)
+                                                                                                                                 10
+                                                                                                                                              Tj=100 C      Tj=25 C
+     Rectification Efficiency Measurement Circuit
+                                                                                                                                  1
+
+
+                                                                                                                                 10-2
+
+                                                                                                                                 10-1
+                                                                                                                                          0                   1                  2
+                                                                                                                                                            VF (V)
+
+                                                 Power Dissipation vs Ambient Temperature                                                 Leakage current vs. junction temperature
+                                                                                                                                      4
+                                                                                                                                 10
+                                                                                                                                  5
+                                      600
+                                                                                                                                  2
+                                                                                                                                 103
+       Power Dissipation: Ptot (mW)
+
+
+
+
+                                      500
+                                                                                                                                  5
+                                                                                                                   I R (nA)
+
+
+
+
+                                      400                                                                                         2
+                                                                                                                                 102
+                                      300                                                                                         5
+
+                                                                                                                                  2
+                                      200
+                                                                                                                                 10
+                                                                                                                                  5
+                                      100                                                                                                                               VR=20V
+                                                                                                                                  2
+                                        0                                                                                         1
+                                             0        25        50         75    100         125        150
+                                                                                                                                          0                 100                  200
+                                                      Ambient Temperature: Ta ( C)             O
+
+                                                                                                                                                             Tj ( C)
+
+
+
+
+                                              Reverse
+                                              Reverse capacitance
+                                                      capacitance vs.
+                                                                  vs. reverse
+                                                                       reverse voltage
+                                                                               voltage
+
+                                                                                              Tj=25
+                                                                                               Tj=25 CC
+                                      1.1
+                                      1.1
+                                                                                              f=1MHz
+                                                                                               f=1MHz
+
+
+                                      1.0
+                                      1.0
+      tot ((VR)
+              R)
+              V)
+           (0 V)
+      tot (0
+
+
+
+
+                                      0.9
+                                      0.9
+     Ctot
+     Ctot
+
+
+
+
+                                      0.8
+                                      0.8
+
+
+                                      0.7
+                                      0.7
+
+                                            00             22        44           66               88         10
+                                                                                                              10
+                                                                            VVRR (V)
+                                                                                  (V)
+
+
+
+
+                                      SEMTECH ELECTRONICS LTD.
+       ®                                                                                                                                                               Dated: 20/09/2016 Rev: 05
+1N4148W
+
+
+PACKAGE OUTLINE
+
+Plastic surface mounted package; 2 leads                                                                 SOD-123
+
+
+
+
+                                ∠ ALL ROUND
+
+
+
+
+                                                                           A
+                     c
+
+
+
+
+                                                HE
+
+
+
+
+                                                D                  A
+                 E
+                     bp
+
+
+
+
+                          UNIT      A     bp          c      D      E     HE      v    ∠
+
+                           mm     1.15    0.6        0.135   2.7   1.65   3.85   0.2   5   O
+
+                                  1.05    0.5        0.100   2.6   1.55   3.55
+
+
+
+
+               SEMTECH ELECTRONICS LTD.
+           ®                                                                                   Dated: 20/09/2016 Rev: 05
+

@@ -1,0 +1,65 @@
+Circular Data Connectors / Standard Buccaneer - Ethernet
+
+
+PX0833 Datasheet
+
+   Product Name // Front Panel Mount Connector PX0833                                                                                 View Product Page
+
+   Series CAT5e Shielded Coupler
+
+
+
+
+  // Product Description:
+
+
+       Front Panel Mounting Connector                                            PX0833/E or PX0893/E version has additional Earth wire
+       Water and dustproof to IP68 when mated with compatible                    PX0888 Shielding Backshell available separately - fits to rear of
+       connector                                                                 connector to maintain RJ45 coupler shielding directly to panel
+       Single hole fixing                                                        PX0733 Sealing Cap available separately to maintain IP rating of
+       Supplied with panel sealing gasket                                        unmated connectors
+
+       CAT5e or Cat6a shielded coupler - standard RJ45 patchcord                 Mate with Cat 5e PX0834, PX0836, PX0837, PX0838 Standard
+       can be plugged into rear                                                  Series Flex Cable Connectors
+                                                                                 Mate with Cat 6a PX0894, PX0896, PX0897, PX0898 Standard
+                                                                                 Series Flex Cable Connectors
+
+
+
+
+  // General Information:
+
+
+  Product Display Title:                                                Front Panel Mounting Connector
+  Product Family:                                                       Circular Data Connectors
+  Product Series:                                                       Standard Buccaneer - Ethernet
+  Body Material:                                                        Polyester (PET)
+  Body Material Type:                                                   Plastic Body
+  Contact Type:                                                         Socket Contact
+  Coupling Type:                                                        Screw
+  Current Max:                                                          1.5A
+  Data Cable Type:                                                      IP68 RJ45 Coupler
+  Diameter Over Coupling Ring Mm:                                       38.1mm
+  Ethernet Category:                                                    Cat 5e
+  Flamability Rating:                                                   UL94V-0
+  Ip Rating:                                                            IP68|IP69K
+  Max Operating Temperature:                                            +70°C
+  Min Operating Temperature:                                            -20°C
+  Number Of Contacts:                                                   8 Contacts
+  Voltage Max:                                                          42V
+
+
+
+
+  // Product PDF Links                              // Product 3D CAD Model Links
+
+
+       Standard Series Ethernet...                       PX08333D CAD Model
+
+
+
+
+         Have a question or project enquiry
+         you'd like to talk to us about?                                                                                    Bulgin Datasheets        1
+                                                          Click Here To Contact Us
+

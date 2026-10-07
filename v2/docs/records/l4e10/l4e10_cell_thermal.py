@@ -90,6 +90,31 @@ CL_TW = "v2/docs/records/l4e10/clarification/topwell-hl18650v.txt"
 SAFT_MP = "v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf"
 PRICES2 = "v2/docs/records/l4e10/inputs/prices-2026-10-02.json"
 L4E12 = "aab69775@v2/docs/records/l4e12/l4e12_thermal.out"     # U-02's record at its commit (fnd/l4e12, the consolidation)
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 among the pins.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4e10
+PDFTEXT = {
+    "v2/vendor/battery/eaton-scf9550-elx1135.pdf": [["-layout"]],
+    "v2/vendor/battery/heater/rs-pro-245-556-heater-mat-sheet.pdf": [["-layout"]],
+    "v2/vendor/battery/held/lg-inr18650hg2-rev0-2014.pdf": [["-layout"]],
+    "v2/vendor/battery/held/saft-lsh20-31015-2-0426.pdf": [["-layout"]],
+    "v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf": [["-layout"]],
+    "v2/vendor/battery/held/samsung-inr18650-30q-v1.0-2015.pdf": [["-layout"]],
+    "v2/vendor/battery/held/samsung-inr18650-30q6-draft-v0.1-2024.pdf": [["-layout"]],
+    "v2/vendor/battery/held/samsung-inr18650-30q6-v1.0-2020.pdf": [["-layout"]],
+    "v2/vendor/battery/molicel-inr18650-p28a-v1.pdf": [["-layout"]],
+    "v2/vendor/battery/pcm/rubitherm-rt57hc-2026-01-21.pdf": [["-layout"]],
+    "v2/vendor/battery/samsung-35e-akkuzentrum.pdf": [["-layout"]],
+    "v2/vendor/battery/samsung-35e-orbtronic.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-bq4050.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-bq77207.pdf": [["-layout"]],
+    "v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TOP, "v2", "docs", "records", "_lib", "pdftext.py"))
+PDFT = importlib.util.module_from_spec(_PTS)   # PT names a page here
+_PTS.loader.exec_module(PDFT)
 PINS = {
     CM: "55244f94aace54ca09d98c100b9830cba75c70a4774c3ba375a14903fcaf6376",
     APPX: "852736b661a805e36305ca6c2c91ebb76794e883a2ccd75dc3274c25d65212f1",
@@ -132,7 +157,7 @@ PINS = {
     EB_IN: "74a6e4ab0074648ed459cc62daf7000798ae6247cd5056e19cae5e4d56f55aed",
     REPLAY: "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d",
     CSS: "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f",
-    L4E9: "d8882cd01e9df691591e94c5d5b979f7d16615d3d0f6d7fcfc0841d2fabaedd0",
+    L4E9: "0081f048d4d0f72c44308d6e3994409ff6f8a0e7c6b2e3c64d850fc4f67d8c94",
     SAFT_MP: "8ca0a3e09997a4a30567a4313cf83c2b6cf165543baf424e0ff788d5a8d27f8e",
     PRICES2: "eac0fc1807e7e4989801aa3448c13f4b2870de06f23cb1084059aae518b2c7f0",
     L4E12: "88d7b84179b407533bdf4a542c93487c1fa6ca8f95a742518f529517995f9637",
@@ -192,10 +217,7 @@ _PDF = {}
 
 def pdf(rel):
     if rel not in _PDF:
-        r = subprocess.run(["pdftotext", "-layout", path(rel), "-"], capture_output=True)
-        if r.returncode != 0:
-            refuse(3, "pdftotext failed on %s" % rel)
-        _PDF[rel] = r.stdout.decode("utf-8", "replace")
+        _PDF[rel] = PDFT.pdf_text(TOP, rel, ["-layout"], PDFTEXT, "v2/docs/records/l4e10")
     return _PDF[rel]
 
 
@@ -402,7 +424,7 @@ def compute():
         got = sha(rel)
         if got != PINS[rel]:
             refuse(2, "%s is not the pinned file (%s)" % (rel, got[:16]))
-    R = {"pins": dict(PINS)}
+    R = {"pins": dict(PINS, **{t: h for t, h, _held in PDFT.inputs(TOP, PDFTEXT)})}
     # ======================================================== 0: the reproductions
     outs = {rel: open(path(rel), "rb").read() for rel in (PB_OUT, PB_JSON, RED2_OUT, HOT_OUT)}
     with tempfile.TemporaryDirectory() as td:

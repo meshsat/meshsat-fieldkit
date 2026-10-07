@@ -1,0 +1,153 @@
+MAXIMUM SOLUTIONS
+                                             Rugged, High Current Spring Pins
+
+
+
+
+     Mill-Max now offers a series of rugged spring pins capable of carrying 9 amps continuous cur-
+     rent at a low 10° C temperature rise. The Mill-Max 0850, 0851, 0852 and 0853 spring pins are
+     the perfect solution for rugged applications and for use in circuits operating at currents above
+     signal level.
+
+     The 085X series is characterized by a greater mass and surface area which provides a lower
+     resistance electrical path than miniature spring pins. Because they are designed and built with
+     the same precision of our miniature spring pins they exhibit excellent signal integrity in shock
+     and vibration environments.
+
+     These large scale spring pins feature a gold plated stainless steel spring, .050”(1.27 mm) diam-
+     eter solid plunger and thick wall construction to withstand the rigors of demanding applica-
+     tions. Designed for through hole mounting, each pin has a large diameter post and flange
+     providing for a perpendicular and secure PCB attachment.
+
+     The 085X series provides a generous .045”(1.14 mm) mid-stroke and .090” (2.29 mm) maxi-
+     mum stroke allowing for use in applications where stack up tolerances are great. Applications
+     include board stacking, docking stations, cable assemblies, quick connects and anywhere there
+     is a blind mate situation.
+
+     Rated at 1,000,000 cycles minimum, the Mill-Max 085X series spring pins are the best choice for
+     higher-current, high reliability spring pin requirements.
+
+     For more information, visit: www.mill-max.com/PR617.
+
+
+(4/14 -- PR617)
+
+            Mill-Max Mfg. Corp. • 190 Pine Hollow Road, Oyster Bay, NY 11771
+                  516-922-6000 • Fax: 516-922-9253 • www.mill-max.com
+                                                                           SPRING-LOADED PINS
+                                                                 ',6&5(7(635,1*-/2$'('&217$&76s32:(5635,1*3,16
+
+
+                                       0850                                                        0851                                                   0853                                                    0852
+                                       0850-0-15-20-83-14-11-0                                     0851-0-15-20-82-14-11-0                                0853-0-15-20-82-14-11-0                                 0852-0-15-20-83-14-11-0
+                                       Power spring pin                                            Power spring pin                                       Power spring pin                                        Power spring pin
+                                       4PMEFS.PVOUJONJONPVOUJOHIPMF                     4PMEFS.PVOUJONJONPVOUJOHIPMF                4PMEFS.PVOUJONJONPVOUJOHIPMF                 4PMEFS.PVOUJONJONPVOUJOHIPMF
+                                                                                                                                                                                 MID                                                        MID
+                                                                                                                           MID
+                                                                                                                                                                                                                                          STROKE
+                                                                                                                         STROKE                                                STROKE
+                                                                    .045                                                                                                                                                                    .045
+                                                                                                                         .045                                                    .045
+
+                                                                                                                                                                                                                      .050 DIA.                             MAX
+                                        .050 DIA.                                                                                                                                                                                                    .090 STROKE
+                                                                               .090                .050 DIA.                             MAX
+                                                                                                                                  .090 STROKE               .050 DIA.                                MAX
+                                                                                                                                                                                           .090 STROKE
+                                                                                                                                                                                                                      .095 DIA.
+                                        .095 DIA.
+                                                                                                                                                   .318                                                               .111 DIA.
+                                        .153 DIA.                                                  .095 DIA.                                                                                                                                .030
+                                                                     .030                                                                                   .095 DIA.                                                                                          .304
+                                                                                                                                                                                                                      .092 DIA.
+                                                                                                                         .030
+                                                                                       .304                                             .265                                                         .288                (2x)                        .204
+                                        .087 DIA.                              .204                .153 DIA.                                                .125 DIA.                                                 .087 DIA.
+                                                                                                                                                                                    .030
+                                                                                                   .087 DIA.
+                                                                                                                                                   .060     .087 DIA.                       .090                      .040 DIA.
+                                                                                                                                                                                                                                                               .060
+
+
+
+
+                                       0854                                                        0855                                                   0856                                                    0861
+                                       0854-0-15-20-82-14-11-0                                     0855-0-15-20-82-14-11-0                                0856-0-15-20-82-14-11-0                                 0861-0-15-20-82-14-11-0
+                                       Power spring pin, Soldercup                                 Power spring pin, Wire termination for                 Power spring pin                                        4PMEFS.PVOUJONJONPVOUJOHIPMF
+                                       "DDFQUTXJSFTJ[FTVQUPu%JB                         XJSFTJ[FT"8(.BY"8(.JO                   4PMEFS.PVOUJONJONPVOUJOHIPMF                  'PSDF!.JE4USPLFH
+                                                                                                                                                                                                                                              62-       6*A
+                                                                                                                               MID
+                                          .050 DIA.                     MID
+                                                                 .045 STROKE               MAX        .050 DIA.         .045 STROKE          MAX
+                                                                                                                                                                                                                                            <=;84.    <=;84.
+                                                                                  .090 STROKE                                         .090 STROKE                                                                                           .040      .080
+                                                                                                                                                                             .045   MID
+                                                                                                                                                          .050 DIA.               STROKE .090      MAX
+                                                                                                                                                                                                  STROKE
+
+
+                                                                                                      .095 DIA.                                                                                                    .092 DIA.
+                                          .095 DIA.                                                                                                                                                                                                             .090
+                                                                                                                        .030                                                                               .318
+                                                                 .030                                                                                     .095 DIA.
+                                                                                                      .125 DIA.                                                               .030                                  .140 DIA.
+                                          .125 DIA.
+                                                                                                      .087 DIA.                                                                                    .265
+                                          .087 DIA.                                         .509                                             .559
+                                                                                                                                                          .153 DIA.                                                 .155 DIA.                                   .310
+                                                                                                                                                          .087 DIA.                                                 .158 DIA.
+                                          .100 DIA.                                                                                                                                        .090
+                                                                                   .260               .100 DIA.                       .310                                                                          .187 DIA.                 .051
+                                                                           .180                                         .220                              .040 DIA.
+                                                                                                                                                                                                           .125
+                                                                                                                                                                                                                   .040 DIA.
+                                                                 .112                                                                                                                                                                                           .125
+                                          .067 DIA.                                                   .067 DIA.
+                                            HOLE                                                        HOLE
+
+
+                                       0871
+                                       0871-0-15-20-82-14-11-0
+                                       -POHTUSPLF 4VSGBDF.PVOU
+                                        'PSDF!.JE4USPLFH
+                                                                      62-           6*A
+                                                                    <=;84.        <=;84.
+                                                                     .040         .080
+
+
+                                        .092 DIA.
+                                                                                            .090
+PAGE 28 | SPRING-LOADED CONNECTORS
+
+
+
+
+                                        .140 DIA.
+                                        .155 DIA.                                           .310
+                                        .158 DIA.
+                                        .187 DIA.                       .051
+
+
+
+
+                                                      Material Specifications:                                    Mechanical & Electrical Specifications:                           Order Code: 08XX - X - 15 - 20 - 8X - 14 - 11 - 0
+                                                                                                                         Durability:   DZDMFT
+                                        Sleeve & Plunger Material: Copper Alloy
+                                                                                                                          Rated Current (Free air):                                                          Spring Number
+                                        Spring Material: 4UBJOMFTT4UFFM
+                                                                                                                  $POUJOVPVTBNQT!$UFNQFSBUVSFSJTF
+                                        Sleeve & Plunger Finish: Pu(PMEPWFS/JDLFM                                                                                           Spring              Mid.          Max.           Force @    Initial Force
+                                                                                                                      Contact Resistance: N: max.                             Number              Stroke        Stroke         Mid. Stroke (Pre-Load)
+                                        Spring Finish: Pu(PMEPWFS/JDLFM
+                                                                                                                      Environmental Specifications:
+                                        Dimensions: Inches
+                                                                                                                  Operating temperature range:   C
+                                        Tolerances On: -FOHUIT                                                                                                         82                                    H                   25 g
+                                                                                                   RoHS - 2
+                                     %JBNFUFST    2011/65/EU                82, 83 Springs are not                                    83                                    H                   25 g
+                                     "OHMFT                              interchangeable
+
+
+
+                                                                                   .JMM.BY.GH$PSQt1JOF)PMMPX3PBE 10#PY 0ZTUFS#BZ /:tt'BYtXXXNJMMNBYDPN
+

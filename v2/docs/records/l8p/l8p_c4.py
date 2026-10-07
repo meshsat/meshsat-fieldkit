@@ -163,7 +163,7 @@ def read_l9stk5():
 
 
 def read_2n7002():
-    t = G.pdftext(G.N7002)
+    t = pdftext(G.N7002)
     S = {}
     S["vds"] = float(need(t, r"Drain-Source Voltage\s+VDS\s+%s" % N, "2N7002: VDS").group(1))
     S["vgs"] = float(need(t, r"Gate-Source Voltage\s+VGS\s+±%s" % N, "2N7002: VGS").group(1))
@@ -180,7 +180,7 @@ def read_2n7002():
 
 
 def read_bzt():
-    t = G.pdftext(BZT)
+    t = pdftext(BZT)
     need(t, r"DS18004 Rev\. 38", "BZT52C: the revision")
     Z = {}
     for part in ("BZT52C5V6", "BZT52C6V2"):
@@ -266,7 +266,7 @@ def read_fs():
 
 def read_lm26lv_od():
     """The LM26LV's open-drain row (SNIS144G 6.6): IOH at TA 30 C and 150 C, and the VOL row at VDD 3.3 V or more."""
-    t = G.pdftext(G.LM26LV)
+    t = pdftext(G.LM26LV)
     m = need(t, r"Logic High output leakage\s+TA = 30°C\s+%s\s+%s\s*\nIOH.*?\n\s+current \(3\)\s+TA = 150°C\s+%s\s+%s" % (N, N, N, N),
              "LM26LV: the open drain's IOH", re.M | re.S)
     S = {"ioh30": float(m.group(2)) * 1e-6, "ioh150": float(m.group(4)) * 1e-6}
@@ -390,7 +390,7 @@ def main():
     w("0. PINS (sha256/16)\n")
     for p in (L9_OUT5, L9_PAGE5, PROT_OUT, os.path.join(HERE, "inputs", "l4e11-section20c-ecb598c5.md"), G.LM26LV, G.TPS709, G.N7002, G.AO3400A, BZT,
               G.LM5069, DRAFT, os.path.join(HERE, "l8p_guard.py"), THGFS, os.path.join(HERE, "check_l8p_fs.py"), DD7_CHECK,
-              os.path.abspath(__file__)):
+              os.path.abspath(__file__)) + tuple(os.path.join(ROOT, t) for t, _h, _held in G.PT.inputs(ROOT, PDFTEXT)):
         w("   %s  %s%s\n" % (sha(p, 16), rel(p), "  (held back, fetch_held_back.py)" if "/held/" in p else ""))
 
     # ------------------------------------------------------------------ 1. record l9stk's statements
@@ -1025,7 +1025,7 @@ def main():
             w("     mutated, %-62s THG %s: %s\n" % (lab + ":", v, why[:90]))
     else:
         w("     the generator FAILED (%r)\n" % X.get("gen_rc"))
-    w("   DISPOSITION (10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends): V6-m7 and cx45's Q5 NOT CLOSED. Drafted and\n")
+    w("   DISPOSITION (10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends): V6-m7 NOT CLOSED; Q5: cx45 'P0-5: NOT CONFIRMED', cx46's items 9 and 10 'NOT CLOSED'. Drafted and\n")
     w("     reproducible: the two paths (the intact circuit's desk rows %s, the composition %s). PROVISIONAL: C-PROT rev 1 for the guard (L8P-R9-F1,\n"
       % ("hold" if fs_ok else "DO NOT HOLD", "reads DRAWN and its mutations FAIL" if comp_ok else "NOT as drafted"))
     w("     the retry heating with path 1 lost), the allowances (L8P-R9-F2, unrestated by their owners). REMAINING ENGINEERING: the retry-\n")
@@ -1100,6 +1100,28 @@ def main():
         w("   %-128s %s\n" % (text, "yes" if val else "NO"))
     sys.stdout.write("".join(out))
     return 0
+
+
+# W55 (Q-74, 6 October 2026; adopted in set 32 with W34's branch): the makers' PDFs this script reads as text, each with its pdftotext
+# options. W34 converted l8p_guard.pdftext, which this script called for its three sheets, but this script's own read of the BZT52C
+# sheet was in no table, so it refused on W34's branch ("diodes-bzt52c-ds18004.pdf with -layout is not declared in
+# v2/docs/records/l8p's PDFTEXT table", W53). A module's table holds its own reads (PDFTEXT-INVENTORY.md section 2), so the three reads
+# are declared here and go through v2/docs/records/_lib/pdftext.py with this table; the texts are the ones l8p_drafts.py and
+# l8p_guard.py already declare (the BZT52C and 2N7002 texts committed beside their PDFs, the LM26LV text held back under held/pdftext/
+# with its sheet); section 0 prints each text's sha256 after the pins. Nothing this script computes changed. Placed last so that no
+# line above it moves. Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8p
+PDFTEXT = {
+    "v2/vendor/diodes/diodes-bzt52c-ds18004.pdf": [["-layout"]],
+    "v2/vendor/power/jscj-2n7002-c8545.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-lm26lv-snis144g.pdf": [["-layout"]],
+}
+
+
+def pdftext(path):
+    """A maker's sheet's committed text, as l8p_guard.pdftext reads it (its absence check, -layout), against this script's table."""
+    if not os.path.isfile(path):
+        refuse("%s is absent (held back: run v2/docs/records/l8p/fetch_held_back.py)" % rel(path))
+    return G.PT.pdf_text(ROOT, rel(path), ["-layout"], PDFTEXT, "v2/docs/records/l8p")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,14 @@
+{
+ "command": "pdftotext v2/vendor/ti/ti-lm74700-q1.pdf -",
+ "held_back": false,
+ "options": [],
+ "pdf": "v2/vendor/ti/ti-lm74700-q1.pdf",
+ "pdf_sha256": "e16b3a8c0023201fafa5825436f5f2dd6f885b92b84e65602b3f50d741c58b6f",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-lm74700-q1.plain.txt",
+ "text_bytes": 62585,
+ "text_sha256": "454a09b2d1bc4f1d183b261d68d513845d478d9cab1ea6d20a1cfa69cfca52f9"
+}

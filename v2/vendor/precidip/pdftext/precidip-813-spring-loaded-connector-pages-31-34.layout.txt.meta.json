@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf",
+ "pdf_sha256": "d630c8a92e7f65fc63a51fed5bebfe974ecacfc81b64265c4c262d0d01b3d194",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/precidip/pdftext/precidip-813-spring-loaded-connector-pages-31-34.layout.txt",
+ "text_bytes": 7193,
+ "text_sha256": "7945661d94b481170e71a6d53d463bffa1da57119682fd135cba01dbe090821b"
+}

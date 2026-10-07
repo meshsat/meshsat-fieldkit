@@ -1,0 +1,17 @@
+E2370KS0C1
+Size                    3.7"                            inch
+Resolution              416(H) x 240(V)                 pixel
+Active Area             81.536(H) x 47.04(V)            mm
+Outline Dimension       92.99(H) x 53.00(V) x 0.85(T)   mm
+Pixel Density           130                             dpi
+Display Colors          Black / White
+Surface Treatment       Anti-Glare
+Operation Temperature   -15~60                          °C
+Weight                  8.2                             g
+                         CHIP-UC8253c
+
+
+
+
+                                                                www.perv asivedisplay s.com
+

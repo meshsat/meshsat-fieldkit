@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/battery/molicel-inr18650-p28a-v1.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/battery/molicel-inr18650-p28a-v1.pdf",
+ "pdf_sha256": "05db826b40db2106639eb137047ecce6d8e6a1efb57fd57e70dfc01318d471d1",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/molicel-inr18650-p28a-v1.layout.txt",
+ "text_bytes": 12624,
+ "text_sha256": "f78b191e18095dcdebd287d0b9450bea62bb8f428a1a489b07571b0048d63a4a"
+}

@@ -1,0 +1,372 @@
+                                                                                                                                                              C&K® Switch Datasheet
+
+
+ATP19 Series
+Anti-Vandal Sealed Pushbutton Switches                                                                                                                                                                  Switches
+
+
+
+
+                                                                                                                    Description
+                                                                                                                    The ATP19 series is an anti-vandal sealed pushbutton switch that
+                                                                                                                    offers the industry standard ring illuminated version in 19 mm
+                                                                                                                    diameter. The pushbutton switches use a scratch resistant actuator
+                                                                                                                    and housings are made of robust stainless steel particularly
+                                                                                                                    suitable for use in equipment subjected to harsh conditions or
+                                                                                                                    applications that require protection from vandalism. The 19 mm
+                                                                                                                    pushbuttons meet the seal protection and impact resistance
+                                                                                                                    ratings of IP67 and IK10 that design to withstand the possible
+                                                                                                                    extreme outdoor environmental and may subject to abuse. Also,
+                                                                                                                    the ATP19 comes with a variety of LED colors as illuminated
+                                                                                                                    pushbuttons and various of indicators on the actuator that meet
+                                                                                                                    your application needs.
+
+
+                                                                                                                    Features & Benefits
+                                                                                                                    ■ Momentary or Lock version            ■ Various colors of LED
+                                                                                                                    ■ IP67 sealed & IK10 (Stainless             illuminate indicator
+                                     Agency Approvals
+                                                                                                                      steel bushing)                         ■ Choices of pushbutton with
+                      Agency                                         Agency File Number                             ■ Capable of up to 3A resistive             symbol on spot, ring or power
+                                                                               E42363                                 load                                      logo
+                                                                                                                    ■ 50,000 life cycle at full load
+
+
+                                          Specifications
+  Function                                      Single pole and double poles                                        Applications
+  Contact Arrangement                           N.O. And N.C.                                                       ■ Control Panels including car           ■ Communication equipment
+                                                                                                                      park and traffic light                 ■ Alarm, safety and security
+  Mounting Type                                 Threaded front panel mount                                          ■ Industrial Instruments                     systems
+  Torque for Threaded Body                      5-14 Nm                                                             ■ Lifts / Escalator
+
+
+                             Mechanical Specifications                                                                                          Materials
+                                                Momentary 1,000,000 cycles                                                                           Stainless steel / Nickel plated brass /
+  Mechanical Life                                                                                                    Bushing
+                                                Self-lock 500,000 cycles                                                                             Aluminum alloy
+                                                                                                                     Base                            PBT (UL 94-A0), PC (UL 94-V2)
+  Total Travel                                  About 3.2 mm
+                                                                                                                                                     PC, (UL 94-V2); Stainless steel /
+                                                1 pole 2.5 ± 1N                                                      Actuator
+  Operating Force                                                                                                                                    Nickel plated brass / Aluminum alloy
+                                                2 pole 3.5 ± 1N
+                                                                                                                     Internal Assembly               POM / PA66
+                               Electrical Specifications                                                             Spring                          Steel
+                                                Ith 5A/250VAC                                                        Sealing / O-ring                Silicone
+  Contact Rating                                3A / 250VAC                                                          Terminals                       Brass with silver or gold plated
+                                                3A / 28VDC
+                                                                                                                     Contact                         Copper, silver plated
+                                                50,000 make-and-break cycles
+  Operating Life
+                                                at full load
+  Dielectric Strength                           2,000 V RMS @ sea level
+  Insulation Resistance                         1,000 MΩ min. @ 500 VDC
+  Initial Contact Resistance                    50 mΩ max @ 1A 12 VDC
+  Operating Temperature                         -20ºC to 55ºC
+  Sealing / Protection                          IP67 / IK10 (Stainless steel bushing)
+Notes:
+Specifications and materials listed above are for switches with standard options. For information on specific
+and custom switches, please contact Customer Service.
+
+
+
+
+                                                                                                                                                                                      © 2025 Littelfuse, Inc.
+                                                                                                                1                                      Specifications are subject to change without notice.
+                                                                                                                                                                                       Revised: VL 02/05/25
+                                                                                                                                                                                     C&K® Switch Datasheet
+
+
+ATP19 Series
+Anti-Vandal Sealed Pushbutton Switches                                                                                                                                                                                        Switches
+
+
+
+
+                                                             Ordering Number
+To order, simply select desired option from each category and place in the appropriate box.
+
+                                                              ATP19 - x - xx - x - xx - xx - x - x - xx - x
+                               Designation
+                               ATP19: Series                                                                                                                                                Terminal plating
+                                                                                                                                                                                            Q: Silver
+                          Actuator Style
+                                                                                                                                                                                            G: Gold
+                          S: Standard                                                                                                                           Termination
+                          R: Raised                                                                                                                             03: STD Solder lug
+                          D: Dome without LED only6                                                                                                             04: Short Solder lug
+                                                                                                                                     Mechanical Function W1: Wire lead 500mm³
+         Actuator Indicator
+         L0: Without LED                  L1: Fix ring¹                                                                              A: Momentary               W2: Wire lead 1,000mm³
+         L2: Spot¹             L3: Moving ring¹ (standard actuator only)                                                             E: Lock
+         L4: Power logo²       L5: Moving ring & Power logo² (standard actuator only)                                            Contact Arrangement
+                                                                                                                                 S: SPDT
+                                          LED Illumination                                                                       D: DPDT
+                                          Color                          Dual Color                                                     Bushing type
+                                          0: Without LED                 A: Red & Green                        LED Voltage (20 mA)      Round                                Double D Shape
+                                          2: White                       B: Red & Blue                         00: Without LED          B0: Stainless (Natural)              M0: Stainless (Natural)
+                                          3: Red                         D: Blue & Yellow                      03: 3V                   B3: AI alloy (Black anodized)5
+                                                                                                                                                                             M3: AI alloy (Black anodized)5
+                                          5: Yellow                      G: Red & Yellow                       06: 6V
+                                          6: Green                       H: Green & Yellow                     12: 12V
+                                          7: Blue                        J: Orange & Green                     24: 24V
+                                                                                                               36: 36V
+                                                                                                               A1: 110V AC
+                                                                                                               A2: 220V AC
+
+Notes:
+1. Available on round bushing only
+2. Available on double D-shape bushing only
+3. Available upon request, please contact your sales representative for details
+4. Come in B0 & M0 with L1 or L4 indicator only
+5. Come in S style actuator only & no L5 indicator
+6. Without LED & for B0 & M0 bushing type only
+
+
+
+                                                                                  Standard View - Dimensions inches (mm)
+
+                                          Round Bushing                                                                                                    Double-D Bushing
+
+                                                   .08.08                                                                                                          .08.08
+                                                 (2.00)
+                                                    (2.00)                                                                                                        (2.00
+                                                                                                                                                                     (2.00
+                                                                                                                                                                    ) )
+
+
+
+                  1.01.0                                                                                                            1.01.0
+                                                                                                  M19x1.0
+                                                                                                   M19x1.0                 1.31.3 (25.5)
+                                                                                                                                     (25.5)                               1.29
+                                                                                                                                                                             1.29                               M19x1.0
+                                                                                                                                                                                                                 M19x1.0
+                (25.5)
+                   (25.5)                                     1.29
+                                                                 1.29
+          1.31
+             1.31                                                                                                        (33.3)
+                                                                                                                            (33.3)                                       (32.7)
+                                                                                                                                                                            (32.7)
+         (33.3)
+            (33.3)                                           (32.7)
+                                                                (32.7)
+
+
+
+
+                                           .02.02                                                                                                            .02.02
+                   .11.11                (0.50)
+                                            (0.50)                                            .20.20                                .11.11                 (0.50)
+                                                                                                                                                              (0.50)                                        .20.20
+                 (2.75)
+                    (2.75)                                      .11.11                       (5.0)
+                                                                                                (5.0)                                            .51.51                           .11.11                   (5.0)
+                                                                                                                                                                                                              (5.0)
+                                                               (2.8)
+                                                                  (2.8)                                                           (2.75)
+                                                                                                                                     (2.75)
+                               .51.51                                                                                                          (13.0)
+                                                                                                                                                  (13.0)                         (2.8)
+                                                                                                                                                                                    (2.8)
+                             (13.0)
+                                (13.0)                                         .69.69                                                                                                          .69.69
+                                                                             (17.40)
+                                                                                (17.40)                                                         .69.69                                       (17.40)
+                                                                                                                                                                                                (17.40)
+                                                                                                                                              (17.50)
+                                                                                                                                                 (17.50)
+
+
+
+
+                                                                                  Actuator Style - Dimensions inches (mm)
+
+                            S Standard                                                                       R Raised                                                                   D Dome
+
+                                                                                                                       Ø61
+                                                                                                                     (Ø15.50)
+                .08                                                                          .08                                                        .08
+             (2.00)                                                                       (2.00) .08                                                 (2.00)        .08
+                                                                                                (2.00)                                                          (2.00)
+
+
+
+
+                                                                                                                                                                                                            © 2025 Littelfuse, Inc.
+                                                                                                                2                                                            Specifications are subject to change without notice.
+                                                                                                                                                                                                             Revised: VL 02/05/25
+                                                                                                                 C&K® Switch Datasheet
+
+
+ATP19 Series
+Anti-Vandal Sealed Pushbutton Switches                                                                                                                     Switches
+
+
+
+
+                                            Actuator Indicator - Dimensions inches (mm)
+
+              L0 Without LED                                     L1 Fix Ring
+                                                                         ø.61 Illuminated                        L3 Movingø.61
+                                                                                                                            Ring
+                                                                                                                               Illuminated
+     Actuator                                      Actuator                                           Actuator
+                                                                             (ø15.50)                                         (ø15.50)
+
+    Actuator                                       Actuator                    ø.61 Illuminated      Actuator                 ø.61 Illuminated
+                                 ø.61                                        (ø15.50) ø.51                                  (ø15.50) ø.51
+                               (ø15.50)                                                 (ø13.00)                                       (ø13.00)
+
+                              ø.61                                                        ø.51                                             ø.51
+                            (ø15.50)                                                    (ø13.00)                                         (ø13.00)
+
+
+
+
+                 L2 Spot                                       L4 Power Logo                             L5 Power & Moving Ring
+
+   Actuator                                                                                                                     ø.61 Illuminated
+                       Illuminated                 Actuator                                          Actuator
+                                                                                                                              (ø15.50)
+   Actuator                                                                                                                    ø.61 Illuminated
+                       Illuminated
+                                ø.39     ø.61      Actuator                                 ø.61     Actuator                             ø.51
+                              (ø10.00) (ø15.50)                                                                              (ø15.50)
+                                                                                          (ø15.50)                                      (ø13.00)
+                               ø.39     ø.61                                                ø.61                                            ø.51
+                             (ø10.00) (ø15.50)                                            (ø15.50)                                        (ø13.00)
+                                                             Illuminated                                     Illuminated
+
+
+                                                             Illuminated                                   Illuminated
+                                                                   Circuit
+        SPDT                                       SPDT - Single Color LED                                      SPDT - Dual Color LED
+
+       3
+        3
+                                                        3
+                                                        3
+                                                  RR                                                                   3
+                                                                                                            RR
+       2                                                                                                              3
+        2
+                                                        2
+                                                        2                                                              2
+       1                                                                                                              2
+        1
+                                                        1
+                                                        1                                                             1
+                                                                                                                     1
+
+
+
+
+              DPDT                                 DPDT - Single Color LED                                      DPDT - Dual Color LED
+
+
+
+       33         66
+                                                        33          66
+       22         55                              RR    22          55                                      RR
+                                                                                                                     33           66
+
+       11         44                                                                                                 22           55
+                                                        11          44
+                                                                                                                     11           44
+
+
+
+
+                                                                                                                                         © 2025 Littelfuse, Inc.
+                                                                         3                                Specifications are subject to change without notice.
+                                                                                                                                          Revised: VL 02/05/25
+                                                                                                                                                                                      C&K® Switch Datasheet
+
+
+ ATP19 Series
+ Anti-Vandal Sealed Pushbutton Switches                                                                                                                                                                                             Switches
+
+
+
+
+                                                                                 Termination - Dimensions inches (mm)
+
+
+                                            03 Solder Lug                                                                                                     04 Short Solder Lug
+
+                                                                                                    .12
+                                                                                                    .12
+                                                                                                   (3.1)
+                                                                                                   (3.1)
+                                                              .31                                                                                                     ø.047
+                                                               .31                                                                                                  ø.047
+                                                             (7.8)                                                                                                   (ø1.20)
+                                                              (7.8)                                                                .12                             (ø1.20)
+                                                                                                                                  .12                       .20                        .20
+           .28                                                                                                                    (3.1)                   .20                        .20                           .11
+             .28                                           .11                              .02                                  (3.1).08                  (5.0)                      (5.0)                     .11
+          (7.2)                     .20                     .11                             .02                                       .08                (5.0)                      (5.0)                        (2.75)
+            (7.2)                     .20                                                  (0.5)                                                                                                              (2.75)
+                                   (5.0)                 (2.75)                            (0.5)                                     (2.00)                                                         .51
+                                .11 (5.0)                 (2.75)            .51                                                     (2.00)                                                       .51
+                                  .11                                        .51                                                                                                                  (13.0)
+                               (2.8)                                      (13.0)                                                                                                               (13.0)
+                                 (2.8)                                     (13.0)
+
+
+
+                                                                                                   W1 or W2 Wire Lead
+
+                                                              L                                                                               Wire, Green
+                                                               L                                                                             Wire, Green
+                                                                                                                                               (Terminal)
+                                                                                                                                              (Terminal)
+                                                                                                                                           Wire, Purple
+                                 1.77                        L-150mm                                                                       Wire, Purple
+                                                                                                                                             (Terminal)
+                                  1.77                        L-150mm                                                                       (Terminal)
+                                 (45)
+                                  (45)
+
+                                                                                                                                        Wire, Red (LED+)                                        Wire, Black (LED-)
+                                                                                                                                        Wire, Red (LED+)                                       Wire, Black (LED-)
+
+                                                                                                               Wire and                     Wire, Yellow
+                                   Heat shrink                                       Heat shrink               Wire and                     Wire, Yellow
+                                    Heat shrink                                      Heat shrink                tinned                        (Terminal)
+                                      tube                                              tube                    tinned                       (Terminal)
+                                       tube                                             tube
+
+
+
+
+                                                                                    Hardware - Dimensions inches (mm)
+
+                                            Hex Nut                                                                                                                 O Ring
+                                      Order PN: ATP19-HN                                                                                                      Order PN: ATP19-OR
+
+                                                                                                 .12.12
+                                                                                                   (3.00)
+                                                                                               (3.00)                                               ø.55ø.55
+                                                                                                                                                   (ø14.0)
+                                                                                                                                                      (ø14.0)                                            0.60.6
+                                                                                                                                                                                                       (1.50)
+                                                                                                                                                                                                           (1.50)
+                                                            .87.87
+                                                             (22.00)
+                                                          (22.00)
+
+M 19x1.0
+  M 19x1.0
+
+
+
+
+ Disclaimer Notice - Information furnished is believed to be accurate and reliable. However, users should independently evaluate the suitability of and test each product selected for their own applications. Littelfuse products are
+ not designed for, and may not be used in, all applications. Read complete Disclaimer Notice at http://www.littelfuse.com/disclaimer-electronics.
+                                                                                                                                                                                                              © 2025 Littelfuse, Inc.
+                                                                                                                    4                                                          Specifications are subject to change without notice.
+                                                                                                                                                                                                               Revised: VL 02/05/25
+

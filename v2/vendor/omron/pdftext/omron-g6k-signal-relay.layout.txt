@@ -1,0 +1,993 @@
+  G6K
+  Surface Mounting Relay
+
+Surface Mounting Relay with the World’s
+Smallest Mounting Area
+• Subminiature model as small as 5.2 (H) × 6.5 (W) × 10 (L) mm is ideal for
+  high-density mounting (G6K(U)-2F(-Y)).
+• Low profile of 5.2 mm improves mounting efficiency (G6K(U)-2F(-Y)).
+• Light weight of 0.7 g contributes to higher speed mounting.
+• Surface mounting terminal models incorporate a unique terminal structure with
+  high infrared irradiation efficiency which allows the terminal temperature to rise
+  easily when mounting the IRS, thus ensuring excellent soldering.
+• Ensures a dielectric strength of 1,500 VAC and conforms to FCC Part 68 (i.e.,
+  withstanding an impulse withstand voltage of 1,500 V for 10 × 160 μs).
+• -Y models offer an impulse withstand voltage of 2,500 V for 2 × 10 μs (conforms
+  to Telcordia specifications) by optimizing the distance between coil and contacts.
+• Standard model conforms to UL/CSA standards, certified by BSI (EN62368-1).
+• Models available with a 2.54-mm terminal pitch.
+• Rated carry current: 2A.
+ RoHS Compliant
+
+
+■Model Number Legend                                                                                                      G
+                                                                                                                          6
+                                                                                                                          K
+G 6 K@ -@ @ -@
+      1 2 3 4
+1. Relay function
+None : Single-side stable model
+  U : Single-winding latching model
+2. Number of contact poles/Contact form
+2 : 2-pole/DPDT (2c)
+3. Terminal Shape
+F : Outside-L surface mounting terminals
+G : Inside-L surface mounting terminals
+P : PCB terminals
+4. Terminal Arrangement - Impulse withstand voltage
+None :Terminal Arrangement      2.54 mm pitch
+      Impulse withstand voltage Between coil and contacts (1.5 kV for 10 × 160 μs)
+  Y :Terminal Arrangement       Between Coil-Contact Terminal 3.2 mm
+                                Between Contact Terminal 2.2 mm pitch
+      Impulse withstand voltage Between coil and contacts
+                                (Conforms to Telcordia specifications: 2.5 kV for 2 × 10 μs, 1.5kV for 10 × 160 μs)
+
+
+
+
+■Application Examples
+• Telecommunication equipment
+• Office automation machines
+• Test and measurement equipment
+• Building automation equipment
+• Security equipment
+• Industrial equipment
+• Amusement equipment
+• Home appliances
+
+
+
+
+                                                                                                                      1
+    G6K                                                                                                                     Surface Mounting Relay
+
+    ■Ordering Information
+    ●Surface Mounting Terminal Standard Models
+                                             Packing                   Tube Packing                                             Tape Packing
+    Enclosure            Relay                                           Rated coil   Minimum                           Rated coil    Minimum       Minimum ordering unit
+                                      Contact form         Model                                          Model
+    rating              Function                                           voltage   packing unit                         voltage    packing unit     (tape packing)
+                                                                         3 VDC                                          3 VDC
+                                                                         4.5 VDC                                        4.5 VDC
+                                                       G6K-2F            5 VDC                       G6K-2F-TR          5 VDC
+                                                                         12 VDC                                         12 VDC
+                                                                         24 VDC                                         24 VDC
+                                                                         3 VDC                                          3 VDC
+                                                       Highly insulated 4.5 VDC                      Highly insulated   4.5 VDC
+                                                       G6K-2F-Y          5 VDC                       G6K-2F-Y-TR        5 VDC
+                                                                         12 VDC                                         12 VDC
+                    Single-side                                          24 VDC                                         24 VDC
+                    stable                                               3 VDC                                          3 VDC
+                                                                         4.5 VDC                                        4.5 VDC
+                                                       G6K-2G            5 VDC                       G6K-2G-TR          5 VDC
+                                                                         12 VDC                                         12 VDC
+                                                                         24 VDC                                         24 VDC
+    Fully sealed                      DPDT (2c)                                     50 pcs/tube                                     900 pcs/reel    1,800 pcs/2 reels
+                                                                         3 VDC                                          3 VDC
+                                                       Highly insulated 4.5 VDC                      Highly insulated   4.5 VDC
+                                                       G6K-2G-Y          5 VDC                       G6K-2G-Y-TR        5 VDC
+                                                                         12 VDC                                         12 VDC
+                                                                         24 VDC                                         24 VDC
+G                                                                        3 VDC                                          3 VDC
+6                                                      Highly insulated 4.5 VDC                      Highly insulated   4.5 VDC
+K                                                      G6KU-2F-Y         5 VDC                       G6KU-2F-Y-TR       5 VDC
+                                                                         12 VDC                                         12 VDC
+                    Single-
+                                                                         24 VDC                                         24 VDC
+                    winding
+                                                                         3 VDC                                          3 VDC
+                    latching
+                                                       Highly insulated 4.5 VDC                      Highly insulated   4.5 VDC
+                                                       G6KU-2G-Y         5 VDC                       G6KU-2G-Y-TR       5 VDC
+                                                                         12 VDC                                         12 VDC
+                                                                         24 VDC                                         24 VDC
+
+
+    ●PCB Terminal Standard Models
+                                                                                        Rated coil       Minimum
+     Enclosure rating      Relay Function       Contact form           Model
+                                                                                         voltage        packing unit
+                                                                                          3 VDC
+                                                                                         4.5 VDC
+                                                                      G6K-2P              5 VDC
+                                                                                         12 VDC
+                                                                                         24 VDC
+                        Single-side stable
+                                                                                          3 VDC
+                                                                                         4.5 VDC
+                                                                   Highly insulated
+    Fully sealed                                 DPDT (2c)                                5 VDC          50 pcs/tube
+                                                                     G6K-2P-Y
+                                                                                         12 VDC
+                                                                                         24 VDC
+                                                                                          3 VDC
+                                                                                         4.5 VDC
+                        Single-winding                             Highly insulated
+                                                                                          5 VDC
+                        latching                                     G6KU-2P-Y
+                                                                                         12 VDC
+                                                                                         24 VDC
+    Note 1. When ordering, add the rated coil voltage to the model number.
+            Example: G6K-2F DC3
+                                      Rated coil voltage
+            However, the notation of the coil voltage on the product case as well as on the packing will be marked as @@ VDC.
+    Note 2. When ordering tape packing, add -TR" to the model number.
+            Be sure since -TR" is not part of the relay model number, it is not marked on the relay case.
+            When ordering tape packing, minimum order unit is 2 reels (900 pcs ✕ 2 = 1,800 pcs).
+    Note 3. Surface mounting terminal (SMT) standard models are shipped in moisture-proof package.
+            PCB terminal standard types do not require moisture proof packaging and therefore shipped in non-moisture-proof package.
+
+
+
+
+    2
+G6K                                                                                                                             Surface Mounting Relay
+
+■Ratings
+Coil: Single-side Stable Models                                                                                         Contacts
+                 Item         Rated        Coil    Must operate Must release Max. voltage    Power                       Item               Load        Resistive load
+                              current   resistance voltage (V) voltage (V)       (V)      consumption                    Contact type              Bifurcated crossbar
+Rated voltage                  (mA)         (Ω)              % of rated voltage              (mW)
+                                                                                                                         Contact material          Ag (Au-Alloy contact)
+         3 VDC                 33.0          91
+                                                                                                                                                   0.3 A at 125 VAC,
+       4.5 VDC                 23.2         194                                                                          Rated load
+                                                                                                                                                   1 A at 30 VDC
+                                                                                                    Approx.
+         5 VDC                 21.1         237      80% max.      10% min.           150%                               Rated carry current       2A
+                                                                                                     100
+       12 VDC                   9.1       1,315                                                                          Max. switching voltage 125 VAC, 60 VDC
+       24 VDC                   4.6       5,220                                                                          Max. switching current    1A
+Note 1. The rated current and coil resistance are measured at a coil temperature of 23°C with a tolerance
+        of ±10%.
+Note 2. The operating characteristics are measured at a coil temperature of 23°C.
+Note 3. The maximum voltage is the highest voltage that can be imposed on the relay coil instantaneously.
+
+Coil: Single-winding Latching Models (G6KU-2F-Y, G6KU-2G-Y, G6KU-2P-Y)
+                 Item         Rated        Coil    Must operate Must release Max. voltage    Power
+                              current   resistance voltage (V) voltage (V)       (V)      consumption
+Rated voltage                  (mA)         (Ω)              % of rated voltage              (mW)
+         3 VDC                 33.0          91
+       4.5 VDC                 23.2         194
+                                                                                                    Approx.
+         5 VDC                 21.1         237      75% max.      75% max.           150%
+                                                                                                     100
+       12 VDC                   9.1       1,315
+       24 VDC                   4.6       5,220                                                                                                                                G
+Note 1. The rated current and coil resistance are measured at a coil temperature of 23°C with a tolerance                                                                      6
+        of ±10%.                                                                                                                                                               K
+Note 2. The operating characteristics are measured at a coil temperature of 23°C.
+Note 3. The maximum voltage is the highest voltage that can be imposed on the relay coil instantaneously.
+
+
+■Characteristics
+                      Relay Function                    Single-side stable models                        Single-winding latching models
+Item                                    G6K-2F, G6K-2G, G6K-2PG6K-2F-Y, G6K-2G-Y, G6K-2P-YG6KU-2F-Y, G6KU-2G-Y, G6KU-2P-Y
+Contact resistance *1                                                              100 mΩ max.
+Operating (set) time                                                                 3 ms max.
+Release (reset) time                                                                 3 ms max.
+Minimum set/reset signal width                                      −                                                10 ms
+Insulation resistance *2                                                 1,000 MΩ min. (at 500 VDC)
+                 Between coil and
+                                                                        1,500 VAC, 50/60 Hz for 1 min
+                 contacts
+Dielectric       Between contacts of
+                                                                        1,000 VAC, 50/60 Hz for 1 min
+strength         different polarity
+                 Between contacts of
+                                                                         750 VAC, 50/60 Hz for 1 min
+                 the same polarity
+                 Between coil and
+                                          1,500 V (10 × 160 μs)                    2,500 V (2 × 10 μs), 1,500 V (10 × 160 μs)
+                 contacts
+Impulse
+                 Between contacts of
+withstand
+                 different polarity
+voltage                                                                         1,500 V (10 × 160 μs)
+                 Between contacts of
+                 the same polarity
+Vibration        Destruction              10-55-10 Hz, 2.5 mm single amplitude (5 mm double amplitude) and 55 to 500 Hz, 300 m/s2
+resistance       Malfunction             10-55-10 Hz, 1.65 mm single amplitude (3.3 mm double amplitude) and 55 to 500 Hz, 200 m/s2
+Shock            Destruction                                                         1,000 m/s2
+resistance       Malfunction                                                          750 m/s2
+                 Mechanical                                 50,000,000 operations min. (at 36,000 operations/hour)
+Durability
+                 Electrical                           100,000 operations min. (with a rated load at 1,800 operations/hour)
+Failure rate (P level) *3                                                        10 μA at 10 mVDC
+Ambient operating temperature                                     -40 to 70°C (with no icing or condensation)
+Ambient operating humidity                                                           5% to 85%
+Weight                                                                              Approx. 0.7 g
+Note: The above values are initial values.
+*1. The contact resistance was measured with 10 mA at 1                   *3.     This value was measured at a switching frequency of 120
+      VDC with a voltage-drop method.                                             operations/min and the criterion of contact resistance is
+*2. The insulation resistance was measured with a 500 VDC                         50 Ω. This value may vary depending on the switching
+      megohmmeter applied to the same parts as those used for                     frequency    and   operating     environment.     Always
+      checking the dielectric strength.                                           double-check relay suitability under actual operating
+                                                                                  conditions.
+
+
+
+
+                                                                                                                                                                           3
+    G6K                                                                                                                                                                                                                                                                                                            Surface Mounting Relay
+
+    ■Engineering Data
+    ●Maximum Switching Capacity                                                                                   ●Durability                                                                                                                           ●Ambient Temperature vs.
+                                                                                                                                                                                                                                                         Maximum Coil Voltage
+                Switching current (A)
+
+
+
+
+                                                                                                                              Durability (x104 operations)
+                                          10                                                                                                              1,000                                                                                                                                            250
+
+
+
+
+                                                                                                                                                                                                                                                                       Maximum coil voltage (%)
+                                           7                                                                                                                 500
+                                           5
+                                                                                                                                                             300
+                                                                                                                                                                                                                                                                                                           200
+                                           3
+                                                                                                                                                             100                                            30 VDC resistive load
+                                                                                                                                                                                                            Ambient temperature: 23°C
+                                                                                                                                                                                                            Switching frequency:                                                                           150
+                                                                                                                                                              50
+                                                                                                                                                                                                            1,800 operations/hour
+                                           1                                                                                                                  30
+                                         0.7                                   AC resistive load
+                                                                                                                                                                                                                                                                                                           100
+                                         0.5                                                                                                                  10
+                                                DC resistive load
+                                                                                                                                                                    125 VAC resistive load
+                                         0.3                                                                                                                   5    Ambient temperature: 23°C
+                                                                                                                                                                    Switching frequency:                                                                                                                           50
+                                                                                                                                                               3    1,800 operations/hour
+
+
+                                         0.1                                                                                                                   1                                                                                                                                                   0
+                                            10            30       50 70 100                  300 500 700 1,000                                                 0        0.2         0.4                             0.6       0.8       1      1.2                                                                −40       −20       0                          20           40    60     80 100
+                                                                                                                                                                                                                               Switching current (A)                                                                                                                           Ambient temperature (°C)
+                                                                                          Switching voltage (V)
+                                                                                                                                                                                                                                                        Note: The maximum coil voltage refers to the maximum
+                                                                                                                                                                                                                                                              value in a varying range of operating power
+                                                                                                                                                                                                                                                              voltage, not a continuous voltage.
+    ●Ambient Temperature vs. Carry                                                                                ●Ambient Temperature vs. Must                                                                                                         ●Ambient Temperature vs. Must
+     Current                                                                                                       Operate or Must Release Voltage                                                                                                       Set or Must Reset Voltage
+                                                                                                                   G6K-2G (F/P), G6K-2G (F/P)-Y                                                                                                          G6KU-2G (F/P)-Y
+                     Carry current (A)
+
+
+
+
+                                         2.4                                                                                                                                                                                                                                                                   100
+                                                                                                                   On the basis of rated voltage (%)
+
+
+
+
+                                                                                                                                                                                                                                                                               On the basis of rated voltage (%)
+                                                                                                                                                          100
+
+                                                                                                                                                             90
+                                         2.0                                                                                                                                                                                                                                                                       90
+                                                                                                                                                                                                                                         max.                                                                                                                                    Max. estimated value
+                                                                                                                                                             80
+                                                                                                                                                                                                                                         −
+                                                                                                                                                                                                                                         X
+G                                        1.6                                                                                                                 70                                                                          min.                                                                      80
+
+6                                                                                                                                                            60
+K                                                                                                                                                                                                                                                                                                                  70
+                                                                                                                                                                                                                                                                                                                                                                                                 max.
+                                         1.2                                                                                                                 50
+                                                                                                                                                                                                                                                                                                                                                                                                   −
+                                                                                                                                                                                                                                                                                                                   60                                                                              X
+                                                                                                                                                             40
+                                         0.8                                                                                                                                                                                                                                                                                                                                                      min.
+                                                                                                                                                             30                                                                          max.
+                                                                                                                                                                                                                                         −                                                                         50
+                                                                                                                                                                                                                                         X
+                                                                                                                                                             20                                                                          min.
+                                         0.4
+                                                                                                                                                                                                                                                                                                                   40
+                                                                                                                                                             10                                                              Must operate voltage
+                                                                                                                                                                                                                             Must release voltage
+                                           0                                                                                                                  0                                                                                                                                                    30
+                                           -40      -20        0         20          40       60       80   100                                               −60      −40     −20      0                           20        40    60     80 100                                                                   −60      −40     −20                 0                20      40      60    80 100
+                                                                                     Ambient temperature (°C)                                                                                                              Ambient temperature (°C)                                                                                                                            Ambient temperature (°C)
+
+    ●Shock Malfunction                                                                                            ●Electrical Durability (with Must Operate ●Electrical Durability
+                                                                                                                   and Must Release Voltage) *1              (Contact Resistance) *1
+                                                                                                                   G6K-2G (F/P), G6K-2G (F/P)-Y              G6K-2G (F/P), G6K-2G (F/P)-Y
+                                                                         Y                                                                                100
+                                                                                                                                                                                                                                                         Contact resistance (mΩ)
+                                                                                                                      On the basis of rated voltage (%)
+
+
+
+
+                                                                                                                                                                                                                                                                              1,000
+                                                                             1,000                                                                              Sample: G6K-2G                                                                                                                                 Sample: G6K-2G
+                                                                                          Energized                                                                                                                                                                                                                                                                                        NO contact
+                                                                                                                                                                Number of Relays: 10 pcs                                                                                                                       Number of Relays: 10 pcs
+                                                                                                                                                                Test conditions: 1 A resistive load at 30 VDC                                                                                                                                                                              NC contact
+                                                                             800                                                                                                                                                                                                                           500 Test conditions: 1 A resistive load
+                                                                                                                                                                with an operation rate of 50%                                                                                                                  at 30 VDC with an operation rate
+                                                                                                                                                             80
+                                            X                                600 De-                  Z                                                         Switching frequency: 1,800 operations/h                                                                                                        of 50%
+                                          1,000                                  energized          1,000                                                                                                                                      max.                                                        300 Switching frequency: 1,800
+                                                                             400
+                                                                                                                                                                                                                                                                                                               operations/h
+                                                                             200                                                                             60                                                                                min.
+                                                                                                                                                                    Must operate voltage
+                                                                                                                                                                                                                                                                                                           100
+                                                                   200                                                                                                                                                                                                                                                    Contact resistance                                                     max.
+                                                                                                                                                             40                                                                                                                                                                                                                                  max.
+                                                                   400
+                                          1,000                                                     1,000                                                                                                                                                                                                          50                                                                            min.
+                                            Z'                     600                                X'                                                                                                                                                                                                                                                                                         min.
+
+                                Shock directions                                                                                                                                                                                               max.                                                                30
+                                                                   800                                                                                       20
+                                  X        X'                                                                                                                       Must release voltage                                                       min.
+                                 Y                              1,000                Unit: m/s2
+                                            Z                            Y'          Sample: G6K-2G
+                                                    Z'                               Number of Relays: 10 pcs                                                 0                                                                                                                                                    10
+                                                                                                                                                               0.001    0.01         0.1        1       10       100                                                                                                 0.001    0.01         0.1        1       10       100
+                                         Y'
+                                                                                                                                                                                     Operating frequency (x103 operations)
+    Conditions: Shock is applied in ±X, ±Y, and ±Z                                                                                                                                                                                                                                                                                         Operating frequency (x103 operations)
+                directions three times each with and
+                without energizing the Relays to check
+                the number of contact malfunctions.
+    ●Contact Reliability Test *1, *2                                                                              ●Mutual Magnetic Interference                                                                                                         ●Mutual Magnetic Interference
+                     G6K-2G (F/P), G6K-2G (F/P)-Y                                                                  G6K-2G (F/P), G6K-2G (F/P)-Y                                                                                                          G6K-2G (F/P), G6K-2G (F/P)-Y
+                          1,000                                                                                                                                                                                                Initial stage     Test                                                                                                                          Initial stage   Test
+     Contact resistance (mΩ)
+
+
+
+
+                                             Sample: G6K-2G
+                                                                                                                                                                                                                                                                                                                                                                         +30
+                                                                                                                                                                                                                                                                                                                                                Change rate on the
+                                                                                                                                                                                                                                                                                                                                            basis of initial value (%)
+
+
+
+
+                                                                                                                                                                                                                         +30
+                                                                                                                                                                                                Change rate on the
+                                                                                                                                                                                            basis of initial value (%)
+
+
+
+
+                                             Number of Relays: 10 pcs                              NO contact
+                                                                                                       max.
+                                                                                                                                                                                                                         +20                                                                                                                                             +20
+                                         500 Test conditions: 10 μA resistive                      NC contact
+                                             load at 10 m VDC with an                                   min.
+                                                                                                                                                                                                                         +10                                                                                                                                             +10
+                                             operation rate of 50%                                                                                                                                                                                                            Sample
+                                         300 Switching frequency: 7,200                                                                                       Sample                                                       0                                                                                                                                               0
+                                             operations/h                                                                                                                                                                −10                                                                                                                                             −10
+                                                                                                                   De-energized                                                                                          −20                                                                                                                                             −20
+                                                                                                                                                                                                                                      Average value                                                                     De-energized                                                   Average value
+                                                                                                                                                                                                                         −30                                                                                                                                             −30
+                                         100
+                                                                                                                                                                                                                               Initial stage     Test                                                                                                                          Initial stage   Test
+                                                                                                                                                                                                                         +30                                                                                                                                             +30
+                                                                                                                                                                                                                                                                                                                                                Change rate on the
+                                                                                                                                                                                                                                                                                                                                            basis of initial value (%)
+                                                                                                                                                                                                Change rate on the
+                                                                                                                                                                                            basis of initial value (%)
+
+
+
+
+                                          50
+                                                                                                        max.                                                                                                             +20                                                                                                                                             +20
+                                                                                                        max.
+                                                                                                        min.                                                                                                             +10                                                                                                                                             +10
+                                                                                                        min.                                                  Sample                                                                                                          Sample
+                                          30                                                                                                                                                                               0                                                                                                                                               0
+                                                                                                                                                                                                                         −10                                                                                                                                             −10
+                                                                                                                                                             Energized                                                   −20                                                                                                                                             −20
+                                                                                                                                                                                                                         −30
+                                                                                                                                                                                                                                      Average value                                                                        Energized                                                   Average value
+                                          10                                                                                                                                                                                                                                                                                                                             −30
+                                            0.001 0.01    0.1      1     10    100 1,000 10,000 100,000                                                                                                                         Must operate voltage                                                                                                                            Must operate voltage
+                                                                Operating frequency (x103 operations)                                                                                                                           Must release voltage                                                                                                                            Must release voltage
+
+    *1.                                       The test was conducted at an ambient temperature of 23°C.
+    *2.                                       The contact resistance data are periodically measured reference values and are not values from each monitoring operation. Contact resistance values will vary
+                                              according to the switching frequency and operating environment, so be sure to check operation under the actual operating conditions before use.
+
+
+
+    4
+                  G6K                                                                                                                                                                                                                                                                                                             Surface Mounting Relay
+
+
+                  ●External Magnetic Interference
+                   G6K-2G (F/P), G6K-2G (F/P)-Y
+                                                                                                (Average value)                                                                                                         (Average value)                                                                                                                        (Average value)
+                                                +30                                                                                                                   +30                                                                                                                                             +30
+Change rate on the basis of initial value (%)
+
+
+
+
+                                                                                                                      Change rate on the basis of initial value (%)
+
+
+
+
+                                                                                                                                                                                                                                             Change rate on the basis of initial value (%)
+                                                         S           N                          S          N                                                                      S            N                       S            N                                                                                         S            N                   S            N
+
+                                                +20                                                                                                                   +20                                                                                                                                             +20
+
+
+
+                                                +10                                                                                                                   +10                                                                                                                                             +10
+
+
+
+                                                  0                                                                                                                        0                                                                                                                                            0
+
+
+
+                                                −10                                                                                                                   −10                                                                                                                                             −10
+
+
+
+                                                −20                                                                                                                   −20                                                                                                                                             −20
+                                                       Sample: G6K-2G                      Must operate voltage                                                                  Sample: G6K-2G                     Must operate voltage                                                                         Sample: G6K-2G                   Must operate voltage
+                                                       Number of Relays: 10 pcs            Must release voltage                                                                  Number of Relays: 10 pcs           Must release voltage                                                                         Number of Relays: 10 pcs         Must release voltage
+                                                −30                                                                                                                   −30                                                                                                                                   −30
+                                                −1,200       −800   −400          0       400     800 1,200                                                           −1,200          −800    −400          0       400     800 1,200                                                                       −1,200  −800      −400        0       400      800 1,200
+                                                                                  External magnetic field (A/m)                                                                                             External magnetic field (A/m)                                                                                                 External magnetic field (A/m)
+
+
+                  ●High-frequency Characteristics                                                                                    ●High-frequency Characteristics                                                                          ●High-frequency Characteristics
+                   (Isolation) *1, *2                                                                                                 (Insertion Loss) ) *1, *2                                                                                (Return Loss) *1, *2
+                   G6K-2G (F/P), G6K-2G (F/P)-Y                                                                                       G6K-2G (F/P), G6K-2G (F/P)-Y                                                                             G6K-2G (F/P),G6K-2G (F/P)-Y
+                                                                                        (Average value (initial))                                                                                                (Average value (initial))                                                                                                              (Average value (initial))
+
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                           V.SWR
+                                                  0                                                                                                                        0                                                                                                                                            0
+                               Isolation (dB)
+
+
+
+
+                                                                                                                                              Insertion loss (dB)
+
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                    1.4            G
+
+
+
+
+                                                                                                                                                                                                                                                                        Return loss (dB)
+                                                    Sample: G6K-2G                                                                                                                                                                                                                                                           Sample: G6K-2F-Y
+                                                 10 Number of Relays: 10 pcs
+                                                                                                                                                                                                                                                                                                                       10
+                                                                                                                                                                                                                                                                                                                             Number of Relays: 5 pcs
+                                                                                                                                                                                                                                                                                                                                                                                    1.35
+                                                                                                                                                                                                                                                                                                                                                                                                   6
+                                                 20                                                                                                                       0.1
+                                                                                                                                                                                                                                                                                                                                                                                                   K
+                                                                                                                                                                                                                                                                                                                       20                                                           1.3
+                                                 30
+
+                                                 40                                                                                                                       0.2                                                                                                                                          30                                                           1.25
+                                                                                                                                                                                                                                                                                                                             Return loss
+                                                 50                                                                                                                                                                                                                                                                    40                                                           1.2
+
+                                                 60                                                                                                                       0.3
+                                                                                                                                                                                                                                                                                                                       50                                                           1.15
+                                                 70
+                                                                                                                                                                                                                                                                                                                       60                                                           1.1
+                                                 80                                                                                                                       0.4
+
+                                                 90                                                                                                                                                                                                                                                                    70                                                           1.05
+                                                                                                                                                                                 Sample: G6K-2G                                                                                                                                   V.SWR
+                                                                                                                                                                                 Number of Relays: 10 pcs
+                                                100                                                                                                                       0.5                                                                                                                                          80                                                     1
+                                                   1                              10                       100                                                               1                              10                     100                                                                                   1                         10                     100
+                                                                                                Frequency (MHz)                                                                                                         Frequency (MHz)                                                                                                                        Frequency (MHz)
+
+
+                  ●Must Operate and Must Release                                                                                     ●Must Operate and Must Release                                                                          ●Vibration Resistance
+                   Time Distribution *1                                                                                               Bounce Time Distribution *1                                                                             G6K-2G (F/P), G6K-2G (F/P)-Y
+                   G6K-2G (F/P), G6K-2G (F/P)-Y                                                                                       G6K-2G (F/P) , G6K-2G (F/P)-Y
+                          Number of contacts
+
+
+
+
+                                                                                                                                                     Number of contacts
+
+
+
+
+                                                 60                                                                                                                        60                                                                                                                                         10.0
+                                                                                                                                                                                                                                                                        Change rate on the basis of rated value (%)
+
+
+
+
+                                                       Sample: G6K-2G                           Must operate
+                                                       Number of Relays:                        voltage                                                                                                      Must operate bounce time
+                                                       50 pcs                                   Must release                                                                                                 Must release bounce time
+                                                                                                voltage
+
+                                                                                                                                                                                                                                                                                                                       5.0
+                                                 40                                                                                                                        40
+
+                                                                                                                                                                                                                                                                                                                                                        Must operate voltage
+
+                                                                                                                                                                                                                                                                                                                       0.0
+                                                                                                                                                                                                                                                                                                                                                        Must release voltage
+
+                                                 20                                                                                                                        20
+
+                                                                                                                                                                                                                                                                                                                      −5.0
+
+
+                                                                                                                                                                                                              Sample: G6K-2G
+                                                                                                                                                                                                              Number of Relays: 50 pcs
+                                                                                                                                                                                                                                                                                             −10.0
+                                                  0           0.5        1        1.5       2        2.5          3                                                         0          0.5         1        1.5     2       2.5       3                                                           Initial                                                               After test
+                                                                                                      Time (ms)                                                                                                                 Time (ms)
+
+                  *1.                                 The tests were conducted at an ambient temperature of 23°C.
+                  *2.                                 High-frequency characteristics depend on the PCB to which the Relay is mounted. Always check these characteristics including endurance in the actual machine
+                                                      before use.
+
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                      5
+  G6K                                                                                                                                             Surface Mounting Relay
+
+  ■Dimensions (Unit: mm)
+  ●Single-side Stable                                                                                       Mounting Dimensions (TOP VIEW)                                Terminal Arrangement/
+                                                                                                            Tolerance: ±0.1 mm                                            Internal Connections
+  G6K-2F
+                                              10±0.2                              6.5±0.2                                       7.62                                      (TOP VIEW)
+                                                                                                                              5.08
+                                                                                                                     2.54
+                        5.2±0.2                                                                                                                                                8      7       6       5
+                               1.6
+                                                                                                                                            1.8      7
+                              0.5±0.1                                              7.8         0.3
+                               1.19            (2.54) (2.54)
+                                 2.54
+                                             5.08                                                                0.8                                                           1      2       3       4
+                                               7.62                                                          (1.19)
+                                                                                                                                                                              Orientation mark
+                                                                        Note 1. Each value has a tolerance of ±0.3 mm.                                              Note: Check carefully the coil
+                                                                        Note 2. The coplanarity of the terminals is 0.1 mm max.                                           polarity of the Relay.
+
+  G6K-2G                                                                                                    Mounting Dimensions (TOP VIEW)                                Terminal Arrangement/
+                                                                                                            Tolerance: ±0.1 mm                                            Internal Connections
+                                              10±0.2                             6.5±0.2                                       7.62                                       (TOP VIEW)
+                                                                                                                             5.08
+                                                                                                                 2.54
+                        5.4±0.2                                                                                                                                               8       7       6       5
+                               1.8
+
+                              0.5±0.1                                             4.9                                                      1.8     5.7
+                                                                                             0.5
+                               1.19            (2.54) (2.54)
+                                 2.54
+                                             5.08                                                               0.8                                                           1       2       3       4
+                                               7.62
+                                                                                                            (1.19)
+                                                                                                                                                                              Orientation mark
+                                                                        Note 1. Each value has a tolerance of ±0.3 mm.                                              Note: Check carefully the coil
+                                                                        Note 2. The coplanarity of the terminals is 0.1 mm max.                                           polarity of the Relay.
+G G6K-2P                                                                                                    PCB Mounting Holes (Bottom VIEW)                              Terminal Arrangement/
+6                                                                                                           Tolerance: ±0.1 mm                                            Internal Connections
+K                                               10±0.2                             6.5±0.2                     2.54
+                                                                                                                                         Eight, 0.85-dia. holes
+                                                                                                                                                                          (Bottom VIEW)
+
+                                                                                                                                                                               Orientation mark
+                             5                                                                       2.54
+                                                                                                                                                                                  1       2       3       4
+                                     0.5
+                            3.5
+                                                                                                                                                             5.08
+                                 0.4±0.1                         R0.2
+                                   1.19          (2.54) (2.54)                               0.15
+                                    2.54                                            5.08
+                                              5.08                                                                                                                                8       7       6       5
+                                                7.62                                                                                                (0.71)
+                                                                                                                                                                     Note: Check carefully the coil
+                                                                                                            (1.19)              7.62                                       polarity of the Relay.
+                                                                           Note: Each value has a tolerance of ±0.3 mm.
+
+  G6K-2F-Y                                                                                                  Mounting Dimensions (TOP VIEW)                                Terminal Arrangement/
+                                                                                                            Tolerance: ±0.1 mm                                            Internal Connections
+                                               10±0.2                             6.5±0.2                                       7.6                                       (TOP VIEW)
+                                                                                                                              5.4
+                                                                                                                      3.2
+                         5.2±0.2                                                                                                                                               8       7      6       5
+                               1.6
+                                                                                                                                             1.8     7
+                               0.5±0.1                                             7.8         0.3
+                                  1.2             (2.2) (2.2)
+                                    3.2
+                                              5.4                                                                0.8                                                           1       2      3       4
+                                                7.6                                                           (1.2)
+                                                                                                                                                                               Orientation mark
+                                                                         Note 1. Each value has a tolerance of ±0.3 mm.                                             Note: Check carefully the coil
+                                                                         Note 2. The coplanarity of the terminals is 0.1 mm max.                                          polarity of the Relay.
+
+  G6K-2G-Y                                                                                                    Mounting Dimensions (TOP VIEW)                              Terminal Arrangement/
+                                                                                                              Tolerance: ±0.1 mm                                          Internal Connections
+                                               10±0.2                              6.5±0.2                                       7.6                                      (TOP VIEW)
+                                                                                                                               5.4
+                                                                                                                       3.2
+                        5.4±0.2                                                                                                                                                   8       7       6       5
+                               1.8
+
+                               0.5±0.1                                              4.9                                                      1.8    5.7
+                                                                                              0.5
+                                  1.2             (2.2) (2.2)
+                                    3.2
+                                              5.4                                                                 0.8                                                             1       2       3       4
+                                                7.6
+                                                                                                               (1.2)
+                                                                                                                                                                               Orientation mark
+                                                                        Note 1. Each value has a tolerance of ±0.3 mm.                                               Note: Check carefully the coil
+                                                                        Note 2. The coplanarity of the terminals is 0.1 mm max.                                            polarity of the Relay.
+
+  G6K-2P-Y                                                                                                    PCB Mounting Holes (BOTTOM VIEW)                            Terminal Arrangement/
+                                                                                                              Tolerance: ±0.1 mm                                          Internal Connections
+                                                 10±0.2                            6.5±0.2                                                 Eight, 0.85-dia. holes         (BOTTOM VIEW)
+                                                                                                                                   7.6
+                                                                                                                                 5.4                                              Orientation mark
+                                                                                                                        3.2
+                              5
+                                                                                                                                                                                  1       2       3       4
+                                      0.5
+                             3.5
+                                                                                                                                                          5.08
+                                  0.4±0.1                        R0.2
+                                     1.2                                                     0.15
+                                                   (2.2) (2.2)
+                                       3.2                                          5.08
+                                               5.4                                                                                                                                8       7       6       5
+                                                                                                                                                 (0.71)
+                                                 7.6                                                           (1.2)                                                Note: Check carefully the coil
+                                                                            Note: Each value has a tolerance of ±0.3 mm.                                                  polarity of the Relay.
+
+
+
+  6
+G6K                                                                                                                           Surface Mounting Relay
+
+
+●Single-winding Latching                                                                        Mounting Dimensions (TOP VIEW)                          Terminal Arrangement/
+                                                                                                Tolerance: ±0.1 mm                                      Internal Connections
+G6KU-2F-Y
+                                          10±0.2                           6.5±0.2                                7.6                                   (TOP VIEW)
+                                                                                                                5.4
+                                                                                                         3.2
+                      5.2±0.2                                                                                                                                8        7   6    5
+                            1.6
+                                                                                                                           1.8    7
+                           0.5±0.1                                           7.8                                                                                 SR
+                                                                                         0.3
+                              1.2           (2.2) (2.2)
+                                3.2
+                                          5.4                                                       0.8                                                      1        2   3    4
+                                            7.6                                                  (1.2)
+                                                                                                                                                            Orientation mark
+                                                                   Note 1. Each value has a tolerance of ±0.3 mm.                                  Note: Check carefully the coil
+                                                                   Note 2. The coplanarity of the terminals is 0.1 mm max.                               polarity of the Relay.
+
+
+G6KU-2G-Y                                                                                        Mounting Dimensions (TOP VIEW)                         Terminal Arrangement/
+                                                                                                 Tolerance: ±0.1 mm                                     Internal Connections
+                                          10±0.2                            6.5±0.2                               7.6                                   (TOP VIEW)
+                                                                                                                5.4
+                                                                                                         3.2
+                      5.4±0.2                                                                                                                                8        7   6     5
+                             1.8
+
+                            0.5±0.1                                          4.9                                            1.8   5.7                            SR
+                                                                                        0.5
+                               1.2          (2.2) (2.2)
+                                 3.2
+                                          5.4                                                        0.8                                                     1        2   3     4
+                                            7.6
+                                                                                                  (1.2)
+                                                                                                                                                             Orientation mark
+                                                                   Note 1. Each value has a tolerance of ±0.3 mm.                                  Note: Check carefully the coil
+                                                                   Note 2. The coplanarity of the terminals is 0.1 mm max.                               polarity of the Relay.
+                                                                                                                                                                                        G
+G6KU-2P-Y                                                                                        PCB Mounting Holes (BOTTOM VIEW)                       Terminal Arrangement/           6
+                                                                                                 Tolerance: ±0.1 mm                                     Internal Connections            K
+                                            10±0.2                         6.5±0.2                                       Eight, 0.85-dia. holes         (BOTTOM VIEW)
+                                                                                                                   7.6
+                                                                                                                 5.4                                        Orientation mark
+                                                                                                          3.2
+                           5
+                                                                                                                                                             1        2   3    4
+                                   0.5
+                           3.5
+                                                                                                                                      5.08                       SR
+                               0.4±0.1                      R0.2
+                                  1.2                                                 0.15
+                                              (2.2) (2.2)
+                                    3.2                                     5.08
+                                           5.4                                                                                                               8        7   6    5
+                                                                                                                             (0.71)
+                                             7.6                                                 (1.2)                                            Note: Check carefully the coil
+                                                                      Note: Each value has a tolerance of ±0.3 mm.
+                                                                                                                                                        polarity of the Relay.
+
+
+
+
+                                                                                                                                                                                    7
+   G6K                                                                                                                                                                    Surface Mounting Relay
+
+   ■Tube Packing and Tape Packing
+   Surface mounting terminal (SMT) standard models are shipped in moisture-proof package, and PCB terminal standard types do not
+   require moisture proof packaging and therefore shipped in non-moisture-proof package.
+   Please refer to "Correct Use" for handling after opening moisture-proof packaging for Surface mounting terminal (SMT) models.
+   (1) Tube Packing                                                                                                            2. Reel Dimensions
+                                                                                                                                                                                                       17.5±1.0
+    • Relays in tube packing are arranged so that the orientation                                                                                              2±0.5
+                                                                                                                                                                                                        21.5±1.0
+                                                                                                                                                                          13±0.2
+      mark of each Relay in on the left side. Fifty Relays are packed                                                                                 21±0.5
+
+      on one tube.
+      Be sure not to make mistakes in Relay orientation when
+      mounting the Relay to the PCB.                                                                                                                                                                     80      330
+             Stopper                                 Orientation of Relays                               Stopper
+              (gray)                                                                                     (green)
+
+
+                                                                                                                                                      R1
+
+
+                                                                                                                               3. Carrier Tape Dimensions
+       Tube length: 520 mm (stopper not included)                                                                              G6K-2F, G6K-2F-Y, G6KU-2F-Y
+       No. of Relays per tube: 50 pcs                                                                                                                                                                              5.6±0.1
+                                                                                                                                                                        4±0.1
+                                                                                                                                                 1.5+0.1
+   (2) Tape Packing (Surface Mounting Terminal Models)                                                                                              −0
+                                                                                                                                                                        2±0.1              1.75±0.1   0.4±0.05
+
+   • When ordering Relays in tape packing, add the prefix “-TR” to
+     the model number, otherwise the Relays in tube packing will                                                                                                                            7.5±0.1
+                                                                                                                                16±0.1
+                                                                                                                                         10.35
+     be provided.
+G    Relays per Reel: 900 pcs
+6    Minimum packing unit: 2 reels (1,800 pcs)                                                                                                                          12±0.1
+K                                                                                                                                                               8.6
+  1. Direction of Relay Insertion
+                                                                                                                               G6K-2G, G6K-2G-Y, G6KU-2G-Y
+                                                                                     Pulling direction                                              +0.1
+                                                                                                                                                 1.5−0
+                                                                                                                                                                       4±0.1                                           0.4±0.05
+                                                                                                                                                                       2±0.1               1.75±0.1                           5.8±0.1
+                                                        Top tape                              Orientation mark
+                                                        (cover tape)                                                                                                                                                         R0.3 max.
+
+                                                                                                                   Pulling                                                                 7.5±0.1
+                                                                                                                   direction
+                                                                                                                                16±0.1
+                                                                                                                                         10.6                                                         10.6±0.1
+
+             Carrier tape                                       Embossed
+                                                                tape                                                                                                   12±0.1                            3° max.
+                                                                                                                                                               6.9
+
+   ■Recommended Soldering Method
+   ●IRS Method (for Surface-mounting Terminal Relays)                                                                          • The thickness of cream solder to be applied should be within a
+   (1) IRS Method (Mounting Solder: Lead)                                                                                        range between 150 and 200 μm on OMRON’s recommended
+                            Temperature (°C)
+
+
+
+
+                                                                                                                                 PCB pattern.
+                                                                                                                               • In order to perform correct soldering, it is recommended that
+                                                                                      Soldering
+                                                                                                                                 the correct soldering conditions be maintained as shown
+                  220 to 245
+                                                                                                                                 below on the left side.
+                  180 to 200                                                                                                   Correct Soldering                          Incorrect Soldering
+                                                                                                                                                               Relay
+
+                                                                   Preheating                                                                                  Terminal
+                                               150
+                                                                                                                                                               Land
+                                                                                                                               Heel fillet
+                                                                                                                                                               PCB
+                                                                                                                               is formed
+
+
+                                                                       90 to 120        20 to 30
+                                                                                                   Time (s)                                  Solder                             Insufficient amount           Excessive amount
+          (The temperature profile indicates the temperature on the circuit board.)                                                                                             of solder                     of solder
+
+   (2) IRS Method (Mounting Solder: Lead-free)                                                                                 Visually check that the Relay is properly soldered.
+                       Temperature (°C)
+
+
+
+
+                                                                              Uppwe surface of case
+                                                                              (peak): 255°C max.
+                                                                                        Soldering
+                   250 max.
+                                          230
+
+                                          180
+
+
+
+
+                                                                  Preheating
+                                          150
+
+
+                                                                                         Relay terminal
+                                                                                         section
+
+
+                                                                   120 max.             30 max.
+                                                                                                   Time (s)
+          (The temperature profile indicates the temperature on the PCB.)
+
+
+
+   8
+G6K                                                                                                                    Surface Mounting Relay
+
+■Approved Standards
+UL recognized:               UL1950 (File No. E41515)                            BSI (EN62368-1) (File No.VC689955)
+CSA certified:          C22.2 No. 950 (File No. LR31928)                          Contact form                 Isolation category    Voltage
+                                                                    Number of      DPDT (2c)                    Basic Insulation    125 VAC
+Contact
+                     Coil rating               Contact rating          test
+ form
+                                                                    operations
+                                            2 A, 30 VDC at 40°C
+ DPDT     G6K-2G(F/P): 3 to 24 VDC
+                                           0.5 A, 60 VDC at 40°C      6,000
+  (2c)    G6K(U)-2G(F/P)-Y: 3 to 24 VDC
+                                           0.3 A, 125 VAC at 40°C
+
+
+■Precautions
+●Please refer to “PCB Relays Common Precautions” for correct use.
+
+                                Correct Use
+●Long-term Continuously ON Contacts                                              ●Maximum Allowable Voltage
+• Using the Relay in a circuit where the Relay will be ON                        • The maximum allowable voltage of the coil can be obtained
+  continuously for long periods (without switching) can lead to                    from the coil temperature increase and the heat-resisting
+  unstable contacts because the heat generated by the coil itself                  temperature of coil insulating sheath material. (Exceeding the
+  will affect the insulation, causing a film to develop on the                     heat-resisting temperature may result in burning or
+  contact surfaces. We recommend using a latching relay                            short-circuiting.) The maximum allowable voltage also involves
+  (magnetic-holding relay) in this kind of circuit. If a single-side               important restrictions which include the following:
+  stable model must be used in this kind of circuit, we                             • Must not cause thermal changes in or deterioration of the
+  recommend using a fail-safe circuit design that provides                            insulating material.                                           G
+  protection against contact failure or coil burnout.                               • Must not cause damage to other control devices.                6
+                                                                                                                                                     K
+                                                                                    • Must not cause any harmful effect on people.
+●Relay Handling                                                                     • Must not cause fire.
+• Use the Relay as soon as possible after opening the                              Therefore, be sure to use the maximum allowable voltage
+  moistureproof package. (As a guideline, use the Relay within                     beyond the value specified in the catalog.
+  one week at 30°C or less and 60% RH or less.) If the Relay is                  • As a rule, the rated voltage must be applied to the coil. A
+  left for a long time after opening the moisture-proof package,                   voltage exceeding the rated value, however, can be applied to
+  the appearance may suffer and seal failure may occur after the                   the coil provided that the voltage is less than the maximum
+  solder mounting process. To store the Relay after opening the                    allowable voltage. It must be noted that continuous voltage
+  moisture-proof package, place it into the original package and                   application to the coil will cause a coil temperature increase
+  sealed the package with adhesive tape.                                           thus affecting characteristics such as electrical life and
+• When washing the product after soldering the Relay to a PCB,                     resulting in the deterioration of coil insulation.
+  use a water-based solvent or alcohol-based solvent, and keep
+  the solvent temperature to less than 40°C. Do not put the                      ●Coating
+  Relay in a cold cleaning bath immediately after soldering.                     • The Relay mounted on the PCB may be coated or washed but
+                                                                                   do not apply silicone coating or detergent containing silicone,
+●Claw Securing Force During Automatic Mounting                                     otherwise the silicone coating or detergent may remain on the
+• During automatic insertion of Relays, make sure to set the                       surface of the Relay.
+  securing force of each claw to the following so that the Relays
+  characteristics will be maintained.                                            ●PCB Mounting
+                         C                                                       • If two or more Relays are closely mounted with the long sides
+                 A                 B   Direction A: 1.96 N max.                    of the Relays facing each other and soldering is performed
+                                       Direction B: 4.90 N max.                    with infrared radiation, the solder may not be properly exposed
+                                       Direction C: 1.96 N max.
+                                                                                   to the infrared rays. Be sure to keep the proper distance
+                                                                                   between adjacent Relays as shown below.
+●Environmental Conditions During Operation, Storage,                               G6K-2G
+ and Transportation
+• Protect the Relay from direct sunlight and keep the Relay
+  under normal temperature, humidity, and pressure.
+                                                                                            2 mm min.
+
+●Latching Relay Mounting
+• Make sure that the vibration or shock that is generated from                     G6K-2F
+  other devices, such as relays in operation, on the same panel
+  and imposed on the Latching Relay does not exceed the rated
+  value, otherwise the Latching Relay that has been set may be
+                                                                                                 2.7 mm min.
+  reset or vice versa. The Latching Relay is reset before
+  shipping. If excessive vibration or shock is imposed, however,                 • Two or more Relays may be closely mounted with the short
+  the Latching Relay may be set accidentally. Be sure to apply a                   sides of the Relays facing each other.
+  reset signal before use.
+
+
+
+
+                                                                                                                                                9
+    G6K                                                                                                                              Surface Mounting Relay
+
+
+
+
+G
+6
+K
+
+
+
+
+    • Application examples provided in this document are for reference only. In actual applications, confirm equipment functions and safety before using the product.
+    • Consult your OMRON representative before using the product under conditions which are not described in the manual or applying the product to nuclear control systems, railroad
+      systems, aviation systems, vehicles, combustion systems, medical equipment, amusement machines, safety equipment, and other systems or equipment that may have a serious
+      influence on lives and property if used improperly. Make sure that the ratings and performance characteristics of the product provide a margin of safety for the system or
+      equipment, and be sure to provide the system or equipment with double safety mechanisms.
+
+
+                                                                                                          Note: Do not use this document to operate the Unit.
+
+    OMRON Corporation
+    Electronic and Mechanical Components Company                                          Contact: www.omron.com/ecb                                       Cat. No. K106-E1-11
+                                                                                                                                                                 0118(0207)(O)
+
+
+    10
+

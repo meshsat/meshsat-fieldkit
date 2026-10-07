@@ -4,14 +4,14 @@ method) V6-B1 stays OPEN as REMAINING ENGINEERING (section 6). PROTOTYPE DESIGN,
 measured. Labels: PRINTED, TYPICAL, DECLARED, MODEL, ASSUMPTION, INFERRED, MISSING, PROVISIONAL.
 
 0. PINS (sha256/16 path)
-   3a4225fa409cb0cf v2/docs/records/l8r2/l8r2_gndret.py
-   24722259a30363c5 v2/docs/records/l8r2/l8r2_gndret.out
-   872cbf961ddd515e v2/docs/records/l8r2/l8r2_p0.py
-   6c2340c0796ee8ff v2/docs/records/l8r2/l8r2_p0.out
+   3cfc55ce5d6711a9 v2/docs/records/l8r2/l8r2_gndret.py
+   29f313c17d6f8283 v2/docs/records/l8r2/l8r2_gndret.out
+   ead614436cf77d00 v2/docs/records/l8r2/l8r2_p0.py
+   ada2070a1c808ae1 v2/docs/records/l8r2/l8r2_p0.out
    4adb13047770eb1c v2/docs/records/l8r2/apply_gen_sch_a_gndrtn.py
    b9048dcbb1ff023f v2/docs/records/l8r2/apply_gen_sch_b_gndrtn.py
    8cc22eaffdde6c2c v2/docs/records/l9t5/l9t5_connected.py
-   d4fa665447fc7a71 v2/docs/records/l9pwr/l9pwr_budget.out
+   a4ea167cb0585283 v2/docs/records/l9pwr/l9pwr_budget.out
    58e26c67987b1daa v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb
    2e64b5bf2d9cd3bc v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb
    a462ac2620b9b8d3 v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb

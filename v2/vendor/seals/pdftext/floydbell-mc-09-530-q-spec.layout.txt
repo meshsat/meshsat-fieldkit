@@ -1,0 +1,37 @@
+AudioLarm II Series
+MC-09-530-Q           Specifications
+
+                               Mounting            Panel Mount
+                            Operating Mode         Medium Loud Continuous Tone
+                           Operating Voltage       5-30 Vdc
+                          Operating Frequency      2900±250 Hz
+                                                   2 mA at 5 Vdc
+                       Typical Operating Current
+                                                   20 mA at 30 Vdc
+                                                   85 ±5 dB(A) at 5 Vdc at 24 inches (61 cm), at 25°C
+                        Typical Sound Pressure
+                                                   95 ±5 dB(A) at 30 Vdc at 24 inches (61 cm), at 25°C
+                              Termination          Quick Connect Blades
+                         Termination Strength      Pull test with a maximum of 22 pounds (10 kg) load
+                        Operating Temperature      -20_C to +65_C
+                         Storage Temperature       -40_C to +85_C
+                             Surge Voltage         20% over maximum rated voltage for less than 5 minutes
+                       Reverse Voltage Protection To the maximum operating voltage
+                                                   Case- Plastic _NORYL_ N-190, Flame Retardant UL 94-VO, Black
+                                                   Internal Circuit- Audio-oscillator and piezoelectric driver
+                         Construction Materials
+                                                   Potting- 2 parts epoxy resin or silicone, black
+                                                   Diaphragm- Stainless Steel 304
+                                 Gasket            Gasket (sold separately) 0.062" thick, 60 Durometer Neoprene
+                                                   ASTM B117 Certified - Withstands exposure to salt spray for 300 hours
+                                                   IP 68 Certified - Withstands water submergence and dust exposure
+                         Construction Materials
+                                                   Humidity- 95% relative humidity at +40_C continuously for 100 hours.
+More Information                                   Vibration- Withstands vibration between 0 and 55 Hz. on all axes.
+                            Life Expectancy        10 years under normal operating conditions.
+   UL Recognized               Warranty            For a period of two years from the date of manufacture under normal operating conditions.
+                                 Notes             This product is not intended as a life safety device.
+                      Terms and Conditions of Sale Link here
+    Rohs Compliant
+Dimensions
+

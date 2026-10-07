@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf",
+ "pdf_sha256": "96c2dc89ae1e3039815ed6c41f566a6e9f6b53035f8e45ea2ada1697935a44dc",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/vishay/pdftext/vishay-wsl-power-metal-strip.layout.txt",
+ "text_bytes": 27812,
+ "text_sha256": "3a3efdb44c14796b72c9961877536fbac8c76cec661b33edfabbf5aad89ea2a3"
+}

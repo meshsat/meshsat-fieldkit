@@ -34,6 +34,19 @@ PINS = ["v2/docs/records/l8r2/l8r2_gndret.py", "v2/docs/records/l8r2/l8r2_gndret
         "v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf", "v2/vendor/connectors/jst-ph-catalogue.pdf",
         "v2/vendor/battery/amass-xt60-spec-tme.pdf", "v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf",
         "v2/ecad/tools/gen_sch_a.py", "v2/ecad/tools/pcb_interfaces.yaml"]
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options. Each text is a
+# verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its PDF; _lib/pdftext.py returns it byte
+# for byte and refuses when it is absent, so this script never runs pdftotext (the pins print each text's sha256, l8r2_gndret.py's texts with them, since G.figures() reads those here).
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8r2
+PDFTEXT = {
+    "v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf": [["-layout"]],
+    "v2/vendor/battery/amass-xt60-spec-tme.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-ph-catalogue.pdf": [["-layout"]],
+    "v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 # the owner's amendment 1 on L8R2-F33a (INBOX 11, 5 October 2026): the condition read against the boards' placement as drawn
 BOARD_PCB = {"a": "v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb", "b": "v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb"}
 PINS += list(BOARD_PCB.values())
@@ -261,7 +274,8 @@ def compute():
     need(cs, r"CONDITION: rev 2 holds only with FW-B20 and FW-B21 applied", "C-DEV rev 2's condition")
     u601_2 = ioc2 * u601 / ioc1                         # the same constant-power reading the record took for rev 1
     totals["C-DEV rev 2 (conditional on FW-B20/B21)"] = totals["C-DEV rev 1"] - u601 + u601_2
-    R = {"F": F, "totals": totals, "u601": (u601, u601_2, ioc1, ioc2), "pins": [(p, sha(p)) for p in PINS]}
+    R = {"F": F, "totals": totals, "u601": (u601, u601_2, ioc1, ioc2), "pins": [(p, sha(p)) for p in PINS]
+         + [(t, h[:16]) for t, h, _held in PT.inputs(ROOT, {k: G.PDFTEXT.get(k, []) + PDFTEXT.get(k, []) for k in set(G.PDFTEXT) | set(PDFTEXT)})]}
 
     # 1. the solver at Rs = 0 against the record's own extremes
     chk = []
@@ -302,10 +316,10 @@ def compute():
     hf = float(need(a, r'_intent\.rail\("\+12V_HF", [\d.]+, [\d.]+, ([\d.]+), "R65"', "+12V_HF's declared peak").group(1))
     ifs = open(rel(PINS[9]), encoding="utf-8").read()
     n_rf = len(re.findall(r"J_RF(?:3|4|5|6|7|8|9|10|11)\b", need(ifs, r"refs: \[(J_RF3, J_RF4[^\]]*)\]", "IF-BA-RF's board A jacks").group(1)))
-    ufl = os.popen("pdftotext -layout %s -" % rel(PINS[4])).read()
+    ufl = PT.pdf_text(ROOT, PINS[4], ["-layout"], PDFTEXT, "v2/docs/records/l8r2", universal_newlines=True)
     ufl_outer = float(need(ufl, r"Outer : (\d+) m ohms max\.", "U.FL outer contact resistance").group(1)) * 1e-3
     ufl_has_current = bool(re.search(r"Rated current|Current rating", ufl))
-    ph = os.popen("pdftotext -layout %s -" % rel(PINS[5])).read()
+    ph = PT.pdf_text(ROOT, PINS[5], ["-layout"], PDFTEXT, "v2/docs/records/l8r2", universal_newlines=True)
     ph_a = float(need(ph, r"Current rating: (\d+) A AC/DC \(AWG #24", "JST PH current rating").group(1))
     paths = [
         ("each RF pigtail's shield, board B's U.FL to board A's SMA jack (%d pigtails, RG-178, 150 mm: IF-BA-RF)" % n_rf,
@@ -346,7 +360,8 @@ def compute():
     R["f4b"] = (f4b, r4b["RIB"], r4b8["RIB"])
 
     # 5. V6-m8: the XT60 rows
-    x12 = os.popen("pdftotext -layout %s -" % rel(PINS[6])).read() + os.popen("pdftotext -layout %s -" % rel(PINS[7])).read()
+    x12 = PT.pdf_text(ROOT, PINS[6], ["-layout"], PDFTEXT, "v2/docs/records/l8r2", universal_newlines=True) \
+        + PT.pdf_text(ROOT, PINS[7], ["-layout"], PDFTEXT, "v2/docs/records/l8r2", universal_newlines=True)
     R["xt_pcb_rating"] = bool(re.search(r"(?i)pcb|solder(ed)? (to|on) (a |the )?board|printed circuit", x12))
     R["xt_row"] = max(rows(F, totals["the declared upper bound (i)"], T)["RET"] for T in (TC, TH))
     ls_ = [b for b in B1 if b["case"].startswith("the largest steady") and b["which"] == "printed" and b["kind"] == "RIB" and b["T"] == TC][0]

@@ -163,10 +163,12 @@ ANCHORS = {  # every citation of sections 6 to 8 that no quotation checks: the t
     "[ANX:96]": ("D-06's pocket",),
     "[ANX:105]": ("R17 at most 0.294 K/W", "0.29 K/W"),
     "[ANX:113]": ("Asked of the owner: nothing.",),
-    "[E11PY:5967]": ('S["z17_t"] = solve(',),
-    "[E11PY:6120]": ('fmt(S["z17_t"], 3)',),
-    "[E11PY:6313]": ('fmt(S["z17_t"], 3)',),
-    "[E11PY:6382]": ('fmt(R["S26"]["z17_t"], 2)',),
+    # four keys restated by W42 (set 32, 6 October 2026; basis: W34's edit of l4e11_power.py on fnd/w34pdftext moved every cited
+    # line by 62, read from aed4bd23 to 886704ea with difflib's equal blocks; the anchors unchanged, the annex re-cited to match)
+    "[E11PY:6029]": ('S["z17_t"] = solve(',),
+    "[E11PY:6182]": ('fmt(S["z17_t"], 3)',),
+    "[E11PY:6375]": ('fmt(S["z17_t"], 3)',),
+    "[E11PY:6444]": ('fmt(R["S26"]["z17_t"], 2)',),
     "[TP29:130-133]": ('col="Specimen"', "with the three gates brought out apart"),
     "[TP29:207-208]": ("R17's coupling at most 0.294",),
     "[TP29:613-666]": ('row="R-159" col="Acceptance"', "L4-E11's E11-29 row, word for word"),
@@ -182,11 +184,11 @@ ANCHORS = {  # every citation of sections 6 to 8 that no quotation checks: the t
     "[P11:154-160]": ("(b) the lower-source back-feed", "Q12's body-diode current inside its pulsed rating"),
     "[L4E9:1022]": ("| D-06 | the vehicle entry's interconnect",),
     "[L4E9:1380]": ("| D-06 | RESOLVED |",),
-    "[E11:508]": ("E11-37 | EVIDENCE", "at -20, 25 and 70 C"),
-    "[E11:944]": ("RBATDRV_ON at most 6 kOhm, RBATDRV_OFF at most 2.1 kOhm",),
-    "[E11:1110-1116]": ("19d. E11-37 REBOUND TO THE THREE-DEVICE NETWORK",),
-    "[E11:1112]": ("42.48 us on (-15 V), 51.66 us on near 0 V, 18.08 us off (MAKER, INFERRED)",),
-    "[E11:1450-1451]": ("Q49 moves at most 192 nC", "sinks at most 3.83 mA"),
+    "[E11:576]": ("E11-37 | EVIDENCE", "at -20, 25 and 70 C"),
+    "[E11:1012]": ("RBATDRV_ON at most 6 kOhm, RBATDRV_OFF at most 2.1 kOhm",),
+    "[E11:1178-1184]": ("19d. E11-37 REBOUND TO THE THREE-DEVICE NETWORK",),
+    "[E11:1180]": ("42.48 us on (-15 V), 51.66 us on near 0 V, 18.08 us off (MAKER, INFERRED)",),
+    "[E11:1518-1519]": ("Q49 moves at most 192 nC", "sinks at most 3.83 mA"),
     "[TIQ:74-78]": ("**Q-TI-17 (E11-37, BQ25730).**",),
     "[TIQ:96-110]": ("Q-TI-17 extended to three devices", "(d) Record section 19h"),
     "[TIQ:100-102]": ("QG(tot) at most 192 nC at -10 V for the three (64 nC each)",),
@@ -248,17 +250,17 @@ def r17_fails(annex, tp):
 
 
 E1137_FACTS = [  # (text the annex's section 7 states, the record line it cites, the text found there)
-    ("7.08 nF typical at -15 V", (E11, 1111, 1111), "Ciss 7.08 nF typical at -15 V"),
-    ("about 8.61 nF near 0 V", (E11, 1111, 1111), "about 8.61 nF near 0 V"),
+    ("7.08 nF typical at -15 V", (E11, 1179, 1179), "Ciss 7.08 nF typical at -15 V"),
+    ("about 8.61 nF near 0 V", (E11, 1179, 1179), "about 8.61 nF near 0 V"),
     ("192 nC for the three", ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", 100, 102), "QG(tot) at most 192 nC at -10 V for the three"),
-    ("RBATDRV_ON at most 6 kOhm and RBATDRV_OFF at most 2.1 kOhm", (E11, 944, 944), "RBATDRV_ON at most 6 kOhm, RBATDRV_OFF at most 2.1 kOhm"),
-    ("42.48 us on", (E11, 1112, 1112), "42.48 us on (-15 V)"),
-    ("51.66 us on near 0 V", (E11, 1112, 1112), "51.66 us on near 0 V"),
-    ("18.08 us off", (E11, 1112, 1112), "18.08 us off"),
-    ("Q49 moves at most 192 nC", (E11, 1450, 1451), "Q49 moves at most 192 nC"),
-    ("3.83 mA", (E11, 1450, 1451), "sinks at most 3.83 mA"),
-    ("its bar 20.39 K/W measured on the coupon, Q42 removed", (E11, 1462, 1463), "its bar 20.39 K/W measured on the coupon, Q42 removed"),
-    ("at -20, 25 and 70 C", (E11, 508, 508), "at -20, 25 and 70 C"),
+    ("RBATDRV_ON at most 6 kOhm and RBATDRV_OFF at most 2.1 kOhm", (E11, 1012, 1012), "RBATDRV_ON at most 6 kOhm, RBATDRV_OFF at most 2.1 kOhm"),
+    ("42.48 us on", (E11, 1180, 1180), "42.48 us on (-15 V)"),
+    ("51.66 us on near 0 V", (E11, 1180, 1180), "51.66 us on near 0 V"),
+    ("18.08 us off", (E11, 1180, 1180), "18.08 us off"),
+    ("Q49 moves at most 192 nC", (E11, 1518, 1519), "Q49 moves at most 192 nC"),
+    ("3.83 mA", (E11, 1518, 1519), "sinks at most 3.83 mA"),
+    ("its bar 20.39 K/W measured on the coupon, Q42 removed", (E11, 1530, 1531), "its bar 20.39 K/W measured on the coupon, Q42 removed"),
+    ("at -20, 25 and 70 C", (E11, 576, 576), "at -20, 25 and 70 C"),
 ]
 
 
@@ -423,8 +425,8 @@ def t_r17_is_one_computed_figure_printed_at_two_roundings():
     annex, tp = _pages()
     assert not r17_fails(annex, tp), r17_fails(annex, tp)
     e11 = _read(E11).split("\n")
-    assert "R17's coupling at most 0.29 K/W" in e11[499] and "0.294" not in e11[499], "the row E11-29 no longer prints 0.29 K/W"
-    for n in (1913, 1922, 1975):
+    assert "R17's coupling at most 0.29 K/W" in e11[567] and "0.294" not in e11[567], "the row E11-29 no longer prints 0.29 K/W"
+    for n in (1981, 1990, 2043):
         assert "0.294" in e11[n - 1], "line %d of the output no longer prints 0.294" % n
     # the generator prints the one solved figure at two precisions (parsed, not grepped)
     tree = ast.parse(_read(E11PY))
@@ -476,11 +478,11 @@ def t_the_predicates_refuse_broken_pages():
     annex, tp = _pages()
     am = _amendment(annex)
     broken = [
-        ("cite", cite_fails, (annex.replace("[E11:1459]", "[E11:99999]", 1),)),
+        ("cite", cite_fails, (annex.replace("[E11:1527]", "[E11:99999]", 1),)),
         ("cite", cite_fails, (annex.replace("| TIQ | `v2/docs/records/l4e11/clarification/TI-QUESTIONS.md` |", "", 1),)),
         ("quote", quote_fails, (annex.replace("E11-37 STAYS OPEN: no printed figure", "E11-37 IS CLOSED: no printed figure", 1),)),
         ("anchor", anchor_fails, (annex.replace("[TP29:738]", "[TP29:742]", 1),)),
-        ("anchor", anchor_fails, (annex.replace("[E11PY:6382]", "[E11PY:6381]", 1),)),
+        ("anchor", anchor_fails, (annex.replace("[E11PY:6444]", "[E11PY:6443]", 1),)),
         ("r17", r17_fails, (annex.replace("0.294 + 2 x 0.353 = 1.000 K/W", "0.294 K/W", 1), tp)),
         ("r17", r17_fails, (annex, tp.replace("one figure, not two targets", "one figure", 1))),
         ("r17", r17_fails, (annex.replace("R17 at most 0.294 K/W, the pours", "R17 at most 0.2941 K/W, the pours", 1), tp)),

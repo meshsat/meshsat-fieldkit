@@ -1,0 +1,140 @@
+AP64500
+3.8V TO 40V INPUT, 5A LOW IQ SYNCHRONOUS BUCK WITH PROGRAMMABLE FREQUENCY
+
+Description
+
+Pin Assignments
+
+The AP64500 is a 5A, synchronous buck converter with a wide inputvoltage range of 3.8V to 40V. The device fully integrates a 45mΩ highside power MOSFET and a 20mΩ low-side power MOSFET to provide
+high-efficiency step-down DC-DC conversion.
+
+TOP VIEW
+BST
+
+1
+
+VIN
+
+2
+
+8
+
+SW
+
+7
+
+GND
+
+The AP64500 device is easily used by minimizing the external
+component count due to its adoption of peak current mode control.
+
+EXPOSED PAD
+9
+
+The AP64500 design is optimized for electromagnetic interference
+(EMI) reduction. The device has a proprietary gate driver scheme to
+resist switching node ringing without sacrificing MOSFET turn-on and
+turn-off times, which reduces high-frequency radiated EMI noise
+caused by MOSFET switching. The AP64500 also features frequency
+spread spectrum (FSS) with a switching frequency jitter of ±6%, which
+reduces EMI by not allowing emitted energy to stay in any one
+frequency for a significant period of time.
+
+EN
+
+3
+
+6
+
+COMP
+
+RT/CLK
+
+4
+
+5
+
+FB
+
+SO-8EP
+
+The device is available in the SO-8EP package.
+
+Applications
+Features
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+
+•
+•
+•
+
+Notes:
+
+VIN 3.8V to 40V
+5A Continuous Output Current
+0.8V ± 1% Reference Voltage
+25µA Low Quiescent Current (Pulse Frequency Modulation)
+Programmable Switching Frequency: 100kHz to 2.2MHz
+External Clock Synchronization: 100kHz to 2.2MHz
+Up to 85% Efficiency at 5mA Light Load
+Proprietary Gate Driver Design for Best EMI Reduction
+Frequency Spread Spectrum (FSS) to Reduce EMI
+Low-Dropout (LDO) Mode
+Precision Enable Threshold to Adjust UVLO
+Protection Circuitry
+o
+Undervoltage Lockout (UVLO)
+o
+Output Overvoltage Protection (OVP)
+o
+Cycle-by-Cycle Peak Current Limit
+o
+Thermal Shutdown
+Totally Lead-Free & Fully RoHS Compliant (Notes 1 & 2)
+Halogen and Antimony Free. “Green” Device (Note 3)
+An automotive-compliant part is available under separate
+datasheet (AP64500Q)
+
+•
+•
+•
+•
+•
+•
+•
+
+5V, 12V, and 24V distributed power bus supplies
+Power tools and laser printers
+White goods and small home appliances
+Home audio
+Network systems
+Consumer electronics
+General-purpose point of load
+
+1. No purposely added lead. Fully EU Directive 2002/95/EC (RoHS), 2011/65/EU (RoHS 2) & 2015/863/EU (RoHS 3) compliant.
+2. See https://www.diodes.com/quality/lead-free/ for more information about Diodes Incorporated’s definitions of Halogen- and Antimony-free, "Green" and
+Lead-free.
+3. Halogen- and Antimony-free "Green” products are defined as those which contain <900ppm bromine, <900ppm chlorine (<1500ppm total Br + Cl) and
+<1000ppm antimony compounds.
+
+AP64500
+Document number: DS41979 Rev. 5 - 2
+
+1 of 26
+www.diodes.com
+
+December 2024
+© 2024 Copyright Diodes Incorporated. All Rights Reserved.
+
+

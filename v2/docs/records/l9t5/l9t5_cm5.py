@@ -20,6 +20,17 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(HERE))))
 sys.dont_write_bytecode = True
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 1 prints each text's sha256, record l9pwr's with them (its budget runs here).
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9t5
+PDFTEXT = {
+    "v2/vendor/cm5/cm5-datasheet.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {"cm5": "v2/vendor/cm5/cm5-datasheet.pdf", "gen_b": "v2/ecad/tools/gen_sch_b.py", "rvpwr": "v2/docs/records/rv-pwr/pwr_budget.py",
         "budget": "v2/docs/records/l9pwr/l9pwr_budget.py", "budget_out": "v2/docs/records/l9pwr/l9pwr_budget.out",
         "cases": "v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md"}
@@ -53,10 +64,7 @@ def main():
     for rel in PINS.values():
         if not os.path.isfile(os.path.join(ROOT, rel)):
             refuse("input %s is missing" % rel)
-    try:
-        t = subprocess.run(["pdftotext", "-layout", os.path.join(ROOT, PINS["cm5"]), "-"], capture_output=True, check=True).stdout.decode("utf-8", "replace")
-    except (OSError, subprocess.CalledProcessError) as e:
-        refuse("pdftotext could not read the CM5 sheet (%s)" % e)
+    t = PT.pdf_text(ROOT, PINS["cm5"], ["-layout"], PDFTEXT, "v2/docs/records/l9t5")
     rel_no = need(t, r"Release\s+(\d+)", "the sheet's release").group(1)
     f = flat(t)
     m = need(f, r"B\.3\. Power budget (CM5 delivers significantly more performance than CM4, and therefore consumes more power\. Power supply designs should "
@@ -88,7 +96,7 @@ def main():
     w("prototype design; nothing built, bought, powered or measured; a case row's change is the coordinator's and none is made here")
     w("")
     w("1. INPUTS, pinned by sha256")
-    for rel in PINS.values():
+    for rel in list(PINS.values()) + [t for t, _h, _held in PT.inputs(ROOT, PT.merge(PDFTEXT, *(PT.declared_in(os.path.join(ROOT, x)) for x in ("v2/docs/records/l9pwr/l9pwr_budget.py",))))]:
         w("   %s %s" % (sha(rel), rel))
     w("")
     w("2. WHAT THE SHEET PRINTS (Raspberry Pi Compute Module 5 datasheet, Release %s)" % rel_no)

@@ -1,0 +1,472 @@
+                                                                                        IP Rated Switches
+                                               Ingress Protection Rating
+The IP code, IEC 60529 Standard (EN 60529), rates the degree of protection against solid objects or materials (e.g.,
+fingers and dust) and is designated by the first number. The second number indicates the level of liquid (water) protection.
+
+                                                         IP Ratings
+    IP50             Dust protected but not against water
+    IP60             Dust tight but not protected against water
+    IP64             Dust tight and protected against splashing water from any direction
+    IP65             Dust tight and protected against water jets from any direction
+    IP67             Dust tight and protected against effects of temporary immersion
+    IP68             Dust tight and protected against effects of immersion in water under pressure for long periods
+
+Coarse environments and their elements can present a challenge to electromechanical switches, and NKK’s switches are
+the best defense. Designed specifically for the hazards of heat, cold, humidity and exposure to elements, NKK has an
+extensive selection of environmentally sealed switches. When applications demand fierce quality and reliability, look to
+NKK as the dependable source. Toggles, rockers, pushbuttons (including emergency stop devices), programmables,
+and rotaries are included in the IP rated group, many of which have accessory options to further enhance performance.
+
+                                                           Toggles
+
+                   Series          Size / Specifications                     Features                           Rating
+
+                                                             6mm diameter threaded bushing for panel
+                  B Series
+                                        Subminiature           seal mounting. Straight PC terminals               IP65
+                                                                                                                 IP65
+               Process Sealed
+                                    0.4VA @ 28V AC/DC            Totally sealed body construction             front panel
+                  Antistatic
+                                                              Operating temperature –30°C ~ +85°C
+
+                                         Miniature            12mm diameter threaded D-flat bushing
+                  M Series             6A @ 125V AC           Internal o-ring & external rubber washer            IP68
+                                                                                                                 IP68
+                  Dual Seal            3A @ 250V AC               Waterproof boot at base of toggle           front panel
+                                    0.4VA @ 28V AC/DC          Operating temperature –30°C ~ +85°C
+
+                                         Miniature          Small bushings ¼-40 or 6mm; large bushing             IP67
+                                                                                                                 IP67
+                  M Series             6A @ 125V AC             12mm; locking levers ¼-40 or 6mm              front panel
+              Splashproof Boots        3A @ 250V AC            (all threaded splashproof with D flat) with boots AT401, AT402S,
+                                    0.4VA @ 28V AC/DC         Operating temperature –30°C ~ +85°C          AT428 or AT4181
+
+
+                                                             Medium capacity; quick connect terminals            IP65
+                                                                                                                IP65
+                 S Series                 Standard
+                                                                12mm diameter threaded bushing               front panel
+               Quick Connect        15 ~ 20A @ 125V AC
+                                                              Optional splashproof boot assemblies           with boots
+                 Terminals           6 ~ 20A @ 250V AC
+                                                              Operating temperature –10°C ~ +70°C          AT401 or AT402
+
+                                                               Medium capacity; solder lug terminals              IP67
+                                                                                                                 IP67
+                 S Series                 Standard
+                                                              12mm diameter threaded D-flat bushing           front panel
+               Panel Seal with      15 ~ 20A @ 125V AC
+                                                               Optional splashproof boot assemblies           with boots
+                AW Bushing           6 ~ 15A @ 250V AC
+                                                              Operating temperature –30°C ~ +70°C          AT401 or AT4181
+
+                                                               Medium capacity; solder lug terminals
+                  S Series                Standard
+                                                              12mm diameter threaded D-flat bushing               IP67
+                                                                                                                 IP67
+                Locking Lever       15 ~ 20A @ 125V AC
+                                                                      Includes AT537 o-ring                   front panel
+                & Panel Seal         6 ~ 15A @ 250V AC
+                                                              Operating temperature –30°C ~ +70°C
+
+
+                                                           www.nkkswitches.com                                                1
+                                                                         IP Rated Switches
+
+                                          Toggles
+
+      Series          Size / Specifications                    Features                            Rating
+
+                            Standard           12mm diameter threaded D-flat bushing
+     S Series           15A @ 125V AC          Internal o-ring & external rubber washer             IP68
+                                                                                                     IP68
+     Dual Seal        6A ~ 15A @ 250V AC           Waterproof boot at base of toggle             front panel
+                      15 ~ 20A @ 30V DC         Operating temperature –30°C ~ +70°C
+
+
+                                                  12mm diameter threaded bushing                   IP65
+                           Standard                                                                 IP65
+     S Series                                            Screw lug terminals
+                        30A @ 125V AC                                                             front panel
+   High Capacity                                 Optional splashproof boot assembly
+                        30A @ 250V AC                                                          with boot AT401
+                                                Operating temperature –10°C ~ +70°C
+
+
+                           Standard                   Environmentally sealed                         IP67
+                                                                                                    IP67
+    WT Series
+                        10A @ 125V AC          12mm diameter D-flat threaded bushing             front panel
+   Solder Lug &
+                        6A @ 250V AC                  Includes AT401P o-ring                         IP60
+                                                                                                    IP60
+Screw Lug Terminals
+                        10A @ 30V DC           Operating temperature –30°C ~ +70°C               back panel
+
+
+                           Standard                   Environmentally sealed
+                                                                                                    IP67
+                                                                                                     IP67
+    WT Series           10A @ 125V AC          12mm diameter D-flat threaded bushing
+    Wire Leads          6A @ 250V AC                  Includes AT401P o-ring                       front &
+                        10A @ 30V DC           Operating temperature –30°C ~ +70°C               back panel
+
+
+
+
+                                         Rockers
+
+      Series          Size / Specifications                    Features                            Rating
+
+                           Standard             Panel seal; handles large inrush current
+    JW Series                                                                                      IP67
+                         JWMW Model           Increased electrical life; less contact bounce        IP67
+    High Inrush
+                      10A @ 125/250V AC            Solder lug/quick connect terminals            front panel
+       10A
+                        10A @ 30V DC            Operating temperature –25°C ~ +85°C
+
+
+                           Standard             Panel seal; handles large inrush current
+    JW Series                                                                                       IP67
+                         JWLW Model           Increased electrical life; less contact bounce         IP67
+    High Inrush
+                      16A @ 125/250V AC            Solder lug/quick connect terminals            front panel
+       16A
+                         5A @ 72V DC            Operating temperature –25°C ~ +85°C
+
+
+    WR Series                                 Environmentally sealed; high arc resistant             IP67
+                                                                                                    IP67
+                           Standard                                                              front panel
+ Solder Lug, Screw                                    Minimal contact bounce
+                      15A @ 125/250V AC
+Lug, Quick Connect                            UL94-V0 flammability standard for housing              IP60
+                                                                                                    IP60
+                        15A @ 30V DC
+     Terminals                                  Operating temperature –25°C ~ +85°C              back panel
+
+
+                                              Environmentally sealed; high arc resistant            IP67
+                           Standard                                                                  IP67
+    WR Series                                         Minimal contact bounce
+                      15A @ 125/250V AC                                                            front &
+    Wire Leads                                UL94-V0 flammability standard for housing
+                        15A @ 30V DC                                                             back panel
+                                                Operating temperature –25°C ~ +85°C
+
+
+
+
+                                         www.nkkswitches.com                                                     2
+                                                                           IP Rated Switches
+
+                                Emergency Stop Pushbuttons
+
+       Series            Size / Specifications                   Features                               Rating
+
+                                                    Low profile, short behind panel depth                IP65
+   FF01 Series                 Standard           16mm bushing. Accessories with legends
+                                                                                                      front panel
+  Emergency Stop            0.5A @ 24V DC            Insert-molded solder lug terminals
+                                                   Operating temperature –25°C ~ +60°C          (Designed for indoor use)
+
+
+
+
+                                          Pushbuttons
+
+       Series            Size / Specifications                    Features                              Rating
+
+                                                 Panel seal; Illumination in several options
+                              Standard                                                                   IP65
+                                                                                                          IP65
+      LB Series                                     22mm diameter threaded bushing
+                          3A @ 125/250V AC
+Front Panel Relamping                               Solder lug/quick connect terminals                front panel
+                            3A @ 30V DC
+                                                  Operating temperature –25°C ~ +50°C
+
+
+                              Miniature            Small (D3, 1/4-40 thread) or large (B3,
+    MBN Series              6A @ 125V AC            12mm thread) splashproof bushings                     IP67
+                                                                                                         IP67
+Splashproof Bushings        3A @ 250V AC             AT516 or AT401P o-rings included                 front panel
+                         0.4VA @ 28V AC/DC         Operating temperature –30°C ~ +85°C
+
+
+                              Miniature             12mm diameter threaded bushing B1                   IP65
+                                                                                                         IP65
+    MBN Series              6A @ 125V AC         No cap needed with optional splashproof boot
+                                                                                                     front panel
+  Splashproof Boot          3A @ 250V AC                  Several terminal options
+                                                                                                  with boot AT4043
+                         0.4VA @ 28V AC/DC         Operating temperature –30°C ~ +85°C
+
+
+                              Standard                   Environmentally sealed                           IP67
+                                                                                                         IP67
+    WB Series                                                                                         front panel
+                            6A @ 125V AC          12mm diameter D-flat threaded bushing
+   Solder Lug &
+                            3A @ 250V AC            Housing meets UL94V-0 standards                       IP60
+                                                                                                         IP60
+Screw Lug Terminals
+                            6A @ 30V DC           Operating temperature –30°C ~ +70°C                 back panel
+
+
+                              Standard                   Environmentally sealed
+                                                                                                          IP67
+                                                                                                         IP67
+     WB Series              6A @ 125V AC          12mm diameter D-flat threaded bushing
+                                                                                                        front &
+     Wire Leads             3A @ 250V AC            Housing meets UL94V-0 standards
+                                                                                                      back panel
+                            6A @ 30V DC           Operating temperature –30°C ~ +70°C
+
+
+                              Miniature            Panel seal, illuminated, 16mm diameter
+      YB Series             3A @ 125V AC         threaded bushing; solder lug/quick connect               IP65
+                                                                                                         IP65
+Full Face Illumination      3A @ 250V AC            Includes mounting nut & AT089 o-ring              front panel
+                         0.4VA @ 28V AC/DC         Operating temperature –25°C ~ +50°C
+
+
+                              Standard             Panel seal, illuminated, 16mm diameter
+    YB2 Series                                                                                            IP65
+                                                                                                         IP65
+                            3A @ 125V AC         threaded bushing; solder lug/quick connect
+  Tamper Resistant
+                            3A @ 250V AC                     Includes 2 o-rings                       front panel
+     Actuators
+                         0.4VA @ 28V AC/DC         Operating temperature –25°C ~ +50°C
+
+
+
+
+                                             www.nkkswitches.com                                                            3
+                                                                       IP Rated Switches
+
+                                      Programmable
+
+      Series          Size / Specifications                   Features                       Rating
+
+                             Standard          Snap-in panel mount rocker/pushbutton
+    IS Series                                                                                 IP64
+                                                                                               IP64
+                          3VA @ 24V DC         Three-switch functionality; monochrome
+   SmartDisplay
+                      Applicable Range 10mA       96 x 64 pixel format. Low profile         front panel
+   OLED Rocker
+                      ~125mA@0.1V~24V DC       Operating temperature –20°C ~ +70°C
+
+
+
+
+                                         Rotaries
+
+      Series          Size / Specifications                   Features                       Rating
+
+                                              6mm diameter double flat threaded bushing
+   MR Series                Miniature                                                          IP67
+                                                Shaft actuated. Includes AT535 o- ring        IP67
+  Metal Bushing            MRK Model
+                                              Process sealed; PC terminals; 30° step size   front panel
+   & Housing           0.4VA @ 28V AC/DC
+                                                Operating temperature –10°C ~ +70°C
+
+
+                                              6mm diameter double flat threaded bushing
+   MRB Series               Miniature            Panel seal with optional AT535 o-ring          IP67
+                                                                                               IP67
+Sealed Construction    0.4VA @ 28V AC/DC      Bracket, PC terminals; 45° & 90° step sizes   front panel
+                                                Operating temperature –10°C ~ +70°C
+
+
+
+
+                                         www.nkkswitches.com                                                  4
+                                                                                                          08.24
+                                                                     Added Protection Accessories
+NKK’s selection of accessories and hardware offers added protection or customization for switches. Panel
+seal qualities are enhanced with use of protective rubber boots for toggles or pushbuttons, and the boots offer
+extended defense against environmental elements. Additional security for pushbuttons or rockers is provided
+by NKK’s line of protective guards and covers.
+
+                                                              Panel Seal Boots
+                     The splashproof boots seal switches to achieve IP65 rating or greater at the front panel.
+
+  Part                  AT401                    AT402 & AT402S             AT428        AT4041 & AT4042            AT4043             AT4181
+ Number                Half Boot                   Full Boots              Full Boot       Full Boots              Full Boot          Full Boot
+
+
+
+   IP65
+ or Greater
+
+
+                         AT401A for
+                      Oil Resistance:
+                                              AT402: Silicone Rubber for
+                 Nitrile Butadiene Rubber                                                    AT4041:
+                                                  Black, Red, Yellow                      For Momentary
+                  AT401H for Dust &                    or Green
+                  Ozone Resistance:           Ethylene Propylene Rubber     Silicone         AT4042:
+ Material                                                                                                        Silicone Rubber    Silicone Rubber
+               Ethylene Propylene Rubber               for Gray             Rubber         For Alternate
+                AT401S for Flexibility,
+                                                       AT402S:
+              Resilience, Tensile Strength
+                                                   Silicone Rubber                        Silicone Rubber
+               over Wide Temp Range:
+                     Silicone Rubber
+
+                     AT401A: Black               AT402: Black, Red,
+  Color              AT401H: Gray               Yellow, Green or Gray        Black            Black                  Black              Black
+                     AT401S: Black                 AT402S: Black
+                                                                              M6 or            M6 or
+ Bushing                 12mm                           12mm                                                         12mm               12mm
+                                                                           1/4–40 Thd       1/4–40 Thd
+                                                    AT402: MN S
+  Series               MN S WT                                              D2 MN              MBN               MBN SB WB            MN S WT
+                                                    AT402S: MN
+
+
+                                             SmartDisplayTM Splashproof Overlay
+                                            IP65 Rated Protection for Programmable Switches
+      IP65               Part Number               IS-SPA4X4A               IS-SPA2X2A                IS-SPA1X2A                   IS-SPA1X1A
+     Number                   Rows                        4                          2                       1                          1
+   of Switches              Columns                       4                          2                       2                          1
+                              Width                    125mm                    80mm                        80mm                     55mm
+   Dimensions
+                             Height                    115mm                    74mm                        53mm                     53mm
+
+The SmartDisplay overlay provides increased protection for
+SmartDisplay or any products where additional safeguarding is
+required. Installing over the switch cutout opening is sufficient
+to make the cutout splashproof. To achieve an IP65 rating, a
+supporting bezel is ideally used to reinforce the adhesive tape.
+Products come in a package of two individual overlays in
+several standard sizes that cover typical size configurations
+of the SmartDisplay.
+For custom sizes, contact engineering@nkkswitches.com.
+
+                                                                     www.nkkswitches.com                                                              1
+                                                                                           Added Protection Accessories
+                                                                    Protective Guards & Covers
+ Part                  AT499                                                     AT4001                                                AT4002                                              AT4072
+Number            Protective Guard                                              Dust Cover                                            Dust Cover                                      Protective Guard
+                                                                                                     (4.8)                                           (4.8)
+                                                                                                     .189                                            .189
+
+                                                   (8.0)                                             (2.5)                                                                                                                 (11.2)
+                                                   .315                                              .098                                             (2.5)                                                                 .441
+                                                                                                                                                     .098
+                                                                                                                                                                                   (6.6)
+                                                                                                                                                                                   .260
+                         (20.0)         (21.0)                                                                                                (30.0) Dia                                      (23.9)            (22.9)
+                          .787           .827                                            (24.0) Sq
+                                                                                          .945                                                 1.181                                           .941              .902
+
+
+
+
+                                                                                                                                                                                   Cover: Polycarbonate
+                Cover: Polycarbonate                                  Lid: Polyvinyl Chloride                             Lid: Polyvinyl Chloride
+Material                                                                                                                                                                        Base: Glass Fiber Reinforced
+                  Base: Polyamide                                     Gasket: Polyethylene                                Gasket: Polyethylene
+                                                                                                                                                                                      Polycarbonate
+
+             Opens 90°, Closes Manually.                                                                                                                                        Opens 90°, Closes Manually.
+                                                                     Reduces Depth of Switch                             Reduces Depth of Switch
+ Notes        Reduces Depth of Switch                                                                                                                                            Reduces Depth of Switch
+                                                                   Behind Panel by .020” (0.5mm)                       Behind Panel by .020” (0.5mm)
+            Behind Panel by .020” (0.5mm)                                                                                                                                      Behind Panel by .047” (1.2mm)
+
+Series                            LB                                              LB UB                                                  LB                                                            YB
+
+ Part                AT4115                                                      AT4126                                          AT4173                                                       AT9410
+Number          Dust/Splash Cover                                               Dust Cover                                  Protective Guard                                               Splash Cover
+
+                                             (16.2)
+                                              .638
+                                                                                           (22.2)                         (20.5)                                                                                      (4.8)
+                                                                                            .874                           .807                      (20.4)                                                           .189
+                                                      (5.9)                                                                                           .803
+                                                      .232
+
+                                                                                                              (6.0)                                                    (6.0)
+                                                                                                                                                                       .236                                               (3.0)
+                                                                                                             .236                                                                                                         .118
+                                                                                                                                                                                                                               (0.5)
+                                                           (5.2)                                                                                                       (9.0)                                                  .020
+                                                           .205                                                (2.6)                                                   .354
+                                                                                                               .102
+
+
+                                                                       (33.0)               (42.0)
+                                                                                            1.654                                                                                                           (31.3) Dia
+                                          (29.2)                       1.299                                                                                                                                1.232
+                (23.2)                     1.150
+                 .913
+
+
+
+
+                                                                                                                          Cover: Polycarbonate                                      Lid: Polyvinyl Chloride
+                Lid: Polyvinyl Chloride                               Lid: Polyvinyl Chloride
+Material                                                                                                                     Base: Polyamide                                         Base: Polyethylene
+                   Base: Polyamide                                       Base: Polyamide
+                                                                                                                        Coil Spring: Stainless Steel                           O-ring: Nitrile Butadiene Rubber
+
+                                                                      Rocker is Operable with
+            For Snap-in or Bushing Mount.                                                                                    For Snap-in Model.
+                                                                        Dust Cover in Place.                                                                                     Reduces Depth of Switch
+ Notes        Reduces Depth of Switch                                                                                           Opens 180°,
+                                                                     Reduces Depth of Switch                                                                                   Behind Panel by .020” (0.5mm)
+            Behind Panel by .047” (1.2mm)                                                                                   Closes Automatically
+                                                                   Behind Panel by .024” (0.6mm)
+
+Series                            YB                                               JWL                                                   UB                                                  LB Panel Seal
+
+ Part                  AT4142                                                    AT4145                                          AT4172                                                    AT4175
+Number            Protective Guard                                              Dust Cover                                  Protective Guard                                          Protective Guard
+                                                                                                     (3.9)
+                                                                                                     .154
+
+                                                                                                     (2.5)                                                                                                                  (11.2)
+                                                   (6.5)                                             .098                                                      (7.5)
+                                                                                                                                                                                                                            .441
+                                                   .256                                                                                                        .295
+
+
+
+                                                                                                                             (26.6)
+                     (21.5)              (21.7)                                          (25.2) Sq                            1.047
+                                                                                                                                                      (20.5)                               (23.9)                (22.9)
+                      .846               .854                                             .992                                                        .807                                  .941                 .902
+
+
+
+
+               Cover: Polycarbonate                                                                                       Cover: Polycarbonate                                     Cover: Polycarbonate
+                                                                      Lid: Polyvinyl Chloride
+Material       Base: GFR Polyamide                                                                                        Base: GFR Polyamide                                      Base: GFR Polyamide
+                                                                      Gasket: Polyethylene
+             Coil Spring: Stainless Steel                                                                               Coil Spring: Stainless Steel                             Coil Spring: Stainless Steel
+
+                 For Snap-in Model.                                              For Snap-in Model.
+                                               Not for Use with Barriers.                                    Opens 180°, Closes Automatically.
+           Opens 180°, Closes Automatically.                               Opens 180°, Closes Automatically.
+ Notes                                         Reduces Depth of Switch                                          Reduces Depth of Switch
+              Reduces Depth of Switch                                         Reduces Depth of Switch
+                                             Behind Panel by .028” (0.7mm)                                    Behind Panel by .047” (1.2mm)
+            Behind Panel by .020” (0.5mm)                                   Behind Panel by .020” (0.5mm)
+
+Series                            UB2                                              UB2                                                  LB UB                                                          YB
+
+
+                                                                                             www.nkkswitches.com                                                                                                                         2
+                                                                                                                                                                                                                                     08.24
+

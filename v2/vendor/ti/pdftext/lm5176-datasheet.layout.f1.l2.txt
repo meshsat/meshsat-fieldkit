@@ -1,0 +1,151 @@
+                                                                                                                                                                    LM5176
+                                                                                                                                   SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+             LM5176 55-V Wide VIN Synchronous 4-switch Buck-boost Controller
+
+1 Features                                                                                                       3 Description
+•   Functional Safety-Capable                                                                                    The LM5176 is a synchronous four-switch buck-boost
+    – Documentation available to aid functional safety                                                           DC/DC controller capable of regulating the output
+        system design                                                                                            voltage at, above, or below the input voltage. The
+•   Single inductor buck-boost controller for step-up/                                                           LM5176 operates over a wide input voltage range of
+    step-down DC/DC conversion                                                                                   4.2 V to 55 V (60-V absolute maximum) to support a
+•   Wide VIN: 4.2 V (2.5 V with bias) to 55 V (60 V                                                              variety of applications.
+    maximum)                                                                                                     The LM5176 uses current-mode control both in
+•   Flexible VOUT: 0.8 V to 55 V                                                                                 buck and boost modes of operation for superior
+•   VOUT short protection                                                                                        load and line regulation. The switching frequency
+•   High efficiency buck-boost transition                                                                        is programmed by an external resistor and can be
+•   Adjustable switching frequency                                                                               synchronized to an external clock signal.
+•   Optional frequency sync and dithering
+•   Integrated 2-A MOSFET gate drivers                                                                           The device also features a programmable soft-start
+•   Cycle-by-cycle current limit and optional hiccup                                                             function and offers protection features including cycle-
+•   Optional input or output average current limiting                                                            by-cycle current limiting, input undervoltage lockout
+•   Programmable input UVLO and soft start                                                                       (UVLO), output overvoltage protection (OVP), and
+•   Power Good and output overvoltage protection                                                                 thermal shutdown. In addition, the LM5176 features
+•   Available in HTSSOP-28 and QFN-28 packages                                                                   optional average input or output current limiting,
+•   Create a custom design using the LM5176 with the                                                             optional spread spectrum to reduce peak EMI, and
+    WEBENCH Power Designer                                                                                       optional hiccup mode protection in sustained overload
+                                                                                                                 conditions.
+2 Applications
+                                                                                                                                  Device Information
+•   Industrial PC power supplies
+                                                                                                                   PART NUMBER         PACKAGE              BODY SIZE
+•   USB power delivery
+                                                                                                                                   HTSSOP (28)         9.70 mm × 4.40 mm
+•   Battery-powered systems                                                                                      LM5176
+•   LED lighting                                                                                                                   QFN (28)            5.00 mm × 4.00 mm
+
+                             VIN
+
+
+
+
+                                                                                                                    VCC                       VOUT
+                                                             VISNS
+
+
+                                                                            VIN
+
+
+                                                                                   ISNS(-)
+
+
+                                                                                               ISNS(+)
+
+
+
+
+                                       Enable   EN/UVLO                                                  BOOT1
+
+
+                                                                                                         HDRV1
+                                   Power Good   PGOOD
+
+                                                                                                          SW1
+                                                SS
+                                                                                                         LDRV1
+
+                                                SLOPE
+                                                                       LM5176                               CS
+
+                                                RT/SYNC
+                                                                                                          CSG
+
+
+                                                COMP                                                     LDRV2
+
+
+                                                                                                          SW2
+                                                AGND
+
+                                                                                                         BOOT2        VCC
+                                                PGND
+                                                                                                         HDRV2
+                                                                     MODE
+
+
+
+
+                                                VCC
+                                                          DITH
+
+
+
+
+                                                                                             BIAS
+
+
+
+
+                                                                                                         VOSNS
+                                                                                  FB
+
+
+
+
+                                                                        Simplified Schematic
+
+
+
+
+     An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+     intellectual property matters and other important disclaimers. PRODUCTION DATA.
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                                                       www.ti.com
+
+
+                                                                        Table of Contents
+1 Features............................................................................1   8 Application and Implementation.................................. 21
+2 Applications..................................................................... 1       8.1 Application Information............................................. 21
+3 Description.......................................................................1       8.2 Typical Application.................................................... 21
+4 Revision History.............................................................. 2        9 Power Supply Recommendations................................29
+5 Pin Configuration and Functions...................................3                     10 Layout...........................................................................30
+6 Specifications.................................................................. 5        10.1 Layout Guidelines................................................... 30
+  6.1 Absolute Maximum Ratings........................................ 5                    10.2 Layout Example...................................................... 31
+  6.2 ESD Ratings............................................................... 5        11 Device and Documentation Support..........................32
+  6.3 Recommended Operating Conditions.........................5                            11.1 Device Support........................................................32
+  6.4 Thermal Information....................................................6              11.2 Documentation Support.......................................... 32
+  6.5 Electrical Characteristics.............................................6              11.3 Receiving Notification of Documentation Updates.. 32
+  6.6 Typical Characteristics................................................ 9             11.4 Support Resources................................................. 32
+7 Detailed Description......................................................13              11.5 Trademarks............................................................. 32
+  7.1 Overview................................................................... 13        11.6 Electrostatic Discharge Caution.............................. 32
+  7.2 Functional Block Diagram......................................... 14                  11.7 Glossary.................................................................. 33
+  7.3 Feature Description...................................................14            12 Mechanical, Packaging, and Orderable
+  7.4 Device Functional Modes..........................................19                   Information.................................................................... 33
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+Changes from Revision C (June 2020) to Revision D (August 2021)                                             Page
+• Updated the numbering format for tables, figures, and cross-references throughout the document. ................1
+
+Changes from Revision B (June 2020) to Revision C (June 2020)                                                                                 Page
+• Added functional safety bullet to the Section 1 ..................................................................................................1
+
+
+
+
+2       Submit Document Feedback                                                                                           Copyright © 2021 Texas Instruments Incorporated
+
+                                                                      Product Folder Links: LM5176
+

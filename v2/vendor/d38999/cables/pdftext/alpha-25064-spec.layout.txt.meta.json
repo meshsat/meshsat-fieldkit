@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/d38999/cables/alpha-25064-spec.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/d38999/cables/alpha-25064-spec.pdf",
+ "pdf_sha256": "232d6661444a7e3a75819a61d57df4a83735353c4c8ea3ac204450a59e77d300",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/d38999/cables/pdftext/alpha-25064-spec.layout.txt",
+ "text_bytes": 10263,
+ "text_sha256": "28f0c06999839af60403c39d902de27e7d7920e64bc422d0a4bc672498a2e6cc"
+}

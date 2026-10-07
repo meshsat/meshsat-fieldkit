@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/diodes/diodes-bzt52c-ds18004.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/diodes/diodes-bzt52c-ds18004.pdf",
+ "pdf_sha256": "0fbd7d137524820f0160594065cbceb8c6b3188757c328416d08fceb7418202f",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/diodes/pdftext/diodes-bzt52c-ds18004.layout.txt",
+ "text_bytes": 30172,
+ "text_sha256": "6cf7cbd81b4e2df00c0aca8e71c61033ae4f57b6d49566fa695009d43aa16974"
+}

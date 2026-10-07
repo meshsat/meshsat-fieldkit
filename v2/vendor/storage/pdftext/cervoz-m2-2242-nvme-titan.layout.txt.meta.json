@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/storage/cervoz-m2-2242-nvme-titan.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/storage/cervoz-m2-2242-nvme-titan.pdf",
+ "pdf_sha256": "30b3c59cd3332952f91eb825cd6bb9ebcbea3281fca4bd6a3277ddd03ce032b9",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/storage/pdftext/cervoz-m2-2242-nvme-titan.layout.txt",
+ "text_bytes": 29650,
+ "text_sha256": "ec52807329f1dc5687d4c905b687c356ce5d53487bb12393d78427af10db0568"
+}

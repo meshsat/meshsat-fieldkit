@@ -1,0 +1,149 @@
+RP2040 Datasheet
+
+Bits
+
+Description
+
+Type
+
+Reset
+
+7:4
+
+VSEL: threshold select
+
+RW
+
+0x9
+
+0000 - 0.473V
+0001 - 0.516V
+0010 - 0.559V
+0011 - 0.602V
+0100 - 0.645V
+0101 - 0.688V
+0110 - 0.731V
+0111 - 0.774V
+1000 - 0.817V
+1001 - 0.860V (default)
+1010 - 0.903V
+1011 - 0.946V
+1100 - 0.989V
+1101 - 1.032V
+1110 - 1.075V
+1111 - 1.118V
+3:1
+
+Reserved.
+
+-
+
+-
+
+0
+
+EN: enable
+
+RW
+
+0x1
+
+0=not enabled, 1=enabled
+
+VREG_AND_CHIP_RESET: CHIP_RESET Register
+Offset: 0x8
+Description
+Chip reset control and status
+Table 191.
+CHIP_RESET Register
+
+Bits
+
+Description
+
+Type
+
+Reset
+
+31:25
+
+Reserved.
+
+-
+
+-
+
+24
+
+PSM_RESTART_FLAG: This is set by psm_restart from the debugger.
+
+WC
+
+0x0
+
+Its purpose is to branch bootcode to a safe mode when the debugger has
+issued a psm_restart in order to recover from a boot lock-up.
+In the safe mode the debugger can repair the boot code, clear this flag then
+reboot the processor.
+23:21
+
+Reserved.
+
+-
+
+-
+
+20
+
+HAD_PSM_RESTART: Last reset was from the debug port
+
+RO
+
+0x0
+
+19:17
+
+Reserved.
+
+-
+
+-
+
+16
+
+HAD_RUN: Last reset was from the RUN pin
+
+RO
+
+0x0
+
+15:9
+
+Reserved.
+
+-
+
+-
+
+8
+
+HAD_POR: Last reset was from the power-on reset or brown-out detection
+
+RO
+
+0x0
+
+-
+
+-
+
+blocks
+7:0
+
+Reserved.
+
+2.10. Core Supply Regulator
+
+159
+
+

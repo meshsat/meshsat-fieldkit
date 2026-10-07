@@ -4,7 +4,7 @@ NOT READ; DRAFTED: true of a release-guarded draft no generator carries; PROVISI
 
 0. INPUTS (sha256)
    yaml       b0ea9ce43308e78996d21de802e7ec3700a77d9224c2fe294f86e13030a79be2  v2/ecad/tools/pcb_interfaces.yaml
-   hwfw       f26757c7c5004cddc6c725e10c713e2338256fb464cd916b33f579f4771ab49b  v2/docs/HW-FW-CONTRACT.md
+   hwfw       12b6ea059a68b5c5f0eb4d67513283af2bd8a011f9e80bea7d047e5955b1e99a  v2/docs/HW-FW-CONTRACT.md
    base_yaml  22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  a1f696de@v2/ecad/tools/pcb_interfaces.yaml
    base_hwfw  7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  a1f696de@v2/docs/HW-FW-CONTRACT.md
    e18        0f3a1f39367c449c4ee6bdf7fc3a6212ea4981d51295381714f70a6be62698b3  v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md
@@ -32,6 +32,13 @@ NOT READ; DRAFTED: true of a release-guarded draft no generator carries; PROVISI
    ltc2954    1e9e2567d15e569ecc95023a40e4fb99eb0288db842803ff78cd14fdd621d8ae  v2/vendor/power/ltc2954.pdf
    ra30       9fda757ab1acfb6b29125429035d2361ad711db44b6f40773469527fe17c6da0  v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf
    hc5        cb4f69e6f9e3afa95691047f74b15baa4a77092f1a85c790f10b69787bdadf4b  v2/docs/records/hc5/check_contract_fields.py
+   pdftext    9d315dec55a94ab8a37c2bf4f22ff751396adf9eb66020b9b6b4b25f881cc6f5  v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt
+   pdftext    eef7675bf24fdcb76bbf5ac8ef1fa9bf2afc02259c5cdb221999def0a0712ebe  v2/vendor/connectors/pdftext/wurth-wr-bhd-box-header-61202621621.layout.txt
+   pdftext    7e2f408892ad65c7cbe59c133fa90683a0fb0cc4fbfe2073a31a187a447bc7cd  v2/vendor/connectors/pdftext/wurth-wr-bhd-idc-socket-61202623021.layout.txt
+   pdftext    394ad1917142ad019600e6feb0134a7c4178a36c1161a4737163d5f1e6f1e796  v2/vendor/connectors/pdftext/wurth-wr-cab-ribbon-63912615521cab.layout.txt
+   pdftext    e1ad9f624efd2d98b4777ce1890bffc2ecf681a76f144a1b053ca80c23c8d2d0  v2/vendor/mitsubishi/pdftext/ra30h1317m1-datasheet.layout.txt
+   pdftext    718f1e924867429151e9902ecda149725d66ee596c9009eb4a7f7bdbcc1d3dd2  v2/vendor/power/pdftext/bourns-mf-msmf-pptc.layout.txt
+   pdftext    079f13e6379768d03ba9abd64e0765321f9f606e711c22ab76dbdcf502e19def  v2/vendor/power/pdftext/ltc2954.layout.txt
    copied input e18: body sha256 12f7feedb75841fd1b1b235518673522b157a408bd56c266ea348910a5fbde6f, equal to the sha its header declares
    copied input l8gnd: body sha256 60ee25758268bea97c01a852f6d07eebdebd136099643e41b582fd8eb5be3baa, equal to the sha its header declares
 

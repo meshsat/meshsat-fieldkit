@@ -5,8 +5,8 @@ evidence bounds it).
 
 0. PINS (path  sha256/16)
    bq4050       v2/vendor/battery/ti-bq4050.pdf  sha256 2664e33fe6d6ebed
-   budget       v2/docs/records/l9pwr/l9pwr_budget.py  sha256 afae23c87c38302b
-   budget_out   v2/docs/records/l9pwr/l9pwr_budget.out  sha256 d4fa665447fc7a71
+   budget       v2/docs/records/l9pwr/l9pwr_budget.py  sha256 9b251b7d3be2aca7
+   budget_out   v2/docs/records/l9pwr/l9pwr_budget.out  sha256 a4ea167cb0585283
    cases        v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md  sha256 0be579949c22eab1
    cell         v2/vendor/battery/samsung-35e-orbtronic.pdf  sha256 5ec577b952b9dc51
    chain        v2/ecad/tools/pcb_energy_chain.yaml  sha256 a09ca0293afd1f7c
@@ -20,7 +20,25 @@ evidence bounds it).
    ina250       v2/vendor/ti/held/ti-ina250-sbos511c.pdf  sha256 4690d49c0e10739b
    lcsc_fill    v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
    lm5176       v2/vendor/ti/lm5176-datasheet.pdf  sha256 98191bec36d43771
-   paloop       v2/docs/records/l9t5/l9t5_paloop.py  sha256 d1192fcfd0c734ac
+   paloop       v2/docs/records/l9t5/l9t5_paloop.py  sha256 6542173666aa02f2
+   pdftext 01   v2/vendor/battery/pdftext/samsung-35e-orbtronic.layout.txt  sha256 d2eed21ecffdff2b
+   pdftext 02   v2/vendor/battery/pdftext/ti-bq4050.layout.txt  sha256 f83f141c39e09df2
+   pdftext 03   v2/vendor/battery/pdftext/ti-csd18510q5b.layout.txt  sha256 5ecf7f639ea2bf4c
+   pdftext 04   v2/vendor/connectors/pdftext/jst-vh-catalogue.layout.txt  sha256 9d315dec55a94ab8
+   pdftext 05   v2/vendor/diodes/pdftext/diodes-ap2112-ldo.plain.l1.txt  sha256 c59cee8614dfb14b
+   pdftext 06   v2/vendor/diodes/pdftext/diodes-ap63200-series-buck.plain.l1.txt  sha256 86e6d8baf3f2bd0f
+   pdftext 07   v2/vendor/diodes/pdftext/diodes-ap64500.plain.l1.txt  sha256 523141f25b1ce791
+   pdftext 08   v2/vendor/mitsubishi/pdftext/ra30h1317m1-datasheet.layout.txt  sha256 e1ad9f624efd2d98
+   pdftext 09   v2/vendor/power/pdftext/ti-tlv755p-ldo.plain.l1.txt  sha256 0645dd67a4e97ebd
+   pdftext 10   v2/vendor/power/pdftext/tps2596.plain.txt  sha256 6830354f577b4bad
+   pdftext 11   v2/vendor/ti/held/pdftext/ti-ina250-sbos511c.layout.txt  sha256 23961b85e31fdbb3
+   pdftext 12   v2/vendor/ti/pdftext/lm5176-datasheet.layout.txt  sha256 6399dcdabf2895da
+   pdftext 13   v2/vendor/ti/pdftext/ti-ina226.layout.txt  sha256 234fbb73ef374502
+   pdftext 14   v2/vendor/ti/pdftext/ti-tlv758p.layout.txt  sha256 da725d6f1fcac1bd
+   pdftext 15   v2/vendor/ti/pdftext/ti-tlv9062-op-amp.layout.txt  sha256 dae07174ea3a294c
+   pdftext 16   v2/vendor/ti/pdftext/ti-tps62933.layout.txt  sha256 010f30f3bffdad5f
+   pdftext 17   v2/vendor/ti/pdftext/ti-tps62933.plain.l1.txt  sha256 a4965834fb931ea9
+   pdftext 18   v2/vendor/vishay/pdftext/vishay-wsl-power-metal-strip.layout.txt  sha256 3a3efdb44c14796b
    ra30         v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf  sha256 9fda757ab1acfb6b
    reqs         v2/ecad/tools/pcb_requirements.yaml  sha256 8c8e26858293d6f7
    rvpwr        v2/docs/records/rv-pwr/pwr_budget.py  sha256 469d0820b046ef6f
