@@ -9,6 +9,14 @@ read by check_l8p_ocn and mutated). L4A-67: C-PROT rev 1 re-evaluated on the cor
 the trip on its printed limits or its missing figure named. L4A-68: the guard's allowance (record l8p 10c) printed for its consumers;
 the replay of L4-E11's 20f, 22 and 28 is record l4e11's l4e11_rowc.py.
 
+ROUND 12 (W149, 7 October 2026, after the focused check L4A-69, W147's F1 to F12): 4c' bounds a source's share of the crowbar's
+current (the path that holds VSYS is the charger, not board E's entry) and restates R140's single pulse (E-6b) and Q111's row; 4i
+states the BRK_VIN range the event can happen at, the band under 9.43 V where the crowbar's own current can hold the trip with the
+-1 out of its limit, and the on-time bound drawn against it (channel 2 also disarms once the trip has been asserted: D106, R143,
+C120 at 22 nF); check_l8p_och.py reads R10, R135, C117, C119 and C120 into the window and the delays, with the new mutations; 4g
+carries a shorted crowbar with a source (L8P-R12-F1) and 4h the RC hold's stretch; the verdicts state L4A-67's latent-failure
+clause NOT MET and name E-10 among L8P-R11-D1's conditions. The constitution was read and applied (sections 3 to 5 and 8).
+
 This script prints:
   0. its pins (the records and the makers' documents it reads, sha256);
   1. the finding and the case (RECORD: record l8p round 10, l8p_rowc.py's own computation, records l9stk and l8p);
@@ -72,6 +80,7 @@ RECS = {
     "l9g": "v2/docs/records/l8p/inputs/l9stk-section15.9-bb6d2c8f.md",
     "a5": "v2/docs/records/l8p/apply_pcb_interfaces_guard_allowance.py",
     "a9": "v2/docs/records/l8p/apply_l9stk_guard_allowance.py",
+    "arch": "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md",
 }
 DOCS = {
     "tps37": ("v2/vendor/ti/ti-tps37-snvsbj1e.pdf", "TI TPS37, SNVSBJ1E (August 2023)"),
@@ -83,13 +92,20 @@ DOCS = {
     "csd": ("v2/vendor/battery/ti-csd18510q5b.pdf", "TI CSD18510Q5B, SLPS632"),
     "bzt": ("v2/vendor/diodes/diodes-bzt52c-ds18004.pdf", "Diodes BZT52C series, DS18004"),
     "lf297": ("v2/vendor/keystone/littelfuse-297-ficcorp.pdf", "Littelfuse MINI 297"),
+    "bq25730": ("v2/vendor/ti/held/ti-bq25730-sluse65a.pdf", "TI BQ25730, SLUSE65A (held back, record l4e11's fetch_held_back.py)"),
+    "bat46w": ("v2/vendor/diodes/diodes-bat46w.pdf", "Diodes BAT46W, DS30044 Rev. 20-2"),
 }
-PIN = {"lm5066i": "a759a5d04fe5b81577af575153fd528f0f03f147c892040eac6c51e400693628"}
+PIN = {"lm5066i": "a759a5d04fe5b81577af575153fd528f0f03f147c892040eac6c51e400693628",
+       "bq25730": "e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f"}
 
 # ---------------------------------------------------------------- the trip as drawn (read back from the draft below)
 G_RIN, G_RF = 1.00e3, 19.3e3
-C_CTS1, C_CTS2, C_TOL = 4.7e-9, 47e-9, 0.05           # C0G, 5 %
+C_CTS1, C_CTS2, C_TOL = 4.7e-9, 22e-9, 0.05           # C0G, 5 % (C120 47 nF in round 11, 22 nF since round 12: the on-time bound)
 R136, R137, R138, R139, R141, R142, R140 = 47e3, 100e3, 4.7e3, 1e6, 1e6, 1e3, 0.39
+R143 = 2.2e6                                           # round 12: BRK_PGD to OCH_S2
+CISS_Q110_TYP, CISS_Q111_MAX = 645e-12, 11.4e-9        # AO3401A Ciss TYPICAL only (no maximum printed); CSD18510Q5B Ciss 11400 pF MAX
+Q110_CISS_FACTOR = 2.0                                 # ASSUMED: twice the AO3401A's typical Ciss bounds its gate charge (no maximum printed)
+TCL_RECORD = 50e-6                                     # tCL taken 50 us: 45 us TYPICAL, no maximum printed (RECORD, l9stk prot 3; F12)
 PACK_LEAST, PACK_MOST, CLAMP = 10.6, 16.8, 29.2
 SERVICE_TRUE = O.SERVICE_TRUE                          # 18.80 A: record l9stk condition C4
 DOUBLING_K = 10.0                                      # the record's ASSUMED doubling of an off leakage every 10 K (l8p 12j, l9stk 15.9)
@@ -219,9 +235,10 @@ def compute():
 
     # 4a. the window (check_l8p_och's own arithmetic on the drawn values)
     dr = read(RECS["draft"])
-    for pat in (r'r\("R132", "1\.00k 0\.1% 25ppm', r'r\("R133", "19\.3k 0\.1% 25ppm', r'c\("C119", "4\.7n 50V C0G 5%', r'c\("C120", "47n 50V C0G 5%',
+    for pat in (r'r\("R132", "1\.00k 0\.1% 25ppm', r'r\("R133", "19\.3k 0\.1% 25ppm', r'c\("C119", "4\.7n 50V C0G 5%', r'c\("C120", "22n 50V C0G 5%', r'r\("R143", "2\.2M 1%", "BRK_PGD", "OCH_S2"\)',
+                r'part\("D106", "Device", "D_Schottky", "BAT46W-7-F',
                 r'r\("R136", "47k"', r'r\("R137", "100k"', r'r\("R142", "1k", "OCH_GD", "OCH_CG"\); r\("R138", "4\.7k"',
-                r'r\("R140", "0\.39R 1% 2512', r'r\("R139", "1M", "BRK_VIN", "OCH_EG"\); r\("R141", "1M", "OCH_EG", "PACK_N"\)'):
+                r'r\("R140", "0\.39R 1% ', r'r\("R139", "1M", "BRK_VIN", "OCH_EG"\); r\("R141", "1M", "OCH_EG", "PACK_N"\)'):
         need(dr, pat, "the draft's value %s" % pat[3:9])
     t37 = flat(pdftext("tps37"))
     need(t37, r"VITP \(Overvoltage\) VIT = 800 mV \(3\) 0\.792 0\.800 0\.808 V", "TPS37 VITP at 800 mV")
@@ -241,7 +258,8 @@ def compute():
     need(o, r"OFFSET VOLTAGE ±1 ±10 [µμ]V VOS Input offset voltage TA = \u201340°C to \+125°C ±0\.001 ±0\.015 [µμ]V/°C", "OPA187 VOS and drift")
     need(o, r"\(V\u2013\) \u2013 0\.1 \(V\+\) \u2013 2 V", "OPA187 VCM")
     need(o, r"IO = 0 mA, TA = \u201340°C to \+125°C 150 [µμ]A", "OPA187 IQ")
-    lo, hi = O.window({"comps": {"R132": {"value": "1.00k"}, "R133": {"value": "19.3k"}}, "pins": {}, "on": {}})
+    lo, hi = O.window({"comps": {"R132": {"value": "1.00k"}, "R133": {"value": "19.3k"}, "R135": {"value": "1k"},
+                                 "R10": {"value": "2m 2512 2W (sense)"}}, "pins": {}, "on": {}})   # the drafted values; section 5 reads the netlist
     gd = O.GAIN_TOL + O.GAIN_TCR * O.GAIN_DT
     vos_tot = O.VOS
     r10_hi = (O.VITP[0] - (1 + G_RF / G_RIN * (1 + gd) / (1 - gd)) * vos_tot - O.IB * G_RF * (1 + gd) - O.ISENSE * 1e3) / \
@@ -263,15 +281,79 @@ def compute():
              peak_16=i_c(PACK_MOST, R140 * 0.99) + LIM[2], peak_clamp=i_c(CLAMP, R140 * 0.99) + LIM[2],
              vlim=LIM[2] * R140 * 1.01)
     p_lim = R["vlim"] ** 2 / (R140 * 0.99)
-    e_lim = p_lim * (CLEAR + 50e-6)
+    e_lim = p_lim * (CLEAR + TCL_RECORD)
     c_kit = 593e-6
     e_cap = 0.5 * c_kit * R["vlim"] ** 2
-    R.update(p_lim=p_lim, e_lim=e_lim, e_cap=e_cap, e_r140=e_lim + e_cap + R["peak_clamp"] ** 2 * R140 * 16.5e-6)
+    e_spike = R["peak_clamp"] ** 2 * R140 * 16.5e-6                # round 11's arithmetic: the crowbar's peak with the load's (an overcount)
+    R.update(p_lim=p_lim, e_lim=e_lim, e_cap=e_cap, e_spike=e_spike, e_n=e_lim + e_cap + e_spike)
     # the sequence: the trip's sense delay, the gate drive, the -1's clearing; the arming's delay after PGD falls
     t_gate = 75e-9 / ((PACK_LEAST - 4.5) / R142)                  # Qg(4.5 V) 75 nC at most through R142 from BRK_VIN
     R.update(t_gate=t_gate, t_event=tcts1[1] + t_gate + CLEAR, arm_margin=tcts2[0] - (t_gate + CLEAR))
-    t_off = 40e-6 + 5 * R138 * 11.4e-9                            # tCTR1 without a capacitor at most (800 mV row); 5 time constants of R138 and Ciss
-    R.update(t_off=t_off, t_src=R["t_event"] + t_off)
+    # the crowbar's turn-off once RESET1 releases or RESET2 disarms (round 12 adds Q110's own turn-off, which round 11 left out): tCTR1
+    # without a capacitor at most 40 us (PRINTED); Q110's gate pulled up through R136 (+1 %) from its drive to 0.5 V with twice its
+    # TYPICAL Ciss (ASSUMED: no maximum printed); Q111's gate through R138 (+1 %) for five time constants of its PRINTED 11.4 nF maximum
+    t_q110 = max(math.log(v * R136 / (R136 + R137) / 0.5) for v in (PACK_LEAST, PACK_MOST, CLAMP)) * R136 * 1.01 * Q110_CISS_FACTOR * CISS_Q110_TYP
+    t_off = 40e-6 + t_q110 + 5 * R138 * 1.01 * CISS_Q111_MAX
+    R.update(t_q110=t_q110, t_off=t_off, t_src=R["t_event"] + t_off)
+    need(t37, r"VOL \(5\) Low level output voltage 300 mV", "TPS37 VOL")
+    need(t37, r"tCTR \(CTR1/MR, CTR2/MR\) \(2\) VIT = 800 mV CCTR1 = CCTR2 = Open 40", "TPS37 tCTR at 800 mV")
+    need(flat(pdftext("ao3401a")), r"Ciss Input Capacitance 645 pF", "AO3401A Ciss (TYPICAL only)")
+
+    # 4c'. A SOURCE'S SHARE OF THE CROWBAR'S CURRENT (round 12; the check's F1). The path that holds VSYS (L4-E9's power edges): board
+    # E's entry feeds VIN_RAW, board A's front end makes VBUS20 and the charger U3 holds VSYS; board E's thresholds bound VIN_RAW's
+    # current two conversions upstream, not the current a source pushes from VSYS through board A's battery FETs into PACK_P
+    arch = flat(read(RECS["arch"]))
+    need(arch, r"\| P06 \| ENTRY \| VINRAW \| R19, L2 to VIN_RAW \|", "L4-E9's edge P06: the entry feeds VIN_RAW")
+    need(arch, r"\| P07 \| VINRAW \| FE \| the dock's pins, U2's input \|", "L4-E9's edge P07: VIN_RAW into the front end")
+    need(arch, r"\| P10 \| CHG \| VBAT \| U3's output, VSYS \|", "L4-E9's edge P10: the charger holds VSYS")
+    need(arch, r"\| P11 \| VBAT \| PACK \| \(B1\) Q39 and Q40 to CH_BATQ, then R17, A F1, the pack pins, board P \|", "L4-E9's edge P11: VSYS to the pack")
+    m = need(e11, r"to ([\d.]+) V \(the pack at ChargeVoltage's ([\d.]+) V plus 150 mV, \+2 %, p\.9\): BOUNDED", "VSYS's most (L4-E11 12c)")
+    vsys_max = float(m.group(1))
+    m = need(e11, r"into a resistive fault at sqrt\(P x R\): ([\d.]+) V at the breaker's least-limit fault of ([\d.]+) ohm with the front end's "
+             r"([\d.]+) W \(its ([\d.]+) A ISNS maximum\)", "the source's settled power into a resistive fault (L4-E11, B-R2's reach)")
+    p_src = float(m.group(3))
+    inh_v = float(need(e11, r"the inhibit sets only when CELL\+ falls under ([\d.]+) V", "the DD-7 inhibit's CELL+ threshold (L4-E11)").group(1))
+    bq = flat(pdftext("bq25730"))
+    need(bq, r"Pre-charge current REG0x03/02\(\) = 0x00C0H 384 mA regulation accuracy \u22652S \u201325\.0% 25\.0%", "BQ25730 IPRECHRG_REG_ACC at 384 mA")
+    need(bq, r"CONVERTER OVER-CURRENT COMPARATOR \(Q2\) Converter Over- Reg0x32\[5\]=1b 150 mV", "BQ25730 VOCP_lim_Q2 (a TYPICAL only)")
+    pre_max = 0.384 * 1.25
+    r_lo, r_hi = R140 * 0.99, R140 * 1.01
+    # the crowbar conducts until RESET1 releases (after the -1 latches, the cells' current through R10 stops) or RESET2 disarms
+    # (round 12): while the -1 conducts, PACK_P is under BRK_VIN; once latched it is at most VSYS. No printed figure bounds the
+    # source's current inside the event (the charger's and the front end's regulation loops print no settling time; the charger's
+    # cycle-by-cycle comparators print a typical only), so R140's power is bounded on VOLTAGE over the bounded on-time
+    p_on, p_after = PACK_MOST ** 2 / r_lo, vsys_max ** 2 / r_lo
+    R.update(vsys_max=vsys_max, p_src=p_src, inh_v=inh_v, pre_max=pre_max, p_on=p_on, p_after=p_after,
+             v_settled=math.sqrt(p_src * r_hi), i_settled=math.sqrt(p_src / r_hi),
+             e_n_src=p_on * (t_gate + CLEAR + TCL_RECORD) + p_after * t_off + e_spike)
+
+    # 4i. THE BRK_VIN RANGE AND THE ON-TIME BOUND (round 12; the check's F2). The -1 runs from 7.6 V (record l8p 12d, C-PROT rev 1;
+    # LM5069's PORIT, typical) to the pack's 16.8 V; the crowbar's own current exceeds the most limit only from LIM x R140 (+1 %)
+    l69 = flat(pdftext("lm5069"))
+    need(l69, r"PORIT VIN increasing 7\.6 8 V", "LM5069 PORIT")
+    v_force = R["LIM"][2] * r_hi
+    lim, w_lo = R["LIM"][2], R["win"][0]
+    # the band where the crowbar's own current lies between the trip's least and a unit's most limit (no source); with a source's
+    # settled share on the record's B-R2 basis (p_src into the pack side) the -1 can stay under its limit up to v_band_src; a held
+    # overload that persists through the bound needs the source to carry (V / R140 + the window's least - the most limit) x V
+    v_band_src = (lim * r_hi + math.sqrt((lim * r_hi) ** 2 + 4 * p_src * r_hi)) / 2
+    a_ = 1 / r_hi
+    v_resid = (-(w_lo - lim) + math.sqrt((w_lo - lim) ** 2 + 4 * a_ * p_src)) / (2 * a_)
+    R.update(v_floor=7.6, v_force=v_force, band=(w_lo * r_lo, v_force), v_band_src=v_band_src, v_resid=v_resid)
+    t2 = tcts2
+    R.update(t_on_max=t2[1] + t_off, arm_cover=t2[0] - (t_gate + CLEAR))
+    p_stall = R["LIM"][2] ** 2 * r_hi                                  # the crowbar's own current under the most limit, no source
+    R.update(p_stall=p_stall, e_s=p_stall * (t2[1] + t_off), e_w=p_on * t2[1] + p_after * t_off + e_spike,
+             p_peak=CLAMP ** 2 / r_lo, i_q111_src=vsys_max / r_lo,
+             p_q111_off=vsys_max ** 2 / (4 * r_lo), p_q111_off_settled=p_src * r_hi / (4 * r_lo),
+             p_q111_off_nosrc=v_force ** 2 / (4 * r_lo), t_q111_off=5 * R138 * 1.01 * CISS_Q111_MAX)
+    R["e_r140"] = max(R["e_n"], R["e_s"], R["e_w"])
+    need(dr, r"single pulse of at least %s J in %s ms with %s kW for 16\.5 us" % (re.escape(fmt(R["e_r140"], 2)), re.escape(fmt(R["t_on_max"] * 1e3, 2)),
+         re.escape(fmt(R["p_peak"] / 1e3, 2))), "the draft's R140 stating this round's pulse")
+    # D106's low level and R143's levels (check_l8p_och's own arithmetic on the drawn values)
+    bt = flat(pdftext("bat46w"))
+    need(bt, r"0\.25 IF = 0\.1mA Forward Voltage VF", "BAT46W VF at 0.1 mA")
+    need(flat(pdftext("n7002")), r"Gate-Threshold Voltage Vth\(GS\) VDS=VGS, ID=250 \u00b5A 1 1\.6 2\.5", "2N7002 Vth(GS)")
     # 4d. ratings and leakages
     vgs110 = (PACK_LEAST * R136 / (R136 + R137), CLAMP * R136 / (R136 + R137))
     leak_n = 80e-9 * 2 ** ((SITE - 25.0) / DOUBLING_K)             # 2N7002 80 nA at 25 C (PRINTED), doubled (ASSUMED)
@@ -311,6 +393,14 @@ def compute():
         mid = (lo_t + hi_t) / 2
         lo_t, hi_t = (mid, hi_t) if uvlo_at(mid)[1] >= 2.55 else (lo_t, mid)
     R.update(uvlo_air=uvlo_at(76.25), uvlo_site=uvlo_at(SITE), uvlo_t=lo_t, uvlo_sink_only=uvlo_at(-273.0, n=0, rf=1.0))
+
+    # the RC hold's release on the same rule (round 12; the check's F8): BRK_H charges through R104 (+1 %) into C103 (3.3 uF +10 %,
+    # record l9stk's CAP_TOL) toward its settled value and releases at UVLOTH's 2.55 V plus D102's 0.715 V
+    def hold_t(site, n=2, rf=1.01):
+        h = uvlo_at(site, n=n, rf=rf)[0]
+        need_h = 2.55 + 0.715
+        return float("inf") if h <= need_h else 200e3 * 1.01 * 3.3e-6 * 1.10 * math.log(h / (h - need_h))
+    R.update(hold_sink_only=hold_t(-273.0, n=0, rf=1.0), hold_air=hold_t(76.25), hold_site=hold_t(SITE))
     return R
 
 
@@ -339,6 +429,8 @@ def compose():
         out["l8p_lines"] = lines
         out["och"] = O.judge(nl)["OCH"]
         out["win_drawn"] = O.window(nl)
+        out["delays"] = O.delays(nl)
+        out["levels"] = O.bound_levels(nl)
         muts = []
         for name, ops in MUTATIONS:
             q = D.mutate_ops(net, d, "m%d" % len(muts), ops)
@@ -368,6 +460,14 @@ MUTATIONS = (
     ("the crowbar's gate clamp removed", [("drop", "D105")]),
     ("the gain at 10 kOhm (the window off)", [("value", "R133", "10.0k 0.1% 25ppm")]),
     ("the crowbar's drain on DOCK_EN_OUT (a sink on the enable loop)", [("move", "R140", "2", "DOCK_EN_OUT")]),
+    # round 12 (the check's F3 and F2): the values the window and the delays are now read from, and the on-time bound
+    ("R10 at 1 mOhm (round 12: the window read from R10's drawn value, about 40 to 43 A)", [("value", "R10", "1m 2512 2W (sense)")]),
+    ("R135 at 1 MOhm (round 12: SENSE1's input current through it moves the window)", [("value", "R135", "1M")]),
+    ("C117 at 100 nF (round 12: SENSE1's filter over its share of the sense delay)", [("value", "C117", "100n 50V C0G (SENSE1's filter)")]),
+    ("C120 at 47 nF (round 12: round 11's value, the on-time past R140's figure)", [("value", "C120", "47n 50V C0G 5% (CTS2)")]),
+    ("D106 removed (round 12: the on-time bound lost)", [("drop", "D106")]),
+    ("R143 at 100 kOhm (round 12: BRK_PGD under Q106's threshold while the trip asserts)", [("value", "R143", "100k 1%")]),
+    ("SENSE2 back on BRK_PGD (round 12: round 11's arming, no on-time bound)", [("move", "U107", "3", "BRK_PGD")]),
 )
 
 
@@ -434,9 +534,12 @@ def render(R, K):
     w("     breaker, the copper, the 18 A service or any printed margin; it adds a protection and lowers none; every part type is in the kit")
     w("   END CONDITION (any one): (1) R10's maker sheet (E-6) reads a tolerance with its temperature coefficient over 130 K outside %s to %s %%;" % (
         fmt(100 * R["r10_room"][0], 1), fmt(100 * R["r10_room"][1], 1)))
-    w("     (2) Layer 6 finds no R140 whose maker prints a single pulse of at least %s J in 1.4 ms; (3) a check of this round finds a held" % fmt(R["e_r140"], 2))
-    w("     current over %s A, a trip at or under %s A, or a crowbar event that does not end in the -1's latch, and a second negative check of" % (fmt(O.BLADE_BAND), fmt(SERVICE_TRUE)))
-    w("     the same trip follows; then (C) with its band reading resolved, or the blades' evidence route (round 10's (c)) as the supplier's")
+    w("     (2) Layer 6 finds no R140 whose maker prints a single pulse of at least %s J in %s ms (round 12, 4c'; 0.40 J in 1.4 ms in round 11);" % (
+        fmt(R["e_r140"], 2), fmt(R["t_on_max"] * 1e3, 2)))
+    w("     (3) a check of this round finds a held current over %s A, a trip at or under %s A, or a crowbar event that ends neither in" % (
+        fmt(O.BLADE_BAND), fmt(SERVICE_TRUE)))
+    w("     the -1's latch nor within the on-time bound (round 12), and a second negative check of the same trip follows; then (C) with its")
+    w("     band reading resolved, or the blades' evidence route (round 10's (c)) as the supplier's")
     w("")
     w("4. THE TRIP ON PRINTED FIGURES (B)")
     w("   4a. THE WINDOW (INFERRED on PRINTED rows; R10 ASSUMED): OCH_A = %s x I x R10 (U106 inverting, R133 over R132); U107's VITP %s to %s V" % (
@@ -444,6 +547,8 @@ def render(R, K):
     w("     (TI SNVSBJ1E 7.5, -40 to 125 C); R132 and R133 at 0.1 %% and 25 ppm/K over 100 K; OPA187's VOS %s uV in all (10 uV, 0.015 uV/C over" % fmt(O.VOS * 1e6, 1))
     w("     100 K, CMRR 126 dB at VCM V-), IB 7.5 nA, U107's ISENSE 100 nA through R135; R10 2 mOhm at 1 % and 75 ppm/K over 130 K (ASSUMED,")
     w("     record l8p 12c; no maker's sheet held, E-6): the held current is ended from %s A at the least to %s A at the most" % (fmt(lo, 3), fmt(hi, 3)))
+    w("     (round 12, the check's F3: check_l8p_och.py reads R10's, R132's, R133's and R135's DRAWN values into this window and C117's,")
+    w("     C119's and C120's into the delays; round 11 read R132 and R133 only, so R10 at 1 mOhm or R135 at 1 MOhm still read DRAWN)")
     w("     margins: %s A over the service's true %s A; %s A under the blades' %s A at the band (%s A under %s A at the air)" % (
         fmt(lo - SERVICE_TRUE), fmt(SERVICE_TRUE), fmt(O.BLADE_BAND - hi), fmt(O.BLADE_BAND), fmt(W["I_rr_air"] - hi), fmt(W["I_rr_air"])))
     w("     robustness: the window stays inside both while R10 reads within %s %% to +%s %% (the record assumes +-%s %%)" % (
@@ -454,8 +559,11 @@ def render(R, K):
         fmt(R["tcts1"][0] * 1e3, 3), fmt(R["tcts1"][1] * 1e3, 3)))
     w("     longer than E-10's %s ms excursions (record l9stk 15.7: the key-down current's excursions above %s A each under it), so the trip," % (
         fmt(R["e10"] * 1e3, 3), fmt(R["LIM"][0])))
-    w("     whose least is over %s A, is never more sensitive than the breaker's least unit; the arming's delay after PGD falls %s to %s ms" % (
-        fmt(R["LIM"][0]), fmt(R["tcts2"][0] * 1e3, 2), fmt(R["tcts2"][1] * 1e3, 2)))
+    w("     whose least is over %s A, is never more sensitive than the breaker's least unit INSIDE E-10's bound (E-10 is a bench item: an" % fmt(R["LIM"][0]))
+    w("     excursion over the window lasting from %s ms up to the -1's own timer would be ended by the trip where the breaker alone" % fmt(R["tcts1"][0] * 1e3, 3))
+    w("     would ride it out; the check's F7: E-10 is a condition of L8P-R11-D1); the arming's delay after PGD falls OR THE TRIP ASSERTS")
+    w("     %s to %s ms (C120 22 nF C0G since round 12; round 11's 47 nF gave 4.60 to 8.36 ms after PGD's fall only)" % (
+        fmt(R["tcts2"][0] * 1e3, 2), fmt(R["tcts2"][1] * 1e3, 2)))
     w("   4c. THE CROWBAR INTO THE -1'S LATCH: R140 %s Ohm and Q111; its own current %s A at %s V, %s A at %s V, %s A at the %s V clamp," % (
         fmt(R140, 2), fmt(R["ic_least"], 1), fmt(PACK_LEAST, 1), fmt(R["ic_16"], 1), fmt(PACK_MOST, 1), fmt(R["ic_clamp"], 1), fmt(CLAMP, 1)))
     w("     each over the breaker's most limit %s A WHATEVER THE LOAD: U101 enters its current limit (its circuit breaker from %s A) and the" % (
@@ -470,17 +578,54 @@ def render(R, K):
     w("     cycle: the -1's own); no retry train")
     w("     the gate: Q111's Qg(4.5 V) 75 nC at most through R142 from BRK_VIN at %s V: %s us; the event from the held current's onset at most" % (
         fmt(PACK_LEAST, 1), fmt(R["t_gate"] * 1e6, 1)))
-    w("       %s ms (the trip's delay, the gate, the clearing) plus tCL; PGD falls only when VDS passes %s to %s V (RECORD), and the arming's" % (
+    w("       %s ms (the trip's delay, the gate, the clearing) plus tCL; PGD falls only when VDS passes %s to %s V (RECORD); the arming's" % (
         fmt(R["t_event"] * 1e3, 3), fmt(R["PGD_VDS"][0], 2), fmt(R["PGD_VDS"][1], 2)))
-    w("       least delay after it, %s ms, leaves %s ms for tCL past the gate and the clearing: the crowbar stays until the latch" % (
+    w("       least delay, now counted from the trip's assertion (round 12), %s ms, leaves %s ms for tCL past the gate and the clearing" % (
         fmt(R["tcts2"][0] * 1e3, 2), fmt(R["arm_margin"] * 1e3, 2)))
-    w("     R140's single pulse (INFERRED): PACK_P under the limit at most %s V (the most limit through R140 alone), %s W for %s ms plus 50 us" % (
-        fmt(R["vlim"], 2), fmt(R["p_lim"], 0), fmt(R["CLEAR"] * 1e3, 3)))
-    w("       of tCL: %s J; the kit's %s uF on PACK_P from %s V: %s J; the release spike at the clamp: under 0.003 J; at most %s J in all:" % (
-        fmt(R["e_lim"], 3), fmt(593, 0), fmt(R["vlim"], 2), fmt(R["e_cap"], 3), fmt(R["e_r140"], 2)))
-    w("       a 2512 part whose maker prints a single pulse of at least that in 1.4 ms (Layer 6; CONDITIONAL, E-6b)")
-    w("     Q111 (CSD18510Q5B, PRINTED): IDM 400 A against %s A; VDS 40 V against PACK_P's %s V clamp; VGS 20 V against D105's 12.7 V" % (
-        fmt(R["peak_clamp"], 1), fmt(CLAMP, 1)))
+    w("       (tCL 45 us TYPICAL, no maximum printed: the 50 us taken is RECORD, the check's F12): the crowbar stays until the latch")
+    w("     R140's single pulse WITHOUT A SOURCE (INFERRED): PACK_P under the limit at most %s V (the most limit through R140 alone), %s W" % (
+        fmt(R["vlim"], 2), fmt(R["p_lim"], 0)))
+    w("       for %s ms plus tCL (50 us, RECORD: 45 us TYPICAL, no maximum printed; the check's F12): %s J; the kit's %s uF on PACK_P from" % (
+        fmt(R["CLEAR"] * 1e3, 3), fmt(R["e_lim"], 3), fmt(593, 0)))
+    w("       %s V: %s J; the onset at the clamp, the crowbar's peak with the most limit's load for 16.5 us (an overcount: the load's current" % (
+        fmt(R["vlim"], 2), fmt(R["e_cap"], 3)))
+    w("       does not pass R140): %s J (round 11 printed 'under 0.003 J' beside this same arithmetic: corrected); %s J in all: ROUND 11'S" % (
+        fmt(R["e_spike"], 3), fmt(R["e_n"], 2)))
+    w("       FIGURE, which left out a source's share (the check's F1) and the band of 4i (F2): restated in 4c' and 4i")
+    w("   4c'. A SOURCE'S SHARE (round 12, the check's F1; C-PROT rev 1: each source present or absent)")
+    w("     the path that holds VSYS (RECORD, L4-E9's power edges): P06 the entry to VIN_RAW, P07 VIN_RAW into the front end U2, P10 the")
+    w("       charger U3 onto VSYS, P11 VSYS through the battery FETs, R17 and A's F1 to the pack: THE CHARGER holds VSYS; board E's entry")
+    w("       (its overcurrent 6.364 to 7.136 A, its short-circuit 10.36 to 13.87 A) acts on VIN_RAW two conversions upstream, so its")
+    w("       thresholds bound VIN_RAW's current, not the current a source pushes from VSYS into PACK_P (round 11's 4e and the check's")
+    w("       estimate read them as VSYS's: WITHDRAWN as the path's reading)")
+    w("     the charger's printed figures are regulations: the pre-charge clamp at 384 mA +-25 % (PRINTED, IPRECHRG_REG_ACC, 0 to 85 C:" )
+    w("       at most %s A) acts only while a charge is commanded and VBAT is under VSYS_MIN; its cycle-by-cycle comparators (VOCP_lim) print" % fmt(R["pre_max"], 2))
+    w("       a typical only; neither its loops nor the front end's ISNS loop print a settling time. SETTLED, on the record's B-R2 basis")
+    w("       (L4-E11: the charger holds a resistive load on the pack side at sqrt(P x R) with the front end's %s W, RECORD), a source alone" % fmt(R["p_src"], 0))
+    w("       holds R140 at %s V, %s A; INSIDE THE EVENT no printed figure bounds its current, so R140 is bounded on VOLTAGE:" % (
+        fmt(R["v_settled"], 2), fmt(R["i_settled"], 1)))
+    w("       while the -1 conducts PACK_P is under BRK_VIN (at most %s V: %s W in R140 at its least), once latched at most VSYS's %s V" % (
+        fmt(PACK_MOST, 1), fmt(R["p_on"], 0), fmt(R["vsys_max"], 3)))
+    w("       (RECORD, L4-E11 12c: %s W), for the crowbar's on-time, which 4i bounds" % fmt(R["p_after"], 0))
+    w("     the turn-off (round 12 adds Q110's own, left out in round 11): tCTR1 40 us PRINTED, Q110's gate through R136 %s ms (twice its" % fmt(R["t_q110"] * 1e3, 3))
+    w("       TYPICAL Ciss, ASSUMED: no maximum printed), Q111's gate through R138, five time constants of its PRINTED 11.4 nF: %s ms in all" % fmt(R["t_off"] * 1e3, 3))
+    w("     R140's single pulse, each case (INFERRED; the time from the trip's assertion):")
+    w("       no source, the -1 latched (round 11, above)                                   %s J in %s ms" % (fmt(R["e_n"], 3), fmt((R["t_gate"] + R["CLEAR"] + TCL_RECORD) * 1e3, 3)))
+    w("       a source present, the -1 latched                                              %s J in %s ms" % (fmt(R["e_n_src"], 3), fmt((R["t_gate"] + R["CLEAR"] + TCL_RECORD + R["t_off"]) * 1e3, 3)))
+    w("       no source, the band of 4i, ended by the on-time bound                         %s J in %s ms" % (fmt(R["e_s"], 3), fmt(R["t_on_max"] * 1e3, 3)))
+    w("       a source present, the -1 held out of its limit, ended by the on-time bound    %s J in %s ms" % (fmt(R["e_w"], 3), fmt(R["t_on_max"] * 1e3, 3)))
+    w("       E-6b RESTATED: a part whose maker prints a single pulse of at least %s J in %s ms (%s W held, %s W for 16.5 us at the clamp);" % (
+        fmt(R["e_r140"], 2), fmt(R["t_on_max"] * 1e3, 2), fmt(R["p_after"], 0), fmt(R["p_peak"], 0)))
+    w("       round 11's 0.40 J in 1.4 ms is withdrawn. No 2512 sheet this record holds prints it: a larger part (Layer 6's selection,")
+    w("       with its maker's pulse curve read at %s ms; a power package or parallel pulse-rated chips on the PACK_P band) (CONDITIONAL)" % fmt(R["t_on_max"] * 1e3, 2))
+    w("     Q111 (CSD18510Q5B, PRINTED): IDM 400 A against %s A at the onset and %s A held with a source; VDS 40 V against PACK_P's %s V" % (
+        fmt(R["peak_clamp"], 1), fmt(R["i_q111_src"], 1), fmt(CLAMP, 1)))
+    w("       clamp; VGS 20 V against D105's 12.7 V; its own turn-off crosses at most V^2/4R: %s W without a source (at %s V), WITHIN the" % (
+        fmt(R["p_q111_off_nosrc"], 1), fmt(R["v_force"], 2)))
+    w("       record's derated %s W of the same part at %s ms (l9stk 15.6) for at most %s ms; %s W on the settled source basis, WITHIN;" % (
+        fmt(R["PULSE"][2], 1), fmt(R["PULSE"][1], 3), fmt(R["t_q111_off"] * 1e3, 3), fmt(R["p_q111_off_settled"], 1)))
+    w("       %s W on the voltage bound with a source: NOT SHOWN (its SOA at %s ms or less is not read: CONDITIONAL, with E-2 and E-3)" % (
+        fmt(R["p_q111_off"], 0), fmt(R["t_q111_off"] * 1e3, 2)))
     w("   4d. THE ARMING AND THE GATE DRIVE (PRINTED limits; leakages ASSUMED to double every 10 K at the record's %s C site)" % fmt(SITE))
     w("     Q110 (AO3401A) driven at VGS -%s V at %s V to -%s V at the clamp (R136 over R137), against its +-12 V and its -2.5 V RDS(on) row" % (
         fmt(R["vgs110"][0], 2), fmt(PACK_LEAST, 1), fmt(R["vgs110"][1], 2)))
@@ -494,17 +639,20 @@ def render(R, K):
     w("       Q112's gate at most %s V against 20 V; OCH_CG under D105's %s V; R142 and D105 carry at most %s mA for the event" % (
         fmt(R["vgs112"], 1), fmt(R["vcg"], 1), fmt(R["iz"] * 1e3, 1)))
     w("   4e. POWER-UP, THE START AND A LATCHED BREAKER: U107 holds RESET1 and RESET2 asserted for tSD (2 ms at most) and RESET2 while PGD is")
-    w("     low, so Q112 is off and the crowbar disarmed whenever the breaker is not running: at a gauge's wake, at a docking (the RC hold's")
-    w("     0.110 s and the start), during a start (PGD low while VDS is high) and once latched; the trip touches neither the enable loop nor")
+    w("     low (round 12: or while RESET1 is asserted, through D106), so Q112 is off and the crowbar disarmed whenever the breaker is not")
+    w("     running: at a gauge's wake, at a docking (the RC hold's 0.110 s and the start), during a start (PGD low while VDS is high), once")
+    w("     latched, and %s ms at most after the trip asserts (4i); the trip touches neither the enable loop nor" % fmt(R["tcts2"][1] * 1e3, 2))
     w("     UVLO (check_l8p_och's APART): L4-E11 20c's window, its readings and the RC hold's 0.110 to 0.907 s are unchanged")
     w("     EACH SOURCE PRESENT OR ABSENT (C-PROT rev 1): with a source holding VSYS and board A's battery FETs on, the crowbar also loads the")
-    w("       source through those FETs, CELL+, the dock and the lead, for the event and the crowbar's turn-off after the latch (RESET1's")
-    w("       release at most 40 us without a capacitor, PRINTED, and R138 with Q111's 11.4 nF: %s ms), %s ms at most; that current returns" % (
-        fmt(R["t_off"] * 1e3, 2), fmt(R["t_src"] * 1e3, 2)))
-    w("       through board A's ground, not R10, so it never holds the trip; board E's entry meets it as a short on VSYS, its overcurrent %s to" % fmt(R["ENTRY"][0], 3))
-    w("       %s A and its short-circuit %s to %s A (record l4e11 3c, RECORD), its own fault behaviour, the case its own record judges; the" % (
-        fmt(R["ENTRY"][1], 3), fmt(R["ENTRY"][2], 2), fmt(R["ENTRY"][3], 2)))
-    w("       battery FETs carry at most that source current, reversed, inside their held rows; afterwards a charge through the latched")
+    w("       source through those FETs, CELL+, the dock and the lead, for the event and the crowbar's turn-off after the latch (%s ms," % fmt(R["t_off"] * 1e3, 2))
+    w("       4c'), %s ms at most when the -1 latches, %s ms at most when it does not (4i); that current returns through board A's ground," % (
+        fmt(R["t_src"] * 1e3, 2), fmt(R["t_on_max"] * 1e3, 2)))
+    w("       not R10, so it never holds the trip; THE CHARGER holds VSYS (L4-E9's P10, 4c'): board E's entry (overcurrent %s to %s A," % (
+        fmt(R["ENTRY"][0], 3), fmt(R["ENTRY"][1], 3)))
+    w("       short-circuit %s to %s A, record l4e11 3c, RECORD) meets it only through the front end and the charger, two conversions" % (
+        fmt(R["ENTRY"][2], 2), fmt(R["ENTRY"][3], 2)))
+    w("       upstream (round 11 read it as a short on VSYS: corrected); the source's share and R140's pulse are 4c''s; the battery FETs")
+    w("       carry at most that source current, reversed, inside their held rows; afterwards a charge through the latched")
     w("       breaker's body diodes is route R1's (round 3: the detector holds the return, board A's inhibit sets), as after any latch")
     w("     THE GAUGE: R10 carries the event, so the gauge's AFE reads it as it reads any short on PACK_P (IF-6); its levels are unchanged")
     w("       (IF-4), and if its ASCD acts Q2 opens behind the latched breaker; the gauge's recovery is the battery stream's")
@@ -516,8 +664,21 @@ def render(R, K):
         w("     %-52s %s" % (a, b))
     w("     so a latent first failure returns the design to round 10's rows at %s A held (the blades at %s %% of their rerated current, no part" % (
         fmt(I), fmt(100 * I / W["I_rr_air"], 1)))
-    w("       the guard protects exposed: M-A holds the FETs at %s A); no automatic diagnostic is drawn: E-12f at commissioning and at each" % fmt(I))
-    w("       service, and an automatic test is REMAINING ENGINEERING with HO-A's pattern")
+    w("       the guard protects exposed: M-A holds the FETs at %s A on a board whose path meets E-1's bar); no automatic diagnostic is" % fmt(I))
+    w("       drawn and THE TRIP'S SILENT FAILURES HAVE NO DETECTION INTERVAL beyond E-12f at commissioning and at each service: L4A-67's")
+    w("       acceptance ('fails on any latent first failure left without its interval') reads NOT MET on that clause (the check's F6);")
+    w("       an automatic test is REMAINING ENGINEERING with HO-A's pattern")
+    w("     Q110 OR Q111 SHORTED WITH A SOURCE (the check's F11): the -1 latches (found at the next start); while a source holds VSYS with")
+    w("       the battery FETs on when the failure comes, CELL+ stays tied to VSYS and the charger holds R140 as a resistive load: on the")
+    w("       record's settled B-R2 basis %s V, %s A, %s W held (L4-E11: the DD-7 inhibit sets only under %s V on CELL+, and does not here)," % (
+        fmt(R["v_settled"], 2), fmt(R["i_settled"], 1), fmt(R["p_src"], 0), fmt(R["inh_v"], 2)))
+    w("       until R140 opens (then the crowbar's open failure, latent, as the second row) or the source goes; the charger's pre-charge")
+    w("       clamp (at most %s A, PRINTED) holds it under %s W only while a charge is commanded with VBAT under VSYS_MIN, which nothing" % (
+        fmt(R["pre_max"], 2), fmt(R["pre_max"] ** 2 * R140 * 1.01, 3)))
+    w("       drawn forces; when the failure precedes the source, CELL+ is dead, the DD-7 inhibit holds the battery FETs off and only their")
+    w("       off leakage flows. FINDING L8P-R12-F1 (new, OPEN; the record's B-R2 state with R140 as its resistive fault): smallest")
+    w("       corrections for the next round, none drafted here: a series element whose maker's curve passes the event's pulse and opens")
+    w("       the held %s A inside R140's printed short-time rating (chosen with R140's part, E-6b), or route R1's blocking element" % fmt(R["i_settled"], 1))
     w("   4h. A FINDING ON THE DRAWN UVLO NODE (L8P-R11-F1, this record's own C-1b of round 2; OPEN; not this round's circuit, which adds")
     w("     nothing on UVLO): below its threshold U101 sinks UVLOHYS, 12 to 30 uA PRINTED, so at a start H settles under R104 with that sink and")
     w("     every off leakage on BRK_UVLO; record l9stk counts the sink alone (H %s V at %s V, R104 nominal). Q104's and Q105's drains sit on BRK_UVLO: at" % (
@@ -529,6 +690,44 @@ def render(R, K):
     w("     start the breaker (the service, not a protection). Smallest corrections, for this record's next round (none drafted here): R104")
     w("     lowered with C103 raised to keep the hold's 0.110 to 0.907 s, or inverters whose maker prints the hot off leakage, or both;")
     w("     evidence: Q104's and Q105's IDSS at 86.25 and 101 C on board P's specimen (E-12's bench)")
+    w("     IT ALSO STRETCHES THE RC HOLD (the check's F8; the same rule, INFERRED): BRK_H settles at %s V at the 76.25 C air against the" % fmt(R["uvlo_air"][0], 2))
+    w("       3.265 V the release needs, so the hold takes %s s (R104 +1 %%, C103 +10 %%), against the %s s the record's sink-only figure" % (
+        fmt(R["hold_air"], 2), fmt(R["hold_sink_only"], 3)))
+    w("       gives and L4-E11's DD-7 restart timeline (at most 1.149 s) uses: an affected output of L8P-R11-F1 (L4-E11 20d's timeline")
+    w("       and record l9stk's 0.110 to 0.907 s); never released at the %s C site" % fmt(SITE))
+    w("   4i. THE BRK_VIN RANGE AND THE ON-TIME BOUND (round 12, the check's F2)")
+    w("     the event can happen from BRK_VIN %s V (C-PROT rev 1: the -1 runs from its power-on threshold, record l8p 12d; PORIT %s V is" % (
+        fmt(R["v_floor"], 1), fmt(7.6, 1)))
+    w("       a TYPICAL with an 8 V maximum and no minimum printed) to the pack's %s V, the clamp's %s V in a surge" % (fmt(PACK_MOST, 1), fmt(CLAMP, 1)))
+    w("     from %s V up (the most limit through R140 at +1 %%) the crowbar's own current exceeds every unit's limit: the -1 limits and" % fmt(R["v_force"], 2))
+    w("       latches whatever the load (no source). UNDER IT the latch rests on the faulted load persisting as PACK_P falls; if the load")
+    w("       drops out (a constant-power load under its own UVLO, another protection acting) a unit whose limit is over the crowbar's own")
+    w("       current leaves its limit, and the crowbar's own current through R10, over the window's least, HOLDS THE TRIP: the band")
+    w("       %s to %s V (the window's least through R140 at -1 %%, the most limit through it at +1 %%), %s W in R140 held in round 11's" % (
+        fmt(R["band"][0], 2), fmt(R["band"][1], 2), fmt(R["p_stall"], 0)))
+    w("       drawing: a DEMONSTRATED DEFECT of the draft (no source); with a source's settled share on the record's B-R2 basis the -1 can")
+    w("       stay out of its limit up to %s V, and inside the event's unprinted transient up to the pack's %s V (4c')" % (fmt(R["v_band_src"], 2), fmt(PACK_MOST, 1)))
+    w("     three approaches (constitution section 4): (a) R140 under 7.6 V / (23.93 A x 1.01) = %s Ohm, so the crowbar alone exceeds the" % fmt(7.6 / (R["LIM"][2] * 1.01), 4))
+    w("       limit from 7.6 V: its peak at the clamp, %s A with the most limit's load, passes the %s A where VIN to SENSE exceeds its 0.3 V" % (
+        fmt(CLAMP / (7.6 / (R["LIM"][2] * 1.01) * 0.99) + R["LIM"][2], 1), fmt(R["VSNS_I"], 1)))
+    w("       absolute maximum (a row newly reached), and a source can still hold the -1 out of its limit: NOT SELECTED; (b) the trip armed")
+    w("       only above %s V: the blades' held 23.93 A stays uncorrected under it, L8P-R10-F1 open in that band: NOT SELECTED; (c) THE" % fmt(R["v_force"], 2))
+    w("       ON-TIME BOUND, SELECTED (SESSION L8P-R12-D1): channel 2 also reads the trip, through D106 (BAT46W: VF at most 0.25 V at 0.1 mA,")
+    w("       PRINTED, with RESET1's VOL at most 0.3 V: OCH_S2 under 0.55 V against SENSE2's least 0.792 V) and R143 2.2 MOhm from BRK_PGD,")
+    w("       so RESET2 disarms the crowbar %s to %s ms after the trip asserts whatever the breaker does; it re-arms only once RESET1 has" % (
+        fmt(R["tcts2"][0] * 1e3, 2), fmt(R["tcts2"][1] * 1e3, 2)))
+    w("       released (R10 under the window: the dropped load) and PGD is high, so no retry train; the least delay covers the gate and the")
+    w("       -1's clearing with %s ms for tCL; the crowbar conducts at most %s ms" % (fmt(R["arm_cover"] * 1e3, 2), fmt(R["t_on_max"] * 1e3, 2)))
+    w("     its levels (check_l8p_och.py's arithmetic on the drawn R143): BRK_PGD stays over Q106's 2.5 V threshold maximum (JSCJ, PRINTED)")
+    w("       at BRK_VIN 7.6 V while D106 pulls (so the restart inhibit stays gated during the event), and OCH_S2 armed stays over SENSE2's")
+    w("       release with RESET1's 300 nA and SENSE2's 100 nA through R143 (PRINTED)")
+    w("     WHAT STAYS: a held overload that persists through the bound with the -1 out of its limit leaves the trip disarmed until it falls")
+    w("       under the window (round 10's rows meanwhile): it needs a source to carry (V / R140 + the window's least - the most limit) x V")
+    w("       for %s ms, on the record's settled basis only at BRK_VIN under %s V (the -1's floor %s V), otherwise only inside the source's" % (
+        fmt(R["tcts2"][0] * 1e3, 2), fmt(R["v_resid"], 2), fmt(R["v_floor"], 1)))
+    w("       unprinted settling: CONDITIONAL, evidence E-12s (new): board P with boards A and E, a source at its IIN_HOST, a held overload")
+    w("       over the window at BRK_VIN 7.6, 10.6 and 16.8 V, ten events each: the -1 latched inside %s ms, the source's current into the" % fmt(R["tcts2"][0] * 1e3, 2))
+    w("       pack lead and R140's voltage recorded")
     w("")
     w("5. THE DRAFT COMPOSED IN L4-E9'S ORDER (board P; INFERRED from the regenerated netlist)")
     for name, r in K["steps"]:
@@ -537,6 +736,11 @@ def render(R, K):
     w("   check_l8p_netlist.py on it: %s" % "; ".join(l.strip() for l in K["l8p_lines"]))
     w("   check_l8p_och.py on it: OCH %s%s; the window from the drawn values %s to %s A" % (
         K["och"][0], (": " + "; ".join(K["och"][1])) if K["och"][1] else "", fmt(K["win_drawn"][0], 3), fmt(K["win_drawn"][1], 3)))
+    w("     (round 12) the drawn delays: SENSE1's filter %s us, the sense delay %s to %s ms, the arming and on-time delay %s to %s ms;" % (
+        fmt(K["delays"]["filter"] * 1e6, 1), fmt(K["delays"]["cts1"][0] * 1e3, 3), fmt(K["delays"]["cts1"][1] * 1e3, 3),
+        fmt(K["delays"]["cts2"][0] * 1e3, 2), fmt(K["delays"]["cts2"][1] * 1e3, 2)))
+    w("     the bound's levels at BRK_VIN 7.6 V: OCH_S2 %s V with RESET1 asserted, BRK_PGD %s V, OCH_S2 armed %s V" % (
+        fmt(K["levels"]["low"], 2), fmt(K["levels"]["pgd"], 2), fmt(K["levels"]["armed"], 2)))
     w("   the mutations, each read by check_l8p_och.py:")
     for name, v, why in K["muts"]:
         w("     %-100s OCH %s: %s" % (name + ",", v, why[:90]))
@@ -556,7 +760,10 @@ def render(R, K):
         fmt(R["tj_trip_bar"], 1), fmt(R["tj_trip_tgt"], 1)))
     w("     127.8 C at its die, surely tripped from 132.2 C); a held overload over the window is ended by the trip within %s ms plus tCL," % fmt(R["t_event"] * 1e3, 2))
     w("     long before the pour's own time; the guard keeps its own case (the pour's temperature at any current, a pour worse than the bar")
-    w("     included), and its latent failures (L8P-R9-F1) expose no part at the held currents M-A holds")
+    w("     included); its latent failures (L8P-R9-F1) expose no part at the held currents M-A holds ON A BOARD WHOSE INSTALLED PATH MEETS")
+    w("     E-1's BAR (round 12, the check's F5: a per-built-board check of the battery FETs' path, E11-29u, names it); on a board that")
+    w("     misses the bar (a void or a tab joint E11-29's coupon does not see) the guard's own silent failures, with no detection")
+    w("     interval, stay a residual (REMAINING ENGINEERING, HO-A's pattern)")
     w("")
     w("7. L4A-68: THE GUARD'S ALLOWANCE FOR ITS CONSUMERS (RECORD, record l8p 10c; the texts the apply scripts write)")
     w("   the draw on DOCK_EN_OUT at printed maxima, the off leakage at the doubling: cold %s uA (%s uA with the clamp's gates doubled), tripped" % (
@@ -576,13 +783,19 @@ def render(R, K):
         sum(1 for _n, v, _w in K["muts"] if v == "FAIL"), len(K["muts"])))
     w("     acceptance on printed figures: no current held over %s A, %s %% of the blades' rerated current at the band, the service untouched;" % (
         fmt(hi), fmt(100 * hi / O.BLADE_BAND, 1)))
-    w("     CONDITIONAL on E-6 (R10's sheet within -7.3 to +8.3 %), E-6b (R140's printed pulse), E-12f, and the latent-failure residual of 4g;")
-    w("     UNVERIFIED until the focused check (L4A-69); the approaches (A) NOT SUPPORTED and (C) NOT SELECTED on printed figures")
+    w("     CONDITIONAL on E-6 (R10's sheet within -7.3 to +8.3 %%), E-6b (R140's printed pulse, RESTATED in round 12: %s J in %s ms), E-10" % (
+        fmt(R["e_r140"], 2), fmt(R["t_on_max"] * 1e3, 2)))
+    w("     (the key-down excursions under 0.282 ms: a bench item, the check's F7), E-12f, E-12s (round 12, 4i) and the latent-failure")
+    w("     residual of 4g; round 12 corrects the band of 4i (a demonstrated defect of round 11's drawing) by the on-time bound, composed,")
+    w("     read DRAWN and mutated (section 5); UNVERIFIED until the targeted recheck (L4A-69); the approaches (A) NOT SUPPORTED and (C) NOT")
+    w("     SELECTED on printed figures")
     w("   L4A-67: C-PROT rev 1 for the guard on the corrected circuit: every series part within its printed limits below and above the trip")
     w("     where a printed figure exists; NOT SHOWN, each missing figure named and CONDITIONAL: board P's switches' hot RDS(on) (E-8, E-11),")
     w("     R10, R101, R102 and R140 (E-6, E-6b), the 12 AWG wires (a maker's ampacity at 76.25 C with its insulation class), the dock pins'")
-    w("     split (E-4); the battery FETs at most 150 C on the held state, CONDITIONAL on E-05, E11-29 and E11-36 (round 10); L8P-R9-F1's")
-    w("     latent pattern now carries the trip too (REMAINING ENGINEERING)")
+    w("     split (E-4), Q111's turn-off with a source (its SOA); the battery FETs at most 150 C on the held state, CONDITIONAL on E-05,")
+    w("     E11-29, E11-36 and E-9 (round 12, the check's F4); THE REGISTER'S ACCEPTANCE READS NOT MET on its latent-failure clause: the")
+    w("     trip's silent failures (4g) and the guard's on a board that misses E-1's bar have no detection interval (REMAINING ENGINEERING;")
+    w("     the check's F6; round 11's 'DONE on the desk' withdrawn); L8P-R12-F1 (a shorted crowbar with a source, 4g) OPEN")
     w("   L4A-68: the allowance stated for its consumers (section 7, two apply scripts, NOT APPLIED); the replay is record l4e11's round 19")
     w("")
     w("9. PREDICATES")
@@ -595,10 +808,14 @@ FAILS = (
     ("U106 or U107 dead, Rin open, RESET1 stuck high", "the trip lost, LATENT: round 10's rows (the blades over by 0.83 A)"),
     ("Q112, Q110, R142, Q111 or R140 open; D105 short", "the crowbar lost, LATENT: as above"),
     ("U106's output stuck high, Rf open", "a trip at every running start: the -1 latches, the kit dark (found)"),
-    ("Q110 or Q111 shorted", "the crowbar at every start: the -1 latches in its start (found)"),
-    ("Q112 shorted, RESET2 stuck high", "the arming lost: a crowbar for tSD at a gauge's wake on a live PACK_P"),
+    ("Q110 or Q111 shorted", "the crowbar at every start: the -1 latches in its start (found); with a source, 4g's last lines"),
+    ("Q112 shorted, RESET2 stuck high", "the arming and the on-time bound lost: a crowbar for tSD at a gauge's wake on a live PACK_P"),
     ("RESET2 stuck low, C120 shorted", "the crowbar disarmed, LATENT: as the first row"),
     ("C119 open", "the sense delay 17 us at most: a trip on an excursion E-10 allows (found)"),
+    ("D106 or R143 open (round 12)", "the on-time bound lost, LATENT: round 11's state, 4i's band unbounded (E-12f reads TP112)"),
+    ("C120 open (round 12)", "the bound at 17 us: the crowbar too short to latch the -1: the trip lost, LATENT (E-12f: TP111's pulse)"),
+    ("R143 shorted (round 12)", "D106 pulls BRK_PGD while the trip asserts: Q106 off, a hot pad's inhibit pulls UVLO (found, E-12b)"),
+    ("D106 shorted (round 12)", "OCH_S2 on OCH_R: armed at OCH_R's level, disarmed while RESET1 asserts: as drawn"),
 )
 
 import apply_pcb_interfaces_guard_allowance as A5   # noqa: E402  Layer 5's text, one source
@@ -635,7 +852,8 @@ def rows(R):
         ["Q39, Q40, Q42 (BUK6Y10-30P; round 10's 15a, PRINTED device maxima)",
          "held: at most %s A: the hottest junction %s C at E-1's bar, %s C at the design target (trip intact); %s C at the bar with the" % (fmt(hi), fmt(tj_bar, 1), fmt(tj_tgt, 1), fmt(W["TJ_bar"], 2)),
          "  trip failed (round 10) | %s: at most the held %s A state by superposition (round 10's 15e) | WITHIN 150 C, CONDITIONAL on" % (ev, fmt(I)),
-         "  E-05, E11-29, E11-36"],
+         "  E-05, E11-29, E11-36, E-9 (the -1's as-built most limit: the trip failed, the FETs hold the breaker's limit; round 12, the check's",
+         "  F4) and, for the claim that the guard's silent failures expose nothing, each built board's path meeting E-1's bar (E11-29u; F5)"],
         ["R17 (ROHM GMR100HJAAFD5L00, PRINTED derating)",
          "held: %s W at %s A on its printed maximum; its terminals admitted to %s C on the lower line (round 10: 128.5 C at %s A) | the" % (fmt(p17(a), 3), fmt(hi), fmt(a, 1), fmt(I)),
          "  event: within its held state's energy for 2.2 ms; the 16.5 us spike inside the hot-short row the record carries | WITHIN its",
@@ -670,16 +888,25 @@ def rows(R):
          "held: a hot factor up to %s admitted to 150 C (round 10: 5.37) | the event: l9stk 15.6's 'over the unit's limit' row, 0.57 of" % fmt(q101k, 2),
          "  the derated SOA (RECORD) | NOT SHOWN on printed maxima (E-11, the installed path at most 52.5 C/W, and the hot RDS(on)); the",
          "  event's SOA reading CONDITIONAL on E-2 and E-3 (record l9stk)"],
-        ["Q111 (CSD18510Q5B, the crowbar; this round)",
-         "held: off (IDSS 1 uA at 25 C PRINTED) | the event: %s A at most against IDM 400 A PRINTED, VDS a few hundred mV | WITHIN" % fmt(R["peak_clamp"], 1)],
+        ["Q111 (CSD18510Q5B, the crowbar; round 11, restated in round 12)",
+         "held: off (IDSS 1 uA at 25 C PRINTED) | the event: %s A at the onset and %s A held with a source (4c') against IDM 400 A PRINTED; its" % (
+             fmt(R["peak_clamp"], 1), fmt(R["i_q111_src"], 1)),
+         "  turn-off crossing %s W without a source, WITHIN the same part's derated %s W at %s ms; %s W with a source on the voltage" % (
+             fmt(R["p_q111_off_nosrc"], 1), fmt(R["PULSE"][2], 1), fmt(R["PULSE"][1], 3), fmt(R["p_q111_off"], 0)),
+         "  bound (%s W on the settled basis) | WITHIN on current; the turn-off with a source NOT SHOWN (its SOA at %s ms not read)" % (
+             fmt(R["p_q111_off_settled"], 1), fmt(R["t_q111_off"] * 1e3, 2))],
+        ["D106 (BAT46W) and R143 (2.2 MOhm; round 12, the on-time bound)",
+         "held: D106 reverse at most half the clamp's 29.2 V against its 100 V; R143 at most 14.6 V across 2.2 MOhm | WITHIN"],
         ["R10 (2 mOhm 2512 2 W, the gauge's sense and the trip's)",
          "held: %s W at %s A | the event: the hot-short row's 16.5 us | NOT SHOWN: MISSING its maker's sheet (tolerance, temperature" % (fmt(hi ** 2 * 2e-3, 2), fmt(hi)),
          "  coefficient, derating at the band; E-6); the trip's window holds for R10 within -7.3 to +8.3 %"],
         ["R101, R102 (the breaker's sense pair; no part chosen)",
          "held: %s and %s W at %s A | NOT SHOWN: MISSING the parts (Layer 6: 2 W each at the band's temperature, 1 %%, at most 50 ppm/K; E-6)" % (
              fmt(W["SNS_REC"][0] * k, 2), fmt(W["SNS_REC"][1] * k, 2), fmt(hi))],
-        ["R140 (the crowbar's resistor; this round)",
-         "held: no current | the event: at most %s J in 1.4 ms | NOT SHOWN: MISSING a part whose maker prints that single pulse (E-6b)" % fmt(R["e_r140"], 2)],
+        ["R140 (the crowbar's resistor; round 11, restated in round 12)",
+         "held: no current | the event: at most %s J in %s ms (4c': a source present, the -1 held out of its limit; %s J without a source" % (
+             fmt(R["e_r140"], 2), fmt(R["t_on_max"] * 1e3, 2), fmt(R["e_n"], 2)),
+         "  and the -1 latched) | NOT SHOWN: MISSING a part whose maker prints that single pulse (E-6b restated; round 11's 0.40 J withdrawn)"],
         ["F2 (Eaton SCF9550, 30 A, -20 to +60 C PRINTED)",
          "held: %s %% of 30 A; its printed range ends 16.25 K under the 76.25 C air at any current: the pack's thermal environment (record" % fmt(100 * hi / 30.0, 1),
          "  l4e10 section 9), not a held-current row"],
@@ -707,7 +934,7 @@ def predicates(R, K):
         ("the trip's least sense delay is over E-10's excursion bound", R["tcts1"][0] > R["e10"]),
         ("the crowbar's own current at the pack's least exceeds the breaker's most limit", R["ic_least"] > R["LIM"][2]),
         ("the crowbar's peak stays under the current where VIN to SENSE passes 0.3 V", R["peak_clamp"] < R["VSNS_I"]),
-        ("the arming's least delay covers the gate, the clearing and some tCL", R["arm_margin"] > 1e-3),
+        ("the arming's least delay, from the trip's assertion, covers the gate, the clearing and 0.5 ms for tCL (round 12)", R["arm_margin"] > O.ARM_MARGIN),
         ("Q110's VGS at the clamp is within its 12 V", R["vgs110"][1] < 12.0),
         ("Q110 stays off under the leakages at the site", R["v_off110"] < R["vth_p"]),
         ("the crowbar stays off under Q110's leakage at the site", R["v_cg_off"] < R["vth_csd"]),
@@ -721,6 +948,18 @@ def predicates(R, K):
         ("the allowance read from 10c is 40 uA cold and 50 uA tripped", R["ALLOW"] == (40.0, 50.0)),
         ("record l9stk's H at 10.6 V with the sink alone reproduces 4.6 V (R104 nominal)", abs(R["uvlo_sink_only"][0] - 4.6) < 0.05),
         ("L8P-R11-F1: the drawn UVLO node is not released at 10.6 V with its inverters at the 86.25 C site (the rule ASSUMED)", R["uvlo_site"][1] < 2.55),
+        # round 12
+        ("F8: the RC hold's sink-only release reproduces the record's 0.907 s", abs(R["hold_sink_only"] - 0.907) < 1e-3),
+        ("F8: on the same leakage rule the hold at the 76.25 C air is longer than DD-7's 0.907 s", R["hold_air"] > 0.907),
+        ("F2: round 11's band exists: the window's least through R140 is under the most limit through it", R["band"][0] < R["band"][1]),
+        ("F2: the band lies inside the BRK_VIN range the -1 runs at (from 7.6 V)", R["band"][1] > R["v_floor"]),
+        ("F2: approach (a)'s peak at the clamp passes VIN to SENSE's 0.3 V current", CLAMP / (7.6 / (R["LIM"][2] * 1.01) * 0.99) + R["LIM"][2] > R["VSNS_I"]),
+        ("F2: the on-time bound's most is the one R140's restated pulse is stated for", R["tcts2"][1] <= O.T_ON_BOUND),
+        ("F1: R140's restated pulse is the largest of the four cases and over round 11's", R["e_r140"] >= max(R["e_n"], R["e_s"], R["e_w"], R["e_n_src"]) and R["e_r140"] > R["e_n"]),
+        ("F1: the source's settled voltage on R140 is under VSYS's most and over the DD-7 inhibit's threshold (L8P-R12-F1)", R["inh_v"] < R["v_settled"] < R["vsys_max"]),
+        ("F1: Q111's turn-off without a source is within the same part's derated point", R["p_q111_off_nosrc"] < R["PULSE"][2] and R["t_q111_off"] < R["PULSE"][1] * 1e-3),
+        ("F3: the reader computes the window, the delays and the bound from the drawn values", K["delays"] is not None and K["levels"] is not None),
+        ("F2: D106's low level is under SENSE2's least threshold", K["levels"]["low"] < O.VITP[0]),
     ]
 
 

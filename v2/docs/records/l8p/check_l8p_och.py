@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
 """check_l8p_och.py: Layer 8 record l8p ROUND 11 (MESHSAT-1357, 7 October 2026; register row L4A-67, finding L8P-R10-F1): board P's
-netlist read by pin for the held-overcurrent trip apply_gen_sch_p_ocheld.py, drawn after the breaker and the ideal diode.
+netlist read by pin for the held-overcurrent trip apply_gen_sch_p_ocheld.py, drawn after the breaker and the ideal diode. ROUND 12
+(the focused check L4A-69, W147's F3 and F2): the window and the delays are computed from the DRAWN values of R10, R132, R133, R135,
+C117, C119 and C120 (round 11 read R132 and R133 only), and the on-time bound (D106, R143, OCH_S2) is read.
 
 check_l8p_netlist.py (whose digest other records print) is left as it is; this module reads a board P that carries the trip, using
 that reader's netlist parser and helpers:
   SENSE  U106 (OPA187) inverting on the gauge's R10: R132 from GND (R10's cell side) to -IN, R133 from -IN to OUT, +IN on PACK_N
          through R134, V- on PACK_N, V+ on BRK_VIN; R10 itself between GND and PACK_N; R135 and C117 into U107's SENSE1;
-  WINDOW the held current the gain and U107's printed 0.792 to 0.808 V admit, from the drawn values (R132, R133) and the record's R10
-         (2 mOhm, 1 % and 75 ppm/K over 130 K, ASSUMED): inside 18.80 A (the 18 A service's true current at the gauge's
+  WINDOW the held current the gain and U107's printed 0.792 to 0.808 V admit, from the drawn values (R10, R132, R133, R135; R10's
+         tolerance 1 % and 75 ppm/K over 130 K ASSUMED, E-6): inside 18.80 A (the 18 A service's true current at the gauge's
          uncalibrated error, record l9stk's condition C4) and 22.75 A (the blades' printed rerated current at the band's 85.41 C);
-  TRIP   U107 (a TPS37A010122) on BRK_VIN and PACK_N, SENSE1 on OCH_S, SENSE2 on BRK_PGD, RESET1 on OCH_R, RESET2 on OCH_EG, CTS1 and
-         CTS2 each on its own capacitor to PACK_N (4.7 nF and 47 nF), CTR1 and CTR2 open;
+  DELAY  from the drawn C117, C119, C120 and R135 (TI's Equations 5 and 6, C0G at 5 %): SENSE1's filter R135 x C117 at most 5 % of
+         the least sense delay; the least sense delay over E-10's 0.282 ms; the least arming delay over the trip's gate and the
+         -1's 1.292 ms clearing by 0.5 ms or more; the most arming delay at most 3.93 ms (the on-time R140's E-6b is stated for);
+  TRIP   U107 (a TPS37A010122) on BRK_VIN and PACK_N, SENSE1 on OCH_S, SENSE2 on OCH_S2, RESET1 on OCH_R, RESET2 on OCH_EG, CTS1 and
+         CTS2 each on its own capacitor to PACK_N (4.7 nF and 22 nF), CTR1 and CTR2 open;
+  BOUND  (round 12) R143 from BRK_PGD to OCH_S2 and D106 (BAT46W, cathode on OCH_R): while RESET1 is asserted OCH_S2 is under 0.55 V,
+         so RESET2 disarms the crowbar after the arming delay whatever the breaker does; R143 keeps BRK_PGD over Q106's 2.5 V
+         threshold maximum at BRK_VIN 7.6 V, and OCH_S2 over the release level with RESET1's 300 nA and SENSE2's 100 nA through it;
   ARM    Q112 (2N7002) with its gate on OCH_EG (R139 from BRK_VIN, R141 to PACK_N), its source on RESET1, its drain on R137;
          Q110 (AO3401A) with its source on BRK_VIN and its gate on R136 from BRK_VIN over R137;
   BAR    the crowbar Q111 (CSD18510Q5B) with its gate on OCH_CG (R142 from Q110's drain, R138 and the zener D105 to PACK_N), its
@@ -36,12 +44,41 @@ SERVICE_TRUE, BLADE_BAND = 18.80, 22.75   # record l9stk condition C4 (an indica
 VCL_MAX_LIMIT, PACK_LEAST = 23.93, 10.6   # the breaker's most limit (record l9stk 15.4); the pack's least in service
 
 TRIP_PARTS = ("U106", "R132", "R133", "R134", "C116", "R135", "C117", "U107", "C118", "C119", "C120", "R139", "R141", "Q112", "R136",
-              "R137", "Q110", "R142", "R138", "D105", "Q111", "R140", "TP110", "TP111")
-TRIP_NETS = ("OCH_N", "OCH_P", "OCH_A", "OCH_S", "OCH_R", "OCH_EG", "OCH_X", "OCH_PG", "OCH_GD", "OCH_CG", "OCH_CD", "OCH_CTS", "OCH_CTS2")
+              "R137", "Q110", "R142", "R138", "D105", "Q111", "R140", "R143", "D106", "TP110", "TP111", "TP112")
+TRIP_NETS = ("OCH_N", "OCH_P", "OCH_A", "OCH_S", "OCH_R", "OCH_EG", "OCH_X", "OCH_PG", "OCH_GD", "OCH_CG", "OCH_CD", "OCH_CTS", "OCH_CTS2",
+             "OCH_S2")
 KEEP_OFF = ("DOCK_EN_OUT", "DOCK_EN_RET", "BRK_UVLO", "BRK_H", "BRK_HD", "BRK_G2", "INH_G", "INH_OUT", "INH_NTC", "INH_REF")
 VALUES = (("U106", "OPA187"), ("U107", "TPS37A010122"), ("Q112", "2N7002"), ("Q110", "AO3401A"), ("Q111", "CSD18510Q5B"),
           ("D105", "BZT52C12"), ("R132", "1.00k 0.1% 25ppm"), ("R133", "19.3k 0.1% 25ppm"), ("R136", "47k"), ("R137", "100k"),
-          ("R138", "4.7k"), ("R139", "1M"), ("R141", "1M"), ("R142", "1k"), ("C119", "4.7n 50V C0G"), ("C120", "47n 50V C0G"))
+          ("R138", "4.7k"), ("R139", "1M"), ("R141", "1M"), ("R142", "1k"), ("C119", "4.7n 50V C0G"), ("C120", "22n 50V C0G"),
+          ("R143", "2.2M"), ("D106", "BAT46W"))
+# the delays (TI SNVSBJ1E Equations 5 and 6, the capacitors C0G at 5 %; the no-capacitor least not printed, taken 0)
+C_TOL = 0.05
+E10 = 0.282e-3                       # record l9stk 15.7: E-10's bound on the key-down excursions over the breaker's least limit
+T_GATE, CLEAR, ARM_MARGIN = 12.3e-6, 1.292e-3, 0.5e-3     # the crowbar's gate (l8p_cprot 4c), the -1's clearing at most (l9stk), margin
+T_ON_BOUND = 3.93e-3                 # round 12: the most arming delay R140's E-6b figure is stated for (l8p_cprot.out [CP 4c'])
+FILTER_SHARE = 0.05                  # SENSE1's R135 x C117 at most this share of the least sense delay
+# the on-time bound's levels (round 12): Q106's VGS(th) maximum (JSCJ 2N7002, PRINTED), TPS37's VOL at 5 mA and leakage, BAT46W's VF
+VTH_Q106, VOL, ILKG_OD, VF_D106, BRK_LEAST = 2.5, 0.300, 300e-9, 0.25, 7.6
+REL_MAX = 0.808 * 1.13 * 1.015       # SENSE2's release at most: VITN's 0.808 V plus the TPS37 family's largest 13 % hysteresis, +1.5 %
+
+
+def _num(v, units):
+    import re
+    m = re.match(r"([0-9.]+)\s*([%s]?)" % "".join(units), str(v))
+    if not m:
+        raise ValueError(v)
+    return float(m.group(1)) * units.get(m.group(2), 1.0)
+
+
+def ohms(v):
+    """A resistor's leading figure in ohms, milliohms included: '2m 2512' is 0.002, '0.39R' 0.39, '2.2M' 2.2e6."""
+    return _num(v, {"m": 1e-3, "R": 1.0, "k": 1e3, "K": 1e3, "M": 1e6})
+
+
+def farads(v):
+    """A capacitor's leading figure in farads: '4.7n 50V' is 4.7e-9, '10u' 1e-5."""
+    return _num(v, {"p": 1e-12, "n": 1e-9, "u": 1e-6, "\u00b5": 1e-6})
 
 
 def och_drawn(nl):
@@ -53,19 +90,50 @@ def _val(nl, ref):
 
 
 def window(nl):
-    """(least, most) held current the drawn gain and the printed threshold admit, or None if a value does not read."""
+    """(least, most) held current the drawn gain, the drawn R10 and R135 and the printed threshold admit, or None if a value does not
+    read. R10's tolerance and temperature coefficient are the record's assumption (E-6); its value is read from the netlist."""
     try:
-        rin, rf = C._ohms(_val(nl, "R132")), C._ohms(_val(nl, "R133"))
+        rin, rf, r135 = ohms(_val(nl, "R132")), ohms(_val(nl, "R133")), ohms(_val(nl, "R135"))
+        r10 = ohms(_val(nl, "R10"))
     except (ValueError, KeyError):
         return None
     g = rf / rin
     gd = GAIN_TOL + GAIN_TCR * GAIN_DT
     g_hi, g_lo = g * (1 + gd) / (1 - gd), g * (1 - gd) / (1 + gd)
     rd = R10_TOL + R10_TCR * R10_DT
-    r_hi, r_lo = R10_NOM * (1 + rd), R10_NOM * (1 - rd)
-    lo = (VITP[0] - (1 + g_hi) * VOS - IB * rf * (1 + gd) - ISENSE * 1e3) / (g_hi * r_hi)
-    hi = (VITP[2] + (1 + g_hi) * VOS + IB * rf * (1 + gd) + ISENSE * 1e3) / (g_lo * r_lo)
+    r_hi, r_lo = r10 * (1 + rd), r10 * (1 - rd)
+    lo = (VITP[0] - (1 + g_hi) * VOS - IB * rf * (1 + gd) - ISENSE * r135) / (g_hi * r_hi)
+    hi = (VITP[2] + (1 + g_hi) * VOS + IB * rf * (1 + gd) + ISENSE * r135) / (g_lo * r_lo)
     return lo, hi
+
+
+def tcts(c):
+    """(least, most) sense delay of a TPS37 channel with the capacitor c (TI's Equations 5 and 6; RCTS 88 to 122 kOhm)."""
+    import math
+    return (-math.log(0.31) * 88e3 * c * (1 - C_TOL), -math.log(0.25) * 122e3 * c * (1 + C_TOL) + 17e-6)
+
+
+def delays(nl):
+    """The drawn delays: SENSE1's filter, the sense delay and the arming delay, or None if a value does not read."""
+    try:
+        r135, c117 = ohms(_val(nl, "R135")), farads(_val(nl, "C117"))
+        c119, c120 = farads(_val(nl, "C119")), farads(_val(nl, "C120"))
+    except (ValueError, KeyError):
+        return None
+    return {"filter": r135 * c117, "cts1": tcts(c119), "cts2": tcts(c120)}
+
+
+def bound_levels(nl):
+    """Round 12's levels from the drawn R143: BRK_PGD while D106 pulls OCH_S2 at BRK_VIN 7.6 V (R116 and R117 1 MOhm each), and OCH_S2's
+    armed level there with RESET1's open-drain leakage and SENSE2's input current through R143."""
+    try:
+        r143 = ohms(_val(nl, "R143"))
+    except (ValueError, KeyError):
+        return None
+    low = VOL + VF_D106
+    pgd = (BRK_LEAST / 2 * r143 + low * 0.5e6) / (r143 + 0.5e6)
+    armed = BRK_LEAST / 2 - (ILKG_OD + ISENSE) * r143
+    return {"low": low, "pgd": pgd, "armed": armed}
 
 
 def checks_och(nl):
@@ -75,14 +143,15 @@ def checks_och(nl):
     pairs = (("R132", "GND", "OCH_N"), ("R133", "OCH_N", "OCH_A"), ("R134", "PACK_N", "OCH_P"), ("R135", "OCH_A", "OCH_S"),
              ("C117", "OCH_S", "PACK_N"), ("C116", "BRK_VIN", "PACK_N"), ("C118", "BRK_VIN", "PACK_N"), ("C119", "OCH_CTS", "PACK_N"),
              ("C120", "OCH_CTS2", "PACK_N"), ("R139", "BRK_VIN", "OCH_EG"), ("R141", "OCH_EG", "PACK_N"), ("R136", "BRK_VIN", "OCH_PG"),
-             ("R137", "OCH_PG", "OCH_X"), ("R142", "OCH_GD", "OCH_CG"), ("R138", "OCH_CG", "PACK_N"), ("R140", "PACK_P", "OCH_CD"))
+             ("R137", "OCH_PG", "OCH_X"), ("R142", "OCH_GD", "OCH_CG"), ("R138", "OCH_CG", "PACK_N"), ("R140", "PACK_P", "OCH_CD"),
+             ("R143", "BRK_PGD", "OCH_S2"))
     bad += ["%s on %s, wanted %s and %s" % (r, C._two(nl, r), a, b) for r, a, b in pairs if C._two(nl, r) != sorted({a, b})]
-    bad += C.props(nl, [("U107", "1", "BRK_VIN"), ("U107", "2", "OCH_S"), ("U107", "3", "BRK_PGD"), ("U107", "4", "OCH_R"),
+    bad += C.props(nl, [("U107", "1", "BRK_VIN"), ("U107", "2", "OCH_S"), ("U107", "3", "OCH_S2"), ("U107", "4", "OCH_R"),
                         ("U107", "5", "OCH_EG"), ("U107", "7", "OCH_CTS"), ("U107", "8", "OCH_CTS2"), ("U107", "10", "PACK_N"),
                         ("U107", "11", "PACK_N"), ("U107", "6", None), ("U107", "9", None)])
     bad += C.props(nl, [("Q112", "1", "OCH_EG"), ("Q112", "2", "OCH_R"), ("Q112", "3", "OCH_X"),
                         ("Q110", "1", "OCH_PG"), ("Q110", "2", "BRK_VIN"), ("Q110", "3", "OCH_GD"),
-                        ("D105", "1", "OCH_CG"), ("D105", "2", "PACK_N"),
+                        ("D105", "1", "OCH_CG"), ("D105", "2", "PACK_N"), ("D106", "1", "OCH_R"), ("D106", "2", "OCH_S2"),
                         ("Q111", "1", "PACK_N"), ("Q111", "2", "PACK_N"), ("Q111", "3", "PACK_N"), ("Q111", "4", "OCH_CG"), ("Q111", "5", "OCH_CD")])
     if C._pin(nl, "U101", "8") != "BRK_PGD":
         bad.append("U101's PGD (pin 8) on %r, not BRK_PGD" % C._pin(nl, "U101", "8"))
@@ -90,7 +159,7 @@ def checks_och(nl):
         if not _val(nl, ref).startswith(pre):
             bad.append("%s value %r does not start %r" % (ref, _val(nl, ref), pre))
     try:
-        r140 = C._ohms(_val(nl, "R140"))
+        r140 = ohms(_val(nl, "R140"))
     except (ValueError, KeyError):
         r140 = None
     if r140 is None or PACK_LEAST / (r140 * 1.01) <= VCL_MAX_LIMIT:
@@ -98,6 +167,28 @@ def checks_och(nl):
     w = window(nl)
     if w is None or not (w[0] > SERVICE_TRUE and w[1] < BLADE_BAND):
         bad.append("the held window %s is not inside %.2f to %.2f A" % (("%.2f to %.2f A" % w) if w else "unreadable", SERVICE_TRUE, BLADE_BAND))
+    d = delays(nl)
+    if d is None:
+        bad.append("the delays do not read (R135, C117, C119, C120)")
+    else:
+        if d["filter"] > FILTER_SHARE * d["cts1"][0]:
+            bad.append("SENSE1's filter R135 x C117 %.1f us is over %.0f %% of the least sense delay %.3f ms" % (d["filter"] * 1e6, 100 * FILTER_SHARE, d["cts1"][0] * 1e3))
+        if d["cts1"][0] <= E10:
+            bad.append("the least sense delay %.3f ms is not over E-10's %.3f ms" % (d["cts1"][0] * 1e3, E10 * 1e3))
+        if d["cts2"][0] < T_GATE + CLEAR + ARM_MARGIN:
+            bad.append("the least arming delay %.3f ms does not cover the gate, the -1's clearing and %.1f ms" % (d["cts2"][0] * 1e3, ARM_MARGIN * 1e3))
+        if d["cts2"][1] > T_ON_BOUND:
+            bad.append("the most arming delay %.3f ms is over the %.2f ms R140's pulse figure is stated for" % (d["cts2"][1] * 1e3, T_ON_BOUND * 1e3))
+    b = bound_levels(nl)
+    if b is None:
+        bad.append("R143 does not read")
+    else:
+        if not b["low"] < VITP[0]:
+            bad.append("OCH_S2 at %.3f V with RESET1 asserted is not under SENSE2's least threshold" % b["low"])
+        if not b["pgd"] > VTH_Q106:
+            bad.append("BRK_PGD at %.2f V with D106 pulling (BRK_VIN %.1f V) is not over Q106's %.1f V threshold maximum" % (b["pgd"], BRK_LEAST, VTH_Q106))
+        if not b["armed"] > REL_MAX:
+            bad.append("OCH_S2 armed at %.2f V (BRK_VIN %.1f V) is not over SENSE2's release %.3f V" % (b["armed"], BRK_LEAST, REL_MAX))
     for n in TRIP_NETS:
         extra = sorted(r for r in nl["on"].get(n, set()) if r not in TRIP_PARTS and not C._is_tp(nl, r))
         if extra:

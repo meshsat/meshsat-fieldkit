@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """apply_gen_sch_p_ocheld.py: DRAFT for board P's generator owner (Layer 8 record l8p, MESHSAT-1357, round 11, 7 October 2026: the
-correction of finding L8P-R10-F1, register row L4A-67). NOT APPLIED to the tree by this record; its author ran it only on scratch
-copies (the tests write scratch copies). Nothing in this kit has been built, bought or measured.
+correction of finding L8P-R10-F1, register row L4A-67; AMENDED IN PLACE by round 12, 7 October 2026, after the focused check L4A-69
+(W147's F2 and F1: the crowbar's on-time bounded by channel 2, D106, R143, C120 at 22 nF). NOT APPLIED to the tree by this record;
+its authors ran it only on scratch copies (the tests write scratch copies). Nothing in this kit has been built, bought or measured.
 
 The finding (record l8p round 10, L8P-BREAKER.md 15c): at the breaker's held 23.93 A (the LM5069-1's most current limit, held
 indefinitely by design) from the 76.25 C inside air, the three 25 A MINI blades (board P's F1, board E's F3, board A's F1;
@@ -16,21 +17,28 @@ PRINTED CURRENT-LIMIT AND FAULT-TIMER LATCH, so the recovery is the -1's own (re
           OCH_A = 19.3 x I x R10 in discharge, 0 when charging.
   U107    TPS37A010122DSKR (U47's and U48's part, C3685740): channel 1 (OV, 0.792 to 0.808 V printed) reads OCH_A through R135 and
           C117; RESET1 (open drain) asserts after its sense delay C119 (4.7 nF C0G: 0.460 to 0.851 ms, SNVSBJ1E Equations 5 and 6).
-          Channel 2 (UV) reads the breaker's PGD node BRK_PGD: RESET2 asserts after C120's sense delay (47 nF C0G: 4.60 to 8.36 ms)
-          once PGD has been low, and through Q112 disarms the crowbar: the trip acts only on a RUNNING breaker, never at power-up
-          (the TPS37 holds both outputs asserted for tSD) or during a start.
+          Channel 2 (UV) reads OCH_S2: the breaker's PGD node BRK_PGD through R143 2.2 MOhm, pulled under its threshold through
+          D106 (BAT46W) while RESET1 is asserted. RESET2 asserts after C120's sense delay (22 nF C0G: 2.16 to 3.92 ms) once PGD has
+          been low OR the trip has been asserted, and through Q112 disarms the crowbar: the trip acts only on a RUNNING breaker, never
+          at power-up (the TPS37 holds both outputs asserted for tSD) or during a start, AND THE CROWBAR CONDUCTS AT MOST 3.92 ms
+          AFTER THE TRIP ASSERTS whatever the breaker does (round 12: a unit whose limit is over the crowbar's own current at a low
+          BRK_VIN, or a source on VSYS, can keep the -1 out of its limit; L8P-BREAKER.md 16i). It re-arms only once RESET1 has
+          released (the held current under the window) and PGD is high.
   Q112    2N7002, its gate OCH_EG at half BRK_VIN through R139 and R141 (1 MOhm each) unless RESET2 holds it low, in series with
           RESET1 in the gate path of
   Q110    AO3401A (the kit's P-FET, C15127), source on BRK_VIN, gate through R136 47 kOhm over R137 100 kOhm: on (VGS -0.32 of
           BRK_VIN) only while RESET1 AND Q112 conduct; its drain through R142 1 kOhm onto the crowbar's gate OCH_CG, held by R138
           4.7 kOhm and clamped by D105 (BZT52C12, at most 12.7 V) under the gate's 20 V.
-  Q111    CSD18510Q5B (Q101's part, C2876544), the CROWBAR: drain through R140 0.39 Ohm (a 2512 part whose maker prints a single
-          pulse of at least 0.4 J in 1.4 ms, Layer 6) to PACK_P, source on PACK_N. Its own current at the pack's least 10.6 V
-          (26.8 A) is over the LM5069's most limit (23.93 A) whatever the load, so the -1 always enters its current limit (or its
-          circuit breaker, from 30.21 A) and latches after its fault timer: the event l9stk 15.6 judges ("an overload over the
-          unit's limit", 0.57 of the derated SOA), once per recovery.
-  TP110, TP111  OCH_S and OCH_CG for the commissioning check E-12f (a test voltage over 0.808 V on OCH_S latches the breaker).
-  intent  the nodes OCH_N, OCH_P, OCH_A, OCH_S, OCH_R, OCH_EG, OCH_X, OCH_PG, OCH_GD, OCH_CG, OCH_CD, OCH_CTS, OCH_CTS2; the
+  Q111    CSD18510Q5B (Q101's part, C2876544), the CROWBAR: drain through R140 0.39 Ohm (a part whose maker prints the single
+          pulse of l8p_cprot.out [CP 4c'], round 12's E-6b, Layer 6) to PACK_P, source on PACK_N. Its own current from BRK_VIN
+          9.43 V up (26.8 A at the pack's 10.6 V) is over the LM5069's most limit (23.93 A) whatever the load, so the -1 enters its
+          current limit (or its circuit breaker, from 30.21 A) and latches after its fault timer: the event l9stk 15.6 judges
+          ("an overload over the unit's limit", 0.57 of the derated SOA), once per recovery. Under 9.43 V (C-PROT rev 1 runs the
+          -1 from 7.6 V) the latch rests on the faulted load persisting; if it drops out, the crowbar's own current can hold the
+          trip, and channel 2 ends it within 3.92 ms (round 12).
+  TP110, TP111, TP112  OCH_S, OCH_CG and OCH_S2 for the commissioning check E-12f (a test voltage over 0.808 V on OCH_S latches the
+          breaker; OCH_CG's pulse is at most 3.92 ms plus the turn-off; OCH_S2 reads the disarm).
+  intent  the nodes OCH_N, OCH_P, OCH_A, OCH_S, OCH_R, OCH_EG, OCH_X, OCH_PG, OCH_GD, OCH_CG, OCH_CD, OCH_CTS, OCH_CTS2, OCH_S2; the
           decoupling entries C116 (U106) and C118 (U107); one schematic section.
 Nothing of the drawn loop, its inverters, UVLO, the hold or DOCK_EN_OUT and DOCK_EN_RET is touched: the trip adds no sink on the
 loop and none on UVLO, so L4-E11 20c's window, its readings and the RC hold's 0.110 to 0.907 s stand as drawn.
@@ -56,10 +64,10 @@ import re
 import sys
 
 NAME = "apply_gen_sch_p_ocheld"
-ADDS = ("U106", "U107", "Q110", "Q111", "Q112", "D105", "R132", "R133", "R134", "R135", "R136", "R137", "R138", "R139", "R140",
-        "R141", "R142", "C116", "C117", "C118", "C119", "C120", "TP110", "TP111")
+ADDS = ("U106", "U107", "Q110", "Q111", "Q112", "D105", "D106", "R132", "R133", "R134", "R135", "R136", "R137", "R138", "R139", "R140",
+        "R141", "R142", "R143", "C116", "C117", "C118", "C119", "C120", "TP110", "TP111", "TP112")
 NETS = ("OCH_N", "OCH_P", "OCH_A", "OCH_S", "OCH_R", "OCH_EG", "OCH_X", "OCH_PG", "OCH_GD", "OCH_CG", "OCH_CD", "OCH_CTS",
-        "OCH_CTS2")
+        "OCH_CTS2", "OCH_S2")
 REQUIRES = ('ic("U101", 10, "LM5069MM-1 circuit breaker', 'r("R116", "1M", "BRK_VIN", "BRK_PGD"); r("R117", "1M", "BRK_PGD", "PACK_N")',
             'ic("U105", 6, "LM74700QDBVRQ1 ideal-diode controller',
             'r("R10", "2m 2512 2W (sense)", "GND", "PACK_N", "RS2512")')
@@ -80,23 +88,30 @@ _TRIP = (
     '# the gate\'s 20 V), and Q111 loads PACK_P through R140 0.39 Ohm: 26.8 A at the pack\'s least 10.6 V on its own, over U101\'s most\n'
     '# limit 23.93 A whatever the load, so U101 enters its current limit (or its circuit breaker from 30.21 A) and its fault timer\n'
     '# latches the -1 off: the event record l9stk 15.6 judges for "an overload over the unit\'s limit" (1.29 ms, 0.57 of the derated\n'
-    '# SOA), once per recovery (redocking, an input\'s return, the guard\'s cycle: the -1\'s own). U107\'s channel 2 reads BRK_PGD: after\n'
-    '# PGD has been low for C120\'s sense delay (4.60 ms at least, past U101\'s 1.292 ms clearing) RESET2 holds Q112 off, so the crowbar\n'
-    '# acts only on a running breaker: never at power-up (U107 holds its outputs for tSD), during a start or on a latched breaker.\n'
+    '# SOA), once per recovery (redocking, an input\'s return, the guard\'s cycle: the -1\'s own). U107\'s channel 2 reads OCH_S2, BRK_PGD\n'
+    '# through R143 2.2 MOhm, which D106 (BAT46W) pulls under the threshold while RESET1 is asserted: once PGD has been low OR the trip\n'
+    '# has been asserted for C120\'s sense delay (2.16 ms at least, past the trip\'s gate and U101\'s 1.292 ms clearing; 3.92 ms at most)\n'
+    '# RESET2 holds Q112 off, so the crowbar acts only on a running breaker, never at power-up (U107 holds its outputs for tSD), during a\n'
+    '# start or on a latched breaker, AND CONDUCTS AT MOST 3.92 ms PLUS ITS TURN-OFF WHATEVER THE BREAKER DOES (round 12, after the\n'
+    '# focused check L4A-69: under BRK_VIN 9.43 V a unit whose limit is over the crowbar\'s own current, or a source on VSYS, can keep\n'
+    '# the -1 out of its limit with the crowbar\'s own current holding the trip). It re-arms only after RESET1 releases and PGD is high.\n'
     '# The trip adds no sink on the enable loop and none on UVLO: L4-E11 20c\'s window, its readings and the RC hold stand as drawn.\n'
     '# FOR THE LAYOUT (gen_pcb_p3.py): R132 and R134 by Kelvin traces from R10\'s two pads as R120 is; U106, U107, Q110 and Q112 off the\n'
     '# breaker pad (each at most 86.25 C, the site the record counts their leakage at); Q111 and R140 on the PACK_P band with the\n'
-    '# band\'s width to PACK_N. Nothing here is built or measured. The acceptance and what stays open: L8P-BREAKER.md section 16.\n'
+    '# band\'s width to PACK_N; R143 and D106 beside U107. Nothing here is built or measured. The acceptance and what stays open:\n'
+    '# L8P-BREAKER.md section 16 (16i for round 12).\n'
     'ic("U106", 5, "OPA187IDBVR zero-drift amplifier as the held-overcurrent trip\'s R10 amplifier (record l8p round 11): 1 OUT, 2 V-, 3 +IN, 4 -IN, 5 V+",\n'
     '   "Package_TO_SOT_SMD:SOT-23-5", {"1": "OCH_A", "2": "PACK_N", "3": "OCH_P", "4": "OCH_N", "5": "BRK_VIN"})   # U102\'s part; its order code: Layer 6, owed\n'
     'r("R132", "1.00k 0.1% 25ppm (the trip\'s input, Kelvin from R10\'s cell-side pad)", "GND", "OCH_N"); r("R133", "19.3k 0.1% 25ppm (the trip\'s gain)", "OCH_N", "OCH_A")\n'
     'r("R134", "1.00k (Kelvin from R10\'s pack-side pad)", "PACK_N", "OCH_P"); c("C116", "100n 50V X7R (U106\'s supply bypass)", "BRK_VIN", "PACK_N")\n'
     'r("R135", "1k", "OCH_A", "OCH_S"); c("C117", "10n 50V C0G (SENSE1\'s filter)", "OCH_S", "PACK_N")\n'
-    'ic("U107", 11, "TPS37A010122DSKR 65 V OV/UV supervisor: the held-overcurrent trip (channel 1) and its arming on PGD (channel 2)",\n'
-    '   "Package_SON:WSON-10-1EP_2.5x2.5mm_P0.5mm_EP1.2x2mm", {"1": "BRK_VIN", "2": "OCH_S", "3": "BRK_PGD", "4": "OCH_R", "5": "OCH_EG",\n'
+    'ic("U107", 11, "TPS37A010122DSKR 65 V OV/UV supervisor: the held-overcurrent trip (channel 1), its arming on PGD and its on-time bound (channel 2)",\n'
+    '   "Package_SON:WSON-10-1EP_2.5x2.5mm_P0.5mm_EP1.2x2mm", {"1": "BRK_VIN", "2": "OCH_S", "3": "OCH_S2", "4": "OCH_R", "5": "OCH_EG",\n'
     '   "6": "NC", "7": "OCH_CTS", "8": "OCH_CTS2", "9": "NC", "10": "PACK_N", "11": "PACK_N"}, "C3685740")\n'
     'c("C118", "100n 50V X7R (U107\'s VDD bypass)", "BRK_VIN", "PACK_N"); c("C119", "4.7n 50V C0G 5% (CTS1: the trip\'s sense delay)", "OCH_CTS", "PACK_N")\n'
-    'c("C120", "47n 50V C0G 5% (CTS2: the arming\'s sense delay after PGD falls)", "OCH_CTS2", "PACK_N")\n'
+    'c("C120", "22n 50V C0G 5% (CTS2: the arming\'s sense delay after PGD falls or the trip asserts: the crowbar\'s on-time bound)", "OCH_CTS2", "PACK_N")\n'
+    'r("R143", "2.2M 1%", "BRK_PGD", "OCH_S2")   # BRK_PGD stays over Q106\'s 2.5 V threshold maximum while D106 pulls OCH_S2 (L8P-BREAKER.md 16i)\n'
+    'part("D106", "Device", "D_Schottky", "BAT46W-7-F Schottky 100V (the trip asserted pulls OCH_S2: the crowbar\'s on-time bound; DS30044)", "SOD123", {"1": "OCH_R", "2": "OCH_S2"}, "C83152")   # pin 1 K, pin 2 A\n'
     'r("R139", "1M", "BRK_VIN", "OCH_EG"); r("R141", "1M", "OCH_EG", "PACK_N")\n'
     'nfet("Q112", "OCH_EG", "OCH_R", "OCH_X", "2N7002 60 V N-FET: the trip armed while the breaker runs (RESET2 deasserted)")\n'
     'r("R136", "47k", "BRK_VIN", "OCH_PG"); r("R137", "100k", "OCH_PG", "OCH_X")\n'
@@ -104,8 +119,9 @@ _TRIP = (
     'r("R142", "1k", "OCH_GD", "OCH_CG"); r("R138", "4.7k", "OCH_CG", "PACK_N")\n'
     'part("D105", "Device", "D_Zener", "BZT52C12-7-F zener, the crowbar\'s gate under 12.7 V (DS18004)", "SOD123", {"1": "OCH_CG", "2": "PACK_N"}, "C124196")\n'
     'pfet5("Q111", "CSD18510Q5B 40 V N-FET, the held-overcurrent trip\'s crowbar into U101\'s latch (record l8p round 11)", "OCH_CG", "OCH_CD", "PACK_N", "C2876544")\n'
-    'r("R140", "0.39R 1% 2512 (a part whose maker prints a single pulse of at least 0.4 J in 1.4 ms: Layer 6)", "PACK_P", "OCH_CD", "RS2512")\n'
+    'r("R140", "0.39R 1% (a part whose maker prints a single pulse of at least 3.32 J in 4.41 ms with 2.21 kW for 16.5 us: Layer 6, E-6b)", "PACK_P", "OCH_CD", "RS2512")\n'
     'part("TP110", "Connector", "TestPoint", "OCH_S", "TP", {"1": "OCH_S"}); part("TP111", "Connector", "TestPoint", "OCH_CG", "TP", {"1": "OCH_CG"})   # E-12f\n'
+    'part("TP112", "Connector", "TestPoint", "OCH_S2", "TP", {"1": "OCH_S2"})   # E-12f: the disarm\n'
     '_intent.bypass("C116", "U106", "5", "BRK_VIN", cls="D", basis="TI OPA187 SBOS807E, revised May 2020 (v2/vendor/ti/held/ti-opa187-sbos807e.pdf, "\n'
     '               "held back): 10.1 \\"Connect low-ESR, 0.1-uF ceramic bypass capacitors between each supply pin and ground; place the "\n'
     '               "capacitors as close to the device as possible\\" (p.27); the 100n drawn at U106\'s V+ (pin 5)")\n'
@@ -129,12 +145,14 @@ _TRIP = (
     '             "clamp\'s 29.2 V in a transient", v_work=16.8)\n'
     '_intent.node("OCH_CTS", 6.0, _r11 + "U107\'s CTS1 capacitor, under the pin\'s 6 V (SNVSBJ1E 7.1)")\n'
     '_intent.node("OCH_CTS2", 6.0, _r11 + "U107\'s CTS2 capacitor, under the pin\'s 6 V (SNVSBJ1E 7.1)")\n'
+    '_intent.node("OCH_S2", 14.6, "record l8p round 12 (the on-time bound): U107\'s SENSE2, BRK_PGD through R143 2.2 MOhm, at most half the "\n'
+    '             "clamp\'s 29.2 V; under 0.55 V while D106 conducts into an asserted RESET1 (VOL 0.3 V, VF 0.25 V at 0.1 mA)", v_work=8.4)\n'
     '# =========================================================================================================================\n')
 
 _ANCHOR_SEC = 'placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}\n'
 _SEC = ('SECTIONS.append(("THE HELD-OVERCURRENT TRIP (L8P-R10-F1): U106, U107, THE CROWBAR Q111 INTO U101\'S LATCH (RECORD l8p)",\n'
         '                 ["U106", "R132", "R133", "R134", "C116", "R135", "C117", "U107", "C118", "C119", "C120", "R139", "R141", "Q112",\n'
-        '                  "R136", "R137", "Q110", "R142", "R138", "D105", "Q111", "R140", "TP110", "TP111"]))\n')
+        '                  "R136", "R137", "Q110", "R142", "R138", "D105", "Q111", "R140", "R143", "D106", "TP110", "TP111", "TP112"]))\n')
 
 EDITS = [
     (_ANCHOR_WP, _TRIP + _ANCHOR_WP),
