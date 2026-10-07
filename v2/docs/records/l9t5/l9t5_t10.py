@@ -2102,6 +2102,11 @@ def r10_stage_check(nl):
 
 R10_HOLDOFF = {"n": 3, "retry": 600.0, "holders": 2}   # SESSION W159-D3 (W157-F7): the peers' hold-off after 3 failed restarts, 600 s retries
 R10_RESTORE_OFF = 2.0         # s: the restart's off time, both votes held (record l4canen, FW-B22's restart rule, W143-D5)
+R10_LOSS_DECISION = 2.0       # s: FW-B22's loss decision before a restart, no TXD edge and no state frame for 2 s (record l4canen, W143; DRAFTED)
+R10_REJOIN = 0.800            # s: a restored or rebooted controller rejoins within this (W139: boot 0.5 s ASSUMPTION, 2 windows listening, its slot)
+# W167 on W163-N1: HO-D's pass top, the largest IOS record l4hod's in-service test passes (its J4, W146 with W159's envelope). Record l4hod
+# reads this output, so the figure is CARRIED here, not read (reading it would make a cycle); test_l9t5_rowb holds it equal to l4hod.out's J4
+R10_HOD_TOP = 0.6819          # A
 
 
 def r10_holdoff(pol, period=R10_RESTART, off=R10_RESTORE_OFF):
@@ -2273,7 +2278,18 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
     w("       output in regulation, from its case-top temperature by ψJT %.1f C/W (PRINTED), in still air at %.2f C, its IGND read as input less" % (S["psijt"][0], air))
     w("       output current; PASS LIMIT the junction at most %.0f C (equivalently RθJA(effective) at most %.2f K over the measured power; %.1f C/W" % (
         TJ_GOAL, TJ_GOAL - air, rja_need))
-    w("       at IGND = 0); and for the latched transient, the junction's rise in %.0f ms of %.3f W at most %.1f K from the steady bound, Zth(%.0f ms) at" % (
+    # W167 on W163-N1: E-17 also reads the junction at HO-D's pass top (the theta that holds 125 C there, and the junction there at the limit above)
+    th_hod = (TJ_GOAL - air) / (drop * R10_HOD_TOP)
+    tj_hod_at_need = air + rja_need * drop * R10_HOD_TOP
+    w("       at IGND = 0); AND AT HO-D'S PASS TOP (W163-N1): the same sites' junction at the largest IOS record l4hod's in-service test passes,")
+    w("       %.4f A (its J4; carried here as a figure, not read, because record l4hod reads this output; test_l9t5_rowb holds the two equal)," % R10_HOD_TOP)
+    w("       read as each site's measured RθJA(effective) times the regulator's dissipation at that input current with its IGND read (or read")
+    w("       directly at a coupon site whose limit is set over it); PASS LIMIT the junction at most %.0f C there, %.1f C/W at IGND = 0." % (
+        TJ_GOAL, th_hod))
+    w("       On the %.1f C/W above, a limit passing at %.4f A reads %.1f C, so HO-D's pass reading (a lost limit never passes) is CONDITIONAL" % (
+        rja_need, R10_HOD_TOP, tj_hod_at_need))
+    w("       on this reading, never on a tightened HO-D band (a healthy limiter's reading already reaches that band's top, record l4hod J4); and")
+    w("       for the latched transient, the junction's rise in %.0f ms of %.3f W at most %.1f K from the steady bound, Zth(%.0f ms) at" % (
         S["tlatch"][0][2] * 1e3, hi14 * ios_hi, S["tj_abs"][0] - tj0, S["tlatch"][0][2] * 1e3))
     w("       most %.1f C/W, which would remove W151-1's exclusion (f)" % zth_10)
     # (f) the response and the output short
@@ -2305,6 +2321,19 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
     w("     W159-D3): after %d consecutive failed restarts both peers keep their restart votes (the limiter's EN low, the target unpowered) and retry" % R10_HOLDOFF["n"])
     w("     once every %.0f s, a rejoin clearing the count: powered %.2f %% of the time in the hold-off; a single latch still restarts in 5.603 s." % (R10_HOLDOFF["retry"], h_held * 100))
     w("     Judge %s; mutated, %s" % (hv, "; ".join("%s: %s" % (lab, v) for lab, v in hvm)))
+    # W167 on W163-N6: the hold-off's state across a peer's own reset, specified (no new state, no new mechanism; SESSION W167-D2)
+    n_h = R10_HOLDOFF["n"]
+    t_hold = R10_LOSS_DECISION + (n_h - 1) * R10_RESTART + R10_RESTORE_OFF + R10_REJOIN
+    t_pow = t_hold - n_h * R10_RESTORE_OFF
+    w("     ACROSS A PEER'S OWN RESET (W167 on W163-N6, SESSION W167-D2): the hold-off is each peer's own state (its count and its held vote, in")
+    w("     RAM, not kept across its reset; FW-B24's backup-register record is HO-D's alone). A peer that resets drops its vote: canen's 2-of-2")
+    w("     hold releases, the target's limiter EN rises and the target is powered into its short. The other peer keeps its count and its vote.")
+    w("     The reset peer boots and rejoins (within %.3f s of its reset, W139), finds the target dark for %.1f s and counts afresh, each restart" % (
+        R10_REJOIN, R10_LOSS_DECISION))
+    w("     completed by the other peer's held vote: %d failed restarts %.0f s apart, then both hold again, %.1f s after its rejoin, the target" % (
+        n_h, R10_RESTART, t_hold))
+    w("     powered for %.1f s of it (MODEL on the DRAFTED cadence and the boot ASSUMPTION), then in the hold-off as above. Both peers reset at" % t_pow)
+    w("     once: both count afresh, the same bound. A peer whose own resets repeat is its own fault row (its peers restart it, FW-B22)")
     # (g) W135's four rows held on the selected parts and the service window against C-DEV rev 2
     tj_lim_s3 = air + S["lim_rja"][0] * S["ron"][0] * s3p[s3_key] ** 2
     p_lim_hi = S["ron"][0] * ios_hi ** 2
@@ -2370,7 +2399,8 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
     w("     no bound on board B's copper, so RE-7's sustained bound and RE-6's response read SUPPORTED ON PRINTED FIGURES, CONDITIONAL on E-17's")
     w("     theta and IGND at the site, PROVISIONAL until row (b)'s check (L4A-62); RE-6 and RE-7 stay NOT CLOSED (cx46), REMAINING ENGINEERING")
     w("     until that check and E-17. HO-D (the limiter's latent loss of its limit) is record l4hod's in-service test (a lost limit found within")
-    w("     3602.341 s, DRAFTED); HO-E is not bounded by the limiter (IOSmin is over VOS0's %.4f A and the H743's 125 C current), and"
+    w("     3602.341 s, DRAFTED; its pass reading CONDITIONAL on E-17 at the pass top %.4f A, (e), W163-N1); HO-E is not bounded" % R10_HOD_TOP)
+    w("     by the limiter (IOSmin is over VOS0's %.4f A and the H743's 125 C current), and"
       " the rail trip's controller-protection role (each controller's average under its 125 C current) moves to HO-E (L4REG-F7, W159 on W157-F4), L4A-59's" % 0.1936)
     # (j) the T10 rows restated (L4A-61)
     text_ = "\n".join(out)
@@ -2403,7 +2433,8 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
         ("10j (e) the sustained bound WITHDRAWN, the countermodel over 125 C", "the universal sustained bound and its positive margin are",
          "restated: constant maximum dissipation at IOSmax, %.1f C on the printed theta, the countermodel inside it; CONDITIONAL on E-17" % tj0),
         ("10j (e) the qualification limits (229 C/W, 105 C/W at 181 ms, the INA169)", "the qualification limits below are measurements to take",
-         "superseded by E-17 ((e): the junction at IOSmax at most %.0f C; Zth(%.0f ms) at most %.1f C/W or W151-1's exclusion kept)" % (TJ_GOAL, S["tlatch"][0][2] * 1e3, zth_10)),
+         "superseded by E-17 ((e): the junction at IOSmax at most %.0f C, and at HO-D's pass top %.4f A at most %.0f C (W163-N1); Zth(%.0f ms) at most %.1f C/W or W151-1's exclusion kept)" % (
+             TJ_GOAL, R10_HOD_TOP, TJ_GOAL, S["tlatch"][0][2] * 1e3, zth_10)),
         ("10j (e) VOS0 under the trip", "residual handed over: VOS0 at a current under the trip",
          "not bounded by the limiter (IOSmin over VOS0's current); the rail trip's controller-protection role moves to HO-E (L4REG-F7): L4A-59 and its check L4A-100 (fnd/l4hoe, not in this tree)"),
         ("L9T5-F13, bounded only on its average", "PROVISIONAL after cx46: a firmware outside the row is bounded only on its AVERAGE",
@@ -2423,8 +2454,9 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
     w("     the contract rows (FW-B20, FW-B21, FW-B22's restart rule, V-B20, V-B21, V-B23 and the in-service test FW-B24 with V-B25) are restated")
     w("     by apply_hw_fw_contract_rowb.py after apply_hw_fw_contract_canq.py; IOHA section 12 by apply_ioha_fmea_rowb.py; the ledger's section 4")
     w("     by apply_remeng_rowb.py; none applied (the integrator's); the connected rows in l9t5_connected.out 11a")
-    w("   (k) NOT DONE HERE: no independent check; nothing applied; the site's theta, Zth and IGND (E-17); the band under VOUT + 0.5 V (V-T10-DROP);")
-    w("     the supply's dip at a load step (W146-F10, record l4hod, PROVISIONAL); HO-E (L4A-59); a rev X part (L4A-60)")
+    w("   (k) NOT DONE HERE: no independent check; nothing applied; the site's theta, Zth and IGND (E-17, at IOSmax and at HO-D's pass top);")
+    w("     the band under VOUT + 0.5 V (V-T10-DROP); the supply's dip at a load step (W146-F10, record l4hod, PROVISIONAL); HO-E (L4A-59);")
+    w("     a rev X part (L4A-60)")
     w("")
     pred = {}
     pred["round 10 (L4A-57): row (b)'s four drafts compose after round 6's, the stage reads DRAWN by pin and value, its three mutations FAIL"] = (

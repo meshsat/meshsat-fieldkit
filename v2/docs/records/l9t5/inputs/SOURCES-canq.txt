@@ -6,3 +6,7 @@ l4reg-l4reg_compare-9fbda7a6.out sha256 9fbda7a6e79430c2aea3986a3f20b256084b9d5d
   W138's output v2/docs/records/l4reg/l4reg_compare.out at fnd/l4reg 86dbcdff (Layer 4 task L4A-56 re-scoped: the TPS2553-1 limiter at
   RILIM 49.9 kOhm ahead of a TPS73733DCQRM3, its latch-off after 5 to 10 ms as that record quotes SLVS841F 7.5), copied verbatim by
   W139 on 7 October 2026 for row 8's latch and the recovery proof. Unchecked, not applied.
+  W167 on W163-N4 (7 October 2026, fnd/l4hod): l9t5_canq.py no longer reads this copy; it reads the tree's own
+  v2/docs/records/l4reg/l4reg_compare.out (the band on W159's envelope, 0.4702 to 0.5878 A). Record l4canen's
+  l4canen.py likewise reads the tree's file since W167 (its band and latch energy, 24.2 mJ at 0.5878 A where the copy gave 23.5 mJ).
+  The copy stays here byte for byte as filed; no generator on this branch reads it.

@@ -17,14 +17,14 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    cc9c9eefdd674fd5 v2/docs/records/efuse/efuse_check.out
    33c6c695367f40de v2/docs/records/l9stk/l9stk_protection.out
    5cc3eedafd987a74 v2/docs/records/l8p/l8p_c4.out
-   2b55777bc5d0243d v2/docs/records/l9t5/l9t5_t10.out
+   d2f9cb974c384add v2/docs/records/l9t5/l9t5_t10.out
    4dc36af23b2a2522 v2/docs/records/l9t5/l9t5_f01.out
    ada2070a1c808ae1 v2/docs/records/l8r2/l8r2_p0.out
    3acf4672e3c85c03 v2/docs/records/l4e7/l4e7_p0sol.out
-   9379627278007f08 v2/docs/records/l8r2/l8r2_dist.out
+   4428a479e14b5744 v2/docs/records/l8r2/l8r2_dist.out
    f8960d36a62b8ee9 v2/docs/records/l8r2/l8r2_dist.py
    d39fde5caefe8960 v2/docs/records/l4e7/l4e7_p0sol.py
-   cfbbd8b0bd74a752 v2/docs/records/l9t5/l9t5_t10.py
+   62abfcde748c4d73 v2/docs/records/l9t5/l9t5_t10.py
    be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
    ada5c44d7c9e33f7 v2/docs/records/l9t5/l9t5_case.py
    ead614436cf77d00 v2/docs/records/l8r2/l8r2_p0.py
@@ -368,9 +368,9 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    W151-F1). Sections 0 to 11 stand as written for the candidate composed there; this section restates the rows row (b) changes. Nothing
    here closes an item: cx46's states stand, row (b)'s check is L4A-62, and the connected verdict stays as section 11 reads it
    (a) PINS of this section (sha256/16 path)
-   1159599b4c589352 v2/docs/records/l9t5/l9t5_canmb.out
-   8861819ad38218cf v2/docs/records/l4canen/l4canen.out
-   c22b01bd5250b513 v2/docs/records/l4hod/l4hod.out
+   cfa7ed0220b4f68c v2/docs/records/l9t5/l9t5_canmb.out
+   52009c60e3b0f864 v2/docs/records/l4canen/l4canen.out
+   d5cb022bd87f7955 v2/docs/records/l4hod/l4hod.out
    (b) THE SERVICE WINDOW ON THE COMPOSED CANDIDATE (C-DEV rev 2, conditional on FW-B20 and FW-B21): T10 11a reads IOSmin 0.4702 A over the
      largest served 0.4239 A by 0.0462 A, and 0.0390 A after row (b)'s enabled set (0.0073 A, TIM3 and an ADC, FW-B20 restated); the drafts add on
      a controller's own rail at most 0.0041 A (record l4canen 0.1770 A with canmb's 0.1753 A in
@@ -399,7 +399,7 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
      (INFERRED: section 10's return effect +0.0476 V, taken at its own lead current, carried); PROVISIONAL (L4A-62, E-17, V-T10-DROP)
      L4A-57 reads DONE AS CONDITIONAL on E-17 in T10 11a
    (d) THE OPEN ROWS OF SECTION 11 UNDER ROW (b) (each keeps cx46's state; the row's draft, not its closure):
-     item  6 (the latent rail-trip failure, NOT CLOSED): the rail trip is removed by regstage (W138-2); its place the TPS2553-1's printed limit and latch (T10 11a (f)); the limiter's latent loss of its limit found by record l4hod's in-service test within 3602.341 s (DRAFTED)
+     item  6 (the latent rail-trip failure, NOT CLOSED): the rail trip is removed by regstage (W138-2); its place the TPS2553-1's printed limit and latch (T10 11a (f)); the limiter's latent loss of its limit found by record l4hod's in-service test within 3602.341 s (DRAFTED), its pass CONDITIONAL on E-17 at the pass top 0.6819 A (the site's theta at most 82.5 C/W, record l4hod J4, W163-N1)
      item  7 (the sustained peaks, NOT CLOSED): bounded at constant maximum dissipation at the limiter's printed maximum, 115.0 C on the printed theta, CONDITIONAL on E-17
      item  5 (L9T5-F21, NOT CLOSED): the peers' buffered TXD reads and 2-of-2 SHDN votes drafted (canmb), the quorum held on rows 3, 5 and 7 and the GPIO-toggled TX silenced (canq), its self-test 2.60 s (W143); PROVISIONAL
      item 17 (VOS0 under the trip, NOT CLOSED): not bounded by the limiter (its least over VOS0's current); the rail trip's controller-protection role moves to HO-E (L4REG-F7, W159 on W157-F4): L4A-59 with its check L4A-100 (fnd/l4hoe, not in this tree)

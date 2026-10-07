@@ -15,6 +15,15 @@ What it changes, and nothing else:
   2. v2/docs/records/l4e9/l4e9_power_path.py: four CHANGE_ORDER tuples after R-245's and before R-236's (row (b) after iocguard, then
      R-236, R-237 and Layer 6, the order L4-E9 and record l9t5 compose in), and six ORDER_CONSTRAINTS after the containment's.
   3. v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md: the change-list table regenerated from the patched cons_changes, with a note.
+THE CLASS AGAINST THE ACCEPTANCE (W167 on W163-N5, SESSION W167-D3: noted, not restated): the four rows carry SETTLED WORK and "DO: step
+B (DRAFTED), no open question" because L4-E9's own cons_classes gives that class and next action to every DRAFTED step-B implementation
+row outside its RE_ROWS, DESK_ROWS, KED_ROWS, UDC_ROWS and PHY_EXTRA tables, and test_l9t5 holds the applied register to it; the class
+names the row's STEP (a defined correction that only owes its application), never its acceptance. Read each Acceptance cell for the
+conditions: R-247 PROVISIONAL (RE-5 and HO-C read SUPPORTED by row (b)'s focused check and recheck, AI reviews); R-248 CONDITIONAL on
+E-17 at the limiter's maximum and at HO-D's pass top; R-249 PROVISIONAL with FW-B22's hold-off (V-B23's vector corrected, W163-N2);
+R-250 CONDITIONAL on E-17 at the pass top, W146-F10 and F6's assumption. Restating a class here would need L4-E9's generator tables
+(PHY_EXTRA or RE_ROWS) and test_l9t5's class rule changed together, the integrator's and L4-E9's owner's work at set 33; the page's
+note below says the same where the change list is read.
 Re-takes the integrator owes after it (as for the P0 round): l4e9_power_path.out, the L4 pin chain, l9t5_connected.out (its change
 count), l6r2_passives.out (a content change: its change chain then composes the four drafts on board B), and the digest lines of the
 records that pin the page. fnd/l4hoe's apply_gen_sch_b_vcoremon.py has no row either (HO-E's own task, not this record's).
@@ -46,7 +55,8 @@ ROWS = [
     "86dbcdff); " + FROM + " " + TAIL % (
         "In one release with R-247, R-249 and R-250; the regenerated netlist carries each limiter ahead of its regulator, EN on pin 5 "
         "(l4reg_compare.out, l9t5_t10.out 11a (b)); the junction at constant maximum dissipation at the limiter's printed maximum "
-        "CONDITIONAL on E-17; PROVISIONAL until row (b)'s check L4A-62"),
+        "CONDITIONAL on E-17 (the site's theta at most 95.7 C/W at the limiter's maximum 0.5878 A, and at most 82.5 C/W at HO-D's pass top "
+        "0.6819 A for R-250's pass, W163-N1, l9t5_t10.out 11a (e)); PROVISIONAL until row (b)'s check L4A-62"),
     "| R-249 | IMPLEMENTATION | Board B's restart route of a latched supervisor: the two peers' 2-of-2 vote on each limiter's EN through "
     "an SN74LVC1G08 and an AO3400A with an RC delay, the target reading its own gate (W139-F2): `apply_gen_sch_b_canen.py`, AFTER R-247 "
     "and R-248 | Layer 9's l9t5 round 9 (W143 on fnd/l4canmb at 664d4019; record l4canen); " + FROM + " " + TAIL % (
@@ -57,7 +67,9 @@ ROWS = [
     "through two series switches, one per peer, each peer reading the limiter's FAULT and output: `apply_gen_sch_b_hodtest.py`, AFTER "
     "R-248 and R-249 | Layer 9's l9t5 record l4hod (W146 on fnd/l4hod at 7ebca389); " + FROM + " " + TAIL % (
         "In one release with R-247 to R-249; the regenerated netlist carries the test path as drafted (its mutations failing, "
-        "l4hod.out); FW-B24 with it (Layer 5); PROVISIONAL until row (b)'s check L4A-62, the supply's dip at the step PROVISIONAL (W146-F10)"),
+        "l4hod.out); FW-B24 with it (Layer 5); its pass at the site CONDITIONAL on E-17 read at the pass top 0.6819 A (82.5 C/W at zero "
+        "ground current, W163-N1) and on F6's backup-register assumption under V-B25; PROVISIONAL until row (b)'s check L4A-62, the "
+        "supply's dip at the step PROVISIONAL (W146-F10)"),
 ]
 REG_ANCHOR = "R-246"
 CO_ANCHOR = ('    ("B", "R-245", GB, "AFTER R-235 and R-243 (it edits their lines: the transceivers\' SHDN and the LDOs\' inputs); in one release '
@@ -75,8 +87,9 @@ OC_ADD = ('    ("row (b)\'s CAN vote after the supervisors\' containment draft",
           '    ("row (b)\'s in-service limiter test after its regulator stage", "R-248", "R-250"),\n'
           '    ("row (b)\'s in-service limiter test after its restart route", "R-249", "R-250"),\n')
 NOTE = ("**Row (b) (record l9t5, W159, 7 October 2026; W151-F1).** Rows R-247 to R-250 add row (b)'s four board B drafts (canmb, regstage, "
-        "canen, hodtest) after R-245 and before R-236; each is DRAFTED and PROVISIONAL until row (b)'s check L4A-62; nothing in this kit has "
-        "been built.")
+        "canen, hodtest) after R-245 and before R-236; each is DRAFTED and PROVISIONAL until row (b)'s check L4A-62; their class SETTLED "
+        "WORK names the step L4-E9's rule gives a drafted row, not the acceptance: R-248 and R-250 are CONDITIONAL on E-17 (R-250 also on "
+        "W146-F10 and F6's assumption), as their Acceptance cells state (W163-N5); nothing in this kit has been built.")
 IDS = ["R-247", "R-248", "R-249", "R-250"]
 
 

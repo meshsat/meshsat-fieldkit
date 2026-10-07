@@ -6,11 +6,11 @@ a DRAFT, NOT APPLIED; prototype design, nothing built or measured)
 1. INPUTS (sha256/16)
    1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
    51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
-   1159599b4c589352 v2/docs/records/l9t5/l9t5_canmb.out
+   cfa7ed0220b4f68c v2/docs/records/l9t5/l9t5_canmb.out
    babc11a248760e82 v2/docs/records/l9t5/l9t5_canmb.py
-   9dd1fb7819b4bad2 v2/docs/records/l9t5/l9t5_canq.out
-   0aee5a8148c37d4e v2/docs/records/l9t5/T10-CANQ.md
-   592ae1e712b2d0cd v2/docs/records/l9t5/l9t5_canq.py
+   266f221e85668e80 v2/docs/records/l9t5/l9t5_canq.out
+   4a5b8c86981d97f3 v2/docs/records/l9t5/T10-CANQ.md
+   a69deb9776af483e v2/docs/records/l9t5/l9t5_canq.py
    12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
    20fdb1cd9e1c1e29 v2/docs/records/l9t5/apply_hw_fw_contract_canq.py
    efcfdf67f1fcab83 v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
@@ -20,7 +20,7 @@ a DRAFT, NOT APPLIED; prototype design, nothing built or measured)
    6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
    4f8831c8b21e2ca1 v2/docs/records/l9t5/apply_gen_sch_a_iocset.py
-   9fbda7a6e79430c2 v2/docs/records/l9t5/inputs/l4reg-l4reg_compare-9fbda7a6.out
+   fe5e69e35142a031 v2/docs/records/l4reg/l4reg_compare.out
    469594bb5b4fa6be v2/docs/records/l4canen/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py
    f3a39bd6d9e90711 v2/docs/records/l4canen/inputs/SOURCES.txt
    653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
@@ -152,7 +152,7 @@ a DRAFT, NOT APPLIED; prototype design, nothing built or measured)
      3 ms + 431 us (TYPICAL) + 0.800 s = 5.603 s (MODEL on PRINTED, DRAFTED and the boot ASSUMPTION); before this round: NONE,
      an operator's power cycle
    a persistent cause: the limiter latches again after its 5 to 10 ms deglitch (PRINTED) and the peers try again 10 s after their
-     last vote: at most 23.5 mJ an attempt (W138's MODEL), 2.35 mW on average; the other two keep the quorum throughout (IOHA row 3)
+     last vote: at most 24.2 mJ an attempt (record l4reg's MODEL at the limiter's maximum), 2.42 mW on average; the other two keep the quorum throughout (IOHA row 3)
    with two supervisors latched the third cannot restart either (2 of 2 needs both peers): row 4's outcome until RAIL_EN is cycled;
      with all three latched (row 8 with W138's limiter, R8b) only RAIL_EN returns them, as W139 found
    a supervisor held off on the bench (IOHA A4 and A6, J_IOCOFF fitted) is restarted every 10 s by its peers: harmless, its LDO's EN

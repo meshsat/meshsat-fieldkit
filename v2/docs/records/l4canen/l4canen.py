@@ -68,7 +68,8 @@ DOCS = {"canen": L9R + "/apply_gen_sch_b_canen.py", "canmb": L9R + "/apply_gen_s
         "canmb_py": L9R + "/l9t5_canmb.py", "canmb_out": L9R + "/l9t5_canmb.out", "canq_py": L9R + "/l9t5_canq.py",
         "canq_out": L9R + "/l9t5_canq.out", "canq_page": L9R + "/T10-CANQ.md", "contract": "v2/docs/HW-FW-CONTRACT.md",
         "contract_t10": L9R + "/apply_hw_fw_contract_t10.py", "contract_canq": L9R + "/apply_hw_fw_contract_canq.py",
-        "l4reg_out": L9R + "/inputs/l4reg-l4reg_compare-9fbda7a6.out", "drafts": L9R + "/l9t5_drafts.py",
+        # W167 (W163-N4's class): l4reg_out is the tree's l4reg_compare.out (W159's envelope); it was L9R + "/inputs/l4reg-l4reg_compare-9fbda7a6.out"
+        "l4reg_out": "v2/docs/records/l4reg/l4reg_compare.out", "drafts": L9R + "/l9t5_drafts.py",
         "gen_b": "v2/ecad/tools/gen_sch_b.py", "gennet": "v2/docs/records/l8p/gen_netlist.py", "trace": "v2/docs/REQUIREMENTS-TRACE.md"}
 EN = chr(0x2013)       # the sheets' minus sign, written by its code point (no long dash in this file)
 MU = "[%s%s]" % (chr(0xB5), chr(0x3BC))
@@ -699,7 +700,7 @@ def main():
     w("     an operator's power cycle")
     w("   a persistent cause: the limiter latches again after its %.0f to %.0f ms deglitch (PRINTED) and the peers try again %.0f s after their" % (
         F["deglitch"][0] * 1e3, F["deglitch"][2] * 1e3, T_RATE))
-    w("     last vote: at most %.1f mJ an attempt (W138's MODEL), %.2f mW on average; the other two keep the quorum throughout (IOHA row 3)" % (
+    w("     last vote: at most %.1f mJ an attempt (record l4reg's MODEL at the limiter's maximum), %.2f mW on average; the other two keep the quorum throughout (IOHA row 3)" % (
         F["e_latch"] * 1e3, p_avg * 1e3))
     w("   with two supervisors latched the third cannot restart either (2 of 2 needs both peers): row 4's outcome until RAIL_EN is cycled;")
     w("     with all three latched (row 8 with W138's limiter, R8b) only RAIL_EN returns them, as W139 found")

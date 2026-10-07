@@ -832,7 +832,13 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
        sites; QUANTITY each LDO's junction with its input current held at the limiter's printed maximum 0.5878 A, its input at 4.1174 V and its
        output in regulation, from its case-top temperature by ψJT 8.6 C/W (PRINTED), in still air at 76.25 C, its IGND read as input less
        output current; PASS LIMIT the junction at most 125 C (equivalently RθJA(effective) at most 48.75 K over the measured power; 95.7 C/W
-       at IGND = 0); and for the latched transient, the junction's rise in 10 ms of 2.420 W at most 35.0 K from the steady bound, Zth(10 ms) at
+       at IGND = 0); AND AT HO-D'S PASS TOP (W163-N1): the same sites' junction at the largest IOS record l4hod's in-service test passes,
+       0.6819 A (its J4; carried here as a figure, not read, because record l4hod reads this output; test_l9t5_rowb holds the two equal),
+       read as each site's measured RθJA(effective) times the regulator's dissipation at that input current with its IGND read (or read
+       directly at a coupon site whose limit is set over it); PASS LIMIT the junction at most 125 C there, 82.5 C/W at IGND = 0.
+       On the 95.7 C/W above, a limit passing at 0.6819 A reads 132.8 C, so HO-D's pass reading (a lost limit never passes) is CONDITIONAL
+       on this reading, never on a tightened HO-D band (a healthy limiter's reading already reaches that band's top, record l4hod J4); and
+       for the latched transient, the junction's rise in 10 ms of 2.420 W at most 35.0 K from the steady bound, Zth(10 ms) at
        most 14.5 C/W, which would remove W151-1's exclusion (f)
    (f) RE-6, THE RESPONSE ON PRINTED TIMING, AND THE OUTPUT SHORT. No response time is needed for the sustained bound: the limit is a
      DC limit (IOS, PRINTED), and every state with the output in regulation is inside (d) whatever its waveform. A demand over IOS is a
@@ -855,6 +861,13 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      W159-D3): after 3 consecutive failed restarts both peers keep their restart votes (the limiter's EN low, the target unpowered) and retry
      once every 600 s, a rejoin clearing the count: powered 1.33 % of the time in the hold-off; a single latch still restarts in 5.603 s.
      Judge HOLDS; mutated, no hold-off (the restart rule alone): FAILS; the hold-off retried at the restart rule's period: FAILS; a hold-off one peer's vote holds: FAILS
+     ACROSS A PEER'S OWN RESET (W167 on W163-N6, SESSION W167-D2): the hold-off is each peer's own state (its count and its held vote, in
+     RAM, not kept across its reset; FW-B24's backup-register record is HO-D's alone). A peer that resets drops its vote: canen's 2-of-2
+     hold releases, the target's limiter EN rises and the target is powered into its short. The other peer keeps its count and its vote.
+     The reset peer boots and rejoins (within 0.800 s of its reset, W139), finds the target dark for 2.0 s and counts afresh, each restart
+     completed by the other peer's held vote: 3 failed restarts 10 s apart, then both hold again, 24.8 s after its rejoin, the target
+     powered for 18.8 s of it (MODEL on the DRAFTED cadence and the boot ASSUMPTION), then in the hold-off as above. Both peers reset at
+     once: both count afresh, the same bound. A peer whose own resets repeat is its own fault row (its peers restart it, FW-B22)
    (g) W135's FOUR SCREEN ROWS ON THE SELECTED PARTS, AND THE SERVICE WINDOW AGAINST C-DEV REV 2 (the case row's T10 figures, revision V;
      conditional on FW-B20 and FW-B21 as the row states)
      served  S1 the largest sustained served (10j (e))                0.1855 A  not limited
@@ -900,7 +913,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      no bound on board B's copper, so RE-7's sustained bound and RE-6's response read SUPPORTED ON PRINTED FIGURES, CONDITIONAL on E-17's
      theta and IGND at the site, PROVISIONAL until row (b)'s check (L4A-62); RE-6 and RE-7 stay NOT CLOSED (cx46), REMAINING ENGINEERING
      until that check and E-17. HO-D (the limiter's latent loss of its limit) is record l4hod's in-service test (a lost limit found within
-     3602.341 s, DRAFTED); HO-E is not bounded by the limiter (IOSmin is over VOS0's 0.1936 A and the H743's 125 C current), and the rail trip's controller-protection role (each controller's average under its 125 C current) moves to HO-E (L4REG-F7, W159 on W157-F4), L4A-59's
+     3602.341 s, DRAFTED; its pass reading CONDITIONAL on E-17 at the pass top 0.6819 A, (e), W163-N1); HO-E is not bounded
+     by the limiter (IOSmin is over VOS0's 0.1936 A and the H743's 125 C current), and the rail trip's controller-protection role (each controller's average under its 125 C current) moves to HO-E (L4REG-F7, W159 on W157-F4), L4A-59's
    (j) THE T10 ROWS ROW (b)'S DRAFTS CHANGE, RESTATED (L4A-61; each row's old text, at the line named, is history from here on)
      line  223  T10-A2 on the AP2112K's 184 C/W                                    -> the regulator replaced (regstage): the bounded state rev V 0.1732 A reads 87.7 C on the TPS73733's printed 76.0 C/W, CONDITIONAL on E-17
      line  563  T10-A3 as round 4 and L9T5-D8 wrote it                             -> restated at the limiter's maximum on all three: +0.0041 V (1 A row as bound), +0.1072 V (INFERRED); V-T10-DROP extended (L4REG-F2)
@@ -912,7 +926,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      line  633  10j (c) the peers' observation and vote NOT DRAFTED                -> DRAFTED (canmb, canq, canen; W137, W139, W143); the comparators gone; latent faults found by the self-test (2.60 s; 8.545 s in an HO-D test)
      line  642  10j (d) T10-A3 at the trip's average maximum                       -> restated at IOSmax 0.5878 A with 0.135 ohm ((g) (4)); the other two +0.0402 V while one sits at IOSmax
      line  651  10j (e) the sustained bound WITHDRAWN, the countermodel over 125 C -> restated: constant maximum dissipation at IOSmax, 115.0 C on the printed theta, the countermodel inside it; CONDITIONAL on E-17
-     line  669  10j (e) the qualification limits (229 C/W, 105 C/W at 181 ms, the INA169) -> superseded by E-17 ((e): the junction at IOSmax at most 125 C; Zth(10 ms) at most 14.5 C/W or W151-1's exclusion kept)
+     line  669  10j (e) the qualification limits (229 C/W, 105 C/W at 181 ms, the INA169) -> superseded by E-17 ((e): the junction at IOSmax at most 125 C, and at HO-D's pass top 0.6819 A at most 125 C (W163-N1); Zth(10 ms) at most 14.5 C/W or W151-1's exclusion kept)
      line  674  10j (e) VOS0 under the trip                                        -> not bounded by the limiter (IOSmin over VOS0's current); the rail trip's controller-protection role moves to HO-E (L4REG-F7): L4A-59 and its check L4A-100 (fnd/l4hoe, not in this tree)
      line  712  L9T5-F13, bounded only on its average                              -> restated: a firmware outside the row is bounded by the limiter's printed maximum at constant maximum dissipation ((d)), CONDITIONAL on E-17
      line  716  L9T5-F16, a latent share comparator                                -> restated: no share comparator; the vote path's latent faults found by the self-test within 2.60 s (W143)
@@ -922,8 +936,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      the contract rows (FW-B20, FW-B21, FW-B22's restart rule, V-B20, V-B21, V-B23 and the in-service test FW-B24 with V-B25) are restated
      by apply_hw_fw_contract_rowb.py after apply_hw_fw_contract_canq.py; IOHA section 12 by apply_ioha_fmea_rowb.py; the ledger's section 4
      by apply_remeng_rowb.py; none applied (the integrator's); the connected rows in l9t5_connected.out 11a
-   (k) NOT DONE HERE: no independent check; nothing applied; the site's theta, Zth and IGND (E-17); the band under VOUT + 0.5 V (V-T10-DROP);
-     the supply's dip at a load step (W146-F10, record l4hod, PROVISIONAL); HO-E (L4A-59); a rev X part (L4A-60)
+   (k) NOT DONE HERE: no independent check; nothing applied; the site's theta, Zth and IGND (E-17, at IOSmax and at HO-D's pass top);
+     the band under VOUT + 0.5 V (V-T10-DROP); the supply's dip at a load step (W146-F10, record l4hod, PROVISIONAL); HO-E (L4A-59);
+     a rev X part (L4A-60)
 
 12. THE PREDICATES
    no contract, panel or firmware text in the tree bounds a supervisor's run mode, clock or voltage scale                                 yes

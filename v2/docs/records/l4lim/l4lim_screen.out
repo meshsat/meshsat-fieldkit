@@ -3,10 +3,10 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
 cx46 item, accepts nothing and moves no state (cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand)
 
 1. INPUTS, pinned by sha256
-   2b55777bc5d0243d v2/docs/records/l9t5/l9t5_t10.out
+   d2f9cb974c384add v2/docs/records/l9t5/l9t5_t10.out
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
    37fa5cd78d545f9d v2/docs/records/l4close/REMAINING-ENGINEERING.md
-   cfbbd8b0bd74a752 v2/docs/records/l9t5/l9t5_t10.py
+   62abfcde748c4d73 v2/docs/records/l9t5/l9t5_t10.py
    be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
    29f313c17d6f8283 v2/docs/records/l8r2/l8r2_gndret.out
    ef8d376f2ec356e2 v2/vendor/diodes/diodes-ap2112-ldo.pdf
