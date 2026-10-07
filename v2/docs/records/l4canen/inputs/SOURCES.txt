@@ -1,0 +1,5 @@
+l4reg-apply_gen_sch_b_regstage-469594bb.py sha256 469594bb5b4fa6be16a3e313761a7d822c6bc8d427ef0894d15c219d0f54cbea
+  W138's draft v2/docs/records/l9t5/apply_gen_sch_b_regstage.py at fnd/l4reg 86dbcdff (Layer 4 task L4A-56 re-scoped: the TPS2553-1
+  limiter at RILIM 49.9 kOhm ahead of a TPS73733DCQRM3, EN on IOC{t}_LIM_EN pulled up to +5V_IOC by 100 kOhm), copied verbatim by W143
+  (fnd/l4canmb) on 7 October 2026 so that record l4canen composes it with canmb and canen from its own tree. Unchecked, not applied. Run
+  from this folder its own release guard does not see the tree's generator; record l4canen runs it only on scratch copies.

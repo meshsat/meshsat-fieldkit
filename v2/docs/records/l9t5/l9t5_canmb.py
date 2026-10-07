@@ -14,7 +14,9 @@ It prints, deterministically and without touching the tree:
   5. the pin plan recounted on the composed candidate and read against DS12110 Rev 10 Table 9 and Table 12 (every pin a printed
      function, every observation a timer channel with its own DMA request in RM0433 Rev 8), and CON-017's count restated;
   6. the logic levels on the makers' printed rows (the vote, SHDN, the observation, a faulty reader, the dark cases);
-  7. the vote path's in-service self-test: its phases, its timing on printed figures, its interval, its own faults, its coverage;
+  7. the vote path's in-service self-test, RESTATED in round 9 (W143, 7 October 2026) on W139's analysis: the 12-window cycle with both
+     fabrics at once, every phase run as worded (enumerated, with the mutant of round 7's precondition), its timing on printed
+     figures, its interval, the surviving fabric tested when one is down, its own faults with the attribution path, its coverage;
   8. what this closes once independently checked and what stays OPEN (L4A-55), the SESSION decisions and the findings;
   9. the predicates the test holds (v2/ecad/tools/tests/test_l9t5_canmb.py).
 Run from the repository root:  python3 v2/docs/records/l9t5/l9t5_canmb.py  (about 6 s; l9t5_canmb.out is its output, regenerated
@@ -43,6 +45,7 @@ PDFTEXT = {
     "v2/vendor/diodes/diodes-74lvc1g34.pdf": [["-layout"]],
     "v2/vendor/diodes/diodes-ap2112-ldo.pdf": [["-layout"]],
     "v2/vendor/power/st-semtech-1n4148w-c81598.pdf": [["-layout"]],
+    "v2/vendor/st/st-es0392-rev15.pdf": [["-layout", "-f", "48", "-l", "48"]],
     "v2/vendor/st/st-rm0433-rev8.pdf": [["-layout", "-f", "533", "-l", "533"], ["-layout", "-f", "694", "-l", "696"]],
     "v2/vendor/st/st-stm32h743xi-datasheet.pdf": [["-layout"]],
     "v2/vendor/ti/ti-sn74lvc1g08.pdf": [["-layout"]],
@@ -55,22 +58,36 @@ SHEETS = {"h743": "v2/vendor/st/st-stm32h743xi-datasheet.pdf", "tcan": "v2/vendo
           "g08": "v2/vendor/ti/ti-sn74lvc1g08.pdf", "ap2112": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
           "d4148": "v2/vendor/power/st-semtech-1n4148w-c81598.pdf", "g34": "v2/vendor/diodes/diodes-74lvc1g34.pdf"}
 RM = "v2/vendor/st/st-rm0433-rev8.pdf"
+ES = "v2/vendor/st/st-es0392-rev15.pdf"
 REC = "v2/docs/records/l9t5"
 DOCS = {"draft": REC + "/apply_gen_sch_b_canmb.py", "guard": REC + "/apply_gen_sch_b_iocguard.py", "shdn": REC + "/apply_gen_sch_b_canshdn.py",
         "drafts": REC + "/l9t5_drafts.py", "check": REC + "/check_l9t5_netlist.py", "gen_b": "v2/ecad/tools/gen_sch_b.py",
         "gennet": "v2/docs/records/l8p/gen_netlist.py", "trace": "v2/docs/REQUIREMENTS-TRACE.md", "ioha": "v2/docs/ARCH-PCB-B-IOHA.md",
         "compat": "v2/docs/parts/STM32H743-COMPATIBILITY.md", "ledger": "v2/docs/records/l4close/REMAINING-ENGINEERING.md",
         "t10out": REC + "/l9t5_t10.out", "contract": REC + "/apply_hw_fw_contract_t10.py", "changes": "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md",
-        "u23": "v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py", "u24": "v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py"}
+        "u23": "v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py", "u24": "v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py",
+        "canq": REC + "/l9t5_canq.py", "canqout": REC + "/l9t5_canq.out"}
 EN = chr(0x2013)       # the sheets' minus sign and dash, written by its code point (no long dash in this file)
 MINUS = chr(0x2212)    # ST's minus sign
 EM = chr(0x2014)       # the empty cell of Diodes' tables
 LE = chr(0x2264)       # the less-or-equal sign in ST's tables
 MU = "[%s%s]" % (chr(0xB5), chr(0x3BC))
 TAGS = "ABC"
-# the session's choices for the self-test (SESSION, under the owner's standing rule of 26 September 2026; section 7 gives each reason)
-GUARD_MS = 10.0        # each assertion starts this long after its window opens and ends this long before it closes
+# the session's choices for the self-test (SESSION, under the owner's standing rule of 26 September 2026; section 7 gives each reason).
+# Round 9 (W143, 7 October 2026) restates the schedule on W139's analysis (T10-CANQ.md, W139-D1 to D3): round 7's GUARD_MS and its
+# 24-window cycle are superseded (they stay in git history and in l9t5_canq.out's "W137's schedule" column)
 EVERY = 1              # a test phase runs in every EVERY-th window of FW-B22's schedule
+CYCLE_R = 12           # the restated cycle: 3 targets x 4 phases, both fabrics at once (fabric B's target the next controller), W139-D2
+CYCLE_7 = 24           # round 7's cycle (6 transceivers x 4 phases, one at a time): SUPERSEDED, printed for comparison
+N_CYCLES = 2           # the cycles the phase enumeration counts (after one cycle of warm-up)
+ALIGN_MS = 1.0         # DRAFTED (round 9): each controller's window clock within 1 ms of its peers', set from their state frames' start of
+                       # frame on TIM3 (W139-D12); a slot owner's frame starts within one frame time (0.27 ms at 500 kbit/s, MODEL) of its slot
+PHASE_CODES = ("S", "P1", "P2", "V")
+PHASES_R = (("S", "its own SHDN request over the hold: its test frame received by no peer, and it hears no peer's", "silenced"),
+            ("P1", "the next controller's vote alone over the hold (commanded): every test frame received both ways", "not silenced"),
+            ("P2", "the one after's vote alone over the hold (commanded): every test frame received both ways", "not silenced"),
+            ("V", "its ONE malformed test frame (12 dominant bit-times, V1) at the hold's start, struck by both readers through their "
+                  "attribution paths; their votes act to the hold's end and it hears no peer's test frame", "silenced"))
 CONFIRM = 2            # a phase is declared failed on its CONFIRM-th consecutive failure (one corrupted frame never declares a fault)
 C_SD_PF = 20.0         # ASSUMPTION: SD's node capacitance (TI prints none for the SHDN pin; the diodes' CT 2 pF each PRINTED, the trace)
 C_VOTE_PF = 50.0       # ASSUMPTION, a Layer 10 bound: a vote line's capacitance, the gate's Ci and the voter's CIO included (Table 160's load)
@@ -218,12 +235,73 @@ def figures():
     F["dar_compat"] = need(c, r"^\| 2\.24\.5 DAR mode transmission failure due to lost arbitration \|.*\| (firmware does not use DAR) \|$",
                            "the compatibility page's ES0392 2.24.5 row").group(1)
     F["dar_contract"] = need(text(DOCS["contract"]), r"(FDCAN_CCCR\.DAR = 1) on both fabrics", "the contract draft's DAR row").group(1)
+    e = PDFT.pdf_text(ROOT, ES, ["-layout", "-f", "48", "-l", "48"], PDFTEXT, REC)
+    m = need(e, r"^(2\.24\.5)\s+DAR mode transmission failure due to lost arbitration\s*\n.*?Workaround\s*\n\s+(Upon failure,.*?restart the transmission\.)",
+             "ES0392 2.24.5's workaround", re.M | re.S)
+    F["es_item"], F["es_work"] = m.group(1), " ".join(m.group(2).split())
+    m = need(e, r"ES0392 - Rev (\d+)\s+page (\d+)/(\d+)", "ES0392's page footer")
+    F["es_rev"], F["es_page"] = m.group(1), "page %s/%s" % (m.group(2), m.group(3))
     o = text(DOCS["t10out"])
     F["queue"] = float(need(o, r"a state frame waits at most ([\d.]+) ms behind every other frame of its window", "FW-B22's queue wait").group(1)) * 1e-3
     F["window"] = float(need(o, r"in every (\d+) ms window, one state\s*\n?\s*frame", "FW-B22's window").group(1)) * 1e-3
     F["i_r6"] = float(need(o, r"the bounded state with the limiters' pull-ups\s+([\d.]+) A", "round 6's bounded state").group(1))
     F["share_bits"] = int(need(o, r"(\d+) bit-times against FW-B21's (\d+)", "FW-B22's dominant bound").group(1))
     return F
+
+
+def canq():
+    """W139's restated schedule (round 8, L4A-55), which round 9 restates in section 7: the CFG literal of l9t5_canq.py read with ast
+    (never run) and the figures its committed output prints (its event model of the schedule)"""
+    import ast
+    cfg = None
+    for node in ast.parse(text(DOCS["canq"])).body:
+        if isinstance(node, ast.Assign) and getattr(node.targets[0], "id", "") == "CFG":
+            cfg = ast.literal_eval(node.value)
+    if cfg is None:
+        refuse("l9t5_canq.py carries no CFG literal")
+    o = text(DOCS["canqout"])
+    Q = {"cfg": cfg}
+    Q["chain_ms"] = float(need(o, r"= ([\d.]+) ms from a deviation to the target's driver off", "canq's containment chain").group(1))
+    Q["sim_s"] = float(need(o, r"the interval: restated\n\s+([\d.]+) s \(simulated\)", "canq's restated interval").group(1))
+    Q["degraded_s"] = float(need(o, r"stuck low\): restated ([\d.]+) s \(the test runs on the fabric that is up", "canq's degraded interval").group(1))
+    Q["literal"] = need(o, r"open own-request diode is then found in (NOT FOUND|[\d.]+ s)", "canq's literal precondition").group(1)
+    Q["att_s"] = float(need(o, r"^\s+a reader's attribution path .*?\s([\d.]+) s\s+NOT FOUND$", "canq's attribution row").group(1))
+    Q["f2"] = need(o, r"^\s+F2\s+-\s+(quorum lost)\s+(quorum lost)\s", "canq's row F2").groups()
+    Q["fabric_s"] = float(need(o, r"a fabric repaired: each controller's next FW-B21 probe: ([\d.]+) s", "canq's fabric bound").group(1))
+    return Q
+
+
+def phases_run(variant, literal, down=()):
+    """the phases a fault-free schedule runs over N_CYCLES cycles after one cycle of warm-up, per (target, fabric, phase): a MODEL of
+    the schedule (no sheet's figure). 'restated': CYCLE_R windows, both fabrics at once (fabric A's target by (n mod 12) div 4, fabric
+    B's the next controller), the state frames in their slots outside the hold, so no phase silences one; 'w137': round 7's CYCLE_7
+    windows, one transceiver at a time (A on fabric A, A on B, B on A, ...), its state frames at mid-window inside the hold, so its S and
+    V phases silence the target's state frame on the tested fabric. literal: the precondition as worded ("in the previous window every
+    controller heard every other", on the tested fabric for the restated schedule, on both for round 7's); else round 7's as W137 meant
+    it (the test's own silence excluded). down: fabrics on which no controller receives a state frame (down at every controller)."""
+    from collections import Counter
+    ran = Counter()
+    L = CYCLE_R if variant == "restated" else CYCLE_7
+    quiet = set()                                      # (node, fabric): a state frame the previous window's test silenced
+    for n in range(L * (N_CYCLES + 1)):
+        idx = n % L
+        if variant == "restated":
+            x = TAGS[idx // 4]
+            tests = {"A": (x, PHASE_CODES[idx % 4]), "B": (TAGS[(TAGS.index(x) + 1) % 3], PHASE_CODES[idx % 4])}
+        else:
+            j = idx // 4
+            tests = {"AB"[j % 2]: (TAGS[j // 2], PHASE_CODES[idx % 4])}
+        now = set()
+        for f, (x, ph) in sorted(tests.items()):
+            fabs = (f,) if variant == "restated" else ("A", "B")
+            ok = all(g not in down for g in fabs) and not (literal and any(q[1] in fabs for q in quiet))
+            if ok:
+                if n >= L:
+                    ran[(x, f, ph)] += 1
+                if variant == "w137" and ph in ("S", "V"):
+                    now.add((x, f))
+        quiet = now
+    return ran
 
 
 # ------------------------------------------------------------------------------------------------ the composition
@@ -647,65 +725,118 @@ def main():
     w("     per input), all at once: at most %.4f A (MODEL; a labelled scenario for the coordinator's C-DEV, no case row changed here)" % L["rail"])
     w("   all levels hold: %s" % ("yes" if lv_ok else "NO"))
     w("")
-    # ---------------------------------------------------------------- 7. the self-test
-    T_W = F["window"]
-    n_tx = 6
-    phases = (("S", "the target's own SHDN request alone", "silenced"), ("P1", "the next controller's vote alone", "not silenced"),
-              ("P2", "the one after's vote alone", "not silenced"), ("V", "both peers' votes", "silenced"))
-    t_cycle = n_tx * len(phases) * EVERY * T_W * (1 + F["xtal_ppm"])
-    t_det = CONFIRM * (t_cycle + T_W * (1 + F["xtal_ppm"]))
-    t_on = F["tr00"] + F["g_tpd"] + F["tmode"][1]
+    # ---------------------------------------------------------------- 7. the self-test, RESTATED (round 9, W143, on W139's analysis)
     import math
+    Q = canq()
+    QC = Q["cfg"]
+    T_W = F["window"]
+    if abs(QC["window_us"] * 1e-6 - T_W) > 1e-12:
+        refuse("l9t5_canq.py's window is not FW-B22's")
+    ppm = F["xtal_ppm"]
+    t_cycle = CYCLE_R * EVERY * T_W * (1 + ppm)
+    t_det = CONFIRM * (t_cycle + T_W * (1 + ppm))
+    t_cycle7 = CYCLE_7 * EVERY * T_W * (1 + ppm)
+    t_det7 = CONFIRM * (t_cycle7 + T_W * (1 + ppm))
+    t_on = F["tr00"] + F["g_tpd"] + F["tmode"][1]
     t_off = rsd_hi * C_SD_PF * 1e-12 * math.log(vdd_hi / F["sd_vil"]) + F["tmode"][1]
     slew = F["tr00"] / (0.8 * vdd_hi)                  # Table 160's tr is a 10 to 90 % time at 50 pF (C_VOTE_PF, ASSUMPTION, held to it)
     tau_obs = riso_hi * C_OBS_PF * 1e-12
-    drift = 2 * F["xtal_ppm"] * T_W
-    margin = GUARD_MS * 1e-3 - (F["queue"] + drift + max(t_on, t_off))
-    held = T_W - 2 * GUARD_MS * 1e-3
-    tec_up, tec_down = 2 * 8, n_tx * len(phases) * EVERY - 2
-    st_ok = (margin > 0 and slew < F["g_slew"] and C_VOTE_PF <= 50.0 and t_det < 10.0 and tec_down > tec_up)
-    w("7. THE VOTE PATH'S IN-SERVICE SELF-TEST (specified here for the firmware stage; its contract rows are L4A-61's; nothing applied)")
-    w("   One transceiver at a time is tested, never while a fabric is down, so the quorum keeps its three controllers on the other fabric")
-    w("   and two on the tested one. Per transceiver (6) four phases, one per window of FW-B22's %.0f ms schedule (DRAFTED), every %d window(s):" % (
-        T_W * 1e3, EVERY))
-    for code, how, want in phases:
-        w("     %-2s %-40s -> the transceiver %s" % (code, how, want))
-    w("   in each phase the asserting party holds its line from %.0f ms after the window opens to %.0f ms before it closes (%.0f ms held), and" % (
-        GUARD_MS, GUARD_MS, held * 1e3))
-    w("   the three controllers send that window's state frames on the tested fabric at its middle; the evidence of a silence is THREE")
-    w("   independent readings: the target's attempt shows on its TXD at both readers (its start of frame and error flag) while neither")
-    w("   receives a frame of it on that fabric, and the target's own receiver hears neither peer there (SHDN high turns driver AND receiver")
-    w("   off and holds RXD high, TCAN334 Table 6-5 PRINTED); the evidence of no silence is the target's frame received by both and both")
-    w("   peers' frames received by it. Precondition: in the previous window every controller heard every other on both fabrics and no")
-    w("   attribution is running; else the phase is skipped, and every controller publishes its phase counter, so a skip or a stall is seen")
-    w("   TIMING on printed figures:")
-    w("     silence takes effect within %.3f us of the second vote: the GPIO edge %.1f ns (speed 00 at 50 pF, DS12110 Table 160 PRINTED) + the" % (
+    drift = 2 * ppm * T_W
+    h0, h1 = (x * 1e-6 for x in QC["hold_us"])
+    probes = sorted(x * 1e-6 for x in QC["probe_us"].values())
+    slot_end = max(QC["slot_us"].values()) * 1e-6 + QC["slot_len_us"] * 1e-6
+    slot_first = min(QC["slot_us"].values()) * 1e-6
+    frame = QC["frame_bits"] / QC["rate"]
+    chain = Q["chain_ms"] * 1e-3
+    align = ALIGN_MS * 1e-3
+    margins = [("the hold opens after the last state slot closes", h0 - slot_end),
+               ("V's votes act before the first peer test frame (the strike chain from the malformed frame at the hold's start)", probes[0] - (h0 + chain)),
+               ("S's own request acts before the first peer test frame", probes[0] - (h0 + t_on)),
+               ("the last test frame ends before the hold closes", h1 - (probes[-1] + frame) - max(t_on, t_off)),
+               ("the release is complete before the next window's first state slot", T_W + slot_first - (h1 + t_off))]
+    margins = [(lab, v - align - drift) for lab, v in margins]
+    margin = min(v for _l, v in margins)
+    tec_up = 2 * 8                                     # S: its test frame attempted while silenced; V: its malformed frame, its only frame there
+    tec_down = CYCLE_R + (CYCLE_R - 2)                 # its state frame in every window, its test frame in the ten that are not its S or V
+    tec_w139 = 3 * 8                                   # the wording of round 8 read with the test frame also attempted in V (finding W143-F1)
+    runs_r = phases_run("restated", literal=True)
+    runs_wm = phases_run("w137", literal=False)
+    runs_wl = phases_run("w137", literal=True)
+    runs_d = phases_run("restated", literal=True, down=("A",))
+    runs_d7 = phases_run("w137", literal=False, down=("A",))
+    every_r = all(runs_r[(t, f, p)] == N_CYCLES for t in TAGS for f in "AB" for p in PHASE_CODES)
+    s_lit = sum(runs_wl[(t, f, "S")] for t in TAGS for f in "AB")
+    deg_ok = (all(runs_d[(t, "B", p)] == N_CYCLES for t in TAGS for p in PHASE_CODES) and not any(runs_d[(t, "A", p)] for t in TAGS for p in PHASE_CODES))
+    deg7 = sum(runs_d7.values())
+    st_ok = (margin > 0 and slew < F["g_slew"] and C_VOTE_PF <= 50.0 and t_det < 10.0 and tec_down > tec_up and every_r and deg_ok
+             and Q["sim_s"] <= t_det and Q["degraded_s"] <= t_det)
+    w("7. THE VOTE PATH'S IN-SERVICE SELF-TEST, RESTATED IN ROUND 9 (W143, on W139's analysis in T10-CANQ.md; specified for the firmware stage,")
+    w("   its contract text in apply_hw_fw_contract_canq.py; nothing applied). Round 7's schedule is SUPERSEDED: its precondition read as worded")
+    w("   never runs an S phase (W139-F5), its V phase commands the votes so the attribution path is never exercised (W139-F8), and it stops")
+    w("   testing whenever one fabric is down. The restated schedule is W139's (W139-D1 to D3), with its words made exact here:")
+    w("   THE WINDOW (%.0f ms on each fabric, FW-B22 restated): the state slots A %.0f, B %.0f and C %.0f ms, %.0f ms each, are never touched by the test;" % (
+        T_W * 1e3, QC["slot_us"]["A"] / 1e3, QC["slot_us"]["B"] / 1e3, QC["slot_us"]["C"] / 1e3, QC["slot_len_us"] / 1e3))
+    w("     the test acts only in its own segment, the hold %.0f to %.0f ms, where each controller sends one test frame (A at %.0f, B at %.0f, C at %.0f ms)" % (
+        h0 * 1e3, h1 * 1e3, QC["probe_us"]["A"] / 1e3, QC["probe_us"]["B"] / 1e3, QC["probe_us"]["C"] / 1e3))
+    w("   THE CYCLE (%d windows): in window n the target on fabric A is A, B or C by (n mod %d) div 4 and on fabric B the next controller, and" % (CYCLE_R, CYCLE_R))
+    w("     the phase is S, P1, P2 or V by n mod 4; both fabrics are tested at once, so each of the six transceivers meets each phase once a cycle:")
+    import textwrap
+    for code, how, want in PHASES_R:
+        for i, ln in enumerate(textwrap.wrap("%s -> %s" % (how, want), 108)):
+            w("     %-2s %s" % (code if i == 0 else "", ln))
+    w("   THE PRECONDITION, per fabric (as worded, and run here literally): in the previous window every controller received every other")
+    w("     controller's STATE frame on that fabric, no controller has stopped it (FW-B21), no vote on it is asserted outside the test, and")
+    w("     all three controllers are functional; else that fabric's phase is skipped and every controller's published phase counter shows the")
+    w("     skip. The state frames lie outside the hold, so no phase can fail the next window's precondition: the S phase runs as worded")
+    w("   THE PHASES RUN, fault-free, over %d cycles (per transceiver and phase; MODEL of the schedule, no figure from a sheet):" % N_CYCLES)
+    w("     restated schedule, precondition as worded:            every phase of every transceiver %d times: %s" % (N_CYCLES, "yes" if every_r else "NO"))
+    w("     round 7's schedule, its precondition as W137 meant it: every phase %d times: %s" % (N_CYCLES, "yes" if all(
+        runs_wm[(t, f, p)] == N_CYCLES for t in TAGS for f in "AB" for p in PHASE_CODES) else "NO"))
+    w("     round 7's schedule, its precondition as worded:       S phases run %d times (the window after its V phase fails it): MUTANT, FAILS" % s_lit)
+    w("     DEGRADED, fabric A down at every controller: the restated schedule runs every fabric B phase %d times and no fabric A phase: %s;" % (
+        N_CYCLES, "yes" if deg_ok else "NO"))
+    w("       round 7's runs %d phases (its precondition needs both fabrics)" % deg7)
+    w("   TIMING on printed figures and the drafted rows (each margin less the window clocks' alignment %.1f ms, DRAFTED, and two crystals'" % ALIGN_MS)
+    w("     drift over a window %.1f us):" % (drift * 1e6))
+    for lab, v in margins:
+        w("     %-112s %7.3f ms" % (lab, v * 1e3))
+    w("     silence takes effect within %.3f us of the second vote or the own request: the GPIO edge %.1f ns (speed 00 at 50 pF, DS12110 Table 160" % (
         t_on * 1e6, F["tr00"] * 1e9))
-    w("       gate's %.1f ns (tpd at 3.3 V +- 0.3 V, -40 to 85 C, PRINTED; board B's air 76.25 C inside 85 C) + tMODE %.0f us (PRINTED maximum)" % (
-        F["g_tpd"] * 1e9, F["tmode"][1] * 1e6))
-    w("     it ends within %.2f us of the release: SD's %.0f kOhm against %.0f pF (ASSUMPTION: TI prints no SHDN capacitance; the two diodes' CT" % (
-        t_off * 1e6, rsd_hi / 1e3, C_SD_PF))
-    w("       %.0f pF each PRINTED) down to VIL, + tMODE %.0f us; the vote line's edge %.2f ns/V against the gate's %.0f ns/V limit at 50 pF" % (
-        F["ct"] * 1e12, F["tmode"][1] * 1e6, slew * 1e9, F["g_slew"] * 1e9))
-    w("       (C_VOTE %.0f pF, a Layer 10 bound named here: Ci %.0f pF and CIO %.0f pF PRINTED, the trace the rest)" % (C_VOTE_PF, F["g_ci"] * 1e12, F["cio"] * 1e12))
-    w("     the guard %.0f ms covers FW-B22's queue %.1f ms (MODEL), two crystals' drift over a window %.1f us (+-%.0f ppm, the fitted crystal's sheet" % (
-        GUARD_MS, F["queue"] * 1e3, drift * 1e6, F["xtal_ppm"] * 1e6))
-    w("       as STM32H743-COMPATIBILITY.md section 7 reads it) and the slower hardware edge: margin %.3f ms" % (margin * 1e3))
-    w("     a reader's copy of a TXD edge rises or falls in about %.0f ns (10 to 90 %%, %.1f kOhm against %.0f pF: ASSUMPTION, a Layer 10 bound)," % (
-        tau_obs * 1e9 * 2.2, riso / 1e3, C_OBS_PF))
-    w("       the same on both edges, so a dominant interval keeps its length at the reader to within that time")
-    w("   THE INTERVAL: one cycle is %d transceivers x %d phases x %d window(s) x %.0f ms = %.4f s; a latent fault of the vote path is exercised" % (
-        n_tx, len(phases), EVERY, T_W * 1e3, t_cycle))
-    w("     within one cycle, its phase is judged in the next window, and it is declared when %d consecutive runs of that phase fail (one corrupted" % CONFIRM)
-    w("     frame never declares one): DETECTED WITHIN %.2f s of its onset (MODEL on the printed timing above and the DRAFTED %.0f ms window)" % (
-        t_det, T_W * 1e3))
-    w("   the self-test's cost: two phases in four silence one transceiver for %.0f ms; with DAR = 1 (L9T5-D2) the target's one attempt in such" % (held * 1e3))
-    w("     a phase raises its transmit error count by 8, %d a cycle per transceiver, against at least %d successful frames that lower it by 1" % (tec_up, tec_down))
-    w("     each: the count stays bounded and error-active (the protocol's fault confinement)")
-    w("   the target's probe and that bound rest on DAR = 1, and the records disagree (finding W137-F1, for L4A-55 and Layer 5): the")
-    w("     contract draft reads \"%s\" and the compatibility page's ES0392 2.24.5 row \"%s\". With DAR = 0" % (F["dar_contract"], F["dar_compat"]))
-    w("     the target sends nothing on the tested fabric in its silenced phases (an automatic retry would raise its count by 8 at every")
-    w("     attempt), so the silence rests on two readings, not three (no frame of it, its receiver hearing neither peer), same interval")
+    w("       PRINTED) + the gate's %.1f ns (tpd at 3.3 V +- 0.3 V, -40 to 85 C, PRINTED) + tMODE %.0f us (PRINTED maximum); it ends within %.2f us" % (
+        F["g_tpd"] * 1e9, F["tmode"][1] * 1e6, t_off * 1e6))
+    w("       of the release: SD's %.0f kOhm against %.0f pF (ASSUMPTION: TI prints no SHDN capacitance; the two diodes' CT %.0f pF each PRINTED)" % (
+        rsd_hi / 1e3, C_SD_PF, F["ct"] * 1e12))
+    w("       down to VIL, + tMODE; V's strike: %.3f ms from the malformed frame to the target's driver off (l9t5_canq.out section 4, MODEL on" % (chain * 1e3))
+    w("       PRINTED parts); the vote line's edge %.2f ns/V against the gate's %.0f ns/V limit at 50 pF (C_VOTE %.0f pF, a Layer 10 bound: Ci %.0f pF" % (
+        slew * 1e9, F["g_slew"] * 1e9, C_VOTE_PF, F["g_ci"] * 1e12))
+    w("       and CIO %.0f pF PRINTED); a reader's copy of a TXD edge in about %.0f ns (%.1f kOhm against %.0f pF: ASSUMPTION, a Layer 10 bound)" % (
+        F["cio"] * 1e12, tau_obs * 1e9 * 2.2, riso / 1e3, C_OBS_PF))
+    w("   THE INTERVAL: one cycle is %d windows x %.0f ms = %.4f s; a latent fault of the vote path is exercised within one cycle, judged at its" % (
+        CYCLE_R, T_W * 1e3, t_cycle))
+    w("     window's end, declared when %d consecutive runs of that phase fail (one corrupted frame never declares one), the verdict exchanged in" % CONFIRM)
+    w("     the next window: DETECTED WITHIN %.2f s of its onset (MODEL on the printed timing and the DRAFTED %.0f ms window; round 7's %.2f s)" % (
+        t_det, T_W * 1e3, t_det7))
+    w("     W139's event model of this schedule finds the latest declaration at %.2f s and, DEGRADED, a fabric B vote stuck low at %.2f s, both" % (
+        Q["sim_s"], Q["degraded_s"]))
+    w("     within it (l9t5_canq.out section 7); a dead attribution path at %.2f s (round 7's: NOT FOUND); round 7's precondition as worded: an open" % Q["att_s"])
+    w("     own-request diode %s" % Q["literal"])
+    w("   DEGRADED: with one fabric down its phases wait (they need its state frames) and the other fabric's run at the same interval, so every")
+    w("     element of the surviving fabric keeps the %.2f s bound; the down fabric's elements are tested again within %.2f s of its return to" % (t_det, t_det))
+    w("     service, which FW-B21's probe brings within %.3f s of a repair (l9t5_canq.out section 8); while a controller is out the test waits" % Q["fabric_s"])
+    w("     (V needs both peers) and the bound restarts when the quorum is whole")
+    w("   THE ERROR COUNT: per cycle and fabric a target loses two frames, +%d (S: its test frame; V: its malformed frame, its only frame in that" % tec_up)
+    w("     hold), against at least %d successes (its %d state frames and its test frame in the other %d windows): bounded and error-active" % (
+        tec_down, CYCLE_R, CYCLE_R - 2))
+    w("     (+8 and -1 are ISO 11898-1's, which is not held: ASSUMPTION). Read with its test frame also sent in V, round 8's wording gives +%d" % tec_w139)
+    w("     against the same %d and the count rises a cycle (finding W143-F1): the V phase's malformed frame is the target's only frame there" % tec_down)
+    w("   DAR = 1 (L9T5-D2, W139-D8), so each failed attempt is one +8, with ES0392 Rev %s %s's printed workaround (%s):" % (
+        F["es_rev"], F["es_item"], F["es_page"]))
+    for ln in textwrap.wrap("\"%s\"" % F["es_work"], 120):
+        w("     %s" % ln)
+    w("     (W137-F1 answered; the compatibility page's row \"%s\" is Layer 6's to restate, W139-F1)" % F["dar_compat"])
+    w("   THE RESTART ROUTE'S PHASES (record l4canen, apply_gen_sch_b_canen.py): in the windows of the fabric A target X, P1 and P2 pulse one")
+    w("     peer's restart vote on X for 4 ms and V both peers', X reading its restart gate's output; they need only one fabric for the verdict,")
+    w("     so they keep this interval with either fabric down")
     w("   timing and cost hold: %s" % ("yes" if st_ok else "NO"))
     # the self-test's own faults, element by element, and its coverage of the netlist
     rows = [("a vote output, its line or its gate input", "stuck low or open", "the target cannot be silenced by the vote", "V fails", "T"),
@@ -721,6 +852,7 @@ def main():
             ("the own-request diode", "short", "the request pin's low holds SD: the vote fails", "V fails", "T"),
             ("SD's 100 kOhm", "open", "SD rests on the pin's internal pull-down (TI: a fall-back)", "NOT in service: RESIDUAL", "-"),
             ("the transceiver's SHDN input", "ignored", "neither the request nor the vote silences", "S and V fail", "T"),
+            ("a reader's attribution path", "dead", "it never strikes the target, so no vote follows a deviation", "V fails (V runs it end to end)", "T"),
             ("an isolation resistor", "open", "its reader sees no TXD edge while the frames arrive", "continuous reading", "C"),
             ("an isolation resistor", "short", "a faulty reader could move the buffer's output (not the TXD)", "NOT in service: RESIDUAL", "-"),
             ("a reading pin or its input stage", "stuck", "the two readers of one TXD disagree", "continuous reading", "C"),
@@ -734,7 +866,7 @@ def main():
             "C": "within %d windows (%.0f ms): every window carries a frame of each controller on each fabric" % (CONFIRM + 1, (CONFIRM + 1) * T_W * 1e3), "-": "none"}
     w("   THE SELF-TEST'S OWN FAULTS, element by element (per transceiver; the residuals are named, none defeats the containment alone):")
     for el, fl, eff, det, tt in rows:
-        w("     %-42s %-30s %-60s %-28s %s" % (el, fl, eff, det, when[tt]))
+        w("     %-42s %-30s %-62s %-30s %s" % (el, fl, eff, det, when[tt]))
     # coverage: every part the draft draws or re-uses in the vote and observation paths is the subject of a row above
     nl1 = R["nl1"]
     kinds = {"gate": ("U", "SN74LVC1G08"), "pd": ("R", "10k"), "iso": ("R", M.R_ISO), "vdiode": ("D", "1N4148W: the peers'"),
@@ -752,30 +884,33 @@ def main():
                      ("U%d" % (580 + 2 * k + j), "buf"), ("C%d" % (943 + 10 * k + 2 * j), "cbuf"), ("R%d" % (606 + 20 * k + 4 * j), "txpu")]
     cov_ok = all(nl1["comps"].get(r, {}).get("value", "").startswith(kinds[kd][1]) and any(row[0] == covered[kd] for row in rows) for r, kd in path)
     cov_ok &= set(r for r, _k in path) >= set(R["added"]) and set(R["retyped"]) - {mcu(k) for k in range(3)} <= set(r for r, _k in path)
+    att_ok = any(row[0] == "a reader's attribution path" and row[4] == "T" for row in rows) and any(c == "V" and "attribution" in h for c, h, _w in PHASES_R)
     w("   coverage: every one of the %d parts of the six vote and six observation paths (gates, pull-downs, both diodes, SD's resistor, buffers," % len(path))
-    w("     TXD pull-ups, isolation resistors, the capacitors) is the subject of a row, and every part canmb adds or re-uses is among them: %s" % (
+    w("     TXD pull-ups, isolation resistors, the capacitors) is the subject of a row, and every part canmb adds or re-uses is among them: %s;" % (
         "yes" if cov_ok else "NO"))
-    w("   the residuals, each needing further faults: an open vote pull-down acts only while its voter is in reset or dark AND the other peer")
-    w("     votes wrongly; a shorted isolation resistor matters only when its reader also drives its input, and then reaches the buffer's")
-    w("     output, never the TXD; an open SD resistor leaves the transceiver on TI's internal pull-down; an open TXD pull-up leaves the TXD on")
-    w("     TI's own pull-up only while its controller resets, and a resetting controller that drives dominant is then contained by the vote;")
-    w("     a voter that resets while asserting gives the gate a slow edge (10 kOhm against the line) outside the")
-    w("     gate's %.0f ns/V limit: the output may chatter for that edge, and only while the other peer asserts, so it can only end a silence early" % (
-        F["g_slew"] * 1e9))
+    w("     the attribution path is a row and the V phase runs it: %s" % ("yes" if att_ok else "NO"))
+    w("   the residuals, each needing further faults (W139's rows Q1 to Q4 run each with the fault that makes it act): an open vote pull-down")
+    w("     acts only while its voter is in reset or dark AND the other peer votes wrongly; a shorted isolation resistor matters only when its")
+    w("     reader also drives its input, and then reaches the buffer's output, never the TXD; an open SD resistor leaves the transceiver on TI's")
+    w("     internal pull-down; an open TXD pull-up leaves the TXD on TI's own pull-up only while its controller resets, and a resetting")
+    w("     controller that drives dominant is then contained by the vote; a voter that resets while asserting gives the gate a slow edge (10")
+    w("     kOhm against the line) outside the gate's %.0f ns/V limit: the output may chatter for that edge, and only while the other peer" % (F["g_slew"] * 1e9))
+    w("     asserts, so it can only end a silence early")
     w("")
     # ---------------------------------------------------------------- 8. disposition
-    w("8. WHAT THIS ROUND CLOSES ONCE INDEPENDENTLY CHECKED, AND WHAT STAYS OPEN (a draft: nothing is closed by its author)")
-    w("   L4A-54 (this round): the circuit of M-B drafted and composed (section 3), read by pin with failing mutations (section 4), the pin plan")
-    w("     recounted and read against the makers' tables (section 5), the levels on printed rows (section 6), the self-test with its interval")
-    w("     and its own faults (section 7). CON-004, IOHA row 7 and test A7 are kept as accepted: %s" % ("yes" if R["cv"] == "HOLDS" else "NO"))
+    w("8. WHAT THESE ROUNDS CLOSE ONCE INDEPENDENTLY CHECKED, AND WHAT STAYS OPEN (a draft: nothing is closed by its author)")
+    w("   L4A-54 (round 7, W137): the circuit of M-B drafted and composed (section 3), read by pin with failing mutations (section 4), the pin")
+    w("     plan recounted and read against the makers' tables (section 5), the levels on printed rows (section 6). Round 9 (W143, on W139's")
+    w("     L4A-55): the self-test restated (section 7: every phase runs as worded, the attribution path tested, the surviving fabric tested")
+    w("     with one down, interval %.2f s); FW-B21's stop at the loss count and FW-B22's text in apply_hw_fw_contract_canq.py; the latched" % t_det)
+    w("     supervisor's EN route and the composition with W138's regulator stage in record l4canen. CON-004, IOHA row 7 and test A7 are kept")
+    w("     as accepted: %s" % ("yes" if R["cv"] == "HOLDS" else "NO"))
     w("   once independently checked it would answer, for the circuit's part: HO-C's undrafted \"2-of-2 peer observation and vote\" and the")
     w("     share half of HO-D (the limiter, and so its latent stuck comparator, is removed; the vote path's latent faults carry the interval")
-    w("     above). The rail trip's half of HO-D and RE-6, RE-7 and HO-E stay with L4A-56 to L4A-59 (the trips are unchanged here)")
-    w("   OPEN, L4A-55's: CON-004's quorum SERVICE under every fault-table row (IOHA rows 3, 5, 7 and 8) with this circuit: the attribution")
-    w("     rule (which TXD activity is out of contract, read against the frames received), the GPIO-toggled TX, a babbler, a stuck")
-    w("     vote output, a two-faced controller on the common frame, the recovery proof, FW-B22 restated on the two fabrics with the test")
-    w("     windows (a state frame taken from either fabric), and FW-B20 to FW-B22 with V-B20 to V-B23 restated (L4A-61). cx46's item 5 stays")
-    w("     NOT CLOSED, CON-004's quorum service OPEN, FW-B22 PROVISIONAL and L9T5-F21 OPEN until those and an independent check exist")
+    w("     above). The limiter's half of HO-D, RE-6, RE-7 and HO-E stay with L4A-56 to L4A-59 (W138's stage; record l4canen reads its EN route)")
+    w("   OPEN: the independent check of M-B with W139's analysis and these corrections (L4A-62); FW-B20 to FW-B22, V-B20 to V-B23 and IOHA")
+    w("     section 12 restated (L4A-61); the compatibility page's DAR row (W139-F1, Layer 6). cx46's item 5 stays NOT CLOSED, CON-004's quorum")
+    w("     service OPEN, FW-B22 PROVISIONAL and L9T5-F21 OPEN until that check reads them")
     w("")
     # ---------------------------------------------------------------- 9. predicates
     pred["the composition: every draft of board B's change list applies in order with canmb after iocguard and the generator runs to its end"] = R["ok1"] and R["n_seq"] == 19
@@ -793,9 +928,11 @@ def main():
     pred["the parts: eighteen added (twelve isolation resistors, six buffers), none removed, the limiter's 42 places re-used, the three controllers' new pins"] = (
         len(R["added"]) == 18 and not R["removed"] and set(R["retyped"]) == want_kept)
     pred["the levels hold on the printed rows (the vote, SHDN, the observation, a faulty reader, the rails inside the gate's row)"] = lv_ok
-    pred["the self-test's timing holds (guard over queue, drift and the printed hardware times; the edge rate; the error count bounded)"] = st_ok
-    pred["the self-test's interval is bounded and under 10 s, every part of the vote paths has a fault row, the residuals are named"] = cov_ok and t_det < 10.0
-    pred["nothing closes here: cx46's item 5, CON-004's quorum service, FW-B22 and L9T5-F21 keep their states for L4A-55 and the check"] = True
+    pred["the self-test RESTATED (round 9): every phase of every transceiver runs once a cycle as worded, the margins hold, the edge rate, the error count bounded"] = st_ok
+    pred["the self-test's interval bounded under 10 s (W139's simulation within it), every part of the vote paths has a fault row, the attribution path tested, the residuals named"] = (
+        cov_ok and att_ok and t_det < 10.0)
+    pred["the mutant FAILS: round 7's schedule with its precondition as worded runs no S phase; with fabric A down it runs no phase at all"] = s_lit == 0 and deg7 == 0
+    pred["nothing closes here: cx46's item 5, CON-004's quorum service, FW-B22 and L9T5-F21 keep their states for the check"] = True
     w("9. THE PREDICATES (v2/ecad/tools/tests/test_l9t5_canmb.py holds them)")
     for k_, v in pred.items():
         w("   %s: %s" % (k_, "yes" if v else "NO"))
