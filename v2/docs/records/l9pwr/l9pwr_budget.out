@@ -30,7 +30,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    l9stk_prot  v2/docs/records/l9stk/l9stk_protection.out  sha256 33c6c695367f40de
    l4e9r7      v2/docs/records/l9pwr/inputs/l4e9-l4e9_power_path-section30-3737df82.txt  sha256 76c17d1cc02c0fd2
    sources     v2/docs/records/l9pwr/inputs/SOURCES.txt  sha256 2a98e4ac0e307637
-   l8gnd_out   v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 04e8454415d7a19a
+   l8gnd_out   v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 3f537a463997ff47
    ap64500     v2/vendor/diodes/diodes-ap64500.pdf  sha256 d3bcdc7dd4ca44cb
    ap632       v2/vendor/diodes/diodes-ap63200-series-buck.pdf  sha256 ef99daa3789d835b
    tps62933    v2/vendor/ti/ti-tps62933.pdf  sha256 16ec2eac43c7374e

@@ -41,6 +41,12 @@ section 1 counts over the base, the rows it names and its first-parent table, by
 annotations, by the table; the candidate as filled into RESULT.md, LAYER-STATUS.md and the plan, row 36's own commit and the
 promotion log's line as quoted (the log itself read in the runner pass).
 
+W113's restatement (7 October 2026, from 01:56 CEST, on W110's B1): W98's t_the_filled_candidate_is_row_36s_commit_everywhere reads
+LAYER-STATUS.md and the plan at set 31's two adoption commits through git (ADOPTED_AT: 73941afc and ad757edb, W103's form for
+test_adopt31), not on the working tree, because set 32's row L-02 adds a second candidate sentence to LAYER-STATUS.md (its own block)
+and set 32's adoption pages are held whole by test_adopt32; the predicate p_candidate_filled is unchanged, and a second candidate
+sentence on the page read is still refused (a fixture); Skip only where an adoption commit is not in the object store.
+
 Read-only: git is read with `git log`, `git show`, `git diff`, `git rev-list` and `git cat-file`; nothing is written. No pytest is
 needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
 import hashlib
@@ -910,6 +916,11 @@ FILLED = ((RESULT, r"\| INTEGRATED = CANDIDATE: the candidate commit \| `([^`]+)
           (LS, r"CANDIDATE: `([^`]+)`, the commit the gated release suite", "__CANDIDATE__"),
           (PLAN, r"### Milestone, 6 October 2026: integration set 31 promoted as a DESK candidate \(main `([^`]+)`\)", "__CANDIDATE__"),
           (PLAN, r"\*\*Promoted:\*\* main `([^`]+)`, the candidate on fnd/int31regen", "__CANDIDATE__"))
+# W113 (W110's B1): set 32's rows add their own block to LAYER-STATUS.md (row L-02, a second "CANDIDATE: `...`, the commit the gated
+# release suite" sentence) and their own milestone to the plan, so the FILLED entries of those two pages are judged where set 31's
+# fill wrote them, at set 31's two adoption commits read through git (W103's form for test_adopt31: 73941afc, the fill's first run and
+# the adoption commit, and ad757edb, its second run), never on the working tree's pages, which test_adopt32 holds whole for set 32
+ADOPTED_AT = ("73941afc2d4698c5cf81da443064fe7ffe7ca620", "ad757edb1be7e0fe3b586f986d2d704c9836fdcf")
 PROMOTE_LOG = "int31/promote-2257.log"
 PROMOTE_QUOTED = ((RESULT, r"`_runs/int31/promote-2257\.log: GitHub main at ([0-9a-f]{40})`"),
                   (PLAN, r"`GitHub main at ([0-9a-f]{40}) \(_runs/int31/promote-2257\.log\)`"))
@@ -1245,10 +1256,23 @@ def t_the_filled_candidate_is_row_36s_commit_everywhere():
     """W98 (W86's N2): the candidate the fill wrote into RESULT.md, LAYER-STATUS.md and the plan is row 36's own commit and the
     promotion log's line as quoted; the first candidate in any one place (W86's M23, M39, M40, M41) is refused."""
     _need_git()
+    for at in ADOPTED_AT:          # W113 (W110's B1): the two pages as set 31's adoption committed them, through git
+        if not _has(at):
+            raise Skip("set 31's adoption commit %s is not in this object store" % at[:8])
+    for at in ADOPTED_AT:
+        _the_filled_candidate_at(at)
+
+
+def _the_filled_candidate_at(at):
     texts = dict(_texts())
-    texts[LS] = _read(LS)
-    texts[PLAN] = _read(PLAN)
-    assert not p_candidate_filled(texts), p_candidate_filled(texts)
+    texts[LS] = "\n".join(_show(at, LS))
+    texts[PLAN] = "\n".join(_show(at, PLAN))
+    assert not p_candidate_filled(texts), "at %s: %s" % (at[:8], p_candidate_filled(texts))
+    # W113: the predicate is unchanged: a second block naming the candidate on the page (as set 32's row L-02 adds on the working
+    # tree) is still two places, refused
+    two = dict(texts)
+    two[LS] = texts[LS] + "\nCANDIDATE: `%s`, the commit the gated release suite\n" % TIP[:8]
+    assert p_candidate_filled(two), "at %s: a second candidate sentence on LAYER-STATUS.md passed" % at[:8]
     for name, rx, tok in FILLED:
         flat = " ".join(texts[name].split())
         m = re.search(rx, flat)

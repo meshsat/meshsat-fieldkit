@@ -24,6 +24,17 @@ Restated by W65 for set 31's rows (6 October 2026, fnd/adopt31): the pages may c
 __ADOPTION__; test_adopt31 holds them), the promoted commit stands 4 times on each page, and the Tested, Adopted and documents rows
 name set 31's revisions with set 30's kept as dated history (the comment above FILLED gives the rows).
 
+Restated by W105 (7 October 2026, fnd/adopt32; basis: set 32's rows of `v2/docs/records/int32/ENTRY-PAGES.patch.md`, applied to
+the pages on fnd/adopt32, and W99's finding C6 as W102 listed it there): set 32's S-01 takes the promoted commit out of START-HERE's
+line 3 (so it stands 3 times there), S-06 and U-04 restate the Tested rows, S-07, S-08, U-05 and U-06 the Adopted rows, S-11 and U-10
+the documents rows, and S-05 and U-03 bring the GATE token. The two predicates that pin set 31's rows now judge them where set 31's
+adoption made them, the pages at both commits of ADOPTED31 through `git show` (W103's form in test_adopt31):
+t_the_revision_rows_name_the_promoted_commit (its Packaged row, which set 32 does not change, stays read on the tree too) and the
+count and tokens of t_every_placeholder_is_filled_with_the_promoted_commit (on the tree it still refuses the INTEGRATED placeholder, an
+"(at adoption)" mark and any token but set 32's three, SET32, which test_adopt32 holds by the fill's stage). The working tree's
+revision rows are held by test_patch32 and test_adopt32. Taken under the owner's standing rule of 26 September 2026 (authority
+SESSION, W105); reversed by reading the tree's pages in those predicates again.
+
 Runs under the suite's runner (`python3 v2/ecad/tools/tests/run.py test_w30entry.`) and under pytest (each t_ function has a
 test_ alias)."""
 import os
@@ -53,6 +64,10 @@ FILLED = {START: 6, SUPPLIER: 7}
 # declared tokens (filled at set 31's adoption) are the only placeholders a page may carry.
 FILLED = {START: 4, SUPPLIER: 4}
 SET31 = ("__CANDIDATE__", "__ADOPTION__")
+# W105 (basis in the docstring): set 31's adoption commits, where the predicates that pin set 31's rows judge them, and set 32's
+# three tokens on the working tree's pages until the fill
+ADOPTED31 = ("73941afc2d4698c5cf81da443064fe7ffe7ca620", "ad757edb1be7e0fe3b586f986d2d704c9836fdcf")
+SET32 = tuple("__%s__" % n for n in ("CANDIDATE", "ADOPTION", "GATE"))   # built, so no literal token is added to this file
 ADOPTED = "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec"      # the adoption commit (main after the adoption), ruling 2's Adopted row
 PACKAGED = ("| Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its "
             "difference from the tested revision and which checks cover it |")
@@ -110,6 +125,18 @@ def _page(p):
     return _C[p]
 
 
+def _page_at(c, p):
+    """W105: the page as set 31's adoption commit c holds it (git show); Skip where c is not in the object store."""
+    k = (c, p)
+    if k not in _C:
+        if _git("cat-file", "-e", c + "^{commit}").returncode != 0:
+            from harness import Skip
+            raise Skip("commit %s is not in this object store" % c[:8])
+        _C[k] = _show(c, p)
+        assert _C[k] is not None, "%s: no %s" % (c[:8], p)
+    return _C[k]
+
+
 def _git(*a):
     return subprocess.run(["git", "-C", ROOT] + list(a), capture_output=True)
 
@@ -146,15 +173,17 @@ def _paths(text):
     return sorted(set(_repo(m.group(1)) for m in PATH_TOK.finditer(text) if "<" not in m.group(1) and "*" not in m.group(1)))
 
 
-def _placeholder_errors(name, text, n):
+def _placeholder_errors(name, text, n, declared=SET31):
+    """n: how many times the promoted commit stands (None: not counted, W105's working tree); declared: the next set's tokens the
+    page may carry (set 31's at its adoption commits, set 32's on the working tree)."""
     errs = []
     if PLACEHOLDER in text:
         errs.append("%s still carries %s" % (name, PLACEHOLDER))
-    for tok in set(UNDERS.findall(text)) - set(SET31):   # W65: set 31's declared tokens, held by test_adopt31
+    for tok in set(UNDERS.findall(text)) - set(declared):   # W65: set 31's declared tokens, held by test_adopt31
         errs.append("%s carries a placeholder %s" % (name, tok))
     if "(at adoption)" in text:
         errs.append("%s still marks a record (at adoption)" % name)
-    if text.count(PROMOTED) != n:
+    if n is not None and text.count(PROMOTED) != n:
         errs.append("%s names the promoted commit %d times, not %d" % (name, text.count(PROMOTED), n))
     return errs
 
@@ -176,9 +205,12 @@ def _claims_errors(text):
 
 # ------------------------------------------------------------------------------------------------------- the placeholders
 def t_every_placeholder_is_filled_with_the_promoted_commit():
-    for p in PAGES:
-        errs = _placeholder_errors(p, _page(p), FILLED[p])
+    for p in PAGES:   # W105: the tree without the count, set 32's tokens declared; the count and set 31's tokens at set 31's adoption
+        errs = _placeholder_errors(p, _page(p), None, SET32)
         assert not errs, errs
+        for c in ADOPTED31:
+            errs = _placeholder_errors(p, _page_at(c, p), FILLED[p])
+            assert not errs, (c[:8], errs)
     if os.path.exists(VALUES):     # the coordinator's saved value, read where the logs are on this host
         txt = open(VALUES, encoding="utf-8").read()
         assert "INTEGRATED = CANDIDATE = PROMOTED = MIRROR (GitHub main): %s" % PROMOTED in txt, "the values file names another commit"
@@ -192,14 +224,17 @@ def t_the_revision_rows_name_the_promoted_commit():
     # documents row name set 31's candidate (__CANDIDATE__ until set 31's adoption fills it), Adopted set 31's adoption commit
     # (__ADOPTION__); set 30's promoted and adoption commits stand in those rows as dated history
     c31, a31 = r"(?:__CANDIDATE__|[0-9a-f]{8,40})", r"(?:__ADOPTION__|[0-9a-f]{8,40})"
-    for p in PAGES:
+    for p in PAGES:   # W105: the Packaged row, which set 32 does not change, on the tree too
         t = _page(p)
-        assert re.search(r"^\| Tested \| `%s` \| set 31's promoted revision \(set 30's was `%s`, kept as dated history\):" % (c31, PROMOTED),
-                         t, re.M), "%s: the Tested row is not set 31's with the promoted commit as dated history" % p
-        assert re.search(r"^\| Adopted \| `%s` \| .*\(set 30's was `%s`, 6 October 2026, 11:25 CEST, kept as dated history\) \|$"
-                         % (a31, ADOPTED), t, re.M), "%s: the Adopted row" % p
         assert len([ln for ln in t.split("\n") if ln.startswith("| Packaged |")]) == 1 and PACKAGED in t, "%s: the Packaged row" % p
-        assert re.search(r"^\| Documents and editable artifacts \| on main as a DESK candidate \(`%s`, set 31\) \|$" % c31, t, re.M), p
+    for p, c in [(p, c) for p in PAGES for c in ADOPTED31]:   # W105: set 31's rows at set 31's adoption commits (docstring)
+        t = _page_at(c, p)
+        assert re.search(r"^\| Tested \| `%s` \| set 31's promoted revision \(set 30's was `%s`, kept as dated history\):" % (c31, PROMOTED),
+                         t, re.M), "%s at %s: the Tested row is not set 31's with the promoted commit as dated history" % (p, c[:8])
+        assert re.search(r"^\| Adopted \| `%s` \| .*\(set 30's was `%s`, 6 October 2026, 11:25 CEST, kept as dated history\) \|$"
+                         % (a31, ADOPTED), t, re.M), "%s at %s: the Adopted row" % (p, c[:8])
+        assert len([ln for ln in t.split("\n") if ln.startswith("| Packaged |")]) == 1 and PACKAGED in t, "%s at %s: the Packaged row" % (p, c[:8])
+        assert re.search(r"^\| Documents and editable artifacts \| on main as a DESK candidate \(`%s`, set 31\) \|$" % c31, t, re.M), (p, c[:8])
     assert _git("merge-base", "--is-ancestor", PROMOTED, ADOPTED).returncode == 0, "the adoption commit does not follow the promoted one"
 
 

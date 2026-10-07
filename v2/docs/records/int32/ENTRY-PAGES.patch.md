@@ -7,15 +7,24 @@ fnd/res32 and corrected by worker W102 on W99's independent read of them (an AI 
 tree set 32's integration patches (B1), the known item's source (C2), the counts' scope (C1, C5), the held-back texts (C3), the tests
 the rows break (C6), the candidate_guard line (C7), set 31's adoption dated (C8), L-03's wording (N8) and the claims pinned (N2);
 `v2/ecad/tools/tests/test_patch32.py` holds every row against the pages as set 32's integration holds them (the paragraph "What the
-rows are read against"). **NOT DONE:** no page is edited here; the rows are applied by the adoption author at set 32's adoption, and
-the tokens in their new texts are filled by the coordinator's fill tool (`<worktrees>/_bin/fill_res.py --set 32`, which reaches this
-file because `records/int32/RESULT.md` names it). **NEXT:** at set 32's adoption, in this order: (1) the fill's first run (the
-CANDIDATE and GATE tokens, each GATE from the source the paragraph "Filling the GATE tokens" names); (2) the rows applied on the named
-lines in the order given; (3) the tests of set 31's pages that the rows break restated with their bases (the paragraph "The tests the
-rows break"); (4) the fill's second run (the ADOPTION token) and the pages' two ADOPTION cells, rows S-07 and U-05: filled by the
-fill tool once the coordinator extends `fill_res.py --set 32` to the four pages (queue item Q-124), and until then by hand, exactly
-those two cells, with the value the second run writes; (5) this header and RESULT's restated for the state after the fill and the
-adoption; (6) the coordinator's dependency pass for the changed pages (l8gnd's pin of LAYER-STATUS and its cascade), as after set 31.
+rows are read against"); applied to the four pages on branch fnd/adopt32 by worker W105 (7 October
+2026), each by its old text, the tokens left for the fill, and the tests of set 31's pages they break restated there with
+`test_adopt32` new (the paragraph "The rows applied and the tests restated"); restated by worker W113 on W110's read (its B1, B2, C2
+and C3) and W106's N-c, with the fill stages on the chain's own tree (the paragraph "The stages on the chain's own tree"). **NOT DONE:** the tokens in the rows' new texts, in this
+file and on the four pages, are filled by the coordinator's fill tool (`<worktrees>/_bin/fill_res.py --set 32`, which reaches this
+file because `records/int32/RESULT.md` names it, and the four pages since W103's extension, queue item Q-124); the adoption.
+**NEXT:** at set 32's adoption, after its promotion, in this order: (1) fnd/adopt32 merged into set 32's lineage (set 31's step 12a
+pattern); (2) the fill's first run (the CANDIDATE and GATE tokens of this file and of the four pages, each GATE from the source the
+paragraph "Filling the GATE tokens" names); (3) W99's notes N6 and N7 confirmed (W106's N-b): L-05's "regenerates the cascade's
+outputs", L-06's "re-cited at the chain's step a5" and L-06's note on 12.1 against RESULT's section 3b once its rows are filled, and
+S-09's and U-07's "no independent check of the engineering read a later revision" against the scope of the planned independent read
+of set 32's lineage (a read of the integration leaves them true; a read of the engineering restates both rows); (4) the adoption
+commit; (5) the fill's second run (the ADOPTION token, here and in the pages' two ADOPTION cells, rows S-07 and U-05, which the
+tool fills since W103's extension); (6) this header and RESULT's restated for the state after the fill and the adoption, and, since paragraph 0a at the candidate no longer
+names set 30's integrator, rows S-05, U-03, L-02 and P-01's "is planned to be corrected" restated at the adoption as "is corrected",
+with `test_patch32.py`'s pattern KNOWN, by `<worktrees>/_runs/int32/freeze/apply_known32.py` (W119, W123; W110's C2: the GATE
+value is a clause of the regenerated paragraph 0a that set 31's paragraph 0a does not print, which `test_patch32.py` requires); (7) the
+coordinator's dependency pass for the changed pages (l8gnd's pin of LAYER-STATUS and its cascade), as after set 31.
 
 Record text only: it changes no state of any page, accepts nothing and closes nothing; prototype framing: nothing in the kit has been
 built, bought, powered or measured.
@@ -62,10 +71,10 @@ three-host NOTE when the value carries fewer parts); and the known item in S-05,
 `v2/docs/records/l4e7/l4e7_p0sol.out` at the candidate (`git show <candidate>:v2/docs/records/l4e7/l4e7_p0sol.out`), quoted without
 a backtick, never a line of the dependents' log (W99's C2: that log prints the KEY check and the added rows' count, which cannot show
 0a's sentence). `fill_res.py`'s suggestion for these four lines is its default, a step's log line; the value is not that, and
-`test_patch32` refuses a value that is not in that paragraph. The rows never say the known item is corrected: they say a correction
-is planned and quote what 0a prints, and `test_patch32` refuses the words "is corrected" there while paragraph 0a at the candidate
-still names set 30's integrator; `records/int32/CLASSIFICATION.md`'s row 33 keeps "planned to correct that item (no set has run it
-yet)" until the adoption reads that paragraph.
+`test_patch32` refuses a value that is not in that paragraph. The rows say the known item is corrected: the adoption read paragraph
+0a at the candidate, which no longer names set 30's integrator, and `apply_known32.py` (W119, W123) restated "is planned to be
+corrected"; `test_patch32` refuses "is corrected" there while paragraph 0a at the candidate names set 30's integrator, and the planned
+wording once the adoption read it; `records/int32/CLASSIFICATION.md`'s row 33 reads "no longer names set 30's integrator".
 
 **The three claims are quoted, not restated.** Layer 4's DESK gate and the three completion claims stand on every page as set 30's
 adoption wrote them; set 32 changes none of them and no line of the assessment (`records/int32/RESULT.md`, section 6). The rows quote
@@ -83,7 +92,7 @@ work, not a qualified review; no page of the tree was edited.
 
 **How the rows were checked again (W102, 7 October 2026, from 00:18 CEST).** On this branch `test_patch32` reads main's pages at
 `ad757edb` with the pins and step a5 in memory; those four pages equal, byte for byte, the pages of a scratch clone of W102's own
-built as set 32's chain builds them (set 31's promoted `5f25daf3`, main `ad757edb` merged as step a1, the five pins with this
+built as set 32's chain was then planned to build them (set 31's promoted `5f25daf3`, main `ad757edb` merged as step a1, the five pins with this
 branch's checkpoint `57634a8e` for fnd/res32, fnd/w34pdftext's one conflict in the annex taken as ours in the clone only, step a5
 run), where U-16's old text stands on line 414. In that clone, with stand-in commits for the re-key, the candidate and the
 adoption: before the fill `test_patch32`, `test_res32` and `test_public_hygiene` read 11, 15 and 4 passed; the fill tool's template
@@ -92,6 +101,9 @@ first run applied 79 lines with 3 ADOPTION occurrences deferred, and the three m
 three modules read 30 passed and set 31's page tests failed as the next paragraph lists; the second run applied 3 lines, after which
 `test_patch32` refused S-07 and U-05 (the pages' two ADOPTION cells, W99's B2) until those two cells were filled by hand with the
 second run's value, then 30 passed; a third run refused (exit 2). AI work, not a qualified review; no page of the tree was edited.
+That hand fill described the tool before W103's extension (queue item Q-124, `<worktrees>/_bin/fill_res.py`, sha256
+05d3017ce94d32a920c7fe4b0ebf41532e456c792600ae7dffb49bed28f2214f): the second run now fills S-07's and U-05's cells itself (W106's N-a;
+W105's stages in the paragraph "The rows applied and the tests restated").
 
 **The tests the rows break (W99's C6).** Applied to the integrated tree, the rows break these tests of set 31's pages, each to be
 restated at the adoption with the row that moves the line it pins as its basis (as W65 restated set 30's for set 31): test_adopt31,
@@ -102,8 +114,58 @@ restated at the adoption with the row that moves the line it pins as its basis (
 `t_the_six_states_stand_apart_in_each_page`); test_w30entry, 2 (`t_every_placeholder_is_filled_with_the_promoted_commit`,
 `t_the_revision_rows_name_the_promoted_commit`); test_lstat31, 1
 (`t_each_block_sits_between_its_heading_and_its_set_29_block_and_no_other_layer_has_one`). test_lstat32 and test_res31 hold. A sixth
-of test_adopt31's, `t_the_entry_pages_are_the_copies_with_every_row_applied`, already fails on the integrated tree before any row of
-set 32 (W99's N1, the coordinator's queue item Q-123) and is not counted among the five.
+of test_adopt31's, `t_the_entry_pages_are_the_copies_with_every_row_applied`, failed on the integrated tree before any row of set 32
+when W99 read it (W99's N1) and is not counted among the five; since W103's `33a7b7d5` (queue item Q-123) it judges set 31's rows at
+set 31's adoption commits through git and passes there (W106's N-a).
+
+**The rows applied and the tests restated (W105, 7 October 2026, from 00:43 CEST, branch fnd/adopt32).** fnd/adopt32 starts at main
+`ad757edb`, with W103's `33a7b7d5` and this branch's `607cd157` merged; the 38 rows were applied to main's four pages, each located by
+its old text (exactly once on its page) and applied bottom-up, two rows on one line in the given order, every token left for the
+fill. Every old text stood once on its named line but U-16's, which stands on main's line 407: the 7 lines fnd/w34pdftext adds to
+section 7 of the supplier page are not on this branch (they arrive with set 32's lineage and do not touch U-16's lines, so the merge
+carries U-16's paragraph to line 414's place). Applied before the fill (W65's form for set 31), the rows broke 15 tests on
+fnd/adopt32: the eleven of the paragraph above; three that only the tokens standing before the fill break
+(`test_adopt31.t_the_pages_carry_only_their_declared_tokens`, `test_entrypage.t_the_placeholder_is_literal_and_alone`,
+`test_lstat32.t_the_placeholders_stand`); and `test_l8gnd.t_the_committed_output_is_what_the_script_prints`, whose output pins
+LAYER-STATUS.md's digest and is owed to the coordinator's dependency pass, as after set 31. Each set 31 page test is restated with
+these rows as its basis, in W103's form: a predicate that pins set 31's rows judges them at set 31's adoption commits `73941afc` and
+`ad757edb` through git, with the same predicate; what set 32 does not change stays read on the working tree (test_entrypage's other
+anchors and its five other states, test_w30entry's Packaged row and its refusal of the INTEGRATED placeholder and of any token but
+set 32's three, test_lstat31's counts of set 30's and set 29's blocks), and test_lstat32's set 30 placeholders stay read on the tree
+outside set 31's and set 32's blocks. The working tree's four pages are held by `test_adopt32` (new): each page equals set 31's
+adopted page at `ad757edb` with the own change of each pinned branch the judged revision holds, step a5 where the page carries its
+sentence, and these 38 rows, nothing else (so the eight texts of set 31's rows no set 32 row replaces, W106's N-d, are held there),
+the tokens as the fill's stage leaves them, and set 32's added text without a dash, an acceptance word or a percentage; it judges
+the newest revision whose START-HERE line 3 names set 32, so a later set's rows never fail it. In a scratch clone of W105's own, built as set 32's chain was then planned to build the tree (set 31's promoted `5f25daf3`, main
+`ad757edb` merged as step a1, W103's `33a7b7d5`, the five pins with fnd/res32 at `607cd157`, fnd/w34pdftext's one conflict in the
+annex taken as ours in the clone only, step a5 run), with stand-in commits for the re-key and the candidate, fnd/adopt32 at
+`564dc7f6` merged clean as set 31's step 12a merged its branch (U-16's paragraph follows its old text, which stands at line 427 of
+the merged page once the rows above it are in, line 414 before them); the ten modules `test_patch32`, `test_res32`, `test_adopt31`,
+`test_adopt32`, `test_entrypage`, `test_w30entry`, `test_lstat31`, `test_lstat32`, `test_res31` and `test_public_hygiene` read 113
+passed, 0 failed, 0 skipped before the fill; the fill tool's template read 122 rows (this file 25, RESULT.md 70, CLASSIFICATION.md 2,
+the four pages 25: START-HERE.md 8, SUPPLIER-HANDOVER.md 8, LAYER-STATUS.md 3, EXECUTION-PLAN.md 6), its first run applied 101 lines
+with 5 ADOPTION occurrences deferred, and the ten read 113 passed; with a stand-in adoption commit its second run applied 5 lines
+(S-07's and U-05's cells among them, no hand fill), no token was left in the seven files, and the ten read 113 passed; a third run
+refused (exit 2); with START-HERE's line 3 then rewritten as a later set's rows would, `test_adopt32` judged the newest commit naming
+set 32 and read 4 passed. The 43 mutants of the restated predicates (the bytes read at either adoption commit, or the tree's page,
+changed in memory) were each refused, on fnd/adopt32 and in that clone after the second run. AI work, not a qualified review.
+
+**The stages on the chain's own tree (W113, 7 October 2026, from 01:43 CEST, on W110's B1, B2 and C3).** W105's clone and W102's
+were not the tree set 32's chain builds: since W104 (W100's S1) the chain's base is main's tip at its start, `be07863b`
+(`<worktrees>/_runs/int32/real-0115.log:1`), and on that tree W110 read the ten modules as 116 passed, 1 failed before the fill and
+114 passed, 3 failed after each run (test_res31's W98 test and test_res32's `p_filled`, its B1 and B2). W113 merged main `be07863b`
+into fnd/adopt32, restated those two tests (test_res31 reads LAYER-STATUS and the plan at set 31's adoption commits through git;
+test_res32 places set 31's promoted revision as an ancestor of the re-key and the chain's base on its first-parent line) and named
+the lineage's start beside the BASE row in rows L-01, L-02 and P-01 (C3). In a scratch clone of W113's own, built as W110 built it
+(main's tip at the chain's start `be07863b`, the five pins with fnd/res32 at `607cd157` merged with `--no-ff`, fnd/w34pdftext's
+one conflict in the annex taken as ours in the clone only, step a5 run, stand-in commits for the re-key and the candidate (the
+candidate's with a stand-in paragraph 0a in WP-B's words, so that the known item's value is a clause set 31's paragraph does not
+print), then fnd/adopt32 at its commit c1c67169 merged clean), the ten modules read 117 passed, 0 failed, 0 skipped before
+the fill; the fill tool's template read 122 rows (this file 25, RESULT.md 70, CLASSIFICATION.md 2, START-HERE.md 8,
+SUPPLIER-HANDOVER.md 8, LAYER-STATUS.md 3, EXECUTION-PLAN.md 6), its first run applied 101 lines with 5 ADOPTION occurrences deferred
+and printed no NOTE (P-01's candidate_guard value three PASS lines), and the ten read 117 passed; with a stand-in adoption commit its
+second run applied 5 lines, no token was left in the seven files, and the ten read 117 passed; a third run refused (exit 2); with
+START-HERE's line 3 rewritten as a later set's rows would, `test_adopt32` read 4 passed. AI work, not a qualified review.
 
 ## START-HERE.md
 
@@ -115,7 +177,7 @@ Old text:
 ```
 New text:
 ```text
-**Current revision: set 32, the revision `__CANDIDATE__`, an adoption of record text and record tooling over set 31's `5f25daf3`. Read section 0 first.**
+**Current revision: set 32, the revision `f08e3961`, an adoption of record text and record tooling over set 31's `5f25daf3`. Read section 0 first.**
 ```
 Basis: `v2/docs/records/int32/RESULT.md`, section 1 (the candidate's row; set 31's promoted revision is the base) and its paragraph "What set 32 is".
 
@@ -141,7 +203,7 @@ New text:
 ```text
 (`v2/docs/records/int31/RESULT.md`, section 6); no baseline circuit draft, board generator or netlist changed.
 
-**Set 32** (the revision `__CANDIDATE__`). An adoption of record text and record tooling over set 31: 26 record generators read their
+**Set 32** (the revision `f08e3961`). An adoption of record text and record tooling over set 31: 26 record generators read their
 makers' PDF text from committed verbatim extractions instead of running pdftotext (a held-back sheet's text is held back with the
 sheet and re-taken after the fetch: 57 texts, `v2/docs/records/int32/RESULT.md`, section 2a), and the tests' own reads of it are
 declared (W34, W37, W42, W55, W81); each verdict word is attributed to its check (W53: cx45's "NOT CONFIRMED", cx46's "NOT CLOSED"); the handover
@@ -180,12 +242,12 @@ claims stand in the assessment's words, of which set 32 changes no line: "Layer 
 readiness: READY AS A DESK PACKAGE OF OPEN ITEMS"; "Power-design closure: BLOCKED. Fabrication release: BLOCKED."
 (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6). "Set 32 closes NO power item." (`v2/docs/records/int32/RESULT.md`,
 section 6). Set 31's known item, record l4e7's paragraph 0a's history sentence (`v2/docs/records/int31/RESULT.md`, section 4a), is
-planned to be corrected by set 32's one re-key and the regeneration of its dependents (no set had run it when these rows were
-written); the regenerated `v2/docs/records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `__GATE__`.
+corrected by set 32's one re-key and the regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were
+written); the regenerated `v2/docs/records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `its key field is the key of its own parts and no part differs from this tree's`.
 ```
 Basis: `v2/docs/records/int32/RESULT.md`, section 6 (no power item; the three claims unchanged, quoted from the assessment's lines
 492, 496 and 500); `v2/docs/records/int31/RESULT.md`, section 4a (the known item, "to be corrected with set 32's single re-key");
-`v2/docs/records/int32/CLASSIFICATION.md`, row 33 ("planned to correct that item (no set has run it yet)"); the GATE's source, the
+`v2/docs/records/int32/CLASSIFICATION.md`, row 33 ("no longer names set 30's integrator"); the GATE's source, the
 paragraph "Filling the GATE tokens".
 
 ### S-06. `v2/docs/handover/START-HERE.md`, line 117: the Tested row
@@ -196,7 +258,7 @@ Old text:
 ```
 New text:
 ```text
-| Tested | `__CANDIDATE__` | set 32's promoted revision (set 31's was `5f25daf3` and set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`, each kept as dated history):
+| Tested | `f08e3961` | set 32's promoted revision (set 31's was `5f25daf3` and set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`, each kept as dated history):
 ```
 Basis: the Tested row's definition on this page; `v2/docs/records/int32/RESULT.md`, section 1.
 
@@ -208,7 +270,7 @@ Old text:
 ```
 New text:
 ```text
-| Adopted | `__ADOPTION__` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `
+| Adopted | `9a0a0f6a` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `
 ```
 Basis: the Adopted row's definition on this page; set 31's adoption commit, which the row's next code span holds after set 31's
 fill, stays in the row as dated history (row S-08 closes the sentence).
@@ -248,7 +310,7 @@ the candidate commit `5f25daf3` is one of the 106, that file's row 36.
 ```
 New text:
 ```text
-the candidate commit `5f25daf3` is one of the 106, that file's row 36. Set 32 adds its own: of the 34 commits of its five branches, 12 touch a file cx46 read, 2 of them REVIEWED-INPUT CHANGED under set 30's rule (reading A), each "UNREVIEWED since cx46" (`v2/docs/records/int32/CLASSIFICATION.md`, section 2), counted over the branch commits alone; the integration's own commits are that file's rows 31 to 33, the candidate commit `__CANDIDATE__` its row 33, classed at the adoption (its row 31 expects the regenerated outputs that carry row 14's lines to be REVIEWED-INPUT CHANGED too), unlike set 31's 25, counted over all 106 of its commits.
+the candidate commit `5f25daf3` is one of the 106, that file's row 36. Set 32 adds its own: of the 34 commits of its five branches, 12 touch a file cx46 read, 2 of them REVIEWED-INPUT CHANGED under set 30's rule (reading A), each "UNREVIEWED since cx46" (`v2/docs/records/int32/CLASSIFICATION.md`, section 2), counted over the branch commits alone; the integration's own commits are that file's rows 31 to 33, the candidate commit `f08e3961` its row 33, classed at the adoption (its row 31 expects the regenerated outputs that carry row 14's lines to be REVIEWED-INPUT CHANGED too), unlike set 31's 25, counted over all 106 of its commits.
 ```
 Basis: `v2/docs/records/int32/CLASSIFICATION.md`, section 2 (34 rows; `REVIEWED-INPUT CHANGED` 2; "The rows that touch a file cx46
 read: 12, all UNREVIEWED since cx46.") and its rows 31 to 33 (row 31's last cell: "row 14's lines reach `l9t5_t10.out` and
@@ -264,7 +326,7 @@ Old text:
 ```
 New text:
 ```text
-| Documents and editable artifacts | on main as a DESK candidate (`__CANDIDATE__`, set 32) |
+| Documents and editable artifacts | on main as a DESK candidate (`f08e3961`, set 32) |
 ```
 Basis: `v2/docs/records/int32/RESULT.md`, section 6 (kept apart from the three claims).
 
@@ -291,7 +353,7 @@ From a full git checkout at `5f25daf3`:
 ```
 New text:
 ```text
-From a full git checkout at `__CANDIDATE__`:
+From a full git checkout at `f08e3961`:
 ```
 Basis: the Tested row (S-06).
 
@@ -363,9 +425,9 @@ regenerated. It changes the Tested and Adopted revisions of 0a, adds its integra
 0b: "Set 32 closes NO power item." (`records/int32/RESULT.md`, section 6). The DESK gate and the three completion claims, in the
 assessment's words, unchanged: "Layer 4's DESK gate: NOT PASSED"; "Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN
 ITEMS"; "Power-design closure: BLOCKED. Fabrication release: BLOCKED." (`records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6). Set
-31's known item, record l4e7's paragraph 0a's history sentence (`records/int31/RESULT.md`, section 4a), is planned to be corrected
-by set 32's one re-key and the regeneration of its dependents (no set had run it when these rows were written); the regenerated
-`records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `__GATE__`.
+31's known item, record l4e7's paragraph 0a's history sentence (`records/int31/RESULT.md`, section 4a), is corrected by set 32's one
+re-key and the regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were written); the regenerated
+`records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `its key field is the key of its own parts and no part differs from this tree's`.
 ```
 Basis: `v2/docs/records/int32/RESULT.md`, the paragraph "What set 32 is", sections 2a and 6; `v2/docs/records/int31/RESULT.md`,
 section 4a; `v2/docs/records/int32/CLASSIFICATION.md`, row 33; the GATE's source, the paragraph "Filling the GATE tokens"; the
@@ -379,7 +441,7 @@ Old text:
 ```
 New text:
 ```text
-| Tested | `__CANDIDATE__` | set 32's promoted revision (set 31's was `5f25daf3` and set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`, each kept as dated history):
+| Tested | `f08e3961` | set 32's promoted revision (set 31's was `5f25daf3` and set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`, each kept as dated history):
 ```
 Basis: as S-06.
 
@@ -391,7 +453,7 @@ Old text:
 ```
 New text:
 ```text
-| Adopted | `__ADOPTION__` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `
+| Adopted | `9a0a0f6a` | set 32's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 32 records as adopted (set 31's was `
 ```
 Basis: as S-07.
 
@@ -439,7 +501,7 @@ the candidate commit `5f25daf3` is one of the 106, that file's row 36.
 ```
 New text:
 ```text
-the candidate commit `5f25daf3` is one of the 106, that file's row 36. Set 32 adds its own: of the 34 commits of its five branches, 12 touch a file cx46 read, 2 of them REVIEWED-INPUT CHANGED under set 30's rule (reading A), each "UNREVIEWED since cx46" (`records/int32/CLASSIFICATION.md`, section 2), counted over the branch commits alone; the integration's own commits are that file's rows 31 to 33, the candidate commit `__CANDIDATE__` its row 33, classed at the adoption (its row 31 expects the regenerated outputs that carry row 14's lines to be REVIEWED-INPUT CHANGED too), unlike set 31's 25, counted over all 106 of its commits.
+the candidate commit `5f25daf3` is one of the 106, that file's row 36. Set 32 adds its own: of the 34 commits of its five branches, 12 touch a file cx46 read, 2 of them REVIEWED-INPUT CHANGED under set 30's rule (reading A), each "UNREVIEWED since cx46" (`records/int32/CLASSIFICATION.md`, section 2), counted over the branch commits alone; the integration's own commits are that file's rows 31 to 33, the candidate commit `f08e3961` its row 33, classed at the adoption (its row 31 expects the regenerated outputs that carry row 14's lines to be REVIEWED-INPUT CHANGED too), unlike set 31's 25, counted over all 106 of its commits.
 ```
 Basis: as S-10.
 
@@ -451,7 +513,7 @@ Old text:
 ```
 New text:
 ```text
-| Documents and editable artifacts | on main as a DESK candidate (`__CANDIDATE__`, set 32) |
+| Documents and editable artifacts | on main as a DESK candidate (`f08e3961`, set 32) |
 ```
 Basis: as S-11.
 
@@ -488,7 +550,7 @@ From a full git checkout at `5f25daf3`
 ```
 New text:
 ```text
-From a full git checkout at `__CANDIDATE__`
+From a full git checkout at `f08e3961`
 ```
 Basis: as S-13.
 
@@ -500,7 +562,7 @@ The gated release suite's line for `5f25daf3` is in the package's `README.md` an
 ```
 New text:
 ```text
-The gated release suite's line for `__CANDIDATE__` is in the package's `README.md` and in
+The gated release suite's line for `f08e3961` is in the package's `README.md` and in
 ```
 Basis: `v2/docs/records/int32/RESULT.md`, section 4 (the gate lines).
 
@@ -525,7 +587,7 @@ Old text:
 New text:
 ```text
   Layer 4's DESK gate and the three completion claims stand as set 30's assessment gives them.
-- **Set 32, the revision `__CANDIDATE__`, dated by its adoption commit** (section 0). An adoption of record text and record tooling
+- **Set 32, the revision `f08e3961`, dated by its adoption commit** (section 0). An adoption of record text and record tooling
   over set 31: the makers' PDF text as committed verbatim inputs of 26 record generators (a held-back sheet's text held back with the
   sheet and re-taken after the fetch: 57 texts), the verdict words attributed to their checks, the ZIP's cap, N1a's phrase in V-E16
   row 3, record l4e7's cache KEY on the sixteen numbers it reads, ONE re-key, regenerated
@@ -554,7 +616,7 @@ New text:
 ```text
 `v2/ecad/tools/tests/test_adopt31.py` holds them.
 
-**After set 32 (an adoption of record text and record tooling over set 31, MESHSAT-1357).** Layers 4, 5, 8, 9 and 12 open with a block headed After set 32, directly under the layer's heading and above its set 31 block: the items set 32's records move, each naming its record; every row and note not named there keeps its set 31, set 30, set 29 or H2 text. Set 32 adopts, on set 31's promoted revision `5f25daf3`, five branches, `ee940742:v2/docs/records/int32/RESULT.md:88` `34 commits of the five branches over their bases`, regenerated to convergence, with record l4e7's results cache re-keyed ONCE; in its integration record's words, `ee940742:v2/docs/records/int32/RESULT.md:385` `**Set 32 closes NO power item.**`, and `ee940742:v2/docs/records/int32/RESULT.md:389` `It changes no baseline circuit draft, no board generator and no netlist`. No item is raised to MET by set 32 and no layer from 4 on is COMPLETE; nothing has been built, bought or measured. **Citations in the After set 32 blocks** read commit, path and line at the commit they name, a code span right after one being the words quoted from that line: set 32's integration record at fnd/res32's `ee940742`, the assessment at `3057ae43` and W53's generator line at `4d07a401` (each in this page's history after set 32's adoption); `v2/ecad/tools/tests/test_patch32.py` holds them.
+**After set 32 (an adoption of record text and record tooling over set 31, MESHSAT-1357).** Layers 4, 5, 8, 9 and 12 open with a block headed After set 32, directly under the layer's heading and above its set 31 block: the items set 32's records move, each naming its record; every row and note not named there keeps its set 31, set 30, set 29 or H2 text. Set 32 adopts, on set 31's promoted revision `5f25daf3` (the record's BASE row; its lineage starts at main's tip `be07863b`, the chain's base, which carries set 31's adoption and follow-ups over it), five branches, `ee940742:v2/docs/records/int32/RESULT.md:88` `34 commits of the five branches over their bases`, regenerated to convergence, with record l4e7's results cache re-keyed ONCE; in its integration record's words, `ee940742:v2/docs/records/int32/RESULT.md:385` `**Set 32 closes NO power item.**`, and `ee940742:v2/docs/records/int32/RESULT.md:389` `It changes no baseline circuit draft, no board generator and no netlist`. No item is raised to MET by set 32 and no layer from 4 on is COMPLETE; nothing has been built, bought or measured. **Citations in the After set 32 blocks** read commit, path and line at the commit they name, a code span right after one being the words quoted from that line: set 32's integration record at fnd/res32's `ee940742`, the assessment at `3057ae43` and W53's generator line at `4d07a401` (each in this page's history after set 32's adoption); `v2/ecad/tools/tests/test_patch32.py` holds them.
 ```
 Basis: `v2/docs/records/int32/RESULT.md`, sections 1, 2 and 6; set 31's head paragraph (line 38) as the form.
 
@@ -572,13 +634,14 @@ New text:
 The set 31 and set 30 blocks below stand; the notes here name what set 32's records change.
 
 - The chain. REVIEWED: `4d0ff8a2`, unchanged: no independent check of the engineering read a later revision. The base: set 31's
-  promoted revision `5f25daf3`. CANDIDATE: `__CANDIDATE__`, the commit the gated release suite and the promotion gate ran on, to
-  which main was fast-forwarded (written at the adoption). The gate, suite_gate's verdict line over the four pass logs: `__GATE__`.
+  promoted revision `5f25daf3` (the record's BASE row); the lineage starts at main's tip `be07863b`, the chain's base, which descends
+  from it. CANDIDATE: `f08e3961`, the commit the gated release suite and the promotion gate ran on, to
+  which main was fast-forwarded (written at the adoption). The gate, suite_gate's verdict line over the four pass logs: `suite_gate: candidate f08e396175dd; totals tests: 2973 passed, 0 failed, 2 skipped + tests: 26 passed, 0 failed, 0 skipped + tests: 253 passed, 0 failed, 0 skipped + tests: 213 passed, 0 failed, 1 skipped; result lines 3468 (3465 PASS, 3 SKIP, 0 FAIL); modules 269 of 269 ran; suite_gate: PASS`.
 - Record l4e7's results cache (WP-B: W61, W67, W71 on fnd/l4e7cache), `ee940742:v2/docs/records/int32/RESULT.md:387` `a change of record l4e7's cache KEY that moves no computed figure`,
   re-keyed ONCE in set 32 (`v2/docs/records/int32/RESULT.md`, sections 2h and 3c). Set 31's known item, record l4e7's paragraph 0a's
-  history sentence (the set 31 block below; `v2/docs/records/int31/RESULT.md`, section 4a), is planned to be corrected by that
-  re-key and the regeneration of its dependents (no set had run it when these rows were written); the regenerated
-  `v2/docs/records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `__GATE__`.
+  history sentence (the set 31 block below; `v2/docs/records/int31/RESULT.md`, section 4a), is corrected by that re-key and the
+  regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were written); the regenerated
+  `v2/docs/records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `its key field is the key of its own parts and no part differs from this tree's`.
 - Unreviewed changes after cx46. Set 32's classification (`v2/docs/records/int32/CLASSIFICATION.md`, section 2) classes the 34
   commits of its five branches, `ee940742:v2/docs/records/int32/CLASSIFICATION.md:269` `12 of the 34 touch a file cx46 read`, 2 of
   them REVIEWED-INPUT CHANGED (W53's attribution and its tests), each UNREVIEWED since cx46 and credited nothing, counted over the
@@ -686,14 +749,14 @@ New text:
 ```text
 (compute and storage apart, no total).
 
-### Milestone: integration set 32 promoted as a DESK candidate (main `__CANDIDATE__`)
+### Milestone: integration set 32 promoted as a DESK candidate (main `f08e3961`)
 
-**Promoted:** main `__CANDIDATE__`, the candidate on set 32's integration branch, by fast-forward, the promotion log's line: `__GATE__`.
+**Promoted:** main `f08e3961`, the candidate on set 32's integration branch, by fast-forward, the promotion log's line: `GitHub main at f08e396175dd418434061d731e08111d006d6efa (_runs/int32/promote-1041.log)`.
 INTEGRATED = CANDIDATE = PROMOTED. REVIEWED: `4d0ff8a2` (cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."), unchanged: no independent
-check of the engineering read a later revision. The base: set 31's promoted `5f25daf3`; five branches, 34 commits over their bases
+check of the engineering read a later revision. The base: set 31's promoted `5f25daf3` (the record's BASE row; the lineage starts at main's tip `be07863b`, the chain's base, which descends from it); five branches, 34 commits over their bases
 (`records/int32/RESULT.md`, section 1), merged and regenerated to convergence, with record l4e7's results cache re-keyed ONCE (section
-3c). Gated by suite_gate with G7 (`_bin/suite_gate.py`), its verdict line over the four pass logs: `__GATE__`.
-The candidate_guard check, every host, its PASS line on each host in one value: `__GATE__`.
+3c). Gated by suite_gate with G7 (`_bin/suite_gate.py`), its verdict line over the four pass logs: `suite_gate: candidate f08e396175dd; totals tests: 2973 passed, 0 failed, 2 skipped + tests: 26 passed, 0 failed, 0 skipped + tests: 253 passed, 0 failed, 0 skipped + tests: 213 passed, 0 failed, 1 skipped; result lines 3468 (3465 PASS, 3 SKIP, 0 FAIL); modules 269 of 269 ran; suite_gate: PASS`.
+The candidate_guard check, every host, its PASS line on each host in one value: `candidate_guard: PASS candidate f08e396175dd418434061d731e08111d006d6efa: 1111 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate f08e396175dd418434061d731e08111d006d6efa: 1111 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate f08e396175dd418434061d731e08111d006d6efa: 1111 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen`.
 
 **What it closes:** no power item. "Set 32 closes NO power item." (`records/int32/RESULT.md`, section 6). Set 32 adopts the makers' PDF
 text as committed verbatim inputs of 26 record generators (a held-back sheet's text held back with the sheet and re-taken after the
@@ -704,8 +767,8 @@ board generator or netlist changed. Its classification counts 2 REVIEWED-INPUT C
 12 that touch a file cx46 read (`records/int32/CLASSIFICATION.md`, section 2), each UNREVIEWED since cx46 and credited nothing,
 counted over the branch commits alone (the integration's rows 31 to 33 are classed at the adoption), beside set 31's 25 over all 106
 of its commits (its integration's among them) and set 30's 14 over its 45. Set 31's known item, record l4e7's paragraph 0a's history
-sentence (`records/int31/RESULT.md`, section 4a), is planned to be corrected by set 32's re-key and its dependents' regeneration;
-the regenerated `records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `__GATE__`.
+sentence (`records/int31/RESULT.md`, section 4a), is corrected by set 32's re-key and its dependents' regeneration (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption);
+the regenerated `records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `its key field is the key of its own parts and no part differs from this tree's`.
 
 **The three claims, apart, and the gate, unchanged from set 30** (the coordinator's judgement of 6 October 2026, 10:45 CEST, in
 `records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6, of which set 32 changes no line): engineering-handover readiness READY AS A

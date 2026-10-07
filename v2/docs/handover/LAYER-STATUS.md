@@ -37,6 +37,8 @@ contains fnd/w9l9t5 `02b0d30d`), fnd/w13l4e9 `56ab0d01` (it contains fnd/w7rem `
 
 **After set 31 (6 October 2026, an adoption of record text over set 30, MESHSAT-1357).** Layers 4, 5, 8, 9 and 12 open with a block headed After set 31, directly under the layer's heading and above its set 30 block (Layer 5, which has none, above its set 29 block): the items set 31's records move, each naming its record; every row and note not named there keeps its set 30, set 29 or H2 text. Set 31 adopts, on set 30's promoted revision `dd1aed00`, the record text its authors wrote during set 30's integration, with the filed patch rows applied and the citations re-taken, regenerated to convergence on the lineage `31928583` (`31928583c612ea43df17df5d7e0cbb2f66090f8e`), and record l4e7's results cache re-keyed on it in `aa332280`; in its integration record's words, `5f910eb5:v2/docs/records/int31/RESULT.md:409` `Set 31 closes NO power item.`, and `5f910eb5:v2/docs/records/int31/RESULT.md:410` `It changes no baseline circuit draft, no board generator and no netlist`. No item is raised to MET by set 31 and no layer from 4 on is COMPLETE; nothing has been built, bought or measured. **Citations in the After set 31 blocks** read commit, path and line at the commit they name, a code span right after one being the words quoted from that line: the lineage's files at `31928583`, set 31's integration record at fnd/res31's `5f910eb5` (both in this page's history); `v2/ecad/tools/tests/test_adopt31.py` holds them.
 
+**After set 32 (an adoption of record text and record tooling over set 31, MESHSAT-1357).** Layers 4, 5, 8, 9 and 12 open with a block headed After set 32, directly under the layer's heading and above its set 31 block: the items set 32's records move, each naming its record; every row and note not named there keeps its set 31, set 30, set 29 or H2 text. Set 32 adopts, on set 31's promoted revision `5f25daf3` (the record's BASE row; its lineage starts at main's tip `be07863b`, the chain's base, which carries set 31's adoption and follow-ups over it), five branches, `ee940742:v2/docs/records/int32/RESULT.md:88` `34 commits of the five branches over their bases`, regenerated to convergence, with record l4e7's results cache re-keyed ONCE; in its integration record's words, `ee940742:v2/docs/records/int32/RESULT.md:385` `**Set 32 closes NO power item.**`, and `ee940742:v2/docs/records/int32/RESULT.md:389` `It changes no baseline circuit draft, no board generator and no netlist`. No item is raised to MET by set 32 and no layer from 4 on is COMPLETE; nothing has been built, bought or measured. **Citations in the After set 32 blocks** read commit, path and line at the commit they name, a code span right after one being the words quoted from that line: set 32's integration record at fnd/res32's `ee940742`, the assessment at `3057ae43` and W53's generator line at `4d07a401` (each in this page's history after set 32's adoption); `v2/ecad/tools/tests/test_patch32.py` holds them.
+
 **How to read this page after H2.** Three strata, newest first. (1) The section "Status at handover H2" is the current
 status (**H3:** with the H3 section above it): one row per layer with the evidence for its status and what remains, and the per-board layout-entry reasons.
 (2) Each layer's own section (Layer 1 to Layer 9) opens with its status and **a short acceptance table at H2**, item
@@ -351,6 +353,29 @@ FAIL with six; r8b: second check with no blocking finding).
 
 ## Layer 4. System architecture
 
+**After set 32: IN_PROGRESS.** Set 32 moves no state of this layer: `ee940742:v2/docs/records/int32/RESULT.md:40` `It closes NO power item, is not power-design closure and releases nothing; Layer 4's DESK gate`.
+The set 31 and set 30 blocks below stand; the notes here name what set 32's records change.
+
+- The chain. REVIEWED: `4d0ff8a2`, unchanged: no independent check of the engineering read a later revision. The base: set 31's
+  promoted revision `5f25daf3` (the record's BASE row); the lineage starts at main's tip `be07863b`, the chain's base, which descends
+  from it. CANDIDATE: `f08e3961`, the commit the gated release suite and the promotion gate ran on, to
+  which main was fast-forwarded (written at the adoption). The gate, suite_gate's verdict line over the four pass logs: `suite_gate: candidate f08e396175dd; totals tests: 2973 passed, 0 failed, 2 skipped + tests: 26 passed, 0 failed, 0 skipped + tests: 253 passed, 0 failed, 0 skipped + tests: 213 passed, 0 failed, 1 skipped; result lines 3468 (3465 PASS, 3 SKIP, 0 FAIL); modules 269 of 269 ran; suite_gate: PASS`.
+- Record l4e7's results cache (WP-B: W61, W67, W71 on fnd/l4e7cache), `ee940742:v2/docs/records/int32/RESULT.md:387` `a change of record l4e7's cache KEY that moves no computed figure`,
+  re-keyed ONCE in set 32 (`v2/docs/records/int32/RESULT.md`, sections 2h and 3c). Set 31's known item, record l4e7's paragraph 0a's
+  history sentence (the set 31 block below; `v2/docs/records/int31/RESULT.md`, section 4a), is corrected by that re-key and the
+  regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were written); the regenerated
+  `v2/docs/records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `its key field is the key of its own parts and no part differs from this tree's`.
+- Unreviewed changes after cx46. Set 32's classification (`v2/docs/records/int32/CLASSIFICATION.md`, section 2) classes the 34
+  commits of its five branches, `ee940742:v2/docs/records/int32/CLASSIFICATION.md:269` `12 of the 34 touch a file cx46 read`, 2 of
+  them REVIEWED-INPUT CHANGED (W53's attribution and its tests), each UNREVIEWED since cx46 and credited nothing, counted over the
+  branch commits alone; the integration's own commits are its rows 31 to 33, classed at the adoption. They come beside set 31's 25
+  over all 106 of its commits (its integration's among them) and set 30's 14 over its 45 (the blocks below).
+- The DESK gate and the three completion claims, unchanged, in the assessment's words (set 32 changes no line of it):
+  `3057ae43:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md:492` `### Layer 4's DESK gate: NOT PASSED`;
+  `3057ae43:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md:496` `### Engineering-handover readiness: READY AS A DESK PACKAGE OF OPEN ITEMS`;
+  `3057ae43:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md:500` `### Power-design closure: BLOCKED. Fabrication release: BLOCKED.`. No claim is blended with
+  another and none is given as a percentage; a promoted integration set is none of the three by itself.
+
 **After set 31 (6 October 2026): IN_PROGRESS.** Set 31 moves no state of this layer: `5f910eb5:v2/docs/records/int31/RESULT.md:23` `It closes NO power item, is
 not power-design closure and releases nothing; Layer 4's DESK gate stays NOT PASSED as the coordinator`. The set 30 block below
 stands; the notes here name what set 31's records restate.
@@ -608,6 +633,11 @@ above stays as Slot I wrote it at `7070f106`):**
 
 ## Layer 5. Partitioning and interfaces
 
+**After set 32: IN_PROGRESS.** Set 32 carries Q-55, N1a's phrase into V-E16 row 3 of the firmware contract (Layer 12's note below;
+V-E16's rows 2 and 3 are the rows record l5pwr's L5-F09 d wrote, and `test_l5pwr`'s reading of L5-F09 d admits N1a's words there once
+Q-55's script has run), `ee940742:v2/docs/records/int32/RESULT.md:113` `run on the merged tree only: N1a's phrase into V-E16 row 3 of`;
+no state of this layer moves, and the rows below keep their set 31 or set 29 text.
+
 **After set 31 (6 October 2026): IN_PROGRESS.** Set 31 adopts W8's restatement of the Layer 5 contract files to L4-E9's D-10
 (finding L5-F14 of record l5pwr; W14's merge, the classification's rows 3.1 to 3.5), with record l5pwr's two contract-script tests
 restated to them; no state of this layer moves, and the rows below keep their set 29 text.
@@ -724,6 +754,14 @@ restated to them; no state of this layer moves, and the rows below keep their se
 
 ## Layer 8. Schematics
 
+**After set 32: IN_PROGRESS on every board.** Set 32 changes how record l8p's and record l8r2's generators and tests read their
+makers' PDF text and how record l8p's check 10c names each verdict word's check; no board is regenerated,
+`ee940742:v2/docs/records/int32/RESULT.md:389` `It changes no baseline circuit draft, no board generator and no netlist`.
+
+- Record l8p's `l8p_c4.py` (W55), `ee940742:v2/docs/records/int32/RESULT.md:109` `declares and reads its three sheets with its own table (so 26 record generators read each maker's PDF text through the helper, W34's 25 and this one)`;
+  and its check 10c (W53), `ee940742:v2/docs/records/int32/RESULT.md:111` `print each word as its check's (cx45 "NOT CONFIRMED", cx46's items "NOT CLOSED")`.
+  Both are UNREVIEWED since cx46 (`v2/docs/records/int32/CLASSIFICATION.md`, section 2).
+
 **After set 31 (6 October 2026): IN_PROGRESS on every board.** Set 31 adopts two records' restatements of their drafts' text; no
 board is regenerated, `5f910eb5:v2/docs/records/int31/RESULT.md:410` `It changes no baseline circuit draft, no board generator and no netlist`.
 
@@ -791,6 +829,13 @@ as Slot I wrote it at `7070f106`):**
 ---
 
 ## Layer 9. Pre-layout design analysis
+
+**After set 32: IN_PROGRESS.** Set 32 changes record l9t5's check 10j to name each verdict word's check (W53) and regenerates the
+cascade's outputs on set 32's lineage (`v2/docs/records/int32/RESULT.md`, section 3b); every figure stays a MODEL reading on the
+composed candidate, and nothing was routed, built or measured.
+
+- Record l9t5's check 10j, `4d07a401:v2/docs/records/l9t5/l9t5_t10.py:1378` `DISPOSITION (10j, after cx46): Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'.`;
+  no state moved off OPEN (`v2/docs/records/int32/RESULT.md`, section 2f), and the change is UNREVIEWED since cx46.
 
 **After set 31 (6 October 2026): IN_PROGRESS.** Set 31 adopts record l9t5's and record l8r2's restatements (W9 and W11, merged at
 `0ed29a78`, the classification's rows 4.1 to 4.5) and regenerates the cascade on them; every figure stays a MODEL reading on the
@@ -870,6 +915,16 @@ above stays as Slot I wrote it at `7070f106`):**
 ---
 
 ## Layer 12. Firmware, bring-up, test plans and build documentation
+
+**After set 32: IN_PROGRESS.** Set 32 carries Q-55 into the firmware contract and W42's re-cites into TP-E11-29; nothing has run on
+hardware.
+
+- 12.1 (as the set 31 note below): `v2/docs/HW-FW-CONTRACT.md`'s V-E16 row 3 gains N1a's phrase by W40's apply script with its
+  change-record row (W47), `ee940742:v2/docs/records/int32/RESULT.md:113` `run on the merged tree only: N1a's phrase into V-E16 row 3 of`,
+  and `v2/docs/test-procedures/TP-SOLAR.md` quotes the register's annotated U5 line beside its line 297,
+  `ee940742:v2/docs/records/int32/RESULT.md:114` `the register's annotated U5 line as`.
+- 12.3 (as the set 31 note below): `ee940742:v2/docs/records/int32/RESULT.md:108` `TP-E11-29's two prose citations left as a row for the chain`,
+  re-cited at the chain's step a5.
 
 **After set 31 (6 October 2026): IN_PROGRESS.** Set 31 adopts W8's rows of the firmware contract and W3's TP-E11-29; nothing
 has run on hardware.
