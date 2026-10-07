@@ -143,12 +143,12 @@ W160's dry run measured the move: `<worktrees>/_runs/int33/dryrun-1120.log:204` 
 `<worktrees>/_runs/int33/dryrun-1120.log:205` `file v2/ecad/tools/pcb_requirements.yaml: 8c8e26858293 -> c8956b14b0e7`.
 Set 33 therefore carries ONE re-key after the converged commit and its independent read (the chain's hold-back keeps `l4e7_p0sol.out`
 and its dependents for the re-key's pass), never a second; whether the regeneration moves `l4e11_power.out`'s sixteen numbers too is
-the chain's step f (`<worktrees>/_runs/int33/README.md` `f's reading after the regeneration (whether l4e11_power.out's sixteen numbers move)`).
+the chain's step f, which W160's dry run did not reach (`<worktrees>/_runs/int33/README.md` `f's reading after the regeneration (whether`).
 The re-key's cache commit is `__REKEY__`; the KEY-only check's line on it is `__GATE__`.
 
 ### 2e. The drafts set 33 does NOT apply (Layer 8's A)
 
-Applying the drafts to the generators is Layer 8's A, not Layer 4's (W129's note 12: `<worktrees>/_runs/l4ai/REGISTER.draft.md:29` `- **Applying the drafts to the generators is Layer 8's A, NOT Layer 4's (note 12).**`).
+Applying the drafts to the generators is Layer 8's A, not Layer 4's (W129's note 12, in the register draft W164 is updating, so quoted without a line number: `<worktrees>/_runs/l4ai/REGISTER.draft.md` `Applying the drafts to the generators is Layer 8's A, NOT Layer 4's (note 12).`).
 Set 33 commits these drafts and applies none of them; the chain's generator guard asserts that no `gen_sch_*`, netlist or `.kicad_sch`
 changes against the base (`<worktrees>/_runs/int33/README.md` `against the base; an apply row naming an apply_gen_sch_* script refuses;`);
 the records compose them on scratch copies in L4-E9's change-list order for their own checks:
