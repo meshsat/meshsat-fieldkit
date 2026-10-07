@@ -1,0 +1,44 @@
+Technical Data ELX1135                                                                                         SCF9550﻿
+Effective January 2022                                                   9.5 mm x 5.0 mm Surface mount self-control fuse﻿
+                                                                                                                       ﻿﻿
+General specifications
+
+
+Operating temperature: -20 °C to +60 °C
+Storage temperature: -10 °C to +40 °C < 90% RH
+Storage duration: 1 year
+High temperature: +105 °C @ 1000 hours
+Humidity: +85 °C @ 85% RH @ 500 hours
+Low temperature: -40 °C @ 500 hours
+
+
+
+
+Packaging information- mm
+                                                                                             Code        (mm)
+Supplied in tape and reel packaging, 3000 parts per 13” diameter reel. (EIA-481 compliant)
+                                                                                             E1          1.75 ± 0.10
+                                                                                             F           7.50 ± 0.10
+                                                                                             P2          2.00 ± 0.10
+                                                                                             D0          1.50 + 0.1/-0
+                                                                                             D1          1.50 + 0.1/-0
+                                                                                             P0          4.00 ± 0.10
+                                                                                             10P0        40.0 ± 0.20
+                                                                                             W           16.00 ± 0.30
+                                                                                             P           8.00 ± 0.10
+                                                                                             A0          5.3 ± 0.10
+                                                                                             B0          9.8 ± 0.10
+                                                                                             K0          2.3 ± 0.10
+                                                                                             T           0.30 ± 0.05
+
+
+
+
+Direction of taping
+The direction shall be seen from the top cover tape side
+
+
+
+
+4           www.eaton.com/electronics
+

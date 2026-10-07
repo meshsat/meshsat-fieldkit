@@ -24,16 +24,38 @@ that prints only a typical (GuardError), and the tests mutate a typical into a l
 Usage:  python3 v2/docs/records/l4e11/l4e11_fet.py        (from anywhere; it locates the tree from its own path)
 Exit 0: printed; 3: refused (an input missing, a sha256 that differs, a printed row not found on its cited page, a guard tripped)."""
 import hashlib
+import importlib.util
 import json
 import math
 import os
 import re
-import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 READINGS = "v2/docs/records/l4e11/inputs/fet-search-readings-2026-10-07.json"
+
+# the sheets with a text layer, read from their committed extractions (-layout; held back with their sheets under held/pdftext/,
+# taken by v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4e11); the five rendered Infineon sheets are read from READINGS
+PDFTEXT = {
+    "v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf": [["-layout"]],
+    "v2/vendor/nexperia/held/nexperia-pxp9r1-30ql.pdf": [["-layout"]],
+    "v2/vendor/power/held/aos-aons21357-rev2.1-2023-11.pdf": [["-layout"]],
+    "v2/vendor/power/held/infineon-bso301sp-h-rev1.32-2010-05-12.pdf": [["-layout"]],
+    "v2/vendor/power/held/infineon-bsz086p03ns3-g-rev2.4-2019-12-03.pdf": [["-layout"]],
+    "v2/vendor/power/held/infineon-ipd042p03l3-g-rev2.2-2014-05-16.pdf": [["-layout"]],
+    "v2/vendor/power/held/vishay-sqj403ep-67109-reva.pdf": [["-layout"]],
+    "v2/vendor/power/held/vishay-sqj407ep-62806-revb.pdf": [["-layout"]],
+    "v2/vendor/power/held/vishay-sqja37ep-75171-revb.pdf": [["-layout"]],
+    "v2/vendor/power/held/vishay-sqjq131el-77936-reva.pdf": [["-layout"]],
+    "v2/vendor/power/held/vishay-sqs401en-65529-revd.pdf": [["-layout"]],
+    "v2/vendor/power/held/vishay-sqs407enw-76627-reva.pdf": [["-layout"]],
+    "v2/vendor/power/held/vishay-sqs415enw-77427-revc.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-bq25730-sluse65a.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 
 # ---------------------------------------------------------------- the held documents (path, sha256, how its rows are read)
 DOCS = {
@@ -204,6 +226,21 @@ def need(text, pat, what):
     return m
 
 
+_TEXTS = {}
+
+
+def texts():
+    """Every text sheet's committed extraction (-layout; _lib/pdftext.py, set 32's conversion, W34: the bytes pdftotext printed at the
+    re-take), read once over the PDFTEXT literal so that every read is a declared one."""
+    if not _TEXTS:
+        for rel in PDFTEXT:
+            try:
+                _TEXTS[rel] = PT.pdf_text(ROOT, rel, ["-layout"], PDFTEXT, "v2/docs/records/l4e11")
+            except SystemExit as e:
+                raise Refused("the extracted text of %s (exit %s; the reason is on stderr)" % (rel, e.code))
+    return _TEXTS
+
+
 _PAGES = {}
 
 
@@ -217,11 +254,9 @@ def pages(key):
         if kind != "text":
             _PAGES[key] = None
         else:
-            r = subprocess.run(["pdftotext", "-layout", path(rel), "-"], capture_output=True)
-            if r.returncode != 0:
-                raise Refused("pdftotext refused %s" % rel)
+            t = texts()[rel]
             # a control character some makers' fonts map their thin spaces to is read as a space
-            _PAGES[key] = [re.sub(r"[ \t]+", " ", re.sub(r"[\x00-\x08\x0b\x0e-\x1f]", " ", p)) for p in r.stdout.decode("utf-8", "replace").split("\f")]
+            _PAGES[key] = [re.sub(r"[ \t]+", " ", re.sub(r"[\x00-\x08\x0b\x0e-\x1f]", " ", p)) for p in t.split("\f")]
     return _PAGES[key]
 
 

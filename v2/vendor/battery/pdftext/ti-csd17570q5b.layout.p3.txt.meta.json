@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 3 -l 3 v2/vendor/battery/ti-csd17570q5b.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "3",
+  "-l",
+  "3"
+ ],
+ "pdf": "v2/vendor/battery/ti-csd17570q5b.pdf",
+ "pdf_sha256": "596555c33dce1fcac6de3b6ecc3eeb443f202382b3e2091fd6e1c27d129f2436",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/ti-csd17570q5b.layout.p3.txt",
+ "text_bytes": 5131,
+ "text_sha256": "04cfbe828955b97f85d2862c098e5eb39598385f8b5836cf8b7f4f69754f8e6b"
+}

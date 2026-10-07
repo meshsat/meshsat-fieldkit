@@ -1,0 +1,54 @@
+                                            Blade Fuses
+
+
+MINI ® BLADE FUSE RATED 32V
+
+
+                                                                     Specifications
+                                                                     Interrupting Rating:				       1000A @ 32 VDC
+                                                                     Voltage Rating:					            32 VDC
+                                                                     Operating Temperature Range:   -40˚C to +125˚C (Sn=-40˚C to +105˚C)
+                                                                     Terminals:			                   Ag plated zinc alloy
+                                                                     Housing Material:			            PA66
+                                                                     Complies with:                  Meets SAE J2077
+                                                                     		                              ISO 8820-3
+                                                                     		                              UL 248 Special Purpose Fuses
+                                                                     					                            (Sn Fuse not UL recognized)
+                                                                     Ordering Information
+                                                                         Part Number                  Package Size
+
+                                                                         0297xxx.WXNV                      3000
+                                                                            0297xxx.U                       500
+                                                                            0297xxx.H                       100
+                                                                            0297xxx.L                        50
+                                                                     MINI® Sn Fuse
+                                                                          0297xxx.WXT                        3000
+            Also available:
+            MINI® Sn Fuse
+            (tin plated)
+                                                                           Dimensions
+                                                                           Dimensions in mm
+Description
+The MINI® Fuse is the standard for vehicle circuit protection. Its
+miniature design meets the need for more circuits to be protected
+while utilizing less space, and its ability to cope with high
+temperatures in adverse environments makes the MINI® Fuse of
+recommended choice for protection.
+
+
+
+
+Time-Current Characteristics
+      % of Rating              Opening Time Min / Max (s)
+
+           110                        360,000 s / –
+           135                        0.75 s / 600 s
+           200                         0.15 s / 5 s
+           350                      0.080 s / 0.500 s
+           600                      0.030 s / 0.100 s
+
+
+
+
+www.littelfuse.com
+

@@ -1,0 +1,37 @@
+MAXIMUM SOLUTIONS
+                                             Rugged, High Current Spring Pins
+
+
+
+
+     Mill-Max now offers a series of rugged spring pins capable of carrying 9 amps continuous cur-
+     rent at a low 10° C temperature rise. The Mill-Max 0850, 0851, 0852 and 0853 spring pins are
+     the perfect solution for rugged applications and for use in circuits operating at currents above
+     signal level.
+
+     The 085X series is characterized by a greater mass and surface area which provides a lower
+     resistance electrical path than miniature spring pins. Because they are designed and built with
+     the same precision of our miniature spring pins they exhibit excellent signal integrity in shock
+     and vibration environments.
+
+     These large scale spring pins feature a gold plated stainless steel spring, .050”(1.27 mm) diam-
+     eter solid plunger and thick wall construction to withstand the rigors of demanding applica-
+     tions. Designed for through hole mounting, each pin has a large diameter post and flange
+     providing for a perpendicular and secure PCB attachment.
+
+     The 085X series provides a generous .045”(1.14 mm) mid-stroke and .090” (2.29 mm) maxi-
+     mum stroke allowing for use in applications where stack up tolerances are great. Applications
+     include board stacking, docking stations, cable assemblies, quick connects and anywhere there
+     is a blind mate situation.
+
+     Rated at 1,000,000 cycles minimum, the Mill-Max 085X series spring pins are the best choice for
+     higher-current, high reliability spring pin requirements.
+
+     For more information, visit: www.mill-max.com/PR617.
+
+
+(4/14 -- PR617)
+
+            Mill-Max Mfg. Corp. • 190 Pine Hollow Road, Oyster Bay, NY 11771
+                  516-922-6000 • Fax: 516-922-9253 • www.mill-max.com
+
