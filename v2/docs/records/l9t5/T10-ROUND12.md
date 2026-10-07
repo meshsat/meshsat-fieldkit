@@ -49,11 +49,13 @@ ruled_on 2026-10-07; reversed_by none (the way back is the last column).
 
 ## 4. Evidence
 
-- N3's mutants against the real test: copies of `apply_hw_fw_contract_rowb.py` with V-B25's band top at 0.6140 A (M3) and FW-B24's at
-  0.6140 A (M4), the test pointed at each copy: both FAIL (log in section 5's run); the unmutated script PASSES.
+- N3's mutants against the real test (7 October 2026, 12:40 CEST): copies of `apply_hw_fw_contract_rowb.py` with V-B25's band top at
+  0.6140 A (M3) and FW-B24's at 0.6140 A (M4), `test_l9t5_rowb.t_the_contract_hod_band_equals_l4hod_j4` pointed at each copy:
+  unmutated PASS; M3 FAIL; M4 FAIL (the assertion names J4's band, 0.4345 to 0.6326 A, against the row read). The same two mutants
+  are also held inside the test, on the page rowb writes.
 - Every regenerated output passed `_bin/regen_out.py`'s four conditions (two identical runs, exit 0, every pin current), in dependency
   order: `l9t5_t10`, `l4reg_compare`, `l9t5_canq`, `l9t5_canmb`, `l4canen`, `l4hod`, `l8r2_dist`, `l9t5_connected`, `l4lim_screen`;
-  a second pass found every one already identical (a fixed point).
+  a pass after the last source edit found all nine already identical (a fixed point, 12:50 to 12:56 CEST).
 - The tests as run.py printed them are in section 5.
 
 ## 5. Reproduce and the tests
@@ -62,7 +64,18 @@ From the repository root, in the order of section 4, each through `_bin/regen_ou
 only on scratch copies (t10, canq, rowb; `apply_l4e9_changelist_rowb.py --check`). Tests: `env -C v2/ecad/tools python3 tests/run.py
 test_l9t5_rowb.` and the modules W159 and W163 ran.
 
-TESTS-PLACEHOLDER
+Tests on fnd/l4hod (7 October 2026, 12:39 to 12:50 CEST, each module as run.py printed it): test_l4reg "tests: 8 passed, 0 failed,
+0 skipped"; test_l9t5_canmb 10/0/0; test_l9t5_canq 22/0/0; test_l4canen 11/0/0; test_l4hod 12/0/0; test_l9t5_rowb 18/0/0 (13 before
+this round, five new: N1, N2, N3, N5, N6; 18/0/0 again at 12:56 after its docstring); test_w11l9t5 8/0/0; test_l4small 10/0/0;
+test_remeng 17/0/0; test_applier_state 20/0/0; test_l4lim 8/0/0; test_pdftext_input 19/0/0; test_l9t5 42/0/0; test_l4e9 64/0/0;
+test_l8r2 40/0/0: W159's fifteen modules, 309 passed, 0 failed, 0 skipped. The modules W163 added: test_recpack 7/0/0; test_w9l9t5
+11/0/0; test_lstat31 16/0/0; test_w20oneliners 9/0/0; test_dgate2 26/0/0; test_w42cite 8/0/0; test_l8p 33/0/0; test_res32 14/1/0,
+its failure test_res32.t_every_cited_file_of_the_coordinator_exists_and_carries_its_quote on the coordinator's own files outside the
+repository (`_runs/int32/placeholders_check.py` line 10 and `_runs/int32/placeholders-deferred.tsv` no longer carry the quotes
+`records/int32/RESULT.md` cites), which no file of this round touches (W163's clone skipped those three tests).
+
+Tests on fnd/l4hoe (12:28 to 12:58 CEST): test_l9t5_hoe 21/1/0 first (the page cited 15.27 C/W, which the restated output no longer
+prints), then 22/0/0 with the page restated; test_pdftext_input 19/0/0; test_applier_state 20/0/0; test_l9t5 42/0/0.
 
 The constitution was read and is acknowledged (sections 3 to 6 and 8): each correction is held against its own failure case, no
 circuit changes, no verdict is raised, no regeneration cycle is made, and no further check is spent.
