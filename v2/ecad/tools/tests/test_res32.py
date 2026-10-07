@@ -1475,7 +1475,8 @@ def t_the_integration_rows_are_gits():
     assert p_integ(_mut(t, r["32"], r["32"].replace("| 2026-10-07 07:10:50 |", "| 2026-10-07 07:10:53 |", 1))), \
         "row 32 with the queue's clock in place of git's author date passed"
     assert p_integ(_mut(t, r["33"], r["33"].replace("| 7: ", "| 6: ", 1))), "row 33 with a wrong file count passed"
-    assert p_integ(_mut(t, r["33"], r["33"].replace("| `__CANDIDATE__` |", "| `__REKEY__` |", 1))), "row 33 with row 32's token passed"
+    # the tokens through INTEG, never typed here: placeholders_check.py's deferral list types this module's count of the candidate's token
+    assert p_integ(_mut(t, r["33"], r["33"].replace("| `%s` |" % INTEG[1][1], "| `%s` |" % INTEG[0][1], 1))), "row 33 with row 32's token passed"
     assert p_integ(_mut(t, r["32"], r["32"].replace("| `__REKEY__` |", "| `%s` |" % CAND_AT[:8], 1))), "row 32 naming the candidate passed"
     assert p_integ(t.replace(r["31.9"] + "\n", "", 1)), "the unforeseen merge's row 31.9 dropped passed"
     assert p_integ(t.replace(r["31.9.1"] + "\n", "", 1)), "the commit the last merge brings dropped passed"
