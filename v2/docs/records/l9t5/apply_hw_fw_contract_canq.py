@@ -2,6 +2,9 @@
 """apply_hw_fw_contract_canq.py: DRAFT apply script on v2/docs/HW-FW-CONTRACT.md (Layer 9 record l9t5, Layer 4 task L4A-55, MESHSAT-1357,
 7 October 2026, W139). UNAPPLIED: the integrator runs it; this record runs it only on scratch copies.
 
+ROUND 9 (W143, fnd/l4canmb, the same day): the row's text corrected before row (b)'s check, the edits unchanged in number: ES0392's
+workaround quoted with its page, the self-test's cycle, phases and precondition worded so that every S phase runs as worded and the
+attribution path is exercised (W139-F5, W139-F8), and the latched supervisor's restart rule (W139-F2, apply_gen_sch_b_canen.py).
 WHAT IT IS: three edits. FW-B22 (the quorum's schedule) restated on the two fabrics for method M-B (the peers' buffered TXD observation and 2-of-2
 SHDN vote, record l9t5 `apply_gen_sch_b_canmb.py`, W137), with its verification item V-B22 restated (round 6's V-B22 tested the
 transmit-share limiter, which M-B removes: W137-F6); and FW-B21's stop and V-B21's stop time restated at FW-B22's loss count (the
@@ -38,9 +41,21 @@ FW_B22_CANQ = (
     "on both through its own transceiver), with method M-B's observation and vote (record l9t5 `apply_gen_sch_b_canmb.py`, DRAFTED: each "
     "TXD buffered to the other two controllers' TIM3 captures through 2.2 kOhm, twelve 2-of-2 SHDN votes) | In every 100 ms window on "
     "each fabric a controller's frames go only in its own 10 ms slot (A from 10 ms, B from 20 ms, C from 30 ms): one state frame and at "
-    "most five event frames, classic frames of at most 8 data bytes; DAR = 1 with ES0392 2.24.5's printed workaround (a frame lost at "
-    "arbitration is restarted, inside its own slot only); the self-test acts only in its own segment, its hold 52 ms to 88 ms with one "
-    "test frame per controller, never over a state slot, both fabrics in parallel, its V phase run through the attribution path; a "
+    "most five event frames, classic frames of at most 8 data bytes; DAR = 1 with ES0392 Rev 15 2.24.5's printed workaround (page 48/73: "
+    "'Upon failure, clear the corresponding Tx buffer transmission request bit TRPx of the FDCAN_TXBRP register and set the "
+    "corresponding cancellation finished bit CFx of the FDCAN_TXBCF register, then restart the transmission.'), the restart inside its "
+    "own slot only. THE SELF-TEST acts only in its own segment, its hold 52 ms to 88 ms with one test frame per controller (A at 60 ms, "
+    "B at 70 ms, C at 80 ms), never over a state slot: in window n of a 12-window cycle fabric A's target is A, B or C by (n mod 12) div "
+    "4 and fabric B's the next controller, both fabrics at once, and the phase is S, P1, P2 or V by n mod 4 (S: the target's own SHDN "
+    "request over the hold, its test frame received by no peer and no peer's received by it; P1, P2: one peer's vote alone over the "
+    "hold, every test frame received both ways; V: the target's one malformed test frame of 12 dominant bit-times at the hold's start, "
+    "its only frame in that hold, struck by both readers through their attribution paths, their votes acting to the hold's end and the "
+    "target receiving no peer's test frame); a fabric's phase runs when in the previous window every controller received every other's "
+    "state frame on that fabric, no controller has stopped it, no vote on it is asserted outside the test and all three are "
+    "functional, else it is skipped and each controller's published phase counter shows the skip; the restart route's phases ride in "
+    "the fabric A target's windows (P1, P2: one peer's restart vote pulsed from 68 ms to 72 ms; V: both; the target reading its "
+    "restart gate's output from 66 ms to 74 ms; the verdicts on either fabric); a phase is declared failed on its second consecutive "
+    "failure. A "
     "peer's state frame for a window is taken from either fabric and counted only in its sender's slot with its sender's identifier (a "
     "frame carrying another controller's identifier is discarded), two copies that differ discard that peer's state for the window, a "
     "peer is lost after 3 consecutive windows with no valid state frame on either fabric, decisions 2 of 3 as before. ATTRIBUTION: each "
@@ -49,17 +64,27 @@ FW_B22_CANQ = (
     "than half a bit-time, a malformed frame it owns, the first dominant bit where a frame's owner sends recessive outside the ACK slot, "
     "a start of frame outside its slot or over its count), strikes only when its own FDCAN reports a protocol error or loses its "
     "scheduled frame within that frame (never on a TXD reading alone), and on a strike asserts its own vote on that transceiver for 1 s, "
-    "doubled for each strike within 10 s of a release, at most 64 s; it never votes on a message received over a fabric. A controller "
+    "doubled for each strike within 10 s of a release, at most 64 s; it never votes on a message received over a fabric. RESTART (the "
+    "latched supervisor's EN route, record l9t5 `apply_gen_sch_b_canen.py`, DRAFTED): a controller asserts its restart vote on a peer "
+    "for 2 s when it has captured no edge on either of that peer's TXDs and received no state frame of it on either fabric for 2 s, "
+    "at most once in 10 s per peer, never on a message received over a fabric; the peer's limiter's EN is pulled low only while both "
+    "other controllers vote. A controller "
     "returning from reset or power-off listens in bus monitoring mode for 2 windows and sets its votes and voted outputs to the "
     "read-back before it sends | record l9t5 `l9t5_canq.out` (L4A-55): the quorum under IOHA rows 3, 5, 7 and 8 and M-B's vote-path "
-    "faults; RM0433 Rev 8 pp.2469, 2470, 2529, 2530, 2532 to 2535; ES0392 Rev 15 2.24.5; SLLSEQ7F 5.6 and Table 6-5 | V-B22 | OWED (DRAFTED, "
+    "faults; record l9t5 `l9t5_canmb.out` section 7 and record l4canen (round 9, the self-test and the restart route); RM0433 Rev 8 "
+    "pp.2469, 2470, 2529, 2530, 2532 to 2535; ES0392 Rev 15 2.24.5 (page 48/73); SLLSEQ7F 5.6 and Table 6-5; SLVS841F 7.3 and 7.5 | "
+    "V-B22 | OWED (DRAFTED, "
     "record l9t5 L4A-55; PROVISIONAL until independently checked) |\n")
 V_B22_CANQ = (
     "| V-B22 | FW-B22 | the frames of 10 s of traffic counted per window, slot and controller: none outside its slot, at most six, none "
     "over 8 data bytes; each controller's TX pin in turn driven as a GPIO (held low; toggled at the bit rate; toggled once a window into "
     "a peer's state frame), on one fabric and then on both: its transceivers' SHDN reads high within `l9t5_canq.out` section 4's figure "
     "and the other two never miss each other for 3 windows; fabric A and then fabric B shorted and cut at A7's links with the self-test "
-    "running: no controller voted off; each latent fault of `l9t5_canq.out` section 7 injected: found within its bound; the times read "
+    "running: no controller voted off; each latent fault of `l9t5_canq.out` section 7 injected: found within its bound; each "
+    "controller's restart route with the self-test running: its P1, P2 and V pulses read at the target as low, low and high, and each "
+    "latent fault of record l4canen's route table injected: found within its bound; one supervisor's limiter latched by an over-limit "
+    "load and restarted by its two peers within record l4canen's recovery bound, and with one peer's restart vote held asserted the "
+    "supervisor never switched off; the times read "
     "and reported (MODEL figures until then) |\n")
 FW_B21_OLD = "or with a frame pending and no valid frame for 100 ms, is stopped at once (INIT kept set)"
 FW_B21_NEW = ("or with a frame pending and no valid frame for more than 3 windows (300 ms, FW-B22's loss count; frames lost to a deviation the "
@@ -69,7 +94,9 @@ VB21_NEW = "the supervisors stop the faulted fabric within 400 ms (FW-B22's loss
 CHANGE = ("| 3 (L4A-55) | 7 October 2026 | By record l9t5's Layer 4 task L4A-55 (MESHSAT-1357, `records/l9t5/T10-CANQ.md`, "
           "`apply_hw_fw_contract_canq.py`), after `apply_hw_fw_contract_t10.py`: FW-B21's stop at FW-B22's loss count (V-B21 with it), FW-B22 restated on the two fabrics for method M-B (slots, "
           "the decision from either fabric, the loss count, the attribution rule, the self-test's own segment, DAR = 1 with ES0392 "
-          "2.24.5's workaround) and V-B22 restated (round 6's limiter removed by M-B); CON-004 restated, not amended; OWED (DRAFTED) |\n")
+          "2.24.5's workaround) and V-B22 restated (round 6's limiter removed by M-B), with L4A-54's round 9 corrections by W143 (the "
+          "workaround quoted with its page, the self-test's cycle, phases and precondition worded, the restart route's rule); CON-004 "
+          "restated, not amended; OWED (DRAFTED) |\n")
 
 
 def refuse(msg):

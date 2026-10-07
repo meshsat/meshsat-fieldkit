@@ -71,7 +71,7 @@ def t_output_reproduced_and_every_input_pinned():
 def t_every_predicate_holds():
     text_ = _out()
     rows = [l for l in text_.split("9. THE PREDICATES")[1].splitlines()[1:] if l.strip()]
-    assert len(rows) == 12, rows
+    assert len(rows) == 13, rows
     assert all(l.endswith(": yes") for l in rows), [l for l in rows if not l.endswith(": yes")]
 
 
@@ -146,22 +146,51 @@ def t_the_levels_and_the_rail_are_re_solved():
 
 
 def t_the_self_test_interval_is_re_solved():
-    """six transceivers, four phases each, one per 100 ms window, a 2nd consecutive failure: (24 x 0.1 + 0.1) x 2 = 5.0 s, the crystal's
-    +-20 ppm included; the hardware response is tMODE 10 us + 3.6 ns + 16.6 ns; the guard 10 ms over the 4.6 ms queue"""
+    """ROUND 9 (W143), the schedule restated on W139's analysis: three targets, four phases each, both fabrics at once, one per 100 ms
+    window, a 2nd consecutive failure: (12 x 0.1 + 0.1) x 2 = 2.6 s, the crystal's +-20 ppm included; the hardware response is tMODE
+    10 us + 3.6 ns + 16.6 ns; the tightest margin is V's: the strike chain 1.310 ms from the hold's start (52 ms) before the first peer
+    test frame (60 ms), less the 1 ms alignment and two crystals' drift; W139's simulated 2.51 s lies within the bound"""
     text_ = _out()
-    cyc = 6 * 4 * 0.1 * (1 + 20e-6)
+    cyc = 12 * 0.1 * (1 + 20e-6)
     det = 2 * (cyc + 0.1 * (1 + 20e-6))
-    assert abs(_num(r"x 100 ms = ([\d.]+) s;", text_) - round(cyc, 4)) < 1e-4
+    assert abs(_num(r"one cycle is 12 windows x 100 ms = ([\d.]+) s;", text_) - round(cyc, 4)) < 1e-4
     assert abs(_num(r"DETECTED WITHIN ([\d.]+) s of its onset", text_) - round(det, 2)) < 1e-2 and det < 10.0
+    assert abs(_num(r"round 7's ([\d.]+) s\)", text_) - 5.0) < 1e-2
     t_on = 16.6e-9 + 3.6e-9 + 10e-6
     assert abs(_num(r"silence takes effect within ([\d.]+) us", text_) - round(t_on * 1e6, 3)) < 1e-3
     t_off = 105e3 * 20e-12 * math.log(3.3 * (1.015 + 0.0025) / 0.8) + 10e-6
-    assert abs(_num(r"it ends within ([\d.]+) us of the release", text_) - round(t_off * 1e6, 2)) < 1e-2
-    assert abs(_num(r"margin ([\d.]+) ms", text_) - round((10e-3 - (4.6e-3 + 2 * 20e-6 * 0.1 + t_off)) * 1e3, 3)) < 1e-3
+    assert abs(_num(r"it ends within ([\d.]+) us", text_) - round(t_off * 1e6, 2)) < 1e-2
+    v = (60e-3 - 52e-3 - 1.310e-3 - 1e-3 - 2 * 20e-6 * 0.1) * 1e3
+    assert abs(_num(r"(?m)V's votes act before the first peer test frame .*?\s([\d.]+) ms$", text_) - round(v, 3)) < 1e-3 and v > 0
+    assert _num(r"latest declaration at ([\d.]+) s", text_) <= det and _num(r"stuck low at ([\d.]+) s, both", text_) <= det
     sec = text_.split("THE SELF-TEST'S OWN FAULTS")[1].split("   coverage:")[0]
-    assert sec.count("RESIDUAL") == 4 and sec.count("within 5.00 s") >= 10
-    assert "every part canmb adds or re-uses is among them: yes" in text_
-    assert "finding W137-F1" in text_ and "firmware does not use DAR" in text_
+    assert sec.count("RESIDUAL") == 4 and sec.count("within 2.60 s") >= 11
+    assert re.search(r"a reader's attribution path\s+dead\s.*V fails \(V runs it end to end\)\s+within 2\.60 s", sec)
+    assert "every part canmb adds or re-uses is among them: yes" in text_ and "the attribution path is a row and the V phase runs it: yes" in text_
+    assert "W137-F1 answered" in text_ and "firmware does not use DAR" in text_
+    assert "ES0392 Rev 15 2.24.5's printed workaround (page 48/73)" in text_
+    assert '"Upon failure, clear the corresponding Tx buffer transmission request bit TRPx of the FDCAN_TXBRP register and set the' in text_
+    assert "+16 (S: its test frame; V: its malformed frame" in text_ and "at least 22 successes" in text_ and "finding W143-F1" in text_
+
+
+def t_every_phase_runs_as_worded_and_the_mutant_fails():
+    """the brief's mutant: a self-test whose S phases never run FAILS. Round 9's schedule, its precondition as worded, runs every phase
+    of every transceiver once a cycle; round 7's schedule with its precondition as worded runs no S phase (W139-F5); with fabric A down
+    the restated schedule keeps testing fabric B, round 7's tests nothing"""
+    text_ = _out()
+    sp = importlib.util.spec_from_file_location("l9t5_canmb_sched_under_test", need(SCRIPT, "the script"))
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    every = lambda runs, fabs: all(runs[(t, f, p)] == m.N_CYCLES for t in m.TAGS for f in fabs for p in m.PHASE_CODES)
+    assert every(m.phases_run("restated", literal=True), "AB")
+    assert every(m.phases_run("w137", literal=False), "AB")
+    lit = m.phases_run("w137", literal=True)
+    assert not every(lit, "AB") and sum(lit[(t, f, "S")] for t in m.TAGS for f in "AB") == 0, "the mutant does not FAIL"
+    deg = m.phases_run("restated", literal=True, down=("A",))
+    assert every(deg, "B") and not any(deg[(t, "A", p)] for t in m.TAGS for p in m.PHASE_CODES)
+    assert sum(m.phases_run("w137", literal=False, down=("A",)).values()) == 0
+    assert "every phase of every transceiver 2 times: yes" in text_ and "S phases run 0 times" in text_
+    assert re.search(r"runs every fabric B phase 2 times and no fabric A phase: yes", text_) and "round 7's runs 0 phases" in text_
 
 
 def t_the_round_page_states_the_disposition():
