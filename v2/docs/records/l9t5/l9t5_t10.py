@@ -1929,6 +1929,9 @@ R10_A = (2.0e-3, 3.0e-3)      # m, ASSUMPTION: the radius of a disc of the SOT-2
 R10_R = (10.0e-3, 20.0e-3)    # m, ASSUMPTION: the LDO's distance from its own controller's centre (no placement exists, L4REG-F6)
 R10_K_CU, R10_K_FR4 = 390.0, 0.3   # W/(m K): copper, and FR-4 through its plane (ASSUMPTION, a common handbook figure)
 R10_RESTART = 10.0            # s: the peers' restart of one supervisor at most once in 10 s (FW-B22's RESTART rule, record l4canen, DRAFTED)
+R10_ENABLED = ("TIM3", "ADC12 registers", "ADC12 kernel")   # row (b)'s additions to FW-B20's enabled set: canmb's TXD captures (TIM3, W137),
+                              # hodtest's output reads (PC0, PC1 on ADC123_INP10 and INP11, an ADC of ADC1/ADC2, W146-D7)
+R10_ADC_X = 3.0               # ASSUMPTION: the ADC's analog current on VDDA taken at three times ST's TYPICAL (no maximum printed)
 
 
 def pdf10(key):
@@ -2133,6 +2136,18 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
               "(f1) one fabric on the 180 mA row (section 8)": FAULT["d_f1"], "S3' row 7 with the healthy fabric's bit (%s, 10e)" % s3_key: s3p[s3_key]}
     surv = {"(f2) both fabrics on the 180 mA row (section 8)": FAULT["d_f2"], "both fabrics held, revision V (10e)": R5["both"][FITTED_REV][1]}
     i125 = (TJ_GOAL - air) / (S["rja"][0] * drop)
+    # row (b)'s enabled set, by 10c's method (TYPICAL uA/MHz of DS12110 Table 137, VOS3, times the 144 MHz bound and the printed maxima's
+    # ratio to the typical at 125 C, MODEL), and the ADC's analog current on VDDA (TYPICAL only, taken at R10_ADC_X times, ASSUMPTION)
+    th = pdf("h743")
+    blk = need(th, r"\n\s*Table 137\. Peripheral current consumption in Run mode\s*\n(.*?)\n\s*Table 138\. Low-power mode wakeup timings", "rev V's peripheral table", re.S).group(1)
+    en_pm = {}
+    for name in R10_ENABLED:
+        m = need(blk, r"^(?:\s*[A-Z][A-Z0-9]*)?\s+%s\s+((?:[\d.]+\s+){3}[\d.]+)(?:\s+\S*/MHz)?\s*$" % re.escape(name), "%s in rev V's peripheral table" % name)
+        en_pm[name] = float(m.group(1).split()[-1])
+    en_dig = sum(en_pm.values()) * 1e-6 * BOUND[1] * kfac(P, FITTED_REV, 125.0)
+    m = need(th, r"ADC consumption\s+Resolution = 16 bits, fADC=25 MHz\s+-\s+-\s+-\s+(\d+)\s+-", "the ADC's consumption on VDDA (Table 184)")
+    en_ana = float(m.group(1)) * 1e-6
+    en_add = en_dig + R10_ADC_X * en_ana
     w("11a. ROUND 10 (7 October 2026, W151; Layer 4 tasks L4A-57 and L4A-61): ROW (b)'S DRAFTS COMPOSED, THE SELECTED REGULATOR STAGE'S")
     w("   ACCEPTANCE (RE-6, RE-7) AND THE T10 ROWS RESTATED. A DRAFT: nothing applied, no independent check (row (b)'s is L4A-62); every junction")
     w("   below is a MODEL on printed figures, never a measured temperature; sections 1 to 11 stand as written, and where (j) restates a row its")
@@ -2274,8 +2289,14 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
         ios_lo, served_max, ios_lo - served_max))
     w("       needed; the 180 mA a transceiver (PRINTED) enters (f1), (f2) and S3' above. THE WINDOW: %.4f A between the largest served state and" % (ios_lo - served_max))
     w("       the limiter's least, and %.4f A between its most and the regulator's 125 C current on the printed theta (zero at E-17's pass limit by" % (i125 - ios_hi))
-    w("       construction). Row (b)'s own rail additions (the buffers, gates, pull-ups and votes of canmb, canen and hodtest) are the drafts'")
-    w("       records' figures, read against this window in the connected record (l9t5_connected.out 11a), never typed here")
+    w("       construction). ROW (b)'s ENABLED SET (FW-B20 restated: TIM3 for canmb's captures, an ADC of ADC1/ADC2 for hodtest's reads, neither in")
+    w("       10c's set): %s uA/MHz (TYPICAL, Table 137, VOS3) at 144 MHz times %.3f (10c's ratio at 125 C) = %.4f A, MODEL; and the ADC's" % (
+        " + ".join("%s %.1f" % (k, v) for k, v in en_pm.items()), kfac(P, FITTED_REV, 125.0), en_dig))
+    w("       analog current on VDDA, %.2f mA at 16 bits and 25 MHz (TYPICAL only, Table 184), taken at %.0f times (ASSUMPTION): at most %.4f A" % (
+        en_ana * 1e3, R10_ADC_X, en_add))
+    w("       on a controller's rail; the window after it %.4f A. The drafts' own rail additions (the buffers, gates, pull-ups and votes of" % (
+        ios_lo - served_max - en_add))
+    w("       canmb, canen and hodtest) are their records' figures, read against this window in the connected record (l9t5_connected.out 11a)")
     w("     (2) the output short: (f) (i) latched within %.0f ms, (ii) excluded with its reason (W151-1, W138-3, W135-2)" % (S["tlatch"][0][2] * 1e3))
     w("     (3) the limiter's own dissipation: %.1f mW at S3' (%.1f C on %.1f C/W) and %.1f mW at IOSmax in regulation; it holds 125 C to %.0f C/W, so" % (
         S["ron"][0] * s3p[s3_key] ** 2 * 1e3, tj_lim_s3, S["lim_rja"][0], p_lim_hi * 1e3, rja_lim_ok))
@@ -2374,13 +2395,13 @@ def round10_rowb(w, out, P, DP, air, R5, FAULT):
     pred["round 10 (L4A-57): the regulator holds 125 C at constant maximum dissipation at IOSmax on the printed theta, IGND stated, not bounded"] = (
         tj0 <= TJ_GOAL and g_star > 0 and S["ignd"][1] == "TYPICAL")
     pred["round 10 (L4A-57): no served state reaches IOSmin; T10-A3 holds at IOSmax on the 1 A row; three limiters inside U601 and the lead"] = (
-        served_max < ios_lo and at >= nd_bnd and other >= nd_other and 3 * ios_hi <= DP["tps_a"])
+        served_max + en_add < ios_lo and at >= nd_bnd and other >= nd_other and 3 * ios_hi <= DP["tps_a"])
     pred["round 10 (L4A-57): the judge holds on its rows and each mutation FAILS (a TYPICAL or a guideline used as a bound refused at K0)"] = (
         verdict == "HOLDS" and all(v == "FAILS" for _l, v in vjm))
     pred["round 10 (L4A-57): the printed theta is TI's best case, not a site bound: DONE AS CONDITIONAL on E-17, its limits named"] = (
         done and rja_need > S["rja"][0] and zth_10 > 0)
     pred["round 10 (L4A-61): every T10 row the drafts change is restated, its anchor found in this output"] = len(RS) == 17
-    return {"pred": pred, "tj0": tj0, "ios": (ios_lo, ios_hi), "served_max": served_max, "window": ios_lo - served_max, "a3": (at, nd_bnd, nd_inf),
+    return {"pred": pred, "tj0": tj0, "ios": (ios_lo, ios_hi), "served_max": served_max, "window": ios_lo - served_max - en_add, "a3": (at, nd_bnd, nd_inf),
             "g_star": g_star, "rja_need": rja_need, "zth_10": zth_10, "verdict": verdict, "done": done}
 
 
