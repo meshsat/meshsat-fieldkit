@@ -25,7 +25,7 @@ PRINTED CURRENT-LIMIT AND FAULT-TIMER LATCH, so the recovery is the -1's own (re
           BRK_VIN) only while RESET1 AND Q112 conduct; its drain through R142 1 kOhm onto the crowbar's gate OCH_CG, held by R138
           4.7 kOhm and clamped by D105 (BZT52C12, at most 12.7 V) under the gate's 20 V.
   Q111    CSD18510Q5B (Q101's part, C2876544), the CROWBAR: drain through R140 0.39 Ohm (a 2512 part whose maker prints a single
-          pulse of at least 0.35 J in 1.4 ms, Layer 6) to PACK_P, source on PACK_N. Its own current at the pack's least 10.6 V
+          pulse of at least 0.4 J in 1.4 ms, Layer 6) to PACK_P, source on PACK_N. Its own current at the pack's least 10.6 V
           (26.8 A) is over the LM5069's most limit (23.93 A) whatever the load, so the -1 always enters its current limit (or its
           circuit breaker, from 30.21 A) and latches after its fault timer: the event l9stk 15.6 judges ("an overload over the
           unit's limit", 0.57 of the derated SOA), once per recovery.
@@ -103,7 +103,7 @@ _TRIP = (
     'r("R142", "1k", "OCH_GD", "OCH_CG"); r("R138", "4.7k", "OCH_CG", "PACK_N")\n'
     'part("D105", "Device", "D_Zener", "BZT52C12-7-F zener, the crowbar\'s gate under 12.7 V (DS18004)", "SOD123", {"1": "OCH_CG", "2": "PACK_N"}, "C124196")\n'
     'pfet5("Q111", "CSD18510Q5B 40 V N-FET, the held-overcurrent trip\'s crowbar into U101\'s latch (record l8p round 11)", "OCH_CG", "OCH_CD", "PACK_N", "C2876544")\n'
-    'r("R140", "0.39R 1% 2512 (a part whose maker prints a single pulse of at least 0.35 J in 1.4 ms: Layer 6)", "PACK_P", "OCH_CD", "RS2512")\n'
+    'r("R140", "0.39R 1% 2512 (a part whose maker prints a single pulse of at least 0.4 J in 1.4 ms: Layer 6)", "PACK_P", "OCH_CD", "RS2512")\n'
     'part("TP110", "Connector", "TestPoint", "OCH_S", "TP", {"1": "OCH_S"}); part("TP111", "Connector", "TestPoint", "OCH_CG", "TP", {"1": "OCH_CG"})   # E-12f\n'
     '_intent.bypass("C116", "U106", "5", "BRK_VIN", cls="D", basis="TI OPA187 SBOS807E, revised May 2020 (v2/vendor/ti/held/ti-opa187-sbos807e.pdf, "\n'
     '               "held back): 10.1 \\"Connect low-ESR, 0.1-uF ceramic bypass capacitors between each supply pin and ground; place the "\n'

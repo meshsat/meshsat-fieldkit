@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """fetch_held_back_rowc.py: fetch the maker's sheet record l8p's round 10 (register row (c), L4A-66 and L4A-65; MESHSAT-1357, 7 October
-2026) read but did not file.
+2026) read but did not file
+(round 11, 7 October 2026: TI's LM5066I sheet added, read for one comparison of L8P-BREAKER.md section 16).
 
 The round reads R17's derating on ROHM's own sheet for the first time: GMR100 HJ series, Rev. GMR100J-IA-006E (5 March 2026), the
 part GMR100HJAAFD5L00 that the parts stream's identity row names for board A's R17 (pcb_part_identities.yaml, DOCUMENT_OWED until
@@ -23,6 +24,11 @@ DOCS = [
     ("v2/vendor/passives/held/rohm-gmr100hj-rev006e-2026-03-05.pdf",
      "https://fscdn.rohm.com/en/products/databook/datasheet/passive/resistor/chip_resistor/gmr100-e.pdf",
      "3b5ac7258851583c154cc33c7ec7b8be4768702f633402ab72341c42ca525266"),
+    # round 11 (L8P-R10-F1's approach (C), a controller with a tighter current-limit spread): TI's LM5066I, SNVS950C (July 2016),
+    # read for its printed VCL row and its VIN range only; TI's sheets in this tree's held/ folder are kept back as the others are
+    ("v2/vendor/ti/held/ti-lm5066i-snvs950c.pdf",
+     "https://www.ti.com/lit/ds/symlink/lm5066i.pdf",
+     "a759a5d04fe5b81577af575153fd528f0f03f147c892040eac6c51e400693628"),
 ]
 
 

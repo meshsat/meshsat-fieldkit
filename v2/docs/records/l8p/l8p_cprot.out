@@ -1,0 +1,245 @@
+l8p_cprot: record l8p round 11, Layer 4 register row (c): L8P-R10-F1 as a design choice, L4A-67 (C-PROT rev 1 for the guard on the
+corrected circuit) and L4A-68 (the guard's allowance for its consumers) (MESHSAT-1357, 7 October 2026). Desk arithmetic on the makers'
+printed figures and the records' own; nothing was built, bought or measured. LABELS: PRINTED; TYPICAL (never a limit); READING;
+INFERRED; MODEL; RECORD; ASSUMED.
+
+0. PINS (sha256/16)
+   5988e5603a96b27f  v2/docs/records/l8p/l8p_rowc.out
+   3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
+   46f3c6cd9ea6b638  v2/docs/records/l9stk/l9stk_protection.out
+   3a23036c57859f1d  v2/docs/records/l9stk/L9-STACKUPS.md
+   255ef270409e8908  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
+   e8f1294bb0f76c75  v2/docs/records/l8p/apply_gen_sch_p_breaker.py
+   4174af5851fe1be0  v2/docs/records/l8p/apply_gen_sch_p_idealdiode.py
+   d0d538f802b4af97  v2/docs/records/l8p/check_l8p_och.py
+   740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
+   08a656ab0230986d  v2/docs/records/l8p/inputs/l9stk-section15.9-bb6d2c8f.md
+   d6aed9d98fbf7f16  v2/vendor/ti/ti-tps37-snvsbj1e.pdf
+   62bd7b5285171597  v2/vendor/ti/held/ti-opa187-sbos807e.pdf
+   d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
+   a759a5d04fe5b815  v2/vendor/ti/held/ti-lm5066i-snvs950c.pdf
+   0d8e3261ae280e00  v2/vendor/power/aos-ao3401a-p-mosfet.pdf
+   7941fb423af7c6c6  v2/vendor/power/jscj-2n7002-c8545.pdf
+   cb747de812f66859  v2/vendor/battery/ti-csd18510q5b.pdf
+   0fbd7d137524820f  v2/vendor/diodes/diodes-bzt52c-ds18004.pdf
+   98a7e99bc5bbdf2a  v2/vendor/keystone/littelfuse-297-ficcorp.pdf
+
+1. THE FINDING AND THE CASE (RECORD)
+   L8P-R10-F1 (record l8p round 10, l8p_rowc.out 3a, computed again here by l8p_rowc.py): at the breaker's held 23.93 A from 76.25 C the three
+     25 A MINI blades (P's F1, E's F3, A's F1; Littelfuse 297) carry 103.6 % of their printed rerated current (23.10 A at the air, 22.75 A at the
+     band's 85.41 C): OVER by 0.83 A; the 18 A service is 77.9 % of it: within
+   the case: C-PROT rev 1 (the breaker's band 18.32 to 23.93 A held from 76.25 C, board P's FETs welded, no firmware, 10 A held and 18 A for 60 s
+     never interrupted; record l9stk's condition C4: an indicated 18 A may be a true 18.80 A)
+   what may not move (the brief, constitution 4): no protection lowered, not the 18 A service, no printed rating's margin
+
+2. THREE APPROACHES ON PRINTED FIGURES (constitution section 4: at most three, materially different)
+   (A) A FUSE OR A HOLDER ARRANGEMENT THAT CARRIES 23.93 A ON ITS PRINTED RERATING
+     a 25 A element needs a printed rerating of at least 0.9572 at 76.25 C (and at the band's 85.41 C); the held MINI 297 prints 0.9238 and 0.9099
+       (READING of its line); no other maker's sheet held or read prints a 25 A element at or above it: NOT AVAILABLE ON PRINTED FIGURES
+     a 30 A element (0297030) carries it on its own row (27.71 A rerated at the air), but the copper was sized and coordinated at the 25 A
+       blade (record l9stk 14.4 to 14.6): the 30 A blade's 135 % to 200 % band runs from 40.50 A to 60 A for up to 600 s, and the bands'
+       steady reading at 60 A, scaled by the current squared from the record's own 50 A row (116.60 C), is 134.4 C over board A's 125 C and
+       board E's 120 C with the plating pinned: a protection lowered: REFUSED (round 10's (a)); the copper's weight is the open OWNER
+       DECISION (L9STK CU), not this record's to move
+     a holder or busbar that cools the blade: Littelfuse's rerating curve is drawn against the AMBIENT temperature (READING of its axis);
+       no printed figure of the 297 sheet or the 3568's credits a holder or busbar with a lower blade temperature, and the 76.25 C air
+       is every blade's ambient inside the sealed case: NO PRINTED BASIS
+     verdict (A): NOT SUPPORTED on printed figures
+   (B) A HELD-OVERCURRENT TRIP ON BOARD P THAT ENDS IN THE -1'S OWN LATCH (apply_gen_sch_p_ocheld.py; section 4)
+     the held current is ended over a window of 19.96 to 21.52 A (printed maxima; R10 as the record assumes it, E-6), inside 18.80 A (the
+       service's true current, C4) and 22.75 A (the blades at the band); above it a single event per recovery, the -1's own
+     verdict (B): SUPPORTED on printed figures, CONDITIONAL as section 4 names
+   (C) A CONTROLLER WITH A TIGHTER PRINTED CURRENT-LIMIT SPREAD (TI LM5066I, SNVS950C, the record's E-5 fallback)
+     its VCL at CL = GND 45 to 55 mV (PRINTED, -40 to 125 C) with RS's window spread 1.0204 (record l9stk 15.4): the least kept at 18.32 A
+       gives a most of 22.85 A: under the air's 23.10 A by 0.25 A, OVER the band's 22.75 A; at the service's true 18.80 A the most is 23.45 A, over both
+     its recommended VIN starts at 10.0 V, 0.6 V under the pack's least 10.6 V; and it replaces the whole breaker of record l9stk 15.4 to 15.6
+       (its power limit, timer, SOA, latch and the drafts of rounds 1 to 4)
+     verdict (C): NOT SELECTED (fails the band reading and C4's service current on printed figures; the largest redesign of the three)
+
+3. THE SELECTION (SESSION, decision L8P-R11-D1): (B)
+   why: the one approach that ends every held current under the blades' printed rerated current at both readings without moving the
+     breaker, the copper, the 18 A service or any printed margin; it adds a protection and lowers none; every part type is in the kit
+   END CONDITION (any one): (1) R10's maker sheet (E-6) reads a tolerance with its temperature coefficient over 130 K outside -7.3 to 8.3 %;
+     (2) Layer 6 finds no R140 whose maker prints a single pulse of at least 0.40 J in 1.4 ms; (3) a check of this round finds a held
+     current over 22.75 A, a trip at or under 18.80 A, or a crowbar event that does not end in the -1's latch, and a second negative check of
+     the same trip follows; then (C) with its band reading resolved, or the blades' evidence route (round 10's (c)) as the supplier's
+
+4. THE TRIP ON PRINTED FIGURES (B)
+   4a. THE WINDOW (INFERRED on PRINTED rows; R10 ASSUMED): OCH_A = 19.3 x I x R10 (U106 inverting, R133 over R132); U107's VITP 0.792 to 0.808 V
+     (TI SNVSBJ1E 7.5, -40 to 125 C); R132 and R133 at 0.1 % and 25 ppm/K over 100 K; OPA187's VOS 18.8 uV in all (10 uV, 0.015 uV/C over
+     100 K, CMRR 126 dB at VCM V-), IB 7.5 nA, U107's ISENSE 100 nA through R135; R10 2 mOhm at 1 % and 75 ppm/K over 130 K (ASSUMED,
+     record l8p 12c; no maker's sheet held, E-6): the held current is ended from 19.965 A at the least to 21.521 A at the most
+     margins: 1.16 A over the service's true 18.80 A; 1.23 A under the blades' 22.75 A at the band (1.57 A under 23.10 A at the air)
+     robustness: the window stays inside both while R10 reads within -7.3 % to +8.3 % (the record assumes +-1.98 %)
+     OCH_A in the service: 0.386 V at 10 A, 0.695 V at 18 A, 0.726 V at the true 18.80 A: under the least 0.792 V
+   4b. THE DELAYS (TI's Equations 5 and 6, C0G at 5 %; the no-capacitor least not printed, taken 0): the trip's sense delay 0.460 to 0.852 ms,
+     longer than E-10's 0.282 ms excursions (record l9stk 15.7: the key-down current's excursions above 18.32 A each under it), so the trip,
+     whose least is over 18.32 A, is never more sensitive than the breaker's least unit; the arming's delay after PGD falls 4.60 to 8.36 ms
+   4c. THE CROWBAR INTO THE -1'S LATCH: R140 0.39 Ohm and Q111; its own current 26.9 A at 10.6 V, 42.7 A at 16.8 V, 75.6 A at the 29.2 V clamp,
+     each over the breaker's most limit 23.93 A WHATEVER THE LOAD: U101 enters its current limit (its circuit breaker from 30.21 A) and the
+     fault timer latches the -1 off, clearing 1.292 ms at most from the limit's onset plus tCL (45 us typical, no maximum: RECORD, l9stk
+     prot 3): the row 'an overload over the unit's limit' (40.32 W for 1.292 ms against 71.1 W derated: 0.57) and, from 30.21 A, the hot-short
+     row's release in 16.5 us; the crowbar's peak with the most limit's load 67.4 A at 16.8 V, 99.6 A at the clamp, under the 116.8 A where VIN to
+     SENSE passes its 0.3 V: no row of record l9stk 15.6 is newly reached; ONCE per recovery (redocking, an input's return, the guard's
+     cycle: the -1's own); no retry train
+     the gate: Q111's Qg(4.5 V) 75 nC at most through R142 from BRK_VIN at 10.6 V: 12.3 us; the event from the held current's onset at most
+       2.156 ms (the trip's delay, the gate, the clearing) plus tCL; PGD falls only when VDS passes 1.62 to 3.40 V (RECORD), and the arming's
+       least delay after it, 4.60 ms, leaves 3.30 ms for tCL past the gate and the clearing: the crowbar stays until the latch
+     R140's single pulse (INFERRED): PACK_P under the limit at most 9.43 V (the most limit through R140 alone), 230 W for 1.292 ms plus 50 us
+       of tCL: 0.309 J; the kit's 593 uF on PACK_P from 9.43 V: 0.026 J; the release spike at the clamp: under 0.003 J; at most 0.40 J in all:
+       a 2512 part whose maker prints a single pulse of at least that in 1.4 ms (Layer 6; CONDITIONAL, E-6b)
+     Q111 (CSD18510Q5B, PRINTED): IDM 400 A against 99.6 A; VDS 40 V against PACK_P's 29.2 V clamp; VGS 20 V against D105's 12.7 V
+   4d. THE ARMING AND THE GATE DRIVE (PRINTED limits; leakages ASSUMED to double every 10 K at the record's 86.25 C site)
+     Q110 (AO3401A) driven at VGS -3.39 V at 10.6 V to -9.34 V at the clamp (R136 over R137), against its +-12 V and its -2.5 V RDS(on) row
+     Q110 held off: RESET1's 300 nA and Q112's off leakage 5.58 uA through R136: 0.277 V, under its least threshold 0.5 V
+     the crowbar held off: Q110's off leakage 43.6 uA (5 uA at 55 C PRINTED) through R138: 0.205 V (0.570 V at a 101 C site), under Q111's least
+       threshold 1.2 V (25 C row; the threshold falls with temperature, TYPICAL Figure 6: a layout condition keeps both off the pad)
+     U107's RESET1 sinks at most 0.199 mA and RESET2 0.029 mA (TI recommends 5 mA); U107's VDD and SENSE at most 29.2 V against 65 V;
+       Q112's gate at most 14.6 V against 20 V; OCH_CG under D105's 12.7 V; R142 and D105 carry at most 17.8 mA for the event
+   4e. POWER-UP, THE START AND A LATCHED BREAKER: U107 holds RESET1 and RESET2 asserted for tSD (2 ms at most) and RESET2 while PGD is
+     low, so Q112 is off and the crowbar disarmed whenever the breaker is not running: at a gauge's wake, at a docking (the RC hold's
+     0.110 s and the start), during a start (PGD low while VDS is high) and once latched; the trip touches neither the enable loop nor
+     UVLO (check_l8p_och's APART): L4-E11 20c's window, its readings and the RC hold's 0.110 to 0.907 s are unchanged
+   4f. THE STANDING CURRENT from BRK_VIN: U106 150 uA, U107 2.6 uA, R139 with R141 8.4 uA at 16.8 V (PRINTED maxima): beside the detector's
+     0.47 mA (record l8p round 3), a standby load on the pack for the battery stream
+   4g. ITS OWN SINGLE FAILURES (INFERRED from the circuit as drawn):
+     U106 or U107 dead, Rin open, RESET1 stuck high       the trip lost, LATENT: round 10's rows (the blades over by 0.83 A)
+     Q112, Q110, R142, Q111 or R140 open; D105 short      the crowbar lost, LATENT: as above
+     U106's output stuck high, Rf open                    a trip at every running start: the -1 latches, the kit dark (found)
+     Q110 or Q111 shorted                                 the crowbar at every start: the -1 latches in its start (found)
+     Q112 shorted, RESET2 stuck high                      the arming lost: a crowbar for tSD at a gauge's wake on a live PACK_P
+     RESET2 stuck low, C120 shorted                       the crowbar disarmed, LATENT: as the first row
+     C119 open                                            the sense delay 17 us at most: a trip on an excursion E-10 allows (found)
+     so a latent first failure returns the design to round 10's rows at 23.93 A held (the blades at 103.6 % of their rerated current, no part
+       the guard protects exposed: M-A holds the FETs at 23.93 A); no automatic diagnostic is drawn: E-12f at commissioning and at each
+       service, and an automatic test is REMAINING ENGINEERING with HO-A's pattern
+
+5. THE DRAFT COMPOSED IN L4-E9'S ORDER (board P; INFERRED from the regenerated netlist)
+   l8p/apply_gen_sch_p_breaker.py                             OK
+   l8p/apply_gen_sch_p_idealdiode.py                          OK
+   l8p/apply_gen_sch_p_ocheld.py                              OK
+   l6r2/apply_gen_sch_p_intent.py                             OK
+   l6r2/apply_gen_sch_p_lcsc.py                               OK
+   board P regenerated: 183 parts; netlist sha256/16 16f9a7a50d9d01b3
+   check_l8p_netlist.py on it: P BRK  DRAWN; P EN   DRAWN; P INH  DRAWN; P REV  DRAWN; P DIO  DRAWN
+   check_l8p_och.py on it: OCH DRAWN; the window from the drawn values 19.965 to 21.521 A
+   the mutations, each read by check_l8p_och.py:
+     the crowbar's resistor on BRK_VIN, upstream of the sense pair (the breaker could never end it),      OCH FAIL: R140 on ['BRK_VIN', 'OCH_CD'], wanted PACK_P and OCH_CD
+     the amplifier's input and reference exchanged (R132 from PACK_N, R134 from GND),                     OCH FAIL: R132 on ['OCH_N', 'PACK_N'], wanted GND and OCH_N
+     RESET1 on UVLO instead of the arming FET (a sink on UVLO; a retry, not the -1's latch),              OCH FAIL: U107.4 on 'BRK_UVLO', wanted OCH_R
+     the arming on BRK_VIN instead of PGD (the crowbar armed at power-up),                                OCH FAIL: U107.3 on 'BRK_VIN', wanted BRK_PGD
+     the crowbar at 2 Ohm (its own current under the breaker's most limit),                               OCH FAIL: R140 '2.0R 1% 2512': the crowbar's own current at 10.6 V does not exceed the breaker's mos
+     the sense delay capacitor removed,                                                                   OCH FAIL: C119 on [], wanted OCH_CTS and PACK_N
+     the crowbar's gate clamp removed,                                                                    OCH FAIL: D105.1 on None, wanted OCH_CG
+     the gain at 10 kOhm (the window off),                                                                OCH FAIL: R133 value '10.0k 0.1% 25ppm' does not start '19.3k 0.1% 25ppm'
+     the crowbar's drain on DOCK_EN_OUT (a sink on the enable loop),                                      OCH FAIL: R140 on ['DOCK_EN_OUT', 'PACK_P'], wanted PACK_P and OCH_CD
+   the draft refuses a board P without the breaker and the ideal diode (exit 3: apply_gen_sch_p_ocheld: this record's breaker and ideal-diode drafts a), a second application (exit 3: apply_gen_sch_p_ocheld: designator U106 is already in use in) and the
+     repository's own generator while unreleased (exit 3: apply_gen_sch_p_ocheld: NOT RELEASED: no RELEASE.md; l8p's drafts wait on an acc)
+
+6. L4A-67: C-PROT REV 1 FOR THE GUARD ON THE CORRECTED CIRCUIT (the delta of round 9, M-A of round 10, the trip of this round)
+   the states: (i) the trip intact: no current is HELD over 21.52 A; above it one event per recovery as 4c; (ii) the trip latently failed
+     (4g): round 10's rows at the breaker's held 23.93 A. Each row: below the trip (held) | above the trip (the event) | verdict
+   Q39, Q40, Q42 (BUK6Y10-30P; round 10's 15a, PRINTED device maxima)
+       held: at most 21.52 A: the hottest junction 135.9 C at E-1's bar, 125.2 C at the design target (trip intact); 150.00 C at the bar with the
+         trip failed (round 10) | the event: at most 23.93 A for 2.16 ms plus tCL, the crowbar's peak 99.6 A for 16.5 us at most: at most the held 23.93 A state by superposition (round 10's 15e) | WITHIN 150 C, CONDITIONAL on
+         E-05, E11-29, E11-36
+   R17 (ROHM GMR100HJAAFD5L00, PRINTED derating)
+       held: 2.348 W at 21.52 A on its printed maximum; its terminals admitted to 136.5 C on the lower line (round 10: 128.5 C at 23.93 A) | the
+         event: within its held state's energy for 2.2 ms; the 16.5 us spike inside the hot-short row the record carries | WITHIN its
+         derating, CONDITIONAL on the terminal reading (E11-29's coupon)
+   the pour and the vias (MODEL; record l9stk's conductor model)
+       held: the band 7.41 K over the air at 21.52 A (round 10: 9.16 K at 23.93 A) | the event: as the held state | WITHIN on the model; the
+         laminate's limit NOT HELD (L9-STACKUPS 14.3)
+   the three 25 A MINI blades (Littelfuse 297, PRINTED rerating READ)
+       held: at most 21.52 A, 93.2 % of the rerated 23.10 A at the air, 94.6 % of 22.75 A at the band (trip intact); round 10's 103.6 % with the trip
+         failed | the event: one excursion per recovery of at most 2.2 ms at 103.6 % of the rerated current and 16.5 us at 99.6 A, inside
+         the printed rows' least opening times (135 %: 0.75 s; 600 %: 30 ms) | WITHIN with the trip intact (L8P-R10-F1 CORRECTED IN DRAFT);
+         OVER by 0.83 A on the trip's latent failure (4g)
+   the Keystone 3568 holders (M65 p.42, PRINTED UL 30 A, -50 to +145 C)
+       held: 71.7 % of 30 A | the event: as the blades | WITHIN on current
+   the dock pins J_CP1 to 4, J_CN1 to 4 (Mill-Max 0858, 9 A continuous PRINTED, no minimum resistance)
+       held: 5.38 A a pin evenly; no pin over 9 A needs the split ratio at least 0.464 (round 10: 0.553 at 23.93 A) | the event: at most 24.9 A a
+         pin for 16.5 us, inside the hot-short row | WITHIN evenly, CONDITIONAL on E-4
+   the XT60 J_BATT (Amass, PRINTED 30 A; 35 A at a rise under 85 K)
+       held: 71.7 % of 30 A; the rise scaled from the 35 A row 32.1 K (INFERRED), 108.4 C, 11.6 K under its 120 C | the event: as the blades |
+         WITHIN on current, its temperature INFERRED
+   the 12 AWG wires (W_P, W_N, P_CP)
+       no maker's sheet held: MISSING the wire maker's ampacity at a 76.25 C ambient for its insulation class (Layer 6, the harness
+         supplier) | NOT SHOWN, CONDITIONAL (the held current now at most 21.52 A)
+   Q1, Q2, Q109 (CSD17570Q5B, PRINTED 0.69 mOhm at 25 C only; hot TYPICAL)
+       held: the 150 C junction admits a hot factor up to 2.308 with both losses through the common pad at 21.52 A (round 10: 1.866 at 23.93 A),
+         against the typical 1.8 | the event: the held state's bound | NOT SHOWN on printed maxima: MISSING TI's maximum RDS(on) at
+         125 or 150 C, or E-8's joint-case reading on board P's first specimen (TJ under 150 C at the held current from 76.25 C); CONDITIONAL
+   Q101, Q102 (CSD18510Q5B, the breaker's FETs)
+       held: a hot factor up to 6.63 admitted to 150 C (round 10: 5.37) | the event: l9stk 15.6's 'over the unit's limit' row, 0.57 of
+         the derated SOA (RECORD) | NOT SHOWN on printed maxima (E-11, the installed path at most 52.5 C/W, and the hot RDS(on)); the
+         event's SOA reading CONDITIONAL on E-2 and E-3 (record l9stk)
+   Q111 (CSD18510Q5B, the crowbar; this round)
+       held: off (IDSS 1 uA at 25 C PRINTED) | the event: 99.6 A at most against IDM 400 A PRINTED, VDS a few hundred mV | WITHIN
+   R10 (2 mOhm 2512 2 W, the gauge's sense and the trip's)
+       held: 0.93 W at 21.52 A | the event: the hot-short row's 16.5 us | NOT SHOWN: MISSING its maker's sheet (tolerance, temperature
+         coefficient, derating at the band; E-6); the trip's window holds for R10 within -7.3 to +8.3 %
+   R101, R102 (the breaker's sense pair; no part chosen)
+       held: 0.78 and 0.42 W at 21.52 A | NOT SHOWN: MISSING the parts (Layer 6: 2 W each at the band's temperature, 1 %, at most 50 ppm/K; E-6)
+   R140 (the crowbar's resistor; this round)
+       held: no current | the event: at most 0.40 J in 1.4 ms | NOT SHOWN: MISSING a part whose maker prints that single pulse (E-6b)
+   F2 (Eaton SCF9550, 30 A, -20 to +60 C PRINTED)
+       held: 71.7 % of 30 A; its printed range ends 16.25 K under the 76.25 C air at any current: the pack's thermal environment (record
+         l4e10 section 9), not a held-current row
+   the cells
+       held: E-5's split at 21.52 A (round 10: 0.997 of 8 A at 23.93 A, here 0.897 of 8 A per cell evenly, INFERRED) | the battery stream's
+         and U-01's (outside M-A)
+   the guard's own claims (rounds 8 and 9, 10c): unchanged by the trip, which touches neither its pour nor the loop; with the trip
+     intact the hottest battery FET reads at most 135.9 C at E-1's bar and 125.2 C at the design target held (the guard: no trip under
+     127.8 C at its die, surely tripped from 132.2 C); a held overload over the window is ended by the trip within 2.16 ms plus tCL,
+     long before the pour's own time; the guard keeps its own case (the pour's temperature at any current, a pour worse than the bar
+     included), and its latent failures (L8P-R9-F1) expose no part at the held currents M-A holds
+
+7. L4A-68: THE GUARD'S ALLOWANCE FOR ITS CONSUMERS (RECORD, record l8p 10c; the texts the apply scripts write)
+   the draw on DOCK_EN_OUT at printed maxima, the off leakage at the doubling: cold 24.99 uA (36.00 uA with the clamp's gates doubled), tripped
+     35.43 uA (47.02 uA with one of path 1's pull-up resistors shorted): the allowances 40 uA cold and 50 uA tripped (10c)
+   the capacitance on DOCK_EN_OUT: C261 and C268, 330 nF each, and U61's 4.7 uF C262 behind its input in dropout (L4-E11 28d)
+   path 2's load is on VBAT, not on the loop: U62 16 uA and U63 2.25 uA at their printed table maxima (10c)
+   the round 11 trip adds nothing on DOCK_EN_OUT or DOCK_EN_RET (check_l8p_och's APART); the consumers' texts:
+     Layer 5 (IF-AE-DOCK, apply_pcb_interfaces_guard_allowance.py): 'DOCK_EN_OUT on board A carries the thermal guard's draw: at most 40 uA with the guard cold and 50 uA tripped (record l8p 10c: printed maxima, the off leakage at the doubling, the worst single fault), C261 and C268 330 nF each and U61's 4.7 uF behind them; path 2's regulator and switch load VBAT, not the loop; DOCK_EN_RET may be held at ground by board A's Q60, Q44 and board P's Q107 with Q108, and DOCK_EN_OUT by board A's Q61 (path 2 tripped); DRAFTED (R-222, R-244), applied with record l8p's drafts; replaces round 8's 30 uA and 1 uF'
+     record l9stk 15.9 (apply_l9stk_guard_allowance.py): 'ROUND 11 OF RECORD l8p (7 October 2026): with record l8p's fail-safe delta (two guard paths, apply_gen_sch_a_thgfs.py) the guard's draw on DOCK_EN_OUT is at most 40 uA cold and 50 uA tripped (record l8p 10c, printed maxima with the off leakage at the doubling), in place of the 30 uA this round allows round 8's single path; its input capacitance is C261 and C268, 330 nF each'
+   the replay of L4-E11's 20f, 22 and 28 at these figures: record l4e11's round 19 (l4e11_rowc.py)
+
+8. VERDICTS
+   L8P-R10-F1: CORRECTED IN DRAFT by (B), SESSION L8P-R11-D1: composed in L4-E9's order, read DRAWN, 9 of 9 mutations FAIL; electrical
+     acceptance on printed figures: no current held over 21.52 A, 94.6 % of the blades' rerated current at the band, the service untouched;
+     CONDITIONAL on E-6 (R10's sheet within -7.3 to +8.3 %), E-6b (R140's printed pulse), E-12f, and the latent-failure residual of 4g;
+     UNVERIFIED until the focused check (L4A-69); the approaches (A) NOT SUPPORTED and (C) NOT SELECTED on printed figures
+   L4A-67: C-PROT rev 1 for the guard on the corrected circuit: every series part within its printed limits below and above the trip
+     where a printed figure exists; NOT SHOWN, each missing figure named and CONDITIONAL: board P's switches' hot RDS(on) (E-8, E-11),
+     R10, R101, R102 and R140 (E-6, E-6b), the 12 AWG wires (a maker's ampacity at 76.25 C with its insulation class), the dock pins'
+     split (E-4); the battery FETs at most 150 C on the held state, CONDITIONAL on E-05, E11-29 and E11-36 (round 10); L8P-R9-F1's
+     latent pattern now carries the trip too (REMAINING ENGINEERING)
+   L4A-68: the allowance stated for its consumers (section 7, two apply scripts, NOT APPLIED); the replay is record l4e11's round 19
+
+9. PREDICATES
+   round 10's finding reproduces: the blades over their rerated current at the held breaker limit                         yes
+   a 25 A element would need a rerating over the MINI 297's printed one at the air                                        yes
+   a 30 A blade's 60 A row puts the copper over both pinned band limits (approach A refused)                              yes
+   the LM5066I's printed spread fails the band reading at the record's least limit (approach C)                           yes
+   the LM5066I's printed spread fails the air reading at the service's true current (approach C)                          yes
+   the trip's least is over the service's true current (C4)                                                               yes
+   the trip's most is under the blades' rerated current at the band                                                       yes
+   the trip's most is under the blades' rerated current at the air                                                        yes
+   the window from the drawn netlist equals the computed one                                                              yes
+   the window tolerates R10 over the record's assumed error                                                               yes
+   the trip's least sense delay is over E-10's excursion bound                                                            yes
+   the crowbar's own current at the pack's least exceeds the breaker's most limit                                         yes
+   the crowbar's peak stays under the current where VIN to SENSE passes 0.3 V                                             yes
+   the arming's least delay covers the gate, the clearing and some tCL                                                    yes
+   Q110's VGS at the clamp is within its 12 V                                                                             yes
+   Q110 stays off under the leakages at the site                                                                          yes
+   the crowbar stays off under Q110's leakage at the site                                                                 yes
+   U107's RESET currents are within TI's recommended 5 mA                                                                 yes
+   the crowbar's peak is within Q111's printed IDM                                                                        yes
+   the composition ran in L4-E9's order and board P reads its earlier groups DRAWN                                        yes
+   check_l8p_och reads the composed board P DRAWN                                                                         yes
+   every mutation FAILS                                                                                                   yes
+   the draft refuses without its predecessors, twice, and on the tree's generator                                         yes
+   the battery FETs stay at or under 150 C with the trip intact and failed                                                yes
+   the allowance read from 10c is 40 uA cold and 50 uA tripped                                                            yes
