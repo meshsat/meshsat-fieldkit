@@ -28,7 +28,7 @@ This task closes no cx46 item: cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK ga
 | | What it is | Basis | Result | Verdict |
 |---|---|---|---|---|
 | H-1 | a hardware-forced voltage scale | RM0433 Rev 8 p.264, p.279, p.280, p.309, p.560, p.260, p.262, p.307, p.215 to 216; DS12110 Rev 11 p.29, p.210; AN4938 Rev 7 p.10, p.19 (PRINTED, quoted in OUT 3) | the scale is written by software after every reset (PWR_D3CR's VOS bits, then SYSCFG_PWRCR's ODEN for VOS0); no option-byte field selects a scale; the one hardware means printed, the Bypass supply ("Scale 0 ... available only with LDO regulator"), is itself "configured by software" once after every POR with the LDO enabled by default | **DROPS OUT** (the register's end condition). No hardware bar is claimed |
-| H-3 | a thermal-headroom part or heat path | Table 119 p.215 and Table 222 p.344 to 345 (PRINTED); W138's regulator theta (record l4reg) | VOS0 needs at most 15.84 C/W junction to ambient (22.34 C/W with every peripheral off; 15.27 C/W at the limiter's 0.5704 A); the least ThetaJA of any package is 36.6 C/W, the LQFP100's 45.0 C/W; a case-top path leaves 4.34 C/W after ThetaJC 11.5 C/W for an interface and heat sink no held document prints; VOS0 holds 105 C on 45.0 C/W only below 23.3 C air; the regulator's theta does not enter the controller's limit | **FAILS** on printed figures |
+| H-3 | a thermal-headroom part or heat path | Table 119 p.215 and Table 222 p.344 to 345 (PRINTED); W138's regulator theta (record l4reg) | VOS0 needs at most 15.84 C/W junction to ambient (22.34 C/W with every peripheral off; 15.27 C/W at the limiter's 0.5704 A); the least ThetaJA of any package is 36.6 C/W, the LQFP100's 45.0 C/W; a case-top path leaves 4.34 C/W after ThetaJC 11.5 C/W for an interface and heat sink no held document prints for an LQFP100 (the one cooler held is the CM5's); VOS0 holds 105 C on 45.0 C/W only below 23.3 C air; the regulator's theta does not enter the controller's limit | **FAILS** on printed figures |
 | H-2 | a firmware bound with an independent ending | FW-B20 (DRAFTED, T10); RM0433 p.1896 (IWDG); W137's vote (T10-ROUND6.md, `inputs/`); the TPS37 sheet SNVSBJ1E pp.5 to 18; DS12110 Tables 112, 116, 147, 152 | the firmware bound alone ends nothing; the IWDG ends hangs, not a running firmware that keeps writing IWDG_KR; the peers see TXD and act on SHDN, not on VOS0; a VCORE monitor (drafted) resets the controller on any VOS1 or VOS0 entry, on printed thresholds | **NOT SUPPORTED ON PRINTED FIGURES AS A PROOF** (the register's end condition is met: neither the sense delay at VOS0's overdrive nor the controller's transient impedance is printed); **STANDS, PROVISIONAL** under amendment 1 with S1 and S2 as supplier tasks |
 
 ## 3. H-2 in detail: the drafted VCORE monitor (OUT 5)
@@ -55,17 +55,18 @@ S2 confirms it.
 
 **Its timing.** TPS37 sense delay 17 us at most at VIT 800 mV, but printed at "20% Overdrive from VIT" (7.6, p.9); VOS0's bottom is only
 11.5 % over the trip's top, VOS1's 1.7 %, so the printed maximum does NOT cover these entries (S2). NRST pulled to 0.3 x VDD (Table
-147, p.241) through 750 Ohm against NRST's 10 kOhm, RPU 30 to 50 kOhm (Table 152, p.248) and the 100 nF reset capacitor: at most
-130.2 us (MODEL), the sink's peak 4.52 mA under the recommended 5 mA (7.3, p.6). NRST's not-filtered pulse at least 300 ns (Table 152).
-t_resp = 147.5 us, CONDITIONAL on S2.
+147, p.241) through 750 Ohm toward the drain's at most 300 mV (p.7; ASSUMPTION: its current rises with its voltage), against
+NRST's 10 kOhm, RPU 30 to 50 kOhm (Table 152, p.248) and the 100 nF reset capacitor, every corner of the rail and the pull-ups: at
+most 157.4 us (MODEL), the sink's peak 4.52 mA under the recommended 5 mA (7.3, p.6). NRST's not-filtered pulse at least 300 ns (Table 152).
+t_resp = 174.7 us, CONDITIONAL on S2.
 
 **Power-up.** The TPS37's outputs are "in reset, regardless of the voltage at SENSE pins" between VPOR (1.4 V) and UVLO (8.3.1.1, p.18),
 and the H743 leaves its own BOR0 reset from 1.62 to 1.71 V (Table 116, p.212), so NRST is held until the TPS37 is at its 2.7 V minimum;
 then tSD, 2 ms (p.9), and Figure 7-3 (p.12) marks the first release at "tSD + tCTRx" (DIAGRAM, S4).
 
 **Its own faults (SESSION W140-3; the firmware rows are L4A-61's).** At every start and once an hour the controller writes Scale 1 at
-HCLK at most 144 MHz, waits at most 1 ms for VOSRDY and 2 ms for its own reset; a return is MONITOR FAILED, reported in its state frame;
-a pin reset with a kept marker reads PASSED. Scale 1 drives the whole real path (VCAP, divider, SENSE1, RESET1, NRST). An open or
+HCLK at most 144 MHz, waits at most 1 ms for VOSRDY (RM0433 p.309) and 2 ms for its own reset; a return is MONITOR FAILED, reported in
+its state frame; RCC_RSR's PINRSTF ("Set by hardware when a reset from pin occurs.", p.450) with a kept marker reads PASSED. Scale 1 drives the whole real path (VCAP, divider, SENSE1, RESET1, NRST). An open or
 shorted divider, a stuck output, an open series resistor, an unpowered TPS37 and a swapped sense pin are each found by the next test
 or at once (OUT 5e); a firmware that skips the test is found by the peers within two hours (FW-B22's state frame). The residual is a
 double fault: a monitor fault latent since the last test, then a firmware VOS0 entry, its window at most 3600 s.
@@ -84,7 +85,7 @@ credited nothing): ST prints no die size.
 |---|---|---|---|
 | S-a the bounded served state (FW-B20, FW-B21, rev V) | 105 C | 99.6 C (T10 10c) | HOLDS (MODEL on PRINTED) |
 | S-b VOS3 at its printed 200 MHz with every peripheral | 125 C | 119.4 C (T10 section 4) | HOLDS (MODEL on PRINTED) |
-| S-c a VOS0 entry by any firmware | 105 C | ended within 147.5 us; needs ZthJA at most 4.09 K/W | CONDITIONAL (S1, S2) |
+| S-c a VOS0 entry by any firmware | 105 C | ended within 174.7 us; needs ZthJA at most 4.09 K/W | CONDITIONAL (S1, S2) |
 | S-d a VOS1 entry, the self-test included | 125 C | ended within t_resp; needs at most 19.96 K/W | CONDITIONAL (S1, S2) |
 | S-e the self-test with a dead monitor | 125 C | at most 3.0 ms; needs at most 19.96 K/W | CONDITIONAL (S1) |
 | S-f VOS2 with VCAP under the trip's top | 125 C | not surely ended by the monitor | OPEN (FW-B20's verification; L4REG-F7) |
@@ -155,11 +156,14 @@ record that pins them (checked: with SOURCES.txt untouched, test_l9t5 reproduces
 - **W140-F3 (Layer 10):** the land id is an ASSUMPTION; the divider at the VCAP pins, its sense node short; the series resistor at NRST.
 - **W140-F4 (L4REG-F7, W138):** VOS1 and VOS0 entries are ended by the monitor; VOS2 under the trip and VOS3 above 200 MHz are not (S-f,
   S-g) and rest on FW-B20's verification.
+- **W140-F6 (board B's generator owner):** the comment over the supervisors' loop reads "Watchdog and brownout are the H743's own IWDG
+  and BOR. That is deliberate: ..." (against a supervisor chip for output correctness, which the voters carry); the monitor serves the
+  controller's own VOS0 thermal limit; the draft does not edit the comment, which is restated when the draft is taken.
 - **W140-F5 (L4A-100):** the check reads this page, `l9t5_hoe.out` and the draft; H-1 and H-3 rest on the pages OUT 3 and OUT 4 quote.
 - **S1:** the controller's junction-to-ambient transient impedance on board B, three first-article supervisors, a step of 1.320 W: pass
-  at most 4.09 K/W at 147.5 us and 19.96 K/W at 3.0 ms (or ST's transient thermal data with board B's copper).
+  at most 4.09 K/W at 174.7 us and 19.96 K/W at 3.0 ms (or ST's transient thermal data with board B's copper).
 - **S2:** the monitor's entry-to-NRST interval at a VOS0 entry and at the self-test's Scale 1 entry, three supervisors, 76 C chamber:
-  pass at most 147.5 us, and PWR_CSR1's ACTVOS reading Scale 3 at the restart.
+  pass at most 174.7 us, and PWR_CSR1's ACTVOS reading Scale 3 at the restart.
 - **S3:** VCAP in VOS3 with the divider fitted, under load steps: inside 0.95 to 1.05 V and under the trip's least 1.0969 V; ST prints no
   figure for a load on VCAP (at most 10.1 uA here).
 - **S4:** NRST held low from the TPS37's VPOR through tSD + tCTR at power-up, ten power cycles each supervisor.
