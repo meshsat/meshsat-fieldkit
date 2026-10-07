@@ -283,6 +283,11 @@ l8r2's VIN_RAW cut-off FET.
    - **Not covered by this `RELEASE.md`:** `apply_test_l4e11_ptc_pin.py` (a text draft of one pin in L4-E11's `test_l4e11.py`; it
      reads no `RELEASE.md` and is the integrator's and L4-E11's author's to apply); L4-E11's DD-7 draft (R-217), which the guard
      draft follows and which reads record l4e11's own `RELEASE.md` (item 4 gives the order); this folder's checks and readers.
+     Round 11 (section 16): `apply_gen_sch_p_ocheld.py`, board P's held-overcurrent trip, reads its own `RELEASE-R11.md` until
+     L4-E9's change list gives it a row (after R-246); it refuses a board P without the breaker and the ideal diode, so it can never
+     be applied ahead of them, and the integrator then moves it into this release (the count to seven, its row in the table).
+     `apply_pcb_interfaces_guard_allowance.py` and `apply_l9stk_guard_allowance.py` are text drafts for Layer 5 and record l9stk's
+     owner (16e); they read no `RELEASE.md`.
    - **History, dated:** this item read "One release for the three drafts" from round 1 (4 October 2026, `515f6cf2`), "One
      release for the four drafts" from round 4 (4 October 2026, `1816a96a`) and "One release for the five drafts" from round 8
      (5 October 2026, `430c8c61`); round 9 (12o) added the sixth, the delta, without restating it. Restated in set 30 (section 14).
@@ -359,6 +364,7 @@ l8r2's VIN_RAW cut-off FET.
 | **The battery stream** (BAT-F20, EQ-15, S-46; `review-packets/battery/`) | **Round 4, DD-5's correction (section 13):** the ladder rows L2 and L4a, the mode table and BAT-F20's text, which read the discharge crossing Q1's body diode under CHGIN = 1, are answered by Q109 under U105; FET Options stays 0x3D (CHGIN = 1), and no gauge setting changes (IF-4). For its review: U105's ANODE and GND sit directly on the cell node behind F1 and F2 (TI's circuit; every other IC on that node is behind a series resistor); a welded Q109 is found as a welded Q1 is (CFETF, SLUUAQ3A 3.10, if the golden image enables it; the second level behind it); U105 draws 152 uA at most while the gauge holds the discharge FET on, and 2.5 uA with the gauge shut down. The correction does not wait on Q-P18 or Q-TI-10 (drafted, unsent); whether they are still sent is the battery stream's. |
 | The battery stream | Round 3: the detector draws 0.47 mA from BRK_VIN at 16.8 V (two OPA187s, the reference's feed, the dividers), a standby load on the pack beside U101's and U102's. |
 | **Layer 5** (IF-AE-DOCK) | **Round 8 (12m, L8P-R8-F4):** DOCK_EN_OUT on board A carries the thermal guard's 30 uA (U60 and U61 at their printed maxima, 18.25 uA at TI's table condition) and C261's 1 uF; DOCK_EN_RET may be held at ground by board A's Q60 as by board P's detector and board A's Q44. |
+| **Layer 5** (IF-AE-DOCK) | **Round 11 (16f, L8P-R9-F2; the round 8 row above is its history):** DOCK_EN_OUT on board A carries the thermal guard's draw: at most 40 uA with the guard cold and 50 uA tripped (10c: printed maxima, the off leakage at the doubling, the worst single fault), C261 and C268 330 nF each and U61's 4.7 uF behind them; path 2's regulator and switch load VBAT, not the loop; DOCK_EN_RET may be held at ground by board A's Q60, Q44 and board P's Q107 with Q108, and DOCK_EN_OUT by board A's Q61 (path 2 tripped). Drafted for Layer 5 as `apply_pcb_interfaces_guard_allowance.py` (a field dock_en_guard in IF-AE-DOCK), not applied. Round 11's trip on board P adds nothing on either conductor. |
 | **L4-E11** (with board A's generator) | **Round 8 (12m, L8P-R8-F1):** DD-7's `REQUIRES` names RT1's call; with the guard drawn RT1 is gone after DD-7, so DD-7 precedes the guard and is refused after it; its 20c counts every sink on the return (SENSE1, Q44, Q107 over Q108, Q103's gate, Q60) and states the window as a ramp's reading; its 20f's docking row gains the guard's start (VDD over 1.3 V 7.3 to 22.7 ms after the enable mates) and C261 on DOCK_EN_OUT. |
 | **L4-E9's list owner** | **Round 8 (L8P-R8-F2):** a board A row for `apply_gen_sch_a_thguard.py` after R-217 (DD-7) and before R-193 (mainpb); mainpb then takes R264 and C264 on the tree's order. |
 | Layer 6 | **Round 8 (L8P-R8-F3):** order codes for U60 (LM26LVQISDX-130/NOPB) and U61 (TPS70950DBVR); TI's NGF0006A land (2.20 x 2.50 mm) in place of the 2 x 2 mm WSON-6 stand-in; C262's effective capacitance at 5 V (1.5 uF or more) and C260's under its bias; C263 a 100 nF X8R; R260 and R261's rating against 10.4 mW; a VDD clamp that prints both its voltage under 6 V and its current at 5.05 V, if one exists (FM2). |
@@ -1663,3 +1669,825 @@ order.
 "record l8p's" in SET31-CHANGES.md line 108). K-19 names this folder's breaker draft as the correct side ("U101 LM5069MM-1, the
 latch-off variant" [BRKP:11]); set 31 restated R-206, and nothing in this folder changes. The other twenty-six (K-01 to K-13, K-15
 to K-18 and K-20 to K-28) concern files outside `v2/docs/records/l8p/` and are untouched here.
+
+### 15. Round 10 (7 October 2026, W141 on `fnd/l4rowc` from `fnd/l4fet` `49d4f9e6`): register row (c), L4A-66 by M-A and L4A-65 (HO-B) (`l8p_rowc.py`, `l8p_rowc.out`)
+
+**The task.** The AI-scope register's rows L4A-66 and L4A-65 (row (c)), released by record l4e11's decision L4E11-FET-D2 (round FET,
+M-A first, M-B second) after W127's check 1c: M-A, every series part of the pack path held INDEFINITELY at the breaker's held 23.93 A
+(this page's line 31) from the 76.25 C inside air inside its PRINTED limits, the battery FETs at most 150 C on the printed Zth and
+the printed RDS(on) at temperature, so that a latent failure of the thermal guard (L8P-R9-F1, RE-10, HO-A) removes no protection a
+part needs; and HO-B, path 2's retry energy alone (12o: 43.8 ms on in every 0.154 s or more). Desk engineering on the makers' printed
+figures; a typical figure is never a limit. This round closes no cx46 item until checked (L4A-69). Every figure below is printed by
+`l8p_rowc.py` in `l8p_rowc.out` ([RC n] is its section n) from inputs pinned by sha256; `test_l8p_rowc.py` holds the predicates.
+Labels as in 12m, with READING (this record's reading of a maker's drawing from its vector paths) and MODEL (record l9stk's conductor
+model). Nothing here is built, bought or measured; no V2 board exists.
+
+**Closure contract (constitution section 4).** Type: unresolved design choice (M-A against M-B) resting on missing vendor and layout
+evidence (E-05, E11-29, E11-36). Inputs: records l9stk (B-P2, L9-STACKUPS), l4e11 (E-1, E11-29, round FET) and this record (12m, 12o),
+the makers' sheets named in [RC 0]. Requirement: C-PROT rev 1, every series part within its limits below and above the trip.
+Smallest deliverable: this section, the script, its output and its test; a draft only if a part or a pour changes (none does, 15f).
+Acceptance: each part's row on its printed limits at 23.93 A held from 76.25 C; HO-B bounded on printed figures, failing on a typical
+curve. Checkpoint: one focused independent check (L4A-69).
+
+#### 15a. The guard's own parts: Q39, Q40 and Q42, their pour and vias, R17 ([RC 2])
+
+| Part | Printed figures read | At 23.93 A held from 76.25 C | Verdict |
+|---|---|---|---|
+| Q39, Q40, Q42 (BUK6Y10-30P, Nexperia 17 April 2020) | RDS(on) max 10 mOhm at -10 V and 25 C, 16 at 175 C, 25 at -4.5 V and 25 C; Rth(j-mb) 1.1 typ, **1.4 MAX** K/W; Tj 175 C, limit here 150 C | the allowance 21.136 mOhm at -8.5 V and 150 C (two chords, E11-36); 1.3448 W a FET even, 1.5130 W in the hottest (one at R/2, 11.96 A); the junction over its mounting base 2.12 K on the printed maximum; the hottest junction 150.00 C at E-1's bar 40.78 K/W (by construction), 136.79 C at E11-29's design target 37.59 K/W, where the three reach 150 C only at 26.41 A | HOLD, CONDITIONAL on E11-29 (the installed path is no maker's figure), E11-36, E-05 and (round 12, the check's F4) E-9, the -1's as-built most limit |
+| Fig. 4, Zth(j-mb) (READING of its vector paths) | eight curves, duty 1 to 0.01, no single-pulse curve; duty 1 reads 1.178 K/W at 10 us, 1.291 at 10 ms, 1.306 at 0.98 s; the largest of any curve 1.360 | it never reaches the printed 1.4 K/W maximum and the figure says neither typical nor maximum | classed TYPICAL: never a limit (15e) |
+| The pour and vias (MODEL) | board A's band limit 105 C as fitted, 125 C with the blades' silver plating pinned (L9-STACKUPS 14.3) | the band 9.16 K, 85.41 C; the barrel field at R17 0.75 A a barrel, 7.62 K; CH_BATQ a one-face hop inside E-1's installed path | WITHIN on the model; the laminate's limit NOT HELD |
+| R17 (ROHM GMR100 HJ, rev. 006E, 5 March 2026; first read here, held back, `fetch_held_back_rowc.py`) | 7 W at a terminal temperature of 70 C derated to 0 at 170 C (Fig. 1), or 5 W at 110 C derated to 0 at 170 C (Fig. 2); F 1 %; TCR 0 to +50 ppm/C printed for 20 to 60 C only | 2.892 W on its printed maximum 5.05 mOhm (2.902 W at 128.5 C, the TCR ASSUMED to continue); the lower line admits a terminal temperature up to **128.5 C** (Fig. 2 alone 135.2 C): 43.1 K over the band, a terminal-to-band path at most **14.9 K/W**; at the band's own temperature 58 % of its derated power | WITHIN its printed derating, CONDITIONAL on its terminal reading (a layout condition, read on E11-29's coupon with R17 in place) |
+
+Record l9stk's B-P2 row for R17, "5 W printed at 25 C, derating NOT HELD (E-6)", is answered by ROHM's sheet: E-6 for R17 becomes the
+terminal reading above. The parts stream's identity row for R17 (DOCUMENT_OWED) can now cite the sheet: Table 2 decodes
+GMR100HJAAFD5L00 as 5 mOhm, JA, custom A, F, special D.
+
+#### 15b. Every other series part of the pack path ([RC 3])
+
+| Part | Printed figures read | At 23.93 A held from 76.25 C | Verdict |
+|---|---|---|---|
+| The three 25 A MINI blades (P's F1, E's F3, A's F1; 0297025, silver pinned; Littelfuse 297) | 110 % holds 360,000 s; 135 % opens in 0.75 to 600 s; 1000 A at 32 V DC; -40 to +125 C; the Temperature Rerating Curve (page 2, READING of its line: 109.97 % at -39.85 C to 85.28 % at 123.12 C) | the factor 92.38 % at the 76.25 C air: rated **23.10 A** there (90.99 %, 22.75 A at the band's 85.41 C); 23.93 A is **103.6 %** of it, **OVER by 0.83 A** (105.2 %, 1.18 A at the band); nothing printed between 100 % and 110 %, nor the blade's or its terminals' temperature; the 18 A service is 77.9 % | **OVER** (15c) |
+| The Keystone 3568 holders (M65 p.42) | UL 30 A at 500 V AC; -50 to +145 C | 79.8 % of 30 A | WITHIN on current |
+| The dock block's pins J_CP1 to J_CP4, J_CN1 to J_CN4 (Mill-Max 0858, spring 82) | 085X family: 9 A continuous at a 10 C rise in free air, 20 mOhm max and no minimum, -55 to +125 C; the 0858 page: spring 82 "12 Amp", no condition | 5.98 A a pin evenly; the split unbounded by any printed figure: no pin over 9 A needs the lowest pin resistance at least **0.553** of the highest (E-4 restated from 25 A's 0.593); at 9 A 95.41 C (the rise taken over the band, ASSUMED) | WITHIN evenly; CONDITIONAL on E-4 |
+| The XT60 J_BATT (Amass) | 30 A rated, -20 to 120 C; the 2021V1 sheet 35 A max with 12 AWG at a rise under 85 K, 1.0 mOhm max | 79.8 % of 30 A; the rise not printed: under 39.7 K on the 35 A row scaled by the current squared (INFERRED), 116.0 C, 4.0 K under 120 C | WITHIN on current; the temperature INFERRED |
+| The 12 AWG wires (W_P, W_N to J_BATT; P_CP to the block) | no maker's sheet held | the energy chain's 40 A is a convention (PACK_LEAD) | NOT SHOWN |
+| Q1, Q2 (Q109 beside Q1), CSD17570Q5B | 0.69 mOhm max at 10 V and 25 C only; -55 to 150 C; RthJA 50 C/W max on a 1 in2 2 oz pad | 0.395 W each at the 25 C maximum; the hot RDS(on) only on a TYPICAL curve; the 150 C junction admits a hot factor up to **1.866** with both losses through the common-drain pad (3.73 on its own), against the typical 1.8 record l9stk reads (147.4 C); Q109's own loss is bounded by its controller's regulation (13d: 0.724 W, 148.0 C with Q2's typical loss) | NOT SHOWN on printed maxima (E-8) |
+| Q101, Q102, CSD18510Q5B | 0.96 mOhm max at 10 V and 25 C; RthJA 50 C/W max on 1 in2 2 oz (IF-2: at most 52.5 installed) | 0.137 W each at the 25 C maximum; a hot factor up to 5.37 admitted to 150 C, 3.55 to TI's 125 C (record l9stk: 101.2 C at the typical) | NOT SHOWN on printed maxima (E-11) |
+| R10; R101 and R102 | no maker's sheet held for R10 (2 mOhm 2512 2 W); no part chosen for R101, R102 (2 W each at the band's temperature, Layer 6) | 1.15 W; 0.97 W and 0.52 W (RECORD) | NOT SHOWN (E-6) |
+| F2, Eaton SCF9550-30-05 | 30 A; operating -20 to +60 C | 79.8 % of its rating; its range ends 16.25 K under the 76.25 C air at any current (record l4e10 section 9; Eaton's questions drafted) | the pack's thermal environment, not a held-current row |
+| The cells | | the breaker's and U-01's (W127's check 1c, finding 5) | outside M-A |
+
+#### 15c. The blades: the finding and three approaches compared ([RC 3a], [RC 3b])
+
+**Finding L8P-R10-F1 (new; for C-PROT rev 1, register row L4A-67):** at the breaker's held 23.93 A from the 76.25 C inside air the three
+25 A MINI blades carry 103.6 % of their printed rerated current (23.10 A), over it by 0.83 A. Record l9stk's E-7 left the rerating
+"NOT HELD" for Layer 6 to read; the curve is on page 2 of the held sheet. The 18 A service reads 77.9 %: within. What the sheet prints
+for 103.6 %: nothing between 100 % and 110 % (110 % of the rerated current, 25.40 A, holds at least 360,000 s on the usual reading of the
+table on the rerated basis); the blade's and its terminals' temperature there are not printed. The approaches (at most three):
+- **(a) 30 A MINI blades (0297030, the same 3568 holder):** rerated 27.71 A at the air, 23.93 A is 86.3 %: within on their own row. But
+  the blades are the pack conductors' last protection behind a failed breaker, and the copper was sized at their 25 A rating (the
+  energy chain's check 3; L9-STACKUPS 14.4): no opening would be assured up to 40.50 A instead of 33.75 A, a protection lowered.
+  **REFUSED** (never lower a protection).
+- **(b) the breaker's most limit under 23.10 A:** the LM5069's printed VCL alone spans 0.7886 (48.5 / 61.5 mV); keeping record l9stk's
+  least limit 18.32 A needs 0.7932: **INFEASIBLE** even with exact sense resistors. With an 18.00 A least the sense window 2.6629 to
+  2.6944 mOhm exists only with no margin over the 18 A service, a service at its edge: **REFUSED** (never reduce a service).
+- **(c) evidence, not a correction:** Littelfuse's statement of the 0297025's terminal and body temperature at 104 % of its rerated
+  current in 76.25 C air, or a coupon (specimen: three 0297025.WXNV in 3568 holders on board A's band; 23.93 A held from 76.25 C to
+  steady state and for 360,000 s; pass: each holder at most 145 C, each blade body at most 125 C, the band at the holder at most its
+  limit, and either no opening or an opening inside the blade's 1000 A at 32 V DC rating). The supplier's; the question to Littelfuse
+  is not drafted here (the coordinator's to place with the other supplier items).
+
+So no compared correction keeps every protection and the service; the item stays OPEN and is not M-B's (15d).
+
+#### 15d. Which rows the guard ever protected ([RC 4])
+
+The guard senses only board A's battery-FET pour: no trip under 127.8 C at its die, surely tripped from 132.2 C (12m). With the pour at
+E11-29's design target, at the blades' rerated 23.10 A held the hottest FET reads 132.64 C and its mounting base 130.67 C; the guard's
+die is no hotter than the copper it sits on (its own heating 0.008 K, 9 (a)), so its trip is not assured there. A held overload from
+23.10 A to 23.93 A can therefore persist with the guard intact: every row of 15b reads the same with or without the guard, and only
+15a's rows (the parts on the pour it senses) depend on it. M-B, a diagnostic of the guard, would change none of 15b's rows.
+
+**12o's exposure restated (finding L8P-R10-F2, this record's own):** "without any guard the battery FETs reach 150 C held at 20.53 A" is
+record l9stk's PAIR figure (its `l9stk_protection.out` section 2: the pair on E11-29's then 33.12 K/W target). For the drawn three at
+E-1's bar the figure is 23.93 A, the breaker's own most limit; at E11-29's design target 26.41 A, above it. 12o's text is history and
+stays; this note supersedes the figure.
+
+#### 15e. L4A-65: path 2's retry energy alone ([RC 5])
+
+- **The train (RECORD, 12o and `l8p_c4.out` 10c):** with path 1 lost, on at most 43.8 ms, off at least the RC hold's 0.110 s, a period of
+  at least 0.154 s, duty at most 0.284; the current never over the breaker's 23.93 A (its own limit and timer act above it).
+- **The rise per on-time (PRINTED, INFERRED):** the hottest FET at 1.5130 W rises over its mounting base at most 2.12 K: a passive
+  thermal network's transient impedance never exceeds its steady resistance, so Zth(j-mb) at 43.8 ms is at most the printed 1.4 K/W.
+- **Fig. 4 (READING):** 1.357 K/W on duty 0.30 and 1.354 on 0.10 at 43.8 ms, 2.05 K at the train's duty. Class TYPICAL: the script
+  REFUSES it as a limit; a bound read on it FAILS, as the brief requires (`t_the_zth_curve_is_read_from_the_drawing_and_a_bound_on_it_is_refused`
+  relabels it a maximum and shows the predicate catching the change).
+- **The steady periodic peak (INFERRED):** any on and off pattern whose current never exceeds 23.93 A heats every junction at most as the
+  same current held does (superposition on a passive network, the RDS(on) at its 150 C allowance at every instant; the test checks the
+  property on 300 random networks and its tightness for a long on-time). So the peak is at most the held state: **150.00 C at E-1's
+  bar, 136.79 C at E11-29's design target: BOUNDED against 150 C on printed device maxima, CONDITIONAL on E11-29, E11-36 and E-05**, as
+  15a, and (round 12, the check's F4) on E-9: the train never exceeds the -1's as-built most limit, which the window counts at the parts'
+  1.5 % only. No credit is taken for the train's mean loss (0.284 of the held one): the pour's own transient is no maker's figure.
+- **Currents over 23.93 A are single events outside the train**, judged in their records: a fault's onset up to the breaker's 50.59 A for
+  at most 16.5 us, after which the -1 latches off and a restart into the short is power-limited (record l9stk 15.3); the docking pulse,
+  242.9 A once per docking (L4-E11 16d, E11-30).
+- **The other parts under the train:** the breaker's own FETs restart under DD-8's restart inhibit (round 2; record l9stk 15.4b), not
+  judged here; board P's Q1 and Q2 at most their held row (15b) by the same superposition.
+
+#### 15f. Verdicts, what M-A closes once checked, and M-B's entry condition
+
+- **M-A's acceptance as the register writes it ("every series part inside its PRINTED limits") is NOT MET on printed figures:** the three
+  blades OVER by 0.83 A (3.6 %, L8P-R10-F1); NOT SHOWN for lack of a printed maximum or sheet: board P's Q1, Q2, Q109, Q101, Q102 (hot
+  RDS(on) typical only; Q1 and Q2 with 3.7 % of hot factor over the typical), R10, R101, R102, the wires, the pins' split (E-4). Each of
+  these rows is independent of the guard (15d), so none is HO-A's consequence; they go to C-PROT rev 1's re-evaluation (L4A-67).
+- **The guard's own parts HOLD:** the three FETs carry the breaker's held 23.93 A indefinitely at 150.00 C at E-1's bar (136.79 C at the
+  design target); the pour and vias WITHIN on the model; R17 WITHIN its printed derating while its terminals stay at or under 128.5 C.
+- **L4A-65 (HO-B):** BOUNDED on printed device maxima at the held state; FAILS on the typical curve, as it must.
+- **What M-A closes once checked (L4A-69):** HO-A's consequence for the parts the guard protects (the three FETs hold the breaker's most
+  limit, so a latent failure of the guard, or of both paths, removes no protection they need; L8P-R9-F1 stops weakening their C-PROT
+  claims) and HO-B (no retry exceeds a current they hold). The guard stays drawn as defence in depth; its latent states are then no
+  exposure of the FETs. **CONDITIONAL on E-05** (TI's answer to Q-TI-17 or E11-37's bench), **E11-29** (the coupon at the bar, with
+  R17's terminal reading at most 128.5 C added to it) **and E11-36** (the allowance at -8.5 V and 150 C).
+  **Round 12 (W149, after the focused check L4A-69; the check's F4 and F5):** the closure is scoped to **a board whose installed path
+  meets E-1's bar**, and two conditions are added. **E-9** (the -1's as-built most limit, six board P specimens, record l9stk): with the
+  guard silently failed, "the FETs hold the breaker's most limit" rests on that limit as built, which the window counts at the parts'
+  1.5 % only. **E11-29u** (new, a check of EACH BUILT BOARD's path; E11-29's coupon qualifies the design, not a board with a void or a
+  poor tab joint): at production an X-ray of the three FETs' tab joints against the voiding E11-29's coupon was built with, and at
+  commissioning a per-unit reading (the three FETs at a known current for a known time from a known air, the guard's die or the pour's
+  NTC read against E11-29's curve; pass: the bar met within the reading's stated uncertainty). On a board that misses the bar the guard
+  is still needed and its silent failures, with no detection interval, stay a residual (REMAINING ENGINEERING, HO-A's pattern).
+  `l8p_rowc.out` section 6 prints both.
+- **M-B's entry condition (decision L4E11-FET-D2) is not reached:** (1) and (2) need E11-29, E11-36 or E-05 to refuse, and none has been
+  read; (3) needs a part the guard protects over its printed limit with no supported correction after two negative checks, and none
+  is. The blades' row is a part over its printed limit, but the guard does not assure its protection and M-B would not either.
+- **No draft:** no part or pour changes. R17 and the FETs stay as drawn; the blades' corrections (a) and (b) are refused; the pour's
+  figure is E-1's bar as before. Nothing is applied to any generator or shared file.
+
+#### 15g. The SESSION decisions of round 10
+
+The two-part test of 21 September 2026 sends none to the owner: no class of `reserved.json` names this record's files, nothing is
+bought or changed in a drawn circuit, no claim about the kit changes, and each residual risk is removed by a named measurement or
+vendor statement.
+
+```yaml
+- id: L8P-RC-D1
+  title: "M-A's scope read two ways: the register's literal acceptance (every series part) and the guard's own parts (those on the pour it senses)"
+  authority: SESSION
+  authority_why: "it reports the register's acceptance as written (NOT MET) and adds a narrower statement on the same figures; it changes no circuit, limit, service or claim, and the coordinator owns the register's wording"
+  ruled_by: "SESSION (W141) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "the coordinator restating L4A-66's acceptance, or an independent check that finds a 15b row dependent on the guard"
+  outcome: "M-A's literal acceptance NOT MET (the blades OVER by 0.83 A; board P's switches, shunts, the wires and the pins' split NOT SHOWN); the guard's own parts HOLD, CONDITIONAL on E-05, E11-29 and E11-36; the 15b rows go to L4A-67, not to M-B"
+- id: L8P-RC-D2
+  title: "The blades over their printed rerated current: 30 A blades and a tighter breaker limit refused, the evidence route named"
+  authority: SESSION
+  authority_why: "both corrections would lower a protection or a service, which no ruling permits; the remaining route is a vendor statement or a coupon, a supplier task, not an owner judgement; nothing is bought"
+  ruled_by: "SESSION (W141) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "a printed MINI or other blade figure that carries 23.93 A at 76.25 C within its rerating while opening at or under 33.75 A's assured row, or a breaker controller whose printed limit spread fits 18.32 A to 23.10 A, or Littelfuse's statement or the coupon of 15c (c)"
+  outcome: "L8P-R10-F1 OPEN for C-PROT rev 1 (L4A-67); E-7 answered on the desk for the held case (OVER) and the service (77.9 %, within)"
+- id: L8P-RC-D3
+  title: "Fig. 4's Zth curve classed TYPICAL; HO-B bounded on the printed Rth(j-mb) maximum and the held state"
+  authority: SESSION
+  authority_why: "the curve never reaches the printed maximum and is not labelled a maximum, so taking it as a limit would take a typical as a limit; the bound used is the printed maximum and needs no curve"
+  ruled_by: "SESSION (W141) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "Nexperia stating that Fig. 4 is a maximum curve"
+  outcome: "the rise per on-time at most 2.12 K over the mounting base; the steady periodic peak at most the held state (150.00 C at E-1's bar)"
+- id: L8P-RC-D4
+  title: "R17 judged on the lower of ROHM's two printed derating lines, its TCR above 60 C assumed to continue"
+  authority: SESSION
+  authority_why: "the lower line is the conservative reading of two printed ratings; the TCR assumption moves the loss by 0.3 %; neither changes a circuit"
+  ruled_by: "SESSION (W141) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "ROHM stating which line governs the GMR100HJAAFD5L00, or its TCR above 60 C"
+  outcome: "R17's terminals at most 128.5 C at 23.93 A held (14.9 K/W to the band), read on E11-29's coupon"
+```
+
+#### 15h. Findings for other records and the coordinator (nothing of theirs is edited here)
+
+- **Register (the coordinator's):** L4A-66 reads NOT MET as literally written, with the guard's parts HOLD CONDITIONAL (15f); L4A-65
+  BOUNDED CONDITIONAL; a new row for L8P-R10-F1 under L4A-67; the 15b NOT SHOWN rows are existing open items (E-4, E-6, E-8, E-11) and
+  the wires' sheet.
+- **L4-E11 (E11-29):** add R17's terminal reading at most 128.5 C (R17 dissipating in place) to the coupon's lines; (round 12) and a
+  per-built-board companion, E11-29u (15f), for the register and the supplier's list.
+- **Record l9stk (E-7, E-4, B-P2):** E-7's rerating is printed (15b); E-4 at 23.93 A needs 0.553; B-P2's R17 row reads ROHM's sheet now.
+- **The parts stream (`pcb_part_identities.yaml`, R17):** the maker's sheet that decodes GMR100HJAAFD5L00 is held back with its fetch
+  script; the identity's DOCUMENT_OWED can be closed by its owner.
+- **Q1 and Q2 on board P:** at the typical hot factor the common-drain pad leaves 2.6 K to 150 C (147.4 C); a printed hot maximum (TI)
+  or the joint case of E-8 decides it.
+
+**Status of round 10:** DONE on the desk; UNVERIFIED until the focused check (L4A-69). Not claimed: nothing here is verified, built or
+measured; the tests establish this record's own behaviour only. Acknowledgement: the execution constitution (sections 3 to 5 and 8)
+was read and applied: one operating basis (C-PROT rev 1 at 23.93 A from 76.25 C), the complete connected path checked before a part
+fix (15c's corrections refused on their path-wide effect), three approaches at most, and tests that fail on the defect they guard.
+
+### 16. Round 11 (7 October 2026, W142 on `fnd/l4rowc`, continuing W141's branch): register row (c), L8P-R10-F1 as a design choice, L4A-67 and L4A-68 (`l8p_cprot.py`, `l8p_cprot.out`, `apply_gen_sch_p_ocheld.py`, `check_l8p_och.py`)
+
+**The task.** The AI-scope register's rows L4A-67 and L4A-68 (row (c)) after round 10 (section 15): L8P-R10-F1, the three 25 A MINI
+blades over their printed rerated current at the breaker's held 23.93 A, as an unresolved design choice (constitution section 4: at
+most three materially different approaches, none lowering a protection, the 18 A service or a printed rating's margin), its SESSION
+selection and a draft; C-PROT rev 1 for the guard re-evaluated on the corrected circuit (L4A-67); the guard's allowance restated by
+its consumers and L4-E11's 20f, 22 and 28 replayed at it (L4A-68; the replay is record l4e11's round 19, `l4e11_rowc.out`). Desk
+engineering on the makers' printed figures; every figure below is printed by `l8p_cprot.py` in `l8p_cprot.out` ([CP n] is its
+section n) from inputs pinned by sha256; `test_l8p_cprot.py` holds the predicates. Nothing here is built, bought or measured; no V2
+board exists. It closes no cx46 item until checked (L4A-69).
+
+**Closure contract (constitution section 4).** Type: unresolved design choice (L8P-R10-F1), then a demonstrated-defect correction in
+draft. Inputs: this record's rounds 8 to 10, record l9stk (15.4 to 15.7, 14.4 to 14.6, 15.9 by its copy), record l4e11 (20c, 20f, 22,
+27, 28), the makers' sheets of [CP 0]. Requirement: C-PROT rev 1. Smallest deliverable: this section, the draft, its reader, the
+script and its output, two apply scripts for the allowance's consumers, the tests. Acceptance: no current held over the blades'
+printed rerated current; the service untouched; composed, read DRAWN, mutations failing; C-PROT rev 1 part by part on printed
+figures or the missing figure named. Checkpoint: one focused independent check (L4A-69).
+
+#### 16a. Three approaches on printed figures ([CP 2])
+
+| | (A) a fuse or a holder arrangement that carries 23.93 A on its printed rerating | (B) a held-overcurrent trip on board P into the -1's own latch | (C) a controller with a tighter printed current-limit spread (TI LM5066I) |
+|---|---|---|---|
+| Printed figures | a 25 A element needs a rerating of at least 0.9572 at 76.25 C; the MINI 297 prints 0.9238 (0.9099 at the band); a 30 A blade carries it (27.71 A) but its 135 to 200 % band reaches 60 A for up to 600 s, where the bands read 134.4 C (record l9stk's 50 A row, 116.60 C, scaled by the current squared) over board A's 125 C and board E's 120 C pinned; the rerating curve is drawn against the ambient, and no printed figure credits a holder or busbar | a window of 19.965 to 21.521 A on printed rows (U107's VITP 0.792 to 0.808 V, OPA187's 18.8 uV in all, the gain at 0.1 % and 25 ppm/K) with R10 at the record's 1 % and 75 ppm/K (ASSUMED, E-6); it holds for R10 within -7.3 to +8.3 % | VCL 45 to 55 mV at CL = GND (SNVS950C), with RS's window spread 1.0204: a most of 22.85 A at the 18.32 A least (under the air's 23.10 A by 0.25 A, over the band's 22.75 A), 23.45 A at the service's true 18.80 A; VIN recommended from 10 V, 0.6 V under the pack's least |
+| What it moves | the copper's coordination (the open OWNER DECISION L9STK CU) | adds a protection on board P; touches neither the loop, UVLO nor the copper | the whole breaker of l9stk 15.4 to 15.6 and the drafts of rounds 1 to 4 |
+| Verdict | NOT SUPPORTED (no printed basis; the 30 A form lowers a protection) | **SELECTED (SESSION L8P-R11-D1)** | NOT SELECTED (fails the band reading and C4's service current) |
+
+#### 16b. The trip as drawn (`apply_gen_sch_p_ocheld.py`, after the breaker and the ideal diode; [CP 4])
+
+| Part | What it does | Printed figures it rests on |
+|---|---|---|
+| U106 (OPA187), R132 1.00 kOhm, R133 19.3 kOhm (0.1 %, 25 ppm/K), R134 | inverting amplifier of the gauge's R10 by Kelvin taps: OCH_A = 19.3 x I x R10 | VOS 10 uV, drift 0.015 uV/C, VCM to V- less 0.1 V, IQ 150 uA (SBOS807E) |
+| U107 (TPS37A010122, the kit's U47/U48 part), R135, C117 10 nF, C119 4.7 nF C0G | channel 1 (OV) asserts RESET1 after 0.460 to 0.852 ms when OCH_A passes 0.792 to 0.808 V: a held current over 19.965 to 21.521 A | VITP, RCTS 88 to 122 kOhm, Equations 5 and 6, ISENSE 100 nA, VDD 2.7 to 65 V, RESET 5 mA recommended, 300 nA off leakage (SNVSBJ1E) |
+| U107 channel 2 on BRK_PGD, C120 47 nF C0G, R139, R141, Q112 (2N7002) | the arming: RESET2 asserts 4.60 to 8.36 ms after PGD falls and turns Q112 off, so the crowbar acts only on a running breaker (never at power-up, during the tSD of 2 ms, at a start or once latched). **Round 12 (16i):** channel 2 reads OCH_S2 (BRK_PGD through R143 2.2 MOhm, pulled down through D106 while RESET1 is asserted) and C120 is 22 nF: the disarm comes 2.15 to 3.92 ms after PGD falls OR the trip asserts | the same; PGD switches low over VDS 2.5 V (SNVS452G) |
+| Q110 (AO3401A), R136 47 kOhm, R137 100 kOhm, R142 1 kOhm, R138 4.7 kOhm, D105 (BZT52C12) | the crowbar's gate drive from BRK_VIN, VGS -3.39 V at 10.6 V to -9.34 V at the clamp; the gate under 12.7 V | VGS +-12 V, VGS(th) -0.5 to -1.3 V, IDSS 5 uA at 55 C (AOS); VZ 11.4 to 12.7 V (DS18004) |
+| Q111 (CSD18510Q5B, Q101's part), R140 0.39 Ohm 2512 | the crowbar on PACK_P: 26.9 A at 10.6 V, 42.7 A at 16.8 V on its own, over the breaker's most limit 23.93 A whatever the load, so U101 enters its current limit (its circuit breaker from 30.21 A) and the fault timer latches the -1 off: the event l9stk 15.6 judges ("an overload over the unit's limit", 0.57 of the derated SOA), once per recovery. **Round 12 (16i):** "whatever the load" holds from BRK_VIN 9.43 V up; under it, from the -1's 7.6 V, the latch rests on the load persisting (the check's F2) | IDM 400 A, VGS(th) 1.2 to 2.3 V, Qg(4.5 V) 75 nC (SLPS632); R140's single pulse at most 0.40 J in 1.4 ms: a part whose maker prints it (Layer 6, E-6b). **Round 12 (16i):** restated, 3.32 J in 4.41 ms, a source's share and the band included |
+
+- **The service.** OCH_A reads 0.695 V at 18 A and 0.726 V at the true 18.80 A of condition C4, under the least 0.792 V; the trip's
+  sense delay (0.460 ms at least) is longer than E-10's 0.282 ms excursions, and its least current is over the breaker's least 18.32 A,
+  so the trip is never more sensitive than the breaker's least unit: no new interruption of 10 A held or 18 A for 60 s. (Round 12, the
+  check's F7: this holds inside E-10's bound, itself a bench item; an excursion over the window lasting from 0.460 ms up to the -1's own
+  timer is ended by the trip where the breaker alone would ride it out, so E-10 is named among L8P-R11-D1's conditions, 16f.)
+- **The event.** At most 2.156 ms from the held current's onset (the trip's delay, the gate in 12.3 us, the clearing's 1.292 ms) plus
+  tCL (45 us typical, no maximum printed: RECORD); the crowbar's peak with the most limit's load 67.4 A at 16.8 V, 99.6 A at the clamp,
+  under the 116.8 A where VIN to SENSE passes 0.3 V: no row of l9stk 15.6 is newly reached. The arming's least delay leaves 3.30 ms for
+  tCL past the gate and the clearing, so the crowbar stays until the latch; recovery is the -1's own (redocking, an input's return, the
+  guard's cycle); no retry train.
+- **Each source present or absent.** With a source holding VSYS and board A's battery FETs on, the crowbar also loads the source
+  through those FETs, CELL+, the dock and the lead, for the event and the crowbar's turn-off after the latch, 2.46 ms at most; that
+  current returns through board A's ground, not R10, so it never holds the trip; board E's entry meets it as a short on VSYS (its
+  overcurrent 6.364 to 7.136 A, its short-circuit 10.36 to 13.87 A, record l4e11 3c), its own fault behaviour (**round 12 corrects this
+  reading, 16i: the charger holds VSYS, L4-E9's P10; board E's entry acts on VIN_RAW two conversions upstream, so its thresholds do not
+  bound a source's share; the share is bounded on voltage over the crowbar's bounded on-time, and the turn-off with Q110's own is
+  0.49 ms, the event 2.65 ms when the -1 latches**); afterwards a charge
+  through the latched breaker's body diodes is route R1's, as after any latch. The gauge's AFE reads the event on R10 as it reads any
+  short on PACK_P (IF-6); its levels are unchanged (IF-4) and its recovery, if its ASCD acts, is the battery stream's.
+- **Kept off.** Q110 under RESET1's 300 nA and Q112's off leakage (5.58 uA at the record's 86.25 C site, the doubling ASSUMED) through
+  R136: 0.277 V against its least 0.5 V threshold; the crowbar under Q110's off leakage (43.6 uA at the site) through R138: 0.205 V
+  (0.570 V at a 101 C site) against Q111's least 1.2 V at 25 C (its threshold falls with temperature, TYPICAL: the layout keeps U106,
+  U107, Q110 and Q112 off the breaker pad).
+- **Its standing current** from BRK_VIN: U106 150 uA, U107 2.6 uA, R139 with R141 8.4 uA at 16.8 V (printed maxima), beside round 3's
+  0.47 mA: a standby load for the battery stream.
+- **Its own single failures** ([CP 4g]): the silent ones (U106 or U107 dead, the input open, Q112, Q110, R142, Q111 or R140 open, RESET2
+  stuck low) return the design to round 10's rows at 23.93 A held (the blades over by 0.83 A, no part the guard protects exposed); the
+  others latch the -1 at a start (the kit dark, found) or arm the crowbar for tSD at a gauge's wake (Q112 shorted). No automatic
+  diagnostic is drawn: E-12f at commissioning and at each service (a test voltage over 0.808 V on TP110 at a light load latches the
+  breaker; TP111 reads the crowbar's gate), and an automatic test is REMAINING ENGINEERING with HO-A's pattern. (Round 12, 16i: these
+  silent failures have no detection interval beyond E-12f, so L4A-67's acceptance reads NOT MET on its latent-failure clause; a shorted
+  Q110 or Q111 with a source present is finding L8P-R12-F1; D106, R143 and C120's own failures are added.)
+
+#### 16c. Composition, the netlist and the mutations ([CP 5])
+
+In L4-E9's board P order (this record's breaker and ideal diode, this round's trip, Layer 6's two tables) every draft runs and board P
+regenerates (183 parts); `check_l8p_netlist.py` reads BRK, EN, INH, REV and DIO DRAWN as before, and the new `check_l8p_och.py` reads
+OCH DRAWN (SENSE, WINDOW from the drawn values 19.965 to 21.521 A, TRIP, ARM, BAR and APART: no trip net on DOCK_EN_OUT, DOCK_EN_RET,
+BRK_UVLO, BRK_H, BRK_HD, BRK_G2 or the restart inhibit's). Nine mutations each read FAIL: the crowbar's resistor on BRK_VIN, the
+amplifier's input and reference exchanged, RESET1 on UVLO, the arming on BRK_VIN, the crowbar at 2 Ohm, the sense delay removed, the
+gate clamp removed, the gain at 10 kOhm, the crowbar on DOCK_EN_OUT. The draft refuses a board P without its predecessors, a second
+application and the repository's own generator while unreleased.
+
+#### 16d. L4A-67: C-PROT rev 1 for the guard on the corrected circuit ([CP 6])
+
+The corrected circuit is round 9's fail-safe delta, round 10's M-A and this round's trip. Two states: (i) the trip intact, no current
+held over 21.52 A, above it one event per recovery; (ii) the trip latently failed, round 10's rows at 23.93 A.
+
+| Part | Held (below the trip) | The event (above it) | Verdict |
+|---|---|---|---|
+| Q39, Q40, Q42 | 135.9 C at E-1's bar, 125.2 C at the design target (i); 150.00 C at the bar (ii) | at most the held 23.93 A state (superposition, 15e) | WITHIN 150 C, CONDITIONAL on E-05, E11-29, E11-36 |
+| R17 | 2.348 W, terminals admitted to 136.5 C (i); 128.5 C (ii) | inside the hot-short row | WITHIN its printed derating, CONDITIONAL on the terminal reading |
+| the pour and vias | the band 7.41 K (i) | as held | WITHIN on the model; the laminate's limit NOT HELD |
+| the three blades | 93.2 % of the rerated 23.10 A at the air, 94.6 % of 22.75 A at the band (i); 103.6 % (ii) | one excursion of at most 2.2 ms at 103.6 % and 16.5 us at 99.6 A, inside the printed least opening times | WITHIN (i): L8P-R10-F1 CORRECTED IN DRAFT; OVER by 0.83 A in (ii) |
+| the 3568 holders | 71.7 % of 30 A | as the blades | WITHIN on current |
+| the dock pins | 5.38 A a pin evenly; the split ratio needed 0.464 (round 10: 0.553) | 24.9 A a pin for 16.5 us, inside the hot-short row | WITHIN evenly, CONDITIONAL on E-4 |
+| the XT60 | 71.7 % of 30 A; the rise 32.1 K (INFERRED), 108.4 C, 11.6 K under 120 C | as the blades | WITHIN on current, its temperature INFERRED |
+| the 12 AWG wires | MISSING: the wire maker's ampacity at a 76.25 C ambient for its insulation class (Layer 6, the harness supplier) | | NOT SHOWN, CONDITIONAL |
+| Q1, Q2, Q109 | a hot factor up to 2.308 admitted (round 10: 1.866) against the typical 1.8 | the held bound | NOT SHOWN: MISSING TI's maximum RDS(on) at 125 or 150 C, or E-8's joint-case reading; CONDITIONAL |
+| Q101, Q102 | a hot factor up to 6.63 admitted (round 10: 5.37) | l9stk 15.6's row, 0.57 of the derated SOA | NOT SHOWN on printed maxima (E-11 and the hot RDS(on)); the event's reading CONDITIONAL on E-2, E-3 |
+| Q111 (new) | off | 99.6 A against IDM 400 A (round 12, 16i: 45.0 A held with a source, its turn-off with a source NOT SHOWN on its SOA) | WITHIN on current |
+| R10 | 0.93 W | the hot-short row | NOT SHOWN: MISSING its maker's sheet (E-6); the trip holds for R10 within -7.3 to +8.3 % |
+| R101, R102 | 0.78 and 0.42 W | | NOT SHOWN: MISSING the parts (E-6) |
+| R140 (new) | none | at most 0.40 J in 1.4 ms (round 11; **round 12, 16i: 3.32 J in 4.41 ms**, a source's share and the band of 16i included) | NOT SHOWN: MISSING a part whose maker prints that single pulse (E-6b, restated; a named candidate in 16i) |
+| F2 | 71.7 % of 30 A; its range ends 16.25 K under the air | | the pack's thermal environment (record l4e10) |
+| the cells | E-5's split at 21.52 A, 0.897 of 8 A per cell evenly (INFERRED) | | the battery stream's and U-01's |
+
+The guard's own claims (rounds 8 and 9) are unchanged: the trip touches neither its pour nor the loop, and ends a held overload over
+its window within 2.2 ms, long before the pour's own time; the guard keeps its own case (the pour's temperature at any current).
+
+**A finding on the drawn UVLO node (L8P-R11-F1, this record's own C-1b of round 2; OPEN; [CP 4h]).** Below its threshold U101 sinks
+UVLOHYS (12 to 30 uA PRINTED), so at a start H settles under R104 with that sink and every off leakage on BRK_UVLO; record l9stk counts
+the sink alone (H 4.6 V at 10.6 V). Q104's and Q105's drains sit on BRK_UVLO: on the 2N7002's 80 nA at 25 C doubled every 10 K (the
+record's own rule, ASSUMED), with R104 at +1 %, D102's 0.715 V and UVLOTH's 2.55 V, UVLO reaches 2.70 V at 10.6 V with both at the
+76.25 C air (0.15 V of margin) and 1.57 V at the 86.25 C site: the breaker is not released at the pack's least above a site of 78.0 C
+on that rule (the service, not a protection). Smallest corrections for this record's next round, none drafted here: R104 lowered with
+C103 raised to keep the hold's 0.110 to 0.907 s, or inverters whose maker prints the hot off leakage; the evidence is Q104's and
+Q105's IDSS at 86.25 and 101 C on board P's specimen. This round's trip adds nothing on UVLO (the reason it acts through the crowbar).
+(Round 12, the check's F8: on the same rule the RC hold also stretches, BRK_H settling at 3.41 V at the 76.25 C air against the 3.265 V
+the release needs, so the hold takes 2.31 s with R104 +1 % and C103 +10 %, against the 0.907 s L4-E11's DD-7 timeline uses; both are
+L8P-R11-F1's affected outputs, 16i.)
+
+#### 16e. L4A-68: the guard's allowance for its consumers ([CP 7]; record l4e11's round 19)
+
+The allowance is 10c's: at most 40 uA cold and 50 uA tripped on DOCK_EN_OUT (the draw at printed maxima with the off leakage at the
+doubling: 24.99 and 36.00 uA cold, 35.43 and 47.02 uA tripped), C261 and C268 330 nF each with U61's 4.7 uF behind them; path 2's
+regulator and switch load VBAT, not the loop; this round's trip adds nothing on either conductor. The consumers' restatements, drafted
+for their owners and NOT APPLIED:
+- **Layer 5** (`apply_pcb_interfaces_guard_allowance.py`): a field dock_en_guard in IF-AE-DOCK of `pcb_interfaces.yaml`, the text
+  section 7's round 11 row carries; checked on a copy of the tree's file (the YAML parses, no other field moves, a second run refuses).
+- **Record l9stk 15.9** (`apply_l9stk_guard_allowance.py`): three edits, each keeping the round's 30 uA as history (the supply bullet's
+  restatement, the acceptance item, the Layer 5 row of its correction scope). Section 15.9 is on `fnd/l9stk2` at `bb6d2c8f`, not in this
+  tree's L9-STACKUPS.md: the script refuses the tree's page and applies on this record's copy (`inputs/l9stk-section15.9-bb6d2c8f.md`,
+  the same bytes as that section on the branch).
+- **The replay** (record l4e11 round 19, `l4e11_rowc.out`): section 28 on the corrected circuit (path 1 tripped read held with the loop
+  powered at 4.224, 5.999 and 9.666 V; path 2 tripped read dark; the window unchanged); 20f at the allowance against U47's and U48's
+  tSD (the closed loop settles at 5.596, 7.928 and 12.750 V with the cold 40 uA, reads powered from 26.0, 17.1 and 10.1 ms and at the
+  earliest start 4.713, 6.678 and 10.739 V); 22's bleed unchanged with path 2's VBAT load (1.218 s against the hold's 1.341 s; 434.8
+  uA under 520.7 uA), the trip's crowbar a sink on CELL+, never a source.
+
+#### 16f. Verdicts
+
+- **L8P-R10-F1: CORRECTED IN DRAFT** by (B): composed in L4-E9's order, read DRAWN, nine mutations FAIL; on printed figures no current
+  is held over 21.52 A (94.6 % of the blades' rerated current at the band) and the service is untouched (round 13, the recheck's F1:
+  the held service; at a start not shown in round 12's drawing, shown with round 13's disarm, 16j). CONDITIONAL on E-6 (R10's
+  sheet within -7.3 to +8.3 %), E-6b (R140's printed pulse) and E-12f; the trip's latent failure returns round 10's 0.83 A (no
+  automatic diagnostic: REMAINING ENGINEERING). UNVERIFIED until the focused check (L4A-69).
+- **L4A-67:** every series part within its printed limits below and above the trip where a printed figure exists; NOT SHOWN, each
+  missing figure named and CONDITIONAL: board P's switches' hot RDS(on) (E-8, E-11), R10, R101, R102 and R140 (E-6, E-6b), the 12 AWG
+  wires, the pins' split (E-4); the battery FETs at most 150 C on the held state, CONDITIONAL on E-05, E11-29 and E11-36. L8P-R11-F1
+  (the drawn UVLO node) is a new OPEN finding of this record's own drawing. **Round 12 (16i, the check's F6): the register's acceptance
+  reads NOT MET on its latent-failure clause** (the trip's silent failures, and the guard's on a board that misses E-1's bar, have no
+  detection interval: REMAINING ENGINEERING); E-9 joins the FETs' conditions (F4).
+- **L4A-68:** the allowance restated for Layer 5's row and record l9stk 15.9 as two apply scripts (not applied); the replay of 20f, 22
+  and 28 holds at it (record l4e11 round 19). Every row resting on the allowance stays PROVISIONAL until the scripts are applied.
+
+#### 16g. The SESSION decisions of round 11
+
+The two-part test of 21 September 2026 sends none to the owner: no class of `reserved.json` names this record's files, nothing is
+bought, no claim about the kit changes, and each residual risk has a named measurement or part.
+
+```yaml
+- id: L8P-R11-D1
+  title: "L8P-R10-F1 corrected by a held-overcurrent trip on board P that forces the -1's own latch through a crowbar, over (A) a fuse or holder and (C) a tighter-limit controller"
+  authority: SESSION
+  authority_why: "an engineering choice inside the task among three compared approaches; it adds a protection and lowers none, moves no service, requirement, copper or printed margin, and every part type is in the kit"
+  ruled_by: "SESSION (W142) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "R10's maker sheet outside -7.3 to +8.3 %, no R140 with a printed single pulse of 0.40 J in 1.4 ms, or a check finding a held current over 22.75 A, a trip at or under 18.80 A, or an event that does not end in the -1's latch, with a second negative check of the same trip; then (C) or the blades' evidence route"
+  outcome: "apply_gen_sch_p_ocheld.py drafted (release-guarded); a held current ended over 19.965 to 21.521 A; L8P-R10-F1 CORRECTED IN DRAFT, CONDITIONAL on E-6, E-6b, E-12f"
+- id: L8P-R11-D2
+  title: "The trip acts through a crowbar into the -1's printed current limit and fault timer, not on UVLO or the enable loop"
+  authority: SESSION
+  authority_why: "a pull on UVLO or the loop gives a retry train whose heating of a fuse no printed figure bounds, and adds a sink to nodes whose margins are spent (L4-E11 20c's window, the UVLO node of L8P-R11-F1); the crowbar's event is one the record already judges"
+  ruled_by: "SESSION (W142) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "a check finding that the crowbar's event is outside l9stk 15.6's analysed rows, or Layer 6 finding no R140"
+  outcome: "the -1 latches once per recovery; L4-E11's window and readings unchanged"
+- id: L8P-R11-D3
+  title: "The guard's allowance restated for its consumers by apply scripts, the l9stk one against the section's copy"
+  authority: SESSION
+  authority_why: "a text restatement of figures already drafted (10c) for their owners; nothing applied, no figure changed"
+  ruled_by: "SESSION (W142) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "the owners of Layer 5's row or record l9stk restating it otherwise"
+  outcome: "apply_pcb_interfaces_guard_allowance.py and apply_l9stk_guard_allowance.py, not applied"
+```
+
+#### 16h. Findings for other records and the coordinator (nothing of theirs is edited here)
+
+- **Register (the coordinator's):** L4A-67 and L4A-68 DONE on the desk, UNVERIFIED (L4A-69) (**round 12 withdraws "L4A-67 DONE": its
+  acceptance reads NOT MET on the latent-failure clause, 16i**); L8P-R10-F1 CORRECTED IN DRAFT; new items
+  E-6b (R140's printed single pulse, Layer 6), E-12f (the trip's commissioning check) and L8P-R11-F1 (OPEN, this record's next round);
+  the trip's automatic diagnostic as REMAINING ENGINEERING beside HO-A.
+- **L4-E9's change list (the integrator's):** a board P row for `apply_gen_sch_p_ocheld.py` after R-246 (the ideal diode); with it the
+  draft moves from its own `RELEASE-R11.md` into the folder's one `RELEASE.md` (section 6 item 1: the count to seven, its row in the
+  table, `test_w5l8p`'s count with it).
+- **Layer 6:** order codes for U106 (OPA187IDBVR, owed as for U102), U107 (C3685740), Q110 (C15127), Q112 (C8545), Q111 (C2876544),
+  D105 (C124196); R140's part (E-6b); R10's sheet (E-6) with its tolerance and temperature coefficient against the trip's -7.3 to +8.3 %.
+- **Layer 9 layout:** R132 and R134 by Kelvin traces from R10's pads; U106, U107, Q110 and Q112 off the breaker pad; Q111 and R140 on
+  the PACK_P band.
+- **Record l9stk (15.9) and Layer 5:** the two apply scripts of 16e. Record l9stk's E-5 (the cells' split) gains margin while the trip
+  works (21.52 A against 23.93 A).
+- **The battery stream:** the trip's standing 0.16 mA from BRK_VIN beside round 3's 0.47 mA.
+- **Outputs for set 33:** `l8p_cprot.out` and `l8p_rowc.out` need the held makers' sheets (OPA187, LM5066I, BUK6Y10-30P, ROHM GMR100)
+  on the box that regenerates them (`fetch_held_back_rowc.py`, `records/l4e11/fetch_held_back.py`).
+
+**Status of round 11:** DONE on the desk; UNVERIFIED until the focused check (L4A-69). Not claimed: nothing here is verified, built or
+measured; the tests establish this record's own behaviour only. Acknowledgement: the execution constitution (sections 3 to 5 and 8)
+was read and applied: the complete connected path checked before the correction (the copper, the breaker, the loop, UVLO), three
+approaches at most, a correction that lowers no protection or service, and tests that fail on the defect they guard.
+
+#### 16i. Round 12 (7 October 2026, W149 on `fnd/l4rowc` after the focused check L4A-69): the check's F1 to F12 corrected or carried (`l8p_cprot.py` [CP 4c'], [CP 4i], [CP 4g], [CP 4h], [CP 5]; `check_l8p_och.py`; `l8p_rowc.py` section 6)
+
+**The task.** The focused independent check of row (c) (W147, an AI review, `_runs/claude/w147chkrowc/REPORT-FULL-AS-RECEIVED.md`,
+register task L4A-69) read `fnd/l4rowc` at `7c77907a` as SUPPORTED AS CONDITIONAL with no blocking finding and six findings owed
+before the targeted recheck (F1 to F6) and six notes (F7 to F12). This round corrects or carries each, on the makers' printed
+figures; a typical value is never taken as a limit. Every figure is printed by `l8p_cprot.py` (cited [CP n]) or `l8p_rowc.py`
+([RC n]); `test_l8p_cprot.py` and `test_l8p_rowc.py` hold the predicates. Nothing here is built, bought or measured; no V2 board exists.
+
+**Closure contract (constitution section 4).** Type: a demonstrated defect of the round 11 draft (F2), a missing bound (F1), a tool
+defect (F3), record corrections (F4 to F12). Inputs: W147's report, this record's rounds 10 and 11, L4-E9's power edges, L4-E11's 12c
+and B-R2 reach, the makers' sheets of [CP 0] (new: TI's BQ25730, Diodes' BAT46W, Vishay's CRCW-HP e3). Smallest deliverable: the draft
+amended in place (unapplied), the reader, the two scripts and outputs, the tests, this section. Acceptance: F2's band ended by a
+drawn bound read DRAWN with failing mutations; F1's share bounded on printed figures with R140's pulse restated; F3's mutations FAIL;
+F4 to F12 in the records. Checkpoint: the targeted recheck (L4A-69).
+
+| # | The check's finding | Round 12 | Where |
+|---|---|---|---|
+| F1 | R140's 0.40 J omits a source's share | THE CHARGER holds VSYS (L4-E9's P06, P07, P10, P11): board E's entry acts on VIN_RAW two conversions upstream, so its 13.87 A bounds VIN_RAW's current, not the share into PACK_P (round 11's sentence and the check's estimate read it as VSYS's: withdrawn). The charger's printed figures are regulations (the pre-charge clamp 384 mA +-25 %, PRINTED; its cycle-by-cycle comparators typical only; no loop prints a settling time). SETTLED, on the record's B-R2 basis (L4-E11: the front end's 118 W into a resistive load at sqrt(P x R)), a source holds R140 at 6.82 V, 17.3 A; INSIDE THE EVENT R140 is bounded on VOLTAGE (PACK_P under BRK_VIN, at most 16.8 V, while the -1 conducts; at most VSYS's 17.375 V once latched) over the on-time F2's bound sets. R140's pulse: 0.399 J in 1.354 ms with no source and the -1 latched (round 11's figure; its "release spike under 0.003 J" was printed beside an arithmetic of 0.064 J: corrected); 1.437 J in 1.844 ms with a source and the -1 latched; 0.996 J in 4.414 ms in F2's band; 3.315 J in 4.414 ms with a source holding the -1 out of its limit. **E-6b restated: 3.32 J in 4.41 ms (782 W held, 2208 W for 16.5 us)**. The turn-off adds Q110's own (0.179 ms on twice its TYPICAL Ciss, ASSUMED, no maximum printed): 0.490 ms. Q111's row: 45.0 A held with a source, within IDM; its turn-off crossing 57.5 W without a source is within the same part's derated 71.1 W at 1.292 ms; 195 W on the voltage bound with a source is NOT SHOWN (its SOA at 0.27 ms not read) | [CP 4c'], [CP 6] |
+| F2 | the latch premise at 10.6 V does not cover the -1's 7.6 V run | The event can happen from BRK_VIN 7.6 V (12d; PORIT typical) to 16.8 V. From 9.43 V the crowbar's own current exceeds every unit's limit. Under it, if the faulted load drops out, the crowbar's own current through R10 holds the trip with the -1 out of its limit: the band **7.71 to 9.43 V** (round 13, the recheck's F2: its upper edge with the loop's printed resistances is about 9.54 to 9.61 V, 16j), 226 W in R140 held in round 11's drawing, a DEMONSTRATED DEFECT of the draft (with a source's settled share up to 13.00 V; inside the event's transient up to 16.8 V). Three approaches: (a) R140 under 0.3144 Ohm (its peak at the clamp, 117.7 A, passes the 116.8 A where VIN to SENSE exceeds its 0.3 V absolute maximum, and a source still holds the -1 out of its limit): not selected; (b) the trip armed only over 9.43 V (L8P-R10-F1 open under it): not selected; (c) **the on-time bound, selected (L8P-R12-D1)**: channel 2 also reads the trip through D106 (BAT46W, VF at most 0.25 V at 0.1 mA, PRINTED; with RESET1's VOL 0.3 V, OCH_S2 under 0.55 V against 0.792 V) and R143 2.2 MOhm from BRK_PGD, with C120 at 22 nF: RESET2 disarms the crowbar **2.15 to 3.92 ms** after the trip asserts whatever the breaker does, and re-arms only once RESET1 has released (no retry train); the least delay leaves 0.85 ms for tCL past the gate and the clearing; BRK_PGD stays at 3.20 V at BRK_VIN 7.6 V, over Q106's 2.5 V threshold maximum, so the restart inhibit stays gated during the event (round 13: R143 moves to BRK_VIN and Q114 holds OCH_S2 low while PGD is low, because leakage through D106 defeated this drawing's PGD-low disarm, the recheck's F1, 16j) | [CP 4i], the draft |
+| F3 | the reader ignores R10, R135, C117 | `check_l8p_och.py` computes the window from R10's, R132's, R133's and R135's drawn values (a milliohm parser added; R10's tolerance stays the record's assumption, E-6) and the delays from C117's, C119's and C120's: SENSE1's filter at most 5 % of the least sense delay, the least sense delay over E-10's 0.282 ms, the least arming delay over the gate, the clearing and 0.5 ms, the most at most 3.93 ms; and the bound's levels from R143. Mutations added, each FAILS: R10 at 1 mOhm (window 39.93 to 43.04 A), R135 at 1 MOhm (17.44 to 24.18 A), C117 at 100 nF (filter 100 us), C120 at 47 nF, D106 removed, R143 at 100 kOhm, SENSE2 back on BRK_PGD: 16 of 16 | [CP 5], the reader |
+| F4 | E-9 missing from M-A's and HO-B's conditions | added | 15a, 15e, 15f, [RC 6], [CP 6] |
+| F5 | HO-A's closure only for a board meeting E-1's bar | scoped, and **E11-29u** named (production X-ray of the three FETs' tab joints against the coupon's voiding; a per-unit reading at commissioning against E11-29's curve); else a residual | 15f, [RC 6], [CP 6] |
+| F6 | L4A-67's acceptance NOT MET on its latent-failure clause | stated; round 11's "L4A-67 DONE on the desk" withdrawn | 16f, 16h, [CP 4g], [CP 8] |
+| F7 | E-10 among L8P-R11-D1's conditions | named | 16b, [CP 4b], [CP 8] |
+| F8 | L8P-R11-F1 stretches the RC hold | 2.31 s at the 76.25 C air (R104 +1 %, C103 +10 %), never released at the 86.25 C site, against the 0.907 s DD-7's timeline uses: affected outputs named | 16d, [CP 4h] |
+| F9 | the fallback test composes a partial board A order | `test_l4e11_fet.py` reads board A's order from L4-E9's change list | record l4e11's `L4E11-ROUND-ROWC.md` |
+| F10 | the pair rests on one shape of TI's answer | kept as stated (S2 visible) | record l4e11's `L4E11-ROUND-ROWC.md` |
+| F11 | R140 after a shorted Q110 or Q111 with a source | when the failure comes with a source holding VSYS and the battery FETs on, CELL+ stays tied to VSYS and the charger holds R140 at 6.82 V, 17.3 A, 118 W on the settled basis (L4-E11's DD-7 inhibit sets only under 1.98 V on CELL+) until R140 opens or the source goes; held off when the failure precedes the source. **Finding L8P-R12-F1 (new, OPEN)**: the record's B-R2 state with R140 as its resistive fault; smallest corrections for the next round, none drafted: a series element whose maker's curve passes the event's pulse and opens the held 17.3 A inside R140's printed short-time rating (chosen with R140's part), or route R1's blocking element | [CP 4g] |
+| F12 | tCL's RECORD label in E-6b | the 50 us is RECORD (45 us TYPICAL, no maximum printed) wherever it enters | [CP 4b], [CP 4c] |
+
+**R140, named (F1).** Vishay's CRCW2512-HP e3 (pulse proof thick film, 1 Ohm to 1 MOhm, P70 1.5 W; document 20043 of 17 March
+2026, held back, `fetch_held_back_rowc.py`), its single-pulse line READ from its vector path on page 5 (the left axis: its long-pulse
+end, 1.50 W at 100 s, meets the printed 1.5 W row; the right labels belong to a template's secondary axis): 194.5 W for 1.354 ms,
+163.2 W for 1.844 ms, 97.3 W for 4.414 ms, 1566.7 W for 16.5 us. With n equal parts in parallel each carrying 1/n, the restated pulse
+needs **nine** (each about 3.51 Ohm; Layer 6 picks the E96 value), round 11's case alone two, a source with the -1 latched five.
+Alternatives: a power package whose maker prints the pulse, or E-12s's reading of a source's settling narrowing the bound. The chart
+states no ambient: its basis at the 76.25 C air is Layer 6's question to Vishay. R140 stays CONDITIONAL on E-6b; the draft keeps one
+symbol with the restated requirement.
+
+**What stays (each CONDITIONAL with its evidence).** E-6 (R10's sheet within -7.3 to +8.3 %), E-6b (restated), E-10, E-12f (extended:
+TP112 reads the disarm; TP111's pulse at most 3.92 ms plus the turn-off), **E-12s** (new: board P with boards A and E, a source at its
+IIN_HOST, a held overload over the window at BRK_VIN 7.6, 10.6 and 16.8 V, ten events each: the -1 latched inside 2.15 ms, the source's
+current into the pack lead and R140's voltage recorded; it decides the residual that a held overload persisting through the bound, the
+-1 held out of its limit by a source's transient, leaves the trip disarmed until it falls under the window: on the settled basis only
+under BRK_VIN 7.64 V; round 13 states its specimens, temperature, the unit's limit and uncertainty, 16j), Q111's SOA at 0.27 ms,
+L8P-R11-F1, L8P-R12-F1, and the latent-failure clause of L4A-67 (REMAINING ENGINEERING).
+
+**The draft (amended in place, unapplied).** `apply_gen_sch_p_ocheld.py` adds R143, D106 and TP112, moves U107's SENSE2 to OCH_S2 and
+sets C120 at 22 nF; it composes in L4-E9's board P order (186 parts; `check_l8p_netlist.py` reads BRK, EN, INH, REV and DIO DRAWN, the
+new reader OCH DRAWN), and refuses a board P without its predecessors, a second application and the tree's own generator while
+unreleased ([CP 5]).
+
+```yaml
+- id: L8P-R12-D1
+  title: "Round 11's band under BRK_VIN 9.43 V (the crowbar's own current holding the trip with the -1 out of its limit) ended by an on-time bound through channel 2 (D106, R143, C120 22 nF), over R140 lowered and over arming only above 9.43 V"
+  authority: SESSION
+  authority_why: "a correction of this record's own unapplied draft among three compared approaches; it lowers no protection or service, adds two small parts of kit types, and changes no requirement, purchase or claim"
+  ruled_by: "SESSION (W149) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "a check finding the bound shorter than the -1's clearing on printed figures, a re-arm without RESET1's release, or BRK_PGD under Q106's threshold during the event, with a second negative check of the same bound; then approach (a) with VIN to SENSE's 0.3 V answered by TI (Q-TI-L9S-1)"
+  outcome: "the crowbar conducts at most 4.41 ms whatever the breaker does; 16 of 16 mutations FAIL; E-12s named for the residual"
+- id: L8P-R12-D2
+  title: "A source's share of the crowbar's current bounded on voltage over the bounded on-time, the path read as the charger's (L4-E9's P10), not board E's entry"
+  authority: SESSION
+  authority_why: "no printed figure bounds the charger's or the front end's current inside the event; a voltage bound needs none and lowers nothing; the record's settled B-R2 basis is kept for the steady states"
+  ruled_by: "SESSION (W149) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "TI printing the charger's or the front end's settling, or E-12s's reading, either narrowing the bound"
+  outcome: "E-6b restated at 3.32 J in 4.41 ms; round 11's 0.40 J withdrawn as R140's requirement"
+- id: L8P-R12-D3
+  title: "R140 named as a candidate only (nine CRCW2512-HP e3 in parallel on Vishay's read single-pulse line), not drawn; the draft keeps one symbol with the restated requirement"
+  authority: SESSION
+  authority_why: "the part choice and the board area are Layer 6's and Layer 9's; the reading names a supported route without fixing it"
+  ruled_by: "SESSION (W149) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "Layer 6 selecting another part whose maker prints the pulse, or the restated bound narrowed by E-12s"
+  outcome: "E-6b CONDITIONAL with a named, read candidate"
+```
+
+**Status of round 12:** DONE on the desk; UNVERIFIED until the targeted recheck (L4A-69). Not claimed: nothing here is verified, built
+or measured; the tests establish this record's own behaviour only. Acknowledgement: the execution constitution (sections 3 to 5 and 8)
+was read and applied: the complete connected path read before the correction (the charger's path, the breaker, the inhibit, UVLO), at
+most three approaches, a correction that lowers no protection or service, a bound on printed figures where no maker prints the source's
+current, and mutations that fail on each defect the reader now guards.
+
+#### 16j. Round 13 (7 October 2026, W156 on `fnd/l4rowc` after the targeted recheck L4A-69): the PGD-low disarm corrected against leakage (the recheck's F1), the band's upper edge (F2), L8P-R12-F1 among L8P-R10-F1's conditions (F4) and the notes F3, F5 to F8 (`l8p_cprot.py` [CP 4j], [CP 4i], [CP 4c'], [CP 4g], [CP 5], [CP 8]; `check_l8p_och.py`; `l8p_rowc.py` section 6)
+
+**The task.** The targeted recheck of row (c) (W153, an AI review, `_runs/claude/w153rechkrowc/REPORT-FULL-AS-RECEIVED.md`) read
+`fnd/l4rowc` at `f7d745ec` as SUPPORTED AS CONDITIONAL for row (c) as a whole and found the amended draft's PGD-low disarm NOT
+SUPPORTED on printed and record leakage (F1): round 12's R143 (2.2 MOhm from BRK_PGD) and D106 let Q112's off leakage or D106's reverse
+current lift OCH_S2 over SENSE2's VITN while BRK_PGD is low. F1's correction is a changed design (constitution section 6 allows one
+further bounded check of it, Q-179); F2, F4 and the notes are record text the coordinator verifies. Desk engineering on the makers'
+printed figures; every figure is printed by `l8p_cprot.py` ([CP n]) or `l8p_rowc.py` ([RC n]); `test_l8p_cprot.py` holds the
+predicates. Nothing here is built, bought or measured; no V2 board exists.
+
+**Closure contract (constitution section 4).** Type: a demonstrated defect of round 12's draft (F1), record corrections (F2, F4) and
+notes. Inputs: W153's report, rounds 11 and 12, records l9stk and l4e11 as cited, the makers' sheets of [CP 0] (no new sheet: JSCJ
+2N7002, Diodes BAT46W and BZT52C, TI TPS37, LM5069 and CSD18510Q5B, Vishay CRCW-HP e3). Smallest deliverable: OCH_S2's PGD-low level
+shown on leakage, at most three corrections compared, one drafted in the existing release-guarded draft, the reader's predicate with
+failing mutations, this section. Acceptance: OCH_S2 under VITN while PGD is low with every leakage at the 86.25 C site, the armed and
+trip-asserted levels and BRK_PGD's level held, composed and read DRAWN, the mutations FAIL. Checkpoint: Q-179 (F1's correction only).
+
+**F1, shown first: round 12's PGD-low level on leakage ([CP 4j]).** OCH_S2 was pulled toward BRK_PGD's low (PGD's VOL at most 0.150 V,
+PRINTED) through R143 2.2 MOhm only. Lifting it over VITN (0.792 V, PRINTED least) takes 0.29 uA with no sink and 0.69 uA with
+RESET1's 300 nA and SENSE2's 100 nA (PRINTED maxima) as sinks. Through D106 reversed reach it: Q112's off leakage once Q112 is off
+(80 nA at 60 V and 25 C PRINTED; 5.58 uA at the 86.25 C site on the record's doubling rule, ASSUMED), which passes the two lifts at
+43.5 C and 56.1 C; and D106's own reverse current while Q112 holds OCH_R up as PGD falls (BAT46W PRINTED: 0.3 uA at 1.5 V and 25 C,
+already over the 0.29 uA; 5.0 uA at 1.5 V and 60 C; 15 uA at 50 V and 60 C; 92.5 uA at the site from the 50 V row on the rule). The
+PGD pin's printed off leakage (5 uA at 80 V) does not enter: PGD sinks while low (F6). So OCH_S2 sat up to 3.80 V (OCH_R's level)
+while PGD was low: RESET2 released and the crowbar armed after tSD at power-up, through a start and on a latched breaker. Round 12's
+"never at power-up, during a start or on a latched breaker" is NOT SHOWN for its drawing (no protection lowered), and its 4g row
+"D106 shorted: as drawn" is withdrawn: a shorted D106 put OCH_S2 on OCH_R, which Q112 holds near half BRK_VIN, so the PGD-low disarm
+was lost, LATENT.
+
+**Three corrections compared on printed figures ([CP 4j]).**
+
+| | (1) a disarm FET from the crowbar's gate (W153's first) | (2) R143 lowered with a pull-down (W153's second) | (3) OCH_S2 from BRK_VIN, held low through a conducting FET while PGD is low |
+|---|---|---|---|
+| Arrangement | a 2N7002 from OCH_S2 to PACK_N, its gate on OCH_CG; D106 removed; R143 2.2 MOhm from BRK_PGD kept | R143 from BRK_PGD with Rp from OCH_S2 to PACK_N; D106 kept | R143 330 kOhm from BRK_VIN; Q114 (2N7002) from OCH_S2 to PACK_N, its gate OCH_PN PGD inverted by Q113 (2N7002, gate on BRK_PGD) against R144 200 kOhm from BRK_VIN, the zener D107 (BZT52C12) under 12.7 V; D106 kept |
+| PGD-low level | nothing flows into OCH_S2 | at most 3.02 uA of leakage tolerated, judged leniently (OCH_S2 at 0.55 V in the event, no sink, PGD's VOL 0; R143 at least 0.750 MOhm for BRK_PGD over 2.5 V, Rp at least 0.403 MOhm for the armed level) | 1.27 mV: Q114's gate at least 5.06 V at the site, where JSCJ prints 7 Ohm at VGS 5 V; the level holds for any on-resistance up to 4.35 kOhm |
+| Armed level | the FET's off leakage through R143 and BRK_PGD's 0.5 MOhm: -12.49 V at 7.6 V, under the release from a 55.3 C site | as the pair allows | 4.97 V with Q114's off leakage, RESET1's 300 nA and SENSE2's largest printed 2 uA (ASSUMED far over the 0.8 V threshold), over the 0.927 V release |
+| The hold while RESET1 asserts | lost: the gate falls with the crowbar, OCH_S2 rises while the overload is held (a pulse train) | kept | kept (D106) |
+| BRK_PGD | 2.2 MOhm on it | a resistor on it | only Q113's gate beside Q106's: 3.72 V at 7.6 V in every state |
+| Verdict | NOT SELECTED | NOT SUPPORTED: Q112's 5.58 uA and BAT46W's printed 5.0 uA at 60 C both exceed 3.02 uA | **SELECTED (SESSION L8P-R13-D1)** |
+
+**The selection's levels** (`check_l8p_och.py` on the composed netlist, [CP 5]; BRK_VIN 7.6 V): PGD low, OCH_S2 at most 1.27 mV with
+R143's current at the clamp and D106's 92.5 uA through Q114, whose gate reaches at least 5.06 V with Q113's off leakage and D107's
+reverse current (BZT52C12 0.1 uA at 8 V and 25 C PRINTED) doubled to the site through R144 at +1 %: no leakage into OCH_S2 can lift it,
+because it is held by a conducting FET and no longer by a 2.2 MOhm node. Armed, 4.97 V (above). The trip asserted, at most 0.64 V
+(RESET1's VOL 0.3 V at its 5 mA row, D106's VF 0.25 V at 0.1 mA for its 88 uA at the clamp, 90 mV for -20 C INFERRED); RESET1 carries
+at most 0.289 mA. BRK_PGD 3.72 V in every state (Q106's and Q113's gates at 80 nA PRINTED): L8P-R12-D1's reversal "BRK_PGD under
+Q106's threshold during the event" can no longer come from the trip. Q113 holds OCH_PN low at its printed 7 Ohm where BRK_PGD reaches
+5 V (BRK_VIN from 10.2 V); under it the record's convention for Q106 (a gate over the 2.5 V threshold maximum), whose failure
+direction is a disarm, never a crowbar. Ratings: Q113 and Q114 at most 29.2 V across against 60 V, their gates at most 14.6 V and
+12.7 V against 20 V, Q114 at most 0.183 mA, D107 at most 89 uA; the trip's standing current rises to at most 0.246 mA at 16.8 V (R144
+85 uA while PGD is high, R143 51 uA while it is low), a figure for the battery stream. Layout: Q113, Q114 and D107 off the breaker
+pad as U107 (the site the leakage is counted at). (Round 14, Q-179's F5 and F7: with Q114's own IGSS counted the gate is at least
+5.046 V, 1.018x of leakage margin to the 5 V row on the ASSUMED rule; D107's bound at the site is 13.31 V with its printed temperature
+coefficient; 16k.)
+
+**The start service (the recheck's F1), SHOWN.** The start's own current is at most 0.659 A for 40.7 ms (RECORD, record l9stk), under
+the window's least 19.965 A, so a start never asserts the trip by itself. The disarm holds whenever PGD has been low for the arming
+delay: Q114's gate reaches its 2.5 V threshold maximum 0.138 ms after PGD falls (R144 into 1 nF, ASSUMED: JSCJ lists Ciss as
+unverifiable and D107's capacitance is not printed), and RESET2 asserts at most 4.06 ms after PGD's fall, inside the insertion time's
+least 4.23 ms (record l9stk: it runs when VIN passes PORIT with the gate held low) and the RC hold's 0.110 s at a docking. Under about
+5 V of VIN the LM5069 releases PGD itself (SNVS452G 8.3.6, no figure printed): armed with the -1's gate held off, as in rounds 11 and 12.
+**[CP 8]'s "the service untouched" is corrected** to "the held service untouched", with the start service shown by this correction.
+(Round 14, Q-179's F4: shown for a POWER-ON start only, and on record l9stk's IF-1, board A's loads held off during the start; at a
+docking PGD's fall is not bounded against the RC hold on printed figures: NOT BOUNDED, named, 16k.)
+
+**4g restated ([CP 4g]).** D106 shorted (round 12's "as drawn" withdrawn): OCH_S2 sits on OCH_R; both disarms still act (Q114 holds the
+merged node low while PGD is low, RESET1 while the trip asserts), but while armed a fall of PGD now completes the crowbar's gate path
+through Q114 for the arming delay: one pulse inside E-6b at each breaker turn-off (Vishay's single-pulse line holds under 1000),
+LATENT; E-12f gains a reading of TP111 at a commanded turn-off. New rows: Q113 shorted, R144 open, D107 shorted or Q114 open lose the
+PGD-low disarm (LATENT: E-12f reads TP112 with the breaker off); Q113 open or Q114 shorted hold OCH_S2 low (the trip disarmed,
+LATENT, as RESET2 stuck low); D107 open leaves Q114's gate at BRK_VIN while PGD is low, within 20 V to the pack's 16.8 V; R143 open
+leaves OCH_S2 on leakage alone; R143 shorted puts OCH_S2 on BRK_VIN (both disarms lost, Q114 and RESET1 overstressed at the next
+event). (Round 14, Q-179's F2, F3, F9 and F10: R144 shorted and R143 shorted's consequence, D107 open in a clamp surge, the gate shorts
+of Q113 and Q114, 4g's scope and E-12f's interval in turn-offs added, 16k.)
+
+**The reader and the mutations ([CP 5]).** `check_l8p_och.py` computes OCH_S2's level while PGD is low from the netlist's own
+arrangement (R143's far net, the pull-down on OCH_S2, its gate's resistor, inverter and zener) with every leakage at the 86.25 C site,
+puts its electrical predicates before the pin checks, refuses a resistor or diode of the trip on BRK_PGD and refuses RESET1's node as
+the pull-down's node. Five mutations are added and each FAILS on its electrical predicate: round 12's drawing (R143 2.2 MOhm from
+BRK_PGD, Q114 removed: OCH_S2 at 3.80 V while PGD is low), Q114 removed (7.60 V), R144 at 1 MOhm (Q114's gate under 5 V), D106
+shorted (RESET1's node merged into OCH_S2) and R143 on BRK_PGD at 330 kOhm; 21 of 21 FAIL. The draft composes in L4-E9's board P order
+and reads OCH DRAWN; it refuses a board P without its predecessors, a second application and the tree's own generator while unreleased.
+
+**F2: the band's upper edge ([CP 4i]).** Round 12's 9.43 V counted R140 alone. The loop from BRK_VIN to PACK_N also holds the most-limit
+unit's sense drop at its limit (VCL 61.5 mV PRINTED), its two FETs in parallel (0.96 mOhm at VGS 10 V and 25 C PRINTED) and Q111
+(1.6 mOhm at VGS 4.5 V and 25 C PRINTED; its gate at 7.9 V there): 9.54 V on those maxima, 9.61 V with both FETs at twice them and
+1 mOhm of copper (ASSUMED: the hot RDS(on) is printed as a typical curve only and the copper is Layer 9's). The band runs from 7.71 to
+about 9.54 to 9.61 V; the on-time bound acts at every BRK_VIN, so the design is unaffected. Restated in 16i (appended), [CP 4i], the
+draft's docstring and comment, and E-12s.
+
+**F4: L8P-R10-F1's conditions ([CP 8], 16f appended).** L8P-R10-F1 stays CORRECTED IN DRAFT, CONDITIONAL on E-6, E-6b (one basis,
+below), E-10, E-12f, E-12s, **L8P-R12-F1** (R140 held near 118 W, 17.3 A after a shorted Q110 or Q111 with a source: a single-failure
+hazard the trip itself adds) and **the PGD-low disarm of this round** (UNVERIFIED until Q-179). L8P-R12-F1's series element is named as
+Layer 6's, to be chosen with R140's part: a part whose maker's curve does not open on the event's 9.03 A2s (45.0 A for 4.41 ms with
+a source and the onset at the clamp) and opens 17.3 A within 0.142 s, where Vishay's read single-pulse line for nine CRCW2512-HP falls
+to 13.1 W a part (118 W in all; READING); its resistance joins the loop of F2.
+
+**F3: E-6b on one basis; the count's basis ([CP 4c']).** E-6b is now stated on the voltage bound throughout: VSYS's most 17.375 V on
+R140 at its least for the whole bounded on-time, 782 W held and 2208 W for 16.5 us at the clamp: **3.51 J in 4.41 ms** (round 12's
+3.32 J took PACK_P at most 16.8 V while the -1 conducts beside a 782 W held figure: replaced). The draft's R140 states 3.51 J. Nine
+parts hold at the line's own basis (no ambient stated) with equal shares; with 1 % parts the worst share is 88.4 W against the line's
+97.3 W; Vishay's 70 to 155 C derating applied to the line (INFERRED) holds nine to a part temperature of 77.7 C, ten or more above it:
+Layer 6 states the part's own temperature with the count.
+
+**F5: SNVSBJ1E 8.3.5.1.** A CTS capacitor not fully discharged when a fault returns gives a shorter next delay; TI asks the time
+between faults over 10 % of the programmed delay. Covered: channel 1's least 0.460 ms exceeds 10 % of channel 2's most (0.392 ms), and
+the -1's timer discharges at 1.25 to 3.75 uA against 51 to 120 uA charging, so a repeated fault shortens the -1's clearing more.
+
+**F6: the PGD leakage basis of both levels.** The PGD-low level does not depend on the PGD pin's off leakage (PGD sinks). The armed
+level needs BRK_PGD over Q113's 2.5 V as Q106 does; on the pin's printed 5 uA (at 80 V, a loose bound at 3.8 to 8.4 V) BRK_PGD's
+released level clears it from BRK_VIN 10.16 V up, for Q106 (the breaker's draft) and Q113 alike; under it the trip disarms (a lost
+trip, never a crowbar). Round 11 armed from about 6.8 V and round 12 from about 8.8 V on that bound (W153, RECORD). Evidence: the pin's
+off leakage at 3.8 to 8.4 V, a vendor fact for TI or a reading on board P's specimen with E-12b. (Round 14, Q-179's F1: a bounded
+provisional choice for 7.6 to 10.16 V with its supplier task E-12p, and the stiffer divider compared and not adopted, 16k.)
+
+**F7: the cycling load.** A load that drops out at each trip and returns over the window at each re-arm makes a train of bounded
+pulses at least 2.61 ms apart, each at most 0.996 J in the band (no source) and 3.51 J on the voltage bound. Vishay's continuous-pulse
+line for the 2512 (READ from its vector path; its long-pulse end meets the printed P70) gives 48.7 W a part at 4.41 ms against the
+band's 25.1 W, but its condition holds the mean under the rated dissipation at the ambient (nine parts at P70 1.5 W derated to the air,
+12.5 W): a train needs a period of 79.6 ms or more (281 ms with a source). A faster train is NOT BOUNDED: named, the kit's loads (Layer
+7's list) must show none re-enters the window within 281 ms of a trip; the smallest correction for a next round, not drafted, is a
+re-arm hold-off on U107's CTR2 longer than that period.
+
+**F8: E-12s and E11-29u.** E-12s: three board P specimens with boards A and E, the -1's current limit read on each first (E-9's
+method), the events run on the specimen whose limit reads highest (the worst case), the result transferring only to units whose limit
+reads at or under it; at 25 C and in a chamber at the 76.25 C air; ten events at each of 7.6, 10.6 and 16.8 V; pass: the -1 latched
+inside 2.15 ms of the trip's assertion in every event, and where it stays out of its limit TP111's pulse ended inside 4.41 ms; timing
+read at 10 us or better, about 1 % of the 0.85 ms left for tCL. E11-29u ([RC 6]): every built board, one reading each, from a known air
+of 15 to 35 C with a heating of at least 40 K; the unit's limit is E-1's bar itself; pass: the reading plus its expanded uncertainty
+(k = 2) at most the bar; the uncertainty budgeted at 6.2 % (2.54 K/W) from two sensors of 1.5 K (IEC 60584-1 class 1, ASSUMED: the
+supplier states its instruments) and the power within 1 %.
+
+**The draft (amended in place again, unapplied).** `apply_gen_sch_p_ocheld.py` moves R143 to BRK_VIN at 330 kOhm, adds Q113, Q114,
+R144, D107 and the net OCH_PN with its intent, puts R140's requirement at 3.51 J and restates the band's edge; still released only by
+its own `RELEASE-R11.md`.
+
+```yaml
+- id: L8P-R13-D1
+  title: "Round 12's PGD-low disarm, defeated by leakage into a 2.2 MOhm node, corrected by holding OCH_S2 low through a conducting FET while PGD is low (Q113, Q114, R144, D107; R143 330 kOhm from BRK_VIN), over a disarm FET driven from the crowbar's gate and over R143 lowered with a pull-down"
+  authority: SESSION
+  authority_why: "a correction of this record's own unapplied draft among three compared approaches; it lowers no protection or service, adds four small parts of kit types (2N7002, BZT52C12, two resistors), removes the trip's only resistive load on BRK_PGD, and changes no requirement, purchase or claim"
+  ruled_by: "SESSION (W156) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "a check finding OCH_S2 over VITN while PGD is low on printed or record leakage, the armed level under the release at the site, or BRK_PGD under Q106's threshold, with a second negative check of the same arrangement; then the disarm by a re-arm hold-off and a separate supervisor channel"
+  outcome: "OCH_S2 at most 1.27 mV while PGD is low at the 86.25 C site; armed 4.97 V; 21 of 21 mutations FAIL; the start service shown"
+- id: L8P-R13-D2
+  title: "E-6b stated on one basis, the voltage bound throughout (3.51 J in 4.41 ms), over round 12's split basis"
+  authority: SESSION
+  authority_why: "a record restatement on the more conservative of two bases already printed; no part, requirement or claim changes"
+  ruled_by: "SESSION (W156) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "a printed bound on PACK_P during the event that narrows it, or E-12s's reading"
+  outcome: "the draft's R140 states 3.51 J; nine CRCW2512-HP e3 at the line's basis, ten above a 77.7 C part"
+- id: L8P-R13-D3
+  title: "L8P-R12-F1's series element named as Layer 6's with its criteria, not drawn"
+  authority: SESSION
+  authority_why: "the part is chosen with R140's (Layer 6) and its board area is Layer 9's; the criteria fix the supported route without selecting a part"
+  ruled_by: "SESSION (W156) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "Layer 6 finding no part that meets both criteria; then route R1's blocking element"
+  outcome: "not opening on 9.03 A2s, opening 17.3 A within 0.142 s; L8P-R12-F1 stays OPEN and a condition of L8P-R10-F1"
+```
+
+**Status of round 13:** DONE on the desk; F1's correction UNVERIFIED until its one bounded check (Q-179); F2, F4 and the notes for the
+coordinator's verification. Row (c) stays SUPPORTED AS CONDITIONAL as W153 read it; no verdict is upgraded. Not claimed: nothing here
+is verified, built or measured; the tests establish this record's own behaviour only. Acknowledgement: the execution constitution
+(sections 3 to 6 and 8) was read and applied: the connected path read before the correction (BRK_PGD, Q106's gating, the start, the
+insertion time), at most three approaches, a correction that lowers no protection or service, a correction that changes the circuit
+rather than a third try of the same node, and mutations that fail on the defect the reader now guards. (Round 14: Q-179, W158's one
+bounded check, read F1's correction SUPPORTED AS CONDITIONAL on its F1, F2, F4 and F5; round 14 answers them as record text, 16k.)
+
+#### 16k. Round 14 (7 October 2026, W161 on `fnd/l4rowc` after Q-179): W158's findings as record text, conditions and compared alternatives, no circuit changed (`l8p_cprot.py` [CP 4k], [CP 4g], [CP 4j], [CP 6], [CP 8]; `check_l8p_och.py`)
+
+**The task.** Q-179, the one bounded check of round 13's F1 correction (W158, an AI review,
+`_runs/claude/w158chkr13/REPORT-FULL-AS-RECEIVED.md`), read `fnd/l4rowc` at `dcec879b` and the PGD-low disarm SUPPORTED AS
+CONDITIONAL on its F5 (the gate's hot leakage on the ASSUMED doubling rule), F1 (on the PGD pin's printed 5 uA the trip is armed only
+from BRK_VIN 10.16 V), F4 (the start service on record l9stk's IF-1, the timing for power-on starts only) and F2 (4g without R144
+shorted), with notes F3 and F6 to F10; the four scripts reproduced and 33 of 33 mutations failed (its 12 and the record's 21). Row (c)'s
+three checks are spent (W147 focused, W153 targeted, W158 bounded). Constitution section 6 allows no further check without a
+materially changed design, so this round changes NO circuit: no part, value or net of any draft moves, and the coordinator verifies it
+as clerical. Desk work on the makers' printed figures; nothing here is built, bought or measured; no V2 board exists.
+
+**Closure contract (constitution section 4).** Type: record corrections and missing vendor or physical evidence (Amendment 1, item 2).
+Inputs: W158's report, rounds 11 to 13, record l9stk's IF-1 (`L9-STACKUPS.md`), the makers' sheets of [CP 0] (no new sheet; DS18004's
+temperature coefficient column and the 2N7002's ID and PD rows are now read). Smallest deliverable: each finding answered as a
+condition, a bounded provisional choice with its supplier task, or a compared alternative not adopted; the reader's gate level with
+Q114's IGSS; 4g completed; row (c)'s status restated. Acceptance: the four scripts reproduce, every predicate reads yes, the 21
+mutations FAIL, the affected tests pass; no verdict upgraded. Checkpoint: the coordinator's clerical verification.
+
+**The findings and their answers.**
+
+| # | W158's finding | Round 14's answer | Where |
+|---|---|---|---|
+| F1 | armed only from 10.16 V on the PGD pin's printed 5 uA; no provisional choice; the stiffer divider not compared | the claim, the affected files, the BOUNDED PROVISIONAL CHOICE (L8P-R14-D1) and the supplier's task E-12p below; W158's stiffer divider COMPARED, NOT ADOPTED | [CP 4k] |
+| F2 | 4g omits R144 shorted; R143 shorted's consequence unstated | both rows (found at once, with damage; a part failing short ties BRK_VIN to PACK_N upstream of the -1); 4g's scope stated (L8P-R14-D2) | [CP 4g] |
+| F3 | D107 open with a clamp surge | stated: Q114's gate to 29.2 V, over its 20 V, while PGD is low; D107 open itself LATENT (no test point on OCH_PN); E-12p (b) reads the gate | [CP 4g] |
+| F4 | IF-1 not named; the timing covers power-on starts only | IF-1 named as a condition of the start service; 4.06 ms against 4.23 ms scoped to a power-on start; a docking NOT BOUNDED, named | [CP 4j], [CP 8] |
+| F5 | the gate's hot leakage ASSUMED with about 2x margin; Q114's IGSS left out | IGSS counted by the reader (5.046 V; round 13 5.062 V); the rule named with its margins: 1.018x to the printed 7 Ohm row at VGS 5 V (0.26 K of site temperature), 2.00x to the 2.5 V threshold maximum (10.0 K), where no on-resistance is printed; L8P-R14-D3; R144 at 100 kOhm COMPARED, NOT ADOPTED | [CP 4k], `check_l8p_och.py` |
+| F6 | the PGD-low predicate blind to D107's polarity or absence and to a gate net on PACK_N | kept as pin checks, which catch all three; not modelled | [CP 4k] |
+| F7 | "under 12.7 V" without the temperature coefficient | 13.31 V at the 86.25 C site (12.7 V and at most +10.0 mV/C PRINTED, DS18004): Q114's and Q111's gates under their 20 V | [CP 4k], [CP 6] |
+| F8 | 0.64 V at -20 C about 19 % under VITN | one line: 19.2 % against the 20 % overdrive at which SNVSBJ1E 7.6 prints its delays (30.6 % at 25 C), taken as met (ASSUMED); not new | [CP 4k] |
+| F9 | the n < 1000 pulses not tied to E-12f's interval | E-12f's interval at most 999 breaker turn-offs after a D106 short can occur; in days OPEN with the duty profile (Layer 7) | [CP 4g], [CP 4k] |
+| F10 | the FET gate shorts not listed | the gate-drain and gate-source shorts of Q113 and Q114 added; those of rounds 11 and 12's FETs NOT LISTED, REMAINING ENGINEERING | [CP 4g] |
+
+**F1 under Amendment 1, item 2 ([CP 4k]).**
+- *The claim:* the trip is armed whenever the breaker runs, over the -1's run from BRK_VIN 7.6 V (C-PROT rev 1, 12d), so L8P-R10-F1's
+  correction covers that run. On the PGD pin's printed off leakage (5 uA at 80 V, SNVS452G) BRK_PGD's released level clears Q113's and
+  Q106's 2.5 V threshold maximum from 10.16 V, under the pack's least in service, 10.6 V: SHOWN on printed figures over the service
+  range 10.6 to 16.8 V.
+- *The affected files and decisions:* `apply_gen_sch_p_breaker.py` (R116, R117 and Q106, round 2's PGD gating),
+  `apply_gen_sch_p_ocheld.py` (Q113), `check_l8p_och.py`'s armed level, L8P-R13-D1, and L8P-R10-F1's correction under 10.16 V.
+- *The bounded provisional choice (SESSION L8P-R14-D1):* the drawing stands (R116 and R117 at 1 MOhm). Between 7.6 and 10.16 V the
+  trip is taken armed PROVISIONALLY on the PGD pin's off leakage at most 2.44 uA at VPGD 2.5 to 3.8 V and the site's temperature, the
+  most that keeps BRK_PGD at 2.5 V at BRK_VIN 7.6 V beside Q106's and Q113's 80 nA gates (R116 and R117 nominal, as 16j's 10.16 V).
+  If the pin leaks more, the failure direction is a disarm, never a crowbar: L8P-R10-F1 stays uncorrected in that band (round 10's
+  rows), and Q106 off lets the breaker's restart inhibit reach UVLO through Q105 on a running breaker whose pad reads hot (a stop of
+  the service; no protection lowered). The trip under 10.16 V is PROVISIONAL in this record and for the register.
+- *The supplier's task, E-12p (new):* (a) specimen U101 (the LM5069-1) as fitted on E-12s's three board P specimens; quantity three,
+  each at 25 C and in a chamber at the 76.25 C air; with the breaker running and PGD released at BRK_VIN 7.6, 8.8 and 10.16 V,
+  BRK_PGD read at U101's pin 8 (no test point is drawn) and the pin's leakage taken from R116's and R117's measured values; pass: the
+  pin's off leakage at most 2.44 uA at every point (BRK_PGD at 2.5 V or more at 7.6 V) and TP112 armed (over 0.927 V); (b) under F5
+  below. The reading transfers to its specimens only; a population figure is TI's (a vendor question for the supplier list, UNSENT).
+
+**Compared alternative, NOT ADOPTED: W158's stiffer divider ([CP 4k]).** R116 and R117 at 200 kOhm each give BRK_PGD a 100 kOhm
+Thevenin, so on the printed 5 uA the trip is armed from BRK_VIN 6.03 V, over the -1's whole run. It adds 33.6 uA from BRK_VIN while the
+breaker runs and 66.6 uA while PGD is low (R116 into the PGD pin, inside its 2 mA VOL row) at 16.8 V: standby figures for the battery
+stream. Not adopted: it changes round 2's breaker draft, a design change that constitution section 6 sends to its own check; it moves
+the standby draw; and the band it adds lies under the pack's least in service. Layer 6 or the receiving company may take it with its
+own check.
+
+**F5: the gate's leakage on the ASSUMED rule ([CP 4k], `check_l8p_och.py`).** The reader now counts Q114's own IGSS (80 nA PRINTED at
+its 25 C row) beside Q113's IDSS (5.58 uA) and D107's IR (6.98 uA), both on the record's doubling rule (ASSUMED): 12.64 uA through
+R144 at +1 %, so Q114's gate is at least 5.046 V at BRK_VIN 7.6 V (round 13: 5.062 V without it). The margin is 1.018x to the 5 V at
+which JSCJ prints 7 Ohm (0.26 K of site temperature on the rule) and 2.00x to the 2.5 V threshold maximum (10.0 K), where no
+on-resistance is printed and OCH_S2's level needs under 4.35 kOhm: CONDITIONAL on the rule. The provisional choice (SESSION
+L8P-R14-D3): R144 at 200 kOhm stands on the rule. Compared, NOT ADOPTED: R144 at 100 kOhm gives 2.04x to the 5 V row for 85 uA more
+at 16.8 V while PGD is high (a design change, its own check). E-12p (b): with PGD low at BRK_VIN 7.6 V in the chamber at the 76.25 C
+air, Q114's gate (read at its pin: no test point on OCH_PN) at 5.0 V or more on each specimen. A regression in `test_l8p_cprot.py`
+fails against round 13's gate level.
+
+**F2, F3 and F10: 4g completed ([CP 4g]).** Rows added or restated, on the circuit as drawn: **R144 shorted** (OCH_PN on BRK_VIN: D107
+across BRK_VIN and PACK_N over its 11.4 V, its printed 0.37 W far exceeded; Q113 across them whenever PGD is high, its printed 0.115 A
+and 0.225 W far exceeded; Q114's gate at BRK_VIN): found at once, with damage; a part failing short ties BRK_VIN to PACK_N upstream of
+the -1, which only the gauge's short-circuit protection on R10 and F2 end (the kit dark); Q113 failing open leaves Q114 on and the
+trip never armed, LATENT. **R143 shorted's consequence:** at every fall of PGD, the first power-up included, Q114 turns on across
+BRK_VIN (its printed 0.115 A and 0.225 W far exceeded): found at once, with damage; failing short, as above; failing open, the trip
+with neither disarm, and D106 and RESET1 overstressed at the next trip. **D107 open in a clamp surge:** Q114's gate goes to 29.2 V,
+over its 20 V, while PGD is low, and may then fail as its gate shorts below; D107 open itself is LATENT (no test point on OCH_PN).
+**Q113 gate-drain shorted:** PGD low pulls OCH_PN low (armed through starts) and, released, Q113 as a diode holds it near its own
+threshold, so the arming is inverted or undetermined, LATENT. **Q113 gate-source shorted:** the trip disarmed, LATENT, and Q106 off as
+under F1. **Q114 gate-drain shorted:** disarmed while running and, with PGD low, held near Q114's threshold about or over VITN, armed
+through starts, LATENT. **Q114 gate-source shorted:** the PGD-low disarm lost, LATENT, as Q114 open. E-12f's TP112 finds each LATENT
+row. **4g's scope (SESSION L8P-R14-D2):** resistor shorts and FET gate shorts are listed for round 13's parts (R143, R144, Q113,
+Q114); the other parts' failure modes not in a row (among them the shorts of R132 to R142 and the gate shorts of Q110 to Q112) are NOT
+LISTED: REMAINING ENGINEERING with L4A-67's latent clause, the trip's complete failure-mode table being the receiving company's. A FET
+"shorted" reads drain to source (W158's reading, taken).
+
+**F4: the start service's scope ([CP 4j]).** The start's own 0.659 A (RECORD, record l9stk) rests on record l9stk's IF-1: board A's
+loads on VSYS stay off, under 0.81 A, until the breaker's start ends (at most 40.7 ms), or follow its PGD (owners L4-E11 with board
+A's generator). IF-1 is a condition of the start service. The comparison of 4.06 ms against the insertion time's least 4.23 ms covers
+a POWER-ON start only (the insertion time runs only when VIN passes PORIT). At a docking (VIN already present, the start after the RC
+hold's 0.110 to 0.907 s) PGD's fall is NOT BOUNDED against the hold on printed figures (PGD's release near 5 V of VIN and PORIT print no
+minimum): named, not shown. A docking start that draws the start's own current stays under the window, so only a faulted start over
+the window depends on it.
+
+**F7, F8 and F9 ([CP 4k]).** F7: D107's 12.7 V is PRINTED at its 5 mA row and 25 C with a temperature coefficient of at most +10.0
+mV/C (DS18004): 13.31 V at the 86.25 C site (INFERRED; it carries at most 90 uA, under that row, where its voltage is lower). Q114's
+gate is at most 13.31 V against the 2N7002's 20 V, and D105's crowbar gate the same against the CSD18510Q5B's 20 V; the drafts' intent
+lines keep 12.7 V at 25 C (no verdict rests on them; restated at their next design round). F8: the trip-asserted level at -20 C,
+0.64 V, sits 19.2 % under VITN's least 0.792 V, at the edge of the 20 % overdrive at which SNVSBJ1E 7.6 prints its delays (30.6 % at
+25 C): the on-time bound is taken on that condition (ASSUMED); not new. F9: a shorted D106 makes one pulse inside E-6b per breaker
+turn-off while armed, and Vishay's single-pulse line holds under 1000 pulses, so E-12f's interval is bounded at 999 breaker turn-offs
+after such a short can occur; the operating envelope states no turn-offs a day, so the interval in days is OPEN with the duty profile
+(Layer 7).
+
+**Row (c)'s status, restated from the three AI reviews ([CP 8]; no verdict upgraded).** Row (c) as a whole: **SUPPORTED AS
+CONDITIONAL**; no cx46 item closes unconditionally. Its conditions:
+- W147's (the focused check): E-05, E11-29, E11-36 and E-9 for RE-10 and HO-A by M-A and the battery FETs; RE-9's two apply scripts
+  applied by their owners; E-6, E-6b, E-12f and E-10 for the trip.
+- W153's (the targeted recheck): E11-29u (each built board's path); E-6b as restated; E-12s; Q111's SOA with a source (E-2, E-3); the
+  PGD-low disarm's correction (round 13); L8P-R12-F1 (OPEN).
+- W158's (Q-179): F5, the gate's hot leakage on the ASSUMED doubling rule (1.018x to the 5 V row, 2.00x to the threshold); F1, the trip
+  between BRK_VIN 7.6 and 10.16 V PROVISIONAL on the PGD pin (E-12p); F4, the start service on IF-1 for a power-on start, a docking
+  not bounded; F2, 4g completed in this round.
+- This record's own: L8P-R11-F1 (OPEN, the drawn UVLO node) and the fast cycling load (NOT BOUNDED, 16j).
+
+L8P-R10-F1 stays CORRECTED IN DRAFT and CONDITIONAL; the PGD-low disarm (L8P-R13-D1) is SUPPORTED AS CONDITIONAL by Q-179. **L4A-67's
+acceptance reads NOT MET on its latent-failure clause** (REMAINING ENGINEERING). **HO-L stays OPEN on E-05.**
+
+```yaml
+- id: L8P-R14-D1
+  title: "Q-179's F1: the trip between BRK_VIN 7.6 and 10.16 V taken armed PROVISIONALLY on the PGD pin's off leakage at most 2.44 uA, the drawing kept (R116 and R117 1 MOhm), over W158's stiffer divider (200 kOhm), compared and not adopted"
+  authority: SESSION
+  authority_why: "a bounded provisional choice under Amendment 1 item 2 on a missing vendor figure; no part, value, net, requirement, purchase or claim changes; the band lies under the pack's least in service and its failure direction is a disarm"
+  ruled_by: "SESSION (W161) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "E-12p (a) reading the pin over 2.44 uA, or TI printing a larger leakage at 2.5 to 3.8 V; then the stiffer divider or an equivalent, with its own check"
+  outcome: "the trip SHOWN armed from 10.16 V on printed figures (the service range 10.6 to 16.8 V), PROVISIONAL from 7.6 V; E-12p named"
+- id: L8P-R14-D2
+  title: "Q-179's F2, F3 and F10: 4g gains R144 shorted and the four gate shorts of Q113 and Q114, restates R143 shorted and D107 open, and states its scope, over a resistor-short exclusion"
+  authority: SESSION
+  authority_why: "record text on the circuit as drawn; the rows the check named are added and the parts outside them are named as remaining engineering; nothing is drawn or changed"
+  ruled_by: "SESSION (W161) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "a check finding a row's consequence misread, or the receiving company's complete failure-mode table"
+  outcome: "five rows added and two restated, the D106-shorted row tied to E-12f's interval; the other parts' resistor and gate shorts NOT LISTED, REMAINING ENGINEERING"
+- id: L8P-R14-D3
+  title: "Q-179's F5: R144 at 200 kOhm kept on the record's ASSUMED doubling rule with its margins stated (1.018x to the printed 7 Ohm row, 2.00x to the threshold), over R144 at 100 kOhm, compared and not adopted"
+  authority: SESSION
+  authority_why: "a provisional choice under Amendment 1 item 2 on an assumed leakage rule; no part or value changes; the reader now counts Q114's IGSS and the gate still reads at or over 5 V"
+  ruled_by: "SESSION (W161) under the owner's rulings of 21 and 26 September 2026"
+  ruled_on: 2026-10-07
+  reversed_by: "E-12p (b) reading Q114's gate under 5.0 V, or a printed hot leakage for Q113 or D107 that moves it under 5 V; then R144 lowered, with its own check"
+  outcome: "Q114's gate at least 5.046 V at the site, CONDITIONAL on the rule; E-12p (b) named"
+```
+
+**Tests and reproduction.** The four scripts reproduce their outputs through `_bin/regen_out.py` in dependency order:
+`l8p_rowc.out` (it pins this page), then `l8p_cprot.out`, then record l4e11's `l4e11_rowc.out`; `l4e11_fet.out` reads "already
+identical". Every predicate of `l8p_cprot.out` reads yes, the composed board P reads OCH DRAWN and 21 of 21 mutations FAIL. Record
+l4e11's `l4e11_rowc.py` now names round 13's R143 and Q113 where two of its lines read round 12's (its page, section 6). The affected
+tests as run.py printed them, each module alone:
+- test_l8p_cprot: tests: 16 passed, 0 failed, 0 skipped (one test added: the reader's gate level with Q114's IGSS, which fails on
+  round 13's reader at `dcec879b`, run on a scratch copy of that file);
+- test_l8p_rowc: tests: 11 passed, 0 failed, 0 skipped; test_l4e11_rowc: tests: 6 passed, 0 failed, 0 skipped; test_l4e11_fet:
+  tests: 8 passed, 0 failed, 0 skipped; test_l8p: tests: 33 passed, 0 failed, 0 skipped; test_w5l8p: tests: 5 passed, 0 failed, 0
+  skipped; test_l4e11: tests: 82 passed, 0 failed, 0 skipped;
+- test_remeng: tests: 17 passed, 0 failed, 0 skipped; test_w7rem: tests: 9 passed, 0 failed, 0 skipped; test_execution_paths: tests:
+  7 passed, 0 failed, 0 skipped; test_recpack: tests: 7 passed, 0 failed, 0 skipped; test_driver_hygiene: tests: 78 passed, 0 failed,
+  0 skipped; test_public_hygiene: tests: 4 passed, 0 failed, 0 skipped.
+
+**Status of round 14:** DONE on the desk as record text, conditions and compared alternatives; no circuit changed, so no further check
+is due under constitution section 6; for the coordinator's clerical verification. NOT DONE: E-12p, the docking start's bound, the fast
+cycling load, the resistor and gate shorts of rounds 11 and 12's parts, L8P-R11-F1 and L8P-R12-F1 stay open as named. Not claimed:
+nothing here is verified, built or measured; the tests establish this record's own behaviour only. Acknowledgement: the execution
+constitution (sections 3 to 6 and 8) was read and applied: no further check sought without a materially changed design, a missing
+vendor figure answered by a bounded provisional choice with its supplier task, compared alternatives kept visible and not adopted, the
+reader corrected with a regression that fails against round 13's gate level, and no verdict upgraded.
