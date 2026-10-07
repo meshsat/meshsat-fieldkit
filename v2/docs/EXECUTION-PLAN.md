@@ -1756,14 +1756,14 @@ pages' rows, applied); `handover/START-HERE.md` and `handover/supplier/SUPPLIER-
 `handover/LAYER-STATUS.md` (the blocks headed After set 31, Layers 4, 5, 8, 9 and 12). Compute: `records/int31/RESULT.md`, section 5
 (compute and storage apart, no total).
 
-### Milestone: integration set 32 promoted as a DESK candidate (main `__CANDIDATE__`)
+### Milestone: integration set 32 promoted as a DESK candidate (main `f08e3961`)
 
-**Promoted:** main `__CANDIDATE__`, the candidate on set 32's integration branch, by fast-forward, the promotion log's line: `__GATE__`.
+**Promoted:** main `f08e3961`, the candidate on set 32's integration branch, by fast-forward, the promotion log's line: `GitHub main at f08e396175dd418434061d731e08111d006d6efa (_runs/int32/promote-1041.log)`.
 INTEGRATED = CANDIDATE = PROMOTED. REVIEWED: `4d0ff8a2` (cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."), unchanged: no independent
 check of the engineering read a later revision. The base: set 31's promoted `5f25daf3` (the record's BASE row; the lineage starts at main's tip `be07863b`, the chain's base, which descends from it); five branches, 34 commits over their bases
 (`records/int32/RESULT.md`, section 1), merged and regenerated to convergence, with record l4e7's results cache re-keyed ONCE (section
-3c). Gated by suite_gate with G7 (`_bin/suite_gate.py`), its verdict line over the four pass logs: `__GATE__`.
-The candidate_guard check, every host, its PASS line on each host in one value: `__GATE__`.
+3c). Gated by suite_gate with G7 (`_bin/suite_gate.py`), its verdict line over the four pass logs: `suite_gate: candidate f08e396175dd; totals tests: 2973 passed, 0 failed, 2 skipped + tests: 26 passed, 0 failed, 0 skipped + tests: 253 passed, 0 failed, 0 skipped + tests: 213 passed, 0 failed, 1 skipped; result lines 3468 (3465 PASS, 3 SKIP, 0 FAIL); modules 269 of 269 ran; suite_gate: PASS`.
+The candidate_guard check, every host, its PASS line on each host in one value: `candidate_guard: PASS candidate f08e396175dd418434061d731e08111d006d6efa: 1111 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate f08e396175dd418434061d731e08111d006d6efa: 1111 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate f08e396175dd418434061d731e08111d006d6efa: 1111 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen`.
 
 **What it closes:** no power item. "Set 32 closes NO power item." (`records/int32/RESULT.md`, section 6). Set 32 adopts the makers' PDF
 text as committed verbatim inputs of 26 record generators (a held-back sheet's text held back with the sheet and re-taken after the
@@ -1774,8 +1774,8 @@ board generator or netlist changed. Its classification counts 2 REVIEWED-INPUT C
 12 that touch a file cx46 read (`records/int32/CLASSIFICATION.md`, section 2), each UNREVIEWED since cx46 and credited nothing,
 counted over the branch commits alone (the integration's rows 31 to 33 are classed at the adoption), beside set 31's 25 over all 106
 of its commits (its integration's among them) and set 30's 14 over its 45. Set 31's known item, record l4e7's paragraph 0a's history
-sentence (`records/int31/RESULT.md`, section 4a), is planned to be corrected by set 32's re-key and its dependents' regeneration;
-the regenerated `records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `__GATE__`.
+sentence (`records/int31/RESULT.md`, section 4a), is corrected by set 32's re-key and its dependents' regeneration (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption);
+the regenerated `records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `its key field is the key of its own parts and no part differs from this tree's`.
 
 **The three claims, apart, and the gate, unchanged from set 30** (the coordinator's judgement of 6 October 2026, 10:45 CEST, in
 `records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6, of which set 32 changes no line): engineering-handover readiness READY AS A

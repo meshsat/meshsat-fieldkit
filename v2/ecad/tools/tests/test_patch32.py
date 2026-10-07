@@ -47,6 +47,14 @@ every test while the fill tool's three-host NOTE fell silent): P-01's candidate_
 (p_rows), and after the fill its value is three parts joined by "; ", each "candidate_guard: PASS candidate <the candidate>" as
 candidate_guard prints it on each host (p_fill; set 31's guard logs give the form); each with a mutant it refuses.
 
+W119's restatement at set 32's adoption (7 October 2026; W116's finding 1, W110's C2), written by apply_known32.py only when paragraph
+0a of l4e7_p0sol.out at the candidate no longer prints set 31's history sentence (set 30's integrator) and prints WP-B's clause as
+para_0a's source gives it: rows S-05, U-03, L-02 and P-01 say the known item is corrected (RESTATED, the same blocks on the pages);
+KNOWN takes that wording only and p_known refuses the planned wording (KNOWN_PLANNED); p_fill reads its template through RESTATED.
+The restated rows hold after the fill only: before it no candidate is named, so "is corrected" is refused there. W123 (W121's
+findings 3 and 6): RESTATED also carries three blocks of the patch file's own prose (on no page), and a self-mutant pins p_known's
+guard: set 31's paragraph 0a appended to the candidate's output (through _C) makes every restated row refused.
+
 This file never writes a token of the fill tool literally (it builds them with T()), so the placeholder check of set 32's chain needs
 no deferral row for it. Read-only: git is read with `git show`, `git log`, `git cat-file`; nothing is written. No pytest is needed
 (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
@@ -525,9 +533,53 @@ def p_claims(rows):
     return bad
 
 
-KNOWN = re.compile(r"is planned to be corrected by (?:that|set 32's one|set 32's) re-key and (?:the regeneration of its dependents|its "
-                   r"dependents' regeneration)(?: \(no set had run it when these rows were written\))?; the regenerated `(?:v2/docs/)?"
-                   r"records/l4e7/l4e7_p0sol\.out` at the candidate prints in its paragraph 0a: `([^`]+)`")
+# W119 (W116's finding 1, W110's C2), restated at set 32's adoption by `<worktrees>/_runs/int32/freeze/apply_known32.py` because
+# paragraph 0a of l4e7_p0sol.out at the candidate no longer names set 30's integrator and prints WP-B's clause (para_0a's source):
+# the rows say the known item is corrected and KNOWN takes that wording only; KNOWN_PLANNED, W113's pattern, is refused by p_known;
+# RESTATED is the change in the rows, on the pages and in p_fill's template alike; its last three blocks (W123, W121's finding 3)
+# are the patch file's own prose (NEXT step (6), the paragraph "Filling the GATE tokens", S-05's basis), on no page.
+KNOWN = re.compile(r"is corrected by (?:that|set 32's one|set 32's) re-key and (?:the regeneration of its dependents|its dependents' "
+                   r"regeneration) \(paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption(?:, "
+                   r"after these rows were written)?\); the regenerated `(?:v2/docs/)?records/l4e7/l4e7_p0sol\.out` at the candidate "
+                   r"prints in its paragraph 0a: `([^`]+)`")
+KNOWN_PLANNED = re.compile(r"is planned to be corrected by (?:that|set 32's one|set 32's) re-key and (?:the regeneration of its "
+                           r"dependents|its dependents' regeneration)(?: \(no set had run it when these rows were written\))?; the "
+                           r"regenerated `(?:v2/docs/)?records/l4e7/l4e7_p0sol\.out` at the candidate prints in its paragraph 0a: "
+                           r"`([^`]+)`")
+W119_READ = "paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption"
+RESTATED = (   # W119: (the rows' planned text, the corrected text), the same blocks in the patch file and on the pages;
+               # W123: the last three, the patch file's own prose only
+    ("planned to be corrected by set 32's one re-key and the regeneration of its dependents (no set had run it when these rows were",
+     "corrected by set 32's one re-key and the regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were"),
+    ("\n".join(("31's known item, record l4e7's paragraph 0a's history sentence (`records/int31/RESULT.md`, section 4a), is planned to be corrected",
+                 "by set 32's one re-key and the regeneration of its dependents (no set had run it when these rows were written); the regenerated")),
+     "\n".join(("31's known item, record l4e7's paragraph 0a's history sentence (`records/int31/RESULT.md`, section 4a), is corrected by set 32's one",
+                 "re-key and the regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were written); the regenerated"))),
+    ("\n".join(('  history sentence (the set 31 block below; `v2/docs/records/int31/RESULT.md`, section 4a), is planned to be corrected by that',
+                 '  re-key and the regeneration of its dependents (no set had run it when these rows were written); the regenerated')),
+     "\n".join(('  history sentence (the set 31 block below; `v2/docs/records/int31/RESULT.md`, section 4a), is corrected by that re-key and the',
+                 "  regeneration of its dependents (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption, after these rows were written); the regenerated"))),
+    ("sentence (`records/int31/RESULT.md`, section 4a), is planned to be corrected by set 32's re-key and its dependents' regeneration;",
+     "sentence (`records/int31/RESULT.md`, section 4a), is corrected by set 32's re-key and its dependents' regeneration (paragraph 0a at the candidate no longer names set 30's integrator: read at the adoption);"),
+    ("\n".join(('and, if paragraph 0a at the candidate no longer',
+                 'names set 30\'s integrator, rows S-05, U-03, L-02 and P-01\'s "is planned to be corrected" restated with `test_patch32.py`\'s pattern',
+                 "KNOWN (W110's C2: no basis for it exists before the regenerated output, so W113 left the words; the GATE value is a clause of the",
+                 "regenerated paragraph 0a that set 31's paragraph 0a does not print, which `test_patch32.py` now requires); (7) the")),
+     "\n".join(('and, since paragraph 0a at the candidate no longer',
+                 'names set 30\'s integrator, rows S-05, U-03, L-02 and P-01\'s "is planned to be corrected" restated at the adoption as "is corrected",',
+                 "with `test_patch32.py`'s pattern KNOWN, by `<worktrees>/_runs/int32/freeze/apply_known32.py` (W119, W123; W110's C2: the GATE",
+                 "value is a clause of the regenerated paragraph 0a that set 31's paragraph 0a does not print, which `test_patch32.py` requires); (7) the"))),
+    ("\n".join(('The rows never say the known item is corrected: they say a correction',
+                 'is planned and quote what 0a prints, and `test_patch32` refuses the words "is corrected" there while paragraph 0a at the candidate',
+                 'still names set 30\'s integrator; `records/int32/CLASSIFICATION.md`\'s row 33 keeps "planned to correct that item (no set has run it',
+                 'yet)" until the adoption reads that paragraph.')),
+     "\n".join(('The rows say the known item is corrected: the adoption read paragraph',
+                 '0a at the candidate, which no longer names set 30\'s integrator, and `apply_known32.py` (W119, W123) restated "is planned to be',
+                 'corrected"; `test_patch32` refuses "is corrected" there while paragraph 0a at the candidate names set 30\'s integrator, and the planned',
+                 'wording once the adoption read it; `records/int32/CLASSIFICATION.md`\'s row 33 reads "no longer names set 30\'s integrator".'))),
+    ('row 33 ("planned to correct that item (no set has run it yet)"); the GATE\'s source, the',
+     'row 33 ("no longer names set 30\'s integrator"); the GATE\'s source, the'),
+)
 
 
 def _para_0a(cand):
@@ -554,6 +606,8 @@ def p_known(rows, result):
         old = _para_0a(S31_CAND)
     for rid in KNOWN_ROWS:
         txt = by.get(rid, "")
+        if KNOWN_PLANNED.search(txt):     # W119: the planned wording once the adoption read the correction
+            bad.append("%s: says the correction is planned, while the adoption read it in paragraph 0a at the candidate" % rid)
         ms = KNOWN.findall(txt)
         if len(ms) != 1:
             bad.append("%s: the known item is not stated once with paragraph 0a at the candidate as its source" % rid)
@@ -625,6 +679,10 @@ def p_fill(text, result):
     tmpl = _template()
     if tmpl is None:
         return bad + ["after the fill, no committed revision of the patch file holds the template"]
+    for old_, new_ in RESTATED:     # W119: the template read through the known item's restatement (apply_known32.py), its only change
+        if tmpl.count(old_) != 1:
+            return bad + ["the template does not hold the known item's planned text once (W119's RESTATED): %r" % old_[:60]]
+        tmpl = tmpl.replace(old_, new_, 1)
     a, b = tmpl.split("\n"), text.split("\n")
     if len(a) != len(b):
         return bad + ["the filled patch file has %d lines, its template %d" % (len(b), len(a))]
@@ -804,11 +862,14 @@ def t_set_31s_known_item_reads_paragraph_0a_at_the_candidate():
     result = _read(RESULT)
     rows = _rows(t)
     assert not p_known(rows, result), p_known(rows, result)
-    assert p_known(_rows(_mut(t, "regeneration of its dependents (no set had run it when these rows were\nwritten); the regenerated",
+    # W119: restated with the rows (apply_known32.py): the dependents' log as the source; the planned wording put back; the reading dropped
+    assert p_known(_rows(_mut(t, "regeneration of its dependents (%s, after these rows were\nwritten); the regenerated" % W119_READ,
                                   "regeneration of its dependents, as the dependents' log shows; the regenerated")), result), \
         "the dependents' log as the source passed"
-    assert p_known(_rows(_mut(t, "is planned to be corrected by that\n  re-key", "is corrected by that\n  re-key")), result), \
-        "the known item said corrected passed"
+    assert p_known(_rows(_mut(t, "is corrected by that re-key and the\n  regeneration of its dependents (%s, after these rows were written)"
+                                 % W119_READ, "is planned to be corrected by that re-key and the\n  regeneration of its dependents (no set had "
+                                 "run it when these rows were written)")), result), "the planned wording put back passed"
+    assert p_known(_rows(_mut(t, "regeneration (%s);" % W119_READ, "regeneration;")), result), "the correction without its reading passed"
     st = _fill_stage(result)[0]
     if st == 0:
         assert p_known(_rows(_mut(t, "candidate prints in its paragraph 0a: `%s`.\n```\nBasis: `v2/docs/records/int32/RESULT.md`, the paragraph" % T("GATE"),
@@ -821,6 +882,18 @@ def t_set_31s_known_item_reads_paragraph_0a_at_the_candidate():
         # W113 (W110's C2): a fragment that set 31's paragraph 0a prints too (WP-B's 0a and set 31's both begin so)
         assert p_known(_rows(t.replace("paragraph 0a: `%s`" % m.group(1), "paragraph 0a: `its KEY holds on this tree`", 1)), result), \
             "a fragment of set 31's paragraph 0a passed"
+        # W123 (W121's finding 6): the rows say the item is corrected while paragraph 0a at the candidate still names set 30's
+        # integrator: the candidate's output, as _show() caches it, read with set 31's paragraph 0a (S31_CAND) appended to its own
+        k_ = (_fill_stage(result)[1], P0SOL)
+        keep_ = _show(*k_)
+        _C[k_] = keep_.replace("\n  0b ", "\n     %s\n  0b " % _para_0a(S31_CAND), 1)
+        try:
+            assert "set 30's integrator" in (_para_0a(k_[0]) or ""), "the mutant's paragraph 0a does not name set 30's integrator"
+            bad_ = p_known(rows, result)
+        finally:
+            _C[k_] = keep_
+        assert bad_ and all("says the known item is corrected" in b for b in bad_), \
+            "the rows saying corrected while paragraph 0a at the candidate names set 30's integrator passed: %r" % bad_[:2]
 
 
 def t_the_tokens_are_the_rows_and_the_fill_stage_is_resultss():
