@@ -13,8 +13,8 @@ limiter that has lost its limit looks healthy in service: a latent first failure
 current bound RE-7's thermal case rests on, found by nothing (the objection L8P-BREAKER.md states for the guard). The quorum tolerates
 one supervisor out (IOHA row 3), so the other two can test each supervisor's limiter in service, one at a time:
   1. THE TEST LOAD (R800, R820, R840): 3.0 Ohm 1 % in 2512 (1 W at 70 C, UNI-ROYAL's thick-film series) from the limiter's output
-     IOC{t}_LDO_IN to IOC{t}_TL: at the least input it asks more than twice the limiter's highest limit, and with a limiter that has
-     lost its limit it draws at most 1.386 A, which U601 and the survivors' inputs carry (record l4hod section 8).
+     IOC{t}_LDO_IN to IOC{t}_TL: at the least input it asks 1.89 times the limiter's highest limit, and with a limiter that has lost
+     its limit it draws at most 1.440 A, which U601 and the survivors' inputs carry on the DC path (record l4hod section 8).
   2. THE TEST SWITCH, two AO3400A in series below it (Q590 and Q591 for controller A; Q592, Q593; Q594, Q595), the upper one gated
      by the NEXT controller, the lower one by the one after, each through 1 kOhm (R801, R803) with 100 kOhm to ground (R802, R804):
      no single peer can load the rail (2 of 2 to start), either peer alone ends the load, a dark or reset peer leaves its half off,
@@ -31,7 +31,8 @@ one supervisor out (IOHA row 3), so the other two can test each supervisor's lim
      the diode is off (the bench jumper J_IOCOFF still holds the EN low as before).
   6. THE PINS (per controller): PE12 and PE13 (pins 42 and 43, outputs) its half of the test switch on the next controller and on the
      one after; PE14 and PE15 (pins 44 and 45, inputs) their FAULT; PC0 (pin 15, ADC123_INP10) and PC1 (pin 16, ADC123_INP11) their
-     output, both FT pins (a shorted divider leaves the limiter's output on the pin, inside an FT pin's limit while it is powered). Free on the composed map (43 of 100 used with canen; 49 with this draft).
+     output, both FT pins (a shorted divider leaves the limiter's output on the pin, inside an FT pin's limit while it is powered).
+     Free on the composed map (43 of 100 used with canen; 49 with this draft).
 The procedure (record l4hod section 9, DRAFTED for Layer 5's contract; L4A-61 propagates it): the two peers take the target out of the
 quorum; exercise the restore route by pulling its EN low and releasing it (record l4canen's route); close each half alone for 4 ms (a
 stuck other half shows as a load, under the 5 ms printed least deglitch, so nothing latches); close both, read the output (the limit's
