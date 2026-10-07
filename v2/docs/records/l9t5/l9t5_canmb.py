@@ -10,14 +10,14 @@ It prints, deterministically and without touching the tree:
      its end through record l8p's gen_netlist.py, and the regenerated netlist read by pin: CON-004's three supply branches and two
      fabrics with their termination, the twelve observations, the twelve votes and the six 2-of-2 gates on the targets' own rails;
   4. the mutations that must FAIL (a draft that removes a fabric, a vote that does not reach its SHDN, an observation reading the
-     node's own TXD, and three more) and the draft's refusals;
+     node's own TXD, and four more) and the draft's refusals;
   5. the pin plan recounted on the composed candidate and read against DS12110 Rev 10 Table 9 and Table 12 (every pin a printed
      function, every observation a timer channel with its own DMA request in RM0433 Rev 8), and CON-017's count restated;
   6. the logic levels on the makers' printed rows (the vote, SHDN, the observation, a faulty reader, the dark cases);
   7. the vote path's in-service self-test: its phases, its timing on printed figures, its interval, its own faults, its coverage;
   8. what this closes once independently checked and what stays OPEN (L4A-55), the SESSION decisions and the findings;
   9. the predicates the test holds (v2/ecad/tools/tests/test_l9t5_canmb.py).
-Run from the repository root:  python3 v2/docs/records/l9t5/l9t5_canmb.py  (about 15 s; l9t5_canmb.out is its output, regenerated
+Run from the repository root:  python3 v2/docs/records/l9t5/l9t5_canmb.py  (about 6 s; l9t5_canmb.out is its output, regenerated
 with _bin/regen_out.py). Labels: PRINTED (a maker's limit), TYPICAL, DECLARED, DRAFTED (a contract row, not applied), MODEL,
 ASSUMPTION, SESSION."""
 import hashlib
@@ -664,7 +664,7 @@ def main():
     held = T_W - 2 * GUARD_MS * 1e-3
     tec_up, tec_down = 2 * 8, n_tx * len(phases) * EVERY - 2
     st_ok = (margin > 0 and slew < F["g_slew"] and C_VOTE_PF <= 50.0 and t_det < 10.0 and tec_down > tec_up)
-    w("7. THE VOTE PATH'S IN-SERVICE SELF-TEST (drafted for the firmware stage as rows of the contract; nothing applied)")
+    w("7. THE VOTE PATH'S IN-SERVICE SELF-TEST (specified here for the firmware stage; its contract rows are L4A-61's; nothing applied)")
     w("   One transceiver at a time is tested, never while a fabric is down, so the quorum keeps its three controllers on the other fabric")
     w("   and two on the tested one. Per transceiver (6) four phases, one per window of FW-B22's %.0f ms schedule (DRAFTED), every %d window(s):" % (
         T_W * 1e3, EVERY))
@@ -696,8 +696,8 @@ def main():
     w("       the same on both edges, so a dominant interval keeps its length at the reader to within that time")
     w("   THE INTERVAL: one cycle is %d transceivers x %d phases x %d window(s) x %.0f ms = %.4f s; a latent fault of the vote path is exercised" % (
         n_tx, len(phases), EVERY, T_W * 1e3, t_cycle))
-    w("     within one cycle, its phase is judged in the next window, and it is declared on its %d. consecutive failure (one corrupted frame" % CONFIRM)
-    w("     never declares one): DETECTED WITHIN %.2f s of its onset (MODEL on the printed timing above and the DRAFTED %.0f ms window)" % (
+    w("     within one cycle, its phase is judged in the next window, and it is declared when %d consecutive runs of that phase fail (one corrupted" % CONFIRM)
+    w("     frame never declares one): DETECTED WITHIN %.2f s of its onset (MODEL on the printed timing above and the DRAFTED %.0f ms window)" % (
         t_det, T_W * 1e3))
     w("   the self-test's cost: two phases in four silence one transceiver for %.0f ms; with DAR = 1 (L9T5-D2) the target's one attempt in such" % (held * 1e3))
     w("     a phase raises its transmit error count by 8, %d a cycle per transceiver, against at least %d successful frames that lower it by 1" % (tec_up, tec_down))
