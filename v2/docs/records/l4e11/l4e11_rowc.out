@@ -5,11 +5,11 @@ built, bought or measured. LABELS: RECORD; INFERRED; MODEL; ASSUMED.
 0. PINS (sha256/16)
    36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
-   b95218435708531f  v2/docs/records/l8p/l8p_cprot.out
+   d06bfcbe864755ac  v2/docs/records/l8p/l8p_cprot.out
    e8f1294bb0f76c75  v2/docs/records/l8p/apply_gen_sch_p_breaker.py
    544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    19af759a934be6cc  v2/docs/records/l8p/apply_gen_sch_a_thgfs.py
-   255ef270409e8908  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
+   39fd1b4c3f38c2cb  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
 
 1. THE WINDOWS AND THE FIGURES (RECORD)
    this record's windows (20c, 27a, 20f): held under 0.7755 V; closed over 0.84 V; powered over 1.981 V at most (1.825 V at least);
