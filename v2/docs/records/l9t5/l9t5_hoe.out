@@ -33,6 +33,7 @@ printed thermal resistances, never a measured temperature
    9f5d20b27d35986f v2/vendor/st/pdftext/st-rm0433-rev8.layout.f307.l309.txt
    3d93fb62233e99ca v2/vendor/st/pdftext/st-rm0433-rev8.layout.f449.l450.txt
    7335d8c4f0c8e0e9 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p1896.txt
+   99f935eabcbf2be6 v2/vendor/st/pdftext/st-rm0433-rev8.layout.p256.txt
    5b9234079e915cbb v2/vendor/st/pdftext/st-rm0433-rev8.layout.p260.txt
    c549b896ed5fd25e v2/vendor/st/pdftext/st-rm0433-rev8.layout.p560.txt
    2c5d1288b4bd811f v2/vendor/st/pdftext/st-stm32h743xi-datasheet-rev11.layout.f208.l210.txt
@@ -88,6 +89,7 @@ printed thermal resistances, never a measured temperature
    AN4938 Rev 7 p.19:                             "In Bypass mode, the internal voltage scaling is not managed internally, and the external voltage value must be consistent with the targeted maximum frequency"
    the option bytes (RM0433 Rev 8 p.215 to 216, 4.9.9 FLASH_OPTSR_PRG, the user option word a part keeps across resets): 11 fields,
      SWAP_BANK_OPT, IO_HSLV, SECURITY, ST_RAM_SIZE[1:0], IWDG_FZ_SDBY, IWDG_FZ_STOP, RDP, NRST_STDY_D1, NRST_STOP_D1, IWDG1_SW, BOR_LEV; a field that selects a voltage scale or the supply configuration: NONE
+   the PWR pins (RM0433 Rev 8 p.256, Table 32, 'PWR input/output signals connected to package pins or balls'): VDD Main I/O and VDD domain supply input; VDDA External analog power supply for analog peripherals; VREF+,VREF- External reference voltage for ADCs and DAC; VBAT Backup battery supply input; VDDLDO Voltage regulator supply input; VCAP Digital core domain supply; VDD50USB USB regulator supply input; VDD33USB USB regulator supply output; VSS Main ground; AHB AHB register interface; PDR_ON Power Down Reset enable
    READING: the voltage scale is a software choice made after every reset (PWR_D3CR's VOS bits, then ODEN for VOS0); no pin, strap or
    option byte selects or caps it. The one hardware means the documents print is the Bypass supply (an external regulator on VCAP; VOS0
    'available only with LDO regulator'), and that configuration is itself written by software once after every POR, with the LDO enabled
@@ -302,7 +304,7 @@ printed thermal resistances, never a measured temperature
 10. THE PREDICATES
    the five filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it) yes
    every quoted sentence of H-1 is in its pinned text, with its page                                                      yes
-   no option-byte field of FLASH_OPTSR_PRG selects a voltage scale or the supply configuration                            yes
+   no option-byte field of FLASH_OPTSR_PRG and no PWR pin of Table 32 selects a voltage scale or the supply configuration yes
    T10's 0.1936 A and 112.7 C are reproduced from T10's own air and theta                                                 yes
    no printed VOS0 row has an operating point at or under 105 C at the case's air                                         yes
    no package in Table 222 reaches the ThetaJA H-3 needs                                                                  yes

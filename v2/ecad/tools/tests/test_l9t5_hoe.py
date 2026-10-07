@@ -110,6 +110,10 @@ def t_h1_rests_on_the_pages_it_quotes():
     fields = set(re.findall(r"Bits? \d+(?::\d+)? ([A-Z][A-Z0-9_]+)", opt.split("4.9.9")[1]))
     assert {"IWDG1_SW", "BOR_LEV", "RDP"} <= fields, fields
     assert not [f for f in fields if re.search(r"VOS|ODEN|SCU|LDO|BYPASS", f)], fields
+    p256 = _txt(ST, "st-rm0433-rev8.layout.p256.txt")
+    t32 = p256.split("Table 32.")[1].split("Table 33.")[0]
+    assert "256/3353" in p256 and "PDR_ON" in t32 and "VCAP" in t32
+    assert not re.search(r"scal|VOS|overdrive", t32, re.I), "a PWR pin of Table 32 names a voltage scale"
     text_ = _out()
     assert "VERDICT H-1: DROPS OUT" in text_ and "Not claimed: any hardware bar on VOS0" in text_
 

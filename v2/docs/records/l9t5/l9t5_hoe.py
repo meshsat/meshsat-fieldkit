@@ -43,7 +43,7 @@ CHK = D.CHK
 # W34's convention (Q-41 item 1): the makers' PDFs this script reads as text, each with its options, taken once on the runner by
 # v2/docs/records/_lib/retake_pdf_text.py beside its PDF; _lib/pdftext.py returns the text byte for byte and refuses when it is absent.
 PDFTEXT = {
-    "v2/vendor/st/st-rm0433-rev8.pdf": [["-layout", "-f", "215", "-l", "216"], ["-layout", "-f", "260", "-l", "260"],
+    "v2/vendor/st/st-rm0433-rev8.pdf": [["-layout", "-f", "215", "-l", "216"], ["-layout", "-f", "256", "-l", "256"], ["-layout", "-f", "260", "-l", "260"],
                                         ["-layout", "-f", "262", "-l", "264"], ["-layout", "-f", "279", "-l", "280"],
                                         ["-layout", "-f", "307", "-l", "309"], ["-layout", "-f", "449", "-l", "450"],
                                         ["-layout", "-f", "560", "-l", "560"], ["-layout", "-f", "1896", "-l", "1896"]],
@@ -429,6 +429,15 @@ def main():
     vos_like = [f for f in fields if re.search(r"VOS|ODEN|SCU|LDO|BYPASS|SDLEVEL", f)]
     w("   the option bytes (RM0433 Rev 8 p.215 to 216, 4.9.9 FLASH_OPTSR_PRG, the user option word a part keeps across resets): %d fields," % len(fields))
     w("     %s; a field that selects a voltage scale or the supply configuration: %s" % (", ".join(fields), ", ".join(vos_like) or "NONE"))
+    t256 = page(RM, 256)
+    t32 = t256[t256.index("Table 32. PWR input/output signals connected to package pins or balls"):t256.index("Table 33.")]
+    pins32 = re.findall(r"^\s{6,}([A-Z][A-Z0-9_+,\-]+)\s{2,}(?:Input/ |inputs/ )?([A-Z][^\n]+?)\s*$", t32, re.M)
+    pins32 = [(n, squash(dsc)) for n, dsc in pins32 if n not in ("Pin", "Supply", "Digital")]
+    w("   the PWR pins (RM0433 Rev 8 p.256, Table 32, 'PWR input/output signals connected to package pins or balls'): %s" % "; ".join(
+        "%s %s" % (n, dsc) for n, dsc in pins32))
+    if [n for n, _d in pins32] != ["VDD", "VDDA", "VREF+,VREF-", "VBAT", "VDDLDO", "VCAP", "VDD50USB", "VDD33USB", "VSS", "AHB", "PDR_ON"]:
+        refuse("RM0433 Table 32's pins are not the ones this record read: %r" % pins32)
+    pin_scale = [n for n, dsc in pins32 if re.search(r"scal|VOS|overdrive", dsc, re.I)]
     w("   READING: the voltage scale is a software choice made after every reset (PWR_D3CR's VOS bits, then ODEN for VOS0); no pin, strap or")
     w("   option byte selects or caps it. The one hardware means the documents print is the Bypass supply (an external regulator on VCAP; VOS0")
     w("   'available only with LDO regulator'), and that configuration is itself written by software once after every POR, with the LDO enabled")
@@ -748,7 +757,7 @@ def main():
     w("10. THE PREDICATES")
     P = [("the five filed copies equal the sha256 SOURCES-HOE.txt names (SOURCES.txt untouched: l9t5_case and l9t5_drafts pin it)", copies_ok),
          ("every quoted sentence of H-1 is in its pinned text, with its page", True),
-         ("no option-byte field of FLASH_OPTSR_PRG selects a voltage scale or the supply configuration", not vos_like),
+         ("no option-byte field of FLASH_OPTSR_PRG and no PWR pin of Table 32 selects a voltage scale or the supply configuration", not vos_like and not pin_scale),
          ("T10's 0.1936 A and 112.7 C are reproduced from T10's own air and theta", abs(i105 - i105_t10) < 5e-5 and abs(tj_at(i_trip) - tj_t10) < 0.05),
          ("no printed VOS0 row has an operating point at or under 105 C at the case's air", ops["dis"][0] > 0 and ops["en"][0] > 0),
          ("no package in Table 222 reaches the ThetaJA H-3 needs", min(F["ja"].values()) > need_en),
