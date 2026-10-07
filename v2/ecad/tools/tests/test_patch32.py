@@ -843,7 +843,10 @@ def t_the_tokens_are_the_rows_and_the_fill_stage_is_resultss():
 def t_the_record_names_the_patch_file_so_the_fill_reaches_it():
     result, klass = _read(RESULT), _read(CLASS)
     assert not p_named(result, klass), p_named(result, klass)
-    assert p_named(result.replace("int32/ENTRY-PAGES.patch.md", "int32/ENTRY-PAGES.md"), klass), "an unnamed patch file passed"
+    # W154 (7 October 2026): the classification's rows 31.4.9 and 31.4.10 quote git's subjects of c0d0bb30 and 86da0523, which name
+    # the patch file, and the fill reads the names in RESULT and CLASSIFICATION alike, so the mutant removes the name from both records
+    assert p_named(result.replace("int32/ENTRY-PAGES.patch.md", "int32/ENTRY-PAGES.md"),
+                   klass.replace("int32/ENTRY-PAGES.patch.md", "int32/ENTRY-PAGES.md")), "an unnamed patch file passed"
 
 
 def _pytest(fn):
