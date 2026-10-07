@@ -1,0 +1,68 @@
+Electrical characteristics (rev V)                                               STM32H742xI/G STM32H743xI/G
+
+
+
+ Table 120. Typical and maximum current consumption in Run mode, code with data processing
+                            running from flash memory, cache ON,
+                                      LDO regulator ON
+                                                                                        Max(1)
+                                                       fHCLK
+ Symbol      Parameter           Conditions                        Typ                                           Unit
+                                                       (MHz)             Tj=25    Tj=85     Tj=105     Tj=125
+                                                                          °C       °C         °C         °C
+
+                                                        480        110    222     304        388         -
+                                            VOS0
+                                                        400        91      -        -            -       -
+                                                        400        80     162     228        294        381
+                                All         VOS1
+                            peripherals                 300       61.5     -        -            -       -
+                             disabled
+                                                        300        55     111     168        222        294
+                                            VOS2
+                                                        200       38.5     -        -            -       -
+              Supply                        VOS3        200       34.5    69      120        163        222
+    IDD      current in                                                                                          mA
+             Run mode                                   480        220    342     436        546         -
+                                            VOS0
+                                                        400        195     -        -            -       -
+                                                        400        175    264     336        424        544
+                                All         VOS1
+                            peripherals                 300        135     -        -            -       -
+                             enabled
+                                                        300        120    180     246        318        418
+                                            VOS2
+                                                        200        83      -        -            -       -
+                                            VOS3        200        75     114     173        232        312
+1. Guaranteed by characterization results, unless otherwise specified.
+
+
+
+
+ Table 121. Typical and maximum current consumption in Run mode, code with data processing
+                            running from flash memory, cache OFF,
+                                       LDO regulator ON
+                                                                                         Max(1)
+                                                       fHCLK
+ Symbol      Parameter            Conditions                       Typ                                           Unit
+                                                       (MHz)                                 Tj=105     Tj=125
+                                                                         Tj=25°C Tj=85°C
+                                                                                               °C         °C
+
+                                             VOS0       480         87    157      259           342      453
+                                 All         VOS1       400         73    123      201           267      355
+                             peripherals
+                              disabled       VOS2       300         52     85      150           204      277
+               Supply                        VOS3       200         34     54      109           152      212
+    IDD       current in                                                                                          mA
+              Run mode                       VOS0       480        168    276      390           504      658
+                                 All         VOS1       400        135    224      308           397      519
+                             peripherals
+                              enabled        VOS2       300        100    154      228           301      401
+                                             VOS3       200         70    103      167           226      307
+1. Guaranteed by characterization results, unless otherwise specified.
+
+
+
+216/357                                               DS12110 Rev 11
+

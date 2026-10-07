@@ -1,0 +1,70 @@
+                                                                                                                                                 TPS3808
+www.ti.com                                                                                               SBVS050N – MAY 2004 – REVISED AUGUST 2026
+
+                                                    VIN                                  VOUT
+
+                                                                      VDD
+                                                                                                       R1
+                                                                                         VIT¢ = (1 +      ) 0.405
+                                                          R1                                           R2
+                                                                  TPS3808G01
+                                                                 SENSE
+
+                                                                         RESET
+                                              1nF         R2
+                                                                      GND
+
+
+
+
+                   Figure 7-1. Using the TPS3808G01 to Monitor a User-Defined Threshold Voltage
+
+7.3.2 Selecting the RESET Delay Time
+The TPS3808 has three options for setting the RESET delay time as shown in Figure 7-2. Figure 7-2 (a) shows
+the configuration for a fixed 300ms typical delay time by tying CT to VDD; use a resistor from 40kΩ to 200kΩ.
+Resistor selection does not impact the supply current. Figure 7-2 (b) shows a fixed 20ms delay time by leaving
+the CT pin open. Figure 7-2 (c) shows a ground referenced capacitor connected to CT for a user-defined program
+time from 1.25ms to 10s.
+      3.3V                                                3.3V                                                3.3V
+
+                     SENSE VDD                                        SENSE VDD                                            SENSE VDD
+
+              50kΩ
+                     TPS3808G33                                       TPS3808G33                                           TPS3808G33
+
+
+                     CT     RESET                                     CT     RESET                                         CT    RESET
+                                                                                                               CT
+
+
+
+
+                                                                                                                Delay (s) = CT (nF) + 0.5 x 10−3 (s)
+                     300ms Delay                                       20ms Delay
+                                                                                                                             175
+                          (a)                                               (b)                                                (c)
+
+                                 Figure 7-2. Configuration Used to Set the RESET Delay Time
+
+The capacitor CT must be ≥ 100pF nominal value for the TPS3808xxx to recognize that the capacitor is present.
+Calculate the capacitor value for a given delay time using Equation 1.
+
+             CT nF = tD s − 0.5 × 10−3 s × 175                                                                                                     (1)
+
+The time an on-chip precision 220nA current source takes to charge the external capacitor to 1.23V determines
+the reset delay time. When a RESET is asserted, the capacitor is discharged. When the RESET conditions are
+cleared, the internal current source is enabled and begins to charge the external capacitor. When the voltage on
+this capacitor reaches 1.23V, RESET is deasserted. Note that a low-leakage type capacitor such as a ceramic
+must be used, and that stray capacitance around this pin can cause errors in the reset delay time.
+7.3.3 Manual RESET (MR) Input
+The manual reset (MR) input allows a processor or other logic circuits to initiate a reset. A logic low (0.3 VDD) on
+MR causes RESET to assert. After MR returns to a logic high and SENSE is above its reset threshold, RESET
+is de-asserted after the user-defined reset delay expires. Note that MR is internally tied to VDD using a 90kΩ
+resistor, so this pin can be left unconnected if MR is not used.
+See Figure 7-3 for how to use MR to monitor multiple system voltages. Note that if the logic signal driving MR
+does not go fully to VDD, there is some additional current draw into VDD as a result of the internal pullup resistor
+on MR. To minimize current draw, use a logic-level FET, as in Figure 7-4.
+
+Copyright © 2026 Texas Instruments Incorporated                                                                      Submit Document Feedback            11
+                                                               Product Folder Links: TPS3808
+
