@@ -469,6 +469,8 @@ def compute(zth_class=None):
 
     # 3b. the breaker's limit tightened (correction (c)): the LM5069's printed VCL 48.5 to 61.5 mV (record l9stk 15.3, read there)
     VCL_MIN, VCL_MAX = 48.5, 61.5
+    if "16.5 us to the release" not in prot or "242.9 A peak, time constant 33.8 us" not in e11:
+        refuse("the over-limit single events' rows not found (l9stk_protection.out, l4e11_power.out E11-30)")
     if "current limit 18.32 / 21.08 / 23.93 A (VCL 48.5 to 61.5 mV" not in prot:
         refuse("l9stk_protection.out: the breaker's limits row not found")
     R.update(vcl_ratio=VCL_MIN / VCL_MAX, need_ratio_margin=18.32 / I_rr_air, need_ratio_bare=SERVICE_A / I_rr_air,
@@ -673,6 +675,9 @@ def render(R):
     w("     the held state: %.2f C at E-1's bar, %.2f C at E11-29's design target: BOUNDED against %.0f C on printed device maxima, CONDITIONAL" % (R["peak_bar"], R["peak_tgt"], T_LIMIT))
     w("     on E11-29 (the pour), E11-36 (the allowance) and E-05 (the three), as section 2a; bounded on the typical curve instead: FAILS")
     w("   the train's mean loss is at most %.3f of the held one; no credit is taken for it (the pour's own transient is no maker's figure)" % R["mean_frac"])
+    w("   currents over %.2f A are single events outside the train, judged in their records: a fault's onset up to the breaker's 50.59 A for" % R["I"])
+    w("     at most 16.5 us, after which the -1 latches off and a restart into the short is power-limited (record l9stk 15.3, its table); the")
+    w("     docking pulse, 242.9 A once per docking (L4-E11 16d, E11-30)")
     w("   the breaker's own FETs under the train: each restart is judged under DD-8's restart inhibit (record l8p round 2, l9stk 15.4b),")
     w("     not here; board P's Q1 and Q2 under the train: at most their held row (section 3f), by the same superposition")
     w("")
