@@ -211,7 +211,7 @@ def t_the_page_and_readme_carry_the_outputs_numbers_and_the_session_decisions():
     r10 = [q for q in heads if q.startswith("**ROUND 10")]
     r11 = [q for q in heads if q.startswith("**ROUND 11")]
     r12 = [q for q in heads if q.startswith("**ROUND 12")]
-    assert r10 and r11 and r12 and heads[0] is r12[0], [q[:12] for q in heads]
+    assert r10 and r11 and r12 and paras.index(r12[0]) == paras.index(r11[0]) + 1, [q[:12] for q in heads]   # set 30's note stays first (test_w5l8p)
     assert all(w in r11[0] for w in ("DONE", "NOT DONE", "NEXT")) and all(w in r12[0] for w in ("DONE", "NOT DONE", "NEXT"))
 
 

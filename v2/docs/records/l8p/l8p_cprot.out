@@ -4,12 +4,12 @@ printed figures and the records' own; nothing was built, bought or measured. LAB
 INFERRED; MODEL; RECORD; ASSUMED.
 
 0. PINS (sha256/16)
-   41e0a5e97154d1d2  v2/docs/records/l8p/l8p_rowc.out
+   ee34240422273538  v2/docs/records/l8p/l8p_rowc.out
    36141414a1b60011  v2/docs/records/l4e11/l4e11_power.out
    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
    46f3c6cd9ea6b638  v2/docs/records/l9stk/l9stk_protection.out
    3a23036c57859f1d  v2/docs/records/l9stk/L9-STACKUPS.md
-   ae15d75976c46865  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
+   4656171f0157282e  v2/docs/records/l8p/apply_gen_sch_p_ocheld.py
    e8f1294bb0f76c75  v2/docs/records/l8p/apply_gen_sch_p_breaker.py
    4174af5851fe1be0  v2/docs/records/l8p/apply_gen_sch_p_idealdiode.py
    1c8483adf23d070f  v2/docs/records/l8p/check_l8p_och.py
@@ -29,6 +29,7 @@ INFERRED; MODEL; RECORD; ASSUMED.
    98a7e99bc5bbdf2a  v2/vendor/keystone/littelfuse-297-ficcorp.pdf
    e41ef289ce1de377  v2/vendor/ti/held/ti-bq25730-sluse65a.pdf
    3bc31f4a5302521c  v2/vendor/diodes/diodes-bat46w.pdf
+   86a39a559a7be1ff  v2/vendor/passives/held/vishay-crcw-hp-e3-20043-2026-03-17.pdf
 
 1. THE FINDING AND THE CASE (RECORD)
    L8P-R10-F1 (record l8p round 10, l8p_rowc.out 3a, computed again here by l8p_rowc.py): at the breaker's held 23.93 A from 76.25 C the three
@@ -124,8 +125,18 @@ INFERRED; MODEL; RECORD; ASSUMED.
        no source, the band of 4i, ended by the on-time bound                         0.996 J in 4.414 ms
        a source present, the -1 held out of its limit, ended by the on-time bound    3.315 J in 4.414 ms
        E-6b RESTATED: a part whose maker prints a single pulse of at least 3.32 J in 4.41 ms (782 W held, 2208 W for 16.5 us at the clamp);
-       round 11's 0.40 J in 1.4 ms is withdrawn. No 2512 sheet this record holds prints it: a larger part (Layer 6's selection,
-       with its maker's pulse curve read at 4.41 ms; a power package or parallel pulse-rated chips on the PACK_P band) (CONDITIONAL)
+       round 11's 0.40 J in 1.4 ms is withdrawn. A NAMED PART (Layer 6 selects): Vishay's CRCW2512-HP e3 pulse proof chip (1 Ohm
+       to 1 MOhm, P70 1.5 W), its single-pulse line READ from its vector path (document 20043, page 5; the curve's own conditions: no
+       preload, under 1000 pulses, the pulse voltage under its limit; its long-pulse end 1.50 W at 100 s meets the printed 1.5 W row);
+       n equal parts in parallel each carry 1/n of R140's power:
+         no source, the -1 latched                           230 W for   1.3543 ms against the line's   194.5 W: 2 parts
+         a source present, the -1 latched                    782 W for   1.8441 ms against the line's   163.2 W: 5 parts
+         no source, the band of 4i                           226 W for   4.4137 ms against the line's    97.3 W: 3 parts
+         a source present, the -1 held out of its limit      782 W for   4.4137 ms against the line's    97.3 W: 9 parts
+         the onset at the clamp                             2208 W for   0.0165 ms against the line's  1566.7 W: 2 parts
+       so the restated pulse needs 9 of them in parallel (each 3.51 Ohm for 0.39 Ohm), a power package whose maker prints the pulse, or
+       E-12s's reading of a source's settling narrowing the bound (the chart states no ambient: the line's temperature basis at
+       the 76.25 C air is Layer 6's question to Vishay); until Layer 6 selects, R140 stays CONDITIONAL on E-6b
      Q111 (CSD18510Q5B, PRINTED): IDM 400 A against 99.6 A at the onset and 45.0 A held with a source; VDS 40 V against PACK_P's 29.2 V
        clamp; VGS 20 V against D105's 12.7 V; its own turn-off crosses at most V^2/4R: 57.5 W without a source (at 9.43 V), WITHIN the
        record's derated 71.1 W of the same part at 1.292 ms (l9stk 15.6) for at most 0.271 ms; 30.1 W on the settled source basis, WITHIN;

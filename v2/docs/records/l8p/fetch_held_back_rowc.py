@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """fetch_held_back_rowc.py: fetch the maker's sheet record l8p's round 10 (register row (c), L4A-66 and L4A-65; MESHSAT-1357, 7 October
 2026) read but did not file
-(round 11, 7 October 2026: TI's LM5066I sheet added, read for one comparison of L8P-BREAKER.md section 16).
+(round 11, 7 October 2026: TI's LM5066I sheet added, read for one comparison of L8P-BREAKER.md section 16;
+round 12, 7 October 2026: Vishay's CRCW-HP e3 sheet added, read for R140's single pulse, L8P-BREAKER.md 16i).
 
 The round reads R17's derating on ROHM's own sheet for the first time: GMR100 HJ series, Rev. GMR100J-IA-006E (5 March 2026), the
 part GMR100HJAAFD5L00 that the parts stream's identity row names for board A's R17 (pcb_part_identities.yaml, DOCUMENT_OWED until
@@ -29,6 +30,12 @@ DOCS = [
     ("v2/vendor/ti/held/ti-lm5066i-snvs950c.pdf",
      "https://www.ti.com/lit/ds/symlink/lm5066i.pdf",
      "a759a5d04fe5b81577af575153fd528f0f03f147c892040eac6c51e400693628"),
+    # round 12 (the focused check's F1: R140's restated single pulse): Vishay Draloric's CRCW-HP e3 pulse proof thick film chips,
+    # document 20043, revision 17-Mar-2026, read for its single-pulse curve (page 5) and its ratings table; Vishay grants no
+    # redistribution, so it is held back as the tree's other passives sheets are
+    ("v2/vendor/passives/held/vishay-crcw-hp-e3-20043-2026-03-17.pdf",
+     "https://www.vishay.com/docs/20043/crcwhpe3.pdf",
+     "86a39a559a7be1ff772c95fd77ce386dad5a7744e848bab9eb27af55362df1a1"),
 ]
 
 
