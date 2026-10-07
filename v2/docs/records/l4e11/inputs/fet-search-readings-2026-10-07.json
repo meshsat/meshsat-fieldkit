@@ -1,0 +1,127 @@
+{
+ "what": "Readings of five Infineon OptiMOS P3 data sheets (Rev. 2.1, 16 November 2009) whose text layer maps to no Unicode, so pdftotext returns no usable text: each page rendered by pdftocairo at 100 dpi (110 dpi for pages 2 and 3 of BSZ120 and BSZ180) and read by this record (task L4A-70, record l4e11 round FET, 7 October 2026). Units SI (ohm, farad, coulomb, ampere, K/W, C, V). Page 1: maximum ratings (VDS, VGS, Tj and Tstg, the pulsed drain current); page 2: thermal and static characteristics (RthJC, RDS(on) at VGS -6 V and -10 V, Tj 25 C); page 3: dynamic, gate charge (VDD -15 V, VGS 0 to -10 V) and reverse diode (IS,pulse at TC 25 C). Ciss is printed at VGS 0 V, VDS -15 V, f 1 MHz. No sheet prints an RDS(on) maximum above 25 C (only the typical curve RDS(on) = f(Tj)).",
+ "label": "READING (MAKER rows read from the rendered pages)",
+ "date": "2026-10-07",
+ "sheets": {
+  "bsc030": {
+   "part": "BSC030P03NS3 G",
+   "sha256": "a9786bf2b5f65b25742d95d5f4f5c4c76f758bf3f8f8e5b9076c9e97c6edda19",
+   "pages": [
+    1,
+    2,
+    3
+   ],
+   "rows": {
+    "vds": 30,
+    "vgs_max": 25,
+    "tj_max": 150,
+    "rthjc_max": 1.0,
+    "rds_10v_25c_max": 0.003,
+    "rds_lo_25c_max": 0.0046,
+    "rds_lo_vgs": 6.0,
+    "ciss_typ": 1.05e-08,
+    "ciss_max": 1.4e-08,
+    "ciss_vds": 15,
+    "qg_typ": 1.4e-07,
+    "qg_max": 1.86e-07,
+    "is_pulse": 200.0
+   }
+  },
+  "bsc060": {
+   "part": "BSC060P03NS3E G",
+   "sha256": "64c17f6d22bac04897fb583456f3b560cc7a65bd0c0d05af5beb23c9296e9112",
+   "pages": [
+    1,
+    2,
+    3
+   ],
+   "rows": {
+    "vds": 30,
+    "vgs_max": 25,
+    "tj_max": 150,
+    "rthjc_max": 1.5,
+    "rds_10v_25c_max": 0.006,
+    "rds_lo_25c_max": 0.0096,
+    "rds_lo_vgs": 6.0,
+    "ciss_typ": 4.53e-09,
+    "ciss_max": 6.02e-09,
+    "ciss_vds": 15,
+    "qg_typ": 6.1e-08,
+    "qg_max": 8.1e-08,
+    "is_pulse": 200.0
+   }
+  },
+  "bsc084": {
+   "part": "BSC084P03NS3 G",
+   "sha256": "78b0ee06750492feaac517b0a1b358d8898b9780025e5cda927b65c67bb40060",
+   "pages": [
+    1,
+    2,
+    3
+   ],
+   "rows": {
+    "vds": 30,
+    "vgs_max": 25,
+    "tj_max": 150,
+    "rthjc_max": 1.8,
+    "rds_10v_25c_max": 0.0084,
+    "rds_lo_25c_max": 0.014,
+    "rds_lo_vgs": 6.0,
+    "ciss_typ": 3.19e-09,
+    "ciss_max": 4.785e-09,
+    "ciss_vds": 15,
+    "qg_typ": 4.3e-08,
+    "qg_max": 5.8e-08,
+    "is_pulse": 200.0
+   }
+  },
+  "bsz120": {
+   "part": "BSZ120P03NS3 G",
+   "sha256": "d6798434aec2a3771b568795bbf0ce29700d4033aee8196b3987326e17259015",
+   "pages": [
+    1,
+    2,
+    3
+   ],
+   "rows": {
+    "vds": 30,
+    "vgs_max": 25,
+    "tj_max": 150,
+    "rthjc_max": 2.4,
+    "rds_10v_25c_max": 0.012,
+    "rds_lo_25c_max": 0.02,
+    "rds_lo_vgs": 6.0,
+    "ciss_typ": 2.24e-09,
+    "ciss_max": 3.36e-09,
+    "ciss_vds": 15,
+    "qg_typ": 3e-08,
+    "qg_max": 4.5e-08,
+    "is_pulse": 160.0
+   }
+  },
+  "bsz180": {
+   "part": "BSZ180P03NS3 G",
+   "sha256": "c7882d545da9f2f1f114e34f61113e23946ce32014a03394189058eff9f41a25",
+   "pages": [
+    1,
+    2,
+    3
+   ],
+   "rows": {
+    "vds": 30,
+    "vgs_max": 25,
+    "tj_max": 150,
+    "rthjc_max": 3.1,
+    "rds_10v_25c_max": 0.018,
+    "rds_lo_25c_max": 0.03,
+    "rds_lo_vgs": 6.0,
+    "ciss_typ": 1.48e-09,
+    "ciss_max": 2.22e-09,
+    "ciss_vds": 15,
+    "qg_typ": 2e-08,
+    "qg_max": 3e-08,
+    "is_pulse": 160.0
+   }
+  }
+ }
+}
