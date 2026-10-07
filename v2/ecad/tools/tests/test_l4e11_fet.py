@@ -229,8 +229,8 @@ def t_the_fallback_composes_runs_reads_the_pair_and_its_mutations_fail():
         assert r.returncode == 3 and b"NOT RELEASED" in r.stderr
         g = _compose(d)
         three = open(g, encoding="utf-8").read()
-        rc, net3, log = _net(g, d, "three")
-        assert rc == 0, log[-300:]
+        rc, net3, log3 = _net(g, d, "three")
+        assert rc == 0, log3[-300:]
         assert _run([PCHK, net3, "--want", "three"]).returncode == 0, "the composed three do not read DRAWN as three"
         r = _run([PCHK, net3])
         assert r.returncode == 4 and b"FAIL" in r.stdout, "mutation 'the three left drawn' did not fail the pair's check"
@@ -242,6 +242,9 @@ def t_the_fallback_composes_runs_reads_the_pair_and_its_mutations_fail():
         assert rc == 0 and "intent written" in log, log[-300:]
         r = _run([PCHK, net])
         assert r.returncode == 0 and b"DRAWN" in r.stdout, r.stdout.decode()[-400:]
+        n3 = int(re.search(r"(\d+) parts", log3).group(1))
+        n2 = int(re.search(r"(\d+) parts", log).group(1))
+        assert n2 == n3 - 1, "the pair's composition is not one part fewer than the three's (%d, %d)" % (n2, n3)
         assert _dd7_on(net, ("Q39", "Q40")) == "DRAWN" and _dd7_on(net, ("Q39", "Q40", "Q42")) == "FAIL"
         q40 = 'for _qb in ("Q39", "Q40"): nfet(_qb, '
         nf = 'nfet(_qb, "BUK6Y10-30PX 30 V P-FET (the BQ25730\'s battery FET, one of two in parallel: S on VSYS, D toward RSR)", "CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56", lcsc="C3278350")'
