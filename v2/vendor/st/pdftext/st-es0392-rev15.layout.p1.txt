@@ -1,0 +1,54 @@
+                                                                                  STM32H742xI/G, STM32H743xI/G
+                                                                                    STM32H750xB, STM32H753xI
+                                                                                                                                    Errata sheet
+
+   STM32H742xI/G, STM32H743xI/G, STM32H750xB, STM32H753xI device errata
+
+
+Applicability
+This document applies to the part numbers of STM32H742xI/G, STM32H743xI/G, STM32H750xB, STM32H753xI devices and
+the device variants as stated in this page.
+It gives a summary and a description of the device errata, with respect to the device datasheet and reference manual RM0433.
+Deviation of the real device behavior from the intended device behavior is considered to be a device limitation. Deviation of the
+description in the reference manual or the datasheet from the intended device behavior is considered to be a documentation
+erratum. The term “errata” applies both to limitations and documentation errata.
+
+
+
+                                                                   Table 1. Device summary
+
+              Reference                                                                       Part numbers
+
+                                           STM32H742VI, STM32H742ZI, STM32H742II, STM32H742BI, STM32H742XI, STM32H742AI,
+           STM32H742xI/G
+                                           STM32H742VG, STM32H742ZG, STM32H742IG, STM32H742BG, STM32H742XG, STM32H742AG
+                                           STM32H743VI, STM32H743ZI, STM32H743II, STM32H743BI, STM32H743XI, STM32H743AI,
+           STM32H743xI/G
+                                           STM32H743VG, STM32H743ZG, STM32H743IG, STM32H743BG, STM32H743XG, STM32H743AG
+            STM32H750xB                    STM32H750VB, STM32H750IB, STM32H750XB, STM32H750ZB
+            STM32H753xI                    STM32H753VI, STM32H753ZI, STM32H753II, STM32H753BI, STM32H753XI, STM32H753AI
+
+
+
+
+                                                                    Table 2. Device variants
+
+                                                                                               Silicon revision codes
+                     Reference
+                                                                          Device marking(1)                             REV_ID(2)
+
+                                                                                Y, W                                     0x1003
+       STM32H742xI/G, STM32H743xI/G,
+                                                                                 X                                       0x2001
+         STM32H750xB, STM32H753xI
+                                                                                 V                                       0x2003
+
+1. Refer to the device datasheet for how to identify this code on different types of package.
+2. REV_ID[15:0] bitfield of DBGMCU_IDC register.
+
+
+
+
+ES0392 - Rev 15 - September 2025                                                                                                         www.st.com
+For further information, contact your local STMicroelectronics sales office.
+

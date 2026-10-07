@@ -1,0 +1,56 @@
+Real-time clock (RTC)                                                                                                                                     RM0433
+
+
+                                        Table 377. RTC functions over modes
+                                                 Functional in all low-
+                                                                                                        Functional in Standby                      Functional in
+                Pin     RTC functions            power modes except
+                                                                                                               mode                                 VBAT mode
+                                                   Standby modes
+
+                         RTC_TAMP1
+                PC13       RTC_TS                                    YES                                                     YES                       YES
+                          RTC_OUT
+                PI8      RTC_TAMP2                                   YES                                                     YES                       YES
+                PC1      RTC_TAMP3                                   YES                                                     YES                       YES
+                PB2       RTC_OUT                                    YES                                                      NO                       NO
+                PB15     RTC_REFIN                                   YES                                                      NO                       NO
+
+
+46.3.4      Clock and prescalers
+            The RTC clock source (RTCCLK) is selected through the clock controller among the LSE
+            clock, the LSI oscillator clock, and the HSE clock. For more information on the RTC clock
+            source configuration, refer to Section 8: Reset and Clock Control (RCC).
+            A programmable prescaler stage generates a 1 Hz clock which is used to update the
+            calendar. To minimize power consumption, the prescaler is split into 2 programmable
+            prescalers (see Figure 537: Detailed RTC block diagram):
+            •     A 7-bit asynchronous prescaler configured through the PREDIV_A bits of the
+                  RTC_PRER register.
+            •     A 15-bit synchronous prescaler configured through the PREDIV_S bits of the
+                  RTC_PRER register.
+Note:       When both prescalers are used, it is recommended to configure the asynchronous prescaler
+            to a high value to minimize consumption.
+            The asynchronous prescaler division factor is set to 128, and the synchronous division
+            factor to 256, to obtain an internal clock frequency of 1 Hz (ck_spre) with an LSE frequency
+            of 32.768 kHz.
+            The minimum division factor is 1 and the maximum division factor is 222.
+            This corresponds to a maximum input frequency of around 4 MHz.
+            fck_apre is given by the following formula:
+                                                                                 f RTCCLK
+                                                            f CK_APRE = --------------------------------------
+                                                                                                             -
+                                                                        PREDIV_A + 1
+
+
+            The ck_apre clock is used to clock the binary RTC_SSR subseconds downcounter. When it
+            reaches 0, RTC_SSR is reloaded with the content of PREDIV_S.
+            fck_spre is given by the following formula:
+                                                                                      f RTCCLK
+                                     f CK_SPRE = -----------------------------------------------------------------------------------------------
+                                                 ( PREDIV_S + 1 ) × ( PREDIV_A + 1 )
+
+
+
+
+1910/3353                                                 RM0433 Rev 8
+

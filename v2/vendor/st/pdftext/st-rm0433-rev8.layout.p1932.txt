@@ -1,0 +1,39 @@
+Real-time clock (RTC)                                                                                               RM0433
+
+
+46.6.5          RTC prescaler register (RTC_PRER)
+                This register must be written in initialization mode only. The initialization must be performed
+                in two separate write accesses. Refer to Calendar initialization and configuration on
+                page 1913.
+                This register is write protected. The write access procedure is described in RTC register
+                write protection on page 1912.
+                Address offset: 0x10
+                Backup domain reset value: 0x007F 00FF
+                System reset: not affected
+
+  31     30       29     28     27      26     25      24       23      22      21   20        19         18   17      16
+ Res.    Res.    Res.    Res.   Res.   Res.   Res.    Res.      Res.                      PREDIV_A[6:0]
+
+                                                                        rw      rw   rw        rw         rw   rw      rw
+
+  15     14       13     12     11      10     9       8         7          6   5    4         3          2    1       0
+ Res.                                                      PREDIV_S[14:0]
+
+         rw       rw     rw     rw      rw     rw      rw       rw      rw      rw   rw        rw         rw   rw      rw
+
+
+
+          Bits 31:23 Reserved, must be kept at reset value.
+          Bits 22:16 PREDIV_A[6:0]: Asynchronous prescaler factor
+                     This is the asynchronous division factor:
+                     ck_apre frequency = RTCCLK frequency/(PREDIV_A+1)
+                Bit 15 Reserved, must be kept at reset value.
+            Bits 14:0 PREDIV_S[14:0]: Synchronous prescaler factor
+                      This is the synchronous division factor:
+                      ck_spre frequency = ck_apre frequency/(PREDIV_S+1)
+
+
+
+
+1932/3353                                            RM0433 Rev 8
+

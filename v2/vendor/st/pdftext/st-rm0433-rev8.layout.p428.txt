@@ -1,0 +1,48 @@
+Reset and Clock Control (RCC)                                                                                    RM0433
+
+
+8.7.27          RCC clock control and status register (RCC_CSR)
+                Address offset: 0x074
+                Reset value: 0x0000 0000
+                Access: 0 ≤ wait state ≤ 7, word, half-word and byte access
+                Wait states are inserted in case of successive accesses to this register.
+
+  31       30     29     28     27      26     25       24    23     22     21     20     19     18     17          16
+ Res.    Res.    Res.   Res.   Res.   Res.    Res.     Res.   Res.   Res.   Res.   Res.   Res.   Res.   Res.       Res.
+
+
+  15       14     13     12     11      10     9        8      7      6      5      4      3      2      1           0
+
+
+
+
+                                                                                                        LSIRDY
+
+
+
+                                                                                                                    LSION
+ Res.    Res.    Res.   Res.   Res.   Res.    Res.     Res.   Res.   Res.   Res.   Res.   Res.   Res.
+
+
+                                                                                                          r         rw
+
+
+
+   Bits 31:2 Reserved, must be kept at reset value.
+         Bit 1 LSIRDY: LSI oscillator ready
+                Set and reset by hardware to indicate when the Low Speed Internal RC oscillator is stable.
+                This bit needs 3 cycles of lsi_ck clock to fall down after LSION has been set to ‘0’.
+                This bit can be set even when LSION is not enabled if there is a request for LSI clock by the Clock
+                Security System on LSE or by the Low Speed Watchdog or by the RTC.
+                0: LSI clock is not ready (default after reset)
+                1: LSI clock is ready
+         Bit 0 LSION: LSI oscillator enable
+                Set and reset by software.
+                0: LSI is OFF (default after reset)
+                1: LSI is ON
+
+
+
+
+428/3353                                              RM0433 Rev 8
+

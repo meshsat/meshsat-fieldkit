@@ -1,0 +1,78 @@
+Reset and Clock Control (RCC)                                                                                                         RM0433
+
+
+8.7.26              RCC backup domain control register (RCC_BDCR)
+                    Address offset: 0x070
+                    Reset value: 0x0000 0000, reset by Backup domain reset.
+                    Access: 0 ≤ wait state ≤ 7, word, half-word and byte access. Wait states are inserted in case
+                    of successive accesses to this register.
+                    After a system reset, the RCC_BDCR register is write-protected. To modify this register, the
+                    DBP bit in the PWR control register 1 (PWR_CR1) has to be set to ‘1’. RCC_BDCR bits are
+                    only reset after a backup domain reset (see Section 8.4.6: Backup domain reset). Any other
+                    internal or external reset will not have any effect on these bits.
+
+  31          30      29     28     27      26    25          24     23     22        21         20          19     18       17          16
+
+
+
+
+                                                                                                                                         BDRST
+ Res.        Res.    Res.   Res.   Res.   Res.   Res.         Res.   Res.   Res.      Res.       Res.        Res.   Res.     Res.
+
+
+                                                                                                                                         rw
+
+  15          14      13     12     11      10     9           8      7      6          5         4           3      2        1           0
+
+
+
+
+                                                                                      LSECSSON
+                                                                            LSECSSD
+
+
+
+
+                                                                                                                             LSERDY
+                                                                                                                    LSEBYP
+  RTCEN
+
+
+
+
+                                                                                                                                         LSEON
+             Res.    Res.   Res.   Res.   Res.    RTCSEL[1:0]        Res.                        LSEDRV[1:0]
+
+
+
+  rw                                                    rwo                   r        rs               rw          rw         r         rw
+
+
+
+   Bits 31:17 Reserved, must be kept at reset value.
+           Bit 16 BDRST: Backup domain software reset
+                   Set and reset by software.
+                   0: Reset not activated (default after backup domain reset)
+                   1: Resets the entire VSW domain
+           Bit 15 RTCEN: RTC clock enable
+                   Set and reset by software.
+                   0: rtc_ck clock is disabled (default after backup domain reset)
+                   1: rtc_ck clock enabled
+   Bits 14:10 Reserved, must be kept at reset value.
+          Bits 9:8 RTCSEL[1:0]:RTC clock source selection
+                    Set by software to select the clock source for the RTC. These bits can be written only one time
+                    (except in case of failure detection on LSE). These bits must be written before LSECSSON is
+                    enabled. The BDRST bit can be used to reset them, then it can be written one time again.
+                    If HSE is selected as RTC clock: this clock is lost when the system is in Stop mode or in case of a
+                    pin reset (NRST).
+                    00: No clock (default after backup domain reset)
+                    01: LSE clock used as RTC clock
+                    10: LSI clock used as RTC clock
+                    11: HSE clock divided by RTCPRE value is used as RTC clock
+             Bit 7 Reserved, must be kept at reset value.
+
+
+
+
+426/3353                                                 RM0433 Rev 8
+
