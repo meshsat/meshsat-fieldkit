@@ -103,8 +103,8 @@ ANX_MOVED = [
     ("[P11:72]", "[P11:44]", 1, W3A), ("[P11:144]", "[P11:110]", 1, W3A), ("[P11:160]", "[P11:123]", 1, W3A),
 ]
 ANX_READ = [
-    # set 33 (the coordinator, 7 October 2026): the ledger's three applies (L4K-4, L4S-3, ROWB-1) put eleven lines above its summary,
-    # so recite33.py re-cited the annex's [REM:672] to [REM:683] by its text from 503e86de
+    # set 33 (the coordinator, 7 October 2026): ROWB-1's table (applied at d16) put eleven lines above the ledger's summary (L4K-4 and
+    # L4S-3 change lines in place; W194's C-3), so recite33.py re-cited the annex's [REM:672] to [REM:683] by its text from 503e86de
     ("[REM:683]", "[REM:585]", 1, ("Counts: remaining engineering 20; qualification 1; external architecture fact 3",)),
     ("[REM:552-584]", "[REM:520-552]", 1, ("### HO-H: E11-29", "### HO-K: U-04")),
     ("[B2:183-186]", "[B2:170]", 3, ("Not computed here", "validation P1-1's S1 (row added)")),
@@ -265,8 +265,8 @@ def rows_fails(text, base=None):
             fails.append("a Q-21 row's old text is still on the ledger: %r" % old[:50])
     # Restated by W41 (6 October 2026; basis: W38's F1): the coordinator's merge d5d9c252 brought main's adoption 836f711b, which put
     # three lines into the ledger (746 to 749 lines on main); so the ledger is its base plus W20-14's one plus those three.
-    # Restated by the coordinator (7 October 2026; basis: set 33's chain applied L4K-4, L4S-3 and ROWB-1 to the ledger under the
-    # coordinator's APPLY rulings, 750 to 761 lines at C1 9df37826): plus those eleven.
+    # Restated by the coordinator (7 October 2026; basis: set 33's chain applied ROWB-1's table to the ledger at d16 under the
+    # coordinator's APPLY ruling, 750 to 761 lines at C1 9df37826; L4K-4 and L4S-3 change lines in place, W194's C-3): plus those eleven.
     if base is not None and text.count("\n") != base.count("\n") + 1 + 3 + 11:
         fails.append("the ledger has %d lines against its base's %d plus W20-14's one, 836f711b's three and set 33's eleven" % (
             text.count("\n"), base.count("\n")))
@@ -342,6 +342,7 @@ def t_the_predicates_refuse_broken_pages():
         ("read", lambda: read_fails(LED, led.replace("[P11:154-160]", "[P11:155-160]"))),
         ("read", lambda: read_fails(ANX, anx.replace("[REM:552-584]", "[REM:552-577]"))),
         ("stale", lambda: stale_fails(ANX, anx.replace("[REM:683]", "[REM:672]", 1))),
+        ("stale", lambda: stale_fails(ANX, anx.replace("[REM:683]", "[REM:669]", 1))),   # W41_GONE's token (W194's F-4: kept beside set 33's)
         ("quote", lambda: quote_fails(LED, led.replace("something must bound the current", "something must limit the current", 1))[0]),
         ("quote", lambda: quote_fails(ANX, anx.replace("A planned measurement alone does not", "A planned measurement does not", 1))[0]),
         ("stale", lambda: stale_fails(ANX, anx.replace("[P11:144]", "[P11:110]", 1))),
