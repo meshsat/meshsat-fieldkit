@@ -1,0 +1,237 @@
+l4canen: record l4canen, T10 round 9 (Layer 4 task L4A-54's correction on W139's L4A-55): the latched supervisor's EN route
+(W139-F2) drafted as record l9t5's apply_gen_sch_b_canen.py, composed with W137's canmb and W138's regstage in both orders, its
+levels, recovery interval and own faults, and FW-B21's stop and the contract text read against the corrected drafts (MESHSAT-1357;
+a DRAFT, NOT APPLIED; prototype design, nothing built or measured)
+
+1. INPUTS (sha256/16)
+   1493b08478306736 v2/docs/records/l9t5/apply_gen_sch_b_canen.py
+   51fc5834c704750a v2/docs/records/l9t5/apply_gen_sch_b_canmb.py
+   5ccf3509355e6533 v2/docs/records/l9t5/l9t5_canmb.out
+   babc11a248760e82 v2/docs/records/l9t5/l9t5_canmb.py
+   c010ff134aa457ee v2/docs/records/l9t5/l9t5_canq.out
+   9481b2e59034d379 v2/docs/records/l9t5/T10-CANQ.md
+   592ae1e712b2d0cd v2/docs/records/l9t5/l9t5_canq.py
+   12b6ea059a68b5c5 v2/docs/HW-FW-CONTRACT.md
+   34866b68362fb0fb v2/docs/records/l9t5/apply_hw_fw_contract_canq.py
+   efcfdf67f1fcab83 v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
+   be5d0a89ba007b2f v2/docs/records/l9t5/l9t5_drafts.py
+   3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+   f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
+   6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
+   877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
+   4f8831c8b21e2ca1 v2/docs/records/l9t5/apply_gen_sch_a_iocset.py
+   9fbda7a6e79430c2 v2/docs/records/l9t5/inputs/l4reg-l4reg_compare-9fbda7a6.out
+   469594bb5b4fa6be v2/docs/records/l4canen/inputs/l4reg-apply_gen_sch_b_regstage-469594bb.py
+   f3a39bd6d9e90711 v2/docs/records/l4canen/inputs/SOURCES.txt
+   653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
+   39f205116896b7e2 v2/vendor/power/pdftext/aos-ao3400a-n-mosfet.layout.txt
+   9e7f53205453bb22 v2/vendor/st/pdftext/st-es0392-rev15.layout.p48.txt
+   227510d881e3f97a v2/vendor/st/pdftext/st-rm0433-rev8.layout.p533.txt
+   8b51c389f0e8ace7 v2/vendor/st/pdftext/st-stm32h743xi-datasheet.layout.txt
+   9a90d9411907d535 v2/vendor/ti/held/pdftext/ti-tps2553-slvs841f.layout.txt  (held back)
+   72c280f85723bbb9 v2/vendor/ti/held/pdftext/ti-tps737-sbvs067w.layout.txt  (held back)
+   a84c416119cebf38 v2/vendor/ti/pdftext/ti-sn74lvc1g08.layout.txt
+   effe23b2b79ec4ee v2/vendor/st/st-es0392-rev15.pdf
+   9c60d0b6c1ddc760 v2/vendor/power/aos-ao3400a-n-mosfet.pdf
+   30b963cc44233cf3 v2/vendor/ti/ti-sn74lvc1g08.pdf
+   9b27d1d993a8bc5b v2/vendor/st/st-stm32h743xi-datasheet.pdf
+   f706914950efed0b v2/vendor/ti/held/ti-tps737-sbvs067w.pdf  (held back)
+   88e453700cea2b26 v2/vendor/ti/held/ti-tps2553-slvs841f.pdf  (held back)
+   9ba54135736a47a3 v2/vendor/st/st-rm0433-rev8.pdf
+
+2. WHY (W139's finding and W138's node, quoted; unchecked drafts)
+   T10-CANQ.md section 6: "As drafted: nobody, so a latched supervisor returns only by a kit power cycle (RAIL_EN), at the
+   operator's time: the recovery proof is NOT met for that state (W139-F2)."
+   W138's apply_gen_sch_b_regstage.py (inputs/, fnd/l4reg 86dbcdff): "EN on IOC{t}_LIM_EN, pulled up to +5V_IOC by 100 kOhm
+   (R602, R622, R642): the node the peers' restart and the in-service test of L4A-54 and L4A-58 would drive"
+   SLVS841F 9.3.1 (page 13, PRINTED): "The device remains off until power is cycled or the device enable is toggled."
+     FAULT deglitch on an overcurrent 5 to 10 ms (7.5, page 7, PRINTED)
+   the route (W139's, drawn here): the two peers restart a latched supervisor by a 2-of-2 vote on its limiter's EN, each on its own
+     observation and needing no fabric, so that a single faulty peer can never hold a healthy supervisor off, as canmb's SHDN votes
+
+3. THE COMPOSITION on board B in L4-E9's change-list order: record l9t5's iocpre, canshdn, iocset and iocguard, then canmb and W138's
+   regstage in either order, then apply_gen_sch_b_canen.py, then the efuse record's R-236 and R-237 and Layer 6's three; the
+   generator run to its end through record l8p's gen_netlist.py
+     order canmb, regstage, canen:    21 steps, every one OK; the three in turn: apply_gen_sch_b_canmb.py, l4reg-apply_gen_sch_b_regstage-469594bb.py, apply_gen_sch_b_canen.py
+     order regstage, canmb, canen:    21 steps, every one OK; the three in turn: l4reg-apply_gen_sch_b_regstage-469594bb.py, apply_gen_sch_b_canmb.py, apply_gen_sch_b_canen.py
+   the netlists of the two orders: IDENTICAL with canen (1554 parts, 1132 nets), IDENTICAL without it (1521 parts, 1111 nets; W138's claim re-read on the
+     corrected canmb); canmb alone (iocguard's state, no regstage): 1533 parts
+   canen adds 33: C947, C948, C957, C958, C967, C968, Q586, Q587, Q588, R615, R616, R617, R618, R619, R635, R636, R637, R638,
+     R639, R655, R656, R657, R658, R659, R660, R661, R662, R663, R664, R665, U586, U587, U588
+   canen removes 0; changes the value or nets of 6: R602, R622, R642, U41, U51, U61
+   CON-004 on the composed netlist (each rail sourced by its own regulator alone, no resistor joining two rails, two fabrics, their
+     termination and break links, no part joining the fabrics): HOLDS
+   canmb read by pin on the limiter's state (record l9t5's reading; the rail trips' rows replaced by W138's limiter and regulator):
+     DRAWN
+
+4. THE EN ROUTE READ BY PIN (each controller's restart gate on the NEXT controller's rail through 100 Ohm, its inputs the two other
+   controllers' planned restart pins each held low by 10 kOhm, its output through 100 kOhm into 4.7 uF with 1 MOhm to ground on an
+   AO3400A whose drain reaches that controller's limiter EN through 470 Ohm, the EN pulled up by 10 kOhm, the read-back pin on the
+   gate's output through 10 kOhm, nothing else on these nets; traced from each EN back to the controllers: a 2-of-2 of its two peers):
+     order canmb first: DRAWN; order regstage first: DRAWN
+     controller A's EN: AND of {B} and {C}
+     controller B's EN: AND of {C} and {A}
+     controller C's EN: AND of {A} and {B}
+     mutated, an EN route a single peer can hold (both of A's restart gate inputs from B):             FAIL (A's EN: AND {B} {B})
+     mutated, the FET's gate driven by one peer's vote directly (no 2-of-2):                           FAIL (A's EN: DIRECT {B})
+     mutated, the restart gate on the target's own rail (dead when it is latched):                     FAIL (A's EN: AND {B} {C})
+     mutated, the FET on another supervisor's EN (A's drain resistor on B's EN):                       FAIL (A's EN: AND {C} {A})
+     mutated, no delay (the FET's gate on the gate's output):                                          FAIL (A's EN: AND {B} {C})
+     mutated, the read-back on another controller's restart gate (A's pin 61 on B's):                  FAIL (A's EN: AND {B} {C})
+     mutated, a peer's vote on the wrong target (B's vote on A swapped with its vote on C):            FAIL (A's EN: AND {B} {C})
+   the draft on a generator without regstage: refused; without canmb: refused; a second time: refused; on the tree's own generator: refused (NOT RELEASED)
+
+5. THE PIN PLAN on the composed candidate, read against DS12110 Rev 10 Table 9 and RM0433 Rev 8 p.533
+     controller A pin 59 PD12  FT_fh  restart vote on B            net IOCB_RSTVA       free before: yes
+     controller A pin 60 PD13  FT_fh  restart vote on C            net IOCC_RSTVA       free before: yes
+     controller A pin 61 PD14  FT_h   reads its own restart gate   net IOCA_RSTRB       free before: yes
+     controller B pin 59 PD12  FT_fh  restart vote on C            net IOCC_RSTVB       free before: yes
+     controller B pin 60 PD13  FT_fh  restart vote on A            net IOCA_RSTVB       free before: yes
+     controller B pin 61 PD14  FT_h   reads its own restart gate   net IOCB_RSTRB       free before: yes
+     controller C pin 59 PD12  FT_fh  restart vote on A            net IOCA_RSTVC       free before: yes
+     controller C pin 60 PD13  FT_fh  restart vote on B            net IOCB_RSTVC       free before: yes
+     controller C pin 61 PD14  FT_h   reads its own restart gate   net IOCC_RSTRB       free before: yes
+   every pin: the generator's port name, a Table 9 row with I/O, free before canen, no debug pin (PA15, PA14, PA13, PB4, PB3): yes
+   the votes are plain outputs, analog (high impedance) during and just after reset (RM0433 p.533), so the 10 kOhm holds each restart
+     gate input low then; the read-back is a plain input with no pull (the gate drives it whenever the gate is powered)
+   THE COUNT (CON-017's convention), per controller: before canen 40 of 100; 14 supplies, 46 unconnected; with canen 43 of 100; 14
+     supplies, 43 unconnected (the same for B and C: yes); CON-017 restated for its owner (finding W143-F4)
+
+6. THE LEVELS on the makers' printed rows (MODEL from PRINTED figures; a resistor that names no tolerance at +-5 %, ASSUMPTION)
+   each controller's rail: the envelope of the AP2112K-3.3's band (3.2422 to 3.3577 V, l9t5_canmb.out) and W138's TPS73733's +-1.5 % (SBVS067W 5.6,
+     PRINTED for VOUT + 0.5 V <= VIN; INFERRED below it, W138's L4REG-F2): 3.2422 to 3.3577 V; +5V_IOC at board B 3.8282 to 4.1174 V (iocset's band
+     3.9063 to 4.1174 V at board A, DRAFTED, less the rail's 2 % budget)
+   the restart votes: a voter's high at least 2.8422 V (VDD - 0.4 V at 8 mA, DS12110 Table 158) against the SN74LVC1G08's VIH 2.0 V (VCC
+     3 to 3.6 V, SCES217AA 5.3); a voter in reset or dark leaves its input at most 0.0551 V (II 5 uA and the pin's 250 nA into the 10 kOhm)
+     against VIL 0.8 V; the voter's output current at most 0.353 mA, inside Table 158's 8 mA
+   the gate's supply through 100R 1% from the NEXT controller's rail: the gate draws at most 1.0133 mA (ICC 10 uA, delta ICC 500 uA an input
+     at VCC - 0.6 V, PRINTED, taken for both; the votes stand within 0.6 V of its VCC: 2.8422 >= 3.3577 - 0.6), so its VCC is 3.1399 to 3.3577 V,
+     inside the 3 to 3.6 V rows; a peer's vote above it is inside the inputs' 5.5 V (5.3)
+   the FET's gate (100k 1% from the gate's output, 1M 1% to ground, 4.7uF): the gate's high at least 2.9899 V (VCC - 0.15 V at -100 uA, -40 to
+     125 C, PRINTED), so a restart vote drives it toward at least 2.7131 V against the 2.5 V at which the AO3400A's RDS(on) is printed
+     (at most 48 mOhm, TJ 25 C, Rev 3.1: July 2023; at the 0.6 mA it carries here the drop is microvolts, so no temperature row is needed); at rest
+     at most 0.1003 V (VOL 0.1 V at 100 uA through the divider, IGSS 100 nA, PRINTED at TJ 25 C)
+   A TEST PULSE of 4 ms (the route's P and V phases) moves the FET's gate to at most 0.2288 V (two pulses back to back 0.3518 V) on the
+     RC's least time constant 90.0 ms (1.0 uF effective, ASSUMPTION, a Layer 10 bound), against VGS(th) 0.65 to 1.45 V (PRINTED at TJ
+     25 C only: margin 0.421 V for the threshold's fall with temperature, which the sheet does not print): the test never switches the
+     supervisor off
+   the limiter's EN, pulled up by 10k 1% to +5V_IOC, pulled down through 470R 1% by the FET: low at most 0.1884 V (0.2974 V even at the sheet's
+     6.5 V input maximum) against VIL 0.66 V (SLVS841F 7.3, page 6, PRINTED); high, with the FET off, for any leakage up to 269.6 uA (IEN
+     0.5 uA PRINTED) against VIH 1.1 V: the AO3400A prints IDSS 1 uA at 25 C and 5 uA at TJ 55 C (VDS 30 V), and no row above 55
+     C, so at board B's 76.25 C air the margin (54 times the 55 C row) is an ASSUMPTION, not a printed bound (finding W143-F6); with the
+     FET's gate at its least threshold (250 uA at VDS = VGS, PRINTED; taken at VDS up to 4.1 V, ASSUMPTION) EN stays at 1.2981 V
+     (the sheet sets mu and Omega in its SymbolMT font, so its text reads them as m and W: 'mA' there is uA and 'mW' is mOhm)
+   a shorted EN pull-up: the FET then draws at most 8.85 mA through 470R 1% during a restart, and the restart fails (a residual, section 8)
+   the read-back (a plain input, 10k from the gate's output): high at least 2.9899 V against 0.7 VDD = 2.3504 V, low at most 0.1026 V against
+     0.3 VDD = 0.9727 V (DS12110 Table 157); a FAULTY target driving its read-back pin reaches only the gate's output through 10k, which
+     then stays at most 0.4 V (VOL at 16 mA, VCC 3 V, PRINTED): the FET's gate at most 0.3735 V, under its threshold
+   the dark cases: the gate unpowered (its supplying peer dark): its output takes at most 10 uA (Ioff PRINTED) and the FET's gate rests
+     on its 1 MOhm at most 0.1010 V (IGSS): no restart and no switch-off; the latched target's read-back pin sees at most 3.3577 V through
+     10 kOhm, inside the FT pins' unpowered maximum (gen_sch_b.py reading DS12110 Rev 10: "FT_xxx: Min(VDD, ...) + 4.0 V, so 4.0 V unpowered")
+   the gate's 100 nF shorted: the next controller's rail carries at most 33.9 mA more through 100R 1%; with its own worst state (0.1753 A,
+     l9t5_canmb.out) that is 0.2092 A, under W138's limiter's least 0.4702 A: the next controller keeps its supply
+   each controller's own rail with the route: at most 0.1770 A (its worst 0.1753 A, plus the previous controller's restart gate 1.0133 mA
+     and its two restart votes asserted, 0.353 mA each): a labelled scenario for C-DEV (finding W143-F8), no case row changed here
+   all levels hold: yes
+
+7. THE TIMING on printed figures and the drafted rows: the restart, the recovery interval, the rate
+   THE DECISION (DRAFTED, W143-D5): a controller asserts its restart vote on a peer when it has captured no edge on either of that
+     peer's TXDs (its own TIM3 captures) and received no state frame of it on either fabric for 2.0 s, at most once in 10 s per peer,
+     and holds it 2.0 s; it needs no fabric and never votes on a message received over one. A running controller is never that
+     silent: with both fabrics stopped by FW-B21 it still probes each once a second (1.1 s cycle, l9t5_canq.py CFG), and a booting
+     controller rejoins within 0.800 s (l9t5_canq.out section 8: boot, ASSUMPTION, MON 2 windows, its slot), both under 2.0 s
+   the two peers' votes start within 1.081 ms of each other (each evaluates within 1 ms, DRAFTED; two crystals' +-20 ppm over the
+     decision; the read-back copy of a TXD edge 1012 ns): they see the same last edge through the same buffers
+   THE RESTART: the FET's gate passes 2.5 V within 1.208 s of the second vote (the RC's largest time constant 0.475 s: 100k 1% and 1M 1% at
+     their 1 %, 4.7uF +10 %, ASSUMPTION), so EN is held under VIL for at least 0.791 s of the 2.0 s hold, against the 3 ms the
+     limiter's turn-off takes at most (SLVS841F 7.5, PRINTED) and the 0.5 s this route requires (DRAFTED): "the device enable is toggled"
+   THE RETURN: the votes released, the FET's gate falls under its least threshold within 0.799 s; EN rises through 10k 1%; the limiter turns
+     on within 3 ms (SLVS841F 7.5, PRINTED, CL 1 uF, RL 100 Ohm), the TPS73733 starts in 431 us (SBVS067W 5.6, new silicon: TYP, no maximum
+     printed), and the controller boots, listens 2 windows in bus monitoring mode and sends in its slot within 0.800 s (W139's bound)
+   THE RECOVERY INTERVAL of a latched supervisor, its cause gone: 2.0 s (decision) + 1 ms + 2.0 s (hold) + 0.799 s (release) +
+     3 ms + 431 us (TYPICAL) + 0.800 s = 5.603 s (MODEL on PRINTED, DRAFTED and the boot ASSUMPTION); before this round: NONE,
+     an operator's power cycle
+   a persistent cause: the limiter latches again after its 5 to 10 ms deglitch (PRINTED) and the peers try again 10 s after their
+     last vote: at most 23.5 mJ an attempt (W138's MODEL), 2.35 mW on average; the other two keep the quorum throughout (IOHA row 3)
+   with two supervisors latched the third cannot restart either (2 of 2 needs both peers): row 4's outcome until RAIL_EN is cycled;
+     with all three latched (row 8 with W138's limiter, R8b) only RAIL_EN returns them, as W139 found
+   a supervisor held off on the bench (IOHA A4 and A6, J_IOCOFF fitted) is restarted every 10 s by its peers: harmless, its LDO's EN
+     stays held (finding W143-F9)
+   timing holds: yes
+
+8. THE ROUTE'S OWN FAULTS (per supervisor) and the route's in-service test
+   THE TEST rides on the restated self-test (l9t5_canmb.out section 7): in the windows of the fabric A target X, P_EN in its P1 and P2
+     windows pulses one peer's restart vote on X from 68 to 72 ms of that peer's window, V_EN in its V window both peers', and X reads
+     its restart gate's output from 66 to 74 ms of its own (the windows aligned within 1.0 ms, so each pulse lies inside the read span
+     and V_EN's two pulses overlap 2 ms or more): P_EN reads low, V_EN high, and a fault is declared on the second consecutive failure;
+     the verdicts travel on either fabric, so the route's test keeps its interval, 2.60 s, with one fabric down; one cycle 1.2000 s
+   element                                          fault                       effect                                                 found by                              bound
+   a restart vote output, its line or its gate input stuck low or open           the route cannot restart the target                    V_EN fails                            within 2.60 s
+   a restart vote output, its line or its gate input stuck high                  one peer alone could switch the target off (1 of 1)    the other peer's P_EN fails           within 2.60 s
+   a peer's restart decision (firmware)             votes without cause         as a vote stuck high: alone it switches nothing        the other peer's P_EN fails           within 2.60 s
+   a peer's restart decision (firmware)             dead                        the route cannot restart the target                    NOT in service: RESIDUAL (recovery)   none
+   a restart vote pull-down (10 kOhm)               short                       as its vote stuck low                                  V_EN fails                            within 2.60 s
+   a restart vote pull-down (10 kOhm)               open                        floats only while its voter is in reset or dark        NOT in service: RESIDUAL              none
+   the restart gate                                 output stuck low            the route cannot restart the target                    V_EN fails                            within 2.60 s
+   the restart gate                                 output stuck high           the FET turns on: the target switched off (IOHA row 3) its frames absent                     within 1.311 s
+   the gate's 100 Ohm feed                          open                        the gate unpowered: no restart                         V_EN fails                            within 2.60 s
+   the gate's 100 Ohm feed                          short                       none until its 100 nF also shorts (then the next rail) NOT in service: RESIDUAL              none
+   the gate's 100 nF                                short                       the gate unpowered (next rail loaded, inside its limit) V_EN fails                            within 2.60 s
+   the RC's 100 kOhm                                open                        the FET never turns on: no restart                     NOT in service: RESIDUAL (recovery)   none
+   the RC's 100 kOhm                                short                       no delay: a V_EN pulse reaches the FET                 V_EN: the target resets, one restart  within 2.60 s, the target back within 0.803 s
+   the RC's 4.7 uF                                  open                        no delay (the FET's own Ciss, TYPICAL only)            V_EN: the target resets, one restart  within 2.60 s, the target back within 0.803 s
+   the RC's 4.7 uF                                  short                       the FET never turns on: no restart                     NOT in service: RESIDUAL (recovery)   none
+   the FET's 1 MOhm                                 short                       the FET never turns on: no restart                     NOT in service: RESIDUAL (recovery)   none
+   the FET's 1 MOhm                                 open                        its gate rests on leakage only while the gate is unpowered NOT in service: RESIDUAL              none
+   the AO3400A                                      drain-source short          EN held low: the target switched off (IOHA row 3)      its frames absent                     within 1.311 s
+   the AO3400A                                      open, or gate-source short  no restart                                             NOT in service: RESIDUAL (recovery)   none
+   the 470 Ohm                                      open                        no restart                                             NOT in service: RESIDUAL (recovery)   none
+   the 470 Ohm                                      short                       none (it bounds a shorted pull-up's current)           NOT in service: RESIDUAL              none
+   the EN pull-up (10 kOhm)                         open                        EN floats: the limiter may switch off (IOHA row 3)     its frames absent                     within 1.311 s
+   the EN pull-up (10 kOhm)                         short                       EN cannot be pulled low: no restart                    NOT in service: RESIDUAL (recovery)   none
+   the read-back's 10 kOhm                          open                        the target cannot see its gate: V_EN reads low         V_EN fails (a route fault flagged)    within 2.60 s
+   the read-back's 10 kOhm                          short                       a faulty target reaches the gate's output directly     NOT in service: RESIDUAL              none
+   the target's read-back input                     stuck                       P_EN or V_EN reads wrong                               that phase fails                      within 2.60 s
+   12 residuals, 7 of them of the recovery only (a latched supervisor then waits for RAIL_EN, the state before this round); none
+     switches a healthy supervisor off or lets one peer do so alone; the faults that switch a supervisor off are single faults of its
+     own power path, IOHA row 3, found at once; the one fault that leaves a 1-of-1 route (a vote stuck high, or a decision that votes
+     without cause) is found within 2.60 s by the other peer's P_EN, without switching anything off
+   NOT TAKEN (W143-D7): a start-up restart of each supervisor by its peers, which would bound the recovery residuals by the kit's power
+     cycle at the cost of switching every healthy supervisor off once per start; the residuals stay named and are injected on the
+     first article (section 10, the supplier's tasks)
+
+9. FW-B21'S STOP AT THE LOSS COUNT AND THE CONTRACT TEXT, read against the corrected drafts (apply_hw_fw_contract_canq.py, W139's
+   rows with this round's text; DRAFTED, UNAPPLIED)
+   FW-B21 as restated: "...or with a frame pending and no valid frame for more than 3 windows (300 ms, FW-B22's loss count;
+   frames lost to a deviation the peers attribute and silence do not stop it), is stopped at once (INIT kept set)"
+   the stop is the loss count (3 windows; l9t5_canq.py CFG stop_windows 3, n_loss 3); with the drafted one-window stop W139's row F2
+     (M1c's GPIO jammer on both fabrics) reads "quorum lost" on both schedules against M1c's required "a node out and contained", which
+     the restated stop gives ("a node out and contained"): the single-window stop FAILS the jammer row (the test re-runs it, test_l4canen.py)
+   consistent with the corrected drafts: the self-test never silences a state frame (its hold lies outside every slot,
+     l9t5_canmb.out section 7), so no test phase can starve a fabric of valid frames toward the stop; a fabric the stop holds is
+     probed once a second, so its controller's TXDs move within 1.1 s, under the restart decision's 2.0 s: the stop never invites a
+     restart; and the stopped fabric's self-test phases wait for it while the other fabric's run: yes
+   FW-B22 restated carries: every phrase above; missing: none
+   DAR = 1 with ES0392 Rev 15 2.24.5's printed workaround quoted with its page (page 48/73): "Upon failure, clear the corresponding Tx buffer transmission..."
+   V-B22 restated carries the route's rows: yes
+   on a scratch copy of the page: the draft without t10's rows exit 3; t10's written exit 0; this draft written exit 0; a second
+     time exit 3; the written page carries FW-B22 and FW-B21 as drafted: yes; W139's A9 on this text: yes
+
+10. SESSION DECISIONS (W143-D1 to D10), FINDINGS (W143-F1 to F9) AND WHAT CLOSES ONCE CHECKED: in record l9t5's T10-ROUND9.md
+   sections 7 to 9, with their reasons and reversals; nothing closes here: W139-F2's recovery proof for a latched supervisor, cx46's
+   item 5, CON-004's quorum service and FW-B22 keep their states until the independent check (L4A-62) reads this round
+
+11. THE PREDICATES (v2/ecad/tools/tests/test_l4canen.py holds them)
+   the composition: canmb and regstage in either order, canen after both, every step OK, the netlists identical in both orders (with canen and without): yes
+   the parts: canen adds 33, removes none, changes R602, R622 and R642 and the three controllers' pins: yes
+   CON-004 holds on the composed netlist (three branches, each rail its own regulator's alone, two fabrics) and canmb reads DRAWN on the limiter's state: yes
+   the EN route reads DRAWN by pin in both orders, each EN held by a 2-of-2 of its two peers: yes
+   every mutation FAILS (seven), an EN route a single peer can hold among them: yes
+   the draft refuses a generator without regstage, without canmb, a second application and the tree's generator (NOT RELEASED): yes
+   the pin plan: pins 59 to 61 free before, Table 9 I/O rows, no debug pin; the count 43 of 100, 14 supplies, 43 unconnected on each controller: yes
+   the levels hold on the printed rows (votes, the gate's supply, the FET's gate under a test pulse and over 2.5 V on a restart, EN low and high, the read-back, the faulty and dark cases): yes
+   the timing holds and the recovery interval is bounded (decision over the probe cycle and the rejoin, EN low over the turn-off, the rate over the recovery): yes
+   every fault of the route has a row; no residual lets one peer act alone; the 1-of-1 faults are found within the self-test's interval: yes
+   FW-B21's stop at the loss count consistent with the drafts, the single-window stop failing the jammer row (W139's F2): yes
+   the contract text carries DAR = 1 with ES0392's workaround quoted with its page, the restated self-test and the restart rule, and composes after t10's: yes
+   nothing closes here: yes
