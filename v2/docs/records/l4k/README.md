@@ -65,4 +65,4 @@ apply_l4k_p0list.py and apply_l4k_remeng.py move no output.
 
 ## Findings
 
-F-1 (record l9stk's 45.88 K/W) and F-2 (the register's standing count) are in `K-TABLE-be07863b.md`.
+F-1 (record l9stk's 45.88 K/W), F-2 (the register's standing count) and F-3 (FW-A05's off-list against R-28's standby card) are in `K-TABLE-be07863b.md`.
