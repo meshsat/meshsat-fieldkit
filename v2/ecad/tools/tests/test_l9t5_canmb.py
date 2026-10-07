@@ -189,6 +189,8 @@ def t_every_phase_runs_as_worded_and_the_mutant_fails():
     deg = m.phases_run("restated", literal=True, down=("A",))
     assert every(deg, "B") and not any(deg[(t, "A", p)] for t in m.TAGS for p in m.PHASE_CODES)
     assert sum(m.phases_run("w137", literal=False, down=("A",)).values()) == 0
+    F = m.figures()                                    # the makers' rows the restated section reads, through the record's own reads
+    assert F["es_item"] == "2.24.5" and F["es_page"] == "page 48/73" and F["es_work"].startswith("Upon failure, clear the corresponding Tx buffer")
     assert "every phase of every transceiver 2 times: yes" in text_ and "S phases run 0 times" in text_
     assert re.search(r"runs every fabric B phase 2 times and no fabric A phase: yes", text_) and "round 7's runs 0 phases" in text_
 
