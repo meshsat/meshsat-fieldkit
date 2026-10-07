@@ -260,8 +260,9 @@ None rented for set 33 when this record was written; its author rented, ran and 
 ## 6. What set 33 closes and what it does not
 
 **Set 33 closes NO power item.** It adopts Layer 4's AI work of 7 October 2026 as record text, record tooling and release-guarded
-drafts: each item's verdict is the check's, as received (section 2b), SUPPORTED AS CONDITIONAL at best, with its conditions open and its
-supplier tasks (E-05, E-6, E-9, E-12p, E-17 and the others) unexecuted; row (b) awaits its one targeted recheck. It applies no circuit
+drafts: each item's verdict is the check's, as received (section 2b): an AI review's, never an acceptance; where it reads SUPPORTED AS
+CONDITIONAL its conditions stay open and its supplier tasks (E-05, E-6, E-9, E-12p, E-17 and the others) unexecuted; row (b) as composed
+read NOT SUPPORTED on one clerical blocker, corrected since, and awaits its one targeted recheck. It applies no circuit
 draft to a generator and changes no board generator and no netlist (`CLASSIFICATION.md`, its bounds). Eleven of its 75 branch commits are
 classed REVIEWED-INPUT CHANGED; the 14 that touch files cx46 read are UNREVIEWED since cx46 and none is credited. No branch's record
 says that it closes a power item, and none is a release.
@@ -281,8 +282,8 @@ of its verdicts):
 | Fabrication release | BLOCKED | the same line |
 
 Kept apart from all three: documents and editable artifacts (a DESK candidate once set 33 is promoted, `__PROMOTED__`); design reviewed
-and accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, the unreviewed changes of sets 30 to 33, and Layer 4's items
-SUPPORTED AS CONDITIONAL at best by AI reviews); circuit changes implemented (NONE: every circuit change is a draft, section 2e); physical
+and accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, the unreviewed changes of sets 30 to 33, and Layer 4's items read
+by AI reviews only, none an acceptance); circuit changes implemented (NONE: every circuit change is a draft, section 2e); physical
 qualification (NONE).
 
 ## 7. The records this result binds
