@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 5 -l 5 v2/vendor/ti/ti-tps3808.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "5",
+  "-l",
+  "5"
+ ],
+ "pdf": "v2/vendor/ti/ti-tps3808.pdf",
+ "pdf_sha256": "74d889c0f68af88032f1633c26381817cc03e10d9fd3b4c177a044ad3ed86eed",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-07",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tps3808.layout.p5.txt",
+ "text_bytes": 5936,
+ "text_sha256": "4c9a07501b42a9edfd95a766cc113e84a03e23af0dc920b1039cfc1b6ac9ea70"
+}

@@ -1,0 +1,62 @@
+                                                                                                                                       TPS3808
+www.ti.com                                                                                        SBVS050N – MAY 2004 – REVISED AUGUST 2026
+
+
+
+6.6 Switching Characteristics
+1.7V ≤ VDD ≤ 6.5V, RLRESET = 100kΩ, CLRESET = 50pF, over operating temperature range (TJ = –40°C to 125°C), unless
+otherwise noted. Typical values are at TJ = 25°C.(1)
+                          PARAMETER                                          TEST CONDITIONS                    MIN     TYP     MAX UNIT
+
+         Input pulse width to            SENSE                  VIH = 1.05VIT, VIL = 0.95VIT                              20
+ tw                                                                                                                                        μs
+         RESET                           MR                     VIH = 0.7VDD, VIL = 0.3VDD                             0.001
+                                         CT = Open                                                                12      20       28
+                                         CT = VDD                                                                180     300      420      ms
+ td      RESET delay time                                       See Figure 6-1
+                                         CT = 130pF                                                             0.75    1.25     1.75
+                                         CT = 180nF                                                             0.62    1.03     1.44      s
+         Propagation delay               MR to RESET            VIH = 0.7VDD, VIL = 0.3VDD                               150               ns
+         High-to-low-level RESET
+                                         SENSE to RESET         VIH = 1.05VIT, VIL = 0.95VIT                              20               μs
+         delay
+
+(1)    RLRESET and CLRESET are the resistor and capacitor connected to the RESET pin.
+                            VDD
+
+
+
+             0.8V
+             0.0V
+
+
+                                       RESET
+
+                                                                                                                    tD = Reset Delay
+                                  tD                       tD                                tD                        = Undefined State
+
+
+                                       SENSE
+
+        VIT + VHYS
+               VIT
+
+
+
+                           MR
+           0.7VDD
+
+           0.3VDD
+
+
+
+                                                                    Time
+
+                      Figure 6-1. TPS3808 Timing Diagram Showing MR and SENSE Reset Timing
+
+
+
+
+Copyright © 2026 Texas Instruments Incorporated                                                            Submit Document Feedback             7
+                                                       Product Folder Links: TPS3808
+

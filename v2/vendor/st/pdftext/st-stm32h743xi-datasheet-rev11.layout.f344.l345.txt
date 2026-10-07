@@ -1,0 +1,106 @@
+Package information                                                STM32H742xI/G STM32H743xI/G
+
+
+                                       Table 222. Thermal characteristics
+           Symbol         Definition                        Parameter                Value   Unit
+                                           Thermal resistance junction-ambient
+                                                                                     45.0
+                                           LQFP100 - 14 x 14 mm /0.5 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     39.3
+                                           TFBGA100 - 8 x 8 mm /0.8 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     43.7
+                                           LQFP144 - 20 x 20 mm /0.5 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     37.7
+                      Thermal resistance   UFBGA169 - 7 x 7 mm /0.5 mm pitch
+             ΘJA                                                                             °C/W
+                       junction-ambient    Thermal resistance junction-ambient
+                                                                                     43.0
+                                           LQFP176 - 24 x 24 mm /0.5 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     42.4
+                                           LQFP208 - 28 x 28 mm /0.5 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     37.4
+                                           UFBGA176+25 - 10 x 10 mm /0.65 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     36.6
+                                           TFBGA240+25 - 14 x 14 mm / 0.8 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     36.3
+                                           LQFP100 - 14 x 14 mm /0.5 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     21.1
+                                           TFBGA100 - 8 x 8 mm /0.8 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     38.3
+                                           LQFP144 - 20 x 20 mm /0.5 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     17.3
+                      Thermal resistance   UFBGA169 - 7 x 7 mm /0.5 mm pitch
+             ΘJB                                                                             °C/W
+                        junction-board     Thermal resistance junction-ambient
+                                                                                     39.4
+                                           LQFP176 - 24 x 24 mm /0.5 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     40.3
+                                           LQFP208 - 28 x 28 mm /0.5 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     19.3
+                                           UFBGA176+25 - 10 x 10 mm /0.65 mm pitch
+                                           Thermal resistance junction-ambient
+                                                                                     24.3
+                                           TFBGA240+25 - 14 x 14 mm / 0.8 mm pitch
+
+
+
+
+344/357                                    DS12110 Rev 11
+STM32H742xI/G STM32H743xI/G                                                     Package information
+
+
+                              Table 222. Thermal characteristics (continued)
+          Symbol         Definition                        Parameter                  Value    Unit
+                                          Thermal resistance junction-ambient
+                                                                                       11.5
+                                          LQFP100 - 14 x 14 mm /0.5 mm pitch
+                                          Thermal resistance junction-ambient
+                                                                                      17.1
+                                          TFBGA100 - 8 x 8 mm /0.8 mm pitch
+                                          Thermal resistance junction-ambient
+                                                                                       11.3
+                                          LQFP144 - 20 x 20 mm /0.5 mm pitch
+                                          Thermal resistance junction-ambient
+                                                                                       11
+                     Thermal resistance   UFBGA169 - 7 x 7 mm /0.5 mm pitch
+              ΘJC                                                                             °C/W
+                       junction-case      Thermal resistance junction-ambient
+                                                                                       11.2
+                                          LQFP176 - 24 x 24 mm /0.5 mm pitch
+                                          Thermal resistance junction-ambient
+                                                                                       11.1
+                                          LQFP208 - 28 x 28 mm /0.5 mm pitch
+                                          Thermal resistance junction-ambient
+                                                                                      23.9
+                                          UFBGA176+25 - 10 x 10 mm /0.65 mm pitch
+                                          Thermal resistance junction-ambient
+                                                                                       7.4
+                                          TFBGA240+25 - 14 x 14 mm / 0.8 mm pitch
+
+
+
+
+8.10.1    Reference documents
+          •    JESD51-2 Integrated Circuits Thermal Test Method Environment Conditions - Natural
+               Convection (Still Air). Available from www.jedec.org.
+          •    For information on thermal management, refer to application note “Guidelines for
+               thermal management on STM32 applications” (AN5036) available from www.st.com.
+
+
+
+
+                                          DS12110 Rev 11                                      345/357
+                                                                                                        347
+

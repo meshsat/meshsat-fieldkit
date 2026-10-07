@@ -1,0 +1,162 @@
+RM0433                                                                                                   Embedded flash memory (FLASH)
+
+
+4.9.9                   FLASH option status register (FLASH_OPTSR_PRG)
+                        Address offset: 0x020 or 0x120
+                        Reset value: 0xXXXX XXXX (see Table 21: Option byte organization)
+                        This register is used to program values in corresponding option bits. Values after reset
+                        reflects the current values of the corresponding option bits.
+
+ 31              30       29        28         27   26     25       24     23             22             21         20                            19             18             17                 16
+ SWAP_BANK_OPT
+
+
+
+
+                                                                                                                               ST_RAM_SIZE[1:0]
+
+
+
+
+                                                                                                                                                                 IWDG_FZ_SDBY
+
+
+
+                                                                                                                                                                                IWDG_FZ_STOP
+                                                                                                         SECURITY
+                          IO_HSLV
+
+
+
+
+                                                           Res.
+
+
+
+                                                                    Res.
+
+
+
+                                                                           Res.
+
+
+
+                                                                                          Res.
+                 Res.               Res.   Res.     Res.                                                                                                                                          Res.
+
+
+
+
+ rw                        rw                                                                            rw         rw                            rw             rw             rw
+ 15              14       13        12         11   10      9        8        7              6             5          4                           3                 2              1               0
+
+
+
+
+                                                                                          NRST_STOP_D1
+                                                                           NRST_STDY_D1
+
+
+
+
+                                                                                                                    IWDG1_SW
+
+
+
+
+                                                                                                                                                       BOR_LEV
+                                                                                                         Res.
+                                         RDP                                                                                                                                    Res.              Res.
+
+
+
+
+ rw              rw        rw       rw         rw   rw     rw       rw     rw             rw                        rw                            rw             rw
+
+
+
+                        Bit 31 SWAP_BANK_OPT: Bank swapping option configuration bit
+                                SWAP_BANK_OPT option bit is used to configure whether the bank 1 and bank 2 are
+                                swapped or not. This bit is loaded with the SWAP_BANK_OPT bit of FLASH_OPTSR_CUR
+                                register after a reset.
+                                0: bank 1 and bank 2 not swapped
+                                1: bank 1 and bank 2 swapped
+                               Note: The flash bank swapping is not available on STM32H750xB devices. The SWAP_BANK
+                                     option bit must be kept at '0'.
+                               Note:
+                        Bit 30 Reserved, must be kept at reset value.
+                        Bit 29 IO_HSLV: I/O high-speed at low-voltage configuration bit
+                                 This bit indicates that the product operates below 2.7 V.
+                                 0: Product working in the full voltage range, I/O speed optimization at low-voltage disabled
+                                 1: Product operating below 2.7 V, I/O speed optimization at low-voltage feature allowed
+                 Bits 28:26 Reserved, must be kept at reset value.
+                 Bits 25:24 Reserved, must be kept at reset value.
+                 Bits 23: 22 Reserved, must be kept at reset value.
+                        Bit 21 SECURITY: Security enable option configuration bit
+                                The SECURITY option bit enables the secure access mode of the device during an option
+                                byte change. The change will be taken into account at next reset (next boot sequence). Once
+                                it is enabled, the security feature can be disabled if no areas are protected by PCROP or
+                                Secure access mode. If there are secure-only or PCROP protected areas, perform a level
+                                regression (from level 1 to 0) and set all the bits to unprotect secure-only areas and PCROP
+                                areas.
+                                0: Security feature disabled
+                                1: Security feature enabled.
+
+
+
+                                                                  RM0433 Rev 8                                                                                                                 215/3353
+                                                                                                                                                                                                          245
+Embedded flash memory (FLASH)                                                                                RM0433
+
+
+           Bits 20:19 ST_RAM_SIZE[1:0]: ST RAM size option configuration bits
+                       00: 2 Kbytes reserved to ST code
+                       01: 4 Kbytes reserved to ST code
+                       10: 8 Kbytes reserved to ST code
+                       11: 16 Kbytes reserved to ST code
+                      Note: This bitfield is effective only when the security is enabled (SECURITY = 1).
+
+
+               Bit 18 IWDG_FZ_SDBY: IWDG Standby mode freeze option configuration bit
+                        This option bit is used to freeze or not the independent watchdog IWDG1 in system Standby
+                        mode.
+                        0: Independent watchdog frozen in Standby mode
+                        1: Independent watchdog keep running in Standby mode.
+               Bit 17 IWDG_FZ_STOP: IWDG Stop mode freeze option configuration bit
+                        This option bit is used to freeze or not the independent watchdog IWDG1 in system Stop
+                        mode.
+                        0: Independent watchdog frozen in system Stop mode
+                        1: Independent watchdog keep running in system Stop mode.
+               Bit 16 Reserved, must be kept at reset value.
+            Bits 15:8 RDP: Readout protection level option configuration bits
+                       RDP bits are used to change the readout protection level. This change is possible only when
+                       the current protection level is different from level 2. The possible configurations are:
+                       0xAA: global readout protection level 0
+                       0xCC: global readout protection level 2
+                       others values: global readout protection level 1.
+                Bit 7 NRST_STDY_D1: D1 domain DStandby entry reset option configuration bit
+                       0: a reset is generated when entering DStandby mode on D1 domain.
+                       1: no reset generated when entering DStandby mode on D1 domain
+                Bit 6 NRST_STOP_D1: D1 domain DStop entry reset option configuration bit
+                       0: a reset is generated when entering DStop mode on D1 domain.
+                       1: no reset generated when entering DStop mode on D1 domain.
+                Bit 5 Reserved, must be kept at reset value.
+                Bit 4 IWDG1_SW: IWDG1 control mode option configuration bit
+                        IWDG1_SW option bit is used to select if IWDG1 independent watchdog is controlled by
+                        hardware or by software.
+                        0: IWDG1 watchdog is controlled by hardware
+                        1: IWDG1 watchdog is controlled by software
+             Bits 3:2 BOR_LEV: Brownout level option configuration bit
+                       These option bits are used to define the power level that generates a system reset.
+                       00: VBOR0, brownout reset threshold 0
+                       01: VBOR1, brownout reset threshold 1
+                       02: VBOR2, brownout reset threshold 2
+                       03: VBOR3, brownout reset threshold 3
+                      Note: Refer to device datasheet for the values of VBORx VDD reset thresholds.
+             Bits 1:0 Reserved, must be kept at reset value.
+
+
+
+
+216/3353                                           RM0433 Rev 8
+

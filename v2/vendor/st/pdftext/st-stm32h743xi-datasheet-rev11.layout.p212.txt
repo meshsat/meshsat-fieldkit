@@ -1,0 +1,67 @@
+Electrical characteristics (rev V)                                          STM32H742xI/G STM32H743xI/G
+
+
+7.3.4        Embedded reset and power control block characteristics
+             The parameters given in Table 116 are derived from tests performed under ambient
+             temperature and VDD supply voltage conditions summarized in Table 112: General
+             operating conditions.
+
+                      Table 116. Reset and power control block characteristics
+    Symbol                Parameter                   Conditions               Min    Typ    Max     Unit
+
+                     Reset temporization
+  tRSTTEMPO(1)                                             -                    -     377      -     µs
+                     after BOR0 released
+
+                  Brown-out reset threshold 0        Rising edge(1)            1.62   1.67   1.71
+ VBOR0/POR/PDR
+                    (VPOR/VPDR thresholds)             Falling edge            1.58   1.62   1.68
+                                                      Rising edge              2.04   2.10   2.15
+     VBOR1        Brown-out reset threshold 1
+                                                       Falling edge            1.95   2.00   2.06
+                                                      Rising edge              2.34   2.41   2.47
+     VBOR2        Brown-out reset threshold 2
+                                                       Falling edge            2.25   2.31   2.37
+                                                      Rising edge              2.63   2.70   2.78
+     VBOR3        Brown-out reset threshold 3
+                                                       Falling edge            2.54   2.61   2.68
+
+                    Programmable Voltage              Rising edge              1.90   1.96   2.01
+     VPVD0
+                     Detector threshold 0              Falling edge            1.81   1.86   1.91
+
+                    Programmable Voltage              Rising edge              2.05   2.10   2.16
+     VPVD1                                                                                            V
+                     Detector threshold 1              Falling edge            1.96   2.01   2.06
+
+                    Programmable Voltage              Rising edge              2.19   2.26   2.32
+     VPVD2
+                     Detector threshold 2              Falling edge            2.10   2.15   2.21
+
+                    Programmable Voltage              Rising edge              2.35   2.41   2.47
+     VPVD3
+                     Detector threshold 3              Falling edge            2.25   2.31   2.37
+
+                    Programmable Voltage              Rising edge              2.49   2.56   2.62
+     VPVD4
+                     Detector threshold 4              Falling edge            2.39   2.45   2.51
+
+                    Programmable Voltage              Rising edge              2.64   2.71   2.78
+     VPVD5
+                     Detector threshold 5              Falling edge            2.55   2.61   2.68
+
+                    Programmable Voltage              Rising edge              2.78   2.86   2.94
+     VPVD6
+                     Detector threshold 6        Falling edge in Run mode      2.69   2.76   2.83
+                  Hysteresis voltage of BOR
+ Vhyst_BOR_PVD                                   Hysteresis in Run mode         -     100      -     mV
+                   (unless BOR0) and PVD
+                  BOR(2) (unless BOR0) and
+ IDD_BOR_PVD(1)                                            -                    -      -     0.630   µA
+                  PVD consumption from VDD
+
+
+
+
+212/357                                         DS12110 Rev 11
+

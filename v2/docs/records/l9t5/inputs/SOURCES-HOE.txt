@@ -1,0 +1,40 @@
+Inputs filed by W140 for Layer 4 task L4A-59 (HO-E), kept apart from SOURCES.txt: l9t5_case.py and l9t5_drafts.py pin SOURCES.txt
+by sha256, so an entry there would move their outputs and every record that pins them. Each file below is byte for byte from a
+commit on another branch, read here as text only; l9t5_hoe.py pins each by its own sha256.
+
+l4reg-L4REG-3b6eb8be.md sha256 3b6eb8be505a5c85102aba8e69065f4706a1e6524da4b52259c67b9a8c500585
+  record l4reg's page as W138 committed it (fnd/l4reg 86dbcdff, v2/docs/records/l4reg/L4REG.md): the selection SESSION W138-1
+  (TPS2553-1 at RILIM 49.9 kOhm, IOS 0.4702 to 0.5704 A, with TPS73733DCQRM3, 76.0 C/W), the rail trip removed (W138-2) and finding
+  L4REG-F7 handing the controller's protection to L4A-59; read by W140 for HO-E (L4A-59), not merged.
+
+l4reg-l4reg_compare-9fbda7a6.out sha256 9fbda7a6e79430c2aea3986a3f20b256084b9d5d8f82f65072bf5ce16689ad7a
+  record l4reg's output as W138 committed it (fnd/l4reg 86dbcdff, v2/docs/records/l4reg/l4reg_compare.out): the limiter's band
+  and the regulators' printed theta, the figures HO-E's acceptance reads (L4A-59, W140).
+
+l4reg-apply_gen_sch_b_regstage-469594bb.py sha256 469594bb5b4fa6be16a3e313761a7d822c6bc8d427ef0894d15c219d0f54cbea
+  W138's draft as committed (fnd/l4reg 86dbcdff, v2/docs/records/l9t5/apply_gen_sch_b_regstage.py), byte for byte; W140 composes
+  its own draft with it on scratch copies to show the two share no designator or net edit (never applied).
+
+l4canmb-T10-ROUND6-0a94dd2c.md sha256 0a94dd2c444e2b89d580bbe80f98ce6a8c81a66b53b38c2e639c8e0436b89b6e
+  W137's round 7 page as committed (fnd/l4canmb 0d079eaf, v2/docs/records/l9t5/T10-ROUND6.md): the peers' TXD observation and 2-of-2
+  SHDN vote (method M-B), read by W140 for H-2's peers path (L4A-59).
+
+l4canmb-apply_gen_sch_b_canmb-8fb8815a.py sha256 8fb8815ac815d870826bab86c18ae6fd6e198de9d533cc1be80339d94f6f68f3
+  W137's draft as committed (fnd/l4canmb 0d079eaf, v2/docs/records/l9t5/apply_gen_sch_b_canmb.py), byte for byte; composed by W140
+  with its own draft on scratch copies only (never applied).
+
+Makers' sheets fetched by W148 for the reset loop's hold stage (L4A-59, HO-E; 7 October 2026, plain GETs from ti.com; each line is a
+fetch record, not a copy from another branch, so it carries no "<name> sha256 <digest>" line of the form above):
+fetched: v2/vendor/ti/ti-tps3808.pdf | https://www.ti.com/lit/ds/symlink/tps3808.pdf | 2026-10-07 HTTP 200 application/pdf 2046179 bytes |
+  sha256 74d889c0f68af88032f1633c26381817cc03e10d9fd3b4c177a044ad3ed86eed | TI SBVS050N, revised August 2026: byte for byte the copy the
+  tree has committed since 26 September 2026 (v2/vendor/SOURCES.yaml, supervisor-tps3808g30); its committed status is not changed here
+fetched: v2/vendor/ti/held/ti-tps3703-sbvs249b.pdf | https://www.ti.com/lit/ds/symlink/tps3703.pdf | 2026-10-07 HTTP 200 application/pdf
+  2644509 bytes | sha256 cc65714774e50c97dca9a1bf094489b17350cc70fa16068880e108e320f8a6ea | TI SBVS249B, revised November 2020: held
+  back as the project holds its other TI sheets (no redistribution grant read); v2/docs/records/l9t5hoe/fetch_held_back.py fetches and
+  checks it (a folder of its own: l9t5's fetch script is pinned by l9t5_a1.py and l9t5_f01.py, SESSION W148-4)
+
+l4reg-l4reg_compare-d6c7e771.out sha256 d6c7e771a97eadb6f9e6432811fbcb6fdc6a3a5666e40d49e2959048300ff08b
+  record l4reg's output as row (b)'s composite carries it (fnd/l4hod 23384006, W159's round 11, read by row (b)'s targeted recheck
+  Q-183; v2/docs/records/l4reg/l4reg_compare.out, last changed there by 8b75762a): the limiter's band on W159's envelope of the tested
+  row and TI's Equation 1, IOS 0.4702 to 0.5878 A (SESSION W159-D2). Copied byte for byte by W167 on 7 October 2026 (W163-N4) so that
+  l9t5_hoe.py reads the current band from its own tree; the 9fbda7a6 copy above stays as filed (its 0.5704 A is W138's tested row).

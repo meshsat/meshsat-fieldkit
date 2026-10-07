@@ -1,0 +1,61 @@
+Power control (PWR)                                                                                                    RM0433
+
+
+                 By configuring the voltage regulator the supply configurations shown in Figure 20 are
+                 supported for the VCORE core domain and an external supply.
+
+                                     Figure 20. System supply configurations
+
+
+
+
+                         VCAP                                       External supply         VCAP
+                        VDDLDO                            VCORE     VDD                   VDDLDO                     VCORE
+           VDD
+                                        V reg                                                              V reg
+                          VSS           (on)                                                 VSS           (off)
+
+
+                    LDO Supply                                                             Bypass
+
+
+                                                                                                                       MSv41901V1
+
+
+                 The different supply configurations are controlled through the LDOEN and BYPASS bits in
+                 PWR control register 3 (PWR_CR3) register according to Table 34.
+
+                                               Table 34. Supply configuration control
+                                                BYPASS
+                                       LDOEN
+
+
+
+
+                       Supply
+                                                                                      Description
+                    configuration
+
+
+
+
+                       Default                           – VCORE Power Domains are supplied from the LDO according to
+                                        1        0
+                     configuration                         VOS.
+                                                         – VCORE Power Domains are supplied from the LDO according to
+                                                           VOS.
+                     LDO supply         1        0
+                                                         – LDO power mode (Main, LP, Off) will follow system low-power
+                                                           modes.
+                                                         – VCORE supplied from external source
+                     LDO Bypass         0        1
+                                                         – LDO bypassed, voltage monitoring still active.
+                                        0        0       – Illegal combination, the default configuration is kept. (write data
+                        Illegal
+                                        1        1         will be ignored).
+
+
+
+
+260/3353                                                    RM0433 Rev 8
+

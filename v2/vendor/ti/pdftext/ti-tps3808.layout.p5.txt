@@ -1,0 +1,66 @@
+                                                                                                                                         TPS3808
+www.ti.com                                                                                           SBVS050N – MAY 2004 – REVISED AUGUST 2026
+
+
+6 Specifications
+6.1 Absolute Maximum Ratings
+over operating junction temperature range (unless otherwise noted) (1)
+                                                                                                        MIN              MAX             UNIT
+                         VDD                                                                            –0.3              7               V
+ Voltage                 VCT                                                                            –0.3           VDD + 0.3          V
+                         VRESET, VMR, VSENSE                                                            –0.3              7               V
+ Current                 RESET pin                                                                         –5             5              mA
+                         Operating junction, TJ (2)                                                     –40              150              °C
+ Temperature
+                         Storage, Tstg                                                                  –65              150              °C
+
+(1)      Operation outside the Absolute Maximum Ratings may cause permanent device damage. Absolute Maximum Ratings do not imply
+         functional operation of the device at these or any other conditions beyond those listed under Recommended Operating Conditions.
+         If used outside the Recommended Operating Conditions but within the Absolute Maximum Ratings, the device may not be fully
+         functional, and this may affect device reliability, functionality, performance, and shorten the device lifetime.
+(2)      As a result of the low dissipated power in this device, it is assumed that TJ = TA.
+
+
+6.2 ESD Ratings
+                                                                                                                        VALUE            UNIT
+                                                      Human body model (HBM), per ANSI/ESDA/JEDEC JS-001,
+                                                                                                                        ±2000
+                                                      all pins(1)
+ V(ESD)           Electrostatic discharge                                                                                                 V
+                                                      Charged device model (CDM), per JEDEC specification
+                                                                                                                         ±500
+                                                      JESD22-C101, all pins(2)
+
+(1)      JEDEC document JEP155 states that 500V HBM allows safe manufacturing with a standard ESD control process.
+(2)      JEDEC document JEP157 states that 250V CDM allows safe manufacturing with a standard ESD control process.
+
+6.3 Recommended Operating Conditions
+over operating free-air temperature range (unless otherwise noted)
+                                                                                              MIN               NOM             MAX      UNIT
+ VDD                     Input supply range                                                    1.7                                 6.5    V
+ VSENSE                  SENSE pin voltage                                                      0                                  6.5    V
+ V(Ct)                   CT pin voltage                                                                                          VDD      V
+ V MR                    MR pin voltage                                                         0                                  6.5    V
+ V RESET                 RESET pin voltage                                                      0                                  6.5    V
+ I RESET                 RESET pin current                                                  0.0003                                  5     mA
+
+
+
+6.4 Thermal Information
+                                                                                                             TPS3808
+                                    THERMAL METRIC(1)                                         DBV (SOT-23)            DRV (WSON)         UNIT
+                                                                                                 6 PINS                 6 PINS
+ RθJA            Junction-to-ambient thermal resistance                                              180.9               178.1           °C/W
+ RθJC(top)       Junction-to-case (top) thermal resistance                                           117.8               95.6            °C/W
+ RθJB            Junction-to-board thermal resistance                                                27.8                 135            °C/W
+ ψJT             Junction-to-top characterization parameter                                          18.9                 6.3            °C/W
+ ψJB             Junction-to-board characterization parameter                                        27.3                136.6           °C/W
+ RθJC(bot)       Junction-to-case (bottom) thermal resistance                                        N/A                  7.3            °C/W
+
+(1)      For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+         note.
+
+
+Copyright © 2026 Texas Instruments Incorporated                                                                 Submit Document Feedback        5
+                                                            Product Folder Links: TPS3808
+

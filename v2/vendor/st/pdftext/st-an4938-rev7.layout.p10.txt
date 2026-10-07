@@ -1,0 +1,47 @@
+Power supplies                                                                                  AN4938
+
+
+2.1.3     Battery backup domain
+          Backup domain description
+          To retain the content of the RTC backup registers, backup SRAM, and supply the RTC when
+          VDD is turned off, VBAT pin can be connected to an optional 1.2-3.6 V standby voltage
+          supplied by a battery. Otherwise, VBAT must be connected to another source, such as VDD.
+          When the backup domain is supplied by VBAT (analog switch connected to VBAT since VDD
+          is not present), the following functions are available:
+          •      PC14 and PC15 can be used as LSE pins only.
+          •      PC13 can be used as a tamper pin (TAMP1).
+          •      PI8 can be used as a tamper pin (TAMP2).
+          •      PC1 can be used as a tamper pin (TAMP3).
+          During tRSTTEMPO (temporization at VDD startup) or after a power-down reset (PDR) is
+          detected, the power switch between VBAT and VDD remains connected to VBAT.
+          During the startup phase, if VDD is established in less than tRSTTEMPO and it is higher than
+          VBAT + 0.6 V, a current may be injected into VBAT pin through an internal diode connected
+          between VDD and the power switch (VBAT). If the power supply/battery connected to the
+          VBAT pin cannot support this current injection, it is strongly recommended to connect an
+          external low-drop diode between this power supply and the VBAT pin.
+          Refer to the device datasheets for the actual value of tRSTTEMPO.
+
+          Battery charging
+          When VDD is present, the external battery connected to VBAT can be charged through an
+          internal resistance. This operation can be performed either through an internal 5 kΩ or
+          1.5 kΩ resistor. The resistor value can be configured by software.
+          Battery charging is automatically disabled in VBAT mode.
+
+2.1.4     LDO voltage regulator
+          The LDO voltage regulator is always enabled after reset with a default output level set to
+          power scale 3 (VOS3). The LDO can operate in three different modes depending on the
+          application operating modes:
+          •      In Run mode, the regulator supplies full power to the core and the digital domain.
+          •      In Stop mode, the regulator supplies low power to the core and to the digital domain,
+                 thus preserving the contents of the registers and SRAM.
+          •      In Standby mode, the regulator is powered down. The contents of the registers and
+                 SRAM are lost except for those related to the standby circuitry and the backup domain.
+          In Run and Stop mode, the LDO voltage regulator can be dynamically scaled by software to
+          different voltage levels: VOS0, VOS1, VOS2, and VOS3, SVOS3, SVOS4, or SVOS5.
+          The LDO regulator requires a capacitor on VCAP pins.
+
+
+
+
+10/46                                        AN4938 Rev 7
+

@@ -1,0 +1,72 @@
+                                                                                                                                              TPS3808
+                                                                                                          SBVS050N – MAY 2004 – REVISED AUGUST 2026
+
+            TPS3808 Low-Quiescent-Current, Programmable-Delay Supervisory Circuit
+1 Features                                                                3 Description
+•    Power-on reset generator with adjustable delay                       The TPS3808 family of microprocessor supervisory
+     time: 1.25ms to 10s                                                  circuits monitors system voltages from 0.4V to 5V,
+•    Very low quiescent current: 2.4μA typical                            asserting an open-drain RESET signal when the
+•    High threshold accuracy: 0.5% typical                                SENSE voltage drops below a preset threshold
+•    Fixed threshold voltages for standard voltage rails                  or when the manual reset (MR) pin drops to a
+     from 0.9V to 5V and adjustable voltage down to                       logic low. The RESET output remains low for the
+     0.4V are available                                                   user-adjustable delay time after the SENSE voltage
+•    Manual reset (MR) input                                              and manual reset (MR) return above the respective
+•    Open-drain RESET output                                              thresholds.
+•    Temperature range: –40°C to 125°C
+                                                                          The TPS3808 device uses a precision reference to
+•    Small SOT-23 and 2mm × 2mm WSON packages
+                                                                          achieve 0.5% threshold accuracy for VIT ≤ 3.3V. The
+2 Applications                                                            reset delay time can be set to 20ms by disconnecting
+                                                                          the CT pin, 300ms by connecting the CT pin to
+•    DSP or microcontroller applications                                  VDD using a resistor, or can be user-adjusted from
+•    Notebook and desktop computers                                       1.25ms to 10s by connecting the CT pin to an external
+•    PDAs and handheld products                                           capacitor. The TPS3808 device has a very low typical
+•    Portable and battery-powered products                                quiescent current of 2.4μA, so it is an excellent
+•    FPGA and ASIC applications                                           choice for battery-powered applications. TPS3808 is
+                                                                          available in the SOT-23 and 2mm × 2mm WSON
+                                                                          packages, and is fully specified over a temperature
+                                                                          range from –40°C to 125°C (TJ).
+                                                                                                     Package Information
+                                                                                PART NUMBER                   PACKAGE(1)              PACKAGE SIZE(2)
+                                                                                                          DBV (SOT-23, 6)            2.90mm × 1.60mm
+                                                                          TPS3808
+                                                                                                          DRV (WSON, 6)              2.00mm × 2.00mm
+
+                                                                          (1)          For all available packages, see the orderable addendum at
+                                                                                       the end of the datasheet.
+                                                                          (2)          The package size (length × width) is a nominal value and
+                                                                                       includes pins, where applicable.
+
+    1.2 V                    3.3 V                                                    4.0
+                                                                                                  -40°C
+                                                                                                   25°C
+                                                                                      3.5          85°C
+                                                                                                  125°C
+            SENSE VDD                SENSE VDD            VI/O   VCORE
+                                                                                      3.0
+                                                                           IDD (mA)
+
+
+
+
+            TPS3808G12               TPS3808G33             DSP
+
+                   RESET             MR
+                                                                                      2.5
+                                           RESET         GPIO
+             CT                      CT
+                  GND                     GND                GND
+                                                                                      2.0
+
+
+                                                                                      1.5
+                           Typical Application                                              1.5     2.5        3.5             4.5      5.5      6.5
+                                                                                                                     VDD (V)
+                                                                                              Supply Current vs Supply Voltage
+
+
+
+
+        An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+        intellectual property matters and other important disclaimers. PRODUCTION DATA.
+

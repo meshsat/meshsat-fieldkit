@@ -1,0 +1,230 @@
+RM0433                                                                                                     Power control (PWR)
+
+
+                   The lower byte of this register is written once after POR and shall be written before changing
+                   VOS level or ck_sys clock frequency. No limitation applies to the upper bytes.
+                   Programming data corresponding to an invalid combination of LDOEN and BYPASS bits
+                   (see Table 34) will be ignored: data will not be written, the written-once mechanism will lock
+                   the register and any further write access will be ignored. The default supply configuration
+                   will be kept and the ACTVOSRDY bit in PWR control status register 1 (PWR_CSR1) will go
+                   on indicating invalid voltage levels. The system shall be power cycled before writing a new
+                   value.
+
+ 31         30       29     28     27     26         25           24         23     22     21     20     19     18      17          16
+
+
+
+
+                                                     USBREGEN
+                                          USB33RDY
+
+
+
+
+                                                                  USB33DEN
+ Res.      Res.     Res.   Res.   Res.                                       Res.   Res.   Res.   Res.   Res.   Res.    Res.       Res.
+
+
+
+                                             r       rw           rw
+ 15         14       13     12     11     10           9            8         7      6      5      4      3      2       1           0
+
+
+
+
+                                                                                                                                    BYPASS
+                                                                                                                SCUEN
+
+
+
+                                                                                                                        LDOEN
+                                                     VBRS
+
+
+
+                                                                  VBE
+
+
+ Res.      Res.     Res.   Res.   Res.   Res.                                Res.   Res.   Res.   Res.   Res.
+
+
+                                                     rw           rw                                            rw      rw          rw
+
+
+  Bits 31:27         Reserved, must be kept at reset value.
+         Bit 26 USB33RDY: USB supply ready.
+                 0: USB33 supply not ready.
+                 1: USB33 supply ready.
+         Bit 25 USBREGEN: USB regulator enable.
+                 0: USB regulator disabled.
+                 1: USB regulator enabled.
+         Bit 24 USB33DEN: VDD33USB voltage level detector enable.
+                 0: VDD33USB voltage level detector disabled.
+                 1: VDD33USB voltage level detector enabled.
+  Bits 23:10         Reserved, must be kept at reset value.
+           Bit 9 VBRS: VBAT charging resistor selection
+                  0: Charge VBAT through a 5 kΩ resistor.
+                  1: Charge VBAT through a 1.5 kΩ resistor.
+           Bit 8 VBE: VBAT charging enable
+                  0: VBAT battery charging disabled.
+                  1: VBAT battery charging enabled.
+        Bits 7:3     Reserved, must be kept at reset value.
+           Bit 2 SCUEN: Supply configuration update enable
+                  0: Supply configuration update locked.
+                  1: Single write enabled to Supply configuration (LDOEN and BYPASS)
+           Bit 1 LDOEN: Low drop-out regulator enable
+                  0: Low drop-out regulator disabled.
+                  1: Low drop-out regulator enabled (default)
+
+
+
+
+                                                                RM0433 Rev 8                                                    307/3353
+                                                                                                                                             312
+Power control (PWR)                                                                                                         RM0433
+
+
+        Bit 0 BYPASS: Power management unit bypass
+               0: Power management unit normal operation.
+               1: Power management unit bypassed, voltage monitoring still active.
+
+
+6.8.5           PWR CPU control register (PWR_CPUCR)
+                This register allows controlling CPU power.
+                Address offset: 0x010
+                Reset value: 0x0000 0000
+
+  31       30     29     28     27       26     25       24       23       22     21      20     19     18        17           16
+ Res.   Res.     Res.    Res.   Res.     Res.   Res.    Res.      Res.     Res.   Res.    Res.   Res.   Res.      Res.        Res.
+
+
+  15       14     13     12     11       10      9        8        7        6      5       4      3      2         1            0
+
+
+
+
+                                                                                                        PDDS_D3
+
+
+
+                                                                                                                  PDDS_D2
+
+
+
+                                                                                                                               PDDS_D1
+                                RUN_D3
+
+
+
+
+                                                         SBF_D2
+
+
+
+                                                                  SBF_D1
+
+
+
+
+                                                                                  SOPFF
+                                                CSSF
+
+
+
+
+                                                                           SBF
+ Res.   Res.     Res.    Res.            Res.                                             Res.   Res.
+
+
+                                rw               rw        r        r       r      r                    rw        rw           rw
+
+
+           Bits 31:12    Reserved, must be kept at reset value.
+                Bit 11 RUN_D3: Keep system D3 domain in Run mode regardless of the CPU subsystem modes
+                        0: D3 domain follows CPU subsystem modes.
+                        1: D3 domain remains in Run mode regardless of CPU subsystem modes.
+                Bit 10   Reserved, must be kept at reset value.
+                 Bit 9 CSSF: Clear Standby and Stop flags (always read as 0)
+                        This bit is cleared to 0 by hardware.
+                        0: No effect.
+                        1: STOPF, SBF, SBF_D1, and SBF_D2 flags are cleared.
+                 Bit 8 SBF_D2: D2 domain DStandby flag
+                        This bit is set by hardware and cleared by any system reset or by setting the CSSF bit. Once
+                        set, this bit can be cleared only when the D2 domain is no longer in DStandby mode.
+                        0: D2 domain has not been in DStandby mode
+                        1: D2 domain has been in DStandby mode.
+                 Bit 7 SBF_D1: D1 domain DStandby flag
+                        This bit is set by hardware and cleared by any system reset or by setting the CSSF bit. Once
+                        set, this bit can be cleared only when the D1 domain is no longer in DStandby mode.
+                        0: D1 domain has not been in DStandby mode
+                        1: D1 domain has been in DStandby mode.
+                 Bit 6 SBF: System Standby flag
+                        This bit is set by hardware and cleared only by a POR (Power-on Reset) or by setting the
+                        CSSF bit
+                        0: System has not been in Standby mode
+                        1: System has been in Standby mode
+                 Bit 5 STOPF: STOP flag
+                        This bit is set by hardware and cleared only by any reset or by setting the CSSF bit.
+                        0: System has not been in Stop mode
+                        1: System has been in Stop mode
+
+
+
+308/3353                                               RM0433 Rev 8
+RM0433                                                                                              Power control (PWR)
+
+
+                    Bits 4:3    Reserved, must be kept at reset value.
+                       Bit 2 PDDS_D3: System D3 domain Power Down Deepsleep.
+                              This bit allows defining the Deepsleep mode for System D3 domain.
+                              0: Keep Stop mode when D3 domain enters Deepsleep.
+                              1: Allow Standby mode when D3 domain enters Deepsleep.
+                       Bit 1 PDDS_D2: D2 domain Power Down Deepsleep.
+                              This bit allows defining the Deepsleep mode for D2 domain.
+                              0: Keep DStop mode when D2 domain enters Deepsleep.
+                              1: Allow DStandby mode when D2 domain enters Deepsleep.
+                       Bit 0 PDDS_D1: D1 domain Power Down Deepsleep selection.
+                              This bit allows defining the Deepsleep mode for D1 domain.
+                              0: Keep DStop mode when D1 domain enters Deepsleep.
+                              1: Allow DStandby mode when D1 domain enters Deepsleep.
+
+
+6.8.6                PWR D3 domain control register (PWR_D3CR)
+                     This register allows controlling D3 domain power.
+                     Address offset: 0x018
+                     Reset value: 0x0000 4000 (Following reset VOSRDY will be read 1 by software).
+
+ 31          30           29       28     27     26     25       24      23   22     21     20     19     18     17       16
+ Res.        Res.        Res.      Res.   Res.   Res.   Res.    Res.   Res.   Res.   Res.   Res.   Res.   Res.   Res.    Res.
+
+
+ 15          14           13       12     11     10      9       8       7     6      5      4      3      2      1       0
+      VOS              VOSRDY      Res.   Res.   Res.   Res.    Res.   Res.   Res.   Res.   Res.   Res.   Res.   Res.    Res.
+        rw                 r
+
+
+              Bits 31:16        Reserved, must be kept at reset value.
+              Bits 15:14 VOS: Voltage scaling selection according to performance
+                           These bits control the VCORE voltage level and allow to obtains the best trade-off between
+                           power consumption and performance:
+                         – When increasing the performance, the voltage scaling shall be changed before increasing
+                           the system frequency.
+                         – When decreasing performance, the system frequency shall first be decreased before
+                           changing the voltage scaling.
+                           00: Reserved (Scale 3 selected).
+                           01: Scale 3 (default)
+                           10: Scale 2
+                           11: Scale 1
+                     Bit 13 VOSRDY: VOS Ready bit for VCORE voltage scaling output selection.
+                             This bit is forced by hardware to 1 when the Bypass mode is selected in PWR control
+                             register 3 (PWR_CR3).
+                             0: Not ready, voltage level below VOS selected level.
+                             1: Ready, voltage level at or above VOS selected level.
+               Bits 12:0        Reserved, must be kept at reset value.
+
+
+
+
+                                                             RM0433 Rev 8                                             309/3353
+                                                                                                                                 312
+

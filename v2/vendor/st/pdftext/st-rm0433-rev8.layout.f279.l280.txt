@@ -1,0 +1,95 @@
+RM0433                                                                        Power control (PWR)
+
+
+6.6.2    Voltage scaling
+         The D1, D2, and D3 domains are supplied from a single voltage regulator supporting
+         voltage scaling with the following features:
+         •    Run mode voltage scaling
+              –   VOS0: Scale 0 (VCORE boost)
+              –   VOS1: Scale 1
+              –   VOS2: Scale 2
+              –   VOS3: Scale 3
+         •    Stop mode voltage scaling
+              –   SVOS3: Scale 3
+              –   LP-SVOS4: Scale 4
+              –   LP-SVOS5: Scale 5
+         For more details on voltage scaling values, refer to the product datasheets.
+         After reset, the system starts on the lowest Run mode voltage scaling (VOS3). The voltage
+         scaling can then be changed on-the-fly by software by programming VOS bits in PWR D3
+         domain control register (PWR_D3CR) according to the required system performance. When
+         exiting from Stop mode or Standby mode, the Run mode voltage scaling is reset to the
+         default VOS3 value.
+         Before entering Stop mode, the software can preselect the SVOS level in PWR control
+         register 1 (PWR_CR1). The Stop mode voltage scaling for SVOS4 and SVOS5 also sets the
+         voltage regulator in Low-power (LP) mode to further reduce power consumption. When
+         preselecting SVOS3, the use of the voltage regulator low-power mode (LP) can be selected
+         by LPDS register bit.
+
+         VOS0 activation/deactivation sequence
+         The system maximum frequency can be reached by boosting the voltage scaling level to
+         VOS0. This is done through the ODEN bit in the SYSCFG_PWRCR register.
+         The sequence to activate the VOS0 is the following:
+         1.   Ensure that the system voltage scaling is set to VOS1 by checking the VOS bits in
+              PWR D3 domain control register (PWR D3 domain control register (PWR_D3CR))
+         2.   Enable the SYSCFG clock in the RCC by setting the SYSCFGEN bit in the
+              RCC_APB4ENR register.
+         3.   Enable the ODEN bit in the SYSCFG_PWRCR register.
+         4. Wait for VOSRDY to be set.
+         Once the VCORE supply has reached the required level, the system frequency can be
+         increased. Figure 31 shows the recommended sequence for switching VCORE from VOS1 to
+         VOS0 sequence.
+
+         The sequence to deactivate the VOS0 is the following:
+         1.   Ensure that the system frequency was decreased.
+         2.   Ensure that the SYSCFG clock is enabled in the RCC by setting the SYSCFGEN bit set
+              in the RCC_APB4ENR register.
+         3.   Reset the ODEN bit in the SYSCFG_PWRCR register to disable VOS0.
+
+
+
+
+                                          RM0433 Rev 8                                     279/3353
+                                                                                                      312
+Power control (PWR)                                                                         RM0433
+
+
+           Once VOS0 is disabled, the voltage scaling can be reduced further by configuring VOS bits
+           in PWR D3 domain control register (PWR_D3CR) according to the required system
+           performance.
+Note:      VOS0 can be enabled only when VOS1 is programmed in PWR D3 domain control register
+           (PWR_D3CR) VOS bits. VOS0 deactivation must be managed by software before the
+           system enters low-power mode.
+
+                               Figure 31. Switching VCORE from VOS1 to VOS0
+
+
+                                           ȝV
+
+                                                          1,35 V
+
+                              1,26 V
+
+                      VCORE
+
+
+
+
+                      ODEN
+
+
+
+
+              ACTVOSRDY
+
+
+
+
+                  VOSRDY
+
+                                                                                           MSv63819V1
+
+
+
+
+280/3353                                  RM0433 Rev 8
+

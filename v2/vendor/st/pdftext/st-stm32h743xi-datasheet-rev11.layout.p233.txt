@@ -1,0 +1,52 @@
+STM32H742xI/G STM32H743xI/G                                                              Electrical characteristics (rev V)
+
+
+                                   Table 135. CSI oscillator characteristics(1) (continued)
+     Symbol                            Parameter                       Conditions            Min     Typ     Max        Unit
+
+                      CSI oscillator frequency drift over
+   DVDD (CSI)                                                      VDD = 1.62 to 3.6 V        -      −0.06   0.06        %
+                      VDD
+     tsu(CSI)         CSI oscillator startup time                            -                -       1        2         µs
+                      CSI oscillator stabilization time
+     tstab(CSI)                                                              -                -        -       4        cycle
+                      (to reach ±3% of fCSI)
+     IDD(CSI)         CSI oscillator power consumption                       -                -       23      30         µA
+1. Guaranteed by design.
+2. Guaranteed by test in production.
+3. Guaranteed by characterization.
+
+
+                  Low-speed internal (LSI) RC oscillator
+
+                                                     Table 136. LSI oscillator characteristics
+                    Symbol            Parameter                  Conditions                 Min      Typ      Max       Unit
+
+                                                       VDD = 3.3 V, TJ = 25 °C             31.4(1)    32     32.6(1)
+                                                       TJ = –40 to 110 °C, VDD = 1.62 to
+                                                                                         29.76(2)      -     33.6(2)
+                                                       3.6 V
+                       fLSI         LSI frequency      TJ = –40 to 125 °C, VDD = 1.62 to                                kHz
+                                                                                            29.4       -      33.6
+                                                       3.6 V
+                                    LSI oscillator
+                    tsu(LSI)(3)                                        -                      -       80      130
+                                    startup time
+                                    LSI oscillator                                                                       µs
+                                    stabilization
+                   tstab(LSI)(3)                                       -                      -      120      170
+                                    time (5% of
+                                    final value)
+                                    LSI oscillator
+                   IDD(LSI)(3)      power                              -                      -      130      280        nA
+                                    consumption
+                  1. Guaranteed by test in production.
+                  2. Guaranteed by characterization results.
+                  3. Guaranteed by design.
+
+
+
+
+                                                            DS12110 Rev 11                                             233/357
+                                                                                                                                 316
+
