@@ -92,7 +92,10 @@ K_TOP, K_BOT, K_TOL, K_TCR = 10e3, 20e3, 0.001, 25e-6     # the read divider, 0.
 R_PU, R_PU_TOL = 10e3, 0.05        # the FAULT pull-up to each peer's own rail (a 5 % allowance, ASSUMPTION: no tolerance named in the value)
 R_GS, R_GPD = 1e3, 100e3           # the test switch's gate resistor and pull-down
 ADC_ERR = 10e-3                    # V at the pin, ASSUMPTION: ten times rev V's TYPICAL +10/-20 LSB TUE at 16 bits (no maximum printed)
-B_MAX = 20e-3                      # A, ASSUMPTION: the tested target's own draw from its limiter's output while held in reset (no row printed)
+B_MAX = 0.5e-3                     # A: what the output feeds besides the load while it conducts: the two dividers and the regulator's EN pull-up at the
+                                   # output's top (0.2 mA, MODEL on the drawn resistors) and 0.3 mA for the regulator held off by the EN diode (ASSUMPTION:
+                                   # SBVS067W prints its shutdown current 20 nA TYPICAL only)
+B_BOR = 20e-3                      # A, ASSUMPTION: the same with the EN diode open: the target held in reset by BOR level 2 (no reset current printed)
 C_DOM = 16e-6                      # F, ASSUMPTION: the output node with the target's 3.3 V domain behind it (1 uF + 10 uF + 1.6 uF drawn, rounded up)
 VF_COLD = 0.10                     # V, ASSUMPTION: the BAT46W's forward rise from 25 C to -20 C (no cold row printed)
 IR_HOT = 20e-6                     # A, ASSUMPTION: the BAT46W's reverse current at 76.25 C and 3.4 V (5 uA at 60 C, 7.5 uA at 10 V, 60 C printed)
@@ -235,6 +238,8 @@ def figures():
     S["ldo_en_lo"] = F_(float(m.group(1)), "PRINTED", "SBVS067W 5.6 p.%d" % ti_page(t, m.end()))
     m = need(t, r"VIN\s+Input supply voltage\s+([\d.]+)\s+([\d.]+)\s+V", "the input range (5.3)")
     S["ldo_vin"] = F_((float(m.group(1)), float(m.group(2))), "PRINTED", "SBVS067W 5.3 p.%d" % ti_page(t, m.end()))
+    m = need(t, r"ISHDN\s+Shutdown current \(IGND\)\s+VEN ≤ 0\.5V, VOUT ≤ VIN ≤ 5\.5V\s+(\d+)\s+nA", "the shutdown current (5.6)")
+    S["ldo_shdn"] = F_(float(m.group(1)) * 1e-9, "TYPICAL", "SBVS067W 5.6 p.%d (typical only)" % ti_page(t, m.end()))
     m = need(t, r"IGND\s+Ground pin current\s+IOUT = 10mA \(IQ\)\s+(\d+)\s+µA", "the ground current at 10 mA (5.6)")
     S["ldo_iq"] = F_(float(m.group(1)) * 1e-6, "TYPICAL", "SBVS067W 5.6 p.%d (typical only)" % ti_page(t, m.end()))
     m = need(t, r"(To make sure that all charge is removed\s*\nfrom the gate of the pass transistor, the EN pin must be driven low before the input voltage is removed\.)",
@@ -456,6 +461,7 @@ def hod_check(nl, H):
         kp, kq = (k + 1) % 3, (k + 2) % 3
         rr = lambda n: "R%d" % (800 + 20 * k + n)                        # noqa: E731
         qa, qb, da, db, ca, cb = "Q%d" % (590 + 2 * k), "Q%d" % (591 + 2 * k), "D%d" % (404 + 10 * k), "D%d" % (405 + 10 * k), "C%d" % (970 + 10 * k), "C%d" % (971 + 10 * k)
+        de = "D%d" % (406 + 10 * k)
         lim, out = "U%d" % (45 + 10 * k), "IOC%s_LDO_IN" % t
         tl, tm, ga, gb, flt = ("IOC%s_%s" % (t, n) for n in ("TL", "TM", "TGA", "TGB", "LIM_FLT"))
         sa, sb, fa, fb, va, vb = ("IOC%s_%s%s" % (t, n, pp) for n, pp in (("TSW", p_), ("TSW", q_), ("FLT", p_), ("FLT", q_), ("VS", p_), ("VS", q_)))
@@ -467,15 +473,16 @@ def hod_check(nl, H):
                              (qb, "3", tm), (qb, "2", "GND"), (qb, "1", gb), (rr(1), "2", ga), (rr(2), "1", ga), (rr(2), "2", "GND"),
                              (rr(3), "2", gb), (rr(4), "1", gb), (rr(4), "2", "GND"), (rr(5), "1", "+3V3_IOC%s" % p_), (rr(6), "1", "+3V3_IOC%s" % q_),
                              (da, "1", flt), (da, "2", fa), (db, "1", flt), (db, "2", fb), (rr(7), "1", out), (rr(8), "2", "GND"), (rr(9), "1", out),
-                             (rr(10), "2", "GND"), (ca, "2", "GND"), (cb, "2", "GND")])
+                             (rr(10), "2", "GND"), (ca, "2", "GND"), (cb, "2", "GND"), (de, "1", tl), (de, "2", "IOC%s_LDO_EN" % t),
+                             ("U%d" % (40 + 10 * k), "5", "IOC%s_LDO_EN" % t)])
         for ref, want in ((rr(0), H.R_LOAD), (rr(1), H.R_GS), (rr(3), H.R_GS), (rr(2), H.R_GPD), (rr(4), H.R_GPD), (rr(5), H.R_FPU), (rr(6), H.R_FPU),
                           (rr(7), H.R_TOP), (rr(9), H.R_TOP), (rr(8), H.R_BOT), (rr(10), H.R_BOT), (ca, H.C_ADC), (cb, H.C_ADC)):
             if CHK.value(nl, ref) != want:
                 why.append("%s is %r, not %r" % (ref, CHK.value(nl, ref), want))
-        for ref, part in ((qa, H.FET), (qb, H.FET), (da, H.DIODE), (db, H.DIODE), (lim, "TPS2553-1")):
+        for ref, part in ((qa, H.FET), (qb, H.FET), (da, H.DIODE), (db, H.DIODE), (de, H.DIODE), (lim, "TPS2553-1")):
             if not CHK.value(nl, ref).startswith(part):
                 why.append("%s is not the drafted %s" % (ref, part))
-        exact(tl, ["%s.2" % rr(0), "%s.3" % qa])
+        exact(tl, ["%s.2" % rr(0), "%s.3" % qa, "%s.1" % de])
         exact(tm, ["%s.2" % qa, "%s.3" % qb])
         exact(ga, ["%s.1" % qa, "%s.2" % rr(1), "%s.1" % rr(2)])
         exact(gb, ["%s.1" % qb, "%s.2" % rr(3), "%s.1" % rr(4)])
@@ -681,7 +688,7 @@ def procedure(S, R):
     steps = [
         ("0", "the announcement", WINDOW, "both peers mark the target under test in their state frames (one window); from here canen's automatic restart and FW-B21's "
          "stop do not act on it and the self-test's phases skip by their own precondition (all three functional)"),
-        ("1", "the restore route proven", step1, "both peers assert their restart votes (record l4canen's route); each sees the output under %.1f V within %.3f s "
+        ("1", "the restore route exercised", step1, "both peers assert their restart votes (record l4canen's route); each sees the output under %.1f V within %.3f s "
          "(the gate over 2.5 V %.3f s, the limiter's turn-off %.0f ms PRINTED, the node and the target's domain (%.0f uF, ASSUMPTION) on the two dividers alone), releases, "
          "and sees it back over %.1f V within %.3f s (the gate under its threshold %.3f s, ton %.0f ms and tr %.1f ms PRINTED); else ABORT, nothing latched" % (
              V_OFF, t1_fall, S["t_gate_on"], S["toff"][0] * 1e3, C_DOM * 1e6, V_OK, t1_back, S["t_gate_off"], S["ton"][0] * 1e3, S["tr"][0] * 1e3)),
@@ -743,6 +750,10 @@ def faults(cfg):
         ("a peer's divider bottom (20 kOhm)", "open or short", "that peer reads full scale or 0 V", "that peer: the output out of its band" if has("cont_vout") else None, C, False),
         ("a peer's 10 nF", "short", "that peer reads 0 V", "that peer: the output out of its band" if has("cont_vout") else None, C, False),
         ("a peer's 10 nF", "open", "the sample taken from 6.67 kOhm (a long sampling time, DRAFTED)", "NOT in service: RESIDUAL", "none", False),
+        ("the EN diode (BAT46W)", "open", "the target's regulator stays on in the load; BOR level 2 holds the target in reset (B at most %.0f mA, ASSUMPTION, inside the "
+         "guarantee's margin)" % (B_BOR * 1e3), "NOT in service: RESIDUAL", "none", False),
+        ("the EN diode (BAT46W)", "short", "in service none (the load's bottom sits at the output); with the bench jumper fitted the load sits across the output and the "
+         "limiter latches (bench only)", "NOT in service: RESIDUAL", "none", False),
         ("a peer's ADC pin or its reading", "stuck inside the band", "that peer sees no drop", "step 3: the two peers disagree (one aborts)" if has("two_readers", "abort") else None, P, False),
         ("canen's restore route", "cannot pull EN low (six of its seven recovery residuals)", "the test would latch the target for good", "step 1: the output does not fall; ABORT, nothing latched" if has("pre") else None, P,
          not has("pre")),
@@ -809,7 +820,7 @@ def main():
             ("TPS2553-1 toff", "toff"), ("TPS2553-1 tr", "tr"), ("TPS2553-1 tIOS", "tios"), ("TPS2553-1 FAULT VOL (V, at A)", "flt_vol"),
             ("TPS2553-1 FAULT leakage", "flt_lkg"), ("TPS2553-1 FAULT sink", "flt_sink"), ("TPS2553-1 EN VIL", "en_vil"),
             ("TPS737 theta JA (DCQ)", "ldo_rja"), ("TPS737 EN high", "ldo_en_hi"), ("TPS737 EN low", "ldo_en_lo"), ("TPS737 VIN", "ldo_vin"),
-            ("TPS737 IGND at 10 mA", "ldo_iq"), ("AO3400A VGS(th)", "vth"), ("AO3400A RDS(on) 2.5 V", "rds25"), ("AO3400A RDS(on) 10 V 25/125 C", "rds10"),
+            ("TPS737 IGND at 10 mA", "ldo_iq"), ("TPS737 ISHDN", "ldo_shdn"), ("AO3400A VGS(th)", "vth"), ("AO3400A RDS(on) 2.5 V", "rds25"), ("AO3400A RDS(on) 10 V 25/125 C", "rds10"),
             ("AO3400A ID at 70 C", "fet_id70"), ("AO3400A IDM", "fet_idm"), ("AO3400A IGSS", "igss"), ("BAT46W VF (0.1, 10 mA)", "vf"),
             ("BAT46W IR (1.5 V; 25, 60 C)", "ir"), ("BAT46W IF", "bat_if"), ("BAT46W TJ max", "bat_tj"), ("H743 VIL / VDD", "vil_k"), ("H743 VIH / VDD", "vih_k"),
             ("H743 FT leakage", "ilkg"), ("H743 VOH drop at -8 mA", "voh_drop"), ("H743 VPDR falling", "vpdr"), ("H743 VBOR2 falling", "vbor2"),
@@ -823,7 +834,7 @@ def main():
     w("   described: SLVS841F 10.1.1 (page %d, application information, 'not part of the TI component specification'): \"%s\"" % (S["latch_text_p"], S["latch_text"]))
     w("   described: SLVS841F 9.3.1 (page %d): \"%s\"; SBVS067W 6.3.4 (page %d): \"%s\"" % (S["latch_exit_p"], S["latch_exit"], S["ldo_rev_p"], S["ldo_rev_text"]))
     w("   described: %s 6.3.4 (page %d): \"%s\"; RM0433 Rev 8 p.533: \"%s\"" % (S["tcan_rev"], S["tcan_text_p"], S["tcan_text"], S["rm_reset"]))
-    w("   DS12110 Table 186 note 1: 'Data guaranteed by characterization for BGA packages. The values for LQFP packages might differ.' (no maximum printed)")
+    w('   DS12110 Table 186 note 1: "Data guaranteed by characterization for BGA packages. The values for LQFP packages might differ." (no maximum printed)')
     w("   the limiter's band with the 1 %% RILIM (MODEL on PRINTED, W138's): %.4f to %.4f A; the regulator's 125 C current at the corner: %.4f A (%.2f C air, %.4f V drop)" % (
         S["ios"][0], S["ios"][1], i125, Erows["air"][0], drop))
     w("")
@@ -867,7 +878,8 @@ def main():
         w("5. THE TEST PATH READ BY PIN (per controller t: the 3.0 Ohm on t's limiter output, the upper AO3400A gated by t's next controller through 1 kOhm")
         w("   with 100 kOhm to ground, the lower to ground gated by the one after, t's FAULT on its own node with the two peers' BAT46W cathodes, each")
         w("   anode on its peer's pin with 10 kOhm to that peer's own rail, each peer's 10k over 20k with 10 nF to its ADC pin; nothing else on these")
-        w("   nets; traced from the load to ground: who can start the test; traced from the output and FAULT: who reads them)")
+        w("   nets but the third BAT46W from t's regulator EN to the load's bottom; traced from the load to ground: who can start the test; traced from")
+        w("   the output and FAULT: who reads them)")
         w("     every order: %s%s" % (", ".join("%s %s" % (o_, v) for o_, v in hv_all.items()), (": " + "; ".join(hw[:3])) if hw else ""))
         for k, t in enumerate(TAGS):
             v, txt = start_verdict(nl1, k)
@@ -952,16 +964,24 @@ def main():
         k_nom, k_lo, k_hi = k_band()
         w("     ASSUMPTION past 1,000 h); the divider %.5f to %.5f (0.1 %%, 25 ppm/C); the rail %.4f to %.4f V (record l4canen's envelope); the ADC +-%.0f mV at the pin" % (
             k_lo, k_hi, S["rail"][0], S["rail"][1], ADC_ERR * 1e3))
-        w("     (ASSUMPTION: %s's TYPICAL %+g/%g LSB at 16 bits, no maximum printed, characterised on BGA); the target's own draw B 0 to %.0f mA (ASSUMPTION: held in reset)" % (
-            "Table 186", S["tue_typ"][0][0], S["tue_typ"][0][1], B_MAX * 1e3))
+        w("     (ASSUMPTION: %s's TYPICAL %+g/%g LSB at 16 bits, no maximum printed, characterised on BGA); what the output feeds besides the load, B, 0 to" % (
+            "Table 186", S["tue_typ"][0][0], S["tue_typ"][0][1]))
+        w("     %.1f mA: the two dividers and the regulator's EN pull-up at the output's top (MODEL on the drawn resistors) and the regulator held off by the" % (B_MAX * 1e3))
+        w("     EN diode (ASSUMPTION %.1f mA: ISHDN %.0f nA TYPICAL only); with that diode open, the target held in reset by BOR level 2 (its rail under the" % (
+            B_MAX * 1e3 - 0.2, S["ldo_shdn"][0] * 1e9))
+        w("     output, at most %.4f V, under VBOR2's %.2f V falling minimum, PRINTED), B at most %.0f mA (ASSUMPTION): the second barrier" % (
+            S["ios"][1] * rt_band(S)[1], S["vbor2"][0][0], B_BOR * 1e3))
+        w("   record l9t5's supply path at board B (W138's reading of it): the least input %.4f V less %.5f Ohm times the lead's current; the served peak" % (fixed, r_sup))
+        w("     S3' %.4f A a supervisor (record l4reg's section 2)" % R["s3"])
         w("   the acceptance: a healthy limiter (%.4f to %.4f A) reads %.4f to %.4f A over every corner: PASS inside, LIMIT LOW under, LIMIT HIGH over (DRAFTED)" % (
             S["ios"][0], S["ios"][1], i_lo, i_hi))
         w("   a PASS admits IOS %.4f to %.4f A; the regulator's 125 C current is %.4f A, so every limit that passes keeps the regulator at %.1f C or less (76.0 C/W PRINTED)" % (
             pmin, pmax, i125, Erows["air"][0] + S["ldo_rja"][0] * drop * pmax))
         b_crit = i125 - (pass_band(S, i_lo, i_hi, bmax=0.0)[1])
         adc_crit = crit_adc(S, i125)
-        w("     the margin: the guarantee holds for the target's draw B up to %.1f mA (assumed %.0f mA) and for an ADC error up to +-%.0f mV at the pin (assumed %.0f mV)" % (
-            b_crit * 1e3, B_MAX * 1e3, adc_crit * 1e3, ADC_ERR * 1e3))
+        w("     the margin: the guarantee holds for B up to %.1f mA (%.1f mA with the EN diode, %.0f mA assumed without it) and for an ADC error up to +-%.0f mV at" % (
+            b_crit * 1e3, B_MAX * 1e3, B_BOR * 1e3, adc_crit * 1e3))
+        w("     the pin (assumed %.0f mV)" % (ADC_ERR * 1e3))
         w("     the low side: a pass admits IOS from %.4f A, %.4f A under the largest served peak %.4f A (S3'): such a limit latches its supervisor at that peak in" % (
             pmin, R["s3"] - pmin, R["s3"]))
         w("     service, a node out that canen restarts and the next test reads LOW only under %.4f A: a service residual stated, not a protection one (W146-F8)" % pmin)
@@ -997,9 +1017,15 @@ def main():
         w("     (MODEL on PRINTED, DRAFTED and the boot and domain ASSUMPTIONs; record l4canen's recovery %.3f s is step 4 plus its %.1f s decision)" % (
             S["recovery"], CEN.T_DEC))
         w("   THE SERVICE LOST: two of three serve for that interval (IOHA row 3: ownership unaffected); the quorum has no spare then (a second supervisor out")
-        w("     is row 4's home assignment); %.2f %% of the time at %.0f s a supervisor; the survivors keep their supply (J2 and record l4reg's J4 (c)) and" % (
+        w("     is row 4's home assignment); %.2f %% of the time at %.0f s a supervisor; the survivors keep their supply on the DC path (J2 and record" % (
             100 * 3 * T["out"] / T_PERIOD, T_PERIOD))
-        w("     their frames: the target's transceivers go to the protected mode (bus high impedance) as its rail falls under UV(VCC) %.2f to %.2f V (PRINTED)," % (
+        w("     l4reg's J4 (c)); the transient dip of +5V_IOC at the test's load step (at most %.4f A with a healthy limit, %.4f A with the limit lost, for the" % (
+            S["ios"][1], S["v5b"][1] / rt_band(S)[0]))
+        w("     closer's %.1f ms) is NOT bounded on printed figures (U601's load-transient response and the lead's inductance are not printed; the base" % (
+            T_ABORT_CLOSER * 1e3))
+        w("     design's own overload step of up to IOSmax has the same open term, W138's J7 being a DC row): PROVISIONAL, finding W146-F10, the supplier's")
+        w("     task in L4HOD.md; their frames hold: the target's transceivers go to the protected mode (bus high impedance) as its rail falls under")
+        w("     UV(VCC) %.2f to %.2f V (PRINTED)," % (
             S["tcan_uv"][0][0], S["tcan_uv"][0][2]))
         w("     its TXDs rest recessive on canmb's pull-ups, and W139's row R3 (a controller dark, its onset scanned over the window) reads '%s' with the" % S["r3"][0])
         w("     survivors' gap %d windows against the loss count %d: W139's loss count respected; the target itself is lost to the quorum by that count, as" % (
@@ -1026,13 +1052,14 @@ def main():
         resid = [r for r in rows if r[3] and r[3].startswith("NOT in service")]
         undetected = [r for r in rows if r[3] is None]
         off_rows = [r for r in rows if r[5]]
-        w("   %d rows; %d residuals, each with no effect alone (a gate's 1 kOhm short, a gate's 100 kOhm open, a reading capacitor open); none NOT FOUND" % (len(rows), len(resid))
+        w("   %d rows; %d residuals, each with no effect alone in service (a gate's 1 kOhm short, a gate's 100 kOhm open, a reading capacitor open, the EN diode open or short);"
+          " none NOT FOUND" % (len(rows), len(resid))
           if not undetected else "   %d rows; NOT FOUND: %d" % (len(rows), len(undetected)))
         w("   the ones that can leave a supervisor unpowered: %s" % "; ".join("%s, %s" % (r[0], r[1]) for r in off_rows))
         w("     a limiter whose latch EN does not clear (a part fault against 9.3.1's description) leaves it latched exactly as any real overload would; the")
         w("     test reveals it at once (step 4), canen's automatic restart retries every 10 s and RAIL_EN returns it: a stated residual of the part")
         w("   no single fault of the test path can load the rail outside a test (two halves in series, one per peer), hold a load past %.0f ms in step 2 or" % (T_SINGLE * 1e3))
-        w("     past the abort in step 3 (either peer opens its half), or leave the target latched: the restore route is proven %.3f s before the load (step 1)" % (
+        w("     past the abort in step 3 (either peer opens its half), or leave the target latched: the restore route is exercised %.3f s before the load (step 1)" % (
             T["step1"] + T_SETTLE + T["step2"]))
         cov = [r for r in S["canen_rows"]]
         if len(cov) != 6:
@@ -1047,7 +1074,7 @@ def main():
         w("     fault in both peers is outside the single-fault scope, as for every 2-of-2 vote of this plane")
         pm = [("a stuck test switch left undetected (step 2 omitted)", full - {"single_a", "single_b"}),
               ("a stuck lower half left undetected (step 2 checks the upper's partner only)", full - {"single_a"}),
-              ("the restore route not proven first (step 1 omitted)", full - {"pre"}),
+              ("the restore route not exercised first (step 1 omitted)", full - {"pre"}),
               ("one peer alone judging FAULT (no second reader)", full - {"two_readers"}),
               ("no continuous checks (FAULT and the output only at the test)", full - {"cont_fault", "cont_vout"})]
         pmut = []
@@ -1067,8 +1094,8 @@ def main():
         # ------------------------------------------------------------ 12. predicates
         pred["the composition: every order of canmb, regstage, canen and this draft composes, every step OK, the netlists identical"] = \
             same and all(runs[o_][2] for o_ in ORDERS) and len(ORDERS) == 5
-        pred["the parts: this draft adds 51 (the declared ones), removes none, changes the three limiters and the three controllers"] = \
-            len(added) == 51 and set(added) == set(H.ADDS) and not removed and set(retyped) == {"U41", "U45", "U51", "U55", "U61", "U65"}
+        pred["the parts: this draft adds 54 (the declared ones), removes none, changes the three limiters and the three controllers"] = \
+            len(added) == 54 and set(added) == set(H.ADDS) and not removed and set(retyped) == {"U41", "U45", "U51", "U55", "U61", "U65"}
         pred["CON-004 holds, canmb and canen's EN route still read DRAWN on the composed netlist"] = cv == "HOLDS" and mv == "DRAWN" and ev == "DRAWN"
         pred["the test path reads DRAWN by pin in every order; each test needs a 2-of-2 of its target's two peers; both peers read its output and FAULT"] = \
             all(v == "DRAWN" for v in hv_all.values()) and all(start_verdict(nl1, k)[0] == "2 of 2" for k in range(3))
@@ -1142,9 +1169,18 @@ def levels(S, R):
     i_pu = 2 * vdd_hi / (R_PU * (1 - R_PU_TOL))
     L.append("the loads the path adds: the two dividers %.3f mA on each limiter's output; a peer's rail carries its two FAULT pull-ups only while FAULT is low (%.3f mA); "
              "the gates draw nothing static: no case row changes (a labelled scenario for the coordinator, W146-F6)" % (i_div * 1e3, i_pu * 1e3 / 2))
-    L.append("the tested target while its limiter limits: its output %.3f to %.3f V (the reading's band) puts its rail under VBOR2's %.2f V falling minimum (PRINTED), so with BOR "
-             "at level 2 (DRAFTED, W146-D9) it is held in reset; its regulator's EN, pulled from that output, falls under 1.7 V and to under 0.5 V once latched (SBVS067W "
-             "5.6), so it blocks reverse current then (6.3.4)" % (S["ios"][0] * rt_band(S)[0] - B_MAX * rt_band(S)[0], S["ios"][1] * rt_band(S)[1], S["vbor2"][0][0]))
+    rfet_hot = S["rds25"][0] * S["rds10"][0][1] / S["rds10"][0][0]
+    v_en = S["ios"][1] * 2 * rfet_hot + S["vf"][0][0] + VF_COLD
+    i_en = S["ios"][1] * rt_band(S)[1] / 100e3
+    ok &= v_en < S["ldo_en_lo"][0] and i_en <= 0.1e-3
+    L.append("the tested target's regulator while the load conducts: the load's bottom at most %.4f V (IOSmax through both switches hot, INFERRED), its EN through the "
+             "BAT46W at most %.4f V (VF %.2f V at 0.1 mA PRINTED, it carries %.0f uA from the EN's 100 kOhm, and %.2f V for the cold, ASSUMPTION) against the TPS737's "
+             "%.1f V low (SBVS067W 5.6, PRINTED): the regulator is off and blocks reverse current (6.3.4, DESCRIBED); with either half open the load carries nothing, its "
+             "bottom sits at the output and the diode is off; with the limit lost the bottom rises to the lost current's drop and the test aborts anyway" % (
+                 S["ios"][1] * 2 * rfet_hot, v_en, S["vf"][0][0], i_en * 1e6, VF_COLD, S["ldo_en_lo"][0]))
+    L.append("the second barrier: while its limiter limits the output is %.3f to %.3f V, so the target's rail is under VBOR2's %.2f V falling minimum (PRINTED) and with BOR "
+             "at level 2 (DRAFTED, W146-D9) it is held in reset even with the EN diode open" % (
+                 (S["ios"][0] - B_BOR) * rt_band(S)[0], S["ios"][1] * rt_band(S)[1], S["vbor2"][0][0]))
     ok &= S["ios"][1] * rt_band(S)[1] < S["vbor2"][0][0]
     return dict(lines=L, ok=bool(ok))
 

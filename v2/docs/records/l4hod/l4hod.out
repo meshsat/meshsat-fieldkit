@@ -13,7 +13,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    c010ff134aa457ee v2/docs/records/l9t5/l9t5_canq.out
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
-   5eb51eff8de6240e v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
+   f8ae03bea14e144a v2/docs/records/l9t5/apply_gen_sch_b_hodtest.py
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
    9fbda7a6e79430c2 v2/docs/records/l4reg/l4reg_compare.out
    161f79300dc27748 v2/docs/records/l4reg/l4reg_compare.py
@@ -66,6 +66,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    TPS737 EN low                      0.5                          PRINTED  SBVS067W 5.6 p.6
    TPS737 VIN                         2.2, 5.5                     PRINTED  SBVS067W 5.3 p.4
    TPS737 IGND at 10 mA               0.0004                       TYPICAL  SBVS067W 5.6 p.6 (typical only)
+   TPS737 ISHDN                       2e-08                        TYPICAL  SBVS067W 5.6 p.6 (typical only)
    AO3400A VGS(th)                    0.65, 1.05, 1.45             PRINTED  AO3400A p.2 (TJ 25 C)
    AO3400A RDS(on) 2.5 V              0.048                        PRINTED  AO3400A p.2 (VGS 2.5 V, TJ 25 C)
    AO3400A RDS(on) 10 V 25/125 C      0.0265, 0.038                PRINTED  AO3400A p.2 (VGS 10 V: TJ 25 C and 125 C maxima)
@@ -93,7 +94,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    described: SLVS841F 10.1.1 (page 17, application information, 'not part of the TI component specification'): "The latch-off devices (TPS255x-1) assert the FAULT flag after the deglitch period and immediately turn off the device."
    described: SLVS841F 9.3.1 (page 13): "The device remains off until power is cycled or the device enable is toggled."; SBVS067W 6.3.4 (page 19): "To make sure that all charge is removed from the gate of the pass transistor, the EN pin must be driven low before the input voltage is removed."
    described: SLLSEQ7F 6.3.4 (page 19): "This protects the bus during an under voltage event on VCC by placing the bus into a high impedance biased to ground state"; RM0433 Rev 8 p.533: "During and just after reset, the alternate functions are not active and most of the I/O ports are configured in analog mode."
-   DS12110 Table 186 note 1: 'Data guaranteed by characterization for BGA packages. The values for LQFP packages might differ.' (no maximum printed)
+   DS12110 Table 186 note 1: "Data guaranteed by characterization for BGA packages. The values for LQFP packages might differ." (no maximum printed)
    the limiter's band with the 1 % RILIM (MODEL on PRINTED, W138's): 0.4702 to 0.5704 A; the regulator's 125 C current at the corner: 0.7399 A (76.25 C air, 0.8669 V drop)
 
 4. THE COMPOSITION on board B in L4-E9's change-list order: record l9t5's iocpre, canshdn, iocset and iocguard, then W137's canmb, W138's
@@ -104,17 +105,18 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
      order regstage, canmb, canen, hodtest:       22 steps, every one OK
      order regstage, canmb, hodtest, canen:       22 steps, every one OK
      order regstage, hodtest, canmb, canen:       22 steps, every one OK
-   the netlists of the 5 orders: IDENTICAL (1605 parts, 1165 nets); without this draft (canmb, regstage, canen): 1554 parts, 1132 nets
-   this draft adds 51: C970, C971, C980, C981, C990, C991, D404, D405, D414, D415, D424, D425, Q590, Q591, Q592, Q593, Q594,
-     Q595, R800, R801, R802, R803, R804, R805, R806, R807, R808, R809, R810, R820, R821, R822, R823, R824, R825, R826, R827,
-     R828, R829, R830, R840, R841, R842, R843, R844, R845, R846, R847, R848, R849, R850
+   the netlists of the 5 orders: IDENTICAL (1608 parts, 1165 nets); without this draft (canmb, regstage, canen): 1554 parts, 1132 nets
+   this draft adds 54: C970, C971, C980, C981, C990, C991, D404, D405, D406, D414, D415, D416, D424, D425, D426, Q590, Q591,
+     Q592, Q593, Q594, Q595, R800, R801, R802, R803, R804, R805, R806, R807, R808, R809, R810, R820, R821, R822, R823, R824,
+     R825, R826, R827, R828, R829, R830, R840, R841, R842, R843, R844, R845, R846, R847, R848, R849, R850
    it removes 0; changes the value or nets of 6: U41, U45, U51, U55, U61, U65
    CON-004 on the composed netlist (record l4canen's reading): HOLDS; canmb by pin on the limiter's state: DRAWN; canen's EN route by pin: DRAWN
 
 5. THE TEST PATH READ BY PIN (per controller t: the 3.0 Ohm on t's limiter output, the upper AO3400A gated by t's next controller through 1 kOhm
    with 100 kOhm to ground, the lower to ground gated by the one after, t's FAULT on its own node with the two peers' BAT46W cathodes, each
    anode on its peer's pin with 10 kOhm to that peer's own rail, each peer's 10k over 20k with 10 nF to its ADC pin; nothing else on these
-   nets; traced from the load to ground: who can start the test; traced from the output and FAULT: who reads them)
+   nets but the third BAT46W from t's regulator EN to the load's bottom; traced from the load to ground: who can start the test; traced from
+   the output and FAULT: who reads them)
      every order: MREH DRAWN, MRHE DRAWN, RMEH DRAWN, RMHE DRAWN, RHME DRAWN
      controller A's test: 2 of 2 (every path needs B and C); its output read by {B, C}, its FAULT by {B, C}
      controller B's test: 2 of 2 (every path needs A and C); its output read by {A, C}, its FAULT by {A, C}
@@ -173,22 +175,31 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    the loads the path adds: the two dividers 0.277 mA on each limiter's output; a peer's rail carries its two FAULT pull-ups
      only while FAULT is low (0.353 mA); the gates draw nothing static: no case row changes (a labelled scenario for the
      coordinator, W146-F6)
-   the tested target while its limiter limits: its output 1.288 to 1.792 V (the reading's band) puts its rail under VBOR2's
-     2.25 V falling minimum (PRINTED), so with BOR at level 2 (DRAFTED, W146-D9) it is held in reset; its regulator's EN, pulled
-     from that output, falls under 1.7 V and to under 0.5 V once latched (SBVS067W 5.6), so it blocks reverse current then
-     (6.3.4)
+   the tested target's regulator while the load conducts: the load's bottom at most 0.0785 V (IOSmax through both switches hot,
+     INFERRED), its EN through the BAT46W at most 0.4285 V (VF 0.25 V at 0.1 mA PRINTED, it carries 18 uA from the EN's 100 kOhm,
+     and 0.10 V for the cold, ASSUMPTION) against the TPS737's 0.5 V low (SBVS067W 5.6, PRINTED): the regulator is off and blocks
+     reverse current (6.3.4, DESCRIBED); with either half open the load carries nothing, its bottom sits at the output and the
+     diode is off; with the limit lost the bottom rises to the lost current's drop and the test aborts anyway
+   the second barrier: while its limiter limits the output is 1.288 to 1.792 V, so the target's rail is under VBOR2's 2.25 V
+     falling minimum (PRINTED) and with BOR at level 2 (DRAFTED, W146-D9) it is held in reset even with the EN diode open
    all levels hold: yes
 
 8. THE TEST'S ELECTRICAL ACCEPTANCE (the judge; MODEL on PRINTED; ASSUMPTION and DRAFTED figures named)
    the reading (each peer, its own): I = V / 3.0 Ohm from the output's mean 1 to 4 ms after the drop, the pin's voltage taken against the peer's own
      3.3 V as 3.3 V; its error terms over every corner: R_T 2.8602 to 3.1417 Ohm (1 %, 200 ppm/C over 51 K PRINTED, the load life's +-(1 % + 0.05 Ohm) as ageing,
      ASSUMPTION past 1,000 h); the divider 0.66565 to 0.66768 (0.1 %, 25 ppm/C); the rail 3.2422 to 3.3577 V (record l4canen's envelope); the ADC +-10 mV at the pin
-     (ASSUMPTION: Table 186's TYPICAL +10/-20 LSB at 16 bits, no maximum printed, characterised on BGA); the target's own draw B 0 to 20 mA (ASSUMPTION: held in reset)
-   the acceptance: a healthy limiter (0.4702 to 0.5704 A) reads 0.4163 to 0.6140 A over every corner: PASS inside, LIMIT LOW under, LIMIT HIGH over (DRAFTED)
-   a PASS admits IOS 0.3852 to 0.6815 A; the regulator's 125 C current is 0.7399 A, so every limit that passes keeps the regulator at 121.1 C or less (76.0 C/W PRINTED)
-     the margin: the guarantee holds for the target's draw B up to 78.4 mA (assumed 20 mA) and for an ADC error up to +-65 mV at the pin (assumed 10 mV)
-     the low side: a pass admits IOS from 0.3852 A, 0.0388 A under the largest served peak 0.4240 A (S3'): such a limit latches its supervisor at that peak in
-     service, a node out that canen restarts and the next test reads LOW only under 0.3852 A: a service residual stated, not a protection one (W146-F8)
+     (ASSUMPTION: Table 186's TYPICAL +10/-20 LSB at 16 bits, no maximum printed, characterised on BGA); what the output feeds besides the load, B, 0 to
+     0.5 mA: the two dividers and the regulator's EN pull-up at the output's top (MODEL on the drawn resistors) and the regulator held off by the
+     EN diode (ASSUMPTION 0.3 mA: ISHDN 20 nA TYPICAL only); with that diode open, the target held in reset by BOR level 2 (its rail under the
+     output, at most 1.7919 V, under VBOR2's 2.25 V falling minimum, PRINTED), B at most 20 mA (ASSUMPTION): the second barrier
+   record l9t5's supply path at board B (W138's reading of it): the least input 3.7579 V less 0.04252 Ohm times the lead's current; the served peak
+     S3' 0.4240 A a supervisor (record l4reg's section 2)
+   the acceptance: a healthy limiter (0.4702 to 0.5704 A) reads 0.4345 to 0.6140 A over every corner: PASS inside, LIMIT LOW under, LIMIT HIGH over (DRAFTED)
+   a PASS admits IOS 0.4023 to 0.6620 A; the regulator's 125 C current is 0.7399 A, so every limit that passes keeps the regulator at 119.9 C or less (76.0 C/W PRINTED)
+     the margin: the guarantee holds for B up to 78.4 mA (0.5 mA with the EN diode, 20 mA assumed without it) and for an ADC error up to +-83 mV at
+     the pin (assumed 10 mV)
+     the low side: a pass admits IOS from 0.4023 A, 0.0217 A under the largest served peak 0.4240 A (S3'): such a limit latches its supervisor at that peak in
+     service, a node out that canen restarts and the next test reads LOW only under 0.4023 A: a service residual stated, not a protection one (W146-F8)
    J0 holds every figure used as a limit is PRINTED: yes
    J1 holds the demand at the least input 1.0767 A against IOSmax 0.5704 A (R_T 3.142 Ohm at its top, both switches 0.0688
       Ohm hot INFERRED, the limiter 0.135 Ohm, the others at 0.4240 A each): 1.89 times
@@ -197,7 +208,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    J3 holds the healthy test puts at most 1.022 W in R_T for at most 10 ms (rated 1 W at 70 C); a lost limit puts at most
       4.1174 V across it for at most 0.2 ms (its closer's abort, 3.2 ms by the other peer), inside the series' short-time
       overload of 2.5 x RCWV = 4.330 V for 5 s (PRINTED)
-   J4 holds a healthy limiter reads 0.4163 to 0.6140 A; a pass admits IOS 0.3852 to 0.6815 A, under the regulator's 125 C
+   J4 holds a healthy limiter reads 0.4345 to 0.6140 A; a pass admits IOS 0.4023 to 0.6620 A, under the regulator's 125 C
       current 0.7399 A (76.0 C/W PRINTED, 0.8669 V drop): a lost limit (IOS over it) never passes
    J5 holds the output while a healthy limiter limits is at most 1.7919 V and reads at most 1.8419 V; with the limit lost it
       is at least 3.3911 V (the least input less the lost current 1.4396 A and the target's 0.4240 A through the limiter's 0.135
@@ -206,7 +217,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
       most that and nothing latches
    J7 holds the reading 1.0 to 4.0 ms after the drop each peer sees, before the least deglitch 5.0 ms; its start 1 ms after
       the drop is 500 times the TYPICAL 2 us response (ASSUMPTION that the limit has settled)
-   J8 holds the limiter dissipates at most 16.1 mJ in a test (its drop at most 2.8297 V at IOSmax for the 10 ms deglitch),
+   J8 holds the limiter dissipates at most 15.8 mJ in a test (its drop at most 2.7739 V at IOSmax for the 10 ms deglitch),
       inside W138's 23.5 mJ latch case (an output short)
    J9 holds the gates at least 2.8141 V (VOH at -8 mA, 1 kOhm and 100 kOhm); the upper switch's VGS at least 2.7150 V with
       1.4396 A in the lower: over the 2.5 V RDS(on) row; 1.4396 A against ID 4.7 A at 70 C
@@ -224,8 +235,8 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    step 0, the announcement (0.100 s): both peers mark the target under test in their state frames (one window); from here
       canen's automatic restart and FW-B21's stop do not act on it and the self-test's phases skip by their own precondition
       (all three functional)
-   step 1, the restore route proven (2.190 s): both peers assert their restart votes (record l4canen's route); each sees the
-      output under 2.0 V within 1.384 s (the gate over 2.5 V 1.208 s, the limiter's turn-off 3 ms PRINTED, the node and the
+   step 1, the restore route exercised (2.190 s): both peers assert their restart votes (record l4canen's route); each sees
+      the output under 2.0 V within 1.384 s (the gate over 2.5 V 1.208 s, the limiter's turn-off 3 ms PRINTED, the node and the
       target's domain (16 uF, ASSUMPTION) on the two dividers alone), releases, and sees it back over 3.3 V within 0.804 s (the
       gate under its threshold 0.799 s, ton 3 ms and tr 1.5 ms PRINTED); else ABORT, nothing latched
    step 1s, settle (0.020 s): the output at 3.3 V or more for 20 ms (the target restarting under its limiter)
@@ -246,8 +257,12 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    THE INTERVAL THE TARGET IS OUT of the quorum: 5.945 s (the announcement 0.1 s, step 1 2.190 s, settle 0.020 s, step 2 0.012 s, step 3 0.019 s, step 4 3.604 s)
      (MODEL on PRINTED, DRAFTED and the boot and domain ASSUMPTIONs; record l4canen's recovery 5.603 s is step 4 plus its 2.0 s decision)
    THE SERVICE LOST: two of three serve for that interval (IOHA row 3: ownership unaffected); the quorum has no spare then (a second supervisor out
-     is row 4's home assignment); 0.50 % of the time at 3600 s a supervisor; the survivors keep their supply (J2 and record l4reg's J4 (c)) and
-     their frames: the target's transceivers go to the protected mode (bus high impedance) as its rail falls under UV(VCC) 1.65 to 2.50 V (PRINTED),
+     is row 4's home assignment); 0.50 % of the time at 3600 s a supervisor; the survivors keep their supply on the DC path (J2 and record
+     l4reg's J4 (c)); the transient dip of +5V_IOC at the test's load step (at most 0.5704 A with a healthy limit, 1.4396 A with the limit lost, for the
+     closer's 0.2 ms) is NOT bounded on printed figures (U601's load-transient response and the lead's inductance are not printed; the base
+     design's own overload step of up to IOSmax has the same open term, W138's J7 being a DC row): PROVISIONAL, finding W146-F10, the supplier's
+     task in L4HOD.md; their frames hold: the target's transceivers go to the protected mode (bus high impedance) as its rail falls under
+     UV(VCC) 1.65 to 2.50 V (PRINTED),
      its TXDs rest recessive on canmb's pull-ups, and W139's row R3 (a controller dark, its onset scanned over the window) reads 'a node out and contained' with the
      survivors' gap 0 windows against the loss count 3: W139's loss count respected; the target itself is lost to the quorum by that count, as
      planned, and rejoins listening first (W139-D9)
@@ -313,6 +328,10 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
    a peer's 10 nF | short | that peer reads 0 V | no | that peer: the output out of its band | within 0.3 s (continuous)
    a peer's 10 nF | open | the sample taken from 6.67 kOhm (a long sampling time, DRAFTED) | no | NOT in service: RESIDUAL |
       none
+   the EN diode (BAT46W) | open | the target's regulator stays on in the load; BOR level 2 holds the target in reset (B at
+      most 20 mA, ASSUMPTION, inside the guarantee's margin) | no | NOT in service: RESIDUAL | none
+   the EN diode (BAT46W) | short | in service none (the load's bottom sits at the output); with the bench jumper fitted the
+      load sits across the output and the limiter latches (bench only) | no | NOT in service: RESIDUAL | none
    a peer's ADC pin or its reading | stuck inside the band | that peer sees no drop | no | step 3: the two peers disagree
       (one aborts) | within the test period
    canen's restore route | cannot pull EN low (six of its seven recovery residuals) | the test would latch the target for
@@ -321,12 +340,12 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
       own single faults, found at once | no | canen 8: its frames absent | at once (canen)
    the limiter | its latch not cleared by EN (against 9.3.1's description) | the test leaves the target latched | YES | step
       4: the output not back | at once
-   33 rows; 3 residuals, each with no effect alone (a gate's 1 kOhm short, a gate's 100 kOhm open, a reading capacitor open); none NOT FOUND
+   35 rows; 5 residuals, each with no effect alone in service (a gate's 1 kOhm short, a gate's 100 kOhm open, a reading capacitor open, the EN diode open or short); none NOT FOUND
    the ones that can leave a supervisor unpowered: the limiter, its latch not cleared by EN (against 9.3.1's description)
      a limiter whose latch EN does not clear (a part fault against 9.3.1's description) leaves it latched exactly as any real overload would; the
      test reveals it at once (step 4), canen's automatic restart retries every 10 s and RAIL_EN returns it: a stated residual of the part
    no single fault of the test path can load the rail outside a test (two halves in series, one per peer), hold a load past 4 ms in step 2 or
-     past the abort in step 3 (either peer opens its half), or leave the target latched: the restore route is proven 2.222 s before the load (step 1)
+     past the abort in step 3 (either peer opens its half), or leave the target latched: the restore route is exercised 2.222 s before the load (step 1)
    step 1 exercises record l4canen's route end to end every test: of canen's 12 residuals (7 of the recovery only), these become detected within the
      test period (finding W146-F1): the RC's 100 kOhm open; the RC's 4.7 uF short; the FET's 1 MOhm short; the AO3400A open, or gate-source short; the 470 Ohm open; the EN pull-up (10 kOhm) short
    double faults, named and bounded (each half of the pair found first within the test period): the test load shorted AND the limit lost: the
@@ -336,7 +355,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
      fault in both peers is outside the single-fault scope, as for every 2-of-2 vote of this plane
    mutated procedure, a stuck test switch left undetected (step 2 omitted):                            FAIL (3 NOT FOUND; 1 leave a supervisor off)
    mutated procedure, a stuck lower half left undetected (step 2 checks the upper's partner only):     FAIL (2 NOT FOUND; 1 leave a supervisor off)
-   mutated procedure, the restore route not proven first (step 1 omitted):                             FAIL (1 NOT FOUND; 2 leave a supervisor off)
+   mutated procedure, the restore route not exercised first (step 1 omitted):                          FAIL (1 NOT FOUND; 2 leave a supervisor off)
    mutated procedure, one peer alone judging FAULT (no second reader):                                 FAIL (5 NOT FOUND; 1 leave a supervisor off)
    mutated procedure, no continuous checks (FAULT and the output only at the test):                    FAIL (7 NOT FOUND; 1 leave a supervisor off)
 
@@ -346,7 +365,7 @@ prototype design, nothing built or measured; it closes no cx46 item and moves no
 
 12. THE PREDICATES (v2/ecad/tools/tests/test_l4hod.py holds them)
    the composition: every order of canmb, regstage, canen and this draft composes, every step OK, the netlists identical: yes
-   the parts: this draft adds 51 (the declared ones), removes none, changes the three limiters and the three controllers: yes
+   the parts: this draft adds 54 (the declared ones), removes none, changes the three limiters and the three controllers: yes
    CON-004 holds, canmb and canen's EN route still read DRAWN on the composed netlist: yes
    the test path reads DRAWN by pin in every order; each test needs a 2-of-2 of its target's two peers; both peers read its output and FAULT: yes
    every netlist mutation FAILS (seven), a test a single peer can start and a test that cannot detect a lost limit among them: yes

@@ -24,15 +24,20 @@ one supervisor out (IOHA row 3), so the other two can test each supervisor's lim
      (R805, R806): FAULT low pulls each pin low; a dark peer's diode is reverse biased and loads nothing.
   4. THE OUTPUT READ: each peer reads the limiter's output on its own ADC pin through its own 10 kOhm over 20 kOhm, 0.1 % 25 ppm
      (R807 and R808; R809 and R810), with 10 nF at the pin (C970, C971; C980, C981; C990, C991).
-  5. THE PINS (per controller): PE12 and PE13 (pins 42 and 43, outputs) its half of the test switch on the next controller and on the
+  5. THE TARGET'S REGULATOR OFF WHILE THE LOAD CONDUCTS: a third BAT46W (D406, D416, D426) from the target's regulator EN
+     (IOC{t}_LDO_EN, anode) to the load's bottom (IOC{t}_TL, cathode): with both halves closed the load's bottom sits near ground and
+     pulls that EN under the TPS737's 0.5 V, so the regulator is off, blocks reverse current (SBVS067W 6.3.4) and the target draws
+     nothing from the output the peers read; with either half open the load carries no current, its bottom sits at the output and
+     the diode is off (the bench jumper J_IOCOFF still holds the EN low as before).
+  6. THE PINS (per controller): PE12 and PE13 (pins 42 and 43, outputs) its half of the test switch on the next controller and on the
      one after; PE14 and PE15 (pins 44 and 45, inputs) their FAULT; PC0 (pin 15, ADC123_INP10) and PC1 (pin 16, ADC123_INP11) their
      output, both FT pins (a shorted divider leaves the limiter's output on the pin, inside an FT pin's limit while it is powered). Free on the composed map (43 of 100 used with canen; 49 with this draft).
 The procedure (record l4hod section 9, DRAFTED for Layer 5's contract; L4A-61 propagates it): the two peers take the target out of the
-quorum; prove the restore route by pulling its EN low and releasing it (record l4canen's route); close each half alone for 4 ms (a
+quorum; exercise the restore route by pulling its EN low and releasing it (record l4canen's route); close each half alone for 4 ms (a
 stuck other half shows as a load, under the 5 ms printed least deglitch, so nothing latches); close both, read the output (the limit's
 current through the 3.0 Ohm) and FAULT (its 5 to 10 ms deglitch) and the latch; open; restore through the EN route; the target rejoins.
-Designators added: R800 to R810, R820 to R830, R840 to R850, Q590 to Q595, D404, D405, D414, D415, D424, D425, C970, C971, C980, C981,
-C990, C991 (51 parts); none removed; changed: U45, U55, U65 (pin 4, FAULT, from NC to IOC{t}_LIM_FLT); the controllers' pins 15, 16 and 42
+Designators added: R800 to R810, R820 to R830, R840 to R850, Q590 to Q595, D404 to D406, D414 to D416, D424 to D426, C970, C971, C980,
+C981, C990, C991 (54 parts); none removed; changed: U45, U55, U65 (pin 4, FAULT, from NC to IOC{t}_LIM_FLT); the controllers' pins 15, 16 and 42
 to 45. Order codes owed (Layer 6): the 3.0 Ohm 2512, the two 0.1 % values, the 10 nF.
 Usage:  apply_gen_sch_b_hodtest.py TARGET [--check | --write]     (default --check: nothing is written)
 Exit 0: checked (or written); 3: refused (already applied, regstage absent, an old text missing, a designator or a pin in use, or the
@@ -46,7 +51,7 @@ import sys
 NAME = "apply_gen_sch_b_hodtest"
 BOARD = "b"
 ADDS = (tuple("R%d" % (800 + 20 * k + n) for k in range(3) for n in range(11)) + tuple("Q%d" % (590 + n) for n in range(6))
-        + tuple("D%d" % (404 + 10 * k + n) for k in range(3) for n in (0, 1)) + tuple("C%d" % (970 + 10 * k + n) for k in range(3) for n in (0, 1)))
+        + tuple("D%d" % (404 + 10 * k + n) for k in range(3) for n in (0, 1, 2)) + tuple("C%d" % (970 + 10 * k + n) for k in range(3) for n in (0, 1)))
 REMOVES = ()
 CHANGED = tuple("U%d" % (45 + 10 * k) for k in range(3))
 # the pin plan, read by record l4hod (never typed there): LQFP-100 pin -> (port, use, which target: 1 the next controller, 2 the one after)
@@ -83,7 +88,9 @@ _NEW_RL = (
     '    r(_hr(5), "10k", "+3V3_IOC%s" % _hp, _hfa); part(_GD(4), "Device", "D_Schottky", "BAT46W-7-F: controller %s reads controller %s\'s limiter FAULT (cathode on FAULT)" % (_hp, _tag), "SOD123", {"1": _hfl, "2": _hfa}, "C83152")\n'
     '    r(_hr(6), "10k", "+3V3_IOC%s" % _hq, _hfb); part(_GD(5), "Device", "D_Schottky", "BAT46W-7-F: controller %s reads controller %s\'s limiter FAULT (cathode on FAULT)" % (_hq, _tag), "SOD123", {"1": _hfl, "2": _hfb}, "C83152")\n'
     '    r(_hr(7), "10k 0.1% 25ppm", "IOC%s_LDO_IN" % _tag, _hva); r(_hr(8), "20k 0.1% 25ppm", _hva, "GND"); c("C%d" % (970 + 10 * _k), "10n", _hva, "GND")   # the next controller\'s read of the output\n'
-    '    r(_hr(9), "10k 0.1% 25ppm", "IOC%s_LDO_IN" % _tag, _hvb); r(_hr(10), "20k 0.1% 25ppm", _hvb, "GND"); c("C%d" % (971 + 10 * _k), "10n", _hvb, "GND")   # the one after\'s\n')
+    '    r(_hr(9), "10k 0.1% 25ppm", "IOC%s_LDO_IN" % _tag, _hvb); r(_hr(10), "20k 0.1% 25ppm", _hvb, "GND"); c("C%d" % (971 + 10 * _k), "10n", _hvb, "GND")   # the one after\'s\n'
+    '    part(_GD(6), "Device", "D_Schottky", "BAT46W-7-F: the conducting test load holds controller %s\'s regulator off (anode on its EN, cathode on the load\'s bottom)" % _tag, "SOD123",\n'
+    '         {"1": _htl, "2": "IOC%s_LDO_EN" % _tag}, "C83152")   # with either half open the load\'s bottom sits at the output and this diode is off\n')
 _OLD_SYN = '    # D-13, 26 September 2026: the symbol, the value and the order line name the part bought, STM32H743VIT6 (C114409).\n'
 _NEW_SYN = (
     "    # L4A-58 (record l4hod, W146; apply_gen_sch_b_hodtest.py, NOT APPLIED): the limiter's in-service test. PE12 and PE13 (pins 42 and 43,\n"
