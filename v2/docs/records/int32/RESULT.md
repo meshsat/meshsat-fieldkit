@@ -11,20 +11,22 @@ to 13.4, none `REVIEWED-INPUT CHANGED`, read by W87, an AI review, and each stil
 `v2/docs/records/int32/ENTRY-PAGES.patch.md` (held by `test_patch32.py` against the pages as set 32's integration holds them, section 7), corrected by W102 on W99's independent read of them; W109's F2 to F4, W110's B1, B2 and C1 to C3 and W106's N-c answered by W113 on
 fnd/adopt32 (the classification's rows 31 to 33 prepared in its section 3; section 8); W109's phase 2 findings 3 and 4 answered by
 W128 (section 3b's paragraph "After the chain's stop": C1, fnd/l3r5keep's merge and C1b, and r1's line moves in three tests; the
-classification's rows 31.7 to 31.8 and row 13.2's note). **NOT DONE:** everything the integration will give: set 31's promoted
+classification's rows 31.7 to 31.8 and row 13.2's note); W132's condition 2 answered by W154 (queue item Q-176) before the
+adoption: section 3b's C1b values filled from git and the logs, the classification's integration rows 31.1 to 33 written from git in
+its section 1 (its section 3 removed; rows 32 and 33 keep their sha cells' tokens), `test_res32.py` restated over the integration's
+commits. **NOT DONE:** everything the integration will give: set 31's promoted
 revision (the record's BASE row; the chain's base is main's tip at its start, section 3b), the chain's counts and the freeze's and the gate's lines, the re-key's cache commit, the candidate, the
-promotion and the adoption commit, each a placeholder that the coordinator's fill tool fills (the paragraph "Placeholders" below);
-C1b's values in section 3b, each a `[FILL: ...]` (C1b did not exist when W128 wrote them; its sha comes by the coordinator's message).
+promotion and the adoption commit, each a placeholder that the coordinator's fill tool fills (the paragraph "Placeholders" below).
 **NEXT:** at the adoption, in this order: the coordinator runs the fill tool on both files and the patch file they name (`<worktrees>/_bin/fill_res.py --set 32`:
 template, values, apply; ADOPTION in its second run; `test_res32.py` holds this file before the fill and after each run, W80), after
 merging branch fnd/adopt32 (W105: the patch file's rows applied to the four pages with their tokens, the tests of set 31's pages that
 the rows break restated, `test_adopt32` new; the patch file's paragraph "The rows applied and the tests restated"), so that the
 fill's first run fills the four pages' CANDIDATE and GATE tokens and its second run their two ADOPTION cells (the patch file's rows
 S-07 and U-05) with the rest, since W103 extended `fill_res.py --set 32` to the four pages (queue item Q-124; W106's N-a), confirms
-W99's notes N6 and N7 before the adoption commit (the patch file's NEXT, item 3; W106's N-b), writes
-the classification's row 31 in full (it carries no token) and its rows 32 and 33's other cells from git by hand, recomputes its section
-2, extends the ranges of `test_res32.py` over the integration's commits (the chain's base, main's tip at its start, to the candidate
-on the first-parent line; set 31's promoted revision, the BASE row, is an ancestor of that base and never on that line: W110's B2),
+W99's notes N6 and N7 before the adoption commit (the patch file's NEXT, item 3; W106's N-b), finds
+the classification's integration rows written (rows 31.1 to 33 from git, its section 2 recomputed and the ranges of `test_res32.py`
+extended over the integration's commits, from the chain's base, main's tip at its start, to the candidate on the first-parent line,
+before the adoption by W154; set 31's promoted revision, the BASE row, is an ancestor of that base and never on that line: W110's B2),
 restates this header and the patch file's for the state
 after the fill and the adoption, and adopts this file with `CLASSIFICATION.md`; then the coordinator's dependency pass for the
 changed pages (l8gnd's pin of LAYER-STATUS and its cascade), as after set 31.
@@ -74,7 +76,8 @@ can stand for two commits: PROMOTED stands for set 31's promoted revision where 
 section 1's BASE row) and for set 32's promotion where its line names set 32 (three occurrences, each line naming set 32; W75's F9).
 ADOPTION is the adoption commit, which cannot name itself: it is left for the tool's second run (its DEFER value), as set 31's. A value
 that only text can give is never a commit token: section 4's re-key row and the KEY check's line on it are two rows (W75's F6), and the
-classification's row 31, several commits that do not exist yet, carries no token (W75's F11). Taken under the owner's standing rule of
+classification's integration rows, several commits written from git one row each (rows 31.1 to 31.9.1, W154), carry no token (W75's
+F11). Taken under the owner's standing rule of
 26 September 2026 (authority SESSION, W73): reversed by giving set 31's promoted revision a token of its own, which needs the fill
 tool's pattern widened first (fill_res.py refuses an upper-case token it does not know, W76) and `test_res32`'s token check restated
 with it (W75's N3).
@@ -89,7 +92,7 @@ with it (W75's N3).
 | Branch A: fnd/w34pdftext (chain step a2) | `62300318cbf256a178659d7635ecfd4a318c47d3` (W81's fix; W73 read `b397aada17befd8c6ee8be09550a785139c45066`) | 17 commits over `aed4bd234644c80fa494299b21099acf6d2454c1` (its merge base with set 31's lineage), no merge, no output committed; W36 read its commit `6dc69ad2` (section 2b); W81's four (rows 13.1 to 13.4) read by W87 (section 2b) | `git rev-list --count aed4bd23..62300318`; `git merge-base aa332280 62300318` |
 | Branch B: fnd/s32attr (step a2b) | `9210ab541e8144af530f928c1da98b96f90c89fd` | 2 commits over `5b3153aa4136f08ab186a2b5da53c1c4f0c3ecac` (W53 cut it from branch A's commit 5b3153aa, which step a2 merges first), no merge, no output committed; no independent reader | `git rev-list --count 5b3153aa..9210ab54` |
 | Branch C: fnd/s32small (step a3) | `7b7219a7d0a695b6b866435116905964a68f5578` | 4 commits over `eff28be3b80f882db545a849b0da1def0217f63d` (main's follow-up after set 30's adoption), no merge, no output committed; W52 read it at this tip (section 2b) | `git rev-list --count eff28be3..7b7219a7` |
-| Branch D: fnd/res32 (step a3b), this record | `7ae6175814b7824b3a9f69357ec75e9810a41da4` as the chain pinned it when W73 began | 5 commits over `3057ae43f4fb7fc5e3d6282ce52d448c8ee27929`, new files only (this record and `test_res32.py`); W73's and W78's commits after it are the integration's placeholder row 31 | `git rev-list --count 3057ae43..7ae61758` |
+| Branch D: fnd/res32 (step a3b), this record | `7ae6175814b7824b3a9f69357ec75e9810a41da4` as the chain pinned it when W73 began | 5 commits over `3057ae43f4fb7fc5e3d6282ce52d448c8ee27929`, new files only (this record and `test_res32.py`); W73's to W102's commits after it are the integration's rows 31.4.1 to 31.4.12 | `git rev-list --count 3057ae43..7ae61758` |
 | Branch E: fnd/l4e7cache (step a3c), WP-B | `5ee1e66eb8787a788647305509ae6c2700144d9a` | 6 commits over `31928583c612ea43df17df5d7e0cbb2f66090f8e` (its merge base with set 31's lineage, W41's converged commit), no merge, no output and no results cache committed; W64 read `849e66c7`, W70 rechecked `849e66c7..2d81d8b2` (section 2g) | `git rev-list --count 31928583..5ee1e66e`; `git merge-base aa332280 5ee1e66e` |
 | The re-key's cache commit | `__REKEY__` | record l4e7's results cache re-keyed ONCE on a fresh debian:12 box at the lineage tip that holds `5ee1e66e`, after the converged commit and its independent read (section 3c) | the coordinator's commit on set 32's integration branch |
 | INTEGRATED = CANDIDATE: the candidate commit | `__CANDIDATE__` | no independent check of its engineering | the coordinator's commit on set 32's integration branch |
@@ -126,7 +129,7 @@ regenerate include files cx46 read.
 | fnd/s32small | 16 | W40, Q-59 (Q-53) | W36's F-S1, decided by the coordinator (section 2d) | `pack.yaml`'s `max_zip_bytes` from 52,428,800 to 104,857,600 with its reason, the old comments dated, a test of the cap and of the estimate's positive margin |
 | fnd/s32small | 17 | W40, Q-59 (Q-55) | the record's own invariant, V-E16 mirrors the register (section 2d) | `s32small/apply_q55_ve16.py`, run on the merged tree only: N1a's phrase into V-E16 row 3 of `HW-FW-CONTRACT.md`, `test_w8l5`'s tree check, `test_l5pwr`'s L5-F09 d reading; the README with Q-53's estimator readings |
 | fnd/s32small | 18, 19 | W47, Q-65 | W40's and W43's left-outs: Q-55's change-record row and `TP-SOLAR.md` line 297's quote of V-E16 row 3 | the same script's edits 5 and 6 (one change-record row in `HW-FW-CONTRACT.md`; the register's annotated U5 line as `TP-SOLAR.md`'s own quote beside line 297, with a dated lead-in) and `test_w8l5`'s check of both; the README with the scratch-clone check and the added step (regenerate `tp_check.out`) |
-| fnd/res32 | 20 to 24 | W44, Q-64; W50, Q-69 | set 32's adoption needs its record | this record's first draft and its rule restated under reading A (W73's commits after `7ae61758` are row 31's) |
+| fnd/res32 | 20 to 24 | W44, Q-64; W50, Q-69 | set 32's adoption needs its record | this record's first draft and its rule restated under reading A (the commits after `7ae61758` are rows 31.4.1 to 31.4.12) |
 | fnd/l4e7cache | 25 to 30 | W61, Q-80; W67, Q-86; W71, Q-91 | the owner's workflow request of 18:29, item 2, and the constitution's section 8 (a cache key covers model code, relevant inputs and material tool versions; unrelated prose need not invalidate) | WP-B: record l4e7's results cache KEY holds the sixteen numbers the record reads of `l4e11_power.out` (part `l4e11_numbers`, a strict extractor), the file's whole digest kept as evidence; W64's F-1 and F-4 corrected by W67 (in W70's words, `<worktrees>/_runs/claude/w70rechkkey/REPORT-AS-RECEIVED.md:7` `W67's corrections answer W64's F-1 and F-4`), W70's R-2 to R-6 answered by W71 (no independent reader after it, section 2g); nothing re-keyed and no output regenerated on the branch (section 2g) |
 
 Q-41 item 1, as the queue states it: `<worktrees>/_runs/int30/QUEUE.md`, entry "| Q-41 |", `pin the EXTRACTED TEXT as a verbatim input beside the PDF`.
@@ -195,7 +198,7 @@ poppler-data on the box (`<worktrees>/_runs/int32/README.md` `converted records'
   The question first written here, whether step a6 is acknowledged without a further hook, is answered by the chain (W109's F3,
   W107's finding 3; restated by W113): step a6 runs one hook, `hook_a6.sh` (the chain's PRE_REGEN_HOOK since W104, on W100's B4),
   which inserts `test_pdftext_input.py`'s KNOWN_RECVIA row for `test_l4e7_cachekey.py`, set 32's integration input change, committed
-  with the converged outputs (section 3b's a6 row; the classification's row 31):
+  with the converged outputs (section 3b's a6 row; the classification's row 31.6):
   `<worktrees>/_runs/int32/real-0115.log:102` `hook_a6: inserted v2/ecad/tools/tests/test_pdftext_input.py's KNOWN_RECVIA row`;
   the chain's a6 lines: `__GATE__`.
 
@@ -218,7 +221,7 @@ cx45. W53 prints each word as its check's at the generator lines and keeps the p
 The check words are the checks' own: `3057ae43:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `"summary": "P0 RECHECK: CORRECTIONS NOT CLOSED.`
 No figure changed and no state moved off OPEN; the classification classes the commit REVIEWED-INPUT CHANGED under reading A because it
 carries set 30's row 8's verdict words into files of the delta cx46 read (row 14), and its tests' commit too, because it quotes row 14's
-words into two test files of that delta (row 15, the coordinator's ruling on W75's F2); the two outputs move at the integration (row 31).
+words into two test files of that delta (row 15, the coordinator's ruling on W75's F2); the two outputs move at the integration (row 31.6).
 No independent reader read the branch.
 
 ### 2g. WP-B (fnd/l4e7cache): what it changes, and the independent checks with their verdicts as given
@@ -333,7 +336,7 @@ The chain's log is the path given as its second argument (`_runs/int32/chain-<HH
 
 **After the chain's stop: C1, fnd/l3r5keep and C1b** (written by W128, 7 October 2026, from 03:44 CEST, on W109's phase 2 findings
 3 and 4, an AI review, not a qualified one; record text read from git and the logs, nothing regenerated; each value C1b alone can give
-is a `[FILL: ...]` for the coordinator, from git and the logs named, C1b's sha from the coordinator's message).
+was left for the coordinator until C1b existed; W154 filled each from git and the logs named, below).
 
 - **C1.** The chain stopped at h by design, `<worktrees>/_runs/int32/real-0115.log:715` `== chain ended at 2026-10-07 03:22:47 CEST (exit 5)`,
   and the coordinator committed its converged outputs as C1, `ed17ac04` (`<worktrees>/_runs/int30/QUEUE.md`, entry "03:23:27 (clock) C1 COMMITTED on fnd/int32", `55 paths, explicit, every one`;
@@ -364,17 +367,24 @@ is a `[FILL: ...]` for the coordinator, from git and the logs named, C1b's sha f
   and its stability pass identical (`<worktrees>/_runs/int32/c1b-l4chain-0330.log:24` `regen_out: v2/docs/records/l4e9/l4e9_power_path.out already identical`);
   then the targeted pass from base `258e9a7d`, so that both pages count as changed (`<worktrees>/_runs/int30/QUEUE.md`, entry "W109's early finding (message, about 03:35)", `TAKEN: regen_targeted with base 258e9a7d (both pages count as changed)`),
   restarted after the five files were restored, `<worktrees>/_runs/int32/c1b-targeted2-0341.log:1` `at 2026-10-07 03:41:05 CEST`.
-  C1b's values, each for the coordinator: [FILL: the targeted pass's last round, from `<worktrees>/_runs/int32/c1b-targeted2-0341.log`:
-  a round with 0 replaced and only the by-design refusals]; [FILL: `h3/zip_size_estimate.out`, replaced in round 1, back at its
-  committed bytes by the chain's d13 policy]; [FILL: the two old digests at C1b: `git grep -F d8882cd01e9df691 <C1b> -- '*.out'`
-  prints nothing, and `git grep -F a7bc3974e9c57998 <C1b> -- '*.out'` prints only `l8gnd_drafts.out`'s line for `LAYER-STATUS.md`, its
-  current digest]; [FILL: the five files equal to `258e9a7d`'s bytes at C1b, read with `git diff`]; [FILL: the KEY-only check on C1b,
-  MISMATCH b8fc6fe2d285112c to 6e11114faadda427 on src, files and l4e11_numbers as at step f]; [FILL: the affected tests on C1b as
-  run.py prints them, test_recpack, test_w17p0list, test_lstat31, test_lstat32, test_pdftext_input, test_l5pwr, test_remeng,
-  test_w3annex, test_w7rem and test_w25tests among them]; [FILL: C1b's commit, its sha as the coordinator's message gives it, its
-  date, subject and files from git; the classification's row 31.8]. These are W109's conditions for the re-key
-  (`<worktrees>/_runs/claude/w109read32/REPORT-PHASE2A-AS-RECEIVED.md:61` `Not yet. The conditions, checked on C1b:`), its read of
-  `4c8196a0..C1b` owed.
+  C1b's values (W154, from git and the logs; the last targeted run governs): C1b is `1d177f6b` (`<worktrees>/_runs/int30/QUEUE.md`, entry "04:37:48 (clock) C1b COMMITTED on fnd/int32", `1d177f6b01df13f7f6ac09be4896194efb4f26c5`), git's author date 2026-10-07 04:37:48, its 32 files the
+  classification's row 31.8 with its subject; the targeted pass's last run, the third log, converged in its first round,
+  `<worktrees>/_runs/int32/c1b-targeted3-0418.log:6` `round 1: 0 replaced`, with only the by-design refusals (`int10/dryrun.py`,
+  `l4close/verify_risks.py`, and `l4e7_p0sol.py` held back until the re-key), the run before it
+  (`<worktrees>/_runs/int32/c1b-targeted2-0341.log`) having stopped at regen_targeted's round cap; `h3/zip_size_estimate.out`,
+  replaced in that run's round 1 (`<worktrees>/_runs/int32/c1b-targeted2-0341.log:4` `round 1: regen_out: v2/docs/records/h3/zip_size_estimate.out replaced`),
+  is not among C1b's paths: back at its committed bytes by the chain's d13 policy (`git diff 4c8196a0 1d177f6b` of it prints
+  nothing); at C1b no output prints `d8882cd01e9df691` (`git grep -F` over the outputs prints nothing) and `a7bc3974e9c57998` is
+  printed only as `LAYER-STATUS.md`'s current digest, `1d177f6b:v2/docs/records/l8gnd/l8gnd_drafts.out:14` `a7bc3974e9c57998 v2/docs/handover/LAYER-STATUS.md`;
+  the five files equal `258e9a7d`'s bytes at C1b (`git diff 258e9a7d 1d177f6b` of the five prints nothing); the KEY-only check on
+  C1b, `<worktrees>/_runs/int32/c1b-targeted3-0418.log:42` `l4e7 KEY MISMATCH committed b8fc6fe2d285112c now 6e11114faadda427; parts moved: src, files, l4e11_numbers`,
+  as at step f; the run's affected tests, `<worktrees>/_runs/int32/c1b-targeted3-0418.log:70` `tests: 368 passed, 2 failed, 0 skipped; failed: test_l4e7.t_p0sol_committed_out_is_what_the_script_prints, test_l4e7.t_p0sol_the_inputs_it_pins_are_this_trees_files`
+  (WP-B's two `t_p0sol_` tests, failing by design until the re-key), and the twelve modules on C1b (test_recpack, test_w17p0list,
+  test_lstat31, test_lstat32, test_pdftext_input, test_l5pwr, test_remeng, test_w3annex, test_w7rem, test_w25tests, test_l3am and
+  test_l3r5), `<worktrees>/_runs/int32/c1b-tests-0432.log:154` `tests: 151 passed, 0 failed, 0 skipped`. These are W109's
+  conditions for the re-key (`<worktrees>/_runs/claude/w109read32/REPORT-PHASE2A-AS-RECEIVED.md:61` `Not yet. The conditions, checked on C1b:`);
+  its read of `4c8196a0..06d064ff` (C1b and the coordinator's merge of fnd/s32applier, the classification's rows 31.8 to 31.9.1;
+  an AI review, not a qualified one) ended `<worktrees>/_runs/claude/w109read32/REPORT-PHASE2B-AS-RECEIVED.md:41` `FIT for the re-key at 06d064ff`.
 - **W109's finding 3 (clerical), stated here as the basis the three tests do not carry.** r1 changed typed line numbers without a
   basis comment beside them in `test_remeng.py` (lines 243 and 244), `test_w3annex.py` (187 to 191, 253, 254, 256 to 263, 428, 429
   and 481) and `test_w7rem.py` (342 to 344). Each moved number is +68, from `l4e11_power.out` line 128 on: lines 128 onward of that
@@ -497,7 +507,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 
 | Record | Path | State |
 |---|---|---|
-| The classification of set 32 | `v2/docs/records/int32/CLASSIFICATION.md` | 34 branch commits classified; 2 REVIEWED-INPUT CHANGED; 12 UNREVIEWED since cx46; three placeholder rows for the integration's commits, prepared in its section 3, where fnd/l3r5keep's two commits are written from git as rows 31.7.1 and 31.7.2 (W128) |
+| The classification of set 32 | `v2/docs/records/int32/CLASSIFICATION.md` | 34 branch commits classified; 2 REVIEWED-INPUT CHANGED; 12 UNREVIEWED since cx46; the integration's 26 rows written from git apart from them (rows 31.1 to 33, W154; fnd/l3r5keep's two commits as W128 wrote them, rows 31.7.1 and 31.7.2): 2 REVIEWED-INPUT CHANGED first, 6 touching a file cx46 read, each UNREVIEWED since cx46; rows 32 and 33's sha cells the fill tool's tokens |
 | W34's inventory, with W37's restatements, W55's section 8 and W81's section 9 | `v2/docs/records/_lib/PDFTEXT-INVENTORY.md` on fnd/w34pdftext | in the tree from the merge |
 | W40's and W47's record | `v2/docs/records/s32small/README.md` on fnd/s32small | in the tree from the merge |
 | W42's record | `v2/docs/records/w42cite/README.md` on fnd/w34pdftext | in the tree from the merge |
@@ -510,10 +520,10 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 ## 8. Left out, and why
 
 - **Commits after the tips as last read** (fnd/w34pdftext `62300318`, fnd/s32attr `9210ab54`, fnd/s32small `7b7219a7`, fnd/l4e7cache
-  `5ee1e66e`) are not classified here; the coordinator adds their rows at the adoption. This record's own commits after `7ae61758`
-  (W73's and W78's) are the integration's placeholder row 31: a record cannot carry its own last commit's row. fnd/l3r5keep's two
-  commits, merged after C1 (section 3b), are written from git in the classification's section 3 as rows 31.7.1 and 31.7.2 under their
-  merge's row 31.7 (W128). The chain's pin of
+  `5ee1e66e`) are not classified here unless an integration merge brings them: this record's own commits after `7ae61758` (W73's to
+  W102's) are the integration's rows 31.4.1 to 31.4.12, fnd/l3r5keep's two commits, merged after C1 (section 3b), rows 31.7.1 and
+  31.7.2 under their merge's row 31.7 (W128), and fnd/s32applier's one, merged after C1b, row 31.9.1, each written from git before the
+  adoption (W154); a record cannot carry its own last commit's row, so fnd/adopt32's commits are the adoption's. The chain's pin of
   fnd/res32 moves to this record's corrected tip (W75's condition; `<worktrees>/_runs/int30/QUEUE.md`, entry "21:03:40 (clock) W78 LAUNCHED", `SRC_RES pin moves to W78's tip`).
 - **The coordinator's items outside the tree:** the base typed in `_runs/int31/dependents.sh` and the wording of
   `_runs/int31/cache_commit.sh` before their reuse (W43's README section 3); the KEY check's swap (`l4e7_key_check.py.new`).
@@ -574,13 +584,14 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   outputs exist.
 - **The independent read of set 32's lineage** is W109's (an AI review, not a qualified one): its phase 1, to `258e9a7d`, found F2 to
   F4, answered by W113; its phase 2, to `4c8196a0`, found findings 3 and 4, answered by W128 (section 3b, the classification's rows
-  31.7 to 31.8); its read of `4c8196a0..C1b` is owed (first written "a later queue item, after the chain; this record names no finding
-  of it", before W109 read; restated by W128).
+  31.7 to 31.8); its read of `4c8196a0..06d064ff` ended "FIT for the re-key at 06d064ff" (section 3b; first written "a later queue
+  item, after the chain; this record names no finding of it", before W109 read; restated by W128 and W154).
 - **Through the fill** (W79's N4, as W68's F1 found for `test_res31`): `test_res32` reads the stage from section 1's role rows and
-  holds before the fill and after each of the tool's two runs (W80, W69's method for set 31: rows 32 and 33 unclassified in either
-  form, the commits the fill writes placed on the lineage by their roles, anchors that survive the fill, the template statement read
-  from the newest committed revision of this file that still holds the tokens). Once the classification's rows 31 to 33 are written in
-  full, its ranges are extended over the integration's commits, as `test_res31`'s TIP moves with set 31's candidate row.
+  holds before the fill and after each of the tool's two runs (W80, W69's method for set 31: rows 32 and 33's sha cells the token
+  or the commit in either form, their other cells git's since W154, the commits the fill writes placed on the lineage by their roles, anchors that survive the fill, the template statement read
+  from the newest committed revision of this file that still holds the tokens). The classification's rows 31.1 to 33 were written in
+  full before the adoption and `test_res32` reads them against git over the integration's commits (W154), as `test_res31`'s TIP moved
+  with set 31's candidate row.
 - **A note for the freeze:** `test_res32`'s predicates that read the coordinator's files (the cited logs, the fill tool, the chain's
   pins) raise Skip where `_runs` is absent, which is every rented box; run them in the runner pass, as W39 recommended for `test_res31`
   (taken as this record's recommendation under the owner's standing rule of 26 September 2026; the coordinator applies or reverses it).
