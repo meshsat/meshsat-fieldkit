@@ -4,7 +4,7 @@
 folded: what set 33 adopts and from whom (78 commits, `CLASSIFICATION.md`), each Layer 4 item's verdicts as received (row (b) with its
 one targeted recheck, row (c), HO-E, the limiter screen, the K table and the B2 sweep; AI reviews, never upgraded), the apply list set 33 runs and the drafts it does NOT apply (Layer
 8's A), the ONE re-key set 33 is planned to carry and why, W160's dry run as logged, the freeze kit's expectations, the three claims as
-the assessment gives them, the classification bound, its integration rows prepared in W113's form (`CLASSIFICATION.md` section 3), and
+the assessment gives them, the classification bound, its integration rows written from git before the adoption (`CLASSIFICATION.md` rows 64.1 to 66, W219 on fnd/adopt33 from the candidate), and
 the 17 rows that bring the four adoption pages to set 33 (`ENTRY-PAGES.patch.md`, held by `test_patch33.py` against set 32's
 adopted pages); brought by W170 (queue item Q-192) to the final Layer 4 tips (fnd/l4hoe `531c4754`, fnd/l4hod `92d81690`) and
 to main `46d4fe58` (set 32's adoption, merged into fnd/res33 first), with W163's, W168's and W158's verdicts as received, and the fill proof re-run on them (section 8, where it also found a second
@@ -13,7 +13,7 @@ base, the chain's counts and lines, the converged commit, the independent read o
 candidate, the freeze's and the gate's lines, the promotion and the adoption commit, each a placeholder the coordinator's fill tool
 fills (the paragraph "Placeholders" below). **NEXT:** before the chain runs, the coordinator's ruling on its OUTS_REGEN (section 8); at the adoption, in this order: the fill tool on this file, the classification and the patch
 file they name (`<worktrees>/_bin/fill_res.py --set 33`: template, values, apply; ADOPTION in its second run; `test_res33.py` holds this
-file before the fill and after each run); the classification's section 3 written into its section 1 from git (its NEXT line); this
+file before the fill and after each run; the classification's integration rows are written, W219, and its rows 65 and 66 keep their sha-cell tokens for the fill); this
 header restated for the state after the fill and the adoption; then the coordinator's dependency pass, as after sets 31 and 32.
 
 **Status: a draft for adoption** at set 33's promotion (queue item Q-187), written by worker W165 on branch fnd/res33 (cut by the
@@ -88,8 +88,9 @@ the T10 and connected rows in new sections 11a of record l9t5's two generators a
 page's section 8 (rows 43.1 and 43.2), and record l8p's page's rounds 10 to 14 (rows 53, 58 and 61 to 63). 15 of the 78 touch a file
 cx46 read (9 distinct files); each is **UNREVIEWED since cx46**, never credited. 39 rows carry new engineering content outside the
 reviewed tree (new records, outputs and seven new circuit drafts); their verdicts are the checks' below, as received, never the
-classification's. The integration's own commits are prepared rows there (its section 3); the outputs they regenerate include files cx46
-read.
+classification's. The integration's own commits are rows 64.1 to 66 there, written from git before the adoption and counted apart (24
+rows: 7 MERGE, 9 RECORD TEXT, 4 TEST, 2 REVIEWED-INPUT CHANGED, 1 TOOLING and 1 DIGEST RE-PIN first; 7 of them touch a file cx46 read,
+each UNREVIEWED since cx46); the outputs they regenerate include files cx46 read.
 
 ### 2a. The branches, in the chain's merge order
 
@@ -298,7 +299,7 @@ qualification (NONE).
 
 | Record | Path | State |
 |---|---|---|
-| The classification of set 33 | `v2/docs/records/int33/CLASSIFICATION.md` | 78 branch commits classified; 12 REVIEWED-INPUT CHANGED; 15 UNREVIEWED since cx46; three placeholder rows and section 3's prepared rows for the integration's commits |
+| The classification of set 33 | `v2/docs/records/int33/CLASSIFICATION.md` | 78 branch commits classified; 12 REVIEWED-INPUT CHANGED; 15 UNREVIEWED since cx46; the integration's 24 rows (64.1 to 66) written from git on fnd/adopt33 (W219), rows 65 and 66 with the fill tool's tokens in their sha cells |
 | The rows for the four adoption pages | `v2/docs/records/int33/ENTRY-PAGES.patch.md` | 17 rows (START-HERE.md 8, SUPPLIER-HANDOVER.md 6, LAYER-STATUS.md 2, EXECUTION-PLAN.md 1), re-read by W170 on main `46d4fe58`, whose four pages are fnd/adopt32 `cb78bc49`'s byte for byte; applied at set 33's adoption; the fill tool fills its tokens because this file names it; `test_patch33.py` holds the rows |
 | Record l4k | `v2/docs/records/l4k/` on fnd/l4k | in the tree from the merge |
 | HO-E | `v2/docs/records/l9t5/HO-E-COMPARISON.md` and `HO-E-REGISTER-ROWS.md` on fnd/l4hoe | in the tree from the merge |

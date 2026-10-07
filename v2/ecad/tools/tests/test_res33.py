@@ -10,12 +10,33 @@ fnd/l4hoe `06d064ff..531c4754`, fnd/l4hod `06d064ff..92d81690` read on its first
 W170 (queue item Q-192, 7 October 2026) brought the record from W165's tips (fnd/l4hoe `003338e3`, fnd/l4hod `23384006`) to the pins
 set 33's chain uses: the commits a range gains past W165's tip are numbered after that tip's row with a letter, in the range's order
 (`531c4754` row 17a; `e1687b89` and `92d81690` rows 47a and 47b), so that rows 1 to 66 keep the numbers the record's prose, the fill
-tool's set 33 suggestions (rows 65 and 66) and the deferral list cite (SESSION decision W170-D1, CLASSIFICATION.md's decisions). The
-reviewed set is set 32's 62 files (`git diff --name-only 06077cee 4d0ff8a2` plus the L4-E9 page and its output); "the reviewed tree" is
+tool's set 33 suggestions (rows 65 and 66) and the deferral list cite (SESSION decision W170-D1, CLASSIFICATION.md's decisions).
+
+W219's restatement (8 October 2026, queue item Q-242, the ONE writer of fnd/adopt33 cut at set 33's candidate b5b4b2a0; the NEXT line of
+both records; W154's form for set 32): the classification's row 64 is replaced, before the adoption, by the integration's rows written from
+git (rows 64.1 to 64.7.6 with 64.5.1 to 64.5.9 and 64.7.1.1), and rows 65 and 66 carry git's date, subject, files and a class while their
+sha cells keep the fill tool's tokens. The basis of each changed expectation: (1) _real() reads the branch rows alone (the four ranges' 78
+rows; the integration's rows are read by p_integ), because the branch counts, the bound statement and RESULT's "first class per row" sentence
+stay over the branch commits, so p_coverage, p_columns and p_summary keep their scope; (2) p_coverage: the rows whose sha cell is one code
+span are rows 65 and 66 alone (row 64, "not determined", is gone: several commits that did not exist, W75's F11, now exist and have rows);
+(3) p_placeholders: no row 64.x carries a token, and rows 65 and 66 carry a date and a class of the fixed set (the re-key's cache commit
+and the candidate exist: REKEY_AT and CAND_AT below); (4) p_integ (new): the integration's rows are git's, row for row: the first-parent
+commits of CHAIN_BASE..CAND_AT oldest first, the first six as 64.1 to 64.6 and the rest before the re-key as 64.7.1 onward (the prepared
+row 64.7's "each further first-parent commit before the re-key, one row each"), after each merge the commits its second parent brings that
+no branch range holds (<row>.<k>, their branch from the merge's subject), then REKEY_AT (65) and CAND_AT (66); each row's sha (65 and 66:
+the token, or after the fill the same commit), author date, subject, branch with its tip holding the commit, file count and folders against
+the first parent, classes of the fixed set with MERGE exactly on two-parent commits, the reviewed files it touches or brings with
+"UNREVIEWED since cx46" or "no file cx46 read" as p_columns requires of a branch row, the files of the reviewed tree outside the delta, a
+REVIEWED-INPUT CHANGED row quoting a line under reading A with earlier source rows and the delta membership, and a merge naming the first
+row it brings; the outputs and drafts a row names are prose, not an enumerated closing clause (D-W219-1); (5) p_integ_summary (new):
+section 2's integration table, touching rows, file touches, distinct files and whole-table count are the rows'; (6) p_nofill (new): no
+fill-in cell is left in either record; (7) p_prepared and section 3 are gone with the section. Each new predicate has mutants it refuses.
+
+The reviewed set is set 32's 62 files (`git diff --name-only 06077cee 4d0ff8a2` plus the L4-E9 page and its output); "the reviewed tree" is
 `git ls-tree -r 4d0ff8a2`. The class counts, the per-branch counts, the touching rows and the rows of new engineering content are
 recomputed from the table and compared with section 2 and with RESULT's restatement of them. The rule paragraph is set 30's line 11
 verbatim. Every `<sha>:path:N` quote is on its line; every commit named resolves; every token is one the fill tool fills; the three
-claims are the assessment's lines at `f08e3961`; the prepared rows of section 3 expect git's file counts and reviewed files.
+claims are the assessment's lines at `f08e3961`; the integration's rows are git's (W219).
 
 Through the fill (set 32's W80 rule): the test reads the stage from RESULT's role rows (the re-key, the candidate, set 33's promotion,
 the adoption): stage 0, every role its token; stage 1, the first three named and ADOPTION its token; stage 2, all four named; any other
@@ -25,8 +46,8 @@ the candidate hold the four tips; the adoption descends from the candidate. The 
 What fails here: a commit of the four ranges missing, doubled or out of order; a short sha that is not its full sha's prefix; a date,
 subject, file count, folder list or closing clause that is not git's; a row's branch label whose tip does not hold its commit; a class
 outside W39's fixed set or a MERGE that is not a merge; a REVIEWED-INPUT CHANGED row that touches no file of the reviewed tree; counts
-that are not the table's; a quote not on its cited line; a placeholder outside the fill tool's tokens or a PROMOTED on a BASE row; an em
-or en dash. Each predicate is run on a mutant it must refuse.
+that are not the table's; a quote not on its cited line; a placeholder outside the fill tool's tokens or a PROMOTED on a BASE row; an integration row that is not git's, a token in a row 64.x
+or a fill-in cell left (W219); an em or en dash. Each predicate is run on a mutant it must refuse.
 
 The coordinator's files (`<worktrees>/_runs`, `<worktrees>/_bin`) are read by two tests, which raise Skip where they are absent (a
 rented box): run them in the runner pass (RESULT.md section 8). Read-only: git is read with `git log`, `git show`, `git diff`,
@@ -57,6 +78,14 @@ LATE = {"fnd/l4hoe": "003338e3f92a86d6bf687385ab752be5eab0c206", "fnd/l4hod": "2
 LABEL_TIPS = {"fnd/l4k": "ff0c79f0", "fnd/l4hoe": "531c4754", "fnd/l4canmb": "664d4019", "fnd/l4canq": "efce7c7a", "fnd/l4reg": "86dbcdff",
               "fnd/l4hod": "92d81690", "fnd/l4small": "77866143", "fnd/l4lim": "aa6704b2", "fnd/l4fet": "49d4f9e6", "fnd/l4rowc": "653cb1bc"}
 PROMOTED32 = "f08e396175dd418434061d731e08111d006d6efa"   # set 32's promoted revision, this record's branch point
+# W219 (Q-242): the integration's rows read from git (p_integ): the chain's base (main after set 32's adoption, the chain's log line 1),
+# the first-parent line to the candidate; REKEY_AT is the re-key's cache commit (row 65), CAND_AT set 33's candidate C4 (row 66), the
+# tips of fnd/res33 and fnd/s33cite the commits the chain's and the coordinator's merges brought (rows 64.5 and 64.7.1)
+CHAIN_BASE = "46d4fe58a233f1417f28e5932b862e884940cd62"
+REKEY_AT = "d9ab507053bef835023c5399bd2a574ee77785de"
+CAND_AT = "b5b4b2a01e54231d17201082f1ecdf25612440fa"
+INTEG_TIPS = {"fnd/int33": CAND_AT, "fnd/res33": "5e5db712e8a8699b1b3cf5cc7454166d63dcb75c", "fnd/s33cite": "31356a264a56ca7ae166115aa196eaa2679aac55"}
+INTEG_ROW = re.compile(r"64(?:\.\d+)+")
 REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"     # cx46's candidate
 CX45 = "06077cee85d0ed44c74c2a06c9fbb2030a0dedbc"         # the base of the delta cx46 read
 L4E9_EXTRA = ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "v2/docs/records/l4e9/l4e9_power_path.out")
@@ -68,6 +97,7 @@ CLAIMS = {492: "### Layer 4's DESK gate: NOT PASSED",
 FIXED = ("REVIEWED-INPUT CHANGED", "RECORD TEXT", "GENERATOR DATA (text)", "TEST", "DIGEST RE-PIN", "MERGE", "TOOLING")
 RIC = "REVIEWED-INPUT CHANGED"
 DECLARED = ("__REKEY__", "__CANDIDATE__", "__GATE__", "__PROMOTED__", "__ADOPTION__")   # fill_res.py's TOK, INTEGRATED apart
+INTEG_TOK = {"65": DECLARED[0], "66": DECLARED[1]}   # W219: through DECLARED, so the deferral list's count of this module's literal tokens holds
 NEW = "new engineering content (outside the reviewed tree):"
 NONCOMMIT = {"6e11114faadda427", "fe15b1f03875940e", "8c8e26858293", "c8956b14b0e7", "99f9075f2ff85a69"}  # KEYs and digests the record names
 GIT_ANCHOR = re.compile(r"`([0-9a-f]{8,40}):([^`:\s]+):(\d+)` `((?:[^`\\]|\\.)+)`")
@@ -194,7 +224,13 @@ def _placeholder_row(cells):
 
 
 def _real(text):
-    return [c for c in _rows(text) if not _placeholder_row(c)]
+    """The branch rows: section 1's rows of the four ranges (W219: the integration's rows 64.x are read by p_integ, so the branch counts
+    and the bound statement keep their scope, the 78 branch commits)."""
+    return [c for c in _rows(text) if not _placeholder_row(c) and not INTEG_ROW.fullmatch(c[0])]
+
+
+def _line(text, prefix):
+    return [ln for ln in text.split("\n") if ln.startswith(prefix)][0]
 
 
 def _classes(cells):
@@ -273,6 +309,13 @@ def p_placeholders(texts):
         for ln in t.split("\n"):
             if "__PROMOTED__" in ln and "| BASE (the REVIEWED role" in ln:
                 bad.append("%s gives PROMOTED a BASE row (adopt33.sh's rule would fill set 32's revision there)" % name)
+    # W219: no integration row 64.x carries a token (W78's rule for row 31 of set 32, kept for the rows that replace row 64), and rows
+    # 65 and 66 carry git's date and a class of the fixed set since their commits exist (W80's "not determined" held while none did)
+    for c in _rows(texts[CLASS]):
+        if INTEG_ROW.fullmatch(c[0]) and any(PH.search(x) for x in c):
+            bad.append("row %s carries a token" % c[0])
+        if _placeholder_row(c) and (c[2] == "not determined" or any(k not in FIXED for k in _classes(c))):
+            bad.append("the token row %s carries no date or a class outside the fixed set" % c[0])
     if st == 0:
         cl = texts[CLASS]
         for tok in ("__REKEY__", "__CANDIDATE__"):
@@ -310,9 +353,11 @@ def p_coverage(text, order):
         miss = [w for w in want if w not in got][:3]
         extra = [g for g in got if g not in want][:3]
         return ["the table is not the four ranges in order: missing %s, extra %s" % (miss, extra)]
+    # W219: row 64 ("not determined", W75's F11) is replaced by the rows 64.x written from git (p_integ), so the rows whose sha cell is
+    # one code span are 65 and 66 alone
     tail = [c[0] for c in _rows(text) if _placeholder_row(c)]
-    if tail != ["64", "65", "66"]:
-        return ["the integration rows are %s, not 64 to 66" % tail]
+    if tail != ["65", "66"]:
+        return ["the token rows are %s, not 65 and 66" % tail]
     return []
 
 
@@ -523,26 +568,146 @@ def p_bounds(text):
     return bad
 
 
-def p_prepared(text):
+def _integ_order():
+    """W219: the integration's rows from git, [(row, branch, full sha, parents, date, subject, files)] in _order()'s shape: the first-parent
+    commits of CHAIN_BASE..CAND_AT oldest first, the first six as rows 64.1 to 64.6 and the further ones before the re-key as 64.7.1 onward
+    (the prepared row 64.7: each further first-parent commit before the re-key, one row each), after each merge the commits its second
+    parent brings that no branch range holds as <row>.<k> (their branch from the merge's subject, "fnd/<name> <sha> merged"), then the
+    re-key's cache commit (65) and the candidate (66)."""
+    if "integ" in _C:
+        return _C["integ"]
+    for s in (CHAIN_BASE, REKEY_AT, CAND_AT) + tuple(INTEG_TIPS.values()):
+        if not _has(s):
+            raise Skip("commit %s is not in this checkout" % s[:8])
+    ranged = {o[2] for o in _order()}
+    fp = _git("rev-list", "--first-parent", "--reverse", "%s..%s" % (CHAIN_BASE, CAND_AT)).split()
+    if fp[-2:] != [REKEY_AT, CAND_AT]:
+        raise AssertionError("the first-parent line %s..%s does not end with the cache commit and the candidate" % (CHAIN_BASE[:8], CAND_AT[:8]))
+    out = []
+    for i, c in enumerate(fp[:-2], 1):
+        num = "64.%d" % i if i <= 6 else "64.7.%d" % (i - 6)
+        f = _facts(c)
+        out.append((num, "fnd/int33", c) + f)
+        if len(f[0]) > 1:
+            m = re.search(r"(fnd/[\w-]+) [0-9a-f]{8} merged", f[2])
+            brought = [s for s in _git("rev-list", "--topo-order", "--reverse", "%s..%s" % (f[0][0], f[0][1])).split() if s not in ranged]
+            for k, s in enumerate(brought, 1):
+                out.append(("%s.%d" % (num, k), m.group(1) if m else "(no branch in the merge's subject)", s) + _facts(s))
+    out.append(("65", "fnd/int33", REKEY_AT) + _facts(REKEY_AT))
+    out.append(("66", "fnd/int33", CAND_AT) + _facts(CAND_AT))
+    _C["integ"] = out
+    return out
+
+
+def _integ_rows(text):
+    return [c for c in _rows(text) if INTEG_ROW.fullmatch(c[0]) or c[0] in ("65", "66")]
+
+
+def p_integ(text):
+    """W219 (Q-242): the integration's rows are git's, row for row (_integ_order): sha cells (rows 65 and 66: their token, or after the fill
+    the same commit), author dates, subjects, branches whose tips hold the commit, file counts and folders against the first parent,
+    classes of the fixed set with MERGE exactly on two-parent commits, the reviewed files touched or brought with UNREVIEWED since cx46
+    (or "no file cx46 read"), the files of the reviewed tree outside the delta, a REVIEWED-INPUT CHANGED row quoting a line under reading
+    A with earlier source rows and the delta membership, a merge naming the first row it brings; and the lineage: 65's first parent the
+    last row 64.x on the first-parent line, 66's row 65."""
     bad = []
-    sec = text.split("\n## 3. ", 1)[1]
-    rows = [[c.strip() for c in CELL_SPLIT.split(ln.strip())[1:-1]] for ln in sec.split("\n") if ln.startswith("| ") and not ln.startswith("| # ")]
-    nums = [c[0] for c in rows]
-    if nums != ["64.1", "64.2", "64.3", "64.4", "64.5", "64.6", "64.7", "65 (prepared)", "66 (prepared)"]:
-        bad.append("section 3's rows are %s" % nums)
-    for c, (name, base, tip, _fp) in zip(rows[:4], BRANCHES):
-        files = _git("diff", "--name-only", base, tip).split()
-        if "expected %d, `git diff --name-only %s %s`" % (len(files), base[:8], tip[:8]) not in c[5]:
-            bad.append("row %s does not expect git's %d files" % (c[0], len(files)))
-        rev = sorted(os.path.basename(p) for p in files if p in _reviewed())
-        n, names = _named(c[7], "reviewed files it brings")
-        if rev and (n != len(rev) or sorted(names) != rev):
-            bad.append("row %s's reviewed files %s are not git's %s" % (c[0], names, rev))
-        if not rev and "no file cx46 read" not in c[7]:
-            bad.append("row %s brings no reviewed file but does not say so" % c[0])
-        if "[FILL:" not in c[1] or PH.search(" ".join(c)):
-            bad.append("row %s is not a prepared row (a FILL sha cell, no token)" % c[0])
+    order = _integ_order()
+    got = _integ_rows(text)
+    if [c[0] for c in got] != [o[0] for o in order]:
+        return ["the integration's rows are %s, not git's %s" % ([c[0] for c in got], [o[0] for o in order])]
+    nums = [c[0] for c in _rows(text)]
+    last64 = [o for o in order if o[1] == "fnd/int33" and o[0] not in ("65", "66")][-1][2]
+    if _git("rev-list", "--parents", "-n1", REKEY_AT).split()[1:2] != [last64] or _git("rev-list", "--parents", "-n1", CAND_AT).split()[1:2] != [REKEY_AT]:
+        bad.append("the cache commit and the candidate are not the next commits on the first-parent line after %s" % last64[:8])
+    for c, (num, branch, full, ps, date, subj, files) in zip(got, order):
+        if len(c) != 8:
+            bad.append("row %s has %d cells" % (num, len(c)))
+            continue
+        if num in INTEG_TOK:
+            m = re.match(r"`(__[A-Z]+__|[0-9a-f]{8,40})`$", c[1])
+            if not m or (m.group(1).startswith("__") and m.group(1) != INTEG_TOK[num]) or (not m.group(1).startswith("__") and not full.startswith(m.group(1))):
+                bad.append("row %s's sha cell %r is neither its token nor %s" % (num, c[1][:30], full[:8]))
+        elif c[1] != "`%s` / `%s`" % (full[:8], full):
+            bad.append("row %s's sha cell is not git's" % num)
+        if c[2] != date:
+            bad.append("row %s's date %s is not git's %s" % (num, c[2], date))
+        if c[3] != subj.replace("|", "\\|"):
+            bad.append("row %s's subject is not git's" % num)
+        if not c[4].startswith(branch + (": " if branch == "fnd/int33" else " (")) or branch not in INTEG_TIPS or not _anc(full, INTEG_TIPS[branch]):
+            bad.append("row %s's branch cell does not name %s, or its tip does not hold the commit" % (num, branch))
+        cnt = Counter(_folder(p) for _s, p in files)
+        fc = "%d: %s" % (len(files), ", ".join("%s (%d)" % (k, cnt[k]) for k in sorted(cnt)))
+        if c[5] != fc:
+            bad.append("row %s's files cell %r is not git's %r" % (num, c[5][:60], fc[:60]))
+        cls = _classes(c)
+        if any(x not in FIXED for x in cls) or len(set(cls)) != len(cls):
+            bad.append("row %s's classes %s are not W39's fixed set" % (num, cls))
+        if (cls[0] == "MERGE") != (len(ps) > 1) or "MERGE" in cls[1:]:
+            bad.append("row %s: MERGE and the commit's parents disagree" % num)
+        rev, tree, _outs, _drafts, verb = _tail(files, len(ps) > 1)
+        reason = c[7]
+        n, names = _named(reason, "reviewed files it %s" % verb)
+        if rev:
+            if n != len(rev) or sorted(names) != rev or not reason.endswith("UNREVIEWED since cx46"):
+                bad.append("row %s: its reviewed files %s are not git's %s, or it lacks UNREVIEWED since cx46" % (num, names, rev))
+        elif not reason.endswith("no file cx46 read") or "UNREVIEWED since cx46" in reason:
+            bad.append("row %s touches no file cx46 read but does not end so" % num)
+        n, names = _named(reason, "files of the reviewed tree outside the delta cx46 read it %s" % verb)
+        if sorted(names) != tree:
+            bad.append("row %s: its files of the reviewed tree %s are not git's %s" % (num, names, tree))
+        if cls[0] == RIC:
+            src = re.search(r"\(rows? ([\d., a-z]+?) the source rows?; in the delta cx46 read\)", reason)   # row numbers, "to", "and" only
+            if not any(p in _tree() for _s, p in files) or not GIT_ANCHOR.search(reason) or "reading A" not in reason or not src:
+                bad.append("row %s is %s without a quoted line, reading A, its source rows and the delta membership" % (num, RIC))
+            elif any(x not in nums or nums.index(x) >= nums.index(num) for x in re.findall(r"\d+(?:\.\d+)*[a-z]?", src.group(1))):
+                bad.append("row %s: its source rows %r are not earlier rows of this table" % (num, src.group(1)))
+        if len(ps) > 1 and any(o[0].startswith(num + ".") for o in order) and not re.search(r"\brows? %s\.1\b" % re.escape(num), reason):
+            bad.append("the merge's row %s does not name the first row it brings, %s.1" % (num, num))
     return bad
+
+
+def p_integ_summary(text):
+    """W219: section 2's part for the integration's rows is the table's: per class first and carried, the total, the touching rows in
+    table order (a row whose sha cell is the fill's token is named by its number), their file touches and distinct files, and the whole
+    table's count."""
+    bad = []
+    rows = _integ_rows(text)
+    sec = text.split("\n## 2. ", 1)[1]
+    if "**The integration's rows**" not in sec or "**Not determined here:**" not in sec:
+        return ["section 2 has no part for the integration's rows"]
+    part = sec.split("**The integration's rows**", 1)[1].split("**Not determined here:**", 1)[0]
+    first = Counter(_classes(c)[0] for c in rows)
+    carry = Counter(k for c in rows for k in set(_classes(c)))
+    for k in FIXED:
+        m = re.search(r"^\| `%s` \| (\d+) \| (\d+) \|$" % re.escape(k), part, re.M)
+        if not m or int(m.group(1)) != first[k] or int(m.group(2)) != carry[k]:
+            bad.append("the integration's summary row of %s is not the table's (%d, %d)" % (k, first[k], carry[k]))
+    m = re.search(r"^\| integration total \| (\d+) \|", part, re.M)
+    if not m or int(m.group(1)) != len(rows):
+        bad.append("the integration's total is not the table's %d" % len(rows))
+    flat = " ".join(part.split())
+    touch = [c for c in rows if c[7].endswith("UNREVIEWED since cx46")]
+    named = [_named(c[7], "reviewed files it brings" if _classes(c)[0] == "MERGE" else "reviewed files it touches") for c in touch]
+    nft, distinct = sum(n for n, _x in named), len({x for _n, xs in named for x in xs})
+    m = re.search(r"\*\*The integration's rows that touch a file cx46 read: (\d+), all UNREVIEWED since cx46\.\*\* In table order: (.*?); "
+                  r"(\d+) file touches among them, each named in its row \((\d+) distinct files", flat)
+    if not m or (int(m.group(1)), int(m.group(3)), int(m.group(4))) != (len(touch), nft, distinct):
+        bad.append("the integration's touching-rows line is not the table's %d rows, %d file touches, %d distinct files" % (len(touch), nft, distinct))
+    else:
+        got = re.findall(r"`([0-9a-f]{8})` \(([\d.]+)\)|row (\d+) \(the candidate", m.group(2))
+        want = [(c[1][1:9], c[0], "") if not _placeholder_row(c) else ("", "", c[0]) for c in touch]
+        if got != want:
+            bad.append("the integration's touching-rows list is not the table's rows in order")
+    m = re.search(r"\*\*The whole table:\*\* (\d+) rows, the (\d+) branch rows of the four ranges and the integration's (\d+)\.", flat)
+    nb = len(_real(text))
+    if not m or (int(m.group(1)), int(m.group(2)), int(m.group(3))) != (nb + len(rows), nb, len(rows)):
+        bad.append("the whole table's count is not %d (%d branch rows and %d integration rows)" % (nb + len(rows), nb, len(rows)))
+    return bad
+
+
+def p_nofill(texts):
+    """W219 (W132's F2 for set 32): no fill-in cell of the coordinator's ("[FILL") is left in either record."""
+    return ["%s holds %d fill-in cell(s)" % (n, t.count("[FILL")) for n, t in texts.items() if "[FILL" in t]
 
 
 def p_logs(texts, runs):
@@ -631,6 +796,10 @@ def t_every_placeholder_is_a_declared_token_and_the_stage_holds():
     _mutant_refused(p_placeholders, texts, RESULT, "| Set 32's promoted revision (the REVIEWED role of the brief's form) |",
                     "| BASE (the REVIEWED role of the brief's form) | `__PROMOTED__` |")
     _mutant_refused(p_placeholders, texts, RESULT, "| ADOPTED: the commit that adopts this record |", "| ADOPTED: the commit that adopts this record | `deadbeef`")
+    # W219: a token in an integration row (C1's) and row 65's date taken back to "not determined" are refused
+    r646, r65 = _line(texts[CLASS], "| 64.6 |"), _line(texts[CLASS], "| 65 |")
+    _mutant_refused(p_placeholders, texts, CLASS, r646, r646.replace("; UNREVIEWED since cx46 |", "; UNREVIEWED since cx46 `__GATE__` |", 1))
+    _mutant_refused(p_placeholders, texts, CLASS, r65, r65.replace("| 2026-10-07 21:39:14 |", "| not determined |", 1))
 
 
 def t_the_table_is_the_four_ranges_in_order_with_gits_columns_and_classes():
@@ -648,6 +817,10 @@ def t_the_table_is_the_four_ranges_in_order_with_gits_columns_and_classes():
     _mutant_refused(lambda x, o: p_coverage(x[CLASS], o), t, CLASS, r1 + "\n", "", order)
     r47b = [ln for ln in text.split("\n") if ln.startswith("| 47b | ")][0]   # W170: a late row dropped is refused too
     _mutant_refused(lambda x, o: p_coverage(x[CLASS], o), t, CLASS, r47b + "\n", "", order)
+    # W219: a row 64 put back ("not determined", W75's F11) is refused: the token rows are 65 and 66 alone
+    r65 = _line(text, "| 65 |")
+    _mutant_refused(lambda x, o: p_coverage(x[CLASS], o), t, CLASS, r65,
+                    "| 64 | not determined | not determined | the integration's commits | fnd/int33 | not determined | not determined | text |\n" + r65, order)
     _mutant_refused(lambda x, o: p_columns(x[CLASS], o), t, CLASS, "| 2026-10-07 04:39:01 |", "| 2026-10-07 04:39:02 |", order)
     _mutant_refused(lambda x, o: p_columns(x[CLASS], o), t, CLASS, "`l9t5_t10.out`, `l9t5_t10.py`; UNREVIEWED since cx46 |",
                     "`l9t5_t10.out`; UNREVIEWED since cx46 |", order)
@@ -695,16 +868,49 @@ def t_the_rule_is_set_30s_line_11_verbatim_and_the_claims_the_assessments():
     _mutant_refused(lambda x, a: p_claims(x[RESULT], a), r, RESULT, "**Set 33 closes NO power item.**", "**Set 33 closes the power items.**", lines)
 
 
-def t_the_bounds_and_the_prepared_rows_are_gits():
+def t_the_bounds_are_gits():
+    """W219: the prepared rows' half of this test (p_prepared, section 3) is gone with the section; the integration's rows are read by
+    t_the_integration_rows_are_gits."""
     _need_git()
     text = _read(CLASS)
     assert not p_bounds(text), p_bounds(text)
-    assert not p_prepared(text), p_prepared(text)
     t = {CLASS: text}
     _mutant_refused(lambda x: p_bounds(x[CLASS]), t, CLASS, "`apply_gen_sch_b_hodtest.py`, `apply_gen_sch_a_fetpair.py`", "`apply_gen_sch_a_fetpair.py`")
-    # W170: fnd/l4hoe's pin 531c4754 (basis: `git diff --name-only 06d064ff 531c4754` names 86 files, W165's 85 and the filed l4reg copy)
-    _mutant_refused(lambda x: p_prepared(x[CLASS]), t, CLASS, "expected 86, `git diff --name-only 06d064ff 531c4754`", "expected 85, `git diff --name-only 06d064ff 531c4754`")
-    _mutant_refused(lambda x: p_prepared(x[CLASS]), t, CLASS, "reviewed files it brings (2): `L8P-BREAKER.md`, `README.md` (l8p)", "reviewed files it brings (1): `L8P-BREAKER.md`")
+
+
+def t_the_integration_rows_are_gits():
+    """W219 (Q-242): rows 64.1 to 66 are git's row for row, section 2's integration part is theirs, and no fill-in cell is left; the
+    basis is git itself (the commits exist on set 33's lineage, the candidate's) and the table."""
+    texts = _texts()
+    t = texts[CLASS]
+    bad = p_integ(t) + p_integ_summary(t) + p_nofill(texts)
+    assert not bad, bad
+    r = {n: _line(t, "| %s |" % n) for n in ("64.3", "64.5", "64.5.1", "64.6", "64.7.1", "64.7.1.1", "65", "66")}
+    mut = lambda old, new: t.replace(old, new, 1)
+    assert p_integ(mut(r["64.6"], r["64.6"].replace("| 2026-10-07 17:49:27 |", "| 2026-10-07 17:49:28 |", 1))), "a wrong date passed"
+    # the queue's clock (21:39:15) in place of git's author date (21:39:14) is refused
+    assert p_integ(mut(r["65"], r["65"].replace("| 2026-10-07 21:39:14 |", "| 2026-10-07 21:39:15 |", 1))), "row 65 with the queue's clock passed"
+    assert p_integ(mut(r["66"], r["66"].replace("| 6: ", "| 5: ", 1))), "row 66 with a wrong file count passed"
+    c65, c66 = r["65"].split(" | ")[1], r["66"].split(" | ")[1]   # the sha cells as the stage holds them (tokens before the fill)
+    assert p_integ(mut(r["66"], r["66"].replace("| %s |" % c66, "| %s |" % c65, 1))), "row 66 with row 65's sha cell passed"
+    assert p_integ(t.replace(r["64.7.1"] + "\n", "", 1)), "the s33cite merge's row dropped passed"
+    assert p_integ(t.replace(r["64.7.1.1"] + "\n", "", 1)), "the commit the s33cite merge brings dropped passed"
+    assert p_integ(mut(r["64.7.1"], r["64.7.1"].replace("| MERGE |", "| TEST |", 1))), "a merge not classed MERGE passed"
+    assert p_integ(mut(r["64.7.1.1"], r["64.7.1.1"].replace("| fnd/s33cite (", "| fnd/int33: (", 1))), "a brought commit outside its branch passed"
+    # the facts table's 29 reviewed files (the 60 without the L4-E9 page and its output) in place of this table's 31 are refused
+    assert p_integ(mut(r["64.6"], r["64.6"].replace("reviewed files it touches (31)", "reviewed files it touches (29)", 1))), "C1 with the facts table's count passed"
+    assert p_integ(mut(r["64.6"], r["64.6"].replace("(rows 1, 37 to 39, 43.1 to 43.3, 45 and 47a the source rows; in the delta cx46 read)", "(in the delta cx46 read)", 1))), \
+        "C1's REVIEWED-INPUT CHANGED without its source rows passed"
+    assert p_integ(mut(r["66"], r["66"].replace("rows 1 and 64.6 the source rows", "rows 1 and 67 the source rows", 1))), "a source row that is not an earlier row passed"
+    assert p_integ(mut(r["64.5.1"], r["64.5.1"].replace("| `799ae465` / ", "| `799ae466` / ", 1))), "a short sha not its full sha's passed"
+    assert p_integ(mut(r["64.3"], r["64.3"].replace("; UNREVIEWED since cx46 |", " |", 1))), "a merge bringing cx46's files without UNREVIEWED passed"
+    assert p_integ(mut("brings rows 64.5.1 to 64.5.9, this record's nine commits", "brings this record's nine commits")), "a merge not naming the rows it brings passed"
+    assert p_integ_summary(mut("| integration total | 24 |", "| integration total | 23 |")), "a wrong integration total passed"
+    assert p_integ_summary(mut("| `MERGE` | 7 | 7 |", "| `MERGE` | 6 | 7 |")), "a wrong integration class count passed"
+    assert p_integ_summary(mut("; 57 file touches among them", "; 56 file touches among them")), "a wrong count of file touches passed"
+    assert p_integ_summary(mut("**The whole table:** 102 rows", "**The whole table:** 101 rows")), "a wrong whole-table count passed"
+    assert p_integ_summary(mut(r["64.7.1"], r["64.7.1"].replace("| MERGE |", "| TEST |", 1))), "a re-classed row with the old counts passed"
+    assert p_nofill(dict(texts, **{RESULT: texts[RESULT] + "\n[FILL: a value]\n"})), "a fill-in cell left passed"
 
 
 def t_every_cited_file_of_the_coordinator_exists_and_carries_its_quote():
@@ -752,7 +958,8 @@ test_every_quote_is_on_its_cited_line_and_every_commit_named_resolves = _pytest(
     t_every_quote_is_on_its_cited_line_and_every_commit_named_resolves)
 test_the_rule_is_set_30s_line_11_verbatim_and_the_claims_the_assessments = _pytest(
     t_the_rule_is_set_30s_line_11_verbatim_and_the_claims_the_assessments)
-test_the_bounds_and_the_prepared_rows_are_gits = _pytest(t_the_bounds_and_the_prepared_rows_are_gits)
+test_the_bounds_are_gits = _pytest(t_the_bounds_are_gits)
+test_the_integration_rows_are_gits = _pytest(t_the_integration_rows_are_gits)
 test_every_cited_file_of_the_coordinator_exists_and_carries_its_quote = _pytest(
     t_every_cited_file_of_the_coordinator_exists_and_carries_its_quote)
 test_the_fill_tool_carries_set_33 = _pytest(t_the_fill_tool_carries_set_33)
