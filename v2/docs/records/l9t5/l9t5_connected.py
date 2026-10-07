@@ -1013,6 +1013,7 @@ def main():
         w("   L4-E9's change-list rows: drafted here (apply_l4e9_changelist_p0.py), APPLIED by the integrator at set 30's integration commit 7070f106 to L4-E9's")
         w("     register, script and page; applying them accepts no draft (cx46: CORRECTIONS NOT CLOSED; the claims read OPEN or PROVISIONAL as above); L4-E9's generator re-pinned at 2a (bbba3e53), its output regenerated in set 31 (this lineage, fnd/int31regen) with its four cascade pins (PINS l4e10, l4e11, l4e12, l4e7p0) at those outputs' current digests, which the chain re-pins, refusing at a pin whose output differs (first regenerated at commit 2b's digests by record l4e9's SET31-CHANGES.md, merged at 6fe398e9)")
         w("")
+        rowb_section(w, FC, t14, FR, P)
         w("12. THE PREDICATES")
         for k, v in P.items():
             w("   %-125s %s" % (k, "yes" if v else "NO"))
@@ -1025,6 +1026,112 @@ def main():
         shutil.rmtree(tmp, ignore_errors=True)
     sys.stdout.write("\n".join(out) + "\n")
     return 0 if all(P.values()) else 1
+
+
+# ======================================================================================================================================
+# ROUND 10 (7 October 2026, W151, MESHSAT-1357; Layer 4 task L4A-61): the connected rows restated for row (b)'s drafts (record l9t5's
+# canmb, regstage, canen and hodtest; records l4canen and l4hod), printed as section 11a after section 11 and before the predicates so
+# every line of sections 0 to 11 keeps its number. It reads T10's section 11a (l9t5_t10.out, already pinned in section 0) and the drafts'
+# own records' rail figures (pinned in 11a (a)); it composes nothing new and closes nothing (row (b)'s check is L4A-62).
+# ======================================================================================================================================
+ROWB_OUTS = {"canmb": "v2/docs/records/l9t5/l9t5_canmb.out", "canen": "v2/docs/records/l4canen/l4canen.out", "hod": "v2/docs/records/l4hod/l4hod.out"}
+
+
+def rowb_figures():
+    """T10's section 11a and the drafts' records, parsed: each figure with the line it was read from"""
+    t10 = text("v2/docs/records/l9t5/l9t5_t10.out")
+    if "\n11a. ROUND 10" not in t10:
+        refuse("l9t5_t10.out carries no section 11a (round 10)")
+    s = t10.split("\n11a. ROUND 10", 1)[1].split("\n12. THE PREDICATES", 1)[0]
+    F = {}
+    m = need(s, r"IOSmin ([\d.]+) A over the largest served ([\d.]+) A by ([\d.]+) A", "T10 11a's window")
+    F["ios_lo"], F["served"], F["window"] = (float(x) for x in m.groups())
+    m = need(s, r"IOS ([\d.]+) to ([\d.]+) A", "T10 11a's band")
+    F["ios_hi"] = float(m.group(2))
+    m = need(s, r"K2  holds the regulator's junction at constant maximum dissipation ([\d.]+) C \(([\d.]+) W at [\d.]+ A, the drop ([\d.]+) V, ([\d.]+) C/W PRINTED\)",
+             "T10 11a's K2")
+    F["tj_bound"], F["p_max"], F["drop"], F["rja"] = (float(x) for x in m.groups())
+    m = need(s, r"at IOSmax on all three: ([\d.]+) V against ([\d.]+) V on the 1 A row", "T10 11a's T10-A3")
+    F["a3_at"], F["a3_need"] = float(m.group(1)), float(m.group(2))
+    m = need(s, r"against\s*\n?\s*([\d.]+) V on the INFERRED linear dropout ([+-][\d.]+) V", "T10 11a's T10-A3 on the INFERRED dropout")
+    F["a3_inf"] = float(m.group(2))
+    m = need(s, r"Zth\(10 ms\) at\s*\n?\s*most ([\d.]+) C/W", "T10 11a's Zth limit")
+    F["zth"] = float(m.group(1))
+    m = need(s, r"L4A-57: (DONE AS CONDITIONAL on E-17|NOT DONE)\.", "T10 11a's L4A-57 line")
+    F["l4a57"] = m.group(1)
+    c = text(ROWB_OUTS["canmb"])
+    m = need(c, r"the controller's own rail: round 6's bounded state ([\d.]+) A less its limiters' pull-ups ([\d.]+) mA", "canmb's rail basis")
+    F["r6"], F["pu"] = float(m.group(1)), float(m.group(2)) / 1000
+    m = need(c, r"all at once: at most ([\d.]+) A \(MODEL", "canmb's rail figure")
+    F["canmb"] = float(m.group(1))
+    e = text(ROWB_OUTS["canen"])
+    F["canen"] = float(need(e, r"each controller's own rail with the route: at most ([\d.]+) A", "canen's rail figure").group(1))
+    h = text(ROWB_OUTS["hod"])
+    F["hod"] = float(need(h, r"only while FAULT is low \(([\d.]+) mA\)", "hodtest's rail figure").group(1)) / 1000
+    F["hod_int"] = float(need(h, r"3600 s \+ [\d.]+ s = ([\d.]+) s of its onset", "hodtest's detection interval").group(1))
+    return F
+
+
+def rowb_section(w, FC, t14, FR, P):
+    """section 11a of this output (L4A-61): the connected rows restated for row (b)'s drafts"""
+    F = rowb_figures()
+    add = F["canen"] + F["hod"] - (F["r6"] - F["pu"])          # the drafts' additions on a controller's rail over round 6's own figure, the
+    win = F["window"] - add                                     # removed pull-ups not credited (conservative)
+    air = FC["air"]
+    w("11a. ROW (b)'S DRAFTS (7 October 2026, W151; Layer 4 task L4A-61): THE CONNECTED ROWS RESTATED. Row (b)'s drafts (record l9t5's")
+    w("   apply_gen_sch_b_canmb.py, apply_gen_sch_b_regstage.py, apply_gen_sch_b_canen.py and apply_gen_sch_b_hodtest.py; records l4canen and")
+    w("   l4hod) take the place of section 2's containment on board B (iocguard's share limiters and rail trips): T10 composed the four after it")
+    w("   (l9t5_t10.out 11a (b)), record l4hod in all five orders. None is applied and none has a row in L4-E9's change list yet (finding")
+    w("   W151-F1). Sections 0 to 11 stand as written for the candidate composed there; this section restates the rows row (b) changes. Nothing")
+    w("   here closes an item: cx46's states stand, row (b)'s check is L4A-62, and the connected verdict stays as section 11 reads it")
+    w("   (a) PINS of this section (sha256/16 path)")
+    for k in ("canmb", "canen", "hod"):
+        w("   %s %s" % (sha(ROWB_OUTS[k]), ROWB_OUTS[k]))
+    w("   (b) THE SERVICE WINDOW ON THE COMPOSED CANDIDATE (C-DEV rev 2, conditional on FW-B20 and FW-B21): T10 11a reads IOSmin %.4f A over the" % F["ios_lo"])
+    w("     largest served %.4f A by %.4f A; the drafts add on a controller's own rail at most %.4f A (record l4canen %.4f A with canmb's %.4f A in" % (
+        F["served"], F["window"], add, F["canen"], F["canmb"]))
+    w("     it, record l4hod %.3f mA, over round 6's %.4f A less its limiters' pull-ups %.3f mA, which canmb removes and this sum does not credit:" % (
+        F["hod"] * 1e3, F["r6"], F["pu"] * 1e3))
+    w("     MODEL, the drafts' records' figures, labelled scenarios for C-DEV): the window %+.4f A, %s" % (win, "no served state limited" if win > 0 else "CLOSED"))
+    rows = [(lab, i_ + add, air + F["drop"] * (i_ + add) * F["rja"]) for lab, i_, _t in FC["serve"]]
+    w("   (c) THE FINAL FIGURES RESTATED (section 10's served rows plus the drafts' additions, on the TPS73733DCQRM3's printed %.1f C/W at the" % F["rja"])
+    w("     drop's worst corner %.4f V; MODEL, CONDITIONAL on E-17's theta at the site, PROVISIONAL until L4A-62):" % F["drop"])
+    for lab, i_, t_ in rows:
+        w("     %-46s %.4f A  sustained  criterion 125 C: %5.1f C (margin %+5.1f K)" % (lab, i_, t_, 125.0 - t_))
+    w("     %-46s %.4f A  any waveform under it: %5.1f C (margin %+5.1f K)" % ("the limiter's printed maximum (11a (d))", F["ios_hi"], F["tj_bound"],
+                                                                             125.0 - F["tj_bound"]))
+    w("     the labels are section 10's: under row (b) the share limiters and their pull-ups are gone and a babbler is silenced by its peers'")
+    w("     vote (canq), so these rows are covers; cx46's countermodel (0.50 A pulses) lies under the limiter's maximum: inside that bound, or")
+    w("     limited and latched (T10 11a, K3)")
+    ret = (t14[1]["at"] - t14[1]["need"]) - (t14[0]["at"] - t14[0]["need"])
+    w("   THE WORST-CASE MARGIN ROW RESTATED: %+.1f K at constant maximum dissipation at the limiter's maximum (MODEL on a JEDEC best-case theta," % (
+        125.0 - F["tj_bound"]))
+    w("     CONDITIONAL on E-17: the site's junction at most 125 C, Zth(10 ms) at most %.1f C/W or W151-1's exclusion); T10-A3 at the limiter's" % F["zth"])
+    w("     maximum on all three %+.4f V as drawn on the 1 A row as the bound (%+.4f V on the INFERRED dropout), %+.4f V with the dedicated return" % (
+        F["a3_at"] - F["a3_need"], F["a3_inf"], F["a3_at"] - F["a3_need"] + ret))
+    w("     (INFERRED: section 10's return effect %+.4f V, taken at its own lead current, carried); PROVISIONAL (L4A-62, E-17, V-T10-DROP)" % ret)
+    w("     L4A-57 reads %s in T10 11a" % F["l4a57"])
+    restate = {6: "the rail trip is removed by regstage (W138-2); its place the TPS2553-1's printed limit and latch (T10 11a (f)); the limiter's latent "
+                  "loss of its limit found by record l4hod's in-service test within %.3f s (DRAFTED)" % F["hod_int"],
+               7: "bounded at constant maximum dissipation at the limiter's printed maximum, %.1f C on the printed theta, CONDITIONAL on E-17" % F["tj_bound"],
+               5: "the peers' buffered TXD reads and 2-of-2 SHDN votes drafted (canmb), the quorum held on rows 3, 5 and 7 and the GPIO-toggled TX "
+                  "silenced (canq), its self-test 2.60 s (W143); PROVISIONAL",
+               17: "unchanged by the limiter (its least over VOS0's current): HO-E, L4A-59 with its check L4A-100 (fnd/l4hoe, not in this tree)"}
+    w("   (d) THE OPEN ROWS OF SECTION 11 UNDER ROW (b) (each keeps cx46's state; the row's draft, not its closure):")
+    for row, item, cl, _aff, _op in FR:
+        if item in restate:
+            w("     item %2d (%s, %s): %s" % (item, row.split(" (")[0], cl, restate[item]))
+    w("     items 2, 4 and 10 are not row (b)'s and read as section 11 states")
+    w("   (e) THE CAN SERVICE PER STATE, RESTATED: under the bound and under a babbler, PROVISIONAL as before; for the TX pin toggled as a GPIO,")
+    w("     DRAFTED (the peers' attribution and vote, record l9t5 l9t5_canq.out), PROVISIONAL until L4A-62, where section 11 read NOT ESTABLISHED")
+    w("   FINDING W151-F1 (the coordinator, L4-E9's change list): canmb, regstage, canen and hodtest need their rows after iocguard on board B")
+    w("     (L4REG-F9 for regstage; canmb, canen and hodtest likewise); until then section 2's composition is the candidate's and T10 11a's the draft's")
+    w("")
+    P["row (b) (L4A-61): the service window holds on the composed candidate with the drafts' rail additions (MODEL, T10 11a's window)"] = win > 0
+    P["row (b) (L4A-61): the final figures and the worst-case margin row are restated on the selected stage, CONDITIONAL on E-17"] = (
+        all(t_ <= 125.0 for _l, _i, t_ in rows) and F["tj_bound"] <= 125.0 and F["l4a57"] == "DONE AS CONDITIONAL on E-17")
+    P["row (b) (L4A-61): section 11's rows 5, 6, 7 and 17 are restated for the drafts and keep cx46's states (nothing closes here)"] = (
+        {r[1] for r in FR} >= set(restate) and all(r[2] == "NOT CLOSED" for r in FR if r[1] in restate))
 
 
 if __name__ == "__main__":
