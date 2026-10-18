@@ -1,16 +1,16 @@
 accepted: yes
 
-# Layer 4, L4-E12: The assistant's closing check of the electronics' thermal record at a86be47b (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E12: The assistant's closing check of the electronics' thermal record at c7639561 (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1478 under MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E12 are spent:
-- the focused check `astra-check-l4e12-1.md` on `bcd23532`, NOT YET; the hold changed E3-O's configuration;
-- the targeted recheck `astra-check-l4e12-2.md` on `39fe74c4`, NOT YET; the SGP41's path and the rating categories.
+- the focused check `astra-check-l4e12-1.md` on `d12a9058`, NOT YET; the hold changed E3-O's configuration;
+- the targeted recheck `astra-check-l4e12-2.md` on `0a8454b8`, NOT YET; the SGP41's path and the rating categories.
 
-The final round is `a86be47b`. **This check accepts the record as a correct statement: U-02 is CONDITIONAL, and one genuine owner
+The final round is `c7639561`. **This check accepts the record as a correct statement: U-02 is CONDITIONAL, and one genuine owner
 question remains, CFL-002 (the SGP41).**
 
 **Verified by the coordinator:**
-- *Reproduction:* `l4e12_thermal.py` re-run at `a86be47b`, its output equal to the committed `.out` byte for byte;
+- *Reproduction:* `l4e12_thermal.py` re-run at `c7639561`, its output equal to the committed `.out` byte for byte;
   `test_l4e12` with `test_public_hygiene` 20 passed, 0 failed, 0 skipped.
 - *The conductance arithmetic (separate arithmetic, earlier round, unchanged):*
   - E3-O with everything on, 27.086 W: needs 27.086 / 15 = 1.806 W/K for +70 C mixed air;

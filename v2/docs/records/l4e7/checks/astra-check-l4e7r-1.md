@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E7R: the check of the control decision for REQ-016's 100 W by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx24-l4e7r-check`, run `20261001T202905Z-3885619`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e7 at commit `26cdf5bd94e8`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e7 at commit `8831cedd1e09`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

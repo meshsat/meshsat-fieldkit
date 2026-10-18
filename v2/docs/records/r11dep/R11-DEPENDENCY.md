@@ -1,10 +1,10 @@
 # Board A's charge path: the circuit as drawn, the resistor-only proposal, and the corrected path (stream r11dep, MESHSAT-1357)
 
-**Third issue, 30 September 2026:** CHECK-4 of `06b8ecea` accepted the second issue with five minors, answered here
+**Third issue, 30 September 2026:** CHECK-4 of `cf9e3909` accepted the second issue with five minors, answered here
 (section 9): the derated setting is 4.00 A, L1's schedule is written as a register setting, the collapse bound's other
 sources of pessimism are named, A-2's status is stated, and B-2's remedies are named concretely.
 
-**Second issue, 30 September 2026.** It answers the independent check CHECK-3 of `4e9fa869`, which read "accepted: no" on
+**Second issue, 30 September 2026.** It answers the independent check CHECK-3 of `a9761fcb`, which read "accepted: no" on
 two blocking items and seven minors (section 9 maps each to its answer). It also carries the owner's amendments of the same
 day. They are quoted here because they set what this page is:
 
@@ -230,7 +230,7 @@ it is an implementation requirement: C-1.
 
 ### 2d. Historical evidence, revision A32 only
 
-- **The board.** `v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb` is revision A32: last commit `b7e0d28f` of 15 September
+- **The board.** `v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb` is revision A32: last commit `8b6bc226` of 15 September
   2026, routed, sha256/16 `58e26c67987b1daa`. On it, U2 pins 13 to 16 sit on VBUS20, FE_OUT, GND and FE_CS, the power nets
   themselves, with no R160, R161, R150 or R151 (`.out` 3, read from the board file).
 - **The reading.** kelvin_check (ADVISORY, 20 September 2026) read two copper drops at dc_drop's solved current:
@@ -409,7 +409,7 @@ service and 226.3 W at the maximum.
 | 4, p.24's filter limit | section 5: it is for CS and CSG; ISNS follows Figure 8-1 (p.17) and p.30 |
 | 5, the spring pins' basis | section 3: the 0850 to 0853 sibling figure, and the 0858 page read by CHECK-3 |
 | 6, the Kelvin budget at 25 C, and ENERGY-BASIS section 2 | 2c C-1: 0.29 mOhm at 25 C. ENERGY-BASIS section 2's drafted-R11 sentence now reads "with Kelvin taps on R11 (r11dep)" |
-| 7, the layout statement's revision | 2d: revision A32, `b7e0d28f`, its pins read from the board file |
+| 7, the layout statement's revision | 2d: revision A32, `8b6bc226`, its pins read from the board file |
 | Owner: three cases kept apart | sections 1 and 4 |
 | Owner: the Kelvin classification | 2a (not an existing defect), 2c C-1 (implementation requirement and verification), 2d (A32 historical) |
 | Owner: the derated setting | 2a A-1: coordination only, shown as the DERATED VARIANT beside the actual AS DRAWN case |

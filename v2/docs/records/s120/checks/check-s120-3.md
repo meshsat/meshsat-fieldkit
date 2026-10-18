@@ -6,9 +6,9 @@ AI review (desk arithmetic on the makers' documents and the committed netlists, 
 qualified engineering review. 29 September 2026, 19:14 CEST. Checker did not write the work. Rounds 1 and 2: `CHECK.md`,
 `CHECK-2.md` beside this file.
 
-Checked: `fnd/s120` at `8c504a24429a24a535f7e085a4b14df5193431ba` (confirmed), four commits on `afcdb557` (`723c7412`,
-`0a164e97`, `a774acac`, `8c504a24`; the last changes only LOG.md and dryrun.out), all as the owner, no trailer. Clone
-`<scratch>/chk-s120` detached at the tip; `<scratch>/chk-s120/_int14` at `b874b744` for main's tools. Netlists of A and E
+Checked: `fnd/s120` at `cd34d6eeee97602c53e7d4fea2ef91bc74ea181f` (confirmed), four commits on `38902f30` (`302afa48`,
+`a860b8af`, `6bfe001d`, `cd34d6ee`; the last changes only LOG.md and dryrun.out), all as the owner, no trailer. Clone
+`<scratch>/chk-s120` detached at the tip; `<scratch>/chk-s120/_int14` at `53804300` for main's tools. Netlists of A and E
 unchanged (`6c40250c47195ebb`, `2ed95a0e8069ebf8`). No en or em dash in the six records. No commit, no push, no agent, no
 box.
 
@@ -91,16 +91,16 @@ CH_ACN_F/CH_ACP_F and GND).
      * TI's 33 nF CACN and CACP to GND (record lines show C998 and C997)
      * R150 and R151 at 4.99 Ohm (the gate asks at most 100 Ohm, which bounds the 1.9 mV offset)
      * R27 at 39.2k (inside the window)
-5. **The registry.** The tip's registry equals `b874b744`'s (sha256/16 1dde1fd16f4e260e). `--check` with the short
-   `8c504a24` wrote nothing. On scratch copies of both:
-   * S-120 is closed by `commit 8c504a24429a24a535f7e085a4b14df5193431ba`.
+5. **The registry.** The tip's registry equals `53804300`'s (sha256/16 1dde1fd16f4e260e). `--check` with the short
+   `cd34d6ee` wrote nothing. On scratch copies of both:
+   * S-120 is closed by `commit cd34d6eeee97602c53e7d4fea2ef91bc74ea181f`.
    * S-124 is opened (SESSION, OPEN).
    * REQ-015 waits on S-106, S-107, S-111, S-124.
    * S-120 is appended after S-121.
    * The two applied copies are byte identical, and a second run refuses.
-   * `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings on all four copies (main's tools at `b874b744` and
+   * `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings on all four copies (main's tools at `53804300` and
      the tip's).
-   * `afcdb557` (README differs) and `a774acac` (LOG differs) are refused, so the integrator passes the tip or a merge that
+   * `38902f30` (README differs) and `6bfe001d` (LOG differs) are refused, so the integrator passes the tip or a merge that
      carries it, as README section 10 now says.
    * Nothing claims ringing is bounded: README 1, 7 and 11, `.out` 10 and 12, the closing evidence ("not bounded at desk
      ... carried by S-124") and S-124 itself.

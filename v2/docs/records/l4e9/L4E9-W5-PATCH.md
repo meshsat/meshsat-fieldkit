@@ -2,13 +2,13 @@
 
 # W5's findings on L4-E9's side: the patch for the coordinator (W13, MESHSAT-1357, 6 October 2026)
 
-**What this is.** Exact text corrections to L4-E9's generator `v2/docs/records/l4e9/l4e9_power_path.py`, its page `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` and its register `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md`, the re-take of three copies in `v2/docs/records/l4e9/inputs/`, and five docstring rows in drafts of records l8p and l4e11, written by worker W13 on branch `fnd/w13l4e9` from W7's tip `3e566c551498f66bda0c092581ce71016ea9bd30` (set 30's integration commit 2c `53a68c7c` plus W7's two patch files). Every file a row names is byte for byte the same at the integration's committed `6bc4424e` (read with `git diff --stat`); the integration's uncommitted regenerated outputs of 2b were not read. No file a row names is edited here. The rows restate record text and bindings; none designs anything, computes a figure, changes a predicate, a pin's meaning or a verdict, or consumes a review. Prototype framing: nothing in the kit is built, bought, powered or measured.
+**What this is.** Exact text corrections to L4-E9's generator `v2/docs/records/l4e9/l4e9_power_path.py`, its page `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` and its register `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md`, the re-take of three copies in `v2/docs/records/l4e9/inputs/`, and five docstring rows in drafts of records l8p and l4e11, written by worker W13 on branch `fnd/w13l4e9` from W7's tip `6c87b6275eb476f0321081551304bc69211712f7` (set 30's integration commit 2c `a78a84cb` plus W7's two patch files). Every file a row names is byte for byte the same at the integration's committed `785bf03a` (read with `git diff --stat`); the integration's uncommitted regenerated outputs of 2b were not read. No file a row names is edited here. The rows restate record text and bindings; none designs anything, computes a figure, changes a predicate, a pin's meaning or a verdict, or consumes a review. Prototype framing: nothing in the kit is built, bought, powered or measured.
 
-**The findings it answers**, as W5 filed them on `fnd/w5l8p` at `cd19df597350b8f56b78fc172e6966e78dba8049`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14 (lines 1592 to 1665), and as the queue carries them (Q-22: "the L4-E9 verbatim inputs `records/l4e9/inputs/l8p-*-515f6cf2.txt` still read LM5069MM-2 (a re-take of the inputs); the change-list order data and R-246 name fewer release companions than six; R-208's row cites a stale section (W5-F1)"; Q-23: "the board A and E drafts' docstrings and record l4e11's DD-7 draft line 50 name only round 1's release companions (W5-F2, W5-F3); the breaker draft's lines 55-56 (W5-D1)").
+**The findings it answers**, as W5 filed them on `fnd/w5l8p` at `e6e91c1e09f605ae363dfa5a6f7db18018776c4d`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14 (lines 1592 to 1665), and as the queue carries them (Q-22: "the L4-E9 verbatim inputs `records/l4e9/inputs/l8p-*-515f6cf2.txt` still read LM5069MM-2 (a re-take of the inputs); the change-list order data and R-246 name fewer release companions than six; R-208's row cites a stale section (W5-F1)"; Q-23: "the board A and E drafts' docstrings and record l4e11's DD-7 draft line 50 name only round 1's release companions (W5-F2, W5-F3); the breaker draft's lines 55-56 (W5-D1)").
 
 ## 1. How to apply
 
-- **Order of adoption.** Apply nothing here before `fnd/w5l8p` (`cd19df59`) is merged: every row cites record l8p's section 6 item 1 as W5 restated it ("One release for the six drafts", lines 266 to 289); at the base that item still reads "One release for the five drafts".
+- **Order of adoption.** Apply nothing here before `fnd/w5l8p` (`e6e91c1e`) is merged: every row cites record l8p's section 6 item 1 as W5 restated it ("One release for the six drafts", lines 266 to 289); at the base that item still reads "One release for the five drafts".
 - **Section 3 (WP-01 to WP-06)** together, in one commit with the re-take of section 2: the three new copies written, the three old ones removed, the three pins and the three From cells changed.
 - **Sections 4 and 5 (WP-07 to WP-22)** together in one commit: each generator row WP-07, 09, 11, 13, 15, 17 with its page row WP-08, 10, 12, 14, 16, 18 (test_l4e9 line 1169: "the page's change list is the script's"); the register rows WP-19 to WP-22 beside them. Sections 3 to 5 may share that commit.
 - **Then regenerate** `l4e9_power_path.out` through `_bin/regen_out.py <worktree> v2/docs/records/l4e9/l4e9_power_path.py v2/docs/records/l4e9/l4e9_power_path.out` (its R4 binds the three new copies' printed pins). What moves in the output: lines 52 to 54 and 2299 to 2301 (the copies' names and sha256/16, section 2) and the change list's rows 32, 34, 35, 66, 92 and 93 (lines 1343, 1345, 1346, 1377, 1403 and 1404 at the base, section 17); no figure, count or verdict line. The page's section 3 table is hand text held equal to the script by the test, so WP-08 to WP-18 are its edit.
@@ -18,46 +18,46 @@
 
 ## 2. The verbatim inputs (W5-F1's PC-04 part; Q-22's first item)
 
-**W5's words** (`fnd/w5l8p` `cd19df59`, `L8P-BREAKER.md` lines 1621 to 1625): "**The copies that name the -2 for U101 are L4-E9's, not this folder's:** `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt` (round 1's bytes: U101 as the -2 at its lines 10, 61, 65, 90, 113 and 175) and `.../l8p-apply_gen_sch_a_ptc-515f6cf2.txt` (line 45); the third, `.../l8p-apply_gen_sch_e_enable-515f6cf2.txt`, names no LM5069. They are verbatim copies pinned by L4-E9's generator (`l4e9_power_path.py` lines 109 to 111): rewriting one would falsify a copy, so they stay as they are; R-206's From calls them superseded (the register's line 302) and their re-take is the coordinator's (PC-04; SET31-CHANGES.md lines 118 to 119)." Read here: each copy is byte for byte its draft at `515f6cf2` (`git show`), and the LM5069 lines W5 names are the copies' only LM5069 lines.
+**W5's words** (`fnd/w5l8p` `e6e91c1e`, `L8P-BREAKER.md` lines 1621 to 1625): "**The copies that name the -2 for U101 are L4-E9's, not this folder's:** `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt` (round 1's bytes: U101 as the -2 at its lines 10, 61, 65, 90, 113 and 175) and `.../l8p-apply_gen_sch_a_ptc-515f6cf2.txt` (line 45); the third, `.../l8p-apply_gen_sch_e_enable-515f6cf2.txt`, names no LM5069. They are verbatim copies pinned by L4-E9's generator (`l4e9_power_path.py` lines 109 to 111): rewriting one would falsify a copy, so they stay as they are; R-206's From calls them superseded (the register's line 302) and their re-take is the coordinator's (PC-04; SET31-CHANGES.md lines 118 to 119)." Read here: each copy is byte for byte its draft at `b158e9a1` (`git show`), and the LM5069 lines W5 names are the copies' only LM5069 lines.
 
-**The re-take: no capture script exists.** Record l4e9's folder holds one fetch script, `fetch_held_back.py`, which downloads the Littelfuse 0997 sheet into the ignored `v2/vendor/power/held/` and never writes `inputs/`; the three copies entered with round 8's commit `5eb6e74f` (4 October 2026) as plain files with no script committed (`git show --stat 5eb6e74f`), and at the base no file names them by file name outside the generator and its output. The coordinator's set 30 re-pin tool (`repin_l4e9.py`, outside the tree) re-pins a pin to the bytes at the SAME path, so it cannot rename a copy. The re-take is therefore the round 8 method by hand, for each copy (never run here; `<wt>` the integration worktree):
+**The re-take: no capture script exists.** Record l4e9's folder holds one fetch script, `fetch_held_back.py`, which downloads the Littelfuse 0997 sheet into the ignored `v2/vendor/power/held/` and never writes `inputs/`; the three copies entered with round 8's commit `fd2dd3c2` (4 October 2026) as plain files with no script committed (`git show --stat fd2dd3c2`), and at the base no file names them by file name outside the generator and its output. The coordinator's set 30 re-pin tool (`repin_l4e9.py`, outside the tree) re-pins a pin to the bytes at the SAME path, so it cannot rename a copy. The re-take is therefore the round 8 method by hand, for each copy (never run here; `<wt>` the integration worktree):
 
 ```text
-git -C <wt> show 6eeb6cfe:v2/docs/records/l8p/apply_gen_sch_p_breaker.py > <wt>/v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-6eeb6cfe.txt
-git -C <wt> show 69b8c3bb:v2/docs/records/l8p/apply_gen_sch_e_enable.py > <wt>/v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-69b8c3bb.txt
-git -C <wt> show 8e6a938c:v2/docs/records/l8p/apply_gen_sch_a_ptc.py > <wt>/v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-8e6a938c.txt
+git -C <wt> show eb359b3c:v2/docs/records/l8p/apply_gen_sch_p_breaker.py > <wt>/v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-6eeb6cfe.txt
+git -C <wt> show 62d8fd32:v2/docs/records/l8p/apply_gen_sch_e_enable.py > <wt>/v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-69b8c3bb.txt
+git -C <wt> show 27c11436:v2/docs/records/l8p/apply_gen_sch_a_ptc.py > <wt>/v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-8e6a938c.txt
 git -C <wt> rm -q v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt
 git -C <wt> rm -q v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-515f6cf2.txt
 git -C <wt> rm -q v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-515f6cf2.txt
 ```
 
-then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1** (authority: SESSION, under the owner's standing rule of 26 September 2026): each new copy is named after the commit that last changed its draft's bytes (`git log -1` on the draft: `6eeb6cfe`, `69b8c3bb`, `8e6a938c`, each an ancestor of `6bc4424e` and of `cd19df59`, where the bytes are the same), as round 8 named its copies after a commit of record l8p, `515f6cf2`, whose bytes they are. Reason: the name then says where the bytes can be read again. To reverse: name all three after the integration commit of the re-take and change WP-01 to WP-03's paths to match.
+then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1** (authority: SESSION, under the owner's standing rule of 26 September 2026): each new copy is named after the commit that last changed its draft's bytes (`git log -1` on the draft: `eb359b3c`, `62d8fd32`, `27c11436`, each an ancestor of `785bf03a` and of `e6e91c1e`, where the bytes are the same), as round 8 named its copies after a commit of record l8p, `b158e9a1`, whose bytes they are. Reason: the name then says where the bytes can be read again. To reverse: name all three after the integration commit of the re-take and change WP-01 to WP-03's paths to match.
 
-**What pins the copies.** By digest, only the generator's PINS lines 109 to 111 (WP-01 to WP-03), printed again by its output at lines 52 to 54 and 2299 to 2301 on regeneration. The page names neither the copies nor their digests. The register names them by commit, not digest, in the From cells of R-206 to R-208 (WP-04 to WP-06). No test pins them: `test_l4e11.py` line 1056 pins `c8e4eeb499491eab...` for `v2/docs/records/l8p/apply_gen_sch_a_ptc.py` read at record l8p's commit `b1295c1e` that L4-E11's round 9 names (`R9_COMMITS`, `l4e11_power.py` line 3228), the same bytes as the PTC copy, and is untouched by the re-take; `test_l4e9.py` line 418 accepts a copy under `inputs/` only for a board E draft that is not in the tree, and the tree holds record l8p's. **What the generator reads from a copy** (lines 5309 to 5315): a draft marker in its first 3000 characters (`NOT\s+APPLIED|DRAFT\s+for\s+the\s+integrator`) and its target's name; W5's bytes carry both (the test reads them), so the re-take adds no refusal and moves no figure.
+**What pins the copies.** By digest, only the generator's PINS lines 109 to 111 (WP-01 to WP-03), printed again by its output at lines 52 to 54 and 2299 to 2301 on regeneration. The page names neither the copies nor their digests. The register names them by commit, not digest, in the From cells of R-206 to R-208 (WP-04 to WP-06). No test pins them: `test_l4e11.py` line 1056 pins `c8e4eeb499491eab...` for `v2/docs/records/l8p/apply_gen_sch_a_ptc.py` read at record l8p's commit `c3b71bbf` that L4-E11's round 9 names (`R9_COMMITS`, `l4e11_power.py` line 3228), the same bytes as the PTC copy, and is untouched by the re-take; `test_l4e9.py` line 418 accepts a copy under `inputs/` only for a board E draft that is not in the tree, and the tree holds record l8p's. **What the generator reads from a copy** (lines 5309 to 5315): a draft marker in its first 3000 characters (`NOT\s+APPLIED|DRAFT\s+for\s+the\s+integrator`) and its target's name; W5's bytes carry both (the test reads them), so the re-take adds no refusal and moves no figure.
 
 #### The copy `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt`
 
-- The base copy: sha256 `ddc7258038c86b6ad03416dafcaab68bb8133cb25540b7fb2cba1263874ff541` (the generator's pin `l8p_breaker`, line 109); round 1's draft at `515f6cf2`, byte for byte.
-- W5's file: `v2/docs/records/l8p/apply_gen_sch_p_breaker.py` at `cd19df59`, sha256 `e8f1294bb0f76c75d146332e41d3783256474804905faa296bcdca8bc0cf2693`; the same bytes at `6eeb6cfe` (its last change), at the base and at `6bc4424e`.
+- The base copy: sha256 `ddc7258038c86b6ad03416dafcaab68bb8133cb25540b7fb2cba1263874ff541` (the generator's pin `l8p_breaker`, line 109); round 1's draft at `b158e9a1`, byte for byte.
+- W5's file: `v2/docs/records/l8p/apply_gen_sch_p_breaker.py` at `e6e91c1e`, sha256 `e8f1294bb0f76c75d146332e41d3783256474804905faa296bcdca8bc0cf2693`; the same bytes at `eb359b3c` (its last change), at the base and at `785bf03a`.
 - The copy's LM5069 lines: 10, 61, 65, 90, 113, 175.
 - The re-taken copy: `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-6eeb6cfe.txt`, sha256 `e8f1294bb0f76c75d146332e41d3783256474804905faa296bcdca8bc0cf2693`.
 - The lines that differ (unified diff, three lines of context, 342 lines):
 
 ```diff
 --- a/v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt
-+++ b/v2/docs/records/l8p/apply_gen_sch_p_breaker.py@cd19df59
++++ b/v2/docs/records/l8p/apply_gen_sch_p_breaker.py@e6e91c1e
 @@ -1,40 +1,58 @@
  #!/usr/bin/env python3
 -"""apply_gen_sch_p_breaker.py: DRAFT for board P's generator owner (Layer 8 record l8p, MESHSAT-1357, 4 October 2026). NOT
 -APPLIED to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
 -
--The defect: W4DP-F2 (record l9stk section 15, DD-1 and DD-6, on branch fnd/l9stk at 2c8b29fb, independently checked
+-The defect: W4DP-F2 (record l9stk section 15, DD-1 and DD-6, on branch fnd/l9stk at c78ead77, independently checked
 -CONFIRMED AS CONDITIONAL). With board P's FETs Q1 and Q2 welded and no firmware, nothing on this board opens the discharge path
 -on current alone (l9stk 15.2), and a docking with a breaker that is already on reaches E11-30's 242.9 A (15.4, B-P1).
 +"""apply_gen_sch_p_breaker.py: DRAFT for board P's generator owner (Layer 8 record l8p, MESHSAT-1357, 4 October 2026; round 2
 +of the same day). NOT APPLIED to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
 +
-+The defects: W4DP-F2 (record l9stk section 15, DD-1, DD-6 and DD-8, branch fnd/l9stk at 0d72880b; its latest changes checked
++The defects: W4DP-F2 (record l9stk section 15, DD-1, DD-6 and DD-8, branch fnd/l9stk at 56b29bf5; its latest changes checked
 +CONFIRMED AS CONDITIONAL). With board P's FETs Q1 and Q2 welded and no firmware, nothing on this board opens the discharge path on
 +current alone (15.2); a docking with a breaker already on reaches E11-30's 242.9 A (15.4, B-P1); and a hot restart of the latching
 +breaker into the worst resistive fault reaches 0.82 of the FET's derated SOA (15.4b, B-R1, DD-8).
@@ -164,7 +164,7 @@ then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1
  _BREAKER = (
      '# =========================================================================================================================\n'
 -    '# RECORD l8p (MESHSAT-1357, 4 October 2026): W4DP-F2\'S FIRMWARE-INDEPENDENT ELEMENT, drawn from record l9stk section 15\n'
--    '# (branch fnd/l9stk at 2c8b29fb, CONFIRMED AS CONDITIONAL). With Q1 and Q2 welded and no firmware, nothing on this board\n'
+-    '# (branch fnd/l9stk at c78ead77, CONFIRMED AS CONDITIONAL). With Q1 and Q2 welded and no firmware, nothing on this board\n'
 -    '# opened the discharge path on current alone (l9stk 15.2). C-1 (15.4): the LM5069-2 circuit breaker U101 from BRK_VIN (Q2\'s\n'
 -    '# source) to PACK_P. The sense pair R101 4 mOhm and R102 7.5 mOhm in parallel, 2.6087 mOhm, 1 percent and at most 50 ppm/K\n'
 -    '# (current limit 18.32 to 23.93 A, breaker 30.21 to 50.59 A); Q101 and Q102 CSD18510Q5B, 40 V; RPWR R103 8.45 kOhm (32.52 W\n'
@@ -181,7 +181,7 @@ then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1
 -    '# 1.51 ms; an open or a short to ground on either conductor holds the breaker off. J_SMB pin 6 is the ground contact between\n'
 -    '# the two conductors (C2). The order of mating (every power pin before the enable, 1 mm short) is Layer 7\'s (C1).\n'
 +    '# RECORD l8p (MESHSAT-1357, 4 October 2026, round 2): W4DP-F2\'S FIRMWARE-INDEPENDENT ELEMENT, drawn from record l9stk section\n'
-+    '# 15 (branch fnd/l9stk at 0d72880b, its latest changes CONFIRMED AS CONDITIONAL). With Q1 and Q2 welded and no firmware,\n'
++    '# 15 (branch fnd/l9stk at 56b29bf5, its latest changes CONFIRMED AS CONDITIONAL). With Q1 and Q2 welded and no firmware,\n'
 +    '# nothing on this board opened the discharge path on current alone (l9stk 15.2).\n'
 +    '# C-1 (15.4, 15.4b): the LM5069-1 circuit breaker U101, THE LATCH-OFF VARIANT (the -2\'s retry takes its own FET past TI\'s\n'
 +    '# margin in a hard short and past 150 C in a resistive fault on VSYS, 15.4b), from BRK_VIN (Q2\'s source) to PACK_P. The sense\n'
@@ -390,21 +390,21 @@ then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1
 
 #### The copy `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-515f6cf2.txt`
 
-- The base copy: sha256 `3323d1831fd1dc46664b739f51d981ab0c9c84f49838e7c8f62053782fc0caa9` (the generator's pin `l8p_enable`, line 110); round 1's draft at `515f6cf2`, byte for byte.
-- W5's file: `v2/docs/records/l8p/apply_gen_sch_e_enable.py` at `cd19df59`, sha256 `c1fa1713c6e5fe291984e8f31e8a47eff447743c38dfc364d05b9e80dcfe5912`; the same bytes at `69b8c3bb` (its last change), at the base and at `6bc4424e`.
+- The base copy: sha256 `3323d1831fd1dc46664b739f51d981ab0c9c84f49838e7c8f62053782fc0caa9` (the generator's pin `l8p_enable`, line 110); round 1's draft at `b158e9a1`, byte for byte.
+- W5's file: `v2/docs/records/l8p/apply_gen_sch_e_enable.py` at `e6e91c1e`, sha256 `c1fa1713c6e5fe291984e8f31e8a47eff447743c38dfc364d05b9e80dcfe5912`; the same bytes at `62d8fd32` (its last change), at the base and at `785bf03a`.
 - The copy's LM5069 lines: none (W5: "names no LM5069").
 - The re-taken copy: `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-69b8c3bb.txt`, sha256 `c1fa1713c6e5fe291984e8f31e8a47eff447743c38dfc364d05b9e80dcfe5912`.
 - The lines that differ (unified diff, three lines of context, 11 lines):
 
 ```diff
 --- a/v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-515f6cf2.txt
-+++ b/v2/docs/records/l8p/apply_gen_sch_e_enable.py@cd19df59
++++ b/v2/docs/records/l8p/apply_gen_sch_e_enable.py@e6e91c1e
 @@ -3,7 +3,7 @@
  APPLIED to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
  
  Board E's half of the pack breaker's make-last enable loop (record l9stk section 15.4, C-1b, conditions C1 and C2; DD-6's owner
--row "board E's generator (two J_SMB contacts with a ground between)"; branch fnd/l9stk at 2c8b29fb). Board E is a pass-through:
-+row "board E's generator (two J_SMB contacts with a ground between)"; branch fnd/l9stk at 2c8b29fb, unchanged at 0d72880b). Board E is a pass-through:
+-row "board E's generator (two J_SMB contacts with a ground between)"; branch fnd/l9stk at c78ead77). Board E is a pass-through:
++row "board E's generator (two J_SMB contacts with a ground between)"; branch fnd/l9stk at c78ead77, unchanged at 56b29bf5). Board E is a pass-through:
  the loop comes from board P on the SMBus lead and leaves for the dock block on the signal lands, and nothing on this board
  touches it. Board P's draft (apply_gen_sch_p_breaker.py) drives it, board A's (apply_gen_sch_a_ptc.py) closes it through the
  thermal guard RT1.
@@ -412,21 +412,21 @@ then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1
 
 #### The copy `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-515f6cf2.txt`
 
-- The base copy: sha256 `c8e4eeb499491eab773332b090ef1ebb8f0d14975ffedf9e750f5c64ff89d92f` (the generator's pin `l8p_ptc`, line 111); round 1's draft at `515f6cf2`, byte for byte.
-- W5's file: `v2/docs/records/l8p/apply_gen_sch_a_ptc.py` at `cd19df59`, sha256 `cedae4eb4572a6a5b137dfc151b07d96ac9004e332317dba1c6d703941ce95c0`; the same bytes at `8e6a938c` (its last change), at the base and at `6bc4424e`.
+- The base copy: sha256 `c8e4eeb499491eab773332b090ef1ebb8f0d14975ffedf9e750f5c64ff89d92f` (the generator's pin `l8p_ptc`, line 111); round 1's draft at `b158e9a1`, byte for byte.
+- W5's file: `v2/docs/records/l8p/apply_gen_sch_a_ptc.py` at `e6e91c1e`, sha256 `cedae4eb4572a6a5b137dfc151b07d96ac9004e332317dba1c6d703941ce95c0`; the same bytes at `27c11436` (its last change), at the base and at `785bf03a`.
 - The copy's LM5069 lines: 45.
 - The re-taken copy: `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-8e6a938c.txt`, sha256 `cedae4eb4572a6a5b137dfc151b07d96ac9004e332317dba1c6d703941ce95c0`.
 - The lines that differ (unified diff, three lines of context, 50 lines):
 
 ```diff
 --- a/v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-515f6cf2.txt
-+++ b/v2/docs/records/l8p/apply_gen_sch_a_ptc.py@cd19df59
++++ b/v2/docs/records/l8p/apply_gen_sch_a_ptc.py@e6e91c1e
 @@ -3,11 +3,16 @@
  to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
  
  Board A's half of the pack breaker's make-last enable loop (record l9stk section 15.4, C-1b, and 15.5, THE THERMAL GUARD,
--SELECTED; owners "board A's generator with L4-E11 for the PTC beside the battery FETs"; branch fnd/l9stk at 2c8b29fb). The loop
-+SELECTED; owners "board A's generator with L4-E11 for the PTC beside the battery FETs"; branch fnd/l9stk at 2c8b29fb, unchanged at 0d72880b). The loop
+-SELECTED; owners "board A's generator with L4-E11 for the PTC beside the battery FETs"; branch fnd/l9stk at c78ead77). The loop
++SELECTED; owners "board A's generator with L4-E11 for the PTC beside the battery FETs"; branch fnd/l9stk at c78ead77, unchanged at 56b29bf5). The loop
  from board P crosses the dock on two contacts and passes, on this board, the kit's PRF15BB103 chip PTC on the battery FETs'
 -copper: 10 kOhm +-50 % cold, 47 kOhm at 130 +-3 C, 32 V. The first inverter on board P stays on to 47 kOhm at 10.6 V and is off
 -from 338 kOhm at 16.8 V, so the breaker opens between the PTC's 47 kOhm point (127 to 133 C) and its 338 kOhm point (E-13), a
@@ -473,13 +473,13 @@ then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1
 
 ## 3. The rows of the re-take (WP-01 to WP-06)
 
-### WP-01. The generator's pin `l8p_breaker`: the copy re-taken at `6eeb6cfe` (PINS)
+### WP-01. The generator's pin `l8p_breaker`: the copy re-taken at `eb359b3c` (PINS)
 
 - File: `v2/docs/records/l4e9/l4e9_power_path.py`
 - Line: 109
 - Kind: line
 - Pairs with: WP-04 to WP-06; the copy's re-take (section 2)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625 (the copies L4-E9's, their re-take the coordinator's); the draft's bytes at `6eeb6cfe` (git log -1 on the draft, section 2)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625 (the copies L4-E9's, their re-take the coordinator's); the draft's bytes at `eb359b3c` (git log -1 on the draft, section 2)
 - Class: BINDING (a pin follows its re-taken copy; the generator reads only the copy's draft marker and target name, lines 5310 to 5314, so no figure, predicate or verdict moves)
 - Old:
 
@@ -493,13 +493,13 @@ then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1
     "l8p_breaker": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-6eeb6cfe.txt", "e8f1294bb0f76c75d146332e41d3783256474804905faa296bcdca8bc0cf2693"),
 ```
 
-### WP-02. The generator's pin `l8p_enable`: the copy re-taken at `69b8c3bb` (PINS)
+### WP-02. The generator's pin `l8p_enable`: the copy re-taken at `62d8fd32` (PINS)
 
 - File: `v2/docs/records/l4e9/l4e9_power_path.py`
 - Line: 110
 - Kind: line
 - Pairs with: WP-04 to WP-06; the copy's re-take (section 2)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625 (the copies L4-E9's, their re-take the coordinator's); the draft's bytes at `69b8c3bb` (git log -1 on the draft, section 2)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625 (the copies L4-E9's, their re-take the coordinator's); the draft's bytes at `62d8fd32` (git log -1 on the draft, section 2)
 - Class: BINDING (a pin follows its re-taken copy; the generator reads only the copy's draft marker and target name, lines 5310 to 5314, so no figure, predicate or verdict moves)
 - Old:
 
@@ -513,13 +513,13 @@ then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1
     "l8p_enable": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-69b8c3bb.txt", "c1fa1713c6e5fe291984e8f31e8a47eff447743c38dfc364d05b9e80dcfe5912"),
 ```
 
-### WP-03. The generator's pin `l8p_ptc`: the copy re-taken at `8e6a938c` (PINS)
+### WP-03. The generator's pin `l8p_ptc`: the copy re-taken at `27c11436` (PINS)
 
 - File: `v2/docs/records/l4e9/l4e9_power_path.py`
 - Line: 111
 - Kind: line
 - Pairs with: WP-04 to WP-06; the copy's re-take (section 2)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625 (the copies L4-E9's, their re-take the coordinator's); the draft's bytes at `8e6a938c` (git log -1 on the draft, section 2)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625 (the copies L4-E9's, their re-take the coordinator's); the draft's bytes at `27c11436` (git log -1 on the draft, section 2)
 - Class: BINDING (a pin follows its re-taken copy; the generator reads only the copy's draft marker and target name, lines 5310 to 5314, so no figure, predicate or verdict moves)
 - Old:
 
@@ -539,18 +539,18 @@ then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1
 - Line: 302
 - Kind: fragment
 - Pairs with: WP-01 to WP-03 (apply only with the re-take)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625; this file's section 2
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625; this file's section 2
 - Class: BINDING (the provenance text follows the re-take; no claim of the row changes)
 - Old:
 
 ```text
-the copies at `515f6cf2` in this folder's inputs are superseded, their pins the coordinator's to re-take) | Layer 8 board P generator owner
+the copies at `b158e9a1` in this folder's inputs are superseded, their pins the coordinator's to re-take) | Layer 8 board P generator owner
 ```
 
 - New:
 
 ```text
-the copies in this folder's inputs taken again from the drafts' current bytes; round 1's copies at `515f6cf2` retired) | Layer 8 board P generator owner
+the copies in this folder's inputs taken again from the drafts' current bytes; round 1's copies at `b158e9a1` retired) | Layer 8 board P generator owner
 ```
 
 ### WP-05. The register's R-207, its From cell after the re-take
@@ -559,18 +559,18 @@ the copies in this folder's inputs taken again from the drafts' current bytes; r
 - Line: 303
 - Kind: fragment
 - Pairs with: WP-01 to WP-03 (apply only with the re-take)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625; this file's section 2
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625; this file's section 2
 - Class: BINDING (the provenance text follows the re-take; no claim of the row changes)
 - Old:
 
 ```text
-the copies at `515f6cf2` in this folder's inputs are superseded, their pins the coordinator's to re-take) | Layer 8 board E generator owner
+the copies at `b158e9a1` in this folder's inputs are superseded, their pins the coordinator's to re-take) | Layer 8 board E generator owner
 ```
 
 - New:
 
 ```text
-the copies in this folder's inputs taken again from the drafts' current bytes; round 1's copies at `515f6cf2` retired) | Layer 8 board E generator owner
+the copies in this folder's inputs taken again from the drafts' current bytes; round 1's copies at `b158e9a1` retired) | Layer 8 board E generator owner
 ```
 
 ### WP-06. The register's R-208, its From cell after the re-take
@@ -579,18 +579,18 @@ the copies in this folder's inputs taken again from the drafts' current bytes; r
 - Line: 304
 - Kind: fragment
 - Pairs with: WP-01 to WP-03 (apply only with the re-take)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625; this file's section 2
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, lines 1621 to 1625; this file's section 2
 - Class: BINDING (the provenance text follows the re-take; no claim of the row changes)
 - Old:
 
 ```text
-the copies at `515f6cf2` in this folder's inputs are superseded, their pins the coordinator's to re-take) | Layer 8 board A generator owner
+the copies at `b158e9a1` in this folder's inputs are superseded, their pins the coordinator's to re-take) | Layer 8 board A generator owner
 ```
 
 - New:
 
 ```text
-the copies in this folder's inputs taken again from the drafts' current bytes; round 1's copies at `515f6cf2` retired) | Layer 8 board A generator owner
+the copies in this folder's inputs taken again from the drafts' current bytes; round 1's copies at `b158e9a1` retired) | Layer 8 board A generator owner
 ```
 
 ## 4. The release companions (W5-F1; Q-22's second item)
@@ -603,7 +603,7 @@ Record l8p's one `RELEASE.md` covers six drafts, named with their register rows 
 - Line: 6468
 - Kind: line
 - Pairs with: WP-08
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); section 6 item 4, line 303 (the order constraint once round 1's section 5, `515f6cf2` line 106: finding 3)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); section 6 item 4, line 303 (the order constraint once round 1's section 5, `b158e9a1` line 106: finding 3)
 - Class: BINDING (the companions as record l8p's section 6 item 1 names them; no order constraint, script, guard or state moves); its section citation corrected from round 1's number to the current one (finding 3)
 - Old:
 
@@ -623,7 +623,7 @@ Record l8p's one `RELEASE.md` covers six drafts, named with their register rows 
 - Line: 457
 - Kind: fragment
 - Pairs with: WP-07
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); section 6 item 4, line 303 (the order constraint once round 1's section 5, `515f6cf2` line 106: finding 3); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); section 6 item 4, line 303 (the order constraint once round 1's section 5, `b158e9a1` line 106: finding 3); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-07)
 - Old:
 
@@ -643,7 +643,7 @@ Record l8p's one `RELEASE.md` covers six drafts, named with their register rows 
 - Line: 6504
 - Kind: line
 - Pairs with: WP-10
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
 - Class: BINDING (the companions as record l8p's section 6 item 1 names them; no order constraint, script, guard or state moves)
 - Old:
 
@@ -663,7 +663,7 @@ Record l8p's one `RELEASE.md` covers six drafts, named with their register rows 
 - Line: 491
 - Kind: fragment
 - Pairs with: WP-09
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-09)
 - Old:
 
@@ -683,7 +683,7 @@ in one release with R-206, R-208, R-222, R-244 and R-246 (record l8p's drafts, L
 - Line: 6531
 - Kind: line
 - Pairs with: WP-12
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
 - Class: BINDING (the companions as record l8p's section 6 item 1 names them; no order constraint, script, guard or state moves)
 - Old:
 
@@ -703,7 +703,7 @@ in one release with R-206, R-208, R-222, R-244 and R-246 (record l8p's drafts, L
 - Line: 517
 - Kind: fragment
 - Pairs with: WP-11
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-11)
 - Old:
 
@@ -723,7 +723,7 @@ in one release with R-207, R-208, R-222, R-244 and R-246 (record l8p's drafts, L
 - Line: 6532
 - Kind: line
 - Pairs with: WP-14
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
 - Class: BINDING (the companions as record l8p's section 6 item 1 names them; no order constraint, script, guard or state moves)
 - Old:
 
@@ -743,7 +743,7 @@ in one release with R-207, R-208, R-222, R-244 and R-246 (record l8p's drafts, L
 - Line: 518
 - Kind: fragment
 - Pairs with: WP-13
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-13)
 - Old:
 
@@ -763,7 +763,7 @@ in one release with R-206, R-207, R-208, R-222 and R-244 (record l8p's drafts, L
 - Line: 6470
 - Kind: line
 - Pairs with: WP-16
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
 - Class: BINDING (the companions as record l8p's section 6 item 1 names them; no order constraint, script, guard or state moves)
 - Old:
 
@@ -783,7 +783,7 @@ in one release with R-206, R-207, R-208, R-222 and R-244 (record l8p's drafts, L
 - Line: 459
 - Kind: fragment
 - Pairs with: WP-15
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-15)
 - Old:
 
@@ -803,7 +803,7 @@ and R-217 (DD-7's readers on the loop); before d8dec31's R-193; in one release w
 - Line: 6471
 - Kind: line
 - Pairs with: WP-18
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row)
 - Class: BINDING (the companions as record l8p's section 6 item 1 names them; no order constraint, script, guard or state moves)
 - Old:
 
@@ -823,7 +823,7 @@ and R-217 (DD-7's readers on the loop); before d8dec31's R-193; in one release w
 - Line: 460
 - Kind: fragment
 - Pairs with: WP-17
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-17)
 - Old:
 
@@ -843,7 +843,7 @@ and R-217 (DD-7's readers on the loop); before d8dec31's R-193; in one release w
 - Line: 341
 - Kind: fragment
 - Pairs with: none (the register; the generator prints no Acceptance cell of R-246)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280; section 14, W5-F1 (lines 1647 to 1654)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280; section 14, W5-F1 (lines 1647 to 1654)
 - Class: BINDING (the companions as record l8p's section 6 item 1 names them, in the words R-206 to R-208 already use)
 - Old:
 
@@ -863,7 +863,7 @@ in one release with R-206, R-207, R-208, R-222 and R-244 (record l8p's drafts, L
 - Line: 318
 - Kind: fragment
 - Pairs with: none
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280; section 14, W5-F1 (lines 1651 to 1652: R-222's and R-244's name no release)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280; section 14, W5-F1 (lines 1651 to 1652: R-222's and R-244's name no release)
 - Class: BINDING (as WP-19; the row's order and acceptance unchanged)
 - Old:
 
@@ -899,7 +899,7 @@ in one release with R-206, R-207, R-208, R-222 and R-244 (record l8p's drafts, L
 
 ## 5. R-208's stale section (W5-F1; Q-22's third item)
 
-R-208's Acceptance (register line 304) and its change-list row (generator line 6468, page line 457; WP-07 and WP-08 correct those two) cite "l8p section 5". At `515f6cf2` section 5 was "Order constraints for L4-E9's change list" (line 106) and it read "It adds no R or C, so d8dec31's mainpb (R-193, 3h) still takes R248 and C247." (line 123); on W5's branch section 5 is "Designators per draft" (line 251) and the order constraints are section 6, the PTC draft's item 4 (line 303), which reads "It adds no R or C, so by itself it composes anywhere" (line 306) and, since round 8, "With the guard before it, mainpb takes R264 and C264 on this tree's order." (lines 318 to 319). The cell's designators are round 1's, so a citation alone would point at a section that does not print them: the row restates the cell with the current section and keeps R248 and C247 as round 1's, dated.
+R-208's Acceptance (register line 304) and its change-list row (generator line 6468, page line 457; WP-07 and WP-08 correct those two) cite "l8p section 5". At `b158e9a1` section 5 was "Order constraints for L4-E9's change list" (line 106) and it read "It adds no R or C, so d8dec31's mainpb (R-193, 3h) still takes R248 and C247." (line 123); on W5's branch section 5 is "Designators per draft" (line 251) and the order constraints are section 6, the PTC draft's item 4 (line 303), which reads "It adds no R or C, so by itself it composes anywhere" (line 306) and, since round 8, "With the guard before it, mainpb takes R264 and C264 on this tree's order." (lines 318 to 319). The cell's designators are round 1's, so a citation alone would point at a section that does not print them: the row restates the cell with the current section and keeps R248 and C247 as round 1's, dated.
 
 ### WP-22. The register's R-208, its Acceptance's section citation
 
@@ -907,7 +907,7 @@ R-208's Acceptance (register line 304) and its change-list row (generator line 6
 - Line: 304
 - Kind: fragment
 - Pairs with: WP-07 and WP-08 (the same citation in the change list)
-- Source: `515f6cf2` `v2/docs/records/l8p/L8P-BREAKER.md` line 106 (round 1's '## 5. Order constraints for L4-E9's change list') and line 123 ('It adds no R or C, so d8dec31's mainpb (R-193, 3h) still takes R248 and C247.'); fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` line 251 ('## 5. Designators per draft'), line 264 ('## 6. Order constraints for L4-E9's change list'), line 303 (item 4), line 306 ('It adds no R or C, so by itself it composes anywhere') and lines 318 to 319 ('With the guard before it, mainpb takes R264 and C264 on this tree's order.')
+- Source: `b158e9a1` `v2/docs/records/l8p/L8P-BREAKER.md` line 106 (round 1's '## 5. Order constraints for L4-E9's change list') and line 123 ('It adds no R or C, so d8dec31's mainpb (R-193, 3h) still takes R248 and C247.'); fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` line 251 ('## 5. Designators per draft'), line 264 ('## 6. Order constraints for L4-E9's change list'), line 303 (item 4), line 306 ('It adds no R or C, so by itself it composes anywhere') and lines 318 to 319 ('With the guard before it, mainpb takes R264 and C264 on this tree's order.')
 - Class: CLAIM CHANGE, narrowing (round 1's designator reading R248 and C247 kept as round 1's, the record's current reading quoted beside it with its section; no designator, order or state of the register moves)
 - Old:
 
@@ -918,7 +918,7 @@ which still takes R248 and C247 (l8p section 5)
 - New:
 
 ```text
-which takes the next free R and C at apply time (l8p section 6 item 4, which reads R264 and C264 on the tree's order with the guard, R-222, before it; R248 and C247 were round 1's reading, its section 5 at `515f6cf2`)
+which takes the next free R and C at apply time (l8p section 6 item 4, which reads R264 and C264 on the tree's order with the guard, R-222, before it; R248 and C247 were round 1's reading, its section 5 at `b158e9a1`)
 ```
 
 ## 6. ONLY WITH THE NEXT CIRCUIT CHANGE TO THESE DRAFTS (W5-F2, W5-F3, W5-D1; Q-23)
@@ -1072,7 +1072,7 @@ Each row changes one docstring sentence and nothing the draft executes (the test
 | 3 | `v2/docs/records/l9t5/l9t5_connected.out` | 20 | `v2/docs/records/l9t5/l9t5_t10.out` | `94071bc12ccf5389` |
 | 3 | `v2/docs/records/l9t5/stability/DIGESTS-cr3.txt` | 13 | `v2/docs/records/l9t5/l9t5_t10.out` | `94071bc12ccf5389` |
 
-Beside the table of `apply_gen_sch_a_ptc.py`: `v2/docs/records/l8p/apply_test_l4e11_ptc_pin.py` names the same digest by its first eight characters in its text at lines 7 and 58, and record l8p's verbatim copy of DD-7 at `ecb598c5`, `v2/docs/records/l8p/inputs/l4e11r17-apply_gen_sch_a_dd7-ecb598c5.py`, reads DD-7's line 50 at its own line 50 (pinned by `inputs/SOURCES.txt`): it stays as it is, as every verbatim copy does.
+Beside the table of `apply_gen_sch_a_ptc.py`: `v2/docs/records/l8p/apply_test_l4e11_ptc_pin.py` names the same digest by its first eight characters in its text at lines 7 and 58, and record l8p's verbatim copy of DD-7 at `c08f4285`, `v2/docs/records/l8p/inputs/l4e11r17-apply_gen_sch_a_dd7-ecb598c5.py`, reads DD-7's line 50 at its own line 50 (pinned by `inputs/SOURCES.txt`): it stays as it is, as every verbatim copy does.
 
 ### WP-23. The breaker draft's Order sentence (W5-D1's reversal, word for word)
 
@@ -1080,7 +1080,7 @@ Beside the table of `apply_gen_sch_a_ptc.py`: `v2/docs/records/l8p/apply_test_l4
 - Line: 55
 - Kind: lines
 - Pairs with: none (record l8p's draft)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, W5-D1, lines 1640 to 1643 (the replacement text, quoted)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 14, W5-D1, lines 1640 to 1643 (the replacement text, quoted)
 - Class: PRESENTATION (a docstring; the draft's code, its released() check and its RELEASE.md unchanged)
 - Old:
 
@@ -1103,7 +1103,7 @@ apply_gen_sch_a_thgfs.py), never alone, with l6r2's two board P drafts in either
 - Line: 23
 - Kind: lines
 - Pairs with: none (record l8p's draft)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280; section 14, W5-F2 (lines 1655 to 1657)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280; section 14, W5-F2 (lines 1655 to 1657)
 - Class: PRESENTATION (as WP-23)
 - Old:
 
@@ -1171,7 +1171,7 @@ apply_gen_sch_a_thgfs.py), never alone.
 - Line: 50
 - Kind: lines
 - Pairs with: record l4e11's E11-43 row (section 7: its own author's)
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 289 (the six; DD-7 reads record l4e11's own RELEASE.md, line 285); section 14, W5-F3 (lines 1658 to 1660)
+- Source: fnd/w5l8p at `e6e91c1e`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 289 (the six; DD-7 reads record l4e11's own RELEASE.md, line 285); section 14, W5-F3 (lines 1658 to 1660)
 - Class: CLAIM CHANGE, record l4e11's text (the companion count follows record l8p's section 6 item 1; nothing widened: DD-7 still reads its own RELEASE.md and keeps its order)
 - Old:
 
@@ -1189,7 +1189,7 @@ which read record l8p's RELEASE.md; this draft reads this record's own) and this
 ## 7. What this file leaves to others, and its SESSION decisions
 
 - **R-217's release words (record l4e11's first):** the register's R-217 Acceptance (line 313) "released with l8p's three drafts (R-206 to R-208)", the change list's R-217 row "in the release of R-206 to R-208 (L4-E11 19h)" (generator line 6469, page line 458) and their source, L4-E11's E11-43 (`l4e11_power.py` line 7128, `l4e11_power.out` line 514, `L4E11-SOURCE-ONLY-AND-ENTRY.md` line 733: "released with l8p's three drafts"). DD-7 reads record l4e11's own `RELEASE.md` (W5's line 285), so its companions are record l4e11's to restate first, with WP-27; L4-E9's three texts follow that restatement. No row here, so no L4-E9 text runs ahead of its source.
-- **Not in W5's findings, read in passing and left:** R-208's change-list text "after 3g's other drafts" predates the P0 round's later 3g rows (R-217, R-222, R-244, R-223 onward), whose order the list's own constraints hold; the PTC draft's "in board A's round in any position" (its line 30) is round 1's, where W5's section 6 item 4 now places it before DD-7; the generator's comment and output header "their commits are outside this branch's history" (line 5183, out line 2290) are round 8's. W5 quotes the ideal diode draft's "released with it" at line 37; it stands at line 35 at the base and at `cd19df59`, true as W5 says, and needs no row.
+- **Not in W5's findings, read in passing and left:** R-208's change-list text "after 3g's other drafts" predates the P0 round's later 3g rows (R-217, R-222, R-244, R-223 onward), whose order the list's own constraints hold; the PTC draft's "in board A's round in any position" (its line 30) is round 1's, where W5's section 6 item 4 now places it before DD-7; the generator's comment and output header "their commits are outside this branch's history" (line 5183, out line 2290) are round 8's. W5 quotes the ideal diode draft's "released with it" at line 37; it stands at line 35 at the base and at `e6e91c1e`, true as W5 says, and needs no row.
 - **The integration's uncommitted 2b outputs** were not read (another worktree's working tree): if they changed a file this file lists, the coordinator re-reads that file's pin lines before applying.
 - **SESSION decisions** (under the owner's standing rule of 26 September 2026):
   1. *W13-D1, the copies' names* (section 2). Reversed by: naming them after the re-take's commit.

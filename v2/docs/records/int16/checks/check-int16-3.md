@@ -1,14 +1,14 @@
 mergeable: yes
 
-# Check 3 (delta confirmation) of integration set 15, `fnd/int16` at `e5322674` (MESHSAT-1357)
+# Check 3 (delta confirmation) of integration set 15, `fnd/int16` at `e057a40b` (MESHSAT-1357)
 
 AI review, labelled as such: an independent check by an assistant session that did not build this integration. It is not a
 qualified engineering review. 30 September 2026, 02:22 to 02:26 CEST (read from `date`). Scope: `git diff
-4012429e..e5322674` against check 2's R1 and minors. Everything below is what I read or ran myself, in a shared clone
+f6f65454..e5322674` against check 2's R1 and minors. Everything below is what I read or ran myself, in a shared clone
 `_scratch/chk-int16c` with `archives/int16-evidence-e5322674.tar` extracted (`git status` clean after extraction), now
 removed. No commits to real branches, no pushes, no box.
 
-`fnd/int16` = `e53226748d88`, one commit on `4012429e`, 6 files.
+`fnd/int16` = `e057a40b181e`, one commit on `f6f65454`, 6 files.
 
 ## Blocking
 
@@ -27,12 +27,12 @@ None.
     still carries `42ce2b3ea2c1a406`.
   * Both read "decision 59, written by apply_decision_decoded.py".
   * `apply_check16b_fixes.py` reads the sha from the file (it does not type it in) and refuses a second run.
-* **Replay.** Replayed on `4012429e`, the script followed by `rules_render.py --requirements` reproduces every changed
-  file of `e5322674`. The only files left over are the script itself and the filed check 2.
+* **Replay.** Replayed on `f6f65454`, the script followed by `rules_render.py --requirements` reproduces every changed
+  file of `e057a40b`. The only files left over are the script itself and the filed check 2.
 * **Minor 1: answered.**
   * Neither `apply_check16_fixes.py` nor the new script carries a literal U+2013 or U+2014. In both, the strings that
     match TI's row hold the en dash only through the backslash u2013 escape; parsed, they still carry it at run time.
-  * No added line of the commit has a dash, and none of the whole set's added lines (`2f0b034a..e5322674`) has one
+  * No added line of the commit has a dash, and none of the whole set's added lines (`b0abd037..e5322674`) has one
     either.
 * **Minor 2: answered.** README step 4 names `apply_decision_decoded.py` (decision 59 and CFL-016's rebind) and
   `apply_identities_c.py` (S-125).
@@ -54,7 +54,7 @@ None.
 * **Text.** The added lines carry no host name or user path.
 * **Commit identity.** The commit is authored and committed by Kyriakos Papadopoulos <ncpjfuzl@mxmx.email>, with no
   trailer.
-* **Box suite.** The box result on `e5322674` is the coordinator's and was still running. I did not see it.
+* **Box suite.** The box result on `e057a40b` is the coordinator's and was still running. I did not see it.
 
 ## Counts
 

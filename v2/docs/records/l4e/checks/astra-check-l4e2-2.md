@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E2: the targeted recheck by the engineering collaborator (an AI review, read-only; the one follow-up)
 
 Collaborator job `cx9-l4e2-recheck`, run `20260930T224030Z-833954`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e at commit `21a9a6fea182`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e at commit `dc38b08140ba`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary
@@ -38,7 +38,7 @@ no
 - B2: maker mechanism and tolerance bound: FAIL. The stated factors 0.908730641/1.104299068 and nominal ceiling 3.622207167 A reproduce the implemented formula. However, p.4 specifies up to 0.005%/V IMON reference line regulation, with the reference limits specified at VIN=12 V. This term is absent from l4e_replay.py:801-805. Applying it conservatively over 12-25 V permits approximately 100.065 W, so the asserted bound is not conservative across the stated envelope.
 - B2: consequence, closure and compliance labels: PASS. The existing assumptions give 55.850537 W at the lower corner. L4-ENERGY-ARCHITECTURE.md:72 separately reports A2 additions of 576.9/1109.9 Wh, apart from the ideal 100 W screening case. Lines 200-204 specify a loaded-voltage and temperature bench sweep. Lines 47-53,208-225 and l4e_replay.out:320-322 retain conditional prototype framing; no demonstrated compliance claim was found.
 - M1: efficiency sensitivity label: PASS. l4e_replay.out:219,222 now explicitly retains U3, U3B and lid-path losses, matching l4e_replay.py:146-163.
-- L3: preserved originals and independent recomputation: PASS. DRAWN gives 301.202822/547.354336 Wh; corrected NOM gives 136.648944/218.246336 Wh. These match L4-ENERGY-ARCHITECTURE.md:251-254 beside the preserved originals 266.7/494.7 and 102.2/165.7 Wh. Changes from b45d1705 are confined to l4e records; no Layer 3 file changed. Worktree remains clean.
+- L3: preserved originals and independent recomputation: PASS. DRAWN gives 301.202822/547.354336 Wh; corrected NOM gives 136.648944/218.246336 Wh. These match L4-ENERGY-ARCHITECTURE.md:251-254 beside the preserved originals 266.7/494.7 and 102.2/165.7 Wh. Changes from 101a1b43 are confined to l4e records; no Layer 3 file changed. Worktree remains clean.
 
 ## Evidence and minors
 

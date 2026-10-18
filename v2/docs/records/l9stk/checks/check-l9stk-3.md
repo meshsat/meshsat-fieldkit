@@ -2,7 +2,7 @@ accepted: CONFIRMED AS CONDITIONAL
 
 # Record l9stk: the independent checker's check 3, PROTECTION: CONFIRMED AS CONDITIONAL (filed as received)
 
-MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `474e6bcea42cb591ff4b4bfd6ec54641d5910d6f` (branch `fnd/l9stk`). Time: 4 October 2026, 02:20 to 02:25 CEST. Nothing in the kit has been built, bought or measured.
+MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `aeb0675e1a0ad3019805668bcc5b46d4d8a435cb` (branch `fnd/l9stk`). Time: 4 October 2026, 02:20 to 02:25 CEST. Nothing in the kit has been built, bought or measured.
 
 Scope, from the coordinator's brief: the targeted recheck of section 15's revision (B-P1, the make-last dock enable into UVLO; B-P2, the battery FETs' junction limit and the third FET), `l9stk_protection.py` and its output, `l9stk_copper.out` section 8 (option 4) and findings L9C-F20 to F22.
 
@@ -12,9 +12,9 @@ Filed by the integrator of set 29 from the checker's final message for the round
 
 **PROTECTION: CONFIRMED AS CONDITIONAL**
 
-At 474e6bce both former blockers are corrected and every figure reproduces at its source. Five things in section 15 need correcting as text, and three conditions have to be bounded by their owners.
+At aeb0675e both former blockers are corrected and every figure reproduces at its source. Five things in section 15 need correcting as text, and three conditions have to be bounded by their owners.
 
-In a scratch clone at 474e6bce, with SLVA673A fetched (sha matched), `test_l9stk` and `test_energy_chain` gave 66 passed, 0 failed, 0 skipped. The three drafts ran with `--check` only: the decisions draft checks clean, the energy chain draft refuses until the decisions are in the register, and the plating draft passes. The tree is unchanged and the clone is deleted.
+In a scratch clone at aeb0675e, with SLVA673A fetched (sha matched), `test_l9stk` and `test_energy_chain` gave 66 passed, 0 failed, 0 skipped. The three drafts ran with `--check` only: the decisions draft checks clean, the energy chain draft refuses until the decisions are in the register, and the plating draft passes. The tree is unchanged and the clone is deleted.
 
 **Blockers:** none.
 

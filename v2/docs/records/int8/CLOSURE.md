@@ -1,7 +1,7 @@
-# Integration set 7 (fnd/int8 at 7f6de345 onto main 6b419b02): closure record, DRAFT by the independent checker
+# Integration set 7 (fnd/int8 at 17d4823b onto main 66c0d1d2): closure record, DRAFT by the independent checker
 
 An AI review's draft for the integrator to file as v2/docs/records/int8/CLOSURE.md; every count below was read from
-git at 7f6de345 against main 6b419b02 (375 files, 128657 insertions, 2191 deletions, 82 commits). Nothing of the kit
+git at 17d4823b against main 66c0d1d2 (375 files, 128657 insertions, 2191 deletions, 82 commits). Nothing of the kit
 has been built, ordered or measured; every verdict named is a desk reading of a prototype design.
 
 ## Circuit changes
@@ -41,15 +41,15 @@ E5 686b29a734c55b9a). The one generator touched, gen_pcb_b3.py (5 lines), change
   the tracked manifest v2/vendor/ibis-manifest.yaml pins the file present, fails closed and says its state when the
   models are withheld, holds every Ramp cell to the model's own V-t table; pcb_edge_rates.yaml (+1136);
   tests/test_edge_length.py, test_ibis_models.py, test_pinned_models.py. Two fixes after the first suite:
-  ibis_fetch.py reads its two flag values through verdict.opt (038037ed); edge_length.py's note no longer says a
-  model is not in the tree when none is absent (05af085c).
+  ibis_fetch.py reads its two flag values through verdict.opt (554fa039); edge_length.py's note no longer says a
+  model is not in the tree when none is absent (d981f528).
 - rules_status.py (+157 net): the manifest as a configuration input of edge_length.py and the pinned-state rule
   (PINNED_INPUTS, _pinned_state); CONFIG_INPUTS for reliability.py; rules_render.py's derived notices.
 - constraints_bound.py (new, 885) with tests/test_constraints_bound.py (687).
 - The tray's record tools: v2/cad/lid_tray_qmx_r2.py, _check.py, _drawing.py; tests/test_lid_tray_qmx_r2.py (315);
   test_frame_seat_inputs.py carries the r2 module.
 - Apply scripts under v2/docs/records/int8/ (seven), each asserting its precondition, re-parsing what it writes and
-  refusing a second run; the box helpers box_retake.sh and install_pack.sh (filed in 38fd7cc9).
+  refusing a second run; the box helpers box_retake.sh and install_pack.sh (filed in 82dd1980).
 - v2/docs/handover/pack.yaml classifies v2/docs/CODEX-WORKER.md in group EV.
 
 ## Registry changes (tools/pcb_requirements.yaml +732 net; pcb_decisions.yaml +280; pcb_rules_coverage.yaml)
@@ -61,7 +61,7 @@ E5 686b29a734c55b9a). The one generator touched, gen_pcb_b3.py (5 lines), change
   S-114 (the energy reconciliation of M1 under D-20).
 - Closed: S-63 by SC-75 (the r2 lid tray); S-88 (H3-02) by TRN-001 PASS of 42 on board A against the reviewed set;
   S-89 (H3-01) by REL-001 re-taken on every board with the repaired tool (every board INCONCLUSIVE, held by named
-  items), both landed by the re-take of aaed6daa and re-taken again in 9d89ffd3.
+  items), both landed by the re-take of eee624e3 and re-taken again in f1ec1d66.
 - Linked: FEA-007 (SC-75; waits on S-95, S-96, no longer S-63), REQ-021 (S-95), FEA-002 (S-92, S-93), REQ-018
   (S-99), REQ-072 and REQ-016 (S-114), REQ-007, REQ-009, REQ-015, REQ-017, REQ-029, REQ-041, REQ-058, CON-018,
   CHO-003 (S-100 to S-113 by finding); REQ-022, REQ-024, REQ-026, REQ-028, REQ-064 stop waiting on S-89 and cite it
@@ -77,14 +77,14 @@ E5 686b29a734c55b9a). The one generator touched, gen_pcb_b3.py (5 lines), change
 
 ## Evidence refreshes
 
-- The consolidated re-take of every schematic-phase reading on the KiCad box at 8b623c96 (commit aaed6daa: the
+- The consolidated re-take of every schematic-phase reading on the KiCad box at 4618ec47 (commit eee624e3: the
   driver retake_schematic_phase.py in place, reliability.py per board, claims_check; the makers' models present for
   SI-001; the tracked readings by patch, the ignored ones by tar).
-- The second re-take at 05af085c after the two tool fixes (commit 9d89ffd3; 96 tracked routed/*.verdict.json changed
-  against main); driver logs filed in 38fd7cc9 under records/int8/box/ (retake-2.log, retake-2-other-writers.log,
-  retake-2-run.txt: HEAD 05af085c, retake exit 0, 19:14:50Z to 19:17:48Z).
+- The second re-take at d981f528 after the two tool fixes (commit f1ec1d66; 96 tracked routed/*.verdict.json changed
+  against main); driver logs filed in 82dd1980 under records/int8/box/ (retake-2.log, retake-2-other-writers.log,
+  retake-2-run.txt: HEAD d981f528, retake exit 0, 19:14:50Z to 19:17:48Z).
 - The pages rendered on it: 34 layout-entry reasons (A 6, B 8, C 4, D 6, E 3, P 5, E5 2), 83 CURRENT_CANDIDATE
-  readings, no reading limited by an open item; the suite at 7f6de345 2171 passed, 0 failed, 3 skipped.
+  readings, no reading limited by an open item; the suite at 17d4823b 2171 passed, 0 failed, 3 skipped.
 
 ## Documents
 
@@ -108,7 +108,7 @@ E5 686b29a734c55b9a). The one generator touched, gen_pcb_b3.py (5 lines), change
 
 | From | Item | Owner | Where it goes |
 |---|---|---|---|
-| set 7 check, 5 | S-88's and S-89's closing evidence name the first re-take's commit (aaed6daa) while the tree's readings are the second re-take's (9d89ffd3), identical in content | integrator | wording only; noted here |
+| set 7 check, 5 | S-88's and S-89's closing evidence name the first re-take's commit (eee624e3) while the tree's readings are the second re-take's (f1ec1d66), identical in content | integrator | wording only; noted here |
 | set 7 check, 6 | `apply_w5tray.py` writes six documents before the registry and does not roll back on a missing vendor file | the drafts' template (next stream's author) | a rollback or a pre-check in the template |
 | d8dec31 check 2, N1 to N6 | the reviewed set's enforcement (pin the per-board map in the test or read the review's tables), a ref listed twice inflates the denominator, duplicate JSON keys, a review file that exists is the only check, the tests leave fixtures under /tmp, `make_pin_tables.py` on the committed shape | port_protect.py's owner (stream d8dec31's successor) | a tool item in the next set |
 | d6rel check 2, 2 to 5 | the tests leave 108 fixtures per run; CONFIG_INPUTS must follow the list's citations by hand; no board reads PASS on REL-001 until REQ-028 rules a service life; REL-O-03's Amphenol M.2 documents and the series sheets' order-code rows | reliability.py's owner; the parts stream | a tool item and a parts item in the next set |

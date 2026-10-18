@@ -52,7 +52,7 @@ are printed DRAFTED, none is applied to a generator, and their release guards st
   efficiency reads 0.85 as before. The battery FETs are parsed from `apply_gen_sch_a_charger.py` the same way: L4-E11's round 9
   writes Q39, Q40 and Q42, the third FET record l9stk 15.5 selected and this budget's step D10 already carried (three at
   21.136 mOhm each, 7.0453 mOhm against the pair's 10.568), so D10's source is now L4-E11's draft and its figure is unchanged.
-- **Record l9stk's output is read from this tree,** not from the copy at `2c8b29fb`, which is retired: the copy named the
+- **Record l9stk's output is read from this tree,** not from the copy at `c78ead77`, which is retired: the copy named the
   automatic-retry LM5069-2, and record l9stk 15.4b selects the latch-off LM5069-1, which out 1's D9 line now prints as read. Every
   figure taken from that output reads the same on the copy and on the tree's file (the sense, its window, the breaker's FETs,
   the battery FETs' count, bound and loss).
@@ -66,10 +66,10 @@ are printed DRAFTED, none is applied to a generator, and their release guards st
 
 ## Round 2 in short (4 October 2026)
 
-- **What moved.** Set 28 was promoted to main (`d834e6a7`, record `64cd25ee`); this round runs on main. Record l8r2's rounds 4 to
-  6 (`fnd/l8r3` at `89924e40`) put slots 1 and 3 on board A's LM5176 stage, keep the coolers at full speed with no Fan_PWM maximum
+- **What moved.** Set 28 was promoted to main (`dbe1a1ba`, record `729f5760`); this round runs on main. Record l8r2's rounds 4 to
+  6 (`fnd/l8r3` at `08e27a6a`) put slots 1 and 3 on board A's LM5176 stage, keep the coolers at full speed with no Fan_PWM maximum
   and declare their slot row at the envelope (0.69 A), set board B's six slot bucks to RT 200 k and every LM5176 5.1 V divider to
-  0.1 %. Record l9stk's section 15 (`fnd/l9stk` at `2c8b29fb`) drafts board P's breaker C-1 (an LM5069, the -2 at that commit and
+  0.1 %. Record l9stk's section 15 (`fnd/l9stk` at `c78ead77`) drafts board P's breaker C-1 (an LM5069, the -2 at that commit and
   the latch-off LM5069-1 since its 15.4b, two CSD18510Q5B, a 2.6087 mOhm sense) and a third battery FET on board A. Each source
   was read from a copy in `inputs/` that `git show` made at that commit, pinned by sha256 and listed in `inputs/SOURCES.txt`; the
   test compares every copy with its source (round 3 reads record l9stk's output from the tree instead).
@@ -125,11 +125,11 @@ the profile (PS-IDLE-SPEC) and for PS-ALLTX:
 
 | Step | Status | What | Profile | PS-ALLTX |
 |---|---|---|---|---|
-| M1 | ON MAIN (`458b2873`, F-PR-04) | slot 2 and the device rail on LM5176 stages; 5.1 V NOT PLOTTED, the generator's declared 0.90 | +0.432 W | +0.755 W |
+| M1 | ON MAIN (`09521e07`, F-PR-04) | slot 2 and the device rail on LM5176 stages; 5.1 V NOT PLOTTED, the generator's declared 0.90 | +0.432 W | +0.755 W |
 | M2 | ON MAIN (O-17) | slot 2's card rail at 3.456 V | 0 | +0.008 W |
 | M3 | ON MAIN (S-99) | board D on its own TPS62933 U41 from VBAT at the declared 0.90 | 0 | 0 |
-| M4 | ON MAIN (`458b2873`) | EMCON with both link cards unpowered (record hc2) | 0 (PS-EMCON -5.979 W) | 0 |
-| M5 | ON MAIN (`458b2873`, S-04, F-PR-06) | board A's 5 mOhm R17 in the pack path; the heater regulated to 12 V (cold overlay only) | +0.046 W | +1.067 W |
+| M4 | ON MAIN (`09521e07`) | EMCON with both link cards unpowered (record hc2) | 0 (PS-EMCON -5.979 W) | 0 |
+| M5 | ON MAIN (`09521e07`, S-04, F-PR-06) | board A's 5 mOhm R17 in the pack path; the heater regulated to 12 V (cold overlay only) | +0.046 W | +1.067 W |
 | D1 | DRAFTED (L4-E11 15c) | the battery FET pair Q39, Q40 at L4-E11's 150 C bound, 10.568 mOhm | +0.097 W | +2.333 W |
 | D2 | DRAFTED (L4-E11 15a) | board E's auxiliary domain on VSYS_E behind U42 | +0.001 W | +0.001 W |
 | D3 | DRAFTED (L4-E11 18a, D-18) | the mixers on U22's 12.0 V rail | +0.498 W | +0.530 W |

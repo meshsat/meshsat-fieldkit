@@ -3,8 +3,8 @@ accepted: yes
 # Layer 4, L4-E2, B2: The assistant's verification of O-2's final bound (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. Scope: B2 only, the one item the engineering collaborator's targeted recheck left open
-(`astra-check-l4e2-2.md`, run 20260930T224030Z-833954 on `21a9a6fe`), at the revision `197350a7`. B1, M1 and the Layer 3
-recount were accepted by that recheck. Astra never examined `197350a7`; the owner's rule allows one assessment and one
+(`astra-check-l4e2-2.md`, run 20260930T224030Z-833954 on `dc38b081`), at the revision `f61982a7`. B1, M1 and the Layer 3
+recount were accepted by that recheck. Astra never examined `f61982a7`; the owner's rule allows one assessment and one
 targeted follow-up per issue, both used. B2 failed twice; the method changed from a hand-picked tolerance list to every
 row of the maker's table that moves the input-current limit, stacked worst case, with a refusal above 100 W.
 
@@ -15,7 +15,7 @@ and tolerance envelope, including line regulation and setting rounding. Dependen
 settings. The planned bench sweep must cover the actual lower hold corner through the maximum permitted loaded voltage at
 the temperature ends, retaining separate steady-state and transient records."
 
-## Evidence at `197350a7`
+## Evidence at `f61982a7`
 
 - The rows, read by the coordinator from `v2/vendor/power/lt8705a.pdf` (8705af) with pdftotext: p.31 the limit
   I = 1.208 V / (1 mA/V x R_SENSE1 x R_IMON_IN); p.4 IMON_IN regulation voltage 1.187 / 1.208 / 1.229 V over temperature;
@@ -26,7 +26,7 @@ the temperature ends, retaining separate steady-state and transient records."
   100 W; the low corner at the lower hold 16.695 V, 3.548 A x (1.187 x (1 - 0.00005 x 4.695) - 1.5 / 130) / 1.208 / 1.07 /
   1.01^2 = 3.1622 A, 52.79 W. Both equal the replay's printed figures (99.9984 W, margin 0.0016 W; 52.8 W).
 - `l4e_replay.py` re-run by the coordinator: its output identical to the committed `l4e_replay.out`; `l3batt/runtime.out`
-  reproduced byte for byte; only `v2/docs/records/l4e/` changed since `b45d1705`.
+  reproduced byte for byte; only `v2/docs/records/l4e/` changed since `101a1b43`.
 - The author's refusal tests (reported, not re-run here): the run exits 4 at 100.0548 W when the line-regulation row is
   classified as moving nothing, and exits 3 when that row is removed from the table.
 - The bench sweep on the page runs from 16.695 V to 25 V at both temperature ends, steady state and transients apart.

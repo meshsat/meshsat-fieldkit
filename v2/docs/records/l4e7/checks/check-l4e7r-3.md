@@ -1,12 +1,12 @@
 accepted: no
 
-# Layer 4, L4-E7R: The assistant's closing check of the control decision at 237cd9be (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E7R: The assistant's closing check of the control decision at 9d89ac26 (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E7R are spent:
-- the independent check `astra-check-l4e7r-1.md` on `26cdf5bd`, NOT YET, six blockers;
-- the targeted recheck `astra-check-l4e7r-2.md` on `6fca30d3`, NOT YET.
+- the independent check `astra-check-l4e7r-1.md` on `8831cedd`, NOT YET, six blockers;
+- the targeted recheck `astra-check-l4e7r-2.md` on `783e230b`, NOT YET.
 
-The third round, `237cd9be`, applied the owner's decision process of 2 October. This is the coordinator's closing check. It
+The third round, `9d89ac26`, applied the owner's decision process of 2 October. This is the coordinator's closing check. It
 challenges the critical calculations and the failure behaviour independently.
 
 **Verified, in the coordinator's own arithmetic from the printed rows (section 10 of the output):**
@@ -44,7 +44,7 @@ answer on the same topology past it.
 - U5's worst sense differential is 0.2144 V against 0.3 V. This figure was reproduced from the record's model, not recomputed
   separately; it is MODELED, with bench row 7b.18 and M3 and M7 at layer 8.
 
-*Run by the coordinator at `237cd9be`:* the output reproduced byte for byte; `test_l4e7` with `test_public_hygiene` 39 passed,
+*Run by the coordinator at `9d89ac26`:* the output reproduced byte for byte; `test_l4e7` with `test_public_hygiene` 39 passed,
 0 failed, 0 skipped.
 
 **Not accepted, one material defect: the backstop's susceptibility under CS101.**

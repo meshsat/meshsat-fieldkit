@@ -1,13 +1,13 @@
 # Board P (pack BMS): layout constraints
 
-**Bound to the set 6 candidate (27 September 2026, read at `760d7f41`).** This sheet's inputs stand in the block below,
+**Bound to the set 6 candidate (27 September 2026, read at `00e74bbb`).** This sheet's inputs stand in the block below,
 one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
 computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
 table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
 table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
 the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 10**,
-which are the readings at `e3aedb25` with the H2 line's changes marked where they stand (`ef144760`, the paragraph
-below). Set 6 changed board P's netlist and intent file in `932cf9d7` (the supplies PWR-001 refused are declared, with
+which are the readings at `956feb28` with the H2 line's changes marked where they stand (`c62ee56b`, the paragraph
+below). Set 6 changed board P's netlist and intent file in `864fdb59` (the supplies PWR-001 refused are declared, with
 the nodes PBI, CELL1 to CELL3, FUSE_G and FUSE_GQ): **BAT_F, VCC_F, SEC_VDD, SW and SCP_HTR are new rows**, each marked
 **SET 6** in the table, and SW is judged at the pack path's 18 A. A line of the older sections that names a part, a net,
 a current or a count is compared with the netlist and the intent file below before it is followed, and where this sheet
@@ -18,28 +18,28 @@ below is its own binding's).
 ```bound
 sheet      P
 board      p
-read       2026-09-29 at d41f85ec
+read       2026-09-29 at 75460813
 current    section 2: the power table, and the figures the text under it quotes from it
-older      sections 1 and 3 to 10: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256/16 20c7b0795593d761 changed d41f85ec
-intent     v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json sha256/16 657f4c42db51e4da changed d41f85ec
-board_file v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb sha256/16 d79865e7b1aceb95 changed 6d1b5a15
+older      sections 1 and 3 to 10: read at 956feb28, with the H2 line's changes marked at c62ee56b
+netlist    v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256/16 20c7b0795593d761 changed 75460813
+intent     v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json sha256/16 657f4c42db51e4da changed 75460813
+board_file v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb sha256/16 d79865e7b1aceb95 changed 85bc81dd
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC04162H-7628 outer 0.0700 mm inner 0.0152 mm
 ```
 
-**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `ef144760`: netlist
-`v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net` sha256/16 `085f833362fbbda8` (round 8, `7bef62bd`), intent
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `c62ee56b`: netlist
+`v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net` sha256/16 `085f833362fbbda8` (round 8, `325a866f`), intent
 `pcb-p-pack-intent.json` `6ff1b8129a5c5aff`; the committed board file `d79865e7b1aceb95` is the two-layer P4, which
 predates the schematic and decision 28. The power figures of this sheet are checked against `calc/rail_widths.py` on
 that intent: the pack path's rails read the same. Board P is not at layout entry: **6 reasons at H2**
 (`CURRENT-EVIDENCE.md`): PWR-001 FAIL (BAT_F, PBI, SEC_VDD, SW and VCC_F declared by no rail), SI-001 INCONCLUSIVE,
 BAT-001 FAIL (the gate's table `pcb_pack_protection.yaml` still describes the older generator, REQ-044), FEA-005,
-FEA-006, FEA-007. Known changes of the H2 line: round 8 is merged (`7bef62bd`: the JST headers the catalogues list,
-the supply filters declared class A, the FET bypass pair) with the temperature windows of `73d5df1e`. Every other line below is the reading at `e3aedb25`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+FEA-006, FEA-007. Known changes of the H2 line: round 8 is merged (`325a866f`: the JST headers the catalogues list,
+the supply filters declared class A, the FET bypass pair) with the temperature windows of `d8a95f3c`. Every other line below is the reading at `956feb28`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
 
-As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)),
-candidate then netlist `4342c4cbe1b43dc4` (at `d90f30e4`), intent `59d679f0859fc203`, 14 blocker lines.
+As first written: a view over the records at `main` `956feb28` (conventions and shared rules: [README.md](README.md)),
+candidate then netlist `4342c4cbe1b43dc4` (at `d0db2f49`), intent `59d679f0859fc203`, 14 blocker lines.
 
 **Board P's placement is frozen only after the qualified battery review R-BAT has answered** (FEA-005's
 FABRICATION_RELEASE stage: "its findings ... are answered before the placement is frozen and board P is released").
@@ -71,11 +71,11 @@ milliamperes: the fabricator's floor governs there, not the current.
 | FUSED | 14.40 | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path, after F1 |
 | SCP_OUT | 14.40 | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path, after F2 |
 | PACK_N (return of PACK_P) | 0.1 (0.1) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path's return, W_N to R10; its stubs take the PACK class (item 2) |
-| BAT_F | 14.4 (16.8) | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **SET 6**, new in `932cf9d7`, one of the supplies PWR-001 refused at H2: "U1's primary supply (SLUSC67B pin 32, 'Primary power supply input pin')"; 336 uA, which prints as 0.00 |
-| VCC_F | 14.4 (16.8) | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **SET 6**, new in `932cf9d7`, one of the supplies PWR-001 refused at H2: "U1's secondary supply (SLUSC67B pin 26, 'Secondary power supply input'), from the pack terminal through R7 1 kohm" |
-| SEC_VDD | 14.4 (16.8) | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **SET 6**, new in `932cf9d7`, one of the supplies PWR-001 refused at H2: "U2's supply (SLUSEG7D pin 1 VDD; RVD 300 ohm and CVD 100 nF, Table 8-1)"; "0.18 mA declared as the peak" |
-| SW | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s, series of SCP_OUT | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 | **SET 6**, new in `932cf9d7`, one of the supplies PWR-001 refused at H2: "the common drain of Q1 and Q2 (CSD17570Q5B, TI SLPS471D), the pack's whole current: 10 A typical and 18 A peak as SCP_OUT and PACK_P carry it". **Pack path**: the intent file declares it a series segment of SCP_OUT at SCP_OUT's own currents, so it is judged at PWR-F12's 18 A with the rest of that conductor (`calc/rail_widths.py`, WHICH RAILS ARE THE PACK PATH; the session's, 27 September 2026). The FETs want their drain copper (item 4), and this is it |
-| SCP_HTR | 14.4 (16.8) | 3.50 / 3.50 | 3.50, typical (PI-001) | 0.84 | 0.32 | 10.11 | 5 / 4 / 4 | **SET 6**, new in `932cf9d7`: "the chemical fuse's heater return (Eaton SCF9550-30-05, ELX1135: heater 4.8 to 8.0 ohm, operating 10.5 to 23.5 V, opens the fuse within 60 s)"; "declared at 3.5 A typical as well as peak because a 60 s event is a steady state for copper" |
+| BAT_F | 14.4 (16.8) | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **SET 6**, new in `864fdb59`, one of the supplies PWR-001 refused at H2: "U1's primary supply (SLUSC67B pin 32, 'Primary power supply input pin')"; 336 uA, which prints as 0.00 |
+| VCC_F | 14.4 (16.8) | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **SET 6**, new in `864fdb59`, one of the supplies PWR-001 refused at H2: "U1's secondary supply (SLUSC67B pin 26, 'Secondary power supply input'), from the pack terminal through R7 1 kohm" |
+| SEC_VDD | 14.4 (16.8) | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **SET 6**, new in `864fdb59`, one of the supplies PWR-001 refused at H2: "U2's supply (SLUSEG7D pin 1 VDD; RVD 300 ohm and CVD 100 nF, Table 8-1)"; "0.18 mA declared as the peak" |
+| SW | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s, series of SCP_OUT | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 | **SET 6**, new in `864fdb59`, one of the supplies PWR-001 refused at H2: "the common drain of Q1 and Q2 (CSD17570Q5B, TI SLPS471D), the pack's whole current: 10 A typical and 18 A peak as SCP_OUT and PACK_P carry it". **Pack path**: the intent file declares it a series segment of SCP_OUT at SCP_OUT's own currents, so it is judged at PWR-F12's 18 A with the rest of that conductor (`calc/rail_widths.py`, WHICH RAILS ARE THE PACK PATH; the session's, 27 September 2026). The FETs want their drain copper (item 4), and this is it |
+| SCP_HTR | 14.4 (16.8) | 3.50 / 3.50 | 3.50, typical (PI-001) | 0.84 | 0.32 | 10.11 | 5 / 4 / 4 | **SET 6**, new in `864fdb59`: "the chemical fuse's heater return (Eaton SCF9550-30-05, ELX1135: heater 4.8 to 8.0 ohm, operating 10.5 to 23.5 V, opens the fuse within 60 s)"; "declared at 3.5 A typical as well as peak because a 60 s event is a steady state for copper" |
 
 1. **Pack bands on both outer faces, each at least 3.36 mm wherever the current is shared equally, or 11.95 mm on a
    face that carries it alone**, generator-laid and stitched (PWR-F12 carried to stages PACK_CELLS and PACK_FETS of

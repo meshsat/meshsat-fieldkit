@@ -134,8 +134,8 @@ Read the current owner brief, execution plan, integration notes and the exact ac
 Starting context, to verify rather than replay:
 
 - Layers 1–3 have accepted document baselines. Their scope must not be confused with verified hardware.
-- The supplier baseline is `d834e6a7`; addendum revision 3 of 4 October at 13:02 resolves the latest document findings. Its SHA-256 is `ea3dcc3260875abc925f74c56ebbb01937ea59d7032240b0a1ecc5d9ba4ddfad`. The quotation remains unsent.
-- Set 29's freeze was running at 13:29. L4-E9 part A3 is reported committed at `1efaf66a`; part B, FAN_OK, belongs in set 30. Preserve any subsequent progress.
+- The supplier baseline is `dbe1a1ba`; addendum revision 3 of 4 October at 13:02 resolves the latest document findings. Its SHA-256 is `ea3dcc3260875abc925f74c56ebbb01937ea59d7032240b0a1ecc5d9ba4ddfad`. The quotation remains unsent.
+- Set 29's freeze was running at 13:29. L4-E9 part A3 is reported committed at `22035998`; part B, FAN_OK, belongs in set 30. Preserve any subsequent progress.
 - The reported current I-03 case is 7.472 A against 7.0957 A. REQ-018 remains 15.5 V; the 16.1 V floor was withdrawn. FAN_OK is conditional and unimplemented. These are context, not independently verified calculations.
 - The protection candidate now selects latch-off LM5069-1. B-R2, DD-3, DD-5 and E11-37 have remaining work. Confirm their latest state before assigning anything.
 
@@ -512,11 +512,11 @@ Read `~/worktrees/meshsat-fieldkit/_runs/resume-20261004-evening.md`. Check actu
 
 Finish the three interrupted candidates:
 
-1. **Ground return — fnd/l8r4, checkpoint 8558dab9:** finish connecting the rewritten model to its main routine, regenerate the stale output and restore the targeted tests. Compare every calculated current against the actual connector, contact, wire and ribbon ratings under the applicable conditions. Include the required contact combinations and fault cases. Scratch figures are provisional.
+1. **Ground return — fnd/l8r4, checkpoint 133f84d5:** finish connecting the rewritten model to its main routine, regenerate the stale output and restore the targeted tests. Compare every calculated current against the actual connector, contact, wire and ribbon ratings under the applicable conditions. Include the required contact combinations and fault cases. Scratch figures are provisional.
 
-2. **DELTA-01 — fnd/fw-r5, checkpoint f33e86f0:** finish the firmware correction and reproduce both reported persistence failures against the old code. Verify the corrected behavior across reset and rollover, intended re-arming, and wipe-journal separation.
+2. **DELTA-01 — fnd/fw-r5, checkpoint be5e1236:** finish the firmware correction and reproduce both reported persistence failures against the old code. Verify the corrected behavior across reset and rollover, intended re-arming, and wipe-journal separation.
 
-3. **DELTA-02 — fnd/l4e11r11, checkpoint 6dbcfb66:** complete the selected measurement method, reconcile the procedure and calculations, and run its focused check. Keep TP-E11-29 non-executable until its method and acceptance conditions are ready for supplier agreement.
+3. **DELTA-02 — fnd/l4e11r11, checkpoint 0eeb501d:** complete the selected measurement method, reconcile the procedure and calculations, and run its focused check. Keep TP-E11-29 non-executable until its method and acceptance conditions are ready for supplier agreement.
 
 Then follow the recorded queue. Start T11’s three-SDR research at the next suitable free slot; it need not wait for physical power qualification.
 

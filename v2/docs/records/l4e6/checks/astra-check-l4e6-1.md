@@ -3,7 +3,7 @@ accepted: yes
 # Layer 4, L4-E6: the one check of the fault-handling decision by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx17-l4e6-check`, run `20261001T125840Z-3029827`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e6 at commit `ae4f7e4c350d`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e6 at commit `59f613dcb345`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

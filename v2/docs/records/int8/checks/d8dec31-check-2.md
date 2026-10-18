@@ -1,7 +1,7 @@
 mergeable: yes
 B1 closed: yes
 
-Second fresh check of stream d8dec31 at 9057e668 (AI review, checker chk-d8dec31-2, 28 September 2026 19:54 to
+Second fresh check of stream d8dec31 at bcda4ef6 (AI review, checker chk-d8dec31-2, 28 September 2026 19:54 to
 20:15 CEST). Not a qualified engineering review; nothing of the kit has been built, ordered or measured. The worktree
 `<worktrees>/d8dec31` was read only and is untouched; everything I wrote is under
 `<worktrees>/_scratch/chk-d8dec31-2/` (`CHECK.md` is the working record).
@@ -89,15 +89,15 @@ edits `boards/a.json`, `d.json`, `e.json` (old text asserted, second run "alread
 OLD asserted once, the json required in the tree, the patched module imported from a copy, second run refused); step
 3 edits `pcb_requirements.yaml` (shared) and writes `records/d8dec31/ids-registry.json`, FAILS as committed (B2), works
 with the fix; step 4 edits `v2/vendor/SOURCES.yaml` (shas checked, marker) and `pcb_board_holds.yaml` (shared; pins
-the review as `094817023210d1b0`, the review at 9057e668, read at apply time; second run "found 0"); step 5 is the
-box's then the closure (B3); step 6 the four circuit scripts (not re-run by me; the diff since f8e61f05 changes the
+the review as `094817023210d1b0`, the review at bcda4ef6, read at apply time; second run "found 0"); step 5 is the
+box's then the closure (B3); step 6 the four circuit scripts (not re-run by me; the diff since 731699bf changes the
 docstrings of a_mainpb and e_cin only) then `apply_interfaces_mainsw.py`, which refuses until the netlist moves.
 
 **The merge result:** one conflict, `v2/vendor/sources.txt`, mechanical: both sides appended after the same line 348
 (int8 12 lines, w5tray's materials and QMX sheets and the MIL-STD-810H transcription; d8dec31 2 lines, the Infineon
 and TI sheets); resolved in the clone as base plus both blocks (362 lines, 0 markers). 58 files auto-merged
 otherwise; the stream touches neither the registry nor the trace page nor `vendor-status.txt`, so those conflicts do
-not arise. Merge base of int8 and d8dec31: `73ae2f21`.
+not arise. Merge base of int8 and d8dec31: `92f22e3f`.
 
 **What I ran, exact last lines:**
 - `env -C <clone>/v2/ecad/tools python3 tests/run.py port_protect`: `tests: 61 passed, 0 failed, 0 skipped`.
@@ -110,7 +110,7 @@ not arise. Merge base of int8 and d8dec31: `73ae2f21`.
 - `apply_registry_d31.py tree2 --check` on int8's registry: `AssertionError: S-98`; the fixed copy: `apply_registry_d31:
   14 open items, S-98 to S-111, each linked from its record(s)`; `rules_lib: 144 requirement record(s), 0 error(s), 0
   warning(s)`.
-- `--close-s88`: five `REFUSED` lines, then `apply_registry_d31: S-88 closed by commit 9057e668 on the re-taken
+- `--close-s88`: five `REFUSED` lines, then `apply_registry_d31: S-88 closed by commit bcda4ef6 on the re-taken
   reading (PASS of 42, netlist 0a2b59087bcc2678, tool 7acd5333fc59f8d0); waits_on dropped from REQ-015, REQ-017,
   REQ-029, CON-018`; second run `S-88 is already closed`; validator `0 error(s), 0 warning(s)`.
 - `make_pin_tables.py` on the committed shape with J_USBW pins ["1"]: `AssertionError: board A: J_USBW.2 carries
@@ -131,4 +131,4 @@ Scratch: `_scratch/chk-d8dec31-2/` holds `CHECK.md`, `RESULT.md`, `seq.log`, `re
 the two scratch clones were removed; `/tmp/port-*` is empty; the d8dec31 worktree is clean.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

@@ -1,11 +1,11 @@
 acceptable: yes
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026); its remaining minor items r1 to r5 are answered in section 9 and the decision paragraph the same day. -->
 
-# AI review, second check: fnd/energy2 at 820f17e6, answering CHECK.md on 3af58534 (MESHSAT-1357)
+# AI review, second check: fnd/energy2 at e883f805, answering CHECK.md on 002fa9c1 (MESHSAT-1357)
 
 This is an AI review made on 29 September 2026, from 01:41 to about 01:50 CEST. It is not a qualified review. It checks only whether each item of CHECK.md is answered correctly. It does not repeat the full review. Prototype design: nothing has been built, ordered or measured.
 
-The work was done in the same scratch clone (`_scratch/chk-energy9/repo`), fetched from the `energy2` worktree and checked out at 820f17e6. My additional code and its output are `recheck2.py` and `recheck2.out`, beside this file. No commit was made and no branch was touched. I briefly edited the clone's own `energy_budget.py` and `energy_inputs.yaml` to test the refusals, then restored both. `git status` is clean.
+The work was done in the same scratch clone (`_scratch/chk-energy9/repo`), fetched from the `energy2` worktree and checked out at e883f805. My additional code and its output are `recheck2.py` and `recheck2.out`, beside this file. No commit was made and no branch was touched. I briefly edited the clone's own `energy_budget.py` and `energy_inputs.yaml` to test the refusals, then restored both. `git status` is clean.
 
 ## Reproduction
 

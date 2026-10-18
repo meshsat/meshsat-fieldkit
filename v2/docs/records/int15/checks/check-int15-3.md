@@ -1,15 +1,15 @@
 mergeable: no
 
-# AI review: third check of integration set 14, fnd/int15 at f21fc8f8 (MESHSAT-1357)
+# AI review: third check of integration set 14, fnd/int15 at b3b5cfaf (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. I did not write the work under check; `CHECK.md` and
 `CHECK-2.md` (filed as `check-int15-1.md` and `check-int15-2.md`) are mine. Checked 29 September 2026 from 20:28 to
 20:37 CEST (times read with `date`). Everything below is what I read or ran myself.
 
 **Set up**
-* `fnd/int15` is `f21fc8f806c3e73230761984db937da2a2b9553e`, one commit on `097d2517`, still the tip at 20:36.
-* Tip clone: `<scratch>/chk-int15`, moved to `f21fc8f8`, with `int15-evidence-097d2517.tar` re-installed (as asked).
-* Throwaway clones in my session scratchpad: `c15/r6` at `097d2517` (the replay) and `c15/r7` at `f21fc8f8` (the
+* `fnd/int15` is `b3b5cfaf57188a702ecda7bab4033e4a6d3e6915`, one commit on `911de5fb`, still the tip at 20:36.
+* Tip clone: `<scratch>/chk-int15`, moved to `b3b5cfaf`, with `int15-evidence-097d2517.tar` re-installed (as asked).
+* Throwaway clones in my session scratchpad: `c15/r6` at `911de5fb` (the replay) and `c15/r7` at `b3b5cfaf` (the
   mutants). Working tree edits only; nothing was committed, and `r7` was reset after each mutant.
 * Tools ran with `VERDICT_DIR` in the scratchpad; `git status` of the tip clone shows only my three reports. No commit,
   no push, no agent, no other model, no box. The full suite was not run.
@@ -32,7 +32,7 @@ read.**
 * The parts corrected, no token: refused on the token.
 * The token and the parts corrected, with `check-s122-3.md`: refused, "does not name check-int15-1".
 * The same, with `check-s122-3.md` edited in the working tree to name check-int15-1: refused, "not committed on a
-  line that carries 097d2517". Its adding commit is on the s122b line.
+  line that carries 911de5fb". Its adding commit is on the s122b line.
 * The token and the parts corrected, with `check-int15-2.md`: the gate passes. The rest of `main` then refuses, on
   the rebinding.
 * **The token, and the five parts replaced by other wrong ones** (TMDS351, WM8731, LM5175 on the E6 row, TRACO TEN
@@ -71,12 +71,12 @@ script has already made sure of the corrections.
 
 ### 1. Can S-122 close without the part number inventory or with the five left?
 
-See B1. The provenance test works as intended: the oldest commit adding the check must descend from `097d2517`. An old
+See B1. The provenance test works as intended: the oldest commit adding the check must descend from `911de5fb`. An old
 check re-edited, or a renamed check, is refused.
 
 ### 2. S-122's addition
 
-* Registry, parsed, `097d2517` to the tip: only S-122's title moves, with the old title kept as a prefix. CFL-016
+* Registry, parsed, `911de5fb` to the tip: only S-122's title moves, with the old title kept as a prefix. CFL-016
   still reads FAIL on S-122, and its 15 bindings are current. No other record or item moved.
 * The first sentence closes the dated loophole in words: "a sentence closes as dated only if the parts it names are
   shown in the generators at the date it states". The tool enforces it only through the five strings (B1).
@@ -94,18 +94,18 @@ check re-edited, or a renamed check, is refused.
   substitution.
 * **n5:** "the stale sentences its inventory found" and "five more sentences corrected" are true.
 * **n6:** `apply_check15_fixes.py` line 27 now writes its dash guard as Python escape sequences (backslash u2014 and
-  backslash u2013), and the new script does the same. No added line from `b874b744` to the tip holds an em or en
+  backslash u2013), and the new script does the same. No added line from `53804300` to the tip holds an em or en
   dash.
 
-### 4. Replay of `apply_check15b_fixes.py` on `097d2517`
+### 4. Replay of `apply_check15b_fixes.py` on `911de5fb`
 
-* On `r6` at `097d2517`, with the script copied from `f21fc8f8`, it wrote:
+* On `r6` at `911de5fb`, with the script copied from `b3b5cfaf`, it wrote:
   * the registry;
   * `close_s122.py`;
   * the s122, records and s120 READMEs;
   * `apply_check15_fixes.py`;
   * `checks/check-int15-2.md`.
-* All seven are identical to `f21fc8f8`'s. After `rules_render.py --requirements`, so is REQUIREMENTS-TRACE.md.
+* All seven are identical to `b3b5cfaf`'s. After `rules_render.py --requirements`, so is REQUIREMENTS-TRACE.md.
 * A second run refuses ("already applied").
 * The int15 README differs from the tip only by the two hand-written additions (the check-int15-2 row, and the n1 and
   n2 lines).
@@ -115,7 +115,7 @@ check re-edited, or a renamed check, is refused.
 ### 5. Status, render, the evidence page, validators
 
 * **`rules_status.py`, three times:** exit 1 each time, with identical stdout, which is identical to main's: FAIL of
-  338 (PASS 195, INCONCLUSIVE 104, FAIL 39), NOT_READY. The audits equal `097d2517`'s apart from the head.
+  338 (PASS 195, INCONCLUSIVE 104, FAIL 39), NOT_READY. The audits equal `911de5fb`'s apart from the head.
 * **`rules_render.py`, twice:** nothing written, and the clone is clean.
 * **The evidence page:** CURRENT-EVIDENCE.md is `c9b98931...`, main's.
 * **Validators and checks:**
@@ -127,11 +127,11 @@ check re-edited, or a renamed check, is refused.
   * `claims_check.py`: PASS of 91.
 * **Tests:** test_requirements 66, test_rules_registry 5, test_decision_register 5 and test_envelope_data 6, which is
   82 passed and 0 failed.
-* **Readings:** the archive is the one checked at `097d2517`. Against main, 339 rows, 0 results moved, 0 classes moved.
+* **Readings:** the archive is the one checked at `911de5fb`. Against main, 339 rows, 0 results moved, 0 classes moved.
 
 ### 6. Files
 
-* `f21fc8f8` changes 10 files, each within its stated scope. `b874b744..f21fc8f8` changes 54.
+* `b3b5cfaf` changes 10 files, each within its stated scope. `53804300..f21fc8f8` changes 54.
 * All 30 commits carry the owner's identity and `[MESHSAT-1357]`, with no trailer and no em or en dash in messages.
 
 ## Minor items
@@ -151,7 +151,7 @@ check re-edited, or a renamed check, is refused.
   dates".**
   * CHECK-2 said so of lines 82 and 86.
   * Lines 77 and 83 state no date; check-int15-1 found them false when written (16 September).
-  * Line 47 was written on 6 September, while the D6 generator still had the WM8960, which left at `bdfc7b3f` (7
+  * Line 47 was written on 6 September, while the D6 generator still had the WM8960, which left at `dcd9f9a4` (7
     September, 07:15). Neither check found it false at a stated date.
   * The conclusion, that they close only corrected, stands.
   * Fix: an appended correction at the next registry pass.

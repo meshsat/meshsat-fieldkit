@@ -1,19 +1,19 @@
 mergeable: yes
 
-# Check 1 of integration set 17, `fnd/int18` at `1f34bf92` against main `8fec0733` (MESHSAT-1357)
+# Check 1 of integration set 17, `fnd/int18` at `9ead1d4e` against main `963740cd` (MESHSAT-1357)
 
 AI review, labelled as such: an independent check by an assistant session that did not build this integration. It is not a
 qualified review. 30 September 2026, 13:10 to 13:24 CEST (read from `date`).
 
 **Scope.** The integration only: the scrub is accepted by its CHECK-2, and l3r4 by its CHECK-3 and CHECK-4 (the last
-reads `mergeable: yes` for `a547fe1d`). Everything below is what I read or ran myself.
+reads `mergeable: yes` for `4908bc02`). Everything below is what I read or ran myself.
 
 **Refs and setup.**
-* `fnd/int18` = `1f34bf92fcb4`, main = `8fec0733`, merge base = main, `fnd/scrub` = `5899d7c7`, `fnd/l3r4` =
-  `a547fe1d`.
-* The set holds 18 commits: the scrub's 11, l3r4's 4 (`3afdc2d6`, `fcfc6007`, `e8e3ef57`, `a547fe1d`) and three merges.
+* `fnd/int18` = `9ead1d4e976a`, main = `963740cd`, merge base = main, `fnd/scrub` = `5607304f`, `fnd/l3r4` =
+  `4908bc02`.
+* The set holds 18 commits: the scrub's 11, l3r4's 4 (`f26f555f`, `d6f1e349`, `6fde32c3`, `4908bc02`) and three merges.
 * One `--no-local --single-branch` clone of `fnd/int18` (`_scratch/chk-int18s`), with `int18-evidence-1f34bf92.tar`
-  installed (`git status` clean after it). It holds the redaction commits, `9493847c`, `cd8720a1` and `b42e1827`, and is
+  installed (`git status` clean after it). It holds the redaction commits, `6e252bd9`, `6d7ca7e6` and `c9249016`, and is
   removed.
 
 ## Blocking
@@ -30,10 +30,10 @@ None.
 ## Merges
 
 * **All three merges are clean and equal `git merge-tree`'s automatic result, with no conflict:**
-  * `96692afc` (main + `5899d7c7`): its tree `fe02c8ec` is exactly the scrub tip's tree;
-  * `ca4f4f9f` (+ `e8e3ef57`) gives `1a220f0c`;
-  * `1f34bf92` (+ `a547fe1d`) gives `3bfd66f5`.
-* **No stray change.** A direct merge of `5899d7c7` and `a547fe1d` gives the same tree, `3bfd66f5`.
+  * `782abc98` (main + `5607304f`): its tree `fe02c8ec` is exactly the scrub tip's tree;
+  * `b5d71ae0` (+ `6fde32c3`) gives `1a220f0c`;
+  * `9ead1d4e` (+ `4908bc02`) gives `3bfd66f5`.
+* **No stray change.** A direct merge of `5607304f` and `4908bc02` gives the same tree, `3bfd66f5`.
 * **`records/README.md`, auto-merged.** Every line the scrub adds is present, and so is every line l3r4 adds (the
   `scrub/` and `l3r4/` rows and the two re-pinned `r8int6` rows). The two lines the scrub replaced are gone. No line is
   in the set that is in none of main, the scrub or l3r4.
@@ -86,4 +86,4 @@ None.
 ## Counts
 
 Blocking 0. Minors 1. Merges: 3 of 3 clean and equal to the automatic result. Tests: 235/0/2. Render order: stable at
-`c9b98931`, run twice. Box suite on `1f34bf92`: not seen by me.
+`c9b98931`, run twice. Box suite on `9ead1d4e`: not seen by me.

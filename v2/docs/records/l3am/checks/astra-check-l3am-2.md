@@ -3,7 +3,7 @@ accepted: no
 # Layer 3 amendment: the targeted recheck by the engineering collaborator (an AI review, read-only; the one follow-up)
 
 Collaborator job `cx12-l3am-recheck`, run `20261001T003321Z-1017926`, model `gpt-6-astra` at effort `xhigh` (the client's
-own record), on branch fnd/l3am at commit `932e0f7f0419`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+own record), on branch fnd/l3am at commit `c3778e451f6e`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

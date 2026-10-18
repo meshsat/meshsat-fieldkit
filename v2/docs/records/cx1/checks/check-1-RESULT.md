@@ -1,6 +1,6 @@
 # RESULT: AI review of the cx1 candidate (finding I-03, IF-AB-POWER), MESHSAT-1357
 
-Independent checker, 28 September 2026 19:30 CEST. Candidate: commit b1c744db on fnd/cx1 (base 6b419b02), four
+Independent checker, 28 September 2026 19:30 CEST. Candidate: commit 6da41a76 on fnd/cx1 (base 66c0d1d2), four
 files under `v2/docs/records/cx1/`. Blind phase 1 (`PHASE1.md`, `phase1.py`, `phase1.out`) was on disk before any
 candidate file was opened; the comparison is `CHECK.md`. All under
 `<worktrees>/_scratch/chk-cx1/`. Prototype framing: nothing built, ordered or
@@ -114,7 +114,7 @@ measured; this is an AI review, not a qualified review.
   new equal to old: `AssertionError: Replacement must change nonempty old text`; broken syntax: `SyntaxError:
   unmatched ')'`, generator copy untouched; a valid entry: exit 0, one line changed, marker created; second run:
   `Refused: this draft has already been applied or attempted.` exit 1.
-- Dash scan of the four files (U+2014, U+2013): none. `git show --stat b1c744db`: four files, 1112 insertions.
+- Dash scan of the four files (U+2014, U+2013): none. `git show --stat 6da41a76`: four files, 1112 insertions.
 - Fifteen source rows opened at their pages with `pdftotext -layout` into `txt/`: all confirmed (CHECK.md section 2).
 
 ## What I could not check, and why
@@ -127,4 +127,4 @@ measured; this is an AI review, not a qualified review.
 - No KiCad, no gate, no suite, nothing on the rented box: none was needed for this check and none was run.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

@@ -11,7 +11,7 @@ fitted; B2, the face-room limits are wrong); a second author pass had run seven 
 is the agents' transcripts: every file written with the editor, every shell command with its output, and the two result records.
 
 This file says what was recovered, what was regenerated and what was lost. The state recovered here is pass 1 as the checker saw it:
-**unchecked, and known NOT to be mergeable**; it is commit `fb4a52eb` of this branch. The answers to B1 and B2 are later commits on
+**unchecked, and known NOT to be mergeable**; it is commit `b5271138` of this branch. The answers to B1 and B2 are later commits on
 this branch (`README.md` beside this file), which rewrite the three CAD scripts, the test, the set's README and both drafts.
 
 ## Recovered (byte for byte, proved by sha256)
@@ -34,11 +34,11 @@ command's patch asserted to have changed the file:
 | File | Made of |
 |---|---|
 | `v2/cad/build_lid_tray_r2.sh` | a shell here-document, then two `sed` lines (the read-back folder renamed to a dot folder) |
-| `v2/cad/README.md`, `v2/cad/build_case_release.sh` | the tree's files at `c23c5e76` with the first pass's two patches |
+| `v2/cad/README.md`, `v2/cad/build_case_release.sh` | the tree's files at `e6c71e82` with the first pass's two patches |
 | `v2/ecad/tools/tests/test_lid_tray_qmx_r2.py` | written, then two patches |
 | `v2/release/case-2026-09-27/lid-tray-qmx-r2/README.md` | written and edited once; its last refresh of the input hashes is NOT replayed, because the generated files it names are regenerated below and the folder's README is rewritten for the answered design |
 | `v2/vendor/materials/README.md` | written, unchanged |
-| `drafts/apply_w5tray.py`, `drafts/apply_frame_seat_r2.py`, `drafts/README.md` | written under `drafts/w5tray/` of the lost worktree, then seven patches; moved here because a worker keeps no `drafts/` folder outside its records. As recovered they are in commit `fb4a52eb`; the files here now are corrected to the second pass |
+| `drafts/apply_w5tray.py`, `drafts/apply_frame_seat_r2.py`, `drafts/README.md` | written under `drafts/w5tray/` of the lost worktree, then seven patches; moved here because a worker keeps no `drafts/` folder outside its records. As recovered they are in commit `b5271138`; the files here now are corrected to the second pass |
 | `pass1/RESULT-w5tray-author-1.json`, `pass1/RESULT-w5tray-check-1.json` | the first author's and the checker's result records, as the transcripts hold them |
 
 ## Fetched again (makers' documents)
@@ -94,10 +94,10 @@ same holds for `v2/vendor/adhesives/3m-scotch-weld-dp8005.pdf` (`90fdb06a6289827
 
 ## The faithful rebuild
 
-Before anything was changed, the recovered scripts of commit `fb4a52eb` were built on the rented box (Ubuntu 24.04.5 LTS, Python 3.12.3,
+Before anything was changed, the recovered scripts of commit `b5271138` were built on the rented box (Ubuntu 24.04.5 LTS, Python 3.12.3,
 x86_64) under `/root/w5tray/`, in a fresh venv installed from `v2/cad/requirements-cad.lock` (`pip freeze` equals the lock line for line;
 build123d 0.13.0), from a sparse clone of this branch (a git bundle on the box's own repository). `v2/cad/build_lid_tray_r2.sh` ran twice
-(27 September 2026, 20:58:03 to 20:58:19 and 20:58:19 to 20:58:36 UTC, `CASE_BASE_COMMIT=c23c5e76`):
+(27 September 2026, 20:58:03 to 20:58:19 and 20:58:19 to 20:58:36 UTC, `CASE_BASE_COMMIT=e6c71e82`):
 
 | Output | sha256 (16), both runs | The first pass's digest | |
 |---|---|---|---|

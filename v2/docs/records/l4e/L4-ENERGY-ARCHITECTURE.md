@@ -1,6 +1,6 @@
 # L4-E2: the energy architecture under REQ-016's retained 100 W window (layer 4, MESHSAT-1357)
 
-**1 October 2026.** Branch `fnd/l4e`, from main `b45d1705` (the Layer 3 baseline accepted at `b4b199d0`, the fixed
+**1 October 2026.** Branch `fnd/l4e`, from main `101a1b43` (the Layer 3 baseline accepted at `30d97428`, the fixed
 input). **Prototype design:** nothing is bought, built, powered or measured. This page is the author's analysis, AI
 arithmetic, not a qualified review and not the independent check. It edits no registry record, no Layer 3 record and
 nothing in `v2/docs/handover/`. Every figure below is printed by `l4e_replay.py` into `l4e_replay.out` (its section

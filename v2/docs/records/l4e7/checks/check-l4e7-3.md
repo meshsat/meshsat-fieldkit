@@ -3,10 +3,10 @@ accepted: yes
 # Layer 4, L4-E7: The assistant's verification of B1's fix and the recheck's residue (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. The engineering collaborator's check of L4-E7 (`astra-check-l4e7-1.md`, run
-20261001T140747Z-3274169 on `2d7e331e`) read NOT YET on B1: the 94.2k over 7.5k hold and its 16.3 V declaration changed
+20261001T140747Z-3274169 on `820e1780`) read NOT YET on B1: the 94.2k over 7.5k hold and its 16.3 V declaration changed
 REQ-016's approved operating point. The coordinator agreed and directed the requirement-preserving hold; the fix is
-`379ea32f`. The targeted recheck (`astra-check-l4e7-2.md`, run 20261001T144407Z-3391302 on `379ea32f`) read ACCEPT with one
-nonblocking residue of M2; its fix is `6f9021c5`.
+`165e39fb`. The targeted recheck (`astra-check-l4e7-2.md`, run 20261001T144407Z-3391302 on `165e39fb`) read ACCEPT with one
+nonblocking residue of M2; its fix is `3be3eebd`.
 
 - **B1, read at the source.** REQ-016's statement says "the panel held at 17.6 V by the stage's input regulation"; owner
   ruling D-34 keeps REQ-016's approved window unchanged unless the owner rules otherwise. The hold draft
@@ -23,7 +23,7 @@ nonblocking residue of M2; its fix is `6f9021c5`.
 - **M2's residue.** The script prints the EA2 break-evens to six decimals and the page states each with its stack: stack A
   25.026426 V/V cold and 24.924212 V/V hot; stack C's other terms (line x2, the drifts) 55.191656 and 54.709122 V/V; the
   bench acceptance stays at or above 65 V/V. The fix changed only those lines of the output.
-- **Run by the coordinator at `6f9021c5`:** `l4e7_stage_settings.py` re-run, its output equal to the committed
+- **Run by the coordinator at `3be3eebd`:** `l4e7_stage_settings.py` re-run, its output equal to the committed
   `l4e7_stage_settings.out` byte for byte (it reproduces `l4e_replay.out` and `l4e5_source_control.out` in child processes
   first); `test_l4e7` with `test_public_hygiene` 16 passed, 0 failed, 0 skipped.
 

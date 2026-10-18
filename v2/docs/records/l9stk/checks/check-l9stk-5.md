@@ -2,7 +2,7 @@ accepted: CONFIRMED AS CONDITIONAL
 
 # Record l9stk: the independent checker's check 5, PROTECTION: CONFIRMED AS CONDITIONAL (B-R2 excluded) (filed as received)
 
-MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `0d72880b34e337a6f2e26c1420507b813784b533` (branch `fnd/l9stk`). Time: 4 October 2026, begun 04:29 CEST, interrupted by the usage limit, finished 12:21 CEST. Nothing in the kit has been built, bought or measured.
+MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `56b29bf556a20bd23a900ab2107eca979a20025d` (branch `fnd/l9stk`). Time: 4 October 2026, begun 04:29 CEST, interrupted by the usage limit, finished 12:21 CEST. Nothing in the kit has been built, bought or measured.
 
 Scope, from the coordinator's brief: the targeted recheck of B-R1's correction (one SOA criterion for both variants; C-1c, the restart inhibit on the breaker pad) and the minors, sections 15.4, 15.4b, 15.6, 15.7 and 15.8, `l9stk_protection.py` and its output; B-R2 (charging through a latched breaker) left out by the coordinator's brief, for L4-E11's round 9.
 
@@ -12,7 +12,7 @@ Filed by the integrator of set 29 from the checker's final message for the round
 
 **PROTECTION: CONFIRMED AS CONDITIONAL** (B-R2 excluded)
 
-The B-R1 correction holds and every figure I recomputed matches the record. What remains open is how the inhibit's error budget is split; the record leaves it unallocated, and the comparator choice decides whether the window closes. I resumed the same scratch clone at 0d72880b with SLVA673A fetched: `test_l9stk` gave 41 passed, 0 failed, 0 skipped. The tree is unchanged and the clone is deleted.
+The B-R1 correction holds and every figure I recomputed matches the record. What remains open is how the inhibit's error budget is split; the record leaves it unallocated, and the comparator choice decides whether the window closes. I resumed the same scratch clone at 56b29bf5 with SLVA673A fetched: `test_l9stk` gave 41 passed, 0 failed, 0 skipped. The tree is unchanged and the clone is deleted.
 
 **What reproduces**
 - **One criterion for both variants.** For the worst resistive start (180 mJ, equivalent to 4.46 ms at 40.32 W), I get 0.545 from the inside air, 0.575 at the trip (0.639 with the 10 % reading allowance) and 0.600 at the block edge (0.667 with it). The -2 still fails. Without the inhibit, a restart at the held 101.0 °C case would be 0.82. My block edge with the reading allowance is 83.0 °C against the record's 83.20 °C, a difference that comes only from how the SOA figure is interpolated.

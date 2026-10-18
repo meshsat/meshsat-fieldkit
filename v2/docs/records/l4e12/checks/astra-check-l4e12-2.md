@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E12: the targeted recheck of the electronics against the inside air at the margins by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx32-l4e12-recheck`, run `20261002T033409Z-367504`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e12 at commit `39fe74c4bf5b`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e12 at commit `0a8454b8d585`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

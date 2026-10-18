@@ -1,7 +1,7 @@
 # What moved between set 9 and set 10 on the EMCON paths (stream d4emcon, 29 September 2026)
 
-Read on the committed netlists of main `7b2caadd` (merged into `fnd/d4emcon` as `da31586e`) against those of set 9
-(`89815e4f`, which carried main `c5f93464`). Tools: `tools/netdiff.py` (parts by value, nets by node), then
+Read on the committed netlists of main `9f023422` (merged into `fnd/d4emcon` as `3da1fac8`) against those of set 9
+(`a5bc4680`, which carried main `5ac1deab`). Tools: `tools/netdiff.py` (parts by value, nets by node), then
 `tools/path_walk.py`, `tools/walk_report.py` (RF-002's walk), `tools/fault_levels.py` and `tools/lamp_check.py`, all
 pure Python on the committed files; nothing here needed KiCad.
 

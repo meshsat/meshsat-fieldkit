@@ -1,13 +1,13 @@
 mergeable: yes
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026). Its minor items N1 (U3's 800 kHz is provisional until S-117 is closed) and N2 (the capacitor is 100 pF or less; Table 9-5 is on printed pages 27 and 28) are carried in the milestone of v2/docs/EXECUTION-PLAN.md; N3 is answered there by the owner's own words. -->
 
-# Focused AI re-check of integration set 10: fnd/int11 at f3d30ceb (MESHSAT-1357, 29 September 2026)
+# Focused AI re-check of integration set 10: fnd/int11 at 34bc4a5d (MESHSAT-1357, 29 September 2026)
 
 This is an AI review, not a qualified review, by the checker of CHECK.md. Its scope is only what the coordinator
 asked: whether B1 and M9 are answered correctly, whether the carried minors are stated faithfully, and whether
 anything moved beyond those files.
 
-The candidate adds three commits on 2cbbef38: fdd50751, 77e0896a and f3d30ceb. All three are authored and committed
+The candidate adds three commits on b21f9ba5: a4ae554c, f2875ae8 and 34bc4a5d. All three are authored and committed
 as the owner, with no co-author trailer. They change seven files: `pcb_emc.yaml`, `pcb_requirements.yaml`,
 REQUIREMENTS-TRACE.md, and four records under `records/int11/`.
 
@@ -76,6 +76,6 @@ findings are unchanged. CLOSURE.md states each carried item as follows:
   100 pF capacitor". Table 9-5 is cited without its pages (27 and 28).
 - **N3. The energy attribution points to a record that does not exist yet.** CLOSURE.md now says section 9 is kept
   as the reference analysis "by the owner's instruction of 29 September, recorded in v2/docs/EXECUTION-PLAN.md with
-  this set's milestone". The plan at f3d30ceb does not record it yet. The instruction the tree does hold
+  this set's milestone". The plan at 34bc4a5d does not record it yet. The instruction the tree does hold
   (`energy_architecture.py` docstring, ENERGY-RECONCILIATION.md's fourth issue) is that M1 and REQ-072 stay as
   written; it does not say that section 9 is the reference. Quote the owner's words in the milestone entry.

@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E7R: the targeted recheck of the control decision for REQ-016's 100 W by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx25-l4e7r-recheck`, run `20261001T221110Z-4111816`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e7 at commit `6fca30d3ceaf`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e7 at commit `783e230bb5ea`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

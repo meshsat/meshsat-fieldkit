@@ -1,13 +1,13 @@
 mergeable: no
 
-# AI review: focused re-check of integration set 12 after the integrator's answers, fnd/int13 at 69156cad (MESHSAT-1357)
+# AI review: focused re-check of integration set 12 after the integrator's answers, fnd/int13 at 87d871d7 (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review.
 
 **Set-up**
-* Clone: `<scratch>/chk-int13b`, a shared clone detached at `69156cad11ac064f414c16a696c9aefc212a57e4` (checked with `git rev-parse fnd/int13`, still the tip at 16:11).
+* Clone: `<scratch>/chk-int13b`, a shared clone detached at `87d871d747fecf876815d12cd81eb445d347c5a1` (checked with `git rev-parse fnd/int13`, still the tip at 16:11).
 * Evidence archive of the tip installed: `int13-evidence-69156cad.tar`, sha256 `5f2ee6236328b915c02d...`, 939 files; `git status` clean after it.
-* Comparison clone (the coordinator's instruction): `<scratch>/chk-int13b-base`, a shared clone at `005e5f5e` with the first check's archive `int13-evidence-005e5f5e.tar` (sha256 `e2256dd9777dd2714f4374da...`) installed; `git status` clean after it.
+* Comparison clone (the coordinator's instruction): `<scratch>/chk-int13b-base`, a shared clone at `4a115314` with the first check's archive `int13-evidence-005e5f5e.tar` (sha256 `e2256dd9777dd2714f4374da...`) installed; `git status` clean after it.
 * The 17 held vendor files: byte identical to the int13 worktree's 17 ignored files; `ibis_fetch.py --check` reads 13 PRESENT of 13; the four TI sheets match `v2/vendor/sources.txt` lines 454 to 457 by full sha256.
 * Time: 29 September 2026, 15:56 to 16:13 CEST (from `date`).
 * Written in the clone: only this file. My scripts and outputs are in the session scratchpad (`chkb/`). Every rule tool ran from a scratch cwd with `VERDICT_DIR` in the scratchpad; `git status` stayed clean throughout.
@@ -28,7 +28,7 @@ This is an AI review, not a qualified engineering review.
 * Line 315, the EMCON row of section 4, which CFL-016's statement names ("CONOPS sections 4, 4b and 5 (the startup enables, EMCON, ... rows)"):
   * It says "the RockBLOCK keeps running on its own stored energy with its ENABLE held by firmware until that ENABLE is forced low in hardware". That contradicts the corrected line 411 and the netlist: `RB_IEN` (J_RB9704 pin 3) is driven by U536 = `EMCON_HW` AND `RB_SW_IEN` through R532, and pulled low by U543.
   * Its "session work owed" list still names "the back-feed paths into the RockBLOCK, the E22 and the E72 (SD-EMC-2)". Set 12 draws those (U537 to U553), and S-01's own text now says they are "drawn and closed at desk".
-* All three were already stale on main: W4B-D3 and W4B-D1, commit `910da406` of 27 September. Main's netlist `97823ef1171a61ce` has the same U215, U216, U115, U116, U315 and U316 as the tip. `feasibility/EMCON.md` section 4c records the change ("U{s}15's second channel is freed") and says it supersedes the older statements. CONOPS was never brought into line.
+* All three were already stale on main: W4B-D3 and W4B-D1, commit `bfd79196` of 27 September. Main's netlist `97823ef1171a61ce` has the same U215, U216, U115, U116, U315 and U316 as the tip. `feasibility/EMCON.md` section 4c records the change ("U{s}15's second channel is freed") and says it supersedes the older statements. CONOPS was never brought into line.
 * "Read ... by the check": `checks/check-int13-1.md` records a reading of lines 411 and 412 only. It names no reading of the other rows.
 
 *Why it blocks:* this is B1's own defect again. CFL-016 is CONFLICT_RESOLVED with evidence PASS and `release_effect: BLOCKER`, and it is rebound on a reason that is not true of the file it binds (`CONOPS.md@b2c55e289da2dcbc`).
@@ -72,12 +72,12 @@ This is an AI review, not a qualified engineering review.
 * In CFL-016's entry, everything before "the section's other rows" is true.
 
 **Reproduction:**
-* `apply_check13_fixes.py` replayed on a scratch clone at `a1f8ec70` gives `CONOPS.md`, `pcb_requirements.yaml`, `apply_rebind_after_circuit.py`, `apply_repin_bc_set12.py` and `rebind_reasons_set12.py` byte identical to `a46db71b`.
-* `rules_render.py --requirements` there gives `REQUIREMENTS-TRACE.md` byte identical to `a46db71b`.
+* `apply_check13_fixes.py` replayed on a scratch clone at `bae6ca21` gives `CONOPS.md`, `pcb_requirements.yaml`, `apply_rebind_after_circuit.py`, `apply_repin_bc_set12.py` and `rebind_reasons_set12.py` byte identical to `b6ab12e7`.
+* `rules_render.py --requirements` there gives `REQUIREMENTS-TRACE.md` byte identical to `b6ab12e7`.
 
 ## 2. m1 to m9
 
-**Registry diff at a46db71b (parsed):**
+**Registry diff at b6ab12e7 (parsed):**
 * Only `evidence` moved, on CON-010, REQ-044, CON-016, CON-018, CON-019, CFL-005 and REQ-077.
 * `evidence` and `evidence_bound_to` moved on CFL-016, CFL-014 and REQ-005.
 * Older entries are kept as a prefix.
@@ -94,9 +94,9 @@ This is an AI review, not a qualified engineering review.
 | m6 | docstring corrected | matches lines 77 and 82 (already pinned: `continue`, then the file is written) |
 | m7 | README, carried to the next regeneration of board B, with a reason | answered |
 | m8 | S-01 dated pointer | true: `readback_d4e.py --board B` on 3ef9b8c4 fails exactly R527, R532, R238; `readback_chk12.py` reads "every check holds" |
-| m9 | "carried at 230fdd65 (first committed at 3d3e32d6)" | true: board A's netlist first reads `6c40250c` at 3d3e32d6, an ancestor of 230fdd65 |
+| m9 | "carried at caeeca1f (first committed at 91f9e28f)" | true: board A's netlist first reads `6c40250c` at 91f9e28f, an ancestor of caeeca1f |
 
-## 3. 58d2ea3f
+## 3. 9a33ef5b
 
 * **C22932.** JLCPCB's public parts API (queried at 16:03) gives UNI-ROYAL 0603WAF1913T5E, 191 kOhm, plus or minus 1 %, 100 mW, 0603, stock 69,150.
   * R219 is `191k 1%` on `R_0603_1608Metric`.
@@ -109,7 +109,7 @@ This is an AI review, not a qualified engineering review.
 
 **Routed verdicts, tip clone against the first check's archive clone:**
 * There are 615 `routed/*.verdict.json` on each side, none only on one side. **0 verdicts moved, 0 counts changed.**
-* 90 files differ, all of them in `git_head`, `version`, `tools_tree_sha` and `ts` (the 90 re-taken at `a46db71b`; the other 525 are byte identical). Beyond that:
+* 90 files differ, all of them in `git_head`, `version`, `tools_tree_sha` and `ts` (the 90 re-taken at `b6ab12e7`; the other 525 are byte identical). Beyond that:
   * `erc_report.sha256_16` differs on 6 `erc_gate` readings. The six ERC reports differ only in their `date` fields.
   * Board A's `intent_rails` differs on documents 7 and 8: from null to the held sheets' shas.
 * The same holds for the 347 unrouted `out/*.verdict.json`: 0 moved, 0 counts changed. `claims_check` (91, 0) and `rules_complete` (339 pairs, 0 errors) are unchanged, and `summary.json` is identical.
@@ -136,13 +136,13 @@ This is an AI review, not a qualified engineering review.
 
 ## 6. Every changed file
 
-`005e5f5e..69156cad` changes 103 files (99 modified, 4 added):
-* 58d2ea3f: `lcsc_fill.py` and `test_rails_census.py` (item 3).
-* a1f8ec70: `EXECUTION-PLAN.md`; the merge brings exactly `77e35dd3`'s diff, and main is still `77e35dd3`.
-* a46db71b: CONOPS, the trace page, the registry, the four scripts, the README and the two filed checks (items 1 and 2).
+`4a115314..69156cad` changes 103 files (99 modified, 4 added):
+* 9a33ef5b: `lcsc_fill.py` and `test_rails_census.py` (item 3).
+* bae6ca21: `EXECUTION-PLAN.md`; the merge brings exactly `9a576dc2`'s diff, and main is still `9a576dc2`.
+* b6ab12e7: CONOPS, the trace page, the registry, the four scripts, the README and the two filed checks (items 1 and 2).
   * `check-int13-1.md` equals the first check's CHECK.md apart from the clone path line.
   * `check-set12-1.md` equals `<scratch>/chk-set12/CHECK.md` plus one filing comment.
-* 69156cad: 90 routed verdicts (item 4).
+* 87d871d7: 90 routed verdicts (item 4).
 
 Nothing unexplained.
 
@@ -153,7 +153,7 @@ Nothing unexplained.
   * "through `R532` (since stream w4b)": R532 is set 12's (D4E-B). On main, U536 pin 4 drove RB_IEN directly.
   * `apply_check13_fixes.py` line 60 asserts only U543 pins 1 and 5.
   * Fix: "powered from +5V_DEV and watching +3V3_DEV"; date U536 to w4b and R532 to set 12; assert pin 6.
-* **m2. CONOPS.md line 399: the section heading paragraph still says it was read at `45bde541`.** Rows 411 and 412 now describe set 12's netlist. Add the netlist they were read at.
+* **m2. CONOPS.md line 399: the section heading paragraph still says it was read at `3e42100d`.** Rows 411 and 412 now describe set 12's netlist. Add the netlist they were read at.
 * **m3. CONOPS.md lines 416 and 417, board A's rows, predate board A as generated.**
   * They cite `U26` as generated, and "board A's round 8 candidate" with `gen_sch_a.py` lines 1240 to 1243.
   * On board A `6c40250c`, U26 is the outlet interlock, and U35 to U38 form PA_EN and HF_EN with PA_HOLD and HF_HOLD (through U40), not PA_SW_EN and HF_SW_EN.

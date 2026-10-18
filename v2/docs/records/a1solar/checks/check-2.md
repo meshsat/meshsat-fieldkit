@@ -1,15 +1,15 @@
 mergeable: yes
-<!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026): the focused re-check of 066e6b97; N1 to N3 answered by records/a1int/apply_a1solar_minors.py, N4 labelled in energy_runs.out. -->
+<!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026): the focused re-check of 2bc84279; N1 to N3 answered by records/a1int/apply_a1solar_minors.py, N4 labelled in energy_runs.out. -->
 
-# AI review: focused re-check of stream a1solar, fnd/a1solar at 066e6b97 (MESHSAT-1357)
+# AI review: focused re-check of stream a1solar, fnd/a1solar at 2bc84279 (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review, made on 29 September 2026 at 04:41 CEST by the checker of
-`CHECK.md` (9f93a9fc), who wrote none of the work. Read-only: the scratch clone was detached at `w/a1solar` = 066e6b97
-(five commits after 9f93a9fc: 4c611d51, 6fa0f576, 69480571, 6e1d72ac, 066e6b97). Nothing here is a measurement.
+`CHECK.md` (715fe251), who wrote none of the work. Read-only: the scratch clone was detached at `w/a1solar` = 2bc84279
+(five commits after 715fe251: d5d0d2ed, 78f4ba8c, 93a5e744, c825795e, 2bc84279). Nothing here is a measurement.
 
-**Merge condition (not a defect of the content):** the merge must be a squash of **559a072d..066e6b97**, the stream's 13
-commits with 18863a97 included, on every step to `main` (fnd/a1int, then main). The branch must never be merged with its
-history or pushed. See answer 5: the range 18863a97..066e6b97 named in the request does not apply.
+**Merge condition (not a defect of the content):** the merge must be a squash of **08ebe6bd..066e6b97**, the stream's 13
+commits with d43136af included, on every step to `main` (fnd/a1int, then main). The branch must never be merged with its
+history or pushed. See answer 5: the range d43136af..066e6b97 named in the request does not apply.
 
 ## Blocking items
 
@@ -87,23 +87,23 @@ line), `v2/vendor/README.md`, `vendor-status.txt` and `sources.txt`. The authors
 **5. The SunPower PDFs and the squash.**
 - **With the history kept**, these would reach the public mirror:
   - `sunpower-spr-e-flex-100-datasheet-523809-revd.pdf` (989,926 bytes) and
-    `sunpower-flex-safety-installation-524958-revf.pdf` (278,154 bytes), both added in ab7f85d2;
-  - `sunpower-flex-safety-installation-524958-reva.pdf` (242,086 bytes), added in c90e10f4;
-  - all three deleted in 6fa0f576.
+    `sunpower-flex-safety-installation-524958-revf.pdf` (278,154 bytes), both added in 4b804d92;
+  - `sunpower-flex-safety-installation-524958-reva.pdf` (242,086 bytes), added in 8dd139ee;
+  - all three deleted in 78f4ba8c.
 
   The twelve MRcalc and PVcalc JSONs the stream later removed would also be kept. They are PVGIS data (reuse with
   attribution), so they are harmless.
-- **Where the branch is now:** GitLab `origin` holds only `main` (`ls-remote`), and ab7f85d2 is in neither w/a1int nor
+- **Where the branch is now:** GitLab `origin` holds only `main` (`ls-remote`), and 4b804d92 is in neither w/a1int nor
   origin/main. So nothing of the branch is public yet.
-- **Which files a squash leaves:** the net diff has no SunPower path, and neither 18863a97's tree nor 066e6b97's tree
+- **Which files a squash leaves:** the net diff has no SunPower path, and neither d43136af's tree nor 2bc84279's tree
   holds one.
-- **But 18863a97..066e6b97 is the wrong range.** 18863a97 itself (the Victron sheet, its sources line, the first
+- **But d43136af..066e6b97 is the wrong range.** d43136af itself (the Victron sheet, its sources line, the first
   README) is in neither w/a1int nor main. A patch of that range fails on both lines (README.md not in the index;
   sources.txt context at line 389). Even applied by hand, it would drop the Victron PDF that `array_calc.py` pins (exit 3).
-- **The right range is 559a072d..066e6b97 (18863a97's parent).** `git apply --cached --check` against temporary indexes
+- **The right range is 08ebe6bd..066e6b97 (d43136af's parent).** `git apply --cached --check` against temporary indexes
   shows it applies cleanly to both w/a1int and origin/main. It carries no SunPower file.
-- **Do not use `git merge --squash fnd/a1solar` onto fnd/a1int.** It would also carry d41f85ec..559a072d, the set 10
-  re-take commits that are on main but not on a1int, because the merge base is 13b5352b.
+- **Do not use `git merge --squash fnd/a1solar` onto fnd/a1int.** It would also carry 75460813..559a072d, the set 10
+  re-take commits that are on main but not on a1int, because the merge base is d77b2a51.
 
 ## Minor items (new)
 

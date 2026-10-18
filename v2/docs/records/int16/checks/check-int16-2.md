@@ -1,14 +1,14 @@
 mergeable: no
 
-# Check 2 (narrow re-check) of integration set 15, `fnd/int16` at `4012429e` (MESHSAT-1357)
+# Check 2 (narrow re-check) of integration set 15, `fnd/int16` at `f6f65454` (MESHSAT-1357)
 
 AI review, labelled as such: an independent check by an assistant session that did not build this integration. It is not a
 qualified engineering review. 30 September 2026, 02:10 to 02:16 CEST (read from `date`). Scope: `git diff
-845a4fd1..4012429e` against check 1's B1, B2 and minors. Everything below is what I read or ran myself, in a shared
+65003aff..4012429e` against check 1's B1, B2 and minors. Everything below is what I read or ran myself, in a shared
 clone `_scratch/chk-int16b` with `archives/int16-evidence-4012429e.tar` extracted (`git status` clean after extraction),
 now removed. No commits to real branches, no pushes, no box.
 
-`fnd/int16` = `4012429eabcf`, one commit on `845a4fd1`, 16 files.
+`fnd/int16` = `f6f6545421dd`, one commit on `65003aff`, 16 files.
 
 ## Blocking
 
@@ -48,12 +48,12 @@ ruling of 21 September 2026". "decision 59, written by apply_decision_decoded.py
     committed one. `build_table.py` re-run leaves the tree clean.
 * **B2: answered.** A fresh `part_identities.py render` is byte identical to `BOARD-C-SELECTIONS.md`. The page names
   only `v2/vendor/power/held/panjit-ss2020fl-series.pdf`, marked "(held back)", and never the old path.
-* **Replay.** On `845a4fd1`, `apply_panjit_held_w5identc.py`, then `apply_check16_fixes.py`, then `rules_render.py
-  --requirements` reproduce every scripted file of `4012429e`. The only differences left are the hand-written files
+* **Replay.** On `65003aff`, `apply_panjit_held_w5identc.py`, then `apply_check16_fixes.py`, then `rules_render.py
+  --requirements` reproduce every scripted file of `f6f65454`. The only differences left are the hand-written files
   (the set README, the index rows, the two filed checks) and the two scripts themselves.
 * **m1, m3, m4, m5, m7, m9: answered in `records/int16/README.md`**, and the text is true to check 1.
   * m3: `check-w5identc-3.md` is byte identical to the checker's report.
-  * m4: I read the four far sheets from `c08f4d5a`. The Uniroyal CS03 sheet reads "© Uniroyal Electronics Global Co.,
+  * m4: I read the four far sheets from `76e050df`. The Uniroyal CS03 sheet reads "© Uniroyal Electronics Global Co.,
     Ltd. All rights reserved"; the Arlitech, Fenghua and Murata text layers carry no rights or reproduction term. This
     agrees with the README's plan.
   * m7: recording it rather than editing is reasoned: `pcb_decisions.yaml` is bound by sha in CFL-016's reading.

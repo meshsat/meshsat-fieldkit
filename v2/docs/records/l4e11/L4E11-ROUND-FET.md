@@ -1,4 +1,4 @@
-**ROUND FET (W136, branch `fnd/l4fet` from main `be07863b`, 7 October 2026): DONE on the desk. DONE: L4A-70, the search of 18 makers' sheets on printed maxima (none meets TI's 5 nF, the 40.78 K/W bar and the held 23.93 A together, at any count), (i)(a) kept CONDITIONAL on E-05, the fallback (ii) DRAFTED (`fallback/apply_gen_sch_a_fetpair.py`, `fallback/check_fetpair_netlist.py`, `fallback/apply_check_dd7_fetpair.py`), composed with board A's drafts, five mutations FAIL; L4A-71, the UDC-1 table and the SESSION selection (M-A first, M-B second, each with its end condition). NOT DONE: no independent check of this round; E-05 itself (vendor or bench); TP-E11-29's design target at the pair's bar. NEXT: one focused check (L4A-69's slot); L4A-66 released for M-A by decision L4E11-FET-D2.**
+**ROUND FET (W136, branch `fnd/l4fet` from main `571af742`, 7 October 2026): DONE on the desk. DONE: L4A-70, the search of 18 makers' sheets on printed maxima (none meets TI's 5 nF, the 40.78 K/W bar and the held 23.93 A together, at any count), (i)(a) kept CONDITIONAL on E-05, the fallback (ii) DRAFTED (`fallback/apply_gen_sch_a_fetpair.py`, `fallback/check_fetpair_netlist.py`, `fallback/apply_check_dd7_fetpair.py`), composed with board A's drafts, five mutations FAIL; L4A-71, the UDC-1 table and the SESSION selection (M-A first, M-B second, each with its end condition). NOT DONE: no independent check of this round; E-05 itself (vendor or bench); TP-E11-29's design target at the pair's bar. NEXT: one focused check (L4A-69's slot); L4A-66 released for M-A by decision L4E11-FET-D2.**
 
 # L4-E11 round FET: a battery-FET set robust to Q-TI-17 (L4A-70) and row (c)'s selection gate (L4A-71) (MESHSAT-1357)
 
@@ -17,7 +17,7 @@ drafted and UNSENT (`clarification/TI-QUESTIONS.md`). Round 11 (`l4e11_power.out
 RDS(on) at -8.5 V and Ciss maxima: none found among the parts read".
 
 **Closure contract (constitution section 4; the register's entries restated).** Type: unresolved design choice (L4A-70, L4A-71) resting
-on missing vendor evidence (E-05). Inputs: the records named in [OUT 1], all at `be07863b`. Requirement: C-PROT rev 1 (every series part
+on missing vendor evidence (E-05). Inputs: the records named in [OUT 1], all at `571af742`. Requirement: C-PROT rev 1 (every series part
 within its limits below and above the trip) and TI's BATDRV selection rule. Smallest deliverable: this page, the script, its output, the
 fallback draft with its check and the test. Acceptance: the selection's gate load on printed maxima, or the fallback draft composed with
 failing mutations; it fails on a typical Ciss used as a limit. Owner: this record. Dependency: none for the desk part; E-05 for the

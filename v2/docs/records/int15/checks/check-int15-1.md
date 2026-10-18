@@ -9,9 +9,9 @@ September 2026 from 19:41 to 20:09 CEST (times read with `date`). Everything bel
 * Tip clone: `<scratch>/chk-int15`, a shared clone detached at `1f3dd306215f80aa6eb57334fc29db8078ac48ba`, still the
   tip of `fnd/int15` at 20:06. Archive `int15-evidence-1f3dd306.tar` installed: sha256 `74e95c9762a705e1...`, 939
   files, none of them tracked (the four held TI sheets and the thirteen IBIS models among them).
-* Main clone: `<scratch>/chk-int15-base`, detached at `b874b744`, with `int14-evidence-a906b932.tar` (sha256
+* Main clone: `<scratch>/chk-int15-base`, detached at `53804300`, with `int14-evidence-a906b932.tar` (sha256
   `dae5201ad41d5dc4...`, 939 files).
-* Replay clones (throwaway, in my session scratchpad under `c15/`): `r1` at `853beff6`, `r3` at `9eaf406f`. My helper
+* Replay clones (throwaway, in my session scratchpad under `c15/`): `r1` at `6ec35a7c`, `r3` at `918b8c75`. My helper
   scripts and outputs are there too.
 * Every tool ran from a scratch cwd (`env -C`, no `cd`) with `VERDICT_DIR` in the scratchpad. `git status` of both
   check clones is clean apart from this file. No commit, no push, no agent, no other model, no box. The full suite was
@@ -30,33 +30,33 @@ circuit as generated". `s122lib.SCOPE` reads V2-SPEC.md whole and OPERATING-ENVE
    * No generator has ever carried a TMDS341A: `git log --all -S TMDS341` touches only documents, vendor records and
      `make_handoff.py`.
    * Board B's display switches are `U3` and `U4`, TI TS3DV642A0RUAR, on the set 13 netlist. `gen_sch_b.py` carries the
-     TS3DV642 since `273c5431` (7 September, 05:45), and it did so at `b2709118`, the commit that wrote this table.
+     TS3DV642 since `c394842f` (7 September, 05:45), and it did so at `be826353`, the commit that wrote this table.
    * `feasibility/FAILOVER-FABRIC.md` lines 103 to 105 already record the TMDS341A as NOT_FITTED.
    * `verdicts.out` line 2118 judges the sentence NOT DERIVABLE, as HISTORY, under `judgements.py` line 417 (T7, "the
      boards table is headed 'as generated on 7 September 2026', a dated record") and entry `b1e7494b6d` (line 973).
      None of its three assertions is about the display switch.
    * The premise is false for this row. The TMDS341A was never what was generated on 7 September. The row is not a 7
-     September record either: `gen_sch_b.py` at `b2709118` holds no TMUXHS4212, TS3USB221A or STM32H7, and the row's
+     September record either: `gen_sch_b.py` at `be826353` holds no TMUXHS4212, TS3USB221A or STM32H7, and the row's
      supervisors' clause states the present (CON-017 PASS).
    * The same table's TPS55288 was corrected in this set (correction 32) on exactly this ground, that it had left
      before 7 September. The TMDS341A is the same class, and it was missed.
 2. **V2-SPEC.md line 86 (the E6 row): "the LM5176 9 to 36 V front end".**
    * The LM5176 front end is board A's `U2` ("VBUS20 from VIN_RAW").
    * Board E carries the LM5069MM-2 hot swap `U6`.
-   * On 7 September too: `gen_sch_e.py` line 104 at `b2709118` says the bus "climbs the dock contacts into A22's LM5176
+   * On 7 September too: `gen_sch_e.py` line 104 at `be826353` says the bus "climbs the dock contacts into A22's LM5176
      front end".
    * `verdicts.out` line 2144 judges it NOT DERIVABLE under the same T7.
 3. **V2-SPEC.md line 47: "Direwolf on the WM8960 codec".**
-   * The WM8960 left the design with the D8 generators at `bdfc7b3f` (7 September). Board D's codec is `U6`, TI PCM2912A.
+   * The WM8960 left the design with the D8 generators at `dcd9f9a4` (7 September). Board D's codec is `U6`, TI PCM2912A.
    * The cell is not inventoried: only the row's third cell, "D8, west jack", is judged (`verdicts.out` line 2040).
    * The same cell says the RA30H1317M sheet is "*owed*". OPERATING-ENVELOPE.md section 2 records that sheet as held
      since 27 September.
 4. **`v2/docs/OPERATING-ENVELOPE.md` line 77: "TRACO TEN 40-2412WIN | dock strip, inside".**
    * No TRACO part is on any set 13 netlist.
-   * `gen_sch_e.py` line 210 (line 107 at `b2709118`) reads "the isolated TRACO converter of E4 is gone".
-   * The row was written at `d122a261` (16 September), after that. It is not inventoried.
+   * `gen_sch_e.py` line 210 (line 107 at `be826353`) reads "the isolated TRACO converter of E4 is gone".
+   * The row was written at `4ad481bd` (16 September), after that. It is not inventoried.
 5. **OPERATING-ENVELOPE.md line 83: "Amphenol M.2 B-key socket", citing `amphenol-mdt420b01001`.**
-   * Board B's only B-key socket is `J_M2C2`, TE 2199119-3. It was TE 1-2199119-5 at `d122a261`, when the row was
+   * Board B's only B-key socket is `J_M2C2`, TE 2199119-3. It was TE 1-2199119-5 at `4ad481bd`, when the row was
      written.
    * No generator has ever carried an MDT420B.
    * The row is not inventoried.
@@ -110,20 +110,20 @@ to describe a replaced circuit". That is true of the judgements, but not of the 
 
 ### 1. Replays (all byte for byte)
 
-* **`apply_registry_s120.py close 853beff6`** on `r1` at `853beff6`:
+* **`apply_registry_s120.py close 6ec35a7c`** on `r1` at `6ec35a7c`:
   * `--check` writes nothing;
-  * the real run closes S-120 by `commit 853beff637b0cd87d30ddab8dfead3e6057d4f23` (40 characters) and opens S-124;
+  * the real run closes S-120 by `commit 6ec35a7ce7a88433dcf1e402a7978a19cac588d4` (40 characters) and opens S-124;
   * a second run refuses ("S-120 is already closed").
 * **`apply_registry_s122.py`** on that result:
   * it rebinds 20 records;
-  * `pcb_requirements.yaml`, `pcb_envelope.yaml` and `pcb_rules_coverage.yaml` are identical to `9eaf406f`'s;
+  * `pcb_requirements.yaml`, `pcb_envelope.yaml` and `pcb_rules_coverage.yaml` are identical to `918b8c75`'s;
   * a second run refuses.
-* **9eaf406f's pages.** With main's archive installed in `r1`, I ran `rules_render.py --requirements`, `rules_status.py`
-  and `rules_render.py`. All nine pages equal `9eaf406f` byte for byte: CURRENT-EVIDENCE.md, the seven PCB-RULE-STATUS
+* **918b8c75's pages.** With main's archive installed in `r1`, I ran `rules_render.py --requirements`, `rules_status.py`
+  and `rules_render.py`. All nine pages equal `918b8c75` byte for byte: CURRENT-EVIDENCE.md, the seven PCB-RULE-STATUS
   pages and REQUIREMENTS-TRACE.md. The tenth file, `checks/check-s122-3.md`, equals `<scratch>/chk-s122/CHECK-3.md` byte
   for byte. `check-s122-1.md` and `-2.md` equal `CHECK.md` and `CHECK-2.md` byte for byte.
-* **`close_s122.py v2/docs/records/s122/checks/check-s122-3.md`** on `r3` at `9eaf406f`:
-  * it closes S-122 "at 9eaf406f" with 862 sentences, 0 STALE and 0 UNJUDGED, re-running and matching both committed
+* **`close_s122.py v2/docs/records/s122/checks/check-s122-3.md`** on `r3` at `918b8c75`:
+  * it closes S-122 "at 918b8c75" with 862 sentences, 0 STALE and 0 UNJUDGED, re-running and matching both committed
     outputs;
   * the registry is identical to `1f3dd306`'s;
   * a second run refuses.
@@ -131,11 +131,11 @@ to describe a replaced circuit". That is true of the judgements, but not of the 
     0 errors and 2 warnings there, CON-010 and REQ-044 on the transient page).
   * With the tip's archive, one status run and one render give `1f3dd306`'s CURRENT-EVIDENCE.md.
 * **The merges.** Both are exact `git merge-tree` results, trees `280611d3` and `fe4f2158`. `fnd/s120` and `fnd/s122b`
-  are still at the checked tips `1561ff88` and `d38c6b4d`.
+  are still at the checked tips `fa394e49` and `3c3d5431`.
 
-### 2. Registry, parsed, main `b874b744` against the tip
+### 2. Registry, parsed, main `53804300` against the tip
 
-* **Top level:** only `needs_document_sha256` moves, from `3c5d4907...` to `6cb7b241...`, which is c5430071's CONOPS.
+* **Top level:** only `needs_document_sha256` moves, from `3c5d4907...` to `6cb7b241...`, which is ed31219a's CONOPS.
   CONOPS's diff starts at line 315, after the needs table (lines 75 to 145).
 * **Records:** 144, same order. 21 records change, every old evidence list kept as a prefix.
   * 20 rebinds: REQ-005, CFL-001, REQ-012, CON-018, REQ-030, REQ-071, REQ-032, CFL-005, CON-010, CON-021, FEA-002,
@@ -188,8 +188,8 @@ cited):
   * Section 3's rows GPIO 2 to 7 through `R53` to `R56` 27R, and GPIO 20 `SHORE_INHIBIT` (section 10).
   * Section 6's two rows:
     * `C24`, and the 100k pull downs on A, B and D;
-    * `U35` to `U38` on `+3V3_EMCON`, and `U26` now the outlet interlock (`gen_sch_a.py` 1572 to 1575 at `e57a7365`,
-      1102 at `45bde541`);
+    * `U35` to `U38` on `+3V3_EMCON`, and `U26` now the outlet interlock (`gen_sch_a.py` 1572 to 1575 at `557a0628`,
+      1102 at `3e42100d`);
     * `R58` 4.7k and `R102` 10k;
     * `U501` to `U505`, `U536` with `R532` and `U543`, `U112` to `U116` and their slot 2 and 3 twins, `U220`,
       `Q212` with `R295` 15R, and `U506`;
@@ -207,7 +207,7 @@ cited):
     * A22's TPS25740A `U18` with LM5176 `U19`, and eleven Radiall sites;
     * B16's PI7C9X2G404, TUSB8041, TMUXHS4212 and TS3USB221A, and three STM32H743;
     * the D8 row's parts;
-    * the B16 row's DS3231M, true as 7 September history (`gen_sch_b.py` at `b2709118`).
+    * the B16 row's DS3231M, true as 7 September history (`gen_sch_b.py` at `be826353`).
 * **OPERATING-ENVELOPE.md, 15 sentences, 2 false** (B1 items 4 and 5).
   * True:
     * board P's `F2`, `U1` and `U2`;
@@ -223,7 +223,7 @@ cited):
     * the RockBLOCK ENABLE (`U536`).
 * **TEST-PLAN.md, 12 sentences, all true:** `U1`, `Q1`, `Q2`, `U2` BQ7720700 with COUT through `R29`, `JP1` and `Q3`
   to `F2`, `Q5` from DOUT, `J_TS2`, `F1`, line 90's list, `J_BATT` and `J_SMB`, `J_TS` pins, HOT-R1 on A and E, and
-  the second level since `faf8c981`.
+  the second level since `247db699`.
 * **ASSEMBLY.md, 16 sentences, all true:**
   * seventeen 0858 pins (`J_CP1` to `J_CP4`, `J_CN1` to `J_CN4`, `J_PRE1`, `J_VR1` to `J_VR4`, `J_VN1` to `J_VN4`),
     and `J_PRE1` through `R1` 10R;
@@ -236,7 +236,7 @@ cited):
   * `J_TAMP`;
   * `J_WOA` and `J_WOB` through `U82` and `U83` to `J_RF6` and `J_RF7`;
   * `J_DOCK`'s twelve pins;
-  * step 3's `U35` to `U38`, and `R102` and `R145` at `gen_sch_a.py` 1597 and 1598 at `e57a7365`;
+  * step 3's `U35` to `U38`, and `R102` and `R145` at `gen_sch_a.py` 1597 and 1598 at `557a0628`;
   * C7's seventeen 3 mm LEDs (`D1` to `D16`, `D22`);
   * B16's two WiFi cards.
 * **DC rows, 9 of 9 true:**
@@ -247,14 +247,14 @@ cited):
     (GPIO 8) drives `Q2` through `R19`);
   * DC-04;
   * DC-05 (`U112` on `+3V3_CM1`);
-  * DC-06 (all ten generator citations at `e57a7365`);
+  * DC-06 (all ten generator citations at `557a0628`);
   * DC-07 (`U41`, `U51`, `U61` pins 92 and 93 on `SCL` and `SDA`, which reach `J_PANEL`; no TCA9517A);
   * DC-08 (`R191` and `R192`, `U513` to `U520`, `U530` to `U535`);
   * DC-09 (`U31` on `PD_CC1` and `PD_CC2`, `J_USBC_OUT` pins 2 and 3).
 
 ### 4. CONOPS
 
-`v2/docs/CONOPS.md` at the tip equals `git show c5430071:v2/docs/CONOPS.md` byte for byte (sha256 `6cb7b241cb84d729...`).
+`v2/docs/CONOPS.md` at the tip equals `git show ed31219a:v2/docs/CONOPS.md` byte for byte (sha256 `6cb7b241cb84d729...`).
 Its sha256 equals `needs_document_sha256`.
 
 ### 5. Pages and readings
@@ -273,16 +273,16 @@ Its sha256 equals `needs_document_sha256`.
   * `claims_check.py` (scratch `VERDICT_DIR`): PASS of 91.
 * **The evidence page:** CURRENT-EVIDENCE.md at the tip is sha256 `c9b98931...`, main's. The PCB-RULE-STATUS pages
   differ from main only in ENV-001's line (sha 43361b02 to a8e65995), 7 of 7.
-* **The explanation of `9eaf406f`'s page is right.**
+* **The explanation of `918b8c75`'s page is right.**
   * `rules_status.CONFIG_INPUTS` (line 815) declares `tools/pcb_rules_coverage.yaml` for `rules_status.py`.
   * `_config_state` (lines 1123 to 1163) counts an uncommitted copy as changed (line 1151), and also a copy committed
     after the reading (line 1154). The rules_complete reading records no sha for it.
   * With the coverage file re-pinned and uncommitted, SGN-001 reads AWAITING_REVALIDATION (CONFIG_CHANGED) on all
     seven boards, its result still PASS. That moves 7 pairs from CURRENT_CANDIDATE and adds the CONFIG_CHANGED row.
     My replay reproduced that page exactly.
-  * The tip's archive holds a rules_complete reading at 17:37:18Z. The coverage file was committed in `9eaf406f` at
+  * The tip's archive holds a rules_complete reading at 17:37:18Z. The coverage file was committed in `918b8c75` at
     17:35:57Z, so the reading is current and the page returns to main's.
-  * `9eaf406f`'s message words it wrongly (m1).
+  * `918b8c75`'s message words it wrongly (m1).
 * **Readings, main against the tip:**
   * 339 rule and board rows: 0 results moved, 0 evidence classes moved.
   * Beyond ENV-001's sha, the audits differ only in SGN-001's `writers` (rules_render.py on main's first run against
@@ -298,11 +298,11 @@ Its sha256 equals `needs_document_sha256`.
 
 ### 6. Every changed file
 
-`b874b744..1f3dd306` changes 44 files, each within its commit's stated scope:
-* `7ef14d42`: the six `records/s120/` files.
-* `853beff6`: the eight documents (ASSEMBLY, CONOPS, OPERATING-ENVELOPE, PANEL, TEST-PLAN, V2-SPEC, EMCON.md and
-  DEFINITION-STATUS.md) and eighteen `records/s122/` files, exactly `b874b744..d38c6b4d`.
-* `9eaf406f`: the nine pages, `check-s122-3.md`, and the envelope, requirements and coverage files.
+`53804300..1f3dd306` changes 44 files, each within its commit's stated scope:
+* `694980ed`: the six `records/s120/` files.
+* `6ec35a7c`: the eight documents (ASSEMBLY, CONOPS, OPERATING-ENVELOPE, PANEL, TEST-PLAN, V2-SPEC, EMCON.md and
+  DEFINITION-STATUS.md) and eighteen `records/s122/` files, exactly `53804300..d38c6b4d`.
+* `918b8c75`: the nine pages, `check-s122-3.md`, and the envelope, requirements and coverage files.
 * `1f3dd306`: CURRENT-EVIDENCE.md, REQUIREMENTS-TRACE.md and the requirements file.
 
 The 29 commits all carry the owner's identity as author and committer and `[MESHSAT-1357]`, with no trailer. There is
@@ -310,7 +310,7 @@ no em or en dash in added text or in messages. No vendor, held, IBIS or assistan
 
 ## Minor items
 
-* **m1.** `9eaf406f`'s message says "The evidence and status pages moved only in ENV-001's verified sha". CURRENT-EVIDENCE.md
+* **m1.** `918b8c75`'s message says "The evidence and status pages moved only in ENV-001's verified sha". CURRENT-EVIDENCE.md
   also moved in SGN-001's seven rows, the count table and a CONFIG_CHANGED row. The message also says CON-010 and
   REQ-044 are "rebound after S-122's closure"; they were not rebound, because the page returned to `c9b98931`. It
   omits S-111's title addition. `1f3dd306`'s message states the page correctly. Fix: one line in the set's record.
@@ -341,14 +341,14 @@ no em or en dash in added text or in messages. No vendor, held, IBIS or assistan
 
 * **Items:** blocking 2 (B1, B2); minor 8.
 * **Replays:** 15 of 15 files byte for byte:
-  * 3 registry files and 9 pages of `9eaf406f`;
+  * 3 registry files and 9 pages of `918b8c75`;
   * 3 files of `1f3dd306`;
   * plus the filed check.
   * Every script refuses a second run. Both merges are exact.
 * **Registry:** 21 records changed; 1 result moved (CFL-016, FAIL to PASS); S-120 and S-122 closed; S-124 opened;
   S-123 unchanged; REQ-015 waits on S-106, S-107, S-111 and S-124.
 * **Sample:** 79 sentences in the five documents, with 5 false (all in scope, none judged STALE); DC rows 9 of 9 true.
-  CONOPS equals `c5430071`.
+  CONOPS equals `ed31219a`.
 * **Readings:** 339 rows, 0 results moved, 0 classes moved; 930 of 939 archive files identical, the 9 others explained.
 * **Validators:** 0 errors, 0 warnings. Renderers current. `claims_check` PASS of 91.
 * **Tests:** 82 passed, 0 failed.

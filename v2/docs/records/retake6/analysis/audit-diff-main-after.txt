@@ -1,4 +1,4 @@
-retake6: the audit of main 6ec37197 (from evidence-main-6ec37197.tar) against the audit in the worktree after the re-take
+retake6: the audit of main c76f45f0 (from evidence-main-6ec37197.tar) against the audit in the worktree after the re-take
 before: 339 rows; classes {'AWAITING_REVALIDATION': 215, 'CURRENT_CANDIDATE': 62, 'DESK_REVIEW': 21, 'NO_EVIDENCE': 22, 'VALID_HISTORICAL': 19}; results {'FAIL': 44, 'INCONCLUSIVE': 88, 'NOT_APPLICABLE': 1, 'PASS': 206}; CURRENT_CANDIDATE 62 of which PASS 57
 after: 339 rows; classes {'AWAITING_REVALIDATION': 213, 'CURRENT_CANDIDATE': 83, 'DESK_REVIEW': 21, 'NO_EVIDENCE': 22}; results {'FAIL': 40, 'INCONCLUSIVE': 89, 'NOT_APPLICABLE': 1, 'PASS': 209}; CURRENT_CANDIDATE 83 of which PASS 71
 

@@ -3,7 +3,7 @@
 APPLIED to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
 
 The defect (E11-40, R-190, Layer 7's F-L7-02): board B's J_FAN1 to J_FAN3 carry the slot rail +5V_Sn at 5.1 V, and the cooler fan
-Layer 7 selected (Sanyo Denki 9WPA0412P6G001, record l7pwr at 2087060b: 12 V, operating range 10.8 to 13.2 V, 0.17 A, 2.0 W, pulse
+Layer 7 selected (Sanyo Denki 9WPA0412P6G001, record l7pwr at 21535049: 12 V, operating range 10.8 to 13.2 V, 0.17 A, 2.0 W, pulse
 sensor and PWM; the PWM input level, the pulse output's type and the starting current NOT READ) needs 10.8 to 13.2 V.
 
 What it draws, per slot s (designators in the 700 block, 700 + 30 (s - 1) + k, registered in SLOT_EXTRA[s] as _cx() does):
@@ -61,7 +61,7 @@ NETS = tuple("CFAN%d_%s" % (s, t) for s in (1, 2, 3) for t in ("12V", "V", "TACH
 
 _OLD_FP = '"SH4": "Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",'
 _NEW_FP = ('"SH4": "Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical", '
-           '"QFN11": "Package_DFN_QFN:Texas_VQFN-RNR0011A-11",   # l8r2: the coolers\' TPS61089 (the land board A drew at A17, b8cef471)')
+           '"QFN11": "Package_DFN_QFN:Texas_VQFN-RNR0011A-11",   # l8r2: the coolers\' TPS61089 (the land board A drew at A17, 4b8730f2)')
 
 _OLD_LOAD = '    "J_FAN%d" % s: 0.1,              # the slot\'s IP68 cooler fan\n'
 _NEW_LOAD = ('    "U%d" % (701 + 30 * (s - 1)): 0.69,   # l8r2 (E11-40): the cooler fan\'s 12 V step-up, 2.75 W of fan over 0.80 '
@@ -82,7 +82,7 @@ _OLD_FAN = ('    part("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 co
             'r(R(51), "10k", "FAN_PWM%d" % s, cm33)')
 
 _NEW_FAN = '''    # E11-40 (R-190, Layer 7's F-L7-02), drafted by Layer 8 record l8r2 (MESHSAT-1357, 3 October 2026): THE COOLER FAN NEEDS 12 V.
-    # The selected Sanyo Denki 9WPA0412P6G001 (record l7pwr at 2087060b) prints 12 V, 10.8 to 13.2 V, 0.17 A, 2.0 W, a pulse
+    # The selected Sanyo Denki 9WPA0412P6G001 (record l7pwr at 21535049) prints 12 V, 10.8 to 13.2 V, 0.17 A, 2.0 W, a pulse
     # sensor and a PWM input; this rail is 5.1 V. A per-slot step-up keeps the fan with its slot (dark with an empty slot),
     # needs no harness, no contract and no board A change; selected over one 12 V feed from board A (the record, section 1).
     # ROUND 4 (record l9pwr's L9P-F02, the record's section 1s): the fan runs at full speed whenever its PWM lead is not driven

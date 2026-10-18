@@ -1,4 +1,4 @@
-HEAD 73ae2f2104c98bc39e5194f82a31e8862e12dbb5  start 2026-09-27T21:05:52Z
+HEAD 92f22e3fa2faba41d580b6bd83f9b75ebce56710  start 2026-09-27T21:05:52Z
 status-1 exit 1 in 18 s: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
 status-2 exit 1 in 19 s: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
 status-3 exit 1 in 19 s: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen

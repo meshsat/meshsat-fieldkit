@@ -1,10 +1,10 @@
 WEAR BEFORE AND AFTER: what reliability.py asks for on the six netlists of the set 6 candidate
-Worker set6fix, MESHSAT-1357, measured 27 September 2026 on branch fnd/r8int6 above a76a246e.
+Worker set6fix, MESHSAT-1357, measured 27 September 2026 on branch fnd/r8int6 above 1b51eb36.
 Written by v2/docs/records/r8int6/fix/measure_wear.py (the table) and by hand (the reading at the end).
 Nothing here was built or measured on hardware: these are readings of netlists, and no board exists.
 
 HOW IT WAS RUN (from the worktree root; the unfixed tool is written outside the tree, no verdict is written)
-  git show a76a246e:v2/ecad/tools/reliability.py > <dir outside the tree>/reliability.py
+  git show 1b51eb36:v2/ecad/tools/reliability.py > <dir outside the tree>/reliability.py
   PYTHONDONTWRITEBYTECODE=1 python3 v2/docs/records/r8int6/fix/measure_wear.py v2/ecad/tools --old <that dir>
 
 COLUMNS: whole = the word list matches somewhere in the value (the unfixed tool's reading); first = it matches
@@ -13,7 +13,7 @@ the first such colon OUTSIDE every bracket. Only parts whose value carries a wea
 
 WEAR pattern    : socket|receptacle|holder|SMA|XT60|JST|IDC|header|standoff|U\.FL|M\.2|blade
 NOT_WEAR_PREFIX : ('C', 'R', 'L', 'D', 'Q', 'FB', 'TP', 'FID', 'LOGO') (unchanged)
-tool before     : reliability.py sha16 149a48e5f2419955 (git show a76a246e:v2/ecad/tools/reliability.py)
+tool before     : reliability.py sha16 149a48e5f2419955 (git show 1b51eb36:v2/ecad/tools/reliability.py)
 tool after      : reliability.py sha16 71d0872195905c9d
 declared list   : pcb_reliability.yaml sha16 fbf56eb06df1d007 (not changed by this work)
 
@@ -359,7 +359,7 @@ THE THREE THE TASK NAMES
                        Package_TO_SOT_SMD:SOT-23-5, five pins on nets. The wear word is "socket" in
                        "slot N's card-socket supply enable = EMCON AND PCIE_PWR_ENn": it names what the gate's
                        output switches. A soldered SOT-23-5 has no mating cycle and carries no mechanical load.
-                       They were the three refusals of the box suite at a76a246e. No class is declared for them.
+                       They were the three refusals of the box suite at 1b51eb36. No class is declared for them.
 
 THE THREE THE TASK DOES NOT NAME
   B U101, U201, U301   Diodes PI7C9X2G404SL, a PCIe 2.0 packet switch. Netlist footprint

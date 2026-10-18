@@ -2,7 +2,7 @@
 
 Prototype design; AI arithmetic on the record's model; nothing built or measured.
 
-- **15:30** Brief and worker rules read; worktree `s119` at `a1f8ec70` (`fnd/int13`, set 12). Every script of the chain
+- **15:30** Brief and worker rules read; worktree `s119` at `bae6ca21` (`fnd/int13`, set 12). Every script of the chain
   run as found: all reproduce their committed outputs except `energy/energy_4s6p.py`, which refuses because set 12's
   S-117 edits moved `gen_sch_a.py` (pinned `eb2e347e`, now `6a136fee`). Bindings found by sha and by import:
   energy_inputs.yaml (energy_budget, energy_4s6p); energy_budget.py (energy_architecture, energy_two_pack, energy_4s6p);
@@ -15,30 +15,30 @@ Prototype design; AI arithmetic on the record's model; nothing built or measured
   the chain to three. energy_architecture.py and energy_4s6p.py re-pinned; energy_4s6p's gen_sch_a.py pin moved after
   `cmp_gen_sch_a.py` found the three parsed calls identical. recompute.py issued a second time with pins. night_bounds,
   packfit_west, array_calc and gauge_scale re-run: unchanged to the byte.
-- **15:38** Commit `51d1d4c9`. The 100 W window's knife-edge cases move (4S19P with 1300 Wp no longer meets; 4S16P no
+- **15:38** Commit `71b1d08f`. The 100 W window's knife-edge cases move (4S19P with 1300 Wp no longer meets; 4S16P no
   longer meets up to 3 kWp); the design cases move by 0.1 Wh.
 - **15:39** energy_two_pack.py's second issue: EB_SHA256, eta_u3b 0.961 (0.947 to 0.971) with its source, section 4's
   U3B bracket rows at 0.947 and 0.971, section 7's U3 loss at the chain's figure and L2 as board A draws it (4.7 uH
   XAL1010-472ME at 400 kHz). The equivalence check holds; the design case keeps 31.0 Wh (was 31.1); the entry
   requirement 5.61 A (was 5.56). recheck_two_pack.py issued a second time (U3B 0.961, the new figures): every figure
-  agrees. energy_runs.py's third issue (EA_SHA, TP_SHA, section 0's 90.9 and 31.0 Wh). Commit `fc8f5f85`.
+  agrees. energy_runs.py's third issue (EA_SHA, TP_SHA, section 0's 90.9 and 31.0 Wh). Commit `11dd5360`.
 - **15:41** reconcile_lid_panel.py's third issue (TP_SHA; its NOTES labelled as the checks' measurements at the second
   issue's rows, re-wrapped whole) and reconcile_lid.py's second issue (a TP pin); both regenerated. Adverse: 4S14P
-  80.6 Wh (was 87.4), 4S15P 111.6 Wh (was 118.5); typical unchanged. Commit `027adc2c`.
+  80.6 Wh (was 87.4), 4S15P 111.6 Wh (was 118.5); typical unchanged. Commit `260ea2cf`.
 - **15:47** `reconcile_s119.py`: reproduces reconcile_lid_panel.out's rows byte for byte, then the change from the
   accepted figures (read from git), the failing case (U3 0.939, U3B 0.802: NOT MET everywhere), the halves apart (U3 as
   drawn with U3B as drafted: adverse NOT MET for both lids), the sensitivity grid, the lowest efficiencies that still
   meet, and the rule's planes for 4S14P and 4S15P (every rule plane meets). Its first run printed "down to 0.8000" where
-  the bisection sat on its floor; relabelled "0.80 or lower". Commit `f531d279`; the least current into U3 per lid added,
-  `1c0c88e1`.
-- **15:49** `headline_diff.py` (old and new headline lines from git) and its output, `f05b4c4c`.
+  the bisection sat on its floor; relabelled "0.80 or lower". Commit `f0425ca1`; the least current into U3 per lid added,
+  `e98bf01a`.
+- **15:49** `headline_diff.py` (old and new headline lines from git) and its output, `b78d7a21`.
 - **15:54** The page scripts: one note per page (RECONCILE, ENERGY-RECONCILIATION, a1elec README, CHARGER, TOPOLOGY,
   a1solar README, ARRAY, a1mech README), each at the page's title, the first issue's figures left in place; tried on
-  scratch copies: each applies once and refuses a second run. The records index row. Commit `2c7bf1c9`.
+  scratch copies: each applies once and refuses a second run. The records index row. Commit `43ed8034`.
 - **15:58** `apply_registry_s119.py close <commit>`: `--check` against HEAD passed with every script re-run to the byte
   (68 s); applied to a scratch copy of the registry, the diff is S-119 closed, the new item S-121 (the next free number
   today), REQ-072's waits_on and one evidence entry; a second run refuses. The page notes name the new item by the script
-  that opens it, since another stream may take S-121 first. Commit `55257c3d`.
+  that opens it, since another stream may take S-121 first. Commit `29242238`.
 - **16:00** README and this log.
 
 Decisions taken (authority SESSION, each reversible by restoring the first issue's line):
@@ -67,16 +67,16 @@ Decisions taken (authority SESSION, each reversible by restoring the first issue
   hours from efficiency.py's equations; the 800 kHz row reproduces the check's 0.957 to 0.960 and 0.906; the 400 kHz row
   weighs 0.9724 to 0.9736, carried 0.972 (0.963 to 0.978). `inductor_u3b.py`: ripple, peak, RMS and the fault bound at
   400 kHz. efficiency.py's third issue pins energy_two_pack.py (M4) and names the rows before and after. recheck_two_pack.py
-  typed the new figures and gained pins (M4): every figure agrees. Commit `37582c04`.
-- **16:26** reconcile_lid and reconcile_lid_panel re-pinned and regenerated: adverse 85.5 and 116.6 Wh. Commit `e2361e4e`.
+  typed the new figures and gained pins (M4): every figure agrees. Commit `fa8ae5c8`.
+- **16:26** reconcile_lid and reconcile_lid_panel re-pinned and regenerated: adverse 85.5 and 116.6 Wh. Commit `c31a7675`.
 - **16:29** reconcile_s119.py rewritten whole: pins on energy_runs.py and u3b_hourly.py (M4), U3B hour by hour (85.8 and
   116.9 Wh adverse), the failing case, the sensitivity, the room for the core loss per charger in watts hour by hour (M2),
-  the planes with U3B hourly. Commit `62bada16`.
+  the planes with U3B hourly. Commit `bce8021e`.
 - **16:35** The session decision's apply script (`apply_decision_s119.py`); TOPOLOGY.md 3b and CHARGER.md 2 and 3 drawn
   (U3B's parts table and settings, the loss table with the sense resistors counted once: 13.9 W, M3); the page notes
   restated (M6's wording in RECONCILE's note); `apply_records_readme_row.py` with `--check` and exits (M7); headline_diff
   naming file hashes (M5); `apply_registry_s119.py` closing S-119, filing U3B's finding closed and leaving REQ-072 on S-53,
-  M-02 and S-114. Commit `c8b148a2`. On scratch copies: the decision applied as 58 and refused a second run; the registry
+  M-02 and S-114. Commit `5e865a19`. On scratch copies: the decision applied as 58 and refused a second run; the registry
   closure `--check` re-ran all sixteen scripts to the byte (104 s), applied, and refused a second run.
 - **16:45** README rewritten whole for the second round; this log. The integrator's note of that hour (S-121 reserved
   for the U3B item, S-122 opened on set 12's line): the registry script now files exactly S-121, refuses if S-121 is in

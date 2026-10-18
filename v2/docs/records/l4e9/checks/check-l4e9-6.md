@@ -1,12 +1,12 @@
 accepted: yes
 
-# Layer 4, L4-E9: The assistant's check of update round 4 at 2661c1ef (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E9: The assistant's check of update round 4 at 9bdf42a4 (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Round 4 re-pins L4-E13 after that record's update on set 25's L4-E7R (L4-E13 check 4 at
-`33b6b7be`): `f8a328c9` merges it and `2661c1ef` carries the changes.
+`919eb18b`): `f50e61be` merges it and `9bdf42a4` carries the changes.
 
 **Verified by the coordinator:**
-- *Reproduction:* `l4e9_power_path.py` re-run at `2661c1ef`, its output equal to the committed `.out` byte for byte. Tests:
+- *Reproduction:* `l4e9_power_path.py` re-run at `9bdf42a4`, its output equal to the committed `.out` byte for byte. Tests:
   `test_l4e9`, `test_l4e_svg_readers` and `test_public_hygiene` give 42 passed, 0 failed, 1 skipped. The skip is L4-E11's
   reader, whose held sheet is not in this worktree. No em or en dash.
 - *The pins:* L4-E13's output and page are re-pinned and its check 4 is newly pinned. The script refuses to run if L4-E13's

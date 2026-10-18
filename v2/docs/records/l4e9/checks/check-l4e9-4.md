@@ -1,17 +1,17 @@
 accepted: yes
 
-# Layer 4, L4-E9: The assistant's closing check of the connected power architecture's update at 170f5daf (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E9: The assistant's closing check of the connected power architecture's update at e8c849a4 (the coordinator's check; not a model review, not an Astra check)
 
-MESHSAT-1357, 2 October 2026. The update round, `170f5daf` on `c715b762`, integrates the accepted results of:
-- L4-E10 (`79b2f568`, check `573c8b8f`);
-- L4-E11 (`3298d1f1`, check `a15ab384`);
-- L4-E12 (`a86be47b`, check `db41c95d`).
+MESHSAT-1357, 2 October 2026. The update round, `e8c849a4` on `25e5f1c6`, integrates the accepted results of:
+- L4-E10 (`ee7430ba`, check `baf66813`);
+- L4-E11 (`90514914`, check `fe81ed20`);
+- L4-E12 (`c7639561`, check `21c51b49`).
 
 It also re-judges the findings that rested on the LM5069 for the TPS48110-Q1 entry (E11-19). **This check accepts the record as the
 current statement of Layer 4's power architecture. The gate reads NOT CLOSED, on named architecture-level dependencies.**
 
 **Verified by the coordinator:**
-- *Reproduction:* `l4e9_power_path.py` re-run at `170f5daf`, its output equal to the committed `.out` byte for byte; `test_l4e9` with
+- *Reproduction:* `l4e9_power_path.py` re-run at `e8c849a4`, its output equal to the committed `.out` byte for byte; `test_l4e9` with
   `test_public_hygiene` 41 passed, 0 failed, 0 skipped.
 - *E11-19, in separate arithmetic:*
   - the hard short in service bounded at 900 A for 8.31 us gives I2t = 6.7311 A2s, 7.24 % of F1's 93 A2s melting figure, so F1

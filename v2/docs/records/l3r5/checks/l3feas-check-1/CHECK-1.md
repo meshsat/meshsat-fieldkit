@@ -3,8 +3,8 @@ accepted: no
 # CHECK-1 of fnd/l3feas: the Layer 3 feasibility record (stream l3feas, MESHSAT-1357)
 
 **An AI check, not a qualified review.** 30 September 2026, 13:02 CEST.
-- **The branch** is `fnd/l3feas`, tip `24942a5fed1936b01b569b4ac319ae0bc8265e6b` (confirmed). It is two commits,
-  `231b59db` and `24942a5f`, on main `8fec0733`.
+- **The branch** is `fnd/l3feas`, tip `41c07ce2d1e732c910a41bcf4dbc3b2d1471c525` (confirmed). It is two commits,
+  `728c512d` and `41c07ce2`, on main `963740cd`.
 - **The files** are all in `v2/docs/records/l3feas/`:
   - `L3-FEASIBILITY.md`, sha256 `27a2b3b4...`;
   - `hf_wab.py` `22d7d495...` and `hf_wab.out` `175dc3e1...`;

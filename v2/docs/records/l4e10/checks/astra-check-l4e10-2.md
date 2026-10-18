@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E10: the targeted recheck of the cell and thermal design of the battery path by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx27-l4e10-recheck`, run `20261001T231603Z-57210`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e10 at commit `2316b107253e`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e10 at commit `84329069bf25`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

@@ -3,7 +3,7 @@ accepted: no
 # Layer 4: the one engineering review of the consolidated power architecture by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx36-l4close-review`, run `20261002T152128Z-1412297`, model `gpt-6-astra` at effort `xhigh` (the client's own record), on set 27's candidate
-`8fbb68b6b6656f9f5aa7ab84431f5ad5d269999c`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the collaborator's result as
+`144fe77b704822e7fa975b06cf1a398426d1cc0b`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the collaborator's result as
 returned, filed byte for byte; the coordinator evaluated it before acting on it.
 
 ## Summary

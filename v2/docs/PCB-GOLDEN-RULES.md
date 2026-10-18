@@ -190,12 +190,12 @@ schematic and no netlist, so its contract is between two BOARDS: gen_pcb_e5.py r
 puts a target under each spring pin carrying that pin's net, and block_contract.py re-derives that match by
 position and compares it, 33 checks on the current A. It is the one blind-mate interface in the kit, where a
 target on the wrong net is invisible until the pack current is on it, and until today nothing checked it at
-all. 26 September 2026 (S-05 of MESHSAT-1357, adjudication A07; tool in 93138ac1): the pack SMBus lead is a
+all. 26 September 2026 (S-05 of MESHSAT-1357, adjudication A07; tool in da13acdb): the pack SMBus lead is a
 contract. J_SMB on P and on E must be the same connector family, pitch and pin count (read from the
 footprints), pin n must carry the same role at both ends (clock, data, return; E may leave P's PRES open or
 ground it, TI SLUSC67B 8.2.2.2.3), P's return pin must be the net of its own negative lead W_N, the load side
 of the shunt, and every clamp on P's SMBus clock and data lines must return to W_N too (TI SLUSC67B Figures
-21, 29, 30). Before faf8c981 it would have failed four ways (a 1x6 2.54 mm header on E against P's JST-XH
+21, 29, 30). Before 247db699 it would have failed four ways (a 1x6 2.54 mm header on E against P's JST-XH
 1x4, clock and data crossed, P's return and its SMBus clamps on the cell-side ground); the generators carry
 A07's fix since then, and the round 7b box regeneration with this tool read check_contracts PASS 96 of 96
 across the set, the five new rows the lead's. A contract judged on every input and not decided (check(None,
@@ -205,7 +205,7 @@ group alone, so they decide inhibit_chain_<letter> and move neither check_contra
 verdict. 27 September 2026 (stream w4r): block_contract.py reads board A's CURRENT netlist and the J_DOCK
 land it names, mounted as gen_pcb_a3.py mounts it, and no longer board A's board file, whose committed layout
 predates EQ-16; it also judges every blind-mate power pin of board A's netlist against a target of its kind.
-On main 91894cd7's files the reading went from PASS 33 of 33 (against the board file) to FAIL, 28 of 38
+On main bd282618's files the reading went from PASS 33 of 33 (against the board file) to FAIL, 28 of 38
 (against the netlist): E5's targets under J_DOCK pins 1 to 4 and their wire lands still carry VIN_RAW and no
 target takes J_VR1 to J_VR4 or J_VN1 to J_VN4 (S-74). The same reading decides INT-001 on E5 (its row's
 verdict_by_board and _verdict_by_board_why).
@@ -486,10 +486,10 @@ carries the inductor's current from EPD_SW into EPD_RESE and the 0.47R shunt R43
 saw it because the set of power nets it reads held the counted nets and the declared rails only, while EPD_SW
 (marked through L1) is declared as a node. A declared node that carries a mark itself is now a power net for
 its neighbours; a node with no mark of its own is not, so board B's eSIM lines behind their 0R links stay
-unmarked (a fixture holds both ways). On the six committed netlists of fc144600 it moves exactly one net,
+unmarked (a fixture holds both ways). On the six committed netlists of 3325e502 it moves exactly one net,
 EPD_RESE, from unmarked to undecided (session decision TSN-D30, under the owner's standing rule of 26
 September 2026). Readings of 27 September on this integration's committed netlists (boards A, D and E as
-round 8 regenerated them, B, C and P as at fc144600), all FAIL: A 9 of 39 (undeclared B33_BST, HT_BST,
+round 8 regenerated them, B, C and P as at 3325e502), all FAIL: A 9 of 39 (undeclared B33_BST, HT_BST,
 PD_DVDD, PD_VAUX, PD_VTX, S1_BOOT, S3_BOOT, VMON; undecided PD_CC1, PD_CC2, PRECHG; 58 settled, MAIN_PB among
 them by the LTC2954's push-button input), B 29 of 70 (28 undeclared: the fourteen buck bootstraps, DEV_BST's
 and KSZC_BST's among them, GNSS_3V3, GNSS_VDD_RF, IOCA/IOCB/IOCC_VCAP, RB_3V3, SIM1_VCC, SIMC2_VCC, VBAT,
@@ -501,7 +501,7 @@ PCM_VCCP, PCM_VCCR, PCM_VDD, SAU_3V3; 10 undecided: FLANGE_AIN0, FLANGE_REF, HS1
 PTT_HS1/HS2_n, RLY_K and the antenna lead RF_ANT), E 6 of 20 (E6_BST, E6_DVDD, SGP_VDD, TRK_LDO33,
 TRK_LSENSE; undecided FAN1_SW, FAN2_SW, WATER_SENSE), P 6 of 11 (BAT_F, PBI, SEC_VDD, SW, VCC_F; undecided
 FUSE_G, FUSE_GQ, the cell taps CELL1 to CELL3 and the fuse heater's return SCP_HTR). Board C's and board P's
-readings are taken on their fc144600 netlists and await the re-take on the netlists their round 8 commits
+readings are taken on their 3325e502 netlists and await the re-take on the netlists their round 8 commits
 regenerate. Each net is closed in the board's schematic generator by declaring it as a rail with its source
 and loads, or as a node where it is a part's own supply, a bootstrap, a charge pump's node, a lead, a sense
 tap or a switch's current shunt, and a re-take; an undecided net is settled by a declaration or by a
@@ -1730,7 +1730,7 @@ family. Also since the integration, from board A's round 8 draft applied by hand
 (TI SCES502Q Table 4-1; II 0.5 uA, Ioff 0.6 uA, VIL 0.9 V at 3 V to 3.6 V) and the walk from each asserted
 line alone, whose best answer an option takes, because a gate both lines force (board A's U35 and U37:
 TX_INHIBIT_n AND EMCON_HW) kept only the path of the line the queue took first. WHAT THE BOARDS MUST SHOW for
-the walk to pass them, as it reads main a6f87e9d: buffers for the STM32 and RP2040 pins on EMCON_HW, one-way
+the walk to pass them, as it reads main 38b98de4: buffers for the STM32 and RP2040 pins on EMCON_HW, one-way
 open-drain buffers instead of the level shifters Q106, Q206 and Q306, gates that state Ioff on EMCON_HW,
 open-drain drive for the six Compute Module disable pins, a one-way readback of KEY on D, the QMX's USB power
 gated or stated, every firmware part's value beginning with its part number, every pin on a gated rail
@@ -1744,7 +1744,7 @@ behind their pulls, so its modules would not pass there if a slot rail were gate
 supply's domain, on both parts that carry a module, held up by nothing, and no logic part or switch (but one
 with Ioff and a power-off rating) running from a gated rail with an output held up. READING ON THIS
 INTEGRATION's six committed netlists (27 September 2026: A 3a786cf3, D 0dad82b4 and E f3c1ad61 as round 8
-regenerated them, B 669d02d0, C 2834f0d8 and P 4342c4cb as at fc144600), with this file: check_contracts PASS
+regenerated them, B 669d02d0, C 2834f0d8 and P 4342c4cb as at 3325e502), with this file: check_contracts PASS
 of 96; inhibit_chain A FAIL (1 fail, 6 pass, 2 undecided: the EMCON_HW line, which the STM32 and RP2040 pins
 on it fail; the 30 W VHF PA's and the QMX HF's supply gates UNDECIDED, walked from TX_INHIBIT_n alone through
 the SN74AUP1G08s U35 to U38, on board A's INA226 U14 and the LM5176s' boost-leg FETs Q14 and Q24, whose drive
@@ -1754,10 +1754,10 @@ and the six on-module Compute Module radios; the classification undecided, since
 data lead rests on a QRP Labs statement not yet held), C FAIL (1 fail, 5 pass: the EMCON_HW line), D
 INCONCLUSIVE (7 pass, 1 undecided: the SA868 exciter's keying), E PASS, P PASS. Board A's two supply gates
 move from FAIL (they inherited the EMCON_HW line's FAIL, the path of the line the queue took first) to
-UNDECIDED on round 8's netlist; nothing else moved against a6f87e9d's readings, and the verdicts per board
+UNDECIDED on round 8's netlist; nothing else moved against 38b98de4's readings, and the verdicts per board
 are the same. Board C's and board P's round 8 netlists, committed after this, are read at the consolidated
 re-take. READING WITH EQ-18's ROW (stream w3t, 27 September 2026, verdicts written to the stream's scratch)
-on main 38dcd764's six netlists (A 3a786cf3, B adcc3c67, C 11eabc2d, D 0dad82b4, E f3c1ad61, P 085f8333):
+on main 78808fef's six netlists (A 3a786cf3, B adcc3c67, C 11eabc2d, D 0dad82b4, E f3c1ad61, P 085f8333):
 inhibit_chain A FAIL (1 fail, 6 pass, 2 undecided), B FAIL (11 fail, 6 pass, 3 undecided), C FAIL (1 fail, 5
 pass), D FAIL (2 fail, 6 pass), E PASS, P PASS, where the file before the row read A INCONCLUSIVE (5 pass, 4
 undecided), B FAIL (10 fail, 3 pass, 7 undecided), C INCONCLUSIVE (4 pass, 2 undecided), D INCONCLUSIVE (6
@@ -1773,7 +1773,7 @@ which reads the line when only board C is off): a FAIL under that convention, no
 item W3T-F1 in pcb_requirements.yaml, corrected at the r8int5 integration from the independent check). FIXED
 ON BOARD C BY STREAM w4c (EQ-25, 27 September 2026, SC-67, which closes S-64; verdicts in the stream's
 scratch on the KiCad box): R14 2.2k 1 percent and R50 10k 1 percent on board C's candidate netlist
-3fddbb3edcd4248a, the other five at main 91894cd7: the TX_INHIBIT_n line PASS (0.243 V with board C
+3fddbb3edcd4248a, the other five at main bd282618: the TX_INHIBIT_n line PASS (0.243 V with board C
 unpowered, which read 1.085 V; 0.178 V with the A-D mezzanine out as well, which read 1.103 V), inhibit_chain
 A INCONCLUSIVE (0 fail, 7 pass, 2 undecided), B FAIL (10 fail, 7 pass, 3 undecided), C PASS (6 of 6), D
 INCONCLUSIVE (0 fail, 7 pass, 1 undecided: the SA868 keying back to its own UNDECIDED, the SA_PTT_n threshold
@@ -1858,7 +1858,7 @@ netlist instead of its board file, because board A's committed layout predates E
 from that same layout, so the old reading's PASS 33 of 33 compared two stale files with each other. The land
 mounted as the tool mounts it gives the same twelve pad offsets as J_DOCK on board A's committed board file
 (58e26c67987b1daa, KiCad 9.0.9 on the box), so the geometry is unchanged and only the source of the nets
-moved. Re-taken in scratch on the box with the re-take driver on main 91894cd7's files (E5 686b29a734c55b9a,
+moved. Re-taken in scratch on the box with the re-take driver on main bd282618's files (E5 686b29a734c55b9a,
 board A's netlist da05dc02bc1e612f): check_contracts_e5 FAIL, 28 of 38 checks passing, where main's tool on
 the same files read PASS 33 of 33 against board A's board file. The ten failures: the four targets under
 J_DOCK pins 1 to 4 and their four wire lands carry VIN_RAW where board A's netlist has GND, and board A's
@@ -1999,7 +1999,7 @@ the clamp exists to stop. The check took four rounds of false-positive removal t
 its own docstring: a part family matched with a word boundary that a part number does not have, galvanic
 isolation not recognised as protection, protection treated as a single net rather than a chain, and a search
 that walked out through a power rail and found a clamp on the other side of the board. 26 SEPTEMBER 2026
-(S-09 of MESHSAT-1357, adjudication A03; tool in 93138ac1): A CLAMP THAT TOUCHES THE CONDUCTOR IS NOT ENOUGH,
+(S-09 of MESHSAT-1357, adjudication A03; tool in da13acdb): A CLAMP THAT TOUCHES THE CONDUCTOR IS NOT ENOUGH,
 IT HAS TO POINT THE RIGHT WAY. All sixteen one-way clamps of the set had been drawn with KiCad's
 bidirectional Device:D_TVS (pins A1/A2, no cathode) and seven had the band on the return (D's D1, E's D1 to
 D4 and D10, P's D1): forward diodes across their own rails. port_protect.py now judges every clamp on every
@@ -2009,14 +2009,14 @@ direction is read from the part number (the families whose makers' sheets are he
 declaration, which kisch.tvs() writes into the intent with its datasheet basis, never from the drawing; a
 part whose direction is read from neither is UNJUDGED and makes the verdict INCONCLUSIVE. kisch.tvs() draws a
 one-way part with Device:D_Zener (K on pin 1) and refuses a swapped call. C, D, E and P took their
-corrections in faf8c981. Reading on the round 7b box regeneration: A FAIL (D1 to D4 on the two-way symbol, 0
+corrections in 247db699. Reading on the round 7b box regeneration: A FAIL (D1 to D4 on the two-way symbol, 0
 reversed; D22 BZT52C12 read OK), B FAIL (D1, D2, D101, D201, D301 and D520 on the two-way symbol, 0
 reversed), C PASS (0 clamps), D PASS (7), E PASS (5), P PASS (3). A's and B's switch to kisch.tvs() is owed
 by their board streams; it changes their pin names and intents only. 26 September 2026, the tools stream's
 recording round: port_protect.py records the netlist (sha and content) and the intent by sha, and on E5
 (--board) its declared phase's board file. Readings unchanged by the change: A FAIL (4 clamps drawn with a
 symbol that does not match the part's direction), B FAIL (6), C PASS of 4, D PASS of 21, E PASS of 13, P PASS
-of 3, E5 a declared zero. The FAIL on A and B is the S-09 polarity pass of 93138ac1 read on the committed
+of 3, E5 a declared zero. The FAIL on A and B is the S-09 polarity pass of da13acdb read on the committed
 netlists; the readings of A and B on disk (PASS) predate it.
 
 ## Isolation Spacing
@@ -2488,7 +2488,7 @@ been compared with a preview by anyone. That is an assumption rather than a veri
 INCONCLUSIVE with the 41 named, and the list is the checklist for the session that has the preview. The tool
 also compares the TWO copies of the table, the CSV and the literal in make_handoff.py that actually reaches a
 CPL: that line is on the never-auto floor, so a disagreement is reported for a person to resolve rather than
-edited here. 26 September 2026 (MESHSAT-1357 round 6, R4T-D35; tool in 93138ac1): the polarised-footprint
+edited here. 26 September 2026 (MESHSAT-1357 round 6, R4T-D35; tool in da13acdb): the polarised-footprint
 test matched its families only at the START of the footprint name, so every land named after its maker
 dropped out: board P's gauge left the list when it moved to Texas_RSM0032A_VQFN-32 in round 4, and board E's
 SGP41 on Sensirion_DFN-6 and board P's three-terminal Eaton_SCF9550 were never on it. A family now counts
@@ -2642,7 +2642,7 @@ with the protection table and the cell specification by sha (it recorded the net
 repository root, which verdict.write hashed only when run from there). Reading unchanged: FAIL, 1 of 45
 checks (no protection independent of software). 27 September 2026 (stream w4dp, S-45 closed): THE TABLE
 DESCRIBES THE DRAWN CIRCUIT. Decision 40 was ruled on 26 September 2026 and board P carries its floor since
-faf8c981 (the BQ7720700 second level, the SCF9550 chemical fuse driven by its COUT and the gauge's FUSE
+247db699 (the BQ7720700 second level, the SCF9550 chemical fuse driven by its COUT and the gauge's FUSE
 through JP1 and Q3, the under-voltage hold Q5 on the discharge FET, the PTC element RT1 with PTCEN on BAT),
 and pcb_pack_protection.yaml now declares it present with its parts, each on the netlist, while
 tests/test_pack_protection.py holds the declaration to the netlist's connections both ways. The five

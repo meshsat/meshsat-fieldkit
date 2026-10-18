@@ -1,10 +1,10 @@
 accepted: yes
 
-# Layer 4, L4-E7R: The assistant's closing check of the CS101 correction at 675b8068 (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E7R: The assistant's closing check of the CS101 correction at 04802c70 (the coordinator's check; not a model review, not an Astra check)
 
-MESHSAT-1357, 2 October 2026. Check 3 (`check-l4e7r-3.md`, at `237cd9be`) confirmed the static bound, the dynamic allowance and
+MESHSAT-1357, 2 October 2026. Check 3 (`check-l4e7r-3.md`, at `9d89ac26`) confirmed the static bound, the dynamic allowance and
 the off-by-default threshold. It did not accept the decision, on one material defect: the backstop tripped under TEST-PLAN M2
-(CS101) and stopped solar charging. The correction is `675b8068`, made under the owner's bounded comparison of 2 October. This
+(CS101) and stopped solar charging. The correction is `04802c70`, made under the owner's bounded comparison of 2 October. This
 check independently recomputes the worst immunity case and the worst protection-response case.
 
 - **The failure, reproduced in the record.** At round 3's setting the trip's lowest sat 0.0335 A above the regulation's
@@ -31,7 +31,7 @@ check independently recomputes the worst immunity case and the worst protection-
   - both are under the 0.1130 A margin, the trip's lowest less the regulation's highest.
 - **What the sensor does and does not see is stated.** The bulk's charge (96.5 mJ) is counted at J_SOLAR in check (b), so
   moving it ahead of the sensor hides no consumption.
-- **Run by the coordinator at `675b8068`:** the output reproduced byte for byte; `test_l4e7` with `test_public_hygiene` 40
+- **Run by the coordinator at `04802c70`:** the output reproduced byte for byte; `test_l4e7` with `test_public_hygiene` 40
   passed, 0 failed, 0 skipped.
 
 **Result: accepted.** L4-E7R's architecture criterion is met. The backstop on SWEN, off by default, holds REQ-016's 100 W at

@@ -2,9 +2,9 @@ accepted: no
 
 # Record l9stk: the independent checker's check 4, PROTECTION: NOT CONFIRMED (filed as received)
 
-MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `d449375b07bfbb6560f0d5396f6d2898e768cc2c` (branch `fnd/l9stk`). Time: 4 October 2026, 04:12 to 04:18 CEST. Nothing in the kit has been built, bought or measured.
+MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `11ed3378b8883f0a903497b9938e0a5b6de79473` (branch `fnd/l9stk`). Time: 4 October 2026, 04:12 to 04:18 CEST. Nothing in the kit has been built, bought or measured.
 
-Scope, from the coordinator's brief: the targeted recheck of section 15.4b (the owner's reviewer's retry question on the d834e6a7 package: the LM5069-2's repeated fault and restart waveform and its accumulated heating over the breaker FETs and every protected series part; the latch-off -1 selected), the updated table and defect lists, `l9stk_protection.py` and its output.
+Scope, from the coordinator's brief: the targeted recheck of section 15.4b (the owner's reviewer's retry question on the dbe1a1ba package: the LM5069-2's repeated fault and restart waveform and its accumulated heating over the breaker FETs and every protected series part; the latch-off -1 selected), the updated table and defect lists, `l9stk_protection.py` and its output.
 
 Filed by the integrator of set 29 from the checker's final message for the round, without edits to its content. The record's author answered it in the next round (`L9-STACKUPS.md` sections 14 and 15 name each revision); this note is the checker's own record of what it read and found.
 
@@ -14,7 +14,7 @@ Filed by the integrator of set 29 from the checker's final message for the round
 
 The retry arithmetic reproduces, and rejecting the -2 is right. The -1 is the right selection but does not yet meet the owner's criterion in two places: the breaker FET restarting hot, and charging through a latched breaker.
 
-In a scratch clone at d449375b (SLVA673A fetched; the LM5069 sheet is already in the tree), `test_l9stk` gave 40 passed, 0 failed, 0 skipped. The tree is unchanged and the clone is deleted.
+In a scratch clone at 11ed3378 (SLVA673A fetched; the LM5069 sheet is already in the tree), `test_l9stk` gave 40 passed, 0 failed, 0 skipped. The tree is unchanged and the clone is deleted.
 
 **What reproduces at the sheet (sections 5 and 8.4.3)**
 - **One retry cycle:**
@@ -57,7 +57,7 @@ The -2 fails the criterion on the 228 °C case alone. Board P cannot provide the
 - **The guard's "trips and restarts at the PTC's rate indefinitely"** holds only for loads that IF-1 holds off. A resistive fault on VSYS latches the -1 at the first restart (the B-R1 event).
 - **The <0.3 V restart condition** does not say which UVLO edge it is judged at. If it is the falling edge, a pulse within 34 ms of a latch does not restart the breaker. That fails safe, but should be stated.
 - **The retry duty** pairs the fault-detection current's slowest value (on) with its fastest (off cycles). One unit has a single source, so this is conservative, not wrong.
-- **Outside this scope, from 2c8b29fb:** the RC hold's 3.3 µF now delays the undock turn-off to 1.51 ms. That lowers the safe withdrawal speed from 2.53 to 0.66 m/s, which a hand can exceed, so the dock contacts may break load current. This belongs to Layer 7 or the hold's circuit (a discharge path that bypasses C_U).
+- **Outside this scope, from c78ead77:** the RC hold's 3.3 µF now delays the undock turn-off to 1.51 ms. That lowers the safe withdrawal speed from 2.53 to 0.66 m/s, which a hand can exceed, so the dock contacts may break load current. This belongs to Layer 7 or the hold's circuit (a discharge path that bypasses C_U).
 
 **Questions as asked**
 - **Retry timing, envelope and per-part table:** confirmed.

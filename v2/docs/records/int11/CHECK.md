@@ -1,10 +1,10 @@
 mergeable: no
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026); B1 and M9 answered by apply_s117_restate.py, the rest carried in CLOSURE.md. -->
 
-# AI review of integration set 10: fnd/int11 at 2cbbef38 onto main c5f93464 (MESHSAT-1357, 29 September 2026)
+# AI review of integration set 10: fnd/int11 at b21f9ba5 onto main 5ac1deab (MESHSAT-1357, 29 September 2026)
 
 This is an AI review by a checker that wrote none of the candidate. It is not a qualified review. Prototype design:
-nothing here has been built, ordered or measured. Scratch clone at 2cbbef38, the int11 worktree's gitignored readings
+nothing here has been built, ordered or measured. Scratch clone at b21f9ba5, the int11 worktree's gitignored readings
 copied in (927 files, caches left out); nothing was written outside this clone and this file, and the clone's
 tracked tree is clean.
 
@@ -62,11 +62,11 @@ describes it wrongly.
   refused jointly, for example by a window capacitor and a far-side one, is filed under "refused for another
   reason", so T4's per-cause cost can under-report. Ask the union last and name the causes jointly.
 - **M4. Stale text in DEC-001's coverage row.** `_classes_why` in `pcb_rules_coverage.yaml` says `bypass_seats.py`
-  "still walks to a flat 3.0 mm measured to the capacitor's centre". Since 91e7649e it takes each class's screen
+  "still walks to a flat 3.0 mm measured to the capacitor's centre". Since ea41a774 it takes each class's screen
   and the rail pad (`bypass_seats.py:84-90`, `:204-206`, and the d6dec README's T2 row). The fingerprint comment
   above `rule_set_fingerprint` still names only the move of 26 September; it does not name the move of
   29 September from 635ff031f210f48c. DECOUPLING.md 8.1 T8's "the fingerprint does not move" also proved wrong,
-  as c65ee303 explains.
+  as 4811a51d explains.
 - **M5. The closure does not say what a re-read gives now.** CLOSURE.md says DEC-001 reads INCONCLUSIVE "until
   each board's next placement" and that measured failures move from 40 to 39. It does not say that the d6dec
   README's out-of-tree read under the new text is FAIL on all six committed placements (0 pass on A, B and P).
@@ -74,7 +74,7 @@ describes it wrongly.
   drop is not read as progress. Nothing claims DEC-001 passed, which I checked.
 - **M6. Two merged diagrams are stale at the candidate.** `v2/docs/diagrams/tools/build.py --check` reads 9 of 11
   current: control-lines and power-tree have inputs changed (the six netlists and `pcb_interfaces.yaml`, moved
-  after 2781cee6). In my clone, `power_tree.py`, which has no check mode and wrote, changed only its netlist sha and
+  after afceb2be). In my clone, `power_tree.py`, which has no check mode and wrote, changed only its netlist sha and
   commit labels; I restored the files. Rebuild both on the box, or record the staleness in the closure.
 - **M7. An owner acceptance with no record in the tree.** CLOSURE.md says section 9 is "the reference analysis the
   owner accepted on 29 September" and that the owner assigned both slots to Option A(i). Nothing in the tree
@@ -89,8 +89,8 @@ describes it wrongly.
 
 ## What I verified
 
-1. **Identity.** All 46 commits in c5f93464..2cbbef38, the merges included, have the owner as author and as
-   committer (`Kyriakos Papadopoulos`, `ncpjfuzl@mxmx.email`). No co-author trailer. c5f93464 is an ancestor
+1. **Identity.** All 46 commits in 5ac1deab..2cbbef38, the merges included, have the owner as author and as
+   committer (`Kyriakos Papadopoulos`, `ncpjfuzl@mxmx.email`). No co-author trailer. 5ac1deab is an ancestor
    of the candidate.
 2. **d6dec's tools against DECOUPLING.md 8.1.**
    - T1: `fan_select` and `decoupling_rules.escaped`, `copper_fanned` and `fanned` carry escape.py's old

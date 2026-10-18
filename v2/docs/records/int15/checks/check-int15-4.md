@@ -1,6 +1,6 @@
 mergeable: yes
 
-# AI review: fourth check of integration set 14, fnd/int15 at 1bafab8c (MESHSAT-1357)
+# AI review: fourth check of integration set 14, fnd/int15 at 4da7cd86 (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. I did not write the work under check; `CHECK.md` to
 `CHECK-3.md` (filed as `check-int15-1.md` to `-3.md`) are mine. Checked 29 September 2026 from 20:42 to 20:51 CEST
@@ -10,9 +10,9 @@ This is an AI review, not a qualified engineering review. I did not write the wo
 must not be filed or used as one.** It did not re-read the five corrected sentences, which are not corrected yet.
 
 **Set up**
-* `fnd/int15` is `1bafab8c6ac03c34b375ec4c2549e45c5b49501b`, one commit on `f21fc8f8`, still the tip at 20:50.
-* Tip clone: `<scratch>/chk-int15`, moved to `1bafab8c`, with `int15-evidence-097d2517.tar` re-installed (as asked).
-* Throwaway clones in my session scratchpad: `c15/r8` at `f21fc8f8` (the replay) and `c15/r7` at `1bafab8c` (the
+* `fnd/int15` is `4da7cd8686ce863f9b72e446abc9d1b9316a351d`, one commit on `b3b5cfaf`, still the tip at 20:50.
+* Tip clone: `<scratch>/chk-int15`, moved to `4da7cd86`, with `int15-evidence-097d2517.tar` re-installed (as asked).
+* Throwaway clones in my session scratchpad: `c15/r8` at `b3b5cfaf` (the replay) and `c15/r7` at `4da7cd86` (the
   mutants). Working tree edits only, reset after each run; nothing committed.
 * Tools ran with `VERDICT_DIR` in the scratchpad; `git status` of the tip clone shows only my four reports. No commit,
   no push, no agent, no other model, no box. The full suite was not run.
@@ -39,7 +39,7 @@ strings.
 * **M2**, the rows corrected and the assertions present, the finder unchanged: refused at the probe.
 * **M3**, everything else met, with `check-s122-3.md`: refused, "does not name check-int15-1".
 * **M4**, the same, with `check-s122-3.md` edited to name check-int15-1: refused, "not committed on a line that
-  carries 097d2517".
+  carries 911de5fb".
 * **M8**, assertions for the wrong boards (B U6 LM5069, A U6 PCM2912A): refused, "asserts no board E's U6 as LM5069".
 
 **Passed as intended:**
@@ -79,7 +79,7 @@ guard I asked for at minimum, so this no longer blocks.
 
 ## 2. S-122's correcting sentence (registry line 3623)
 
-Registry, parsed, `f21fc8f8` to the tip: only S-122's title moves, with the old title kept as a prefix. CFL-016 reads
+Registry, parsed, `b3b5cfaf` to the tip: only S-122's title moves, with the old title kept as a prefix. CFL-016 reads
 FAIL on S-122 with 15 bindings, all current.
 
 Clause by clause:
@@ -92,8 +92,8 @@ Clause by clause:
   * Rows are found by their exact first cells, so relabelled rows keep the parts (M9).
   * The E6 row may keep "the LM5176 ... front end" whenever "A22" appears anywhere in it (M9, with the label
     unchanged).
-* "the filed check names check-int15-1 and was committed on a line that carries 097d2517": true. The oldest commit
-  adding the check must descend from `097d2517`.
+* "the filed check names check-int15-1 and was committed on a line that carries 911de5fb": true. The oldest commit
+  adding the check must descend from `911de5fb`.
 * "Confirming that each correction is true in substance remains the filed check's job": true, and it is the sentence
   that matters.
 * "check-int15-2 found lines 82 and 86 false at their stated date; lines 47, 77 and 83 carry no date": true. The lines
@@ -112,15 +112,15 @@ Clause by clause:
   * none holds a local path or the account name.
   * The note's "its words read garbled" is true of check-int15-2 line 133 and of two lines of check-int15-3.
 
-## 4. Replay of `apply_check15c_fixes.py` on `f21fc8f8`
+## 4. Replay of `apply_check15c_fixes.py` on `b3b5cfaf`
 
-* On `r8` at `f21fc8f8`, the committed script (which writes the notes at the end) wrote:
+* On `r8` at `b3b5cfaf`, the committed script (which writes the notes at the end) wrote:
   * the registry;
   * `close_s122.py`;
   * the records index;
   * `check-int15-3.md`;
   * the notes on the six earlier filed checks.
-* After `rules_render.py --requirements`, all twelve script and render outputs equal `1bafab8c`'s, byte for byte. A
+* After `rules_render.py --requirements`, all twelve script and render outputs equal `4da7cd86`'s, byte for byte. A
   second run refuses.
 * The int15 README differs only by its hand written check-int15-3 row, which the script does not write. So the replay
   reproduces the commit. The first run with notes at the head left no trace in it.
@@ -128,7 +128,7 @@ Clause by clause:
 ## 5. Status, render, the page, validators, tests
 
 * **`rules_status.py`, three times:** exit 1 each time, with identical stdout, which is identical to main's: FAIL of
-  338 (PASS 195, INCONCLUSIVE 104, FAIL 39), NOT_READY. The audits equal `f21fc8f8`'s apart from the head.
+  338 (PASS 195, INCONCLUSIVE 104, FAIL 39), NOT_READY. The audits equal `b3b5cfaf`'s apart from the head.
 * **`rules_render.py`, twice:** nothing written, and the clone is clean.
 * **The evidence page:** CURRENT-EVIDENCE.md is `c9b98931...`, main's.
 * **Validators and checks:**
@@ -140,11 +140,11 @@ Clause by clause:
   * `claims_check.py`: PASS of 91.
 * **Tests:** test_requirements 66, test_rules_registry 5, test_decision_register 5 and test_envelope_data 6, which is
   82 passed and 0 failed.
-* **Readings:** against main, 339 rows, 0 results moved, 0 classes moved (the same archive as at `097d2517`).
+* **Readings:** against main, 339 rows, 0 results moved, 0 classes moved (the same archive as at `911de5fb`).
 
 ## 6. Files
 
-* `1bafab8c` changes 13 files, each within its stated scope. `b874b744..1bafab8c` changes 56.
+* `4da7cd86` changes 13 files, each within its stated scope. `53804300..1bafab8c` changes 56.
 * All 31 commits carry the owner's identity and `[MESHSAT-1357]`, with no trailer, and no em or en dash is added.
 
 ## Minor items
@@ -159,7 +159,7 @@ Clause by clause:
   * The assertions are not tied to the five sentences, and the J_M2C2 one is already met by unrelated ones.
   * These are not blocking, because S-122 now leaves substance to the filed check.
 * **q3. The gate cannot tell S-122's closing check from any other check.**
-  * Any check committed after `097d2517` that says `mergeable: yes` and names check-int15-1 and the ten file names
+  * Any check committed after `911de5fb` that says `mergeable: yes` and names check-int15-1 and the ten file names
     would do, an integration check like this one included.
   * Fix: require a marker only a closing check carries, for example a heading that names S-122's closure and the five
     lines.

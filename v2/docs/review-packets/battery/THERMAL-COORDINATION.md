@@ -41,7 +41,7 @@ session" were taken under the owner's standing rule of 26 September 2026 and can
    the pack out, transport and use with the pack fitted), and the exposures with the pack fitted are run at the cells'
    own rated limits. **The states are session text, not an owner ruling:** the owner approved on 6 September 2026 that a
    whole-kit test plan be written (item 16e, at 23:52); the session wrote its states within the hour (7 September,
-   00:40, `2e33773b`), and the ConOps took them on 25 September.
+   00:40, `612d914f`), and the ConOps took them on 25 September.
    `OPERATING-ENVELOPE.md` section 4, also session text, reads as a kit stored with its pack; section 9 states that
    tension and the reading taken. **Two levels cannot be run in any configuration the product has:** the +55 C
    operating margin and E5's +60 C humidity dwell, at which the fitted cells would pass their maker's +60 C and no ConOps
@@ -309,7 +309,7 @@ owner's (the handover's section 5a).
 - **Owner approval of item 16e (6 September 2026, 23:52, appendix 32.50):** that a whole-kit MIL-STD-810 and 461 test
   plan "is written into the record before the build and run on the built prototype ... with pass criteria per test". It
   approved that a plan be written and its scope; no text of it existed yet.
-- **`TEST-PLAN.md` section 1, session text.** The session wrote it on 7 September 2026 at 00:40 (`2e33773b`), after that
+- **`TEST-PLAN.md` section 1, session text.** The session wrote it on 7 September 2026 at 00:40 (`612d914f`), after that
   approval: "transit (closed, latched, antennas off, cables out, pack fitted), deployed (open, antennas on, cables in),
   stored (closed, pack out)". Its deployed state said nothing about the pack; "pack fitted" in the deployed states was
   added by this stream in round 8. It was written when the kit's pack was a bought BB-2590/U (that plan's own "Article"
@@ -472,9 +472,9 @@ TI BQ4050 SLUSC67B (`v2/vendor/battery/ti-bq4050.pdf`) and its technical referen
 1421182 (`v2/vendor/battery/ti-e2e-1421182-bq77207-application.html`); Samsung INR18650-35E Ver. 1.1 and Version No. 1.0
 (`v2/vendor/battery/samsung-35e-orbtronic.pdf`, `samsung-35e-akkuzentrum.pdf`); Eaton ELX1135
 (`v2/vendor/battery/eaton-scf9550-elx1135.pdf`); TI CSD17570Q5B SLPS471D (`v2/vendor/battery/ti-csd17570q5b.pdf`); TI
-BQ25731 SLUSE66A (`v2/vendor/ti/bq25731-datasheet.pdf`) for its operation without a battery; and, at main `fc144600`:
+BQ25731 SLUSE66A (`v2/vendor/ti/bq25731-datasheet.pdf`) for its operation without a battery; and, at main `3325e502`:
 for the heating rates and the charge ceilings, `v2/docs/feasibility/POWER-THERMAL.md` sections 7.2, 9.2, 9.3, 9.4 and
 10; for section 9, `v2/docs/CONOPS.md` section 4, `v2/docs/OPERATING-ENVELOPE.md` sections 3, 4 and 8,
 `v2/docs/MESHSAT-709-geometry-appendix.md` section 32.50 (item 16e), `v2/docs/TEST-PLAN.md` as first committed
-(`2e33773b`) and the owner's rulings D-02a and D-02b as the envelope records them; for section 9a, `v2/ecad/tools/gen_sch_e.py`
+(`612d914f`) and the owner's rulings D-02a and D-02b as the envelope records them; for section 9a, `v2/ecad/tools/gen_sch_e.py`
 lines 32 to 34, 193 and 218.

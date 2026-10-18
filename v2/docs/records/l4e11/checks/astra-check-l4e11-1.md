@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E11: the focused check of source-only and dead-pack operation (U-04), the vehicle-entry interconnect (D-06) and the hot swap's fault timer (D-09) by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx30-l4e11-check`, run `20261002T024127Z-317909`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e11 at commit `3f9cf2838e30`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e11 at commit `a9a68c67db8a`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

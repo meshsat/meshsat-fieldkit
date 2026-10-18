@@ -1,9 +1,9 @@
 mergeable: yes
 
-# CHECK-2 of layer 3 round 4 (`fnd/l3r4` at `fcfc6007`): the narrow re-check of round 4b
+# CHECK-2 of layer 3 round 4 (`fnd/l3r4` at `d6f1e349`): the narrow re-check of round 4b
 
 An AI check by a session that wrote none of the round, not a qualified review. Written 30 September 2026, 09:17 CEST.
-Scope: `git diff 3afdc2d6..fcfc6007` only (six files: `reissue.py`, `PASSAGE-MAP.md`, `README.md`,
+Scope: `git diff f26f555f..fcfc6007` only (six files: `reissue.py`, `PASSAGE-MAP.md`, `README.md`,
 `apply_layer_status_l3_r4.py`, `test_l3r4.py`, `LAYER-STATUS.md`), against CHECK-1's blocking item B1 and minors 1 to
 9. Everything below was run in a `--no-local --single-branch` clone of `fnd/l3r4` with the set 17 evidence archive
 (`int17-evidence-de11cc4e.tar`) installed, or read from it. Nothing was committed or pushed; the clone is removed.
@@ -92,7 +92,7 @@ No generated file carries an en or em dash.
 `dryrun.out`. Tests: 104 passed, 0 failed, 0 skipped. The 763 added lines of the diff carry no en or em dash, no
 internal host name and no absolute path. `CONOPS.md`, `PRODUCT-BRIEF.md`, the registry and `v2/release/` (H3) are
 unchanged; the author is the owner's identity with no trailer. The README's integrator run order also ran on a branch
-from main `8fec0733` with no failure (104 tests), leaving a tree identical to `fnd/l3r4`.
+from main `963740cd` with no failure (104 tests), leaving a tree identical to `fnd/l3r4`.
 
 ## Minors
 

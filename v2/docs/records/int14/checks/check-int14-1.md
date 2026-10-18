@@ -1,19 +1,19 @@
 mergeable: no
 
-# AI review: independent integration check of set 13, fnd/int14 at a906b932 (MESHSAT-1357)
+# AI review: independent integration check of set 13, fnd/int14 at 8611069e (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. Checked 29 September 2026 from 17:34 to 18:02 CEST (times read
 with `date`).
 
 **Set-up**
-* Tip clone: `<scratch>/chk-int14`, a shared clone detached at `a906b932f826d34fc17e326c66a7f1a331f27d79` (still the tip
+* Tip clone: `<scratch>/chk-int14`, a shared clone detached at `8611069e5dd6ddbf503a54d19719af06f1a00cd8` (still the tip
   of `fnd/int14` at 18:01). Archive `int14-evidence-a906b932.tar` installed: sha256 `dae5201ad41d5dc4...`, 939 files.
   `ibis_fetch.py --check` reads 13 PRESENT of 13; the four held TI sheets match `v2/vendor/sources.txt` lines 454 to 457
   by full sha256.
-* Main clone: `<scratch>/chk-int14-base`, detached at `e57a7365`, with `int13-evidence-69156cad.tar` (sha256
+* Main clone: `<scratch>/chk-int14-base`, detached at `557a0628`, with `int13-evidence-69156cad.tar` (sha256
   `5f2ee6236328b915...`, 939 files).
-* Replay clones (throwaway, in the session scratchpad under `c14/`): `r1` at 3309c9fa, `r2` at 266ee532, `r3` at
-  407bf3a3, `r4` at 4f4fd31d. My scripts and outputs are there too.
+* Replay clones (throwaway, in the session scratchpad under `c14/`): `r1` at fc418009, `r2` at e5aa8153, `r3` at
+  695e36ce, `r4` at b3aceb62. My scripts and outputs are there too.
 * Every rule tool ran from a scratch cwd with `VERDICT_DIR` in the scratchpad. `git status` of both check clones is
   clean apart from this file. Nothing committed or pushed; no box, no agent, no other model.
 
@@ -46,7 +46,7 @@ at fault: "none of the documents it names describes the driver side of board C's
 * CFL-016 reads FAIL and waits on S-122 before and after; nothing moves it.
 
 *Why it blocks:* CFL-016 is a BLOCKER record whose acceptance is that each named document describes the circuit as
-generated. Main's d0717859 already withdrew a third overclaim in its entries. A fourth would let CFL-016 later close
+generated. Main's 0179fb2f already withdrew a third overclaim in its entries. A fourth would let CFL-016 later close
 on S-122 with PANEL.md section 3 still naming the wrong nets, in the firmware contract for MESHSAT-837.
 
 *Fix (either):*
@@ -65,19 +65,19 @@ PANEL.md lines 89 and 90. The existing entry is append-only.
 
 | Commit | Replayed on | Result |
 |---|---|---|
-| 1b9f543c | r1 at 3309c9fa | 14 of 14 files identical. The steps: `apply_decision_s119.py` (35 to 36 decisions); `decisions_render.py`; `apply_registry_s119.py close 3309c9fabe4b...` with its full re-run of the chain (1 min 44 s, every output reproduced, so the entry's "each reproduced byte for byte" holds); the eight notes and the index row; `apply_rebind_decisions_set13.py`; `rules_render.py --requirements`. A second run of the rebind refuses. |
-| 63d64238 | r2 at 266ee532 | `gen_sch_c.py` and `boards/c.json` identical. The dry run writes nothing; a second run refuses. |
-| 4f4fd31d | r3 at 407bf3a3, the tip archive installed | `pcb_reliability.yaml`, `C.md` and `calc/rail_widths.out` identical. The inventory is unchanged (74 candidates, 24 classed, 50 excluded, 0 refused), `constraints_bound` reads PASS on all seven sheets and the set, and a second sheets run refuses. |
-| a906b932 | r4 at 4f4fd31d, with the tip's 96 reading files and archive | Without a reason, the circuit rebind refuses on CFL-016 (names R53). With the hand reason it rebinds REQ-012, CON-021, CFL-016 and CON-016. Then status, render, the page rebind and a second render. `pcb_requirements.yaml`, `CURRENT-EVIDENCE.md`, `PCB-RULE-STATUS-C.md`, `REQUIREMENTS-TRACE.md` and both scripts are identical to a906b932. |
-| 407bf3a3 (box, not replayable) | the tip | Parsed with `tx_inhibit.parse_netlist` and my own parser. Main 87b69472 to tip c9f73945: 221 to 225 parts, exactly R53 to R56 added (27R, R_0603), none removed or changed in value, footprint or fields. Four nets added (`EPD_*_R`); 12 pin moves, all U3 pins 4 to 7 and the eight new resistor pins. `readback_board_c_epd_series.py` HOLDS (0 failing); on main's netlist it FAILS 16. `readback-C-epd.txt` reproduces byte for byte. The provenance file's 69 file hashes match the tip's files, and its schematic sha is the committed schematic's. |
+| 67bf52d7 | r1 at fc418009 | 14 of 14 files identical. The steps: `apply_decision_s119.py` (35 to 36 decisions); `decisions_render.py`; `apply_registry_s119.py close fc418009a64b...` with its full re-run of the chain (1 min 44 s, every output reproduced, so the entry's "each reproduced byte for byte" holds); the eight notes and the index row; `apply_rebind_decisions_set13.py`; `rules_render.py --requirements`. A second run of the rebind refuses. |
+| 64fad6a9 | r2 at e5aa8153 | `gen_sch_c.py` and `boards/c.json` identical. The dry run writes nothing; a second run refuses. |
+| b3aceb62 | r3 at 695e36ce, the tip archive installed | `pcb_reliability.yaml`, `C.md` and `calc/rail_widths.out` identical. The inventory is unchanged (74 candidates, 24 classed, 50 excluded, 0 refused), `constraints_bound` reads PASS on all seven sheets and the set, and a second sheets run refuses. |
+| 8611069e | r4 at b3aceb62, with the tip's 96 reading files and archive | Without a reason, the circuit rebind refuses on CFL-016 (names R53). With the hand reason it rebinds REQ-012, CON-021, CFL-016 and CON-016. Then status, render, the page rebind and a second render. `pcb_requirements.yaml`, `CURRENT-EVIDENCE.md`, `PCB-RULE-STATUS-C.md`, `REQUIREMENTS-TRACE.md` and both scripts are identical to 8611069e. |
+| 695e36ce (box, not replayable) | the tip | Parsed with `tx_inhibit.parse_netlist` and my own parser. Main 87b69472 to tip c9f73945: 221 to 225 parts, exactly R53 to R56 added (27R, R_0603), none removed or changed in value, footprint or fields. Four nets added (`EPD_*_R`); 12 pin moves, all U3 pins 4 to 7 and the eight new resistor pins. `readback_board_c_epd_series.py` HOLDS (0 failing); on main's netlist it FAILS 16. `readback-C-epd.txt` reproduces byte for byte. The provenance file's 69 file hashes match the tip's files, and its schematic sha is the committed schematic's. |
 
 The three merges are exact `git merge-tree` results. Each brings exactly its branch's files at the checked tip:
-606708d2 (s119 checks 1 and 2), 29f24a7e (csi checks 1 to 3) and f9bc2f6f (walkmin).
+72f2a85f (s119 checks 1 and 2), 5c79b1a3 (csi checks 1 to 3) and 8bf7a0b3 (walkmin).
 
 ### 2. Readings against main
 
 * **Routed:** 615 against 615, none on one side only. **0 verdicts moved.** 525 are byte identical. 90 differ, the same
-  90 files set 12 re-took (git_head a46db71b on main, 4f4fd31d at the tip). Beyond volatile fields and input shas, the
+  90 files set 12 re-took (git_head b6ab12e7 on main, b3aceb62 at the tip). Beyond volatile fields and input shas, the
   counts move only as follows:
   * SI-001 on A, B, C, D, E and P gains `allowed_nets` (0 except C). Their tables gain empty `length_limits` rows. E5
     has no SI-001 row in the audit, so "all boards" is these six.
@@ -123,10 +123,10 @@ The three merges are exact `git merge-tree` results. Each brings exactly its bra
   * S-121's figures match the outputs: 32.6 mA (`efficiency.out` line 80), 9.74 A peak and 8.00 A RMS against 25.4 and
     17.5 A (`inductor_u3b.out` lines 22, 31 and 33), 0.972.
 
-### 4. f9bc2f6f (walkmin minors, not checked before)
+### 4. 8bf7a0b3 (walkmin minors, not checked before)
 
 * **The lug check:** `tx_inhibit.py` line 1726 refuses None, a single lug, three lugs and ("1", "1").
-  * On b4a34ffa's tool the tip's new test fails at exactly the ("1", "1") assertion. On the tip it passes.
+  * On e0c24e1d's tool the tip's new test fails at exactly the ("1", "1") assertion. On the tip it passes.
   * `test_tx_inhibit`: 143 passed, 0 failed. The kit's declaration ("1", "2") is unchanged, and RF-002's readings
     moved on no board.
   * The string "12" and integer lugs still pass the check: m3.
@@ -161,18 +161,18 @@ The three merges are exact `git merge-tree` results. Each brings exactly its bra
 
 ### 6. Every changed file
 
-`e57a7365..a906b932` changes 202 files (146 modified, 56 added). Each belongs to one of the eight first parent
+`557a0628..a906b932` changes 202 files (146 modified, 56 added). Each belongs to one of the eight first parent
 commits. Five files are touched twice:
-* CHARGER.md and TOPOLOGY.md: 3309c9fa, then 1b9f543c's notes.
-* `boards/c.json`: 266ee532 and 63d64238.
-* `pcb_requirements.yaml` and REQUIREMENTS-TRACE.md: 1b9f543c and a906b932.
+* CHARGER.md and TOPOLOGY.md: fc418009, then 67bf52d7's notes.
+* `boards/c.json`: e5aa8153 and 64fad6a9.
+* `pcb_requirements.yaml` and REQUIREMENTS-TRACE.md: 67bf52d7 and 8611069e.
 
 No vendor, held, IBIS or assistant file is committed. All 35 commits carry the owner's identity as author and committer,
 [MESHSAT-1357] in the subject, no trailer, and no em or en dash in added text. Nothing is unexplained.
 
 ## Minor items
 
-* **m1. The H1 ERC warning** (a906b932's message): see section 2. Say in the set's record that the ERC JSON leaves
+* **m1. The H1 ERC warning** (8611069e's message): see section 2. Say in the set's record that the ERC JSON leaves
   out the library warning for some symbols on A, B, C and D, so the warning count is not a symbol census.
 * **m2. Board C's `return_via`, `ref_change` and `via_audit` re-takes are owed and carried nowhere.**
   * csi README section 6 step 3 (lines 147 and 148) and section 5 (lines 136 to 138) say they are owed.
@@ -183,8 +183,8 @@ No vendor, held, IBIS or assistant file is committed. All 35 commits carry the o
   by accident) and integer lugs (never match, which is conservative). The walkmin check's minor 2 asked for a tuple of
   two distinct strings. Fix: require `isinstance(lugs, tuple)`, both items `str` and distinct, and add "12" and (1, 2)
   to the test's bad list.
-* **m4. `records/walkmin/README.md` line 5 still says `apply_walk_minors.py` answers the minors.** f9bc2f6f's lug line
-  and the test edits are direct edits, so the script replayed on a1f8ec70 no longer gives the committed file. "Minors 3
+* **m4. `records/walkmin/README.md` line 5 still says `apply_walk_minors.py` answers the minors.** 8bf7a0b3's lug line
+  and the test edits are direct edits, so the script replayed on bae6ca21 no longer gives the committed file. "Minors 3
   to 6 are carried" appears only in the commit message. Fix: one line in the README for each.
 * **m5. Stale docstrings.**
   * `records/int14/apply_rebind_after_circuit_set13.py` lines 2 and 3 describe set 13 as "stream d4emcon's FEA-002

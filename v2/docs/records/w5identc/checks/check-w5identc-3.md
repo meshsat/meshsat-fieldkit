@@ -5,9 +5,9 @@ mergeable: yes
 AI review, labelled as such: an independent check by an assistant session that did not write the work. It is not a
 qualified engineering review. 29 September 2026, 21:16 to 21:30 CEST (read from `date`).
 
-Branch `fnd/w5identc` at `ff69f6fe` (confirmed), two commits on `633697a7`, authored and committed as the owner, no
+Branch `fnd/w5identc` at `d55f2fd2` (confirmed), two commits on `789a4cde`, authored and committed as the owner, no
 trailer. Checked in a new shared clone at `_scratch/chk-w5identc` (sparse: `v1/`, `v2/images/` and `v2/release/` left
-out except `v2/release/handover/_generated/`) and in a second sparse clone of `fnd/int15` at `1bafab8c` with the branch
+out except `v2/release/handover/_generated/`) and in a second sparse clone of `fnd/int15` at `4da7cd86` with the branch
 merged (clean, tree `553ef257`). Both clones are removed. The Uniroyal sheet was fetched afresh with
 `fetch_held_back.py` (sha256 matched).
 
@@ -66,7 +66,7 @@ None.
    another part refuses where the value does not name the part (C1 and C2 as CC0805KKX7R7BB106 with C15850), and binds
    the code's own part (CL21A106KAYNNNE). Latent reach: minor 2. All 21 PRINTED bindings read "the value names ...", and
    each netlist code present reads as the same part in this tree's catalogue.
-4. **The chain on `1bafab8c` plus the branch:**
+4. **The chain on `4da7cd86` plus the branch:**
    * before: `rules_lib.py requirements` 0 errors, 0 warnings, and the check reading is byte identical;
    * `apply_decision_decoded.py --check` then the write: decision 59, CFL-016 rebound from `a41df5d12ff95995` to
      `823a6b32baf41481` (the decisions file's new sha256);

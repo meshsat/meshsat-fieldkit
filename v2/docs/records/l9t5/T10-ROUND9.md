@@ -12,7 +12,7 @@ like every draft of L4-E9's change list, None is APPLIED; `apply_gen_sch_b_canen
 
 ## 1. Why
 
-W139 analysed the quorum on W137's draft (fnd/l4canmb `0d079eaf`) and W138's regulator stage (fnd/l4reg `86dbcdff`): every row held,
+W139 analysed the quorum on W137's draft (fnd/l4canmb `cd823769`) and W138's regulator stage (fnd/l4reg `2eee008d`): every row held,
 contained, or lost as row 8 accepts, with one REQUIRED change and four findings this round corrects before row (b)'s check:
 
 | Item | W139's finding, as received | This round |

@@ -1,8 +1,8 @@
 mergeable: yes
 
-# AI review: third look at the RF-002 walk's B1 (declared EMCON toggle) and the LED-load follow-up, fnd/rf2walk3 at f7597bd7 (MESHSAT-1357)
+# AI review: third look at the RF-002 walk's B1 (declared EMCON toggle) and the LED-load follow-up, fnd/rf2walk3 at 79d2b1b6 (MESHSAT-1357)
 
-This is an AI review, not a qualified engineering review. It was read from the shared scratch clone detached at `f7597bd747794670febf90a3e23ba46ba06f8b4b`, fetched from the rf2walk3 worktree, where `w/rf2walk3` is the same sha, on 29 Sep 2026 from 14:31 to 14:36 CEST (times from `date`).
+This is an AI review, not a qualified engineering review. It was read from the shared scratch clone detached at `79d2b1b60fafc9a7fa5dfdd85afb530e223b1f8e`, fetched from the rf2walk3 worktree, where `w/rf2walk3` is the same sha, on 29 Sep 2026 from 14:31 to 14:36 CEST (times from `date`).
 - **Nothing written outside scratch:** no worktree and not the main checkout.
 - **Rule tools:** run from a scratch cwd with `VERDICT_DIR` in the scratchpad.
 - **My scripts** are in `_chk/`: the earlier ones plus `cx_walk4.py`. `rb12_mutants.py` is extended with two LED-feed mutants.
@@ -13,7 +13,7 @@ This is an AI review, not a qualified engineering review. It was read from the s
 
 None.
 
-## (1) B1: the declared toggle (8c143c24)
+## (1) B1: the declared toggle (9e657c9b)
 
 **The declaration is correctly sourced.** `EMCON_TOGGLES` says board C, SW_EMCON, value "EMCON locking toggle", line TX_INHIBIT_n. The sources agree with it:
 - `gen_sch_c.py` line 306: SW_EMCON lug 1 on TX_INHIBIT_n, lug 2 on GND, lug 3 NC.
@@ -49,21 +49,21 @@ On set 12's board C, `_is_toggle('C', ...)` matches the real SW_EMCON. No other 
 | T3a contact on B from TX_INHIBIT_n to a net pulled to +3V3_DEV by 10k; T3b to an expander pin; T3c through two contacts in series to +3V3_DEV | UNDECIDED / FAIL | holds: the path is followed |
 | T3d contact on B from EMCON_HW to a net pulled up | FAIL / FAIL | holds |
 | T4 a JP solder jumper, an S1 pushbutton, a K1 relay contact or a 2-pin link header J_BR1 on B, from TX_INHIBIT_n to +3V3_DEV | UNDECIDED / UNDECIDED | not hidden, but not FAIL either (minor 2) |
-| **T2a** C's SW_EMCON with lug 1 on TX_INHIBIT_n, lug 2 (the common) NC and lug 3 on GND: a toggle that can never ground the line | **PASS / PASS** | not caught (minor 1). Also PASS on the previous walk (06eb61ef), so it is not caused by this change |
+| **T2a** C's SW_EMCON with lug 1 on TX_INHIBIT_n, lug 2 (the common) NC and lug 3 on GND: a toggle that can never ground the line | **PASS / PASS** | not caught (minor 1). Also PASS on the previous walk (9b5ccdde), so it is not caused by this change |
 
 ## (2) Readings and tests
 
 `check_contracts.py` was run into scratch on a `git archive` of each whole `v2/ecad`. Every output is `cmp`-identical to its file in `readings/b1r3/`.
 
-- **Set 12's netlists under their writing generator (eafb324d):** 0 FAIL, 11 UNDECIDED, 15 PASS on the new walk and on the previous walk (06eb61ef). The two files are byte-identical, and identical to my second-round HEAD reading.
-- **Main (2c7730a4):** 0 FAIL, 11 UNDECIDED, 15 PASS on both walks, byte-identical. Main's own walk gives 7 UNDECIDED and 18 PASS (the earlier reading, same file).
-- **dd7230a7 (the int13 line with CHK12-B applied, board B not regenerated):** 20 UNJUDGED and 5 PASS on both walks, with board B refused as UNKNOWN GENERATOR, as recorded.
+- **Set 12's netlists under their writing generator (2e6dbf93):** 0 FAIL, 11 UNDECIDED, 15 PASS on the new walk and on the previous walk (9b5ccdde). The two files are byte-identical, and identical to my second-round HEAD reading.
+- **Main (c600d33b):** 0 FAIL, 11 UNDECIDED, 15 PASS on both walks, byte-identical. Main's own walk gives 7 UNDECIDED and 18 PASS (the earlier reading, same file).
+- **4829d38c (the int13 line with CHK12-B applied, board B not regenerated):** 20 UNJUDGED and 5 PASS on both walks, with board B refused as UNKNOWN GENERATOR, as recorded.
 
 Tests: `tests/run.py test_tx_inhibit` gives 142 passed, 0 failed (138 in `test_tx_inhibit.py` plus the split guard). The new fixtures state properties on fixtures, each with a defective and an acceptable case (CX10 in both shapes, CX14, the legitimate shapes, and "only the declared toggle is a source").
 
 ## (3) apply_b_chk12_led.py and the extended read-back
 
-- **Base:** dd7230a7's `gen_sch_b.py` is exactly HEAD's plus `apply_b_chk12.py`, which I checked by applying it in scratch and comparing with `cmp`.
+- **Base:** 4829d38c's `gen_sch_b.py` is exactly HEAD's plus `apply_b_chk12.py`, which I checked by applying it in scratch and comparing with `cmp`.
 - **Applying the follow-up** in scratch: the dry run finds its anchor once, the apply gives +6 lines, a second run is refused, and on HEAD's generator it refuses without CHK12-B.
 - **Netlist facts:** Q{s}01 is a BC857 with its emitter on +3V3_CM{s}, feeding red LED17 through R{s}50 (1k), with its base through R{s}49 (10k) from LED_nPWR. R{s}48 (1k) feeds green LED16 into LED_nACT.
 - **Figures:** 3.3 mA each, as 3.3 V over 1k. Slot 3's rail sums to 0.100 + 14 x 0.001 + 2 x 0.0033 = 0.121 A against its 0.20 A peak. With either LED's forward drop taken, the real feed is well under 3.3 mA; minor 4 covers the wording.
@@ -74,7 +74,7 @@ Tests: `tests/run.py test_tx_inhibit` gives 142 passed, 0 failed (138 in `test_t
 ## (4) New
 
 - EMCON.md 4d.6 and the start-up dip added to E-04 match the arithmetic. With R527 at 16.5k the all-rails-lost margin would be 92 mV and the released margin 51 mV, so keeping 20.0k is a stated trade.
-- The integration line dd7230a7 has board B unjudged until CHK12-B and CHK12-LED are regenerated together, as the README says.
+- The integration line 4829d38c has board B unjudged until CHK12-B and CHK12-LED are regenerated together, as the README says.
 
 ## Minor items
 

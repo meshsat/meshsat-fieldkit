@@ -1,4 +1,4 @@
-tools/board_c_layout.py on v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb (C24, the only routed board C; last changed by commit 9527a3d2; sha256/16 2a273803757c68fb; four layers, routed from an older schematic), with board C's held entries at fnd/csi 171fb51a. Exit 1.
+tools/board_c_layout.py on v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb (C24, the only routed board C; last changed by commit 996fcf1f; sha256/16 2a273803757c68fb; four layers, routed from an older schematic), with board C's held entries at fnd/csi 17c41b49. Exit 1.
 == pcb-c-display.kicad_pcb against board C's held edge_allow entries (8 held, 0 refused) and the series stubs' limit
    net         max_mm    routed  ratio  vias  layers             pads_far  the farthest pads  U3 pin to its nearest via
    QSPI_D0      13.10   55.71 mm    4.3     4  B.Cu,F.Cu,In2.Cu   42.13 mm  U4.5 to U3.53      1.18 mm   PAST   PLACEMENT CANNOT MEET IT

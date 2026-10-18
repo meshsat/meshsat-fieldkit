@@ -7,7 +7,7 @@ mergeable: no
 AI review, labelled as such: an independent check by an assistant session that did not write the work. It is not a
 qualified engineering review. 29 September 2026, 19:56 to 20:25 CEST (read from `date`).
 
-Branch `fnd/w5identc`, tip `6b03ef6f` (confirmed with `git rev-parse`), five commits on main `b874b744`, all authored and
+Branch `fnd/w5identc`, tip `efbf8678` (confirmed with `git rev-parse`), five commits on main `53804300`, all authored and
 committed as the owner with no trailer, no dash characters added. Checked in this shared clone at the tip, and in a second
 clone of `fnd/int15` at `1f3dd306` with the branch's files laid on it (the merge is clean: `git merge-tree` gives tree
 `16665af7`; that clone was removed afterwards to free disk). The held Uniroyal sheet was fetched here with the stream's
@@ -132,7 +132,7 @@ sheets in the switches' reasons and next actions; correct README line 131.
 
 ## Observations outside this stream
 
-* `v2/vendor/power/panjit-ss2020fl-series.pdf` (on main since `ccf5808e`, 26 September) reads "Reproducing and modifying
+* `v2/vendor/power/panjit-ss2020fl-series.pdf` (on main since `42ce8b6f`, 26 September) reads "Reproducing and modifying
   information of the document is prohibited without permission from Panjit International Inc."; under the owner's rule
   of 27 September it would be held back. A separate item, not this merge.
 * Rendering OWNER-DECISIONS-OPEN.md off the box on int15 changed "338" to "339" rule board pairs (the scratch tree has no
@@ -170,10 +170,10 @@ sheets in the switches' reasons and next actions; correct README line 131.
    (`git ls-files v2/vendor/passives` lists only the Yageo sheet). Yageo: terms silent (minor 7); neither sheet prints a
    distributor's name anywhere in its text layer.
 7. The file `v2/release/handover/_generated/pcb-c-display-c8/NOT_FOR_FAB-pcb-c-display-bom-per-reference.csv`, tracked,
-   sha256 `e9e7e0a8...`, 167 rows, one commit `6dc4e708` (27 September, H2 exports at `99cde56b`, provenance commit
-   `99cde56b`, netlist `11eabc2d...`), written by `handover_exports.py exports` (lines 136 to 138). The netlist is
-   `11eabc2d...` at `99cde56b`, `6dc4e708` and `e28f91a6^`, and differs from `e28f91a6` (27 September 19:57 CEST) on; at
-   `b874b744` eight parts are missing and R14's value and code differ. Only `part_identities.py` (compares) and
+   sha256 `e9e7e0a8...`, 167 rows, one commit `29201151` (27 September, H2 exports at `fcf69d55`, provenance commit
+   `fcf69d55`, netlist `11eabc2d...`), written by `handover_exports.py exports` (lines 136 to 138). The netlist is
+   `11eabc2d...` at `fcf69d55`, `29201151` and `e7721c52^`, and differs from `e7721c52` (27 September 19:57 CEST) on; at
+   `53804300` eight parts are missing and R14's value and code differ. Only `part_identities.py` (compares) and
    `handover_exports.py` read it. It is a dated handover snapshot that names its own commit: no item; regenerate at the
    next handover (REGENERATE.md section 5). README step 6's "open the stale BOM export item" should say so.
 

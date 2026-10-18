@@ -2,8 +2,8 @@ accepted: yes
 
 # CHECK-4: energy round 4 and r11dep's second issue against CHECK-3 and the owner's corrections (MESHSAT-1357)
 
-**An AI check, not a qualified review.** 30 September 2026, 04:23 CEST. Branch `fnd/l3plane`, tip `06b8ecea` (confirmed),
-on `3ef5987e` and the prior tip `4e9fa869`. **Scope: `git diff 4e9fa869..06b8ecea` only**, against CHECK-3 (B1, B2,
+**An AI check, not a qualified review.** 30 September 2026, 04:23 CEST. Branch `fnd/l3plane`, tip `cf9e3909` (confirmed),
+on `6db3e632` and the prior tip `a9761fcb`. **Scope: `git diff a9761fcb..06b8ecea` only**, against CHECK-3 (B1, B2,
 minors 1 to 7, section 7) and the owner's three corrections of 30 September. The checker wrote none of it. Prototype
 design: nothing is built, powered or measured.
 
@@ -99,7 +99,7 @@ None.
   - R161 "(ISNS- filter, Kelvin from the shunt's rail pad)", from VBUS20 to FE_ISNS_N (U2 pin 13).
 - **No netlist error is established.** A netlist names the net, not the point on it, so Kelvin sensing is correctly
   implementation requirement C-1, not a defect.
-- **A32** is historical evidence tied to its revision: the board file, commit `b7e0d28f`, sha256/16 `58e26c67987b1daa`,
+- **A32** is historical evidence tied to its revision: the board file, commit `8b6bc226`, sha256/16 `58e26c67987b1daa`,
   and the ADVISORY verdict of 20 Sep.
 - **The budget.** 0.371 mOhm is the working-temperature figure. At 25 C it is 0.287 mOhm with the copper at 100 C, or
   0.324 mOhm at 62.1 C. The 25 C criterion of 0.29 mOhm is the conservative one. The bench figure, 0.29 mOhm x 6.0 A,

@@ -1,12 +1,12 @@
 accepted: yes
-tip: cd8720a1ab6eed891b1afd8b5df3b8ceedf36c0f
+tip: 6d7ca7e67f57fe7a88655e7db797346b4a0d3a20
 
 # CHECK-5: delta confirmation of the energy basis's final issue (fnd/l3plane, MESHSAT-1357)
 
 **An AI check, not a qualified review.** 30 September 2026, 04:40 CEST.
-- **The tip** is `cd8720a1ab6eed891b1afd8b5df3b8ceedf36c0f` on `fnd/l3plane`, confirmed with `git rev-parse`. Its
-  parent is `a751e4d8`, on `06b8ecea` (CHECK-4, accepted: yes).
-- **Scope:** only `git diff 06b8ecea..cd8720a1`, against CHECK-4's minors 1 to 5. The checker wrote none of it.
+- **The tip** is `6d7ca7e67f57fe7a88655e7db797346b4a0d3a20` on `fnd/l3plane`, confirmed with `git rev-parse`. Its
+  parent is `922e134b`, on `cf9e3909` (CHECK-4, accepted: yes).
+- **Scope:** only `git diff cf9e3909..cd8720a1`, against CHECK-4's minors 1 to 5. The checker wrote none of it.
   Prototype design: nothing is built, powered or measured.
 - **The clone:** a shared clone at the tip (`_scratch/chk-energy5`, removed after the check), with the int16 worktree's
   held files copied in as ignored files and never committed.
@@ -94,7 +94,7 @@ docstring, and each checks against its source:
 
 ## Files verified at the tip
 
-Each working-tree file equals its blob at `cd8720a1`. The outputs are the ones that rerun byte identical.
+Each working-tree file equals its blob at `6d7ca7e6`. The outputs are the ones that rerun byte identical.
 
 ```
 7bbca138a02bd32facc2a277283218c6bccc2f257c787b374fbf42483d90d132  v2/docs/records/l3plane/ENERGY-BASIS.md

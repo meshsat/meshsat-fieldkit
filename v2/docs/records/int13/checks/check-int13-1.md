@@ -1,11 +1,11 @@
 mergeable: no
 
-# AI review: independent check of the integrator's own work in set 12, fnd/int13 at 005e5f5e (MESHSAT-1357)
+# AI review: independent check of the integrator's own work in set 12, fnd/int13 at 4a115314 (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review.
 
 **Set-up**
-- Clone: a scratch clone, a shared clone detached at `005e5f5e66ddb43dc7b81a88887b136182feeb35` (checked with `git rev-parse`).
+- Clone: a scratch clone, a shared clone detached at `4a11531421febc8c33930b3a0df6111853fd653f` (checked with `git rev-parse`).
 - Evidence archive: `int13-evidence-005e5f5e.tar` installed; its sha256 is `e2256dd9777dd2714f...`.
 - Time: 29 September 2026, 15:08 to 15:30 CEST (from `date`).
 
@@ -16,9 +16,9 @@ This is an AI review, not a qualified engineering review.
 - Every rule tool ran from a scratch cwd with `VERDICT_DIR` in the scratchpad. There is one exception: `constraints_bound.py --emit` ran with cwd in the clone's `v2/ecad/tools`. It printed to stdout only, and nothing in the tree changed.
 
 **Base**
-- `main..005e5f5e` holds 67 commits on the merge base `459fe5b8`.
-- `64865df1` is an ancestor.
-- Main is now `77e35dd3`, which is one commit touching `EXECUTION-PLAN.md` only. `git merge-tree` onto it is clean.
+- `main..005e5f5e` holds 67 commits on the merge base `d03f83e6`.
+- `db48f1c7` is an ancestor.
+- Main is now `9a576dc2`, which is one commit touching `EXECUTION-PLAN.md` only. `git merge-tree` onto it is clean.
 
 **Counts: 1 blocking, 9 minor.**
 - The declarations are true and settle only their own nets.
@@ -103,7 +103,7 @@ The re-taken PWR-001 on A, B and C in scratch reproduces the committed readings 
   - B: 155 / 56 / 99 / 0.
   - C: 74 / 24 / 50 / 0.
 - Board A's 22 reviewed external pins are on the same nets, because no pin moved at all.
-- The three final re-exports differ from their predecessors only in `source` and `date`: C at e41df395 to 8fc5954a, A and B at 33fe3c9c to 3d3e32d6, B at 3d3e32d6 to a03b047e.
+- The three final re-exports differ from their predecessors only in `source` and `date`: C at 1cb60746 to d0c578b6, A and B at 40caad91 to 91f9e28f, B at 91f9e28f to dccd1ad7.
 
 **Pins name the committed netlists**
 - `pcb_reliability.yaml`: A 6c40250c47195ebb, B 3ef9b8c49a01b728, C 87b69472ac83ca5a.
@@ -124,7 +124,7 @@ The re-taken PWR-001 on A, B and C in scratch reproduces the committed readings 
   - S-01 and S-92: text found in `records/d4emcon/apply_registry_d4e.py`.
   - S-115: text found in `records/s117/apply_registry_s117.py` open.
 - No other field or section moved.
-- Every `evidence_bound_to` entry of the registry matches its file's sha at 005e5f5e (0 stale).
+- Every `evidence_bound_to` entry of the registry matches its file's sha at 4a115314 (0 stale).
 - Every record bound on main to a file set 12 changed carries a set 12 entry: the netlists of A, B and C, gen_sch_a and gen_sch_b, the decisions file, EMCON.md and CURRENT-EVIDENCE.md.
 - Every netlist and generator rebind carries a hand reason. None took the default text.
 
@@ -156,7 +156,7 @@ The re-taken PWR-001 on A, B and C in scratch reproduces the committed readings 
 
 **Board B's RF-002 rows**
 - On board B, 4 RF-002 rows moved from PASS to UNDECIDED against main: RockBLOCK, E22, and AW7915 slots 1 and 3. `inhibit_chain_b` went from 16/4 to 12/8, and its result stays INCONCLUSIVE.
-- `records/rf2walk/README.md` lines 57, 58 and 64 attribute this to d4emcon's walk `7dc74508` (checked stream).
+- `records/rf2walk/README.md` lines 57, 58 and 64 attribute this to d4emcon's walk `9e5164fe` (checked stream).
 - None of those rows is claimed PASS by a record rebound here: the only `inhibit_chain_b` counts in the registry are historical.
 
 **Closes**
@@ -212,7 +212,7 @@ The re-taken PWR-001 on A, B and C in scratch reproduces the committed readings 
   - `apply_b_d4e`, `apply_c_d4e_f1`, `apply_emcon_hw_node_c`, `apply_b_chk12`.
   - The five s117 generator and document scripts.
   - `apply_census_nodes_set12`, `apply_b_chk12_led`, `apply_census_nodes2_set12`.
-- The replay gives `gen_sch_a/b/c.py`, `intent_checks.py`, `pcb_decisions.yaml`, `pcb_emc.yaml` and `HW-FW-CONTRACT.md` byte-identical to 005e5f5e.
+- The replay gives `gen_sch_a/b/c.py`, `intent_checks.py`, `pcb_decisions.yaml`, `pcb_emc.yaml` and `HW-FW-CONTRACT.md` byte-identical to 4a115314.
 - Every other changed file belongs to a named stream or step:
   - `tx_inhibit.py` and its tests: rf2walk.
   - EMCON.md: d4emcon and rf2walk2/3.
@@ -251,5 +251,5 @@ The re-taken PWR-001 on A, B and C in scratch reproduces the committed readings 
 - **m8. S-01's appended text names an older read-back.**
   - S-01's text (line 2543, from d4emcon's `after` phase) names d4emcon's read-back on board B at 5b89d5ef, before the check's minors.
   - On the final netlist that read-back fails the three values changed on purpose, and `readback_chk12` carries them. A dated pointer to readback_chk12 would keep the item true.
-- **m9. `closed_by` on S-117 and S-118 overstates what 230fdd65 did.**
-  - Both read "committed by 230fdd65". The netlist 6c40250c was first committed at 3d3e32d6; 230fdd65 carries it but did not commit it. "Carried at" would be exact.
+- **m9. `closed_by` on S-117 and S-118 overstates what caeeca1f did.**
+  - Both read "committed by caeeca1f". The netlist 6c40250c was first committed at 91f9e28f; caeeca1f carries it but did not commit it. "Carried at" would be exact.

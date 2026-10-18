@@ -2,9 +2,9 @@ accepted: yes
 
 # Layer 4, L4-E8: The assistant's verification of the conservative bound and the cold-envelope loop (the coordinator's check; not a model review, not an Astra check)
 
-MESHSAT-1357, 1 October 2026. The collaborator's check (`astra-check-l4e8-1.md`, on `5ff06474`) and its targeted recheck
-(`astra-check-l4e8-2.md`, on `cc95fe1f`) did not accept the bank. The second failure on the same issue changed the method:
-the sampled search was replaced by a conservative analytic bound over fully independent components. The fix is `a282c8b7`,
+MESHSAT-1357, 1 October 2026. The collaborator's check (`astra-check-l4e8-1.md`, on `8a270b2d`) and its targeted recheck
+(`astra-check-l4e8-2.md`, on `eb26289d`) did not accept the bank. The second failure on the same issue changed the method:
+the sampled search was replaced by a conservative analytic bound over fully independent components. The fix is `074db6d8`,
 and this check verifies it. Both collaborator runs on the issue are spent.
 
 - **The bound's construction, read in `ripple_dense.py`.**
@@ -23,7 +23,7 @@ and this check verifies it. Both collaborator runs on the issue are spent.
   - `mink` against the brute-force hull of pairwise sums: 300 random convex pairs, no true sum vertex outside the computed
     sum.
   - `inv_hull` on 300 random branch-shaped rectangles: none of 60,000 random image points outside the enclosure.
-- **Run by the coordinator at `a282c8b7`:** `ripple_dense.py` re-run, its output equal to the committed
+- **Run by the coordinator at `074db6d8`:** `ripple_dense.py` re-run, its output equal to the committed
   `ripple_dense.out` byte for byte. `test_l4e8` with `test_public_hygiene`: 23 passed, 0 failed, 0 skipped. That includes
   the tests' own brute-force samples against the bound, with seeds of their own.
 - **The result, read from the output.** The six drawn EEHZK1V331P cans each sit behind a 45 mOhm ballast (C2903491). The

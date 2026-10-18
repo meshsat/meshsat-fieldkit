@@ -1,14 +1,14 @@
 accepted: yes
 
-# Layer 4, L4-E9: The assistant's closing check of update round 3 at fc0f23ef (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E9: The assistant's closing check of update round 3 at 98d8a12c (the coordinator's check; not a model review, not an Astra check)
 
-MESHSAT-1357, 2 October 2026. Update round 3 brings the gate in line with L4-E13, which the coordinator accepted at `fae419d1`
-(check 3). The round sits on set 25 at `50a44371`, after its readers' fix `bab8d460`. Commits: `f5c87033` merges L4-E13,
-`d564915a` is the update, and `fc0f23ef` merges set 25's new tip. No collaborator run was asked for: this round transcribes an
+MESHSAT-1357, 2 October 2026. Update round 3 brings the gate in line with L4-E13, which the coordinator accepted at `afdca7ac`
+(check 3). The round sits on set 25 at `f6282d81`, after its readers' fix `36432a0c`. Commits: `3a130e7d` merges L4-E13,
+`0c386971` is the update, and `98d8a12c` merges set 25's new tip. No collaborator run was asked for: this round transcribes an
 accepted record into the gate, and the coordinator checks the transcription.
 
 **Verified by the coordinator:**
-- *Reproduction:* `l4e9_power_path.py` re-run at `fc0f23ef`, its output equal to the committed `.out` byte for byte. Tests:
+- *Reproduction:* `l4e9_power_path.py` re-run at `98d8a12c`, its output equal to the committed `.out` byte for byte. Tests:
   `test_l4e9`, `test_l4e_svg_readers` and `test_public_hygiene` give 42 passed, 0 failed, 1 skipped. The skip is L4-E11's
   reader, whose held CSD19536KTT sheet is not in this worktree; set 25's evidence archive carries it. No em or en dash in the
   page, the register, the handover or the output.

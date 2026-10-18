@@ -1,11 +1,11 @@
 mergeable: no
-<!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026): the independent AI check of 9f93a9fc; its items answered in the second issue. -->
+<!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026): the independent AI check of 715fe251; its items answered in the second issue. -->
 
-# AI review: independent check of stream a1solar, fnd/a1solar at 9f93a9fc (MESHSAT-1357)
+# AI review: independent check of stream a1solar, fnd/a1solar at 715fe251 (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review, made on 29 September 2026 at 04:20 CEST by a checker that wrote
-none of the work. Read-only on the stream's files; scratch clone the checker's scratch clone at `w/a1solar` 9f93a9fc
-(12 stream commits on 18863a97; merge base with `fnd/a1int` 13b5352b). Nothing here is a measurement.
+none of the work. Read-only on the stream's files; scratch clone the checker's scratch clone at `w/a1solar` 715fe251
+(12 stream commits on d43136af; merge base with `fnd/a1int` d77b2a51). Nothing here is a measurement.
 
 ## Blocking items
 
@@ -76,7 +76,7 @@ quoted, and use the corrected adverse case in B1's grid.
    Renogy sheet is a retailer's copy. They match the folder's standing practice (makers' published documents as-is,
    takedown on request), so none is judged unpublishable, but record the decision per file in `sources.txt` under the
    27 September rule, and consider citing the superseded Rev A by URL and sha256 instead of filing it.
-9. `LOG.md`: the 04:05 and 04:08 entries were committed at 04:01 and 04:02 (ff73bec5, de50396a), and 04:04 follows
+9. `LOG.md`: the 04:05 and 04:08 entries were committed at 04:01 and 04:02 (3c09d5f0, 765e0534), and 04:04 follows
    04:08. Correct the labels from the commit times.
 10. No verification claim beyond analysis was found; REQ-016 and REQ-072 are untouched (the stream's diff is
    `records/a1solar/`, `vendor/solar/` and `sources.txt` only). "No tracking loop is needed" (ARRAY.md 81) is a model

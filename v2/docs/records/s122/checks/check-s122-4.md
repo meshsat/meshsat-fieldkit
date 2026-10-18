@@ -1,11 +1,11 @@
 mergeable: no
 
-# AI review: independent check of stream s122, round 4, fnd/s122c at edead832 (S-122, CFL-016, MESHSAT-1357)
+# AI review: independent check of stream s122, round 4, fnd/s122c at 29d076eb (S-122, CFL-016, MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. Everything below is what I read or ran myself.
 
 **Set up**
-* `fnd/s122c` at `edead8323c45ac81d604015a1099917e679820e2` (`git rev-parse fnd/s122c`): two commits, `e5fdf670` and `edead832`, on set 14's main `1bafab8c`.
+* `fnd/s122c` at `29d076ebda3bdfba013d8bee61cbe2c3e397ca90` (`git rev-parse fnd/s122c`): two commits, `af1f4d66` and `29d076eb`, on set 14's main `4da7cd86`.
 * Check clone: a new shared clone at `<scratch>/chk-s122` at the tip, removed when done.
 * Throwaway clone in my session scratchpad for the registry script and the closure. In it I made one commit of three fixture checks with the owner's `-c` flags; it was never pushed, and the clone is deleted.
 * Time: 29 September 2026, 21:22 to 21:32 CEST (from `date`).
@@ -27,7 +27,7 @@ This is an AI review, not a qualified engineering review. Everything below is wh
 * `v2/docs/records/s122/verdicts.out`: the entries for V2-SPEC.md lines 81, 82, 84 and 86, and a sample of about 40 entries that name part numbers across PANEL.md, V2-SPEC.md, OPERATING-ENVELOPE.md, TEST-PLAN.md and ASSEMBLY.md.
 * `feasibility/EMCON.md` and the rest of DEFINITION-STATUS.md are unchanged since round 3.
 * Netlists: set 14's six (`tx_inhibit.parse_netlist`: A `6c40250c`, B `3ef9b8c4`, C `c9f73945`, D `a2d48972`, E `2ed95a0e`, P `20c7b079`).
-* Generators: `gen_sch_a.py`, `gen_sch_b.py`, `gen_sch_d.py` and `gen_sch_e.py` at `b2709118` (where the boards table was written); `gen_sch_d.py` before and at `bdfc7b3f`; `gen_sch_e.py` line 800 at the tip.
+* Generators: `gen_sch_a.py`, `gen_sch_b.py`, `gen_sch_d.py` and `gen_sch_e.py` at `be826353` (where the boards table was written); `gen_sch_d.py` before and at `dcd9f9a4`; `gen_sch_e.py` line 800 at the tip.
 * Makers' sheets, read with `pdftotext`: `v2/vendor/ti/ti-lm5069.pdf`, `v2/vendor/m2/te-2199119-m2-b-key.pdf`, `v2/vendor/m2/amphenol-mdt420b01001-m2-b-key.pdf`.
 
 ## Blocking items
@@ -36,14 +36,14 @@ This is an AI review, not a qualified engineering review. Everything below is wh
 * **`v2/docs/V2-SPEC.md` line 84 (the D8 row): "the TPS22810 gate-bias switch".**
   * On board D, the PA's gate bias is `U15`, TLV75801PDRVR ("PA gate bias VGG 4.48 V while PA_KEY is high"); its EN pin is on `PA_KEY` and its output on `VGG_SW` at `J_VGG`.
   * The only TPS22810 on board D is `U21`, "TPS22810DRV load switch, +5V_TX on while +3V3_D8 is above 2.23 to 2.78 V", which switches the exciter's supply.
-  * The TPS22810 was the bias switch on 7 September (`gen_sch_d.py` line 11 at `b2709118`: "bias switched by a TPS22810 on PA_KEY"); `faf8c981` brought in the TLV75801.
+  * The TPS22810 was the bias switch on 7 September (`gen_sch_d.py` line 11 at `be826353`: "bias switched by a TPS22810 on PA_KEY"); `247db699` brought in the TLV75801.
   * `verdicts.out` judges the row TRUE. The assertion it makes for the TPS22810 prints the netlist's own "load switch, +5V_TX".
   * This is the class correction 34 corrects in the same row ("Two names were true on 7 September and are not today": the TUSB2046B, the DS3231M). It concerns the PA bias, which EMCON removes through `PA_KEY`.
   * Line 84 is one of the lines the closing check has to name as corrected and true, so I cannot write that closing section.
 * **V2-SPEC.md line 81 (the A22 row): "three 5.1 V slot rails and a device rail (AP64500, INA226 monitored)".**
   * On board A, `U4` and `U6` are AP64500 (`+5V_S1`, `+5V_S3`), while `U5` (`+5V_S2`) and `U7` (`+5V_DEV`) are LM5176 buck-boost stages.
   * ASSEMBLY.md lines 132 and 133 say so in the same scope.
-  * All four were AP64500 on 7 September (`gen_sch_a.py` lines 205 to 219 and 375 to 377 at `b2709118`).
+  * All four were AP64500 on 7 September (`gen_sch_a.py` lines 205 to 219 and 375 to 377 at `be826353`).
   * The row is judged TRUE; its assertions check the AP64500 on `U4` only.
 * **Why the instrument passes both:** `verdicts.check_parts` asks only whether a part number is on the board the row names. Both are, in another role.
 * **I confirmed S-122 closes with both.** In the throwaway clone, after `apply_registry_s122_r4.py`, `close_s122.py` with a committed fixture closed S-122 and set CFL-016 to PASS at the tip as it stands.
@@ -74,16 +74,16 @@ This is an AI review, not a qualified engineering review. Everything below is wh
 
 * **V2-SPEC.md line 82:** true.
   * Board B's `U3` and `U4` are TS3DV642A0RUAR, and `U9` is DS3231SN.
-  * At `b2709118`, `gen_sch_b.py` carried the TS3DV642 (lines 9, 100, 398) and a "DS3231MZ holdover clock" (line 15).
+  * At `be826353`, `gen_sch_b.py` carried the TS3DV642 (lines 9, 100, 398) and a "DS3231MZ holdover clock" (line 15).
   * No TMDS341A is on any board.
-* **Line 84:** the TUSB2046I correction is true: board D's `U4` is TUSB2046IBVFR, and `gen_sch_d.py` carried the TUSB2046B at `b2709118`. The rest of the row fails as B1 says.
+* **Line 84:** the TUSB2046I correction is true: board D's `U4` is TUSB2046IBVFR, and `gen_sch_d.py` carried the TUSB2046B at `be826353`. The rest of the row fails as B1 says.
 * **Line 86:** true, and it was false at its own date.
   * Board E's `U6` is LM5069MM-2 and board A's `U2` is the LM5176 "VBUS20 from VIN_RAW".
-  * At `b2709118`, `gen_sch_e.py` lines 103 to 104 carry the LM5069 hot swap and send the raw bus "into A22's LM5176 front end", while the row written at `b2709118` put "the LM5176 9 to 36 V front end" on E6.
+  * At `be826353`, `gen_sch_e.py` lines 103 to 104 carry the LM5069 hot swap and send the raw bus "into A22's LM5176 front end", while the row written at `be826353` put "the LM5176 9 to 36 V front end" on E6.
   * Minor m2 applies to the same row.
 * **Line 47:** true.
   * Board D's `U6` is PCM2912A.
-  * `gen_sch_d.py` held five WM8960 mentions before `bdfc7b3f` (7 September 07:15) and none at it, before `b2709118` (11:11).
+  * `gen_sch_d.py` held five WM8960 mentions before `dcd9f9a4` (7 September 07:15) and none at it, before `be826353` (11:11).
   * The RA30H1317M1's sheet is a row of OPERATING-ENVELOPE.md section 2.
 * **Correction 34:** true, except that its "Two names were true on 7 September and are not today" misses line 84's TPS22810 and line 81's AP64500 (B1).
 * **OPERATING-ENVELOPE.md line 77:** true.
@@ -93,9 +93,9 @@ This is an AI review, not a qualified engineering review. Everything below is wh
   * Board B's `J_M2C2` is TE 2199119-3.
   * The TE sheet's Performance Ratings (product specifications 108-115042 and 108-115049) give Service Temperature -40 to +80 C. Amphenol's MDT420B01001 sheet gives -40 C to +80 C too.
   * Board B's Amphenol parts are the MDT420M02001 sockets `J_M2N1` to `J_M2N3`.
-* **The envelope:** no envelope number left the document. Every number of `pcb_envelope.yaml` found in OPERATING-ENVELOPE.md at `1bafab8c` is still in it, and `+75` is not an envelope value.
+* **The envelope:** no envelope number left the document. Every number of `pcb_envelope.yaml` found in OPERATING-ENVELOPE.md at `4da7cd86` is still in it, and `+75` is not an envelope value.
 * **CONOPS.md line 1056 and DC-10:** true.
-  * Board B's `U41` read STM32H753VITx at `1f614233` and reads STM32H743VIT6 since `458b2873`, which I read in round 3.
+  * Board B's `U41` read STM32H753VITx at `f6c449fc` and reads STM32H743VIT6 since `09521e07`, which I read in round 3.
   * CON-017 reads PASS.
 
 ## 3. The gate (a) to (d), by mutants of my own
@@ -111,8 +111,8 @@ This is an AI review, not a qualified engineering review. Everything below is wh
 
 ## 4. Replay
 
-* **Documents.** `apply_docs_s122_r4.py --check`, with V2-SPEC.md, OPERATING-ENVELOPE.md, DEFINITION-STATUS.md and `records/int15/apply_check15c_fixes.py` taken from `1bafab8c`: 12 edits located, 51 assertions hold. The run makes the four files equal the tip, and a second run refuses.
-* **Outputs.** `inventory.py` and `verdicts.py` with `--stdout`, at the tip, with `S122_AT=e57a7365` and with `S122_AT=1bafab8c`, reproduce all six committed outputs byte for byte.
+* **Documents.** `apply_docs_s122_r4.py --check`, with V2-SPEC.md, OPERATING-ENVELOPE.md, DEFINITION-STATUS.md and `records/int15/apply_check15c_fixes.py` taken from `4da7cd86`: 12 edits located, 51 assertions hold. The run makes the four files equal the tip, and a second run refuses.
+* **Outputs.** `inventory.py` and `verdicts.py` with `--stdout`, at the tip, with `S122_AT=557a0628` and with `S122_AT=4da7cd86`, reproduce all six committed outputs byte for byte.
   * Tip: 985 sentences, 410 TRUE, 0 STALE, 40 BASELINE, 535 NOT DERIVABLE, 0 UNJUDGED, 3219 assertions.
   * Set 14's documents: 975 sentences, 7 STALE, 0 UNJUDGED. The 7 are V2-SPEC.md lines 47, 82, 84 and 86, OPERATING-ENVELOPE.md lines 77 and 83, and CONOPS.md line 1056.
 * **Registry.** `apply_registry_s122_r4.py` rebinds 5 records (CFL-010, CFL-013, CFL-014, CFL-016, REQ-005). It re-pins the envelope and ENV-001's `verified_sha` from `a8e65995` to `26e98ecf`, and refuses a second run. `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings. `rules_lib.py`: 59 rules, 0 errors.

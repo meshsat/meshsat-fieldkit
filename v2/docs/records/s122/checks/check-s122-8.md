@@ -1,18 +1,18 @@
 mergeable: yes
 
-# AI review: delta check of stream s122, round 8, fnd/s122c at b1fb815f (S-122, CFL-016, MESHSAT-1357)
+# AI review: delta check of stream s122, round 8, fnd/s122c at 7ca089c0 (S-122, CFL-016, MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. Everything below is what I read or ran myself.
 
-**Scope.** A delta check, by the coordinator's instruction: `git diff b76e5fd3..b1fb815f` only, against my check 7
+**Scope.** A delta check, by the coordinator's instruction: `git diff 575296a4..b1fb815f` only, against my check 7
 (`checks/check-s122-7.md`). Blocking means one of: a closing line false against the netlist or a maker's page; a
 closing figure with no binding, or a binding that does not state it; a change that breaks a replay or the integrator
 sequence; a scope statement that claims more than the gate does.
 
 **Set up**
-* `fnd/s122c` is at `b1fb815f` (read with `git rev-parse`). The fix is `b53258bb`; `b1fb815f` adds the README and LOG.
+* `fnd/s122c` is at `7ca089c0` (read with `git rev-parse`). The fix is `b85b677b`; `7ca089c0` adds the README and LOG.
 * Check clone: a shared clone at `<scratch>/chk-s122-8`, detached at the tip, remote removed.
-* Integration clone: a shared clone at `<scratch>/chk-s122-8-int`, on `fnd/int16`'s tip `36bb1d12`, remote removed
+* Integration clone: a shared clone at `<scratch>/chk-s122-8-int`, on `fnd/int16`'s tip `fa6d3b80`, remote removed
   before any commit, commits with the owner's `-c` flags, never pushed. int16's 945 ignored files under `v2/ecad` and
   `v2/vendor` (minus `__pycache__`) were copied in from its worktree.
 * Both clones are removed when this report is written. No real branch was committed to or pushed.
@@ -22,7 +22,7 @@ sequence; a scope statement that claims more than the gate does.
   set 14 by check-int15-1's findings. Their verdicts are in `verdicts.out`.
 
 **What I read**
-* `git diff b76e5fd3..b1fb815f` of V2-SPEC.md, `apply_docs_s122_r8.py`, `apply_registry_s122_r4.py`, `close_s122.py`,
+* `git diff 575296a4..b1fb815f` of V2-SPEC.md, `apply_docs_s122_r8.py`, `apply_registry_s122_r4.py`, `close_s122.py`,
   `inventory.out`, `verdicts.out`, README.md and LOG.md.
 * `checks/check-s122-7.md`: compared with `cmp`, byte identical to my CHECK-7.md.
 * `verdicts.py`, `s122lib.py`, `judgements.py`, `inventory.py` and `test_close_s122.py` have no diff in this range.
@@ -83,12 +83,12 @@ S-135. It also says each figure's unit is compared "where the source states one"
 **4. Check 7's m1, `apply_docs_s122_r8.py`.**
 * Refusals:
   * on the tip, it refuses (`2c722c9b`, not `4f1fd784`);
-  * with `b76e5fd3`'s V2-SPEC.md, `--check` locates 1 edit;
+  * with `575296a4`'s V2-SPEC.md, `--check` locates 1 edit;
   * pointing the CONOPS.md row of DEFINITION-STATUS.md's baselines table at V2-SPEC.md makes it refuse;
   * adding V2-SPEC.md to `s122lib.BASELINED` makes it refuse.
 * Runs:
   * the real run writes a file identical to the tip, and a second run refuses;
-  * from `1c187977`'s V2-SPEC.md, `apply_docs_s122_r7.py` then `apply_docs_s122_r8.py` also give the tip.
+  * from `0d0b538a`'s V2-SPEC.md, `apply_docs_s122_r7.py` then `apply_docs_s122_r8.py` also give the tip.
 * The new wording holds. Correction 36 now says the closing check "compares a unit only where the source states one".
   That matches the scan: a unit changed where the source states one is refused (four plants below), and "330 x 200 cm"
   and "14.4 mV node" pass, because the board file and the rail intent state no unit.
@@ -98,17 +98,17 @@ S-135. It also says each figure's unit is compared "where the source states one"
   lines removed, 2 added.
 * Re-run at the tip, all nine outputs are byte identical to the committed files:
   * `inventory.out`, `verdicts.out`;
-  * `-base` at `e57a7365`;
-  * `-set14` at `1bafab8c`;
-  * `verdicts-r4.out` at `edead832`;
-  * `verdicts-r5.out` at `a6429e66`;
-  * `verdicts-r6.out` at `1c187977`.
+  * `-base` at `557a0628`;
+  * `-set14` at `4da7cd86`;
+  * `verdicts-r4.out` at `29d076eb`;
+  * `verdicts-r5.out` at `bd34cbd0`;
+  * `verdicts-r6.out` at `0d0b538a`.
 
 **6. `test_close_s122.py` at the tip: ALL PASS.** T4 refuses 45 of 45 changes. T5 lets 45 of 45 through and the gate
 refuses.
 
 **7. The set 15 order**, on the integration clone.
-* **Review D first**, merging `4795d5bf`:
+* **Review D first**, merging `f8b5729f`:
   * one conflict, `v2/vendor/sources.txt`, resolved by keeping both sides (int16's two passives lines, then review D's
     Arlitech line);
   * `facts.py`: 55 facts, 0 FAIL;
@@ -116,7 +116,7 @@ refuses.
   * `apply_findings.py --check`: RD-C-01 extends S-101; RD-C-02 to RD-C-09 and RD-C-24 open S-126 to S-134;
   * `apply_findings.py` wrote, and a second run refused;
   * `rules_lib.py requirements`: 0 errors, 0 warnings. The trace page was rendered and committed.
-* **Then `b1fb815f`**, merged with no conflict.
+* **Then `7ca089c0`**, merged with no conflict.
   * **Registry script.** `apply_registry_s122_r4.py`:
     * rebound 5 records (CFL-010, CFL-013, CFL-014, CFL-016, REQ-005);
     * opened **S-135** (SESSION, OPEN, PROCESS, in no record's `waits_on`);
@@ -148,7 +148,7 @@ refuses.
 
 ## S-122 closing check
 
-These eight lines have the same text at `b1fb815f` as at `b76e5fd3`: I compared each line's hash for V2-SPEC.md
+These eight lines have the same text at `7ca089c0` as at `575296a4`: I compared each line's hash for V2-SPEC.md
 47, 81, 82, 83, 84 and 86, and OPERATING-ENVELOPE.md has no diff in the range. V2-SPEC.md's only change is correction
 36, at line 324. The judgements and the tools that bind them have no diff either. So check 7's line by line reading
 carries forward. I also re-ran at the tip the script that finds each figure token on these lines, the key that spans it
@@ -164,7 +164,7 @@ unit. My eight wrong-figure plants were refused again.
     block, and the 35E sheet's 3.60 V nominal.
   * 9 to 36 V is board E's `J_DCIN`.
   * The three 5.1 V slot rails are `J_5V_S1` to `J_5V_S3`.
-  * The four AP64500 of 7 September are the four rail groups of `gen_sch_a.py` at `b2709118`.
+  * The four AP64500 of 7 September are the four rail groups of `gen_sch_a.py` at `be826353`.
   * 13.8, 12 and 54 V are the output nets named in `U13`, `U15` and `U16`.
   * 45 W is `U18`'s outlet; 3.3 V is `U12`'s logic rail.
   * Eleven SMP-MAX sites are eleven Radiall footprints; 2x13 is `J_AB1`'s IDC header.
@@ -185,7 +185,7 @@ unit. My eight wrong-figure plants were refused again.
 
 ## Counts
 
-Committed `verdicts.out` at `b1fb815f`, reproduced byte for byte:
+Committed `verdicts.out` at `7ca089c0`, reproduced byte for byte:
 
 | Document | Sentences | TRUE | STALE | BASELINE | NOT DERIVABLE | UNJUDGED | Assertions |
 |---|---|---|---|---|---|---|---|

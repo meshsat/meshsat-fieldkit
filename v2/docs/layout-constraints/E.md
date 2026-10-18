@@ -1,13 +1,13 @@
 # Board E1 (dock strip): layout constraints
 
-**Bound to the set 6 candidate (27 September 2026, read at `760d7f41`).** This sheet's inputs stand in the block below,
+**Bound to the set 6 candidate (27 September 2026, read at `00e74bbb`).** This sheet's inputs stand in the block below,
 one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
 computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
 table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
 table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
 the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 10**,
-which are the readings at `e3aedb25` with the H2 line's changes marked where they stand (`ef144760`, the paragraph
-below). Set 6 changed board E's netlist and intent file in `c4ad8350` (the hot stop line HOT-R1 drawn; the nodes FAN1_SW
+which are the readings at `956feb28` with the H2 line's changes marked where they stand (`c62ee56b`, the paragraph
+below). Set 6 changed board E's netlist and intent file in `140588ba` (the hot stop line HOT-R1 drawn; the nodes FAN1_SW
 and FAN2_SW declared). A node is not a rail: **no row of the power table moved**. A line of the older sections that
 names a part, a net, a current or a count is compared with the netlist and the intent file below before it is followed,
 and where this sheet and a record disagree the record governs (README). Board E is not at layout entry: no board is
@@ -17,37 +17,37 @@ below is its own binding's).
 ```bound
 sheet      E
 board      e
-read       2026-09-29 at d41f85ec
+read       2026-09-29 at 75460813
 current    section 2: the power table, and the figures the text under it quotes from it
-older      sections 1 and 3 to 10: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8 changed d41f85ec
-intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 4b328380172ff2c7 changed d41f85ec
-board_file v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb sha256/16 a462ac2620b9b8d3 changed bed211b6
+older      sections 1 and 3 to 10: read at 956feb28, with the H2 line's changes marked at c62ee56b
+netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8 changed 75460813
+intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 4b328380172ff2c7 changed 75460813
+board_file v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb sha256/16 a462ac2620b9b8d3 changed 93972efc
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC04161H-7628 outer 0.0350 mm inner 0.0152 mm
 ```
 
-**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `ef144760`: phase E17, netlist
-`v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` sha256/16 `d6137f50059e5cbc` (round 8 at `bc0f562f`, set 5 at `b7f96784`),
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `c62ee56b`: phase E17, netlist
+`v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` sha256/16 `d6137f50059e5cbc` (round 8 at `7ce797c4`, set 5 at `ae922e4d`),
 intent `pcb-e1-dock-intent.json` `5913e38b20333d35`; the committed board file `a462ac2620b9b8d3` is E17. Section 2's
 table is regenerated from `calc/rail_widths.py` on that intent: VIN_RAW at 14.10 A and TRK_OUT at 10.33 A are now the
 committed figures, not a round 8 note, and SGP_VDD is declared (marked **H2**). Board E is not at layout entry: **5
 reasons at H2** (`CURRENT-EVIDENCE.md`): PWR-001 INCONCLUSIVE (FAN1_SW and FAN2_SW, S-76), SI-001 INCONCLUSIVE,
 decision 31's protection review, FEA-006, FEA-007. Known changes of the H2 line: **section 6.1 item 1's defect is
-corrected in the generator** (set 5, `b7f96784`: the tracker senses its current on its bottom leg, HC9-E1, S-47's
+corrected in the generator** (set 5, `ae922e4d`: the tracker senses its current on its bottom leg, HC9-E1, S-47's
 core; the item stays below as the reading that found it), and VIN_RAW crosses the dock on four 9 A power pins with
-board A's half (SC-55, `b7f96784`). Every other line below is the reading at `e3aedb25`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+board A's half (SC-55, `ae922e4d`). Every other line below is the reading at `956feb28`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
 
-As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)),
-candidate then netlist `d910e49c5f5f50b2`, intent `9ae33eb17d04670e`, 15 blocker lines. **Round 8** (`fnd/r8int1`, which reached `main` as `53a98a71` after this sheet was first
-written; board E's part is `bc0f562f`, netlist sha256/16 `f3c1ad6153002976`) raises two of board E's declared
+As first written: a view over the records at `main` `956feb28` (conventions and shared rules: [README.md](README.md)),
+candidate then netlist `d910e49c5f5f50b2`, intent `9ae33eb17d04670e`, 15 blocker lines. **Round 8** (`fnd/r8int1`, which reached `main` as `f5be4954` after this sheet was first
+written; board E's part is `7ce797c4`, netlist sha256/16 `f3c1ad6153002976`) raises two of board E's declared
 currents: **VIN_RAW from 6.15 A to 14.1 A and TRK_OUT from 6.16 A to 10.33 A** (its intent file compared rail by rail
-for this sheet); section 2 gives both, and sections 5 and 6.1 cite `gen_sch_e.py` by its line numbers at `53a98a71`.
+for this sheet); section 2 gives both, and sections 5 and 6.1 cite `gen_sch_e.py` by its line numbers at `f5be4954`.
 Re-read this sheet on that netlist before a layout starts.
 
 **The tracker's maker constraints are read from the maker's own sheet, which is in the tree:**
 `v2/vendor/power/lt8705a.pdf`, the LT8705A datasheet revision 8705af, 44 pages, sha256/16 `8f552a0b57677bfa`, filed in
-`ada94128` (`v2/docs/respin-research-power-2026-09-04.md` line 24) and unchanged at `e3aedb25` and `53a98a71`; its
+`aff83347` (`v2/docs/respin-research-power-2026-09-04.md` line 24) and unchanged at `956feb28` and `f5be4954`; its
 "Circuit Board Layout Checklist" is on pages 35 and 36. Reading it against board E's netlist found **a circuit defect
 that blocks board E's layout entry** (section 6.1 item 1: the current-sense resistor R5 sits in series with the
 inductor, where the controller's CSP and CSN pins would sit at up to about 15 V against a 3 V absolute maximum) and
@@ -103,7 +103,7 @@ milliamperes: the fabricator's floor governs there, not the current.
 |---|---|---|---|---:|---:|---:|---|---|
 | CELL_F | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path, F3 to the dock block; the inner width is not a conductor (item 1) |
 | CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path, J_BATT to F3 |
-| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.10, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 | **H2**: 14.10 A since `bc0f562f` (round 8); at `e3aedb25` it was 6.15 A, which is 3.67 mm on one outer face and 9 / 7 / 6 barrels. The intent file: "Declared at 14.10 A typical and peak (R4A-N12, 26 September 2026): board A's front end at its ISNS limit (5.7 A at 20.7 V, 0.93) drawing from a 9.0 V bus"; "the 12 AWG pad to the dock's four VIN_RAW power pins (EQ-16, 27 September 2026; until then J_BLK pins 1 to 4)" |
+| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.10, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 | **H2**: 14.10 A since `7ce797c4` (round 8); at `956feb28` it was 6.15 A, which is 3.67 mm on one outer face and 9 / 7 / 6 barrels. The intent file: "Declared at 14.10 A typical and peak (R4A-N12, 26 September 2026): board A's front end at its ISNS limit (5.7 A at 20.7 V, 0.93) drawing from a 9.0 V bus"; "the 12 AWG pad to the dock's four VIN_RAW power pins (EQ-16, 27 September 2026; until then J_BLK pins 1 to 4)" |
 | +3V3_E6 | 3.30 | 0.35 / 0.60 | 0.35, typical (PI-001) | 0.07 | 0.03 | 0.42 | 1 / 1 / 1 |  |
 | +5V_E6 | 5.00 | 0.30 / 0.50 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
 | +5V_GEIGER | 5.00 | 0.10 / 0.10 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |  |
@@ -114,8 +114,8 @@ milliamperes: the fabricator's floor governs there, not the current.
 | DC_HS | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 | the shore and vehicle inlet |
 | PV_P | 17.6 (25.0) | 5.68 / 6.25 | 5.68, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 | the solar input |
 | PV_IN | 17.6 (25.0) | 5.68 / 6.25 | 5.68, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 | the solar input |
-| TRK_OUT | 15.10 | 10.33 / 10.33 | 10.33, typical (PI-001) | 8.65 | 2.89 | 70.84 (over 40 mm) | 14 / 12 / 10 | **H2**: 10.33 A since `bc0f562f` (round 8); at `e3aedb25` it was 6.16 A, which is 3.68 mm on one outer face and 9 / 7 / 6 barrels. The intent file: "Declared at 10.33 A typical and peak (R4A-N12, 26 September 2026): the panel's 93 W at the 9 V bus floor, when a vehicle holds the bus under 15.1 V; 6.16 A is the figure at 15.1 V" |
-| SGP_VDD | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `b7f96784`: "the SGP41's VDD behind its RC element"; 4.6 mA, which prints as 0.00 |
+| TRK_OUT | 15.10 | 10.33 / 10.33 | 10.33, typical (PI-001) | 8.65 | 2.89 | 70.84 (over 40 mm) | 14 / 12 / 10 | **H2**: 10.33 A since `7ce797c4` (round 8); at `956feb28` it was 6.16 A, which is 3.68 mm on one outer face and 9 / 7 / 6 barrels. The intent file: "Declared at 10.33 A typical and peak (R4A-N12, 26 September 2026): the panel's 93 W at the 9 V bus floor, when a vehicle holds the bus under 15.1 V; 6.16 A is the figure at 15.1 V" |
+| SGP_VDD | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `ae922e4d`: "the SGP41's VDD behind its RC element"; 4.6 mA, which prints as 0.00 |
 
 What the table asks of the layout:
 
@@ -155,10 +155,10 @@ In1 plane. No RF line on board E (`rf_line.verdict.json` PASS with nothing judge
 
 ## 5. Decoupling (decision 42)
 
-- **Generator items** (`DECOUPLING.md` section 8.3), owed at `e3aedb25`: G11 (U12, the AP63205: C31 at pin 3 VIN, not
+- **Generator items** (`DECOUPLING.md` section 8.3), owed at `956feb28`: G11 (U12, the AP63205: C31 at pin 3 VIN, not
   pin 2 EN; the generator's own comment reads "2 EN 3 VIN"), G13 (the RP2040's DVDD: 1 uF at VREG_VOUT class L, 100 nF
   at each DVDD pin class D, one 100 nF added; the VREG_IN 1 uF stays), G14 (classes on every entry). **Round 8 closes
-  all three in the generator** (`bc0f562f`: C31 at U12 pin 3; C45 at VREG_VOUT, C46 and a new C59 at the DVDD pins; a
+  all three in the generator** (`7ce797c4`: C31 at U12 pin 3; C45 at VREG_VOUT, C46 and a new C59 at the DVDD pins; a
   class and the maker's clause on every entry, which the generator refuses to omit); DEC-001 reads the seats on the next
   placement.
 - **Class R** at U12 (AP63205) and at the LT8705A tracker U5's power stage (Q3 to Q6, L1, R5, the input capacitors C11
@@ -166,7 +166,7 @@ In1 plane. No RF line on board E (`rf_line.verdict.json` PASS with nothing judge
   escape fan when they are placed against U5).
 - **The tracker controller's supply pins carry no declared bypass, and GATEVCC has no capacitor of its own** (circuit item
   for board E's stream). The intent's bypass list names one U5 entry, C16 at pin 3, which is the sense filter (class
-  A); read on the intent files at `e3aedb25` and `53a98a71`. The maker asks for four:
+  A); read on the intent files at `956feb28` and `f5be4954`. The maker asks for four:
   - VIN, pin 34: "It must be locally bypassed to ground" (`v2/vendor/power/lt8705a.pdf` p.12); the front-page circuit
     fits 1 uF there (p.1).
   - INTVCC, pin 35: "Bypass this pin to ground with a minimum 4.7μF ceramic capacitor" (p.12). C19, 4.7 uF, is on
@@ -196,14 +196,14 @@ In1 plane. No RF line on board E (`rf_line.verdict.json` PASS with nothing judge
 Source: `v2/vendor/power/lt8705a.pdf`, "Circuit Board Layout Checklist" (pp.35 and 36) with Figure 14 (p.35), the pin
 functions (pp.11 and 12), the block diagram (Figure 1, p.13), and two of the maker's own circuits: the front-page
 telecom stabiliser (p.1, the same RT of 215k and 202 kHz as board E) and the 12 V 15 A converter (p.41, whose M1 and M2
-are board E's Q3 and Q4 parts). The maker's names on board E (`gen_sch_e.py` lines 427 to 560 at `53a98a71`): M1 Q3,
+are board E's Q3 and Q4 parts). The maker's names on board E (`gen_sch_e.py` lines 427 to 560 at `f5be4954`): M1 Q3,
 M2 Q4, M3 Q5, M4 Q6, L L1, RSENSE R5, CB1 C17, CB2 C18, DB1 D5, DB2 D6, CIN C11 to C15, COUT C24 to C27; board E fits
 no D1 or D2 (optional in Figure 1). The block's switching nodes TRK_SW1 and TRK_SW2 and its gate drives TRK_TG1,
 TRK_TG2, TRK_BG1 and TRK_BG2 are the board's strict nets (`boards/e.json` signal classes).
 
 1. **Circuit defect, blocking board E's layout entry: R5 is in the inductor's leg, not the bottom switches' leg.** The
-   netlist puts R5 between L1 pin 2 (TRK_LSENSE) and TRK_SW2 (`gen_sch_e.py` line 481 at `53a98a71`, line 433 at
-   `e3aedb25`), takes R6 from TRK_LSENSE to TRK_CSP and R7 from TRK_SW2 to TRK_CSN (line 492), and ties the sources of
+   netlist puts R5 between L1 pin 2 (TRK_LSENSE) and TRK_SW2 (`gen_sch_e.py` line 481 at `f5be4954`, line 433 at
+   `956feb28`), takes R6 from TRK_LSENSE to TRK_CSP and R7 from TRK_SW2 to TRK_CSN (line 492), and ties the sources of
    Q4 and Q5 (pins 1 to 3) straight to GND (lines 477 and 478). CSP and CSN are rated "-0.3V to 3V" (Absolute Maximum
    Ratings, p.2). TRK_SW2 sits at the output in the buck region, where M4 stays on, and switches between ground and the
    output in the boost region; its intent node is declared at 15.1 V (`gen_sch_e.py` line 549). So both pins would
@@ -215,11 +215,11 @@ TRK_TG2, TRK_BG1 and TRK_BG2 are the board's strict nets (`boards/e.json` signal
    from that node to GND; R6 from R5's node-side pad to TRK_CSP and R7 from R5's GND pad to TRK_CSN (Kelvin, p.36); L1
    pin 2 straight to TRK_SW2. The net TRK_LSENSE goes away, and with it its entries in `pcb_sensitive.yaml` board e
    (`switch_nets` and the two Kelvin rows naming R5.1 on TRK_LSENSE and R5.2 on TRK_SW2, lines 275 to 305 at
-   `53a98a71`), `gen_pcb_e3.py` PATTERNS (line 483) and `boards/e.json` (the pattern at line 254 and the pinned-net
+   `f5be4954`), `gen_pcb_e3.py` PATTERNS (line 483) and `boards/e.json` (the pattern at line 254 and the pinned-net
    list at line 430). The current figures that use R5 stand (the 69 mV minimum buck valley over 5 mOhm, 13.8 A,
    `gen_sch_e.py` line 103): the maker's sizing assumes this placement. Board A's seven LM5176 stages were checked for
    the same pattern and do not carry it: each stage's low-side FET sources are on its CS node and the shunt runs from
-   CS to GND (`gen_sch_a.py` lines 431, 432 and 446 at `53a98a71`).
+   CS to GND (`gen_sch_a.py` lines 431, 432 and 446 at `f5be4954`).
 2. **The two hot loops compact** (p.35, with Figure 14): "The high di/dt path formed by switch M1, switch M2, D1,
    RSENSE and the CIN capacitor should be compact with short leads and PC trace lengths. The high di/dt path formed by
    switch M3, switch M4, D2 and the COUT capacitor also should be compact". On board E: Q3, Q4, R5 (after item 1) and
@@ -239,14 +239,14 @@ TRK_TG2, TRK_BG1 and TRK_BG2 are the board's strict nets (`boards/e.json` signal
    PC trace spacing. Avoid having sense lines pass through noisy areas, such as switch nodes. The optional filter
    network capacitor between CSP and CSN should be as close as possible to the IC. Ensure accurate current sensing with
    Kelvin connections at the RSENSE resistors"; and of the filter, "The network should be placed as close as possible
-   to the IC" (p.34, Figure 13a: 10 ohm per leg and 1 nF across, which round 8 fitted as R6, R7 and C16, `bc0f562f`).
+   to the IC" (p.34, Figure 13a: 10 ohm per leg and 1 nF across, which round 8 fitted as R6, R7 and C16, `7ce797c4`).
    So C16 at pins 2 and 3, R6 and R7 with it, and the Kelvin pair from R5's two pads to the network routed together.
    ANA-001's keep stands: TRK_CSP and TRK_CSN at least 0.5 mm from TRK_SW1, TRK_SW2, E6_SW, FAN1_SW, FAN2_SW (and
    TRK_LSENSE while it exists), WATER_SENSE at least 1.0 mm (`pcb_sensitive.yaml` board e). On E37 the tightest
    approaches to the sense pair were gate drives (TRK_CSN 0.204 mm from TRK_TG2), which decision 45 reports rather than
    judges; E39's reading has no close approach left on the declared list (`boards/e.json`
    `_e39_is_read_and_board_e_has_no_close_approach_left_on_its_declared_list`). **A conflict, for board E's stream:**
-   `gen_sch_e.py` lines 493 to 500 (at `53a98a71`) say "the next E placement pass seats R6 and R7 against R5"; the
+   `gen_sch_e.py` lines 493 to 500 (at `f5be4954`) say "the next E placement pass seats R6 and R7 against R5"; the
    maker's p.34 clause places the network at the IC. **This sheet states the maker's placement, a session choice**
    (the owner's standing rule of 26 September 2026). Reason: it is the maker's own clause for its own part, and after
    item 1 the shunt sits at Q4 and Q5, which item 3 puts at U5, so the Kelvin run is short either way. Reversal: board

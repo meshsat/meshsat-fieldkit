@@ -79,5 +79,5 @@ would be a mechanical task.
 
 The author's analysis, AI arithmetic. Not a qualified review and not the independent check.
 
-**Second issue** (CHECK-1 of `05ba0cf0`, minor 7): the cost and stock column is labelled as distributor pages read on
+**Second issue** (CHECK-1 of `5cd34c0b`, minor 7): the cost and stock column is labelled as distributor pages read on
 30 September 2026 and not filed.

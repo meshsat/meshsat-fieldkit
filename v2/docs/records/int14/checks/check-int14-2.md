@@ -1,16 +1,16 @@
 mergeable: no
 
-# AI review: re-check of integration set 13 after the answers, fnd/int14 at bd1cbb07 (MESHSAT-1357)
+# AI review: re-check of integration set 13 after the answers, fnd/int14 at e4a64b0e (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. Checked 29 September 2026 from 18:09 to 18:17 CEST (times read
 with `date`).
 
 **Set-up**
-* The same clone, `<scratch>/chk-int14`, now detached at `bd1cbb0798fd78c2424cd704c991d1595b516809`. This was still the
+* The same clone, `<scratch>/chk-int14`, now detached at `e4a64b0e1c802ac9eef332e7e22cf330434ffc40`. This was still the
   tip of `fnd/int14` at 18:16.
 * The same archive, `int14-evidence-a906b932.tar`, re-installed after the checkout. `git status` shows only my two
   reports.
-* Replay clone `c14/r5` (scratchpad) at a906b932. Every tool ran from a scratch cwd with `VERDICT_DIR` in the
+* Replay clone `c14/r5` (scratchpad) at 8611069e. Every tool ran from a scratch cwd with `VERDICT_DIR` in the
   scratchpad. Nothing committed or pushed.
 
 **Counts: 2 blocking, 3 minor.** Both blocking items are text in `apply_check14_fixes.py`. Everything else holds:
@@ -42,7 +42,7 @@ with `date`).
 
 *Fix:* end `S122_ADD` with a closing clause, for example "S-122 closes only when these rows, like the EMCON statements,
 are re-derived from the committed netlists". Or reword the CFL-016 entry to say what S-122's condition covers. Then
-re-run the script on a906b932.
+re-run the script on 8611069e.
 
 **R2-B2. S-123 states two things the code does not bear out.** (The item and its links are otherwise right; see
 item 3.)
@@ -113,7 +113,7 @@ current files.
   two records, but not by the coverage map (minor n1).
 
 **4. Minors 4, 5 and 8, and the carried ones.**
-* **Minor 4:** walkmin README lines 5 to 7 now say what the script answers and what f9bc2f6f edited, and that the
+* **Minor 4:** walkmin README lines 5 to 7 now say what the script answers and what 8bf7a0b3 edited, and that the
   check's items 3 to 6 are carried.
 * **Minor 5:** both docstrings are corrected. The source it names, `records/int13/apply_rebind_after_circuit.py`,
   exists.
@@ -126,7 +126,7 @@ current files.
 * The filed `checks/check-int14-1.md` equals my CHECK.md apart from the scratch path.
 
 **5. Validators and pages.**
-* `apply_check14_fixes.py` replayed on a906b932 gives the committed registry, walkmin README, two docstrings, records
+* `apply_check14_fixes.py` replayed on 8611069e gives the committed registry, walkmin README, two docstrings, records
   index and trace page byte for byte. A second run refuses (exit 2).
 * The parsed registry diff:
   * CFL-016 gains 1 evidence entry and stays FAIL on S-122;
@@ -134,14 +134,14 @@ current files.
   * S-122's title is extended, its old text kept as a prefix;
   * S-123 is added;
   * closed_items are identical, and nothing else moved.
-* **`rules_status.py`, three times:** exit 1 and identical stdout, the same as at a906b932: FAIL of 338 (PASS 195,
+* **`rules_status.py`, three times:** exit 1 and identical stdout, the same as at 8611069e: FAIL of 338 (PASS 195,
   INCONCLUSIVE 104, FAIL 39). Runs 2 and 3 equal the archive's audit. Run 1 differs only in SGN-001's `writers`,
   the self-reference noted before.
 * **`rules_render.py`, twice:** clean.
 * **Checks:** `--check` reads 16 documents, 0 out of date; `--requirements --check` reads current;
   `decisions_render.py --check` exits 0; `constraints_bound.py` reads PASS.
 * **`rules_lib.py`:** 59 rules and `requirements` 144 records, each with 0 errors and 0 warnings.
-* **Pages:** against a906b932 only REQUIREMENTS-TRACE.md moves: 86 open items (was 85), "waits on S-123" on CON-023
+* **Pages:** against 8611069e only REQUIREMENTS-TRACE.md moves: 86 open items (was 85), "waits on S-123" on CON-023
   and CON-024, CFL-016's entry, S-122's row and S-123's row. CURRENT-EVIDENCE.md, the status pages and
   OWNER-DECISIONS-OPEN.md do not move.
 * **The commit:** 9 files, the owner's identity, no trailer, no em or en dash, `git diff --check` clean.

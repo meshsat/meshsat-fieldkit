@@ -2,8 +2,8 @@ accepted: no
 
 # CHECK-1: the energy basis of L3-OD1, L3-OD2 and L3-OD4 (stream l3plane, MESHSAT-1357)
 
-**An AI check, not a qualified review.** 30 September 2026, 02:19 CEST. Branch `fnd/l3plane`, tip `6a283b25` (confirmed
-with `git rev-parse`), three commits on `d2084904` (`fnd/int16`). The checker wrote none of the stream. Prototype design:
+**An AI check, not a qualified review.** 30 September 2026, 02:19 CEST. Branch `fnd/l3plane`, tip `c194cfd2` (confirmed
+with `git rev-parse`), three commits on `d79248c6` (`fnd/int16`). The checker wrote none of the stream. Prototype design:
 nothing is built, powered or measured, and nothing below is a measurement.
 
 **How it was checked.** A shared clone at the tip, with the 23 held files of the int16 worktree copied in as ignored files

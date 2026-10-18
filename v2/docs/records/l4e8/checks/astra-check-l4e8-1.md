@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E8: the one check of the VBUS20 bank re-size by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx21-l4e8-check`, run `20261001T173655Z-3640468`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e8 at commit `5ff064743b74`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e8 at commit `8a270b2dae79`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

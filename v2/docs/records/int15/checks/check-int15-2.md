@@ -1,18 +1,18 @@
 mergeable: no
 
-# AI review: re-check of integration set 14, fnd/int15 at 097d2517 (MESHSAT-1357)
+# AI review: re-check of integration set 14, fnd/int15 at 911de5fb (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. I did not write the work under check; the first check
 (`CHECK.md`, filed as `records/int15/checks/check-int15-1.md`) is mine. Checked 29 September 2026 from 20:14 to 20:23
 CEST (times read with `date`). Everything below is what I read or ran myself.
 
 **Set up**
-* `fnd/int15` is `097d2517836b3ae31d057d44fbe4ceb62307b505`, one commit on `9eaf406f`, still the tip at 20:22.
+* `fnd/int15` is `911de5fbb6035948ad83254b8d94c03356c678ae`, one commit on `918b8c75`, still the tip at 20:22.
   `1f3dd306` is not an ancestor, and no local or remote tracking branch contains it.
-* Tip clone: `<scratch>/chk-int15`, moved to `097d2517`. Archive `int15-evidence-097d2517.tar` installed: sha256
+* Tip clone: `<scratch>/chk-int15`, moved to `911de5fb`. Archive `int15-evidence-097d2517.tar` installed: sha256
   `7c2cf6038d96cd59...`, 939 files, the same file list as before, none of them tracked.
-* Main clone: `<scratch>/chk-int15-base` at `b874b744`, unchanged since the first check.
-* Throwaway clones in my session scratchpad: `c15/r4` at `9eaf406f` (the replay) and `c15/r5` at `097d2517` (the
+* Main clone: `<scratch>/chk-int15-base` at `53804300`, unchanged since the first check.
+* Throwaway clones in my session scratchpad: `c15/r4` at `918b8c75` (the replay) and `c15/r5` at `911de5fb` (the
   closure test). Neither was committed to.
 * Every tool ran from a scratch cwd (`env -C`) with `VERDICT_DIR` in the scratchpad. `git status` of the tip clone
   shows only my two reports. No commit, no push, no agent, no other model, no box. The full suite was not run.
@@ -25,10 +25,10 @@ close without it (B1 below).
 **B1. S-122 can close today without the part number inventory and without the five sentences.**
 
 1. **The closure tool reads none of the extension.**
-   * `records/s122/close_s122.py` is unchanged (`records/s122/` is identical at `9eaf406f` and `097d2517`).
-   * I ran it on `r5` at `097d2517` with the check already filed there:
+   * `records/s122/close_s122.py` is unchanged (`records/s122/` is identical at `918b8c75` and `911de5fb`).
+   * I ran it on `r5` at `911de5fb` with the check already filed there:
      `close_s122.py v2/docs/records/s122/checks/check-s122-3.md`.
-   * It printed "S-122 closed at 097d2517; CFL-016 reads PASS (was FAIL); 862 sentences, 0 STALE, 0 UNJUDGED".
+   * It printed "S-122 closed at 911de5fb; CFL-016 reads PASS (was FAIL); 862 sentences, 0 STALE, 0 UNJUDGED".
      Afterwards `rules_lib.py requirements` read 0 errors and 0 warnings.
    * That is the dropped closure of `1f3dd306`, repeated on the same check.
    * Its gates (lines 61 to 91) ask:
@@ -42,7 +42,7 @@ close without it (B1 below).
    sentences be "corrected, or dated where the document states their date".
    * V2-SPEC.md lines 82 and 86 sit under a heading that states its date ("as generated on 7 September 2026").
    * Both were false on that date: `gen_sch_b.py` carried the TS3DV642 and never a TMDS341A, and `gen_sch_e.py`
-     line 104 at `b2709118` puts the LM5176 on A22.
+     line 104 at `be826353` puts the LM5176 on A22.
    * Dating them is the T7 HISTORY premise (`judgements.py` line 417) that check-int15-1's B1 found false.
    * The extension does not ask that a HISTORY judgement check its named parts at the stated date.
 
@@ -53,7 +53,7 @@ directly, and the answer is yes: S-122 can close without either.
 *Fix:*
 1. Guard `close_s122.py`, or retire it. Retiring means it refuses with "superseded at set 14" and the s122 README's step
    5 names its successor. A guarded script refuses unless:
-   * the named check was committed after `097d2517` and names `check-int15-1.md` and the five lines;
+   * the named check was committed after `911de5fb` and names `check-int15-1.md` and the five lines;
    * `inventory.out` inventories makers' part numbers (for example `TMDS341A`, `TS3DV642` and `WM8960` appear as
      tokens);
    * none of V2-SPEC.md lines 47, 82 and 86 and OPERATING-ENVELOPE.md lines 77 and 83 still names the TMDS341A, the
@@ -68,7 +68,7 @@ directly, and the answer is yes: S-122 can close without either.
 
 **CFL-016's new entry** (registry line 14304). Each sentence, read against the files:
 * "stream s122's inventory entry above describes the inventory as reading every sentence that names a part": true (the
-  entry at `9eaf406f`, whose phrase the script asserts before writing).
+  entry at `918b8c75`, whose phrase the script asserts before writing).
 * "in the check's words the finder reads designators, nets and board names, not makers' part numbers": true. It is my
   wording, in check-int15-1 B1 and in my final message.
 * "The check names five sentences in this record's scope that name parts no generator carries":
@@ -105,7 +105,7 @@ tracking ref holds `1f3dd306`.
 
 ### 2. CFL-016's FAIL, its bindings, S-122's extension
 
-* **Registry, parsed, `9eaf406f` to the tip:**
+* **Registry, parsed, `918b8c75` to the tip:**
   * only CFL-016 (`evidence` +1 as a prefix, `evidence_bound_to` +3) and S-122's title change;
   * open items 86, closed items 68, both unchanged in membership;
   * the top level is unchanged.
@@ -118,17 +118,17 @@ tracking ref holds `1f3dd306`.
 * **Bindings:** CFL-016's 15 bindings are all current at the tip, including the three new ones.
 * **Can S-122 close without the part number inventory and the five sentences?** Yes (B1).
 
-### 3. Replay of `apply_check15_fixes.py` on `9eaf406f`
+### 3. Replay of `apply_check15_fixes.py` on `918b8c75`
 
-* On `r4` at `9eaf406f`, with the script and the hand-written `records/int15/README.md` copied from `097d2517`, the
+* On `r4` at `918b8c75`, with the script and the hand-written `records/int15/README.md` copied from `911de5fb`, the
   script wrote:
   * the registry;
   * the records index;
   * `records/int15/checks/check-int15-1.md`;
   * the four `records/s120/checks/check-s120-*.md`.
-* All seven are identical to `097d2517`'s, and a second run refuses ("already applied").
+* All seven are identical to `911de5fb`'s, and a second run refuses ("already applied").
 * With the new archive installed, `rules_render.py --requirements`, `rules_status.py` and `rules_render.py` give
-  `097d2517`'s REQUIREMENTS-TRACE.md and CURRENT-EVIDENCE.md byte for byte.
+  `911de5fb`'s REQUIREMENTS-TRACE.md and CURRENT-EVIDENCE.md byte for byte.
 * Nine of nine generated files match; the two copied files are the same by construction.
 * The filed check-int15-1 equals my `CHECK.md` apart from four `<scratch>/` to `<scratch>/` substitutions (lines 9, 12,
   123 and 328).
@@ -141,7 +141,7 @@ tracking ref holds `1f3dd306`.
   * The audits of runs 1 and 3 differ only in SGN-001's `writers` (rules_render.py, read from the archive, against
     rules_status.py). Runs 2 and 3 are identical. This is the self reference that predates the set.
 * **`rules_render.py`, twice:** exit 0, nothing written, `git status` clean.
-* **The evidence page:** CURRENT-EVIDENCE.md is sha256 `c9b98931...`, main's. No diff from `b874b744` to `097d2517`.
+* **The evidence page:** CURRENT-EVIDENCE.md is sha256 `c9b98931...`, main's. No diff from `53804300` to `911de5fb`.
 * **Readings, main against the tip:**
   * 339 rule and board rows, 0 results moved, 0 evidence classes moved;
   * the archives differ from main's in the same nine files as before (the seven audits, the status verdict, and
@@ -168,7 +168,7 @@ tracking ref holds `1f3dd306`.
 
 ### 6. Files
 
-`b874b744..097d2517` changes 52 files. They are the union of the 45 of `9eaf406f`'s line and the 11 of `097d2517` (53
+`53804300..097d2517` changes 52 files. They are the union of the 45 of `918b8c75`'s line and the 11 of `911de5fb` (53
 files), less CURRENT-EVIDENCE.md, which is back to main's. Each is within its commit's stated scope.
 
 All 29 commits carry the owner's identity as author and committer and `[MESHSAT-1357]`, with no trailer. The one added
@@ -197,7 +197,7 @@ line with an em or en dash is the script's own dash guard constant (n6); the mes
 * **Script sentences:** CFL-016's entry, 6 of 6 true (one umbrella clause loose, n1); S-122's extension claims nothing
   done, with one escape (B1.2).
 * **Replay:** 9 of 9 generated files byte for byte; a second run refuses.
-* **Closure test:** `close_s122.py` closes S-122 at `097d2517` with check-s122-3 (B1.1).
+* **Closure test:** `close_s122.py` closes S-122 at `911de5fb` with check-s122-3 (B1.1).
 * **Readings:** 339 rows, 0 results moved, 0 classes moved; the evidence page is main's.
 * **Validators:** 0 errors, 0 warnings. Renderers current. `claims_check` PASS of 91.
 * **Tests:** 82 passed, 0 failed.

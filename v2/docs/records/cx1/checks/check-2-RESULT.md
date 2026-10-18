@@ -1,7 +1,7 @@
 # RESULT-2: AI review, second pass, of the corrected cx1 pilot (finding I-03, IF-AB-POWER), MESHSAT-1357
 
-Independent checker, 28 September 2026 20:24 CEST. Corrected commit 8d9dec44 on fnd/cx1 (the pilot b1c744db, my
-first check filed at 6e149d46 as `v2/docs/records/cx1/checks/check-1-*`). The sources did not change between the
+Independent checker, 28 September 2026 20:24 CEST. Corrected commit 260abdce on fnd/cx1 (the pilot 6da41a76, my
+first check filed at b0033401 as `v2/docs/records/cx1/checks/check-1-*`). The sources did not change between the
 two commits (the two intent files, both generators, the contract and the five maker documents carry the same sha256
 as in my phase 1), so the phase 1 figures in `PHASE1.md` / `phase1.out` stand and were reused. Worktree read-only
 throughout (`git status --short` empty before and after every step); every run was from scratch copies under
@@ -129,8 +129,8 @@ the +5V_DEV peak left to the session's decision)
   POWER-THERMAL.md lines 145, 1037-1038; gen_sch_a.py lines 47, 48, 111, 112, 120, 169, 1308, 1320-1321, 1376, 1533,
   1535; gen_sch_b.py lines 79, 86, 87, 95, 97, 130, 209; gen_sch_d.py:56; pcb_interfaces.yaml:388: all as the
   correction states (the one slip: :119 for the +5V_DEV call, which is line 120).
-- Dash scan (U+2014, U+2013) of the five record files: `dash grep exit 1 (1 = none)`. `git show --stat 8d9dec44`:
+- Dash scan (U+2014, U+2013) of the five record files: `dash grep exit 1 (1 = none)`. `git show --stat 260abdce`:
   five files, 644 insertions, 469 deletions, author Kyriakos Papadopoulos, no trailer.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

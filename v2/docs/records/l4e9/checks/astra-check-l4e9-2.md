@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E9: the targeted recheck of the connected power architecture and its closure gate by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx29-l4e9-recheck`, run `20261002T013531Z-225982`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e9 at commit `71486686ea9f`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e9 at commit `2127d22f0452`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

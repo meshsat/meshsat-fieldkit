@@ -3,10 +3,10 @@ accepted: yes
 # Layer 4, L4-E7Q: The assistant's verification of the qualification of the 100 W bound (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. The owner asked for L4-E7's 96.25 W result to be qualified precisely. The author's answer is
-`L4E7-QUALIFICATION.md` (`ee9909a8`). The collaborator's focused check (`astra-check-l4e7q-1.md`, on `ee9909a8`) read NOT
+`L4E7-QUALIFICATION.md` (`010c3fec`). The collaborator's focused check (`astra-check-l4e7q-1.md`, on `010c3fec`) read NOT
 YET on B1 (A7's gm extrapolated from its test point) and B2 (the cold TCR's effects, the fault-to-limit ratio). The fixes
-are `fac796e4`. Its targeted recheck (`astra-check-l4e7q-2.md`, on `fac796e4`) read ACCEPT with two wording residues,
-fixed at `7f6eeda7`.
+are `a7277d4e`. Its targeted recheck (`astra-check-l4e7q-2.md`, on `a7277d4e`) read ACCEPT with two wording residues,
+fixed at `37caed7f`.
 
 - **B1, read at the source.** 8705af p.5: the A7 gm row (0.94 / 1 / 1.06 mmho, E and I grades, full range) carries the
   conditions VCSPIN minus VCSNIN = 50 mV and VCSPIN = 5.025 V. The CSPIN and CSNIN common-mode range of 1.5 to 80 V is an
@@ -22,7 +22,7 @@ fixed at `7f6eeda7`.
   Both equal the script's figures.
 - **The wording residues.** The output calls the junction "TJ estimated about 105.4 C (INFERRED)", and a predicate holds
   that no page or output line calls it a bound. "No gain of its own" is gone; the line coupling is quantified.
-- **Run by the coordinator at `7f6eeda7`:** `l4e7_stage_settings.py` re-run, its output equal to the committed `.out` byte
+- **Run by the coordinator at `37caed7f`:** `l4e7_stage_settings.py` re-run, its output equal to the committed `.out` byte
   for byte; `test_l4e7` with `test_public_hygiene` 27 passed, 0 failed, 0 skipped.
 
 **Result: the qualification is accepted. The 96.25 W corner stays a calculated result under its stated assumptions and is

@@ -1,15 +1,15 @@
 # Stream rf2walk, running log (MESHSAT-1357, RF-002 on set 12)
 
 Newest last. Times CEST, read from `date`. Worktree `<worktrees>/rf2walk`, branch
-`fnd/rf2walk` from `fnd/int13` at `e41df395` (set 12: stream d4emcon's `apply_b_d4e.py` and `apply_c_d4e_f1.py` applied,
+`fnd/rf2walk` from `fnd/int13` at `1cb60746` (set 12: stream d4emcon's `apply_b_d4e.py` and `apply_c_d4e_f1.py` applied,
 boards B and C regenerated, `readback_d4e.py` holding on both). Author: stream d4emcon's author. Prototype framing: every
 reading is of a committed netlist or a maker's document; nothing is built.
 
 - 13:16 Brief read (`_runs/assistant/rf2walk/BRIEF.md`); worktree created. `check_contracts.py` run into a scratch directory
   (`env -C <scratch> VERDICT_DIR=<scratch>`, never from `v2/ecad`): 21 FAIL, byte for byte the coordinator's
-  `contracts-int13-e41df395.txt`; the tree stays clean. Main (`2c7730a4`) read in a scratch copy of its whole `v2/ecad`
+  `contracts-int13-e41df395.txt`; the tree stays clean. Main (`c600d33b`) read in a scratch copy of its whole `v2/ecad`
   (`git archive`): main's own tool gives main's file back unchanged (0 FAIL); the set 12 tool on main's netlists reads 0 FAIL,
-  11 UNDECIDED (`7dc74508`, stream d4emcon's earlier walk rows, makes four of main's PASS rows UNDECIDED on the radios' own
+  11 UNDECIDED (`9e5164fe`, stream d4emcon's earlier walk rows, makes four of main's PASS rows UNDECIDED on the radios' own
   pins and adds the PA gate-bias row). A narrower copy (the out/ files only) refused every board as UNKNOWN GENERATOR: the
   netlist provenance check needs the generators' whole input closure.
 - 13:17 to 13:20 The two asserted-line FAILs read from the walk's own code (`tx_inhibit.census`, `_line_sources`,
@@ -66,11 +66,11 @@ main reads byte for byte what set 12's unfixed walk read on main (0 FAIL, 11 UND
 `fnd/rf2walk`, re-take RF-002 (`inhibit_chain_<letter>`) and the rest of set 12's re-take, rebind the registry records bound
 to board B and C's regenerated netlists and `gen_sch_b.py`, render.
 
-## Second round: the independent check of set 12 (branch `fnd/rf2walk2` from `fnd/int13` at `eafb324d`)
+## Second round: the independent check of set 12 (branch `fnd/rf2walk2` from `fnd/int13` at `2e6dbf93`)
 
 - 13:56 The check read (`_scratch/chk-set12/CHECK.md`, read only; its `_chk/` scripts run from a scratch cwd with the tools
   directory as argument, nothing written there): mergeable no, 1 blocking, 7 minor; the remedies B-1 to B-5 and D4E-F1 hold
-  at the stated worst case. Worktree `rf2walk2` created from `fnd/int13` at `eafb324d`.
+  at the stated worst case. Worktree `rf2walk2` created from `fnd/int13` at `2e6dbf93`.
 - 13:57 to 13:59 B1 (blocking). The check's CX9, two 74LVC1G34 on board B cross-coupled between the two lines (each input on
   one line, each output on the other, behind its own 330R or directly), read PASS on both lines under this stream's first
   walk: each gate was classed "the line's own source" and `fail_safe` took board B down with it in every state, so the
@@ -81,8 +81,8 @@ to board B and C's regenerated netlists and `gen_sch_b.py`, render.
   rails do (`off` empty): the toggle's board down removes the rails it makes, and a gate on a rail that board receives over a
   plugged ribbon stays powered and is solved.
 - 13:59 to 14:00 Readings, each `check_contracts.py` into scratch on a `git archive` of the whole `v2/ecad`: set 12 at
-  `eafb324d` before and after, byte-identical (0 FAIL, 11 UNDECIDED, 114 PASS); main `2c7730a4` with the previous walk and
-  with this one, byte-identical (0 FAIL, 11 UNDECIDED); main with its own walk 0 FAIL, 7 UNDECIDED (the `7dc74508` rows, as
+  `2e6dbf93` before and after, byte-identical (0 FAIL, 11 UNDECIDED, 114 PASS); main `c600d33b` with the previous walk and
+  with this one, byte-identical (0 FAIL, 11 UNDECIDED); main with its own walk 0 FAIL, 7 UNDECIDED (the `9e5164fe` rows, as
   before). The check's `cx_walk.py` on the previous and the new walk (`readings/b1/check-cx-walk-*.txt`): CX9 behind and
   direct, and CX3, CX3b, CX3c, move from PASS to FAIL on EMCON_HW (and CX9 on TX_INHIBIT_n); every other counterexample reads
   as before. Fixtures `t_a_latch_of_two_buffers_across_the_lines_fails_both_lines` (CX9 on board B behind resistors and direct,
@@ -113,14 +113,14 @@ to board B and C's regenerated netlists and `gen_sch_b.py`, render.
 
 ## Where the stream stands (29 September 2026, 14:09)
 
-B1 closed in the walk (`149b15f7`): a gate is a line's own source only on the board carrying SW_EMCON and is solved by its own
+B1 closed in the walk (`30c27c21`): a gate is a line's own source only on the board carrying SW_EMCON and is solved by its own
 rails; CX9 in both forms and CX3b fail as fixtures, and both fail on the previous walk; set 12 and main read byte for byte as
 before (0 FAIL, 11 UNDECIDED, 15 PASS). The check's minors on this stream's remedies: drafted for board B as `apply_b_chk12.py`
 (M1, M2, M5) with `tools/readback_chk12.py`, stated in EMCON.md 4d.6 (minors 3, 4, 6, 7), and bench E-04 extended.
 Open: the 9704's shutdown time (E-04, sets U543's td), B-3's turn-on exposure, the module pull-down tolerance behind B-5,
 the regeneration and read-back of `apply_b_chk12.py`, and the 11 UNDECIDED rows as listed in README.md.
 
-## Third round: the re-check of set 12 (branch `fnd/rf2walk3` from `fnd/rf2walk2` at `06eb61ef`)
+## Third round: the re-check of set 12 (branch `fnd/rf2walk3` from `fnd/rf2walk2` at `9b5ccdde`)
 
 - 14:18 The re-check read (`_scratch/chk-set12/CHECK-2.md`, read only): B1 not closed. `_switch_board` counted any board with a
   switch on either line as the toggle's board, so a switch on board B from TX_INHIBIT_n to ground brought CX9's latch back
@@ -143,18 +143,18 @@ the regeneration and read-back of `apply_b_chk12.py`, and the 11 UNDECIDED rows 
   FAIL; EMCON_HW PASS on main's shape, UNDECIDED on D4E-F1's through D23's reverse current), `t_the_toggles_board_keeps_its_
   legitimate_shapes` (CX11 and CX12 PASS, the latch on board C's received +5V FAILS, CX13 FAILS as a stated conservative
   reading), `t_only_the_declared_toggle_is_a_source`. `test_tx_inhibit` 142 passed. On the previous walk (a scratch copy with
-  06eb61ef's `tx_inhibit.py`) the CX10 and CX14 fixtures FAIL. The checker's `cx_walk.py`, `cx_walk2.py`, `cx_walk3.py` on
+  9b5ccdde's `tx_inhibit.py`) the CX10 and CX14 fixtures FAIL. The checker's `cx_walk.py`, `cx_walk2.py`, `cx_walk3.py` on
   both walks: `readings/b1r3/check-*.txt`. CX13 does not move (FAIL on this walk and the previous; PASS on main's and the
   first rf2walk walk).
-- 14:26 Readings into scratch (`readings/b1r3/`): set 12 at `dd7230a7` reads board B MISSING on both walks (UNKNOWN
+- 14:26 Readings into scratch (`readings/b1r3/`): set 12 at `4829d38c` reads board B MISSING on both walks (UNKNOWN
   GENERATOR: `gen_sch_b.py` carries CHK12-B and board B is not regenerated yet), 20 RF-002 rows UNJUDGED, identical bytes; set
-  12's netlists under their own generator (`eafb324d`'s tree): 0 FAIL, 11 UNDECIDED, 15 PASS on both walks, identical bytes;
-  main `2c7730a4`: 0 FAIL, 11 UNDECIDED on both walks, identical bytes (7 UNDECIDED with its own walk). Test groups contract,
+  12's netlists under their own generator (`2e6dbf93`'s tree): 0 FAIL, 11 UNDECIDED, 15 PASS on both walks, identical bytes;
+  main `c600d33b`: 0 FAIL, 11 UNDECIDED on both walks, identical bytes (7 UNDECIDED with its own walk). Test groups contract,
   inhibit, requirements, evidence: 346 passed, 0 failed, 5 skipped.
 - 14:26 to 14:28 The two minors. R527's margin at every rail lost stays as drafted and is stated: 0.37 V against the maker's
   0.4 V (30 mV), on the stated Ioff sum (U536 10 uA, U537 10 uA, U543 0.3 uA) into 20.2 k parallel 165.9 k; 16.5 k 1% would give
   92 mV there and leave 51 mV on the released level (2.05 V against 2.0 V) instead of 100 mV, so no value moves and no
-  follow-up script is owed for it. The Q{s}01 note: `apply_b_chk12_led.py` (a follow-up to CHK12-B on `dd7230a7`'s
+  follow-up script is owed for it. The Q{s}01 note: `apply_b_chk12_led.py` (a follow-up to CHK12-B on `4829d38c`'s
   `gen_sch_b.py`; dry run, applied once in scratch, a second run refused, refused on a generator without CHK12-B): Q{s}01 is
   the BC857 buffering LED_nPWR (emitter on the rail) and R{s}48 feeds the ACT LED; both in the loads at 3.3 mA (the rail over
   1 k), the note corrected. `tools/readback_chk12.py` now finds each rail's LED feeds in the netlist (a BC857 on the rail, a
@@ -164,7 +164,7 @@ the regeneration and read-back of `apply_b_chk12.py`, and the 11 UNDECIDED rows 
   and its start-up case; the LED feed loads) and bench E-04 the start-up dip; no claim word, no non-ASCII character;
   `test_requirements` 65 passed. `apply_rebind_page_rf2walk3.py` (the second round's script, its marker and note changed,
   accepting section 4d.6 added or changed): dry run on this branch (173bc6357996d467 to the new page) and on a scratch shared
-  clone of `dd7230a7` (096ed6822d6517a3 to the new page), 7 records each. README.md gains the third round.
+  clone of `4829d38c` (096ed6822d6517a3 to the new page), 7 records each. README.md gains the third round.
 
 ## Where the stream stands (29 September 2026, 14:30)
 

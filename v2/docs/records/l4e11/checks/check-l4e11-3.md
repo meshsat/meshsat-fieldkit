@@ -1,16 +1,16 @@
 accepted: yes
 
-# Layer 4, L4-E11: The assistant's closing check of the source-only and vehicle-entry record at 3298d1f1 (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E11: The assistant's closing check of the source-only and vehicle-entry record at 90514914 (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E11 are spent:
-- the focused check `astra-check-l4e11-1.md` on `3f9cf283`, NOT YET;
-- the targeted recheck `astra-check-l4e11-2.md` on `cbf8bcb9`, NOT YET.
+- the focused check `astra-check-l4e11-1.md` on `a9a68c67`, NOT YET;
+- the targeted recheck `astra-check-l4e11-2.md` on `be08b726`, NOT YET.
 
-The final round is `3298d1f1`. **This check accepts the record as a correct statement of U-04, D-06 and the vehicle entry.
+The final round is `90514914`. **This check accepts the record as a correct statement of U-04, D-06 and the vehicle entry.
 REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE, not closed.**
 
 **Verified by the coordinator:**
-- *Reproduction:* `l4e11_power.py` re-run at `3298d1f1`, its output equal to the committed `.out` byte for byte; `test_l4e11` with
+- *Reproduction:* `l4e11_power.py` re-run at `90514914`, its output equal to the committed `.out` byte for byte; `test_l4e11` with
   `test_public_hygiene` 28 passed, 0 failed, 0 skipped.
 - *The prospective fault current, in separate arithmetic:*
   - the controlled loop floor of 56.93 mOhm at 20 C is 47.98 mOhm at -20 C (copper, 0.00393 per K);

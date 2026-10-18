@@ -1,11 +1,11 @@
 # S-99: board A's +5V_DEV converter against the PS-ALLTX coincident demand
 
-Stream s99, MESHSAT-1357, 28 September 2026, from the integration set's tip `2b7c9374`. **AI engineering analysis**
+Stream s99, MESHSAT-1357, 28 September 2026, from the integration set's tip `417f7794`. **AI engineering analysis**
 (desk calculation and AI review), not a qualified engineering review. Prototype design: no V2 board has been built,
 ordered or measured; every figure below is a declaration, a maker's published figure or arithmetic on them, and the
 label on each says which. The arithmetic is `dev_stage.py` (inputs pinned by sha256, output `dev_stage.out`).
 
-Corrected by job `cx3-s99-correction` from base `684639c4feb39b425d9e51590df80a45442f966e`.
+Corrected by job `cx3-s99-correction` from base `71bacbf6ed35aabe08fb9b5e53de54c6cf84eab2`.
 `CORRECTION.md` answers the first AI review. The original input hashes and valid sense-path work are retained.
 
 ## 0. Result in five lines

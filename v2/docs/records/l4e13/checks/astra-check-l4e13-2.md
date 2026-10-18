@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E13: the targeted recheck of U-03's panel by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx35-l4e13-recheck`, run `20261002T054411Z-593913`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e13 at commit `4fb7d2634ab0`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e13 at commit `5ece28b52b11`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

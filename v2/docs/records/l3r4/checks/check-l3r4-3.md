@@ -1,9 +1,9 @@
 mergeable: yes
 
-# CHECK-3 of layer 3 round 4 (`fnd/l3r4` at `e8e3ef57`): the delta check of round 4c
+# CHECK-3 of layer 3 round 4 (`fnd/l3r4` at `6fde32c3`): the delta check of round 4c
 
 An AI check by a session that wrote none of the round, not a qualified review. Written 30 September 2026, 09:57 CEST.
-Scope: `git diff fcfc6007..e8e3ef57` only (four files: `reissue.py`, `PASSAGE-MAP.md`, `README.md`, `test_l3r4.py`),
+Scope: `git diff d6f1e349..e8e3ef57` only (four files: `reissue.py`, `PASSAGE-MAP.md`, `README.md`, `test_l3r4.py`),
 against CHECK-2's five minors. Everything below was run in a `--no-local --single-branch` clone of `fnd/l3r4` with the
 set 17 evidence archive (`int17-evidence-de11cc4e.tar`) installed, or read from it. Nothing was committed or pushed; the
 clone is removed.
@@ -107,7 +107,7 @@ The first three are as stated. No generated file carries an en or em dash.
 - The 409 added lines carry no en or em dash, no internal host name and no absolute path.
 - `CONOPS.md`, `PRODUCT-BRIEF.md`, the registry and `v2/release/` (H3) are unchanged.
 - The author is the owner's identity, with no trailer.
-- The README's integrator run order ran on a branch from main `8fec0733` with no failure (105 tests). It left a tree
+- The README's integrator run order ran on a branch from main `963740cd` with no failure (105 tests). It left a tree
   identical to `fnd/l3r4`.
 
 ## Minors

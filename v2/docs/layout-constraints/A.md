@@ -1,13 +1,13 @@
 # Board A (power and I/O): layout constraints
 
-**Bound to the set 6 candidate (27 September 2026, read at `760d7f41`).** This sheet's inputs stand in the block below,
+**Bound to the set 6 candidate (27 September 2026, read at `00e74bbb`).** This sheet's inputs stand in the block below,
 one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
 computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
 table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
 table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
 the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 11**,
-which are the readings at `e3aedb25` with the H2 line's changes marked where they stand (`ef144760`, the paragraph
-below). Set 6 changed board A's netlist in `c4ad8350` (the hot stop line HOT-R1 drawn) and nothing of its intent file
+which are the readings at `956feb28` with the H2 line's changes marked where they stand (`c62ee56b`, the paragraph
+below). Set 6 changed board A's netlist in `140588ba` (the hot stop line HOT-R1 drawn) and nothing of its intent file
 but the `written` stamp: **no row of the power table moved**. A line of the older sections that names a part, a net, a
 current or a count is compared with the netlist and the intent file below before it is followed, and where this sheet
 and a record disagree the record governs (README). Board A is not at layout entry: no board is
@@ -17,31 +17,31 @@ below is its own binding's).
 ```bound
 sheet      A
 board      a
-read       2026-09-29 at 3d3e32d6
+read       2026-09-29 at 91f9e28f
 current    section 2: the power table, and the figures the text under it quotes from it
-older      sections 1 and 3 to 11: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 6c40250c47195ebb changed 3d3e32d6
-intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 b75d0e156142af59 changed 3d3e32d6
-board_file v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb sha256/16 58e26c67987b1daa changed b7e0d28f
+older      sections 1 and 3 to 11: read at 956feb28, with the H2 line's changes marked at c62ee56b
+netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 6c40250c47195ebb changed 91f9e28f
+intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 b75d0e156142af59 changed 91f9e28f
+board_file v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb sha256/16 58e26c67987b1daa changed 8b6bc226
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `ef144760`: phase A32, netlist
-`v2/ecad/pcb-a-power-a23/out/pcb-a-power.net` sha256/16 `da05dc02bc1e612f` (last changed at `b7f96784`, set 5), intent
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `c62ee56b`: phase A32, netlist
+`v2/ecad/pcb-a-power-a23/out/pcb-a-power.net` sha256/16 `da05dc02bc1e612f` (last changed at `ae922e4d`, set 5), intent
 `pcb-a-power-intent.json` `92dd3b1cda9046b8`; the committed board file `58e26c67987b1daa` predates the netlist (SCH-002
 FAIL). Section 2's power table is regenerated from `calc/rail_widths.py` on that intent; its moved and new rows are
 marked **H2**. Board A is not at layout entry: **7 reasons at H2** (`CURRENT-EVIDENCE.md`): SI-001 INCONCLUSIVE,
 RF-002 FAIL (EQ-25), decision 31's protection review, FEA-002, FEA-004, FEA-006, FEA-007. What the H2 line changes in
 the rest of this sheet, known and marked where it stands: the PA and HF rails gated on both EMCON lines (round 8,
-`c0133147`), the EMCON gates behind their own eFuse U39 and the PoE and USB-C enables on their own EN/UVLO node
-(`ffca0771`), VIN_RAW onto four 9 A dock power pins J_VR1 to J_VR4 with J_VN1 to J_VN4 (SC-55, `b7f96784`), TRN-001
-PASS on current evidence (section 7). Every other line below is the reading at `e3aedb25`, not re-read against the
+`a23d87fc`), the EMCON gates behind their own eFuse U39 and the PoE and USB-C enables on their own EN/UVLO node
+(`0137e198`), VIN_RAW onto four 9 A dock power pins J_VR1 to J_VR4 with J_VN1 to J_VN4 (SC-55, `ae922e4d`), TRN-001
+PASS on current evidence (section 7). Every other line below is the reading at `956feb28`, not re-read against the
 H2 netlist; where it and a record disagree, the record governs (README).
 
-As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)).
+As first written: a view over the records at `main` `956feb28` (conventions and shared rules: [README.md](README.md)).
 Candidate then: phase A32, netlist sha256/16 `7b08510106687b3d`, intent `83ba5e43a6fbcccb`; 16 blocker lines then.
-Round 8 (`fnd/r8int1`, on `main` as `53a98a71` since this sheet was first written) changes board A's netlist but
+Round 8 (`fnd/r8int1`, on `main` as `f5be4954` since this sheet was first written) changes board A's netlist but
 declares the same rails at the same currents (its intent file compared rail by rail for this sheet), so section 2
 stands through that merge unless the merge itself says otherwise.
 
@@ -75,7 +75,7 @@ milliamperes: the fabricator's floor governs there, not the current.
 | CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path; the inner width is not a practical conductor, so outer copper only (item 1) |
 | CELL_FUSED | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path |
 | VBAT | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path |
-| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.10, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 | **H2**: 14.10 A since `b7f96784`; at `e3aedb25` it was 12.31 A, which is 11.92 mm on one outer face and 17 / 14 / 12 barrels. The intent file: "declared at board E's 14.10 A since R8E-N01 (27 September 2026: this board's front end at its ISNS limit drawing from a 9.0 V bus, R4A-N12)", "crossing the dock on the Mill-Max power pins J_VR1 to J_VR4 (EQ-16)". The inner width is not a practical conductor (item 4) |
+| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.10, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 | **H2**: 14.10 A since `ae922e4d`; at `956feb28` it was 12.31 A, which is 11.92 mm on one outer face and 17 / 14 / 12 barrels. The intent file: "declared at board E's 14.10 A since R8E-N01 (27 September 2026: this board's front end at its ISNS limit drawing from a 9.0 V bus, R4A-N12)", "crossing the dock on the Mill-Max power pins J_VR1 to J_VR4 (EQ-16)". The inner width is not a practical conductor (item 4) |
 | VBUS20 | 20.00 | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |  |
 | +5V_S1 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 | slot 1's rail runs at 4.65 A in PS-ALLTX PLAN (PWR-F02, item 5) |
 | +5V_S2 | 5.10 | 4.20 / 5.63 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 8 / 7 / 6 | Moved at integration set 8 by S-98 (finding I-03, INTERIM alignment of the A to B leads, records/cx1/CORRECTION.md B1, records/s98): the declared typical rose from 2.50 to 4.20 A and the peak from 5.00 to 5.63 A, board B's figures derived from held maker pages; the widths follow the governing typical current (PI-001). The PS-ALLTX mode current stays INCONCLUSIVE (I-03's adequacy, the bench). Before: `typ / peak A` was 2.50 / 5.00; `governing A` was 2.50, typical (PI-001); `outer mm` was 1.06; `two outer faces, each mm` was 0.41; `inner mm` was 6.36; `barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill` was 7 / 6 / 5. |
@@ -86,7 +86,7 @@ milliamperes: the fabricator's floor governs there, not the current.
 | +12V_HF | 12.00 | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |  |
 | +54V_POE | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
 | +5V_D8 | 5.00 | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |  |
-| PRECHG | 14.4 (16.8) | 0.00 / 1.68 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 3 / 2 / 2 | **H2**, new in `ffca0771`: "the pre-charge pin's conductor to R1 (10 Ohm) and CELL+: 1.68 A at most". The typical current is nil, so the widths are; the barrels are at the 1.68 A peak |
+| PRECHG | 14.4 (16.8) | 0.00 / 1.68 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 3 / 2 / 2 | **H2**, new in `0137e198`: "the pre-charge pin's conductor to R1 (10 Ohm) and CELL+: 1.68 A at most". The typical current is nil, so the widths are; the barrels are at the 1.68 A peak |
 | FE_OUT | 20.0 (20.0) | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |  |
 | CH_ACN | 20.0 (20.0) | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |  |
 | S1_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
@@ -100,12 +100,12 @@ milliamperes: the fabricator's floor governs there, not the current.
 | PD_SW | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |  |
 | PD_VBUS | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |  |
 | PD_OUT | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |  |
-| VMON | 14.4 (16.8) | 0.69 / 1.00 | 0.69, typical (PI-001) | 0.18 | 0.07 | 1.08 | 2 / 2 / 1 | **H2**, new in `ffca0771`: "the Xenarc 709GNK monitor's supply behind the eFuse U21 (limit 1.2 A, MON_EN)" |
+| VMON | 14.4 (16.8) | 0.69 / 1.00 | 0.69, typical (PI-001) | 0.18 | 0.07 | 1.08 | 2 / 2 / 1 | **H2**, new in `0137e198`: "the Xenarc 709GNK monitor's supply behind the eFuse U21 (limit 1.2 A, MON_EN)" |
 | VHEAT_IN | 14.4 (16.8) | 0.58 / 0.90 | 0.58, typical (PI-001) | 0.14 | 0.05 | 0.85 | 2 / 2 / 1 |  |
 | VHEAT | 12.00 | 0.63 / 0.63 | 0.63, typical (PI-001) | 0.16 | 0.06 | 0.95 | 1 / 1 / 1 |  |
 | +5V_D8IN | 5.0 (5.1) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 | New at integration set 9 by S-99 (decision 55): the output of the new TPS62933 buck U41 from VBAT, feeding the eFuse U23 and board D's +5V_D8 behind it, declared 1.0 A typical and 2.0 A peak (the mezzanine's own figures) at 5.0 V (5.002 V nominal, 4.872 to 5.133 V over every tolerance); its 2 percent drop budget and the codec floor it bears on are open item S-116 and its layout reading S-115. |
-| +3V3_EMCON_EF | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `ffca0771`: "the EMCON gates' supply behind the eFuse U39"; declared at 0.4 mA typical and 2 mA peak, which print as 0.00 |
-| +3V3_EMCON | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `ffca0771`: "the four SN74AUP1G08 EMCON gates' own supply behind R213"; declared at 0.4 mA typical and 2 mA peak, which print as 0.00 |
+| +3V3_EMCON_EF | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `0137e198`: "the EMCON gates' supply behind the eFuse U39"; declared at 0.4 mA typical and 2 mA peak, which print as 0.00 |
+| +3V3_EMCON | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `0137e198`: "the four SN74AUP1G08 EMCON gates' own supply behind R213"; declared at 0.4 mA typical and 2 mA peak, which print as 0.00 |
 | VBUS_WALL | 5.00 | 0.50 / 0.91 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 | Moved at integration set 9: the wall port's peak is U32's current limit read by TPS2596 equation 7 with its true sign, 0.9142 A nominal (the generator had read 0.89 A); the typical is unchanged. Before: `typ / peak A` was 0.50 / 0.90. |
 
 What the table asks of the layout, each line with its source:
@@ -115,7 +115,7 @@ What the table asks of the layout, each line with its source:
    0.4 mm drill (or 18 of 0.5 mm) at every layer transition** (PWR-F12 at 18 A; `calc/rail_widths.out`). Inner layers
    carry none of it. Until the 60 s transient analysis PWR-F12 names exists, this steady-state width is the constraint;
    the copper weight is open (`STACKUP-DECISIONS.md` section 3.1).
-2. **R17, the 5 mOhm charge shunt, is in the pack's discharge path** since `458b2873` (S-04): 1.62 W at 18 A against
+2. **R17, the 5 mOhm charge shunt, is in the pack's discharge path** since `09521e07` (S-04): 1.62 W at 18 A against
    a 3 W part whose maker's sheet is not held (`POWER-THERMAL.md` PWR-F12; `records/rv-pwr/pwr-chain-redeclaration.yaml`
    `declared_only`). Its lands sit on the pack path's bands with copper on both terminals for its heat; its derating at
    the board's temperature is board A's owner's open item.
@@ -124,7 +124,7 @@ What the table asks of the layout, each line with its source:
    conductor carried 6.26 A against 0.40 A for its cross-section (`boards/a.json`
    `_ch_srp_carries_ten_amps_through_a_conductor_rated_under_one`).
 4. **VIN_RAW at 14.10 A is the second-widest band on the board** (15.29 mm on one face at 1 oz; **H2**: it was 12.31 A
-   and 11.92 mm at `e3aedb25`, and since SC-55, `b7f96784`, it reaches the dock on four 9 A power pins); it dives under the
+   and 11.92 mm at `956feb28`, and since SC-55, `ae922e4d`, it reaches the dock on four 9 A power pins); it dives under the
    VBAT trunk on an inner layer only as a crossing, never as a run (the rule of appendix 32.39, `LAYER-DECISIONS`).
 5. **Slot 1's 5 V rail runs at 4.65 A in PS-ALLTX PLAN against the AP64500's 5 A** (PWR-F02, 7 percent margin); its
    band and barrels are sized at the 5.0 A peak for the barrels (7 of 0.3 mm) and 2.5 A typical for the band (1.06 mm)
@@ -202,7 +202,7 @@ What the table asks of the layout, each line with its source:
    (`v2/docs/layout-constraints/E5.md`); outline and connector positions are frozen for routing only after the
    targeted checks of `CASE-MARGINS.md` finding 28, or with the OPEN rows named.
 6. **Test access:** 25 test points on the committed netlist; no in-circuit programmable device on board A. Bring-up
-   order and measurement points: `PCB-BRING-UP.md` board A (VIN_RAW applied first at 12 V, 14.10 A limit at H2, 12.31 A at `e3aedb25`; CELL+ and
+   order and measurement points: `PCB-BRING-UP.md` board A (VIN_RAW applied first at 12 V, 14.10 A limit at H2, 12.31 A at `956feb28`; CELL+ and
    CELL_FUSED at 14.4 V, 10 A; then 23 derived rails measured in order). The W5 per-board access list REQ-048 names
    is not in the tree (README).
 
@@ -210,7 +210,7 @@ What the table asks of the layout, each line with its source:
 
 | Port (`boards/a.json` external_ports) | Conductor | Part at the entry (committed netlist) | Constraint |
 |---|---|---|---|
-| J_DOCK as declared; **corrected for H3 from the committed netlist:** shore and vehicle DC cross the dock on the power pins J_VR1 to J_VR4, with J_VN1 to J_VN4 as their return, since SC-55 (`b7f96784`) | VIN_RAW (36 V working) | D2 SMCJ40A (intent clamps; committed netlist sha256/16 `da05dc02bc1e612f`: VIN_RAW is on J_VR1 to J_VR4 pin 1, D2 pin 1, C11, C12, Q2 pin 5, D19, R14, R195, R196, R200 and TP13; J_VN1 to J_VN4 pin 1 and D2 pin 2 are on GND). J_DOCK carries no VIN_RAW: its pins 1 to 7 and 11 are GND, 8 SHORE_INHIBIT, 9 and 10 USB_E6_P and USB_E6_N, 12 DOCK_SPARE | clamp at the four power pins J_VR1 to J_VR4, ground return short and on the plane (the same clamp serves all four). This row read "J_DOCK 1 to 4" until H3, the pins of `e3aedb25`. `boards/a.json` still declares J_DOCK pins 1 and 2 as the external port, and both are GND on this netlist, so `port_protect.py`, which skips a ground pin and every pin the declaration does not name, walks no conductor of this entry: TRN-001's PASS on board A judges the two USB ports and the clamps' direction, not VIN_RAW's entry (read in the tool's code, not re-run). The declaration is the board stream's to move to J_VR1 to J_VR4, with TRN-001 re-taken after it |
+| J_DOCK as declared; **corrected for H3 from the committed netlist:** shore and vehicle DC cross the dock on the power pins J_VR1 to J_VR4, with J_VN1 to J_VN4 as their return, since SC-55 (`ae922e4d`) | VIN_RAW (36 V working) | D2 SMCJ40A (intent clamps; committed netlist sha256/16 `da05dc02bc1e612f`: VIN_RAW is on J_VR1 to J_VR4 pin 1, D2 pin 1, C11, C12, Q2 pin 5, D19, R14, R195, R196, R200 and TP13; J_VN1 to J_VN4 pin 1 and D2 pin 2 are on GND). J_DOCK carries no VIN_RAW: its pins 1 to 7 and 11 are GND, 8 SHORE_INHIBIT, 9 and 10 USB_E6_P and USB_E6_N, 12 DOCK_SPARE | clamp at the four power pins J_VR1 to J_VR4, ground return short and on the plane (the same clamp serves all four). This row read "J_DOCK 1 to 4" until H3, the pins of `956feb28`. `boards/a.json` still declares J_DOCK pins 1 and 2 as the external port, and both are GND on this netlist, so `port_protect.py`, which skips a ground pin and every pin the declaration does not name, walks no conductor of this entry: TRN-001's PASS on board A judges the two USB ports and the clamps' direction, not VIN_RAW's entry (read in the tool's code, not re-run). The declaration is the board stream's to move to J_VR1 to J_VR4, with TRN-001 re-taken after it |
 | J_USBW: the wall USB host port | VBUS_WALL, USB_WALL_P, USB_WALL_N | U29 USBLC6-2SC6 (pins 1/6 and 3/4 on the pair, 5 on VBUS; committed netlist) | at the connector, between it and U32 and the ribbon |
 | J_USBC_OUT: the USB-C outlet | PD_VBUS | D4 SMBJ18A | at the connector, ahead of the controller |
 | J_USBC_OUT pins 2, 3 | PD_CC1, PD_CC2 | U31 TPD2E2U06QDBZRQ1 (LCSC C488151, owner D-17) | at the connector (`pcb_board_holds.yaml` board a, fitted_parts) |
@@ -219,7 +219,7 @@ What the table asks of the layout, each line with its source:
 - **TRN-001 reads FAIL on board A** on the clamp symbol only (`PCB-RULE-STATUS-A.md` TRN-001 row; the clamps drawn
   one-way through `kisch.tvs()` since 26 September); the decision 31 hold gates fabrication release, and its review
   record `v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md` is owed at layout entry (`CURRENT-EVIDENCE.md` line 77).
-  **H2:** TRN-001 reads PASS on current evidence (the consolidated re-take, `8ea7867e`); decision 31's review record is
+  **H2:** TRN-001 reads PASS on current evidence (the consolidated re-take, `4ece0866`); decision 31's review record is
   still owed and is one of board A's seven layout-entry reasons.
 
 ## 8. Spacing (ISO-001)

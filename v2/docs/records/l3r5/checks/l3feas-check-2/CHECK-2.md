@@ -1,12 +1,12 @@
 accepted: yes
-tip: c11b99d3301537c23fef6c729fa21e66543f5ebf
+tip: d31273020eb6d7b34538da35cd26fec0806a8ea2
 
 # CHECK-2 of fnd/l3feas: delta check of the second issue (stream l3feas, MESHSAT-1357)
 
 **An AI check, not a qualified review.** 30 September 2026, 13:10 CEST.
-- **The branch** is `fnd/l3feas`, tip `c11b99d3301537c23fef6c729fa21e66543f5ebf` (confirmed), on `c0324564`, on CHECK-1's
-  `24942a5f`.
-- **Scope:** `git diff 24942a5f..c11b99d3` only, against CHECK-1's B1 and minors 1 to 7.
+- **The branch** is `fnd/l3feas`, tip `d31273020eb6d7b34538da35cd26fec0806a8ea2` (confirmed), on `701ece36`, on CHECK-1's
+  `41c07ce2`.
+- **Scope:** `git diff 41c07ce2..c11b99d3` only, against CHECK-1's B1 and minors 1 to 7.
 - **The clone.** A `--no-local --single-branch` clone (`_scratch/chk-l3feas2`, removed after the check), with
   `int17-evidence-de11cc4e.tar` extracted and int16's held sheets added. All of them are ignored files; `git status`
   stayed clean.
@@ -62,7 +62,7 @@ None new.
 7. **The LT8705A is cited as pp.11 (CSNOUT, VOUT) and 12 (CSPIN, VIN).**
 
 **The outputs.**
-- **`hf_wab.out`:** everything before section 4 is byte identical to `24942a5f`'s (5245 bytes compared). Section 4 gains
+- **`hf_wab.out`:** everything before section 4 is byte identical to `41c07ce2`'s (5245 bytes compared). Section 4 gains
   only the two Kelvin blocks, the stage's input per setting, the "does not admit R1" line and the ILIM_HIZ check.
 - **`solar_interface.out`:** the diff touches only minor 6's wording (the 60 V ceiling, in sections 1 and 4) and minor
   7's page citation (section 3). Every figure is unchanged.

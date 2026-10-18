@@ -1,11 +1,11 @@
 # MeshSat field kit V2: product brief
 
-**Status: layer 1 of the foundation baseline (MESHSAT-1357), BASELINED at `a9f212c7`,** an editorial restructure with
-no definition change of the text baselined at `6b2a9965`: the check of the restructure, `reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`
+**Status: layer 1 of the foundation baseline (MESHSAT-1357), BASELINED at `ab560ff5`,** an editorial restructure with
+no definition change of the text baselined at `9406794f`: the check of the restructure, `reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`
 (an AI check, CONTENT_PRESERVED), found every definition statement of that text here word for word, and the baseline
 rests on the release records `reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` and
 `reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md`. How it was reviewed and baselined is recorded in the appendix at
-the end of this file; how this file's text relates to the text baselined at `6b2a9965`, and the current state of
+the end of this file; how this file's text relates to the text baselined at `9406794f`, and the current state of
 everything this brief depends on, is `handover/DEFINITION-STATUS.md`.
 
 **When this brief is reopened (the rule of the independent review of handover H2, `reviews/2026-09-27-h2-independent-review.md` section 4).** This definition is reopened only when a requirement, the scope,
@@ -69,7 +69,7 @@ I/O, B compute and radios, C panel backer, D VHF APRS, E dock strip, E5 dock blo
 Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main properties, as designed:
 
 - **Several independent long-range bearers:** Iridium (RockBLOCK 9704), 5G cellular (Quectel RM520N-GL, the
-  module the generator carries, on an M.2 key-B socket, TE 2199119-3, since `458b2873`, whose land carries the
+  module the generator carries, on an M.2 key-B socket, TE 2199119-3, since `09521e07`, whose land carries the
   maker's two locating holes since board B's round 8 (`V2-SPEC.md` correction 28); dual SIM as two nano-SIM holders, the second behind four 0 ohm links at
   the module so that the same board also builds the eSIM-plus-nano-SIM configuration of appendix 32.50 item 12 with an
   eSIM-fitted module variant, the session's choice SC-13, under which prototype 1 is to be built with two nano-SIMs,
@@ -228,42 +228,42 @@ assumed value.
 
 ## Appendix: review and status history (not part of the baseline)
 
-Not part of the baseline. Moved here word for word on 27 September 2026 (branch `fnd/defstab`, MESHSAT-1357) from the brief above, as it stood at `31cd29b9`: the record of how the brief was reviewed and baselined, and the notes that recorded its own revisions. The changing implementation results that stood in its running text moved to `handover/DEFINITION-STATUS.md`. Each entry names where it stood and its lines at `31cd29b9`; a moved section's own heading is one level lower here. Nothing below is maintained: the current state is where the head of this file says.
+Not part of the baseline. Moved here word for word on 27 September 2026 (branch `fnd/defstab`, MESHSAT-1357) from the brief above, as it stood at `461f02ed`: the record of how the brief was reviewed and baselined, and the notes that recorded its own revisions. The changing implementation results that stood in its running text moved to `handover/DEFINITION-STATUS.md`. Each entry names where it stood and its lines at `461f02ed`; a moved section's own heading is one level lower here. Nothing below is maintained: the current state is where the head of this file says.
 
 ### A1. From the head (the status paragraph)
 
-*Lines 3 to 28 at `31cd29b9`: the status line and the history of the baseline attempts (Review A passes, release checks, the targeted fix, the narrow verification, EQ-27's re-read rule).*
+*Lines 3 to 28 at `461f02ed`: the status line and the history of the baseline attempts (Review A passes, release checks, the targeted fix, the narrow verification, EQ-27's re-read rule).*
 
 **Status: BASELINED as layer 1 of the foundation baseline (MESHSAT-1357) in the commit that files
 `reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md`, the narrow verification of the targeted fix of 27 September 2026 (an
 AI check of named items by a session that wrote none of the lines, not a qualified review), which found R2-B1 and R2-m1
-CLOSED at `3e4799eb` with no new contradiction in the lines touched (this document then sha256/16 `c1bb3fe5e082b57e`,
+CLOSED at `d8636eb5` with no new contradiction in the lines touched (this document then sha256/16 `c1bb3fe5e082b57e`,
 before this status line and the last three sentences of this paragraph were written). Before that it was a CANDIDATE
 for Review A, layer 1 (defined in the last section of this brief), revised on 27 September 2026 by the layer 1 closer
-of the engineering handover against the engineering baseline at `e3aedb25`, to become BASELINED only at the commit
+of the engineering handover against the engineering baseline at `956feb28`, to become BASELINED only at the commit
 that files a record with no open blocking finding.** The first pass of
 that review (`reviews/REVIEW-A-LAYER-1-2026-09-27.md`, an AI review) found two blocking items, B1 (the EMCON
 statements overstated how far the design has come against `feasibility/EMCON.md` section 0a) and B2 (two lines
 contradicting the face rulings), and eleven minor ones; this revision answers each. The second pass of the same record (27 September 2026, an AI
 review by a session that wrote none of the pages) closed B1 and B2 and left no blocking finding; its minor findings N1
 (`V2-SPEC.md` line 34, correction 27) and N2 (`BUILD.md`, a CAD file that does not exist) are corrected. Its finding I5
-(layer 2's EMCON and face text in `CONOPS.md` and `PANEL.md`) is answered there since `95e078a1`. The release check
-at `f2b7fa66` (`reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md`, an AI review by a reviewer who wrote none of the
+(layer 2's EMCON and face text in `CONOPS.md` and `PANEL.md`) is answered there since `8a8d6b68`. The release check
+at `54e74f58` (`reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md`, an AI review by a reviewer who wrote none of the
 pages) found three blocking items that later merges had caused: B1 (the EMCON count, the 5G module's supply removal,
 the EMCON lamp and the 5G socket's land stated as before board B's and board C's round 8), B2 (the case generators
 and templates stated as not carrying C1 to C6) and B3 (the night finding of mission M1, requirement REQ-072, missing
 from the exclusions and the open items). This revision answers the three at desk; the brief stays a CANDIDATE until a
-reviewer who wrote none of the changed lines re-checks them at one pinned commit. The second release attempt of the same day (branch `fnd/rel2`) compared the three fixes with the reviewer's exact fixes and completed B3 (this is not the re-check a fresh reviewer owes), states M1's duration as governed by the session's SC-21 with the owner's part as the requirements registry's M-02, and takes the release check's minors m1, m4, m5, m7 and m8. The second release check at `eb9f9030` (`reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md`, an AI review) closed B1 to B3 and found one blocking item, R2-B1 (the core feasibility blockers counted as six where the requirements registry holds seven, FEA-007 missing); the targeted fix of 27 September 2026 (branch `fnd/h2`) applies that record's wording (the count of seven below, FEA-007's row among the open items and the east plug layout in the D-07 row), and the brief stays a CANDIDATE until a reviewer who wrote none of those lines re-checks them. That re-check is the narrow verification named in the status line: R2-B1 and R2-m1 CLOSED and no new contradiction, so the brief is BASELINED in the commit that files it. With it the session took, under the owner's standing rule of 26 September 2026, the second of the two method remedies both release checks asked for (`handover/ENGINEERING-QUESTIONS.md` EQ-27, option (c)): the five layer 1 pages (this brief, `README.md`, `v2/README.md`, `v2/BUILD.md` and `V2-SPEC.md`) are re-read at every integration that touches EMCON, the case, CONOPS or a feasibility record, the integration records the re-read on `handover/LAYER-STATUS.md` layer 1, and a line found stale is corrected by issuing this brief again (the rule of the open-items section). The first such re-read, for set 5's finding W3T-F1 on `TX_INHIBIT_n`, is recorded there. History: written
+reviewer who wrote none of the changed lines re-checks them at one pinned commit. The second release attempt of the same day (branch `fnd/rel2`) compared the three fixes with the reviewer's exact fixes and completed B3 (this is not the re-check a fresh reviewer owes), states M1's duration as governed by the session's SC-21 with the owner's part as the requirements registry's M-02, and takes the release check's minors m1, m4, m5, m7 and m8. The second release check at `82a303eb` (`reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md`, an AI review) closed B1 to B3 and found one blocking item, R2-B1 (the core feasibility blockers counted as six where the requirements registry holds seven, FEA-007 missing); the targeted fix of 27 September 2026 (branch `fnd/h2`) applies that record's wording (the count of seven below, FEA-007's row among the open items and the east plug layout in the D-07 row), and the brief stays a CANDIDATE until a reviewer who wrote none of those lines re-checks them. That re-check is the narrow verification named in the status line: R2-B1 and R2-m1 CLOSED and no new contradiction, so the brief is BASELINED in the commit that files it. With it the session took, under the owner's standing rule of 26 September 2026, the second of the two method remedies both release checks asked for (`handover/ENGINEERING-QUESTIONS.md` EQ-27, option (c)): the five layer 1 pages (this brief, `README.md`, `v2/README.md`, `v2/BUILD.md` and `V2-SPEC.md`) are re-read at every integration that touches EMCON, the case, CONOPS or a feasibility record, the integration records the re-read on `handover/LAYER-STATUS.md` layer 1, and a line found stale is corrected by issuing this brief again (the rule of the open-items section). The first such re-read, for set 5's finding W3T-F1 on `TX_INHIBIT_n`, is recorded there. History: written
 25 September 2026 as a draft for Review A of the foundation baseline; revised on 26 September 2026 with the owner's
 rulings of 25 and 26 September 2026 (D-01 to D-17, listed in `CONOPS.md` section 7) and later that day for the owner's
 reversal of D-08 with D-08a and the session's SC-02 (appendix 32.367); revised on 27 September 2026 for the circuit as
-generated at `45bde541` (the 5G socket, EMCON), the case choices C1 to C6 of `CASE-MARGINS.md` section 4, the power
+generated at `3e42100d` (the 5G socket, EMCON), the case choices C1 to C6 of `CASE-MARGINS.md` section 4, the power
 and thermal findings of `feasibility/POWER-THERMAL.md`, the dual SIM and the carried-mass limit, and the exclusions
 the handover audit found missing.
 
 ### A2. From the section "How this brief answers layer 1"
 
-*Lines 38 to 54 at `31cd29b9`: the map of the layer 1 review criteria to this brief.*
+*Lines 38 to 54 at `461f02ed`: the map of the layer 1 review criteria to this brief.*
 
 #### How this brief answers layer 1
 
@@ -278,14 +278,14 @@ engineering baseline, and report and deck commitments tracked apart from the tec
 | Prototype scope | "What the first prototype has to show" below; `CONOPS.md` section 2a (owner ruling D-01) |
 | Exclusions | "What it is not, today" below |
 | Intended outcome | "What the first prototype has to show" below |
-| Claims against the baseline | this brief, `README.md`, `v2/README.md`, `v2/BUILD.md` and `V2-SPEC.md`, each read against `CURRENT-EVIDENCE.md`, `CONOPS.md` sections 2a and 7, `CASE-MARGINS.md` section 4 and the pages of `feasibility/` at `e3aedb25` |
+| Claims against the baseline | this brief, `README.md`, `v2/README.md`, `v2/BUILD.md` and `V2-SPEC.md`, each read against `CURRENT-EVIDENCE.md`, `CONOPS.md` sections 2a and 7, `CASE-MARGINS.md` section 4 and the pages of `feasibility/` at `956feb28` |
 | Commitments outside the technical work | "What this brief relies on outside this repository" below |
 | Open items and why the layer can close with them | the section of that name below |
 | The review | "Review A, layer 1" below |
 
 ### A3. From the section "Open items that bear on this brief, and why layer 1 can close with them open"
 
-*Lines 280 to 302 at `31cd29b9`: the closing argument of layer 1 at its baseline, with each open item's state at that time.*
+*Lines 280 to 302 at `461f02ed`: the closing argument of layer 1 at its baseline, with each open item's state at that time.*
 
 #### Open items that bear on this brief, and why layer 1 can close with them open
 
@@ -313,7 +313,7 @@ silently.
 
 ### A4. From the section "Review A, layer 1"
 
-*Lines 304 to 328 at `31cd29b9`: the definition of the review gate layer 1 closed through.*
+*Lines 304 to 328 at `461f02ed`: the definition of the review gate layer 1 closed through.*
 
 #### Review A, layer 1
 

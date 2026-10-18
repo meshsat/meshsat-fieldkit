@@ -2,10 +2,10 @@ accepted: no
 
 # CHECK-3: CHECK-2's minors (task 1) and the R11 dependency (task 2), streams l3plane and r11dep, MESHSAT-1357
 
-**An AI check, not a qualified review.** 30 September 2026, 03:50 CEST. Branch `fnd/l3plane`, tip `4e9fa869`
-(confirmed). It is four commits on `ec415c09`:
-- `c915ce19`, `cf423519` and `868c321f` answer CHECK-2's minors;
-- `4e9fa869` adds `v2/docs/records/r11dep/` and the Milliohm HoJLR2512 sheet.
+**An AI check, not a qualified review.** 30 September 2026, 03:50 CEST. Branch `fnd/l3plane`, tip `a9761fcb`
+(confirmed). It is four commits on `24a2a9a5`:
+- `8ecc4ab4`, `e3aa3787` and `76e6b220` answer CHECK-2's minors;
+- `a9761fcb` adds `v2/docs/records/r11dep/` and the Milliohm HoJLR2512 sheet.
 
 The owner's addendum of 30 September to this check is folded in: sections 3 to 9 below. The checker wrote none of the
 branch. Prototype design: nothing is built, powered or measured.
@@ -102,7 +102,7 @@ to the owner.
    "12 Amp", no rise stated). 5.85 A is under both; name the basis.
 6. **The Kelvin budget is at operating temperature.** 0.371 mOhm at the copper's working temperature is 0.29 to 0.32
    mOhm at 25 C. ENERGY-BASIS section 2 should add "with Kelvin taps on R11 (r11dep)" to its drafted-R11 sentence.
-7. **The layout statement should name its revision** (section 6): A32, commit `b7e0d28f`. On that board the ISNS and CS
+7. **The layout statement should name its revision** (section 6): A32, commit `8b6bc226`. On that board the ISNS and CS
    pins sit directly on the power nets.
 
 ## 3. The elements, named (NETLIST unless stated; the maker's pages SNVSAI1D and SLUSE66A)
@@ -167,7 +167,7 @@ at the maximum limit (28 A) reaches 9.37 A.
 The only reading is `v2/ecad/pcb-a-power-a23/routed/kelvin_check.verdict.json`:
 - kelvin_check, ADVISORY, verdict FAIL, 2026-09-20T05:58:19Z, tools tree `cb58607186f3fb15`;
 - on board `v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb`, sha256/16 **`58e26c67987b1daa`**;
-- **A32**, last committed `b7e0d28f` on 15 Sep 2026, routed: 4854 segments, 902 vias.
+- **A32**, last committed `8b6bc226` on 15 Sep 2026, routed: 4854 segments, 902 vias.
 
 On that board, **U2 pin 14 (ISNS+) is on FE_OUT and pin 13 (ISNS minus) on VBUS20 directly**, as are CS on FE_CS and
 CSG on GND: it has no FE_ISNS nets and no R160, R161, R150 or R151. The reading: 26.62 mV of copper drop from R11.1 to

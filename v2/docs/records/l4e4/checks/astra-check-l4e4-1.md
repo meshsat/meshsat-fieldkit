@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E4: the one check of board A's current-limit coordination and the outlet's R138 by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx13-l4e4-check`, run `20261001T031719Z-1760962`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e4 at commit `85505497dfb2`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e4 at commit `8fa89fb874eb`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary
@@ -48,7 +48,7 @@ no
 - Q4: unmodified reproduction: INCONCLUSIVE. r11_dep.py exited 1 because fig8_readings() requires a temporary directory and this read-only sandbox has none. This is an execution-environment limitation, not evidence of differing numerical output.
 - Q4: reproduction with image I/O in memory: PASS. r11_dep.out reproduced byte for byte, SHA256 f9d2c6f23fab3edcb48ad0116366fe588a514f755aafe56ebd62a0fe9495a209. l4e4_limits.out reproduced byte for byte, SHA256 046ae7d9c620fd1d7f5e3aedad0e2233aabd9695875bcd4e883d4c9dcc489f99. No files were edited.
 - Q4: draft script scope and repeat refusal: PASS. R11 changes only the front-end shunt value and order code, plus commentary. R138 changes only its value/order code, commentary and the corresponding PD_SW intent note. Both results parse and both second applications refuse with exit 3. Neither draft was applied to disk.
-- Read-only scope: PASS. Worktree remained clean and HEAD remained 85505497dfb2319d58d9bdb6a975d5d6df6e1bc8. No verdict writers or gates were run.
+- Read-only scope: PASS. Worktree remained clean and HEAD remained 8fa89fb874eb1aed333ad0e678e365d09db71d1d. No verdict writers or gates were run.
 
 ## Evidence and minors
 

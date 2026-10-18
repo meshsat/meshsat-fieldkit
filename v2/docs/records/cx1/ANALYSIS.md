@@ -2,7 +2,7 @@
 
 Correction job `cx1-if-ab-power-c1`, 28 September 2026, of authoring job
 `cx1-if-ab-power`. Base supplied by the launcher:
-`6e149d4660b3598af77f1f4b97f72d74ace0528c`. Prototype design: no V2 board has
+`b0033401b4b31e9982a40890c2b3a8782d4f9b0f`. Prototype design: no V2 board has
 been built, ordered or measured. This is desk calculation and AI review,
 not a qualified engineering review or acceptance of I-03.
 

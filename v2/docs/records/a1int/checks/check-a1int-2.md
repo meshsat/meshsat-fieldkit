@@ -1,11 +1,11 @@
 acceptable: yes
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026): acceptable, no blocking item; N1 to N4 answered in reconcile_lid_panel.py's notes and RECONCILE.md. -->
 
-# AI review: focused re-check of the two-pack lid reconciliation, fnd/a1int at 637c9876 (MESHSAT-1357)
+# AI review: focused re-check of the two-pack lid reconciliation, fnd/a1int at 57dcd6a0 (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review; every figure is a model result on the September reference day,
 nothing is measured. Re-checked 29 September 2026, 12:25 to about 12:35 CEST, in the same shared clone, detached at
-637c9876832935c3a5e2ef3329bbb1cdaddead6e (verified), against the first check (`CHECK.md`, filed as
+57dcd6a0a32dedb811a96c736547a20ceef9f07f (verified), against the first check (`CHECK.md`, filed as
 `checks/check-a1int-1.md`). Read-only; my scripts and outputs for this pass are in `_chk2/` (untracked). Materiality as
 in the first check.
 
@@ -79,7 +79,7 @@ lid current and at U3's nominal limit. Under the second issue's settings, some o
 
 ## Reproduced
 
-- `git -C <clone> fetch ... fnd/a1int:refs/remotes/w/a1int`, then detached at 637c9876 (rev-parse verified).
+- `git -C <clone> fetch ... fnd/a1int:refs/remotes/w/a1int`, then detached at 57dcd6a0 (rev-parse verified).
 - `env -C <clone> python3 v2/docs/records/a1int/reconcile_lid_panel.py`: exit 0, `cmp` identical to the committed
   `.out`.
 - `_chk2/cmp2.py`: every row parsed from the committed `.out` against `_chk2/indep.py` (my model, U3B at 7.936 A); 21 of

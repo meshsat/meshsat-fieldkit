@@ -1,6 +1,6 @@
 mergeable: yes
 
-AI review of stream w5si2 (`fnd/w5si2` at `f84243ba`, base `85ad1193`) by a checker that wrote none of it; not a
+AI review of stream w5si2 (`fnd/w5si2` at `71495c4d`, base `0f53ec87`) by a checker that wrote none of it; not a
 qualified engineering review. Prototype design: nothing built, ordered or measured. Full notes:
 `<worktrees>/_scratch/chk-w5si2/CHECK.md`.
 
@@ -15,7 +15,7 @@ None.
   item named for BOB. For a lamp FET gate and a GPIO level the class's own question (a reference EXISTS) is arguably
   right, but the sentence belongs in `v2/docs/records/w5si/apply/apply_board_c_declarations.py` (docstring lines 20
   to 40) and `v2/docs/records/w5si2/README.md` section 5.
-- m2. `fnd/int8` moved from `097b6cf7` to `a8607eab` during the check. Rehearsed at both: the same three
+- m2. `fnd/int8` moved from `28c57be0` to `b4b81ba1` during the check. Rehearsed at both: the same three
   append-append conflicts, the drafts apply at both; rehearse again if int8 moves before the merge.
 - m3. Draft 6 writes the paragraph of the state it runs in: on an integration checkout without the models it writes
   the ABSENT counts (64 / 293 / 466) into `pcb_rules_coverage.yaml`. Put the thirteen ignored files in place (copy from
@@ -24,10 +24,10 @@ None.
 - m4. The `.gitignore` conflict must be resolved by keeping both blocks; a HEAD-only resolution drops the ignore rule.
   Verify with `git check-ignore -v v2/vendor/ti/ibis/pca9555.ibs` after the merge.
 - m5. UM10204 has a `sources.txt` line (341) but no `vendor-status.txt` line; the two RP2040 documents have
-  folder-level lines only. Pre-existing files (UM10204 on main from `0da2778b`), for the vendor lists' owner.
+  folder-level lines only. Pre-existing files (UM10204 on main from `cf88153c`), for the vendor lists' owner.
 - m6. The brief's "edges check with five minor items in check-1" does not match the tree: `check-1/` is the first
   pass's refusing check (3 blocking, 13 minor, all answered in `w5si-record.md` sections 6 and 8); the edges lens of
-  7f7721c4 (`mergeable: true`, TEN minor items) is only in the integrator's workflow journal
+  bcd44366 (`mergeable: true`, TEN minor items) is only in the integrator's workflow journal
   (`wf_b5270c7e-b36/journal.jsonl` line 7). Of its ten, M5 is closed by ER-D16 and M9 by the re-issued vendor lines;
   M1, M2, M3, M4, M6, M7, M8, M10 are carried in README section 9 with an owner. Consider filing that result beside
   the records as the drafts check is.
@@ -81,12 +81,12 @@ receiving-end resistor terminates nothing); none is a guess.
 
 ## The merge
 
-Scratch clone from `origin/fnd/int8` (`097b6cf7`), `git merge --no-ff origin/fnd/w5si2`: three conflicts, each
+Scratch clone from `origin/fnd/int8` (`28c57be0`), `git merge --no-ff origin/fnd/w5si2`: three conflicts, each
 one append-append hunk at the end of the file: `.gitignore` lines 36 to 44 (int8's `AGENTS.md` rule against
 w5si2's `v2/vendor/*/ibis/*.ibs` rule), `v2/vendor/sources.txt` lines 349 to 376 (w5tray's 12 lines against the 13
 model lines), `v2/vendor/vendor-status.txt` lines 268 to 295 (the same 12 against 13). All mechanical: keep both,
 HEAD's first; resolved so in the clone (commit `9d99f551`). No other file conflicted; the registry and the trace page
-are not touched by the branch. The same three, same hunks, at `a8607eab`.
+are not touched by the branch. The same three, same hunks, at `b4b81ba1`.
 
 ## What I ran, exact last lines
 
@@ -127,4 +127,4 @@ re-run (its reasons checked against the sources instead). The pinned-state path 
 My model copies in the scratch clones were removed at the end; the only copies remain in the author's worktree.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

@@ -109,7 +109,7 @@ at the ex-factory 30 percent charge (its 3.13). Those are the numbers this table
 so no bound moves. The 35E is the pack's cell of record (`pcb_pack_protection.yaml`, its `cell` entry), and the
 owner's pack ruling of 26 September 2026 keeps it (D-06: one 4S3P pack of Samsung 35E cells, section 4).
 
-**Corrected 26 September 2026 (open item S-07 of the requirements registry, read at `45bde541`): the protection board
+**Corrected 26 September 2026 (open item S-07 of the requirements registry, read at `3e42100d`): the protection board
 row.** Until this correction the table's last row was a bought protection board (`battery/batteryspace-prod-spec-274.pdf`,
 -40 to +85 C, storage -40 to +125 C) from before the kit had its own pack board. The pack's protection is board P;
 its narrowest part is the chemical fuse F2 at -20 to +60 C, whose top is the cells' own +60 C discharge limit and
@@ -198,15 +198,15 @@ the pack gauge's own: the BQ4050 on board P opens its charge FET outside 0 to 45
 (`pcb_pack_protection.yaml`, CHARGE_TEMPERATURE_WINDOW), a threshold held in the gauge's data flash rather than
 fixed in hardware, with the panel's cold-charge inhibit below 0 C on top (`PANEL.md` section 10). Decision 40,
 ruled by the owner on 26 September 2026, adds hardware beside the gauge, and board P's schematic carries it since
-`faf8c981`: a BQ7720700 second level (cell over-voltage 4.325 V, under-voltage 2.25 V, open wire, and a fixed 70 C
-over-temperature on its own thermistor since `d90f30e4`) that blows the Eaton SCF9550 chemical fuse F2 once the arming
+`247db699`: a BQ7720700 second level (cell over-voltage 4.325 V, under-voltage 2.25 V, open wire, and a fixed 70 C
+over-temperature on its own thermistor since `d0db2f49`) that blows the Eaton SCF9550 chemical fuse F2 once the arming
 jumper is closed at commissioning, and the gauge's PTC input enabled (`gen_sch_p.py` lines 243, 288 and 414 to 502 at
-`45bde541`). Its 70 C trip is a permanent backstop above the cells' own limits, not a charge window: the charge window
+`3e42100d`). Its 70 C trip is a permanent backstop above the cells' own limits, not a charge window: the charge window
 stays the gauge's, and its over-temperature half acts on the charge FET only when the golden image sets the OTFET bit
 (`review-packets/battery/CHARGER-STATE-SEQUENCE.md` section 3). The host path is wired end to end: both ends of the
-pack's SMBus lead are the same JST-XH 1x4 since `faf8c981` (`PANEL.md` section 10). **Corrected again 26 September
+pack's SMBus lead are the same JST-XH 1x4 since `247db699` (`PANEL.md` section 10). **Corrected again 26 September
 2026 (S-07):** this paragraph said none of decision 40 was laid and that the SMBus lead did not mate, which was the
-circuit before `faf8c981`.
+circuit before `247db699`.
 
 ## 4. The envelope this proposes
 
@@ -287,12 +287,12 @@ Neither test has been run, so nothing is qualified to them.
 | solar | tracker input, LT8705A | the tracker's own window, board E |
 | pack | 4S, about 14.4 V nominal | **one 4S3P pack of Samsung 35E 18650 cells, about 145 Wh, shrink-wrapped in the east pocket** (D-06, owner ruling of 26 September 2026); the case measurement it was subject to was withdrawn by the owner on 26 September 2026 (D-08 reversed), and the fit is designed against the worst of Peli's own figures (`CASE-MARGINS.md` M4a to M6; M4a and M5 OPEN until the pack's hold-down and the targeted mock-up before boards A and P enter layout). Missions longer than the pack rely on vehicle or solar input. The runtime requirement is battery-only hours in the idle and typical modes at +20 C for an aged pack; that number is not computed yet and no runtime is claimed here. Corrected 26 September 2026: the 4S4P 18650 and 4S3P 21700 packs this row named are not expected to fit beside board P under board B, and the 4S3P 18650 fits only without a rigid enclosure (adjudication A06 of 25 September 2026, whose working files are filed at `v2/docs/records/adj/A06-pack-geometry/`; the same finding is carried by `ASSEMBLY.md` section 3; INFERRED from the committed board heights; the case side at the worst of Peli's figures, `CASE-MARGINS.md`) |
 | Power over Ethernet out | 54 V | the rail that makes ISO-001 and the altitude question real |
-| USB-C Power Delivery out | 45 W | TPS25740A with an LM5176 stage, 5, 9 and 15 V at 3 A (`gen_sch_a.py` line 1003 at `45bde541`); corrected 26 September 2026: the TPS55288 this row named left the design on 7 September |
+| USB-C Power Delivery out | 45 W | TPS25740A with an LM5176 stage, 5, 9 and 15 V at 3 A (`gen_sch_a.py` line 1003 at `3e42100d`); corrected 26 September 2026: the TPS55288 this row named left the design on 7 September |
 
 **Operating modes**, each already in the design: full (three modules, lid open), reduced (slots 2 and 3; lid
 closed, or the measured-temperature and current triggers of `CONOPS.md` section 4c) with its heat stage (one
 module) and, past it, the hot stop (no module), blackout (LEDs and sounder muted), NVG (panel lighting), EMCON (a hardware line on every transmitter and on the PA's rail and bias; what it removes is set out below), and charge (mains, vehicle or solar, gated by the pack
-thermistor and by the cold-charge inhibit). **Corrected 26 September 2026, as generated at `45bde541`:** EMCON removes the
+thermistor and by the cold-charge inhibit). **Corrected 26 September 2026, as generated at `3e42100d`:** EMCON removes the
 supply of the SDR, the Iridium modem, the LoRa, Zigbee and Thread radios, the HF unit, the two WiFi link cards and
 the PA rail, so those stop receiving too; it pulls the compute modules' own WiFi and Bluetooth disables low in
 hardware; and it puts the 5G module in airplane mode through its disable pin, a mode the module's firmware carries out; since board B's round 8 (27 September 2026) it also removes the 5G module's supply by hardware at once (SD-EMC-1r8, `feasibility/EMCON.md` section 4b)
@@ -301,7 +301,7 @@ DARK.** Every radio with an emission path is powered off or RF-disabled in hardw
 because its gate is on transmit only; GNSS, DCF77 and the lightning detector continue. What is left under that ruling
 is session engineering: the items every row of the line shares, the SA868's PTT threshold and the RockBLOCK 9704's response to its ENABLE (forced low in hardware since board B's stream w4b), the 5G module's supply removal being drawn since board B's round 8
 (`feasibility/EMCON.md` sections 0a, 5 and 7). This paragraph first recorded the compute modules' own radios and the WiFi
-cards' disable pin as gaps; both are closed in the schematic since `458b2873` (S-07). The charge gate
+cards' disable pin as gaps; both are closed in the schematic since `09521e07` (S-07). The charge gate
 is the pack gauge's thermistor window (section 3). The closed-lid reduced mode is the owner's ruling of 25
 September 2026 (D-02b, section 8).
 

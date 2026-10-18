@@ -2,7 +2,7 @@ accepted: CLOSED AS CONDITIONAL (the coordinator's closing check, not an indepen
 
 # The coordinator's closing check of L9P-F02 after the collaborator's two runs
 
-At commit `aa07066e` (branch fnd/l8r3, record l8r2 sections 1s, 1t and 1u). The collaborator's focused check (cx38, NOT CONFIRMED,
+At commit `a59a5e1a` (branch fnd/l8r3, record l8r2 sections 1s, 1t and 1u). The collaborator's focused check (cx38, NOT CONFIRMED,
 B1 to B3) and targeted recheck (cx39, NOT CLOSED, B1 to B3 and F5-03) are filed as received in this folder; both runs are spent. This
 check follows the owner's rule: exhausting the runs is neither a pass nor a question, so the coordinator checks the last corrections
 and labels the result as its own. Written on 4 October 2026.

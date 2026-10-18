@@ -1,8 +1,8 @@
-# Second check of stream d6rel, the follow-up at 3d7c98d2 (AI review), 28 September 2026, 20:09 to 20:30 CEST
+# Second check of stream d6rel, the follow-up at 3e7ee4e3 (AI review), 28 September 2026, 20:09 to 20:30 CEST
 
-**This is an AI review, never a qualified engineering review.** Prototype design: no board has been built, ordered or measured; every number below is a reading of a netlist, a board file, a maker's document or a fixture. The worktree `<worktrees>/d6rel` was only read (its HEAD is `fnd/d6rel` at `3d7c98d2`, tracked status clean). Everything I ran, ran in scratch clones under `<worktrees>/_scratch/chk-d6rel-2/`; no gate, verdict writer, `rules_status.py` or `rules_render.py` ran in any tree. I authored nothing of what is checked.
+**This is an AI review, never a qualified engineering review.** Prototype design: no board has been built, ordered or measured; every number below is a reading of a netlist, a board file, a maker's document or a fixture. The worktree `<worktrees>/d6rel` was only read (its HEAD is `fnd/d6rel` at `3e7ee4e3`, tracked status clean). Everything I ran, ran in scratch clones under `<worktrees>/_scratch/chk-d6rel-2/`; no gate, verdict writer, `rules_status.py` or `rules_render.py` ran in any tree. I authored nothing of what is checked.
 
-What was checked: the five commits `7af28903..3d7c98d2` (3bbc01df, 59987cb9, efd6899a, 7eb03d7a, 3d7c98d2). The first check (`main:v2/docs/records/int7/checks/d6rel-check-1.md`) was written at `efd6899a`, the third of the five, so the author's answer to it is `7eb03d7a` (the tool, the list and the tests) and `3d7c98d2` (the record and the apply scripts). I read the whole range as asked. `main` is `6b419b02`; `fnd/int8` was `475becd7` when I cloned (20:10 CEST) and had moved to a later tip by the end (the handover checkpoint `38205171` is already in its history; nothing of that touches this stream's files).
+What was checked: the five commits `08440511..3d7c98d2` (de1ba800, adbbd5ee, 041504d7, cd1d17d2, 3e7ee4e3). The first check (`main:v2/docs/records/int7/checks/d6rel-check-1.md`) was written at `041504d7`, the third of the five, so the author's answer to it is `cd1d17d2` (the tool, the list and the tests) and `3e7ee4e3` (the record and the apply scripts). I read the whole range as asked. `main` is `66c0d1d2`; `fnd/int8` was `9ec8917d` when I cloned (20:10 CEST) and had moved to a later tip by the end (the handover checkpoint `cbd1d406` is already in its history; nothing of that touches this stream's files).
 
 ```
 mergeable: yes
@@ -10,7 +10,7 @@ mergeable: yes
 
 ## 1. The merge as it will happen
 
-`git clone --shared <main checkout> view`, `git checkout -b chk origin/fnd/int8` (475becd7), `git merge --no-ff origin/fnd/d6rel`. Merge base `73ae2f21`.
+`git clone --shared <main checkout> view`, `git checkout -b chk origin/fnd/int8` (9ec8917d), `git merge --no-ff origin/fnd/d6rel`. Merge base `92f22e3f`.
 
 **One conflict, mechanical: `v2/vendor/sources.txt`**, a single append-append hunk at the end of the file. The int8 side appended lines 349 to 374 (the QMX tray materials, the QRP Labs pages, the MIL-STD-810H transcription, the fourteen withheld IBIS model lines of stream w5si2); the d6rel side appended 16 lines (a blank, a header comment, the seven documents it fetched, a blank, a header comment, the five provenance lines for documents held before the stream). No line is shared. Resolution in the clone: delete the three marker lines, keep both blocks in the order int8 then d6rel; the result is 389 lines (base 348, plus 25, plus 16), every non-blank line of both parents present, no line of either parent lost (checked with `comm` on the sorted files; the only "extra" lines are the second copies of blank lines and of a lone `#` comment line that both blocks carry). Committed in the clone as `1adb3c80` (committer instant `2026-09-28T20:10:59+02:00`).
 
@@ -33,7 +33,7 @@ Four tests are new since the first check: `t_an_open_item_that_names_no_board_an
 **(b) The four-case matrix**, run by me with `matrix.py` (TMPDIR in scratch, VERDICT_DIR set by the script to the fixture's own `out/`):
 
 * repaired tool (`view/v2/ecad/tools/reliability.py`, sha256/16 `c50f2b8b35d1d57b`, list `40f2a98323b1f9ce`): case 1 PASS exit 0, case 2 FAIL exit 1, case 3 FAIL exit 1, case 4 INCONCLUSIVE exit 3; `the matrix: 4 of 4 case(s) as wanted, 0 not`, exit 0.
-* unrepaired tool of main (`git show main:v2/ecad/tools/reliability.py`, sha256/16 `71d0872195905c9d`, identical to `73ae2f21`'s; main's list `fbf56eb06df1d007` beside it): cases 1 and 2 as wanted; **case 3 PASS exit 0 (wanted FAIL)** and **case 4 PASS exit 0 (wanted INCONCLUSIVE)**; `the matrix: 2 of 4 case(s) as wanted, 2 not`, exit 1.
+* unrepaired tool of main (`git show main:v2/ecad/tools/reliability.py`, sha256/16 `71d0872195905c9d`, identical to `92f22e3f`'s; main's list `fbf56eb06df1d007` beside it): cases 1 and 2 as wanted; **case 3 PASS exit 0 (wanted FAIL)** and **case 4 PASS exit 0 (wanted INCONCLUSIVE)**; `the matrix: 2 of 4 case(s) as wanted, 2 not`, exit 1.
 
 The stream's records `matrix-on-repaired-tool.txt` and `matrix-on-unrepaired-tool.txt` say the same, with the same shas.
 
@@ -113,7 +113,7 @@ S-89 is closed by nothing else on the branch (the branch does not touch `pcb_req
 
 | id | item |
 |---|---|
-| m-1 | `close-s89` never compares the readings' `writer.sha16` (or `code_bundle`) with the tree's `reliability.py`: counter-example probe 5a in `apply-sequence.txt` (the tree's tool changed by a comment line after the re-take, `--check` still accepts, exit 0). It cannot admit the unrepaired tool (no `per_board`, no `candidates`) nor the intermediate tools of 59987cb9/efd6899a (no `held_by`), so the integrator's planned flow (merge, box re-take at the merged tip, close) is not exposed; a re-take taken with a tool edited between the merge and the closure would be. One guard closes it: in `retake_evidence`, `if (rec.get("writer") or {}).get("sha16") != sha16(<root>/v2/ecad/tools/reliability.py): problems.append(...)`. Until then, read each reading's `writer.sha16` against the merged tree's tool before closing (mine: all seven `c50f2b8b35d1d57b`). |
+| m-1 | `close-s89` never compares the readings' `writer.sha16` (or `code_bundle`) with the tree's `reliability.py`: counter-example probe 5a in `apply-sequence.txt` (the tree's tool changed by a comment line after the re-take, `--check` still accepts, exit 0). It cannot admit the unrepaired tool (no `per_board`, no `candidates`) nor the intermediate tools of adbbd5ee/efd6899a (no `held_by`), so the integrator's planned flow (merge, box re-take at the merged tip, close) is not exposed; a re-take taken with a tool edited between the merge and the closure would be. One guard closes it: in `retake_evidence`, `if (rec.get("writer") or {}).get("sha16") != sha16(<root>/v2/ecad/tools/reliability.py): problems.append(...)`. Until then, read each reading's `writer.sha16` against the merged tree's tool before closing (mine: all seven `c50f2b8b35d1d57b`). |
 | m-2 | The two test files and `matrix.py` leave their `mkdtemp` directories behind (section 5): 108 per test run. |
 | m-3 | `CONFIG_INPUTS["reliability.py"]` now names 30 vendor documents as configuration inputs of the tool, listed from the list on the day the script runs; a citation added to the list later must be added to the entry by hand (the script and README say so). Carried by the integrator. |
 | m-4 | With REL-O-07 `holds: all`, no board can read PASS on REL-001 until REQ-028 rules a service life. Stated by the author; the integrator should know it before reading the readiness page. |
@@ -125,11 +125,11 @@ S-89 is closed by nothing else on the branch (the branch does not touch `pcb_req
 * `rules_status.py` and `rules_render.py` on the merged tree with the new readings: verdict and page writers, not run by a checker.
 * The box re-take itself: my re-take in the scratch clone is the same tool on the same artefacts on this host; its `tools`/`runtime` provenance differs from the box's, nothing else should.
 * REL-O-03's Amphenol M.2 documents; the H* footprint counts of REL-O-13; the per-order-code rows of the series-level sheets: not re-read.
-* `fnd/int8` moved while I worked; the merge was tested against `475becd7`. Nothing that moved touches this stream's files, but the integrator's merge is the one that counts.
+* `fnd/int8` moved while I worked; the merge was tested against `9ec8917d`. Nothing that moved touches this stream's files, but the integrator's merge is the one that counts.
 
 ## 9. Files here
 
 `CHECK.md` (this), `RESULT.md` (the final message), `tests-reliability.txt`, `matrix-repaired.txt`, `matrix-unrepaired.txt`, `apply-sequence.txt`, `probe61.py`, `probe61b.py`, `bind-*/run.txt` and their verdicts, `hro-1.png` (the rendered drawing), `tmp-before.txt`/`tmp-t0.txt`/`tmp-t1.txt`/`tmp-t2.txt` (the `/tmp` listings). The clones `view` and `apply` (1.5 GB each) are removed at the end; to reproduce: `git clone --shared <main checkout> view; git -C view checkout -b chk origin/fnd/int8; git -C view merge --no-ff origin/fnd/d6rel` and strip the three markers of `v2/vendor/sources.txt`.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

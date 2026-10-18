@@ -2,7 +2,7 @@
 
 **Second issue of the charger rows (stream s119, S-119, 29 September 2026).** The energy chain now carries board A's charger U3 at 0.979 (bracket 0.972 to 0.983; was 0.98, read from SLUSE66A Figure 8-4), with the FETs of decision 57, and Option A(i)'s lid charger U3B at 0.972 (bracket 0.963 to 0.978; was 0.975, read from Figure 8-3) on U3's 400 kHz row, which a session decision draws for it (the FET pair of decision 57, XAL1010-472ME, R16B 10 mOhm, IIN_HOST 6.2 A; `records/s119/apply_decision_s119.py`), weighted by energy over the model's own hours. Both are TI's loss equations (SLUSE66A Equations 6 to 22, printed pages 86 to 88) with the sense resistors inside each figure and the inductors' core loss excluded, so each is high by it (`records/s117/efficiency.out` section 7, `records/s119/u3b_hourly.out`). The chain's scripts were re-issued with their pins moved and every output regenerated (`records/s119/README.md`, `records/s119/headline_diff.out`). Where this page quotes a figure listed here, the page's figure is the first issue's and is superseded by the one given here. Model results on the September reference day; nothing is measured. **In this page:** section 4's chain into the node 0.930 x 0.930 x 0.979 = 0.8467 (was 0.93 x 0.93 x 0.98 = 0.8476), bracket 0.787 to 0.925 (was 0.782 to 0.926); 100 Wp gives 320 Wh a day at the node in September and 90 in December as before (320.1 and 89.9, were 320.4 and 90.0), the low brackets 253 and 71 (were 251 and 70); the window's 20 kWp ceiling 1355, 1023 and 623 Wh a day in June, September and December (were 1356, 1024 and 624; 9c's 1023.9 is the independent recompute's own sum, now 1022.8, `checks/recompute.out` second issue); a 100 Wp panel exceeds 42.8 W at the node only above about 537 W/m2 (was 536); section 5's September run from 06:00 leaves 1871 Wh unserved (was 1870, first stop unchanged at hour 8); the pack that would carry M1 alone 2121 Wh (was 2120); section 6f's vehicle entry chain 0.910 (was 0.911). Section 9 (`energy_architecture.out`, second issue): in the 100 W window 4S19P needs 1350 Wp (was 1300), 900 and 1300 Wp need one string more, and 4S16P no longer meets up to the 3 kWp swept (was from 2100 Wp); the 200 W window is unchanged (4S16P from 350 Wp, 4S15P from 650 Wp), but 300 Wp needs 4S21P (was 4S20P). 9d: 4S18P in the 100 W window 41.32, 42.17 and 42.74 W at 1000, 1300 and 1500 Wp (were 41.35, 42.20 and 42.77). 9e: 4S15P, 650 Wp, 3.5 Wh (was 3.6); 4S16P, 400 Wp, 18.1 Wh (was 18.2); 4S18P, 400 Wp, 200 W window, **90.9 Wh** at +20 C (was 91.0), 26.8 Wh at +15 C and +12.9 C unchanged; with 650 Wp 112.7 and 48.5 Wh (were 112.8 and 48.6); inside the 100 W window 4S19P with 1300 Wp **no longer meets at any cell temperature up to +40 C** (was about +19.9 C) and 4S18P with 1600 Wp needs about +19.0 C (was +18.9). Elsewhere: section 6's option table, set 1 in June 32.2 Wh (was 32.3) and set 3 in June 67.7 Wh (was 67.8); PS-IDLE-SPEC at its LOW of 33.1 W on two packs in September 607 Wh unserved (was 606); section 8's June row (`energy_4s6p.out`, re-pinned) 729 Wh unserved (was 728). REQ-072's verdict is unchanged: FAIL.
 
-Stream `energy`, branch `fnd/energy` from the integration set's tip `038037ed`, MESHSAT-1357, 28 September 2026.
+Stream `energy`, branch `fnd/energy` from the integration set's tip `554fa039`, MESHSAT-1357, 28 September 2026.
 **Prototype design: nothing in this kit has been built, ordered or measured.** Every figure on this page is
 arithmetic on makers' figures, on generator declarations and on stated assumptions, computed by
 `energy_budget.py` from `energy_inputs.yaml` (both beside this page; the output is `energy_budget.out`, and
@@ -19,7 +19,7 @@ listed with numbers and ranked (section 6); the smallest justified changes are p
 owner's decision (section 7 and `DECISION-PARAGRAPH.md`). Unmet criteria are left visible: REQ-072 reads FAIL
 before and after this page.
 
-**Second issue (28 September 2026), after an independent AI review of the first (`fc8cf808`).** The review
+**Second issue (28 September 2026), after an independent AI review of the first (`d979123d`).** The review
 reproduced sections 1 to 5 and the conflict with its own code and found three blocking items, corrected here: the
 west pocket's second pack was written as nearly fitting where A06's own tool says its board P does not fit (B1,
 section 6d, now judged with `packfit_west.py`); set 2 said the stage's 100 W window was unchanged where nothing in
@@ -30,7 +30,7 @@ m2, `night_bounds.py`; 16.20 W where the first issue had 15.70), the hour-by-hou
 the 2.80 V line named in the paragraph (m4), the window's ceiling (m5), the wording (m6 to m10) and the files that
 exist only on `fnd/d4energy` with the merge order (m11, section 7's last paragraph).
 
-**Third issue (28 September 2026), after the re-check of `7697c172`.** Two narrow corrections: four universal
+**Third issue (28 September 2026), after the re-check of `32c94641`.** Two narrow corrections: four universal
 sentences are replaced by their supported scope, with the bounds that establish or limit each (R1, sections 5d, 7
 and the new 7b); and Route B's setting (ii) moves from 9.1 to 10 mOhm, because at 9.1 mOhm the stage reaches
 100.9 W at 0.93 and 104.3 W at 0.90 with TRK_OUT at its reference-tolerance maximum of 15.56 V (R2, section 6e).
@@ -58,9 +58,9 @@ otherwise unchanged.
 monthly irradiation file, the two Samsung INR18650-35E documents, the tree's power model outputs
 (`records/rv-pwr/pwr_budget.out`, `records/hc2/pwr_red2.out`), board E's generator, this page's two helper
 outputs (`night_bounds.out` and `packfit_west.out`, each written by a script that imports a committed tool unchanged
-and pinned: `records/rv-pwr/pwr_budget.py` and A06's `pack_fit.py`), and `energy_inputs.yaml` itself. Stream d4energy's `energy_data.yaml` (branch `fnd/d4energy`, commit `9b43e274`) was read in full and
+and pinned: `records/rv-pwr/pwr_budget.py` and A06's `pack_fit.py`), and `energy_inputs.yaml` itself. Stream d4energy's `energy_data.yaml` (branch `fnd/d4energy`, commit `be08b795`) was read in full and
 found sound; its load citations, its pack figures, its readings of the makers' curves and the PVGIS mean-day
-profile it filed (commit `71be4943`) are reused and cited, not duplicated; those files exist only on
+profile it filed (commit `b513b9e7`) are reused and cited, not duplicated; those files exist only on
 `fnd/d4energy` and land with or before this record (section 7, last paragraph). Its `energy_budget.py` (untracked
 there, 1320 lines) did not finish in 240 s in a read-only scratch run on this host and was not run again (the
 host rule); nothing here depends on it.
@@ -212,7 +212,7 @@ and about 16 at midwinter (INFERRED from the latitude)" is confirmed.
 **Resource:** the PVGIS-SARAH2 monthly irradiation 2015 to 2020 on the optimally inclined plane (40 degrees,
 south) at Leiden (`v2/vendor/solar/pvgis-leiden-monthly-2015-2020.json`, pinned): the mean day is 5.49 kWh/m2 in
 June, **4.01 in September** (SC-37's reference day) and **1.13 in December**. The day's shape is PVGIS's DRcalc
-mean-day profile (2005 to 2020, filed on `fnd/d4energy` at `71be4943`, its 24 hourly values for the three months
+mean-day profile (2005 to 2020, filed on `fnd/d4energy` at `b513b9e7`, its 24 hourly values for the three months
 copied into `energy_inputs.yaml` with that file's sha256), scaled by 1.006 to 1.008 to the pinned monthly mean.
 
 **Panel model:** a 36-cell 12 V class crystalline panel as board E's generator describes the entry (about 22 V
@@ -582,10 +582,10 @@ row to `v2/docs/records/README.md`; `apply_req072_evidence_note.py` adds one evi
 `v2/ecad/tools/pcb_requirements.yaml` citing this record, leaving its FAIL and its statement untouched.
 `DECISION-PARAGRAPH.md` is the owner's sheet (at most 120 words). **Merge order (m11):** the files this page cites
 from stream d4energy exist only on `fnd/d4energy` (its data file `v2/docs/records/d4energy/energy_data.yaml` and
-readings at `9b43e274`; the PVGIS daily profile, the PVcalc answer and `v2/vendor/solar/sources.txt` at
-`71be4943`); they land with or before this record. The daily profile's three months used here are copied into
-`energy_inputs.yaml` with that file's sha256, which the independent review verified at `71be4943`. For the
-integrator: diff this stream against `038037ed`, not `main` (the branch carries set 7's registry commits).
+readings at `be08b795`; the PVGIS daily profile, the PVcalc answer and `v2/vendor/solar/sources.txt` at
+`b513b9e7`); they land with or before this record. The daily profile's three months used here are copied into
+`energy_inputs.yaml` with that file's sha256, which the independent review verified at `b513b9e7`. For the
+integrator: diff this stream against `554fa039`, not `main` (the branch carries set 7's registry commits).
 
 ## 8. One 4S6P pack under one board P: the alternative the record did not examine
 
@@ -937,7 +937,7 @@ copies, `v2/vendor/battery/samsung-35e-orbtronic.pdf` and `samsung-35e-conrad.pd
 JRC), MRcalc monthly 2015 to 2020 (pinned), DRcalc mean-day profile and PVcalc 100 Wp answer (on `fnd/d4energy`,
 `v2/vendor/solar/sources.txt` there gives URLs, dates and sha256); `records/rv-pwr/pwr_budget.py` and `.out`
 (PS-IDLE-SPEC's loads), `records/hc2/pwr_red2.out` (the reduced states); `records/d4energy/energy_data.yaml`
-(d4energy, `9b43e274`: the makers' documents and pages for each load, the curve readings, the A06 re-run);
+(d4energy, `be08b795`: the makers' documents and pages for each load, the curve readings, the A06 re-run);
 `v2/ecad/tools/gen_sch_e.py` (the solar stage, U5's pin map and the vehicle entry), `gen_sch_a.py` (the front end);
 Linear Technology LT8705A datasheet 8705af, `v2/vendor/power/lt8705a.pdf` (PDF pages 4, 5, 11, 12 and 19: the
 IMON regulation voltage, the output monitor's gm, the current-sense pins and the output current loop);

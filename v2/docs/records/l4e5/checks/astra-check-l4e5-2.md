@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E5: the targeted recheck of the author's fixes by the engineering collaborator (an AI review, read-only; the second and last run on this issue)
 
 Collaborator job `cx16-l4e5-recheck`, run `20261001T115956Z-2934193`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e5 at commit `03a520635d71`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e5 at commit `c9f004238402`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

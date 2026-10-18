@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E7: the one check of the solar stage's component settings by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx18-l4e7-check`, run `20261001T140747Z-3274169`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e7 at commit `2d7e331e3b26`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e7 at commit `820e17804415`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

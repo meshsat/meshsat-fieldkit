@@ -1,13 +1,13 @@
 # Board D (APRS): layout constraints
 
-**Bound to the set 6 candidate (27 September 2026, read at `760d7f41`).** This sheet's inputs stand in the block below,
+**Bound to the set 6 candidate (27 September 2026, read at `00e74bbb`).** This sheet's inputs stand in the block below,
 one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
 computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
 table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
 table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
 the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 10**,
-which are the readings at `e3aedb25` with the H2 line's changes marked where they stand (`ef144760`, the paragraph
-below). Set 6 changed board D's netlist and intent file in `932cf9d7` (the flyback diode D2 ordered with its sheet; the
+which are the readings at `956feb28` with the H2 line's changes marked where they stand (`c62ee56b`, the paragraph
+below). Set 6 changed board D's netlist and intent file in `864fdb59` (the flyback diode D2 ordered with its sheet; the
 node RLY_K declared). A node is not a rail: **no row of the power table moved**. A line of the older sections that names
 a part, a net, a current or a count is compared with the netlist and the intent file below before it is followed, and
 where this sheet and a record disagree the record governs (README). Board D is not at layout entry: no board is
@@ -17,30 +17,30 @@ below is its own binding's).
 ```bound
 sheet      D
 board      d
-read       2026-09-29 at d41f85ec
+read       2026-09-29 at 75460813
 current    section 2: the power table, and the figures the text under it quotes from it
-older      sections 1 and 3 to 10: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net sha256/16 a2d48972d171aad1 changed d41f85ec
-intent     v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json sha256/16 19fa94a2bce5dd52 changed d41f85ec
-board_file v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb sha256/16 929bf82d2bf6eed4 changed 24e0b03f
+older      sections 1 and 3 to 10: read at 956feb28, with the H2 line's changes marked at c62ee56b
+netlist    v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net sha256/16 a2d48972d171aad1 changed 75460813
+intent     v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json sha256/16 19fa94a2bce5dd52 changed 75460813
+board_file v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb sha256/16 929bf82d2bf6eed4 changed b05392c9
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC04161H-7628 outer 0.0350 mm inner 0.0152 mm
 ```
 
-**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `ef144760`: phase D12, netlist
-`v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net` sha256/16 `76700a687eb6187f` (round 8 at `76235aad`, set 5 at `b7f96784`),
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `c62ee56b`: phase D12, netlist
+`v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net` sha256/16 `76700a687eb6187f` (round 8 at `b99b8646`, set 5 at `ae922e4d`),
 intent `pcb-d-aprs-intent.json` `443fd745879d3022`; the committed board file `929bf82d2bf6eed4` is D12. Section 2's
 table is regenerated from `calc/rail_widths.py` on that intent: the `+5V_TX` rail the paragraph below announced is
 in it (marked **H2**), the other rails read the same. Board D is not at layout entry: **8 reasons at H2**
 (`CURRENT-EVIDENCE.md`): PWR-001 INCONCLUSIVE (RLY_K, S-76), SI-001 INCONCLUSIVE, RF-002 FAIL (EQ-25), decision 31's
 protection review, FEA-002, FEA-004, FEA-006, FEA-007 (its desk item W4-F17, board A's J_AB2 in board D's rectangle,
-alone; no mock-up check holds board D). Known changes of the H2 line: round 8 (`76235aad`: the transmit chain powered
-only while its EMCON gates are in range, the PA flange temperature read) and set 5 (`b7f96784`: every supply PWR-001
-refused declared, the transmit supply behind U21). Every other line below is the reading at `e3aedb25`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+alone; no mock-up check holds board D). Known changes of the H2 line: round 8 (`b99b8646`: the transmit chain powered
+only while its EMCON gates are in range, the PA flange temperature read) and set 5 (`ae922e4d`: every supply PWR-001
+refused declared, the transmit supply behind U21). Every other line below is the reading at `956feb28`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
 
-As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)),
+As first written: a view over the records at `main` `956feb28` (conventions and shared rules: [README.md](README.md)),
 candidate then netlist `f13d8b70099ab03e`, intent `59591c54eb29ab64`, 15 blocker lines.
-**Round 8** (`fnd/r8int1`, on `main` as `53a98a71` since this sheet was first written) changes board D: it adds a
+**Round 8** (`fnd/r8int1`, on `main` as `f5be4954` since this sheet was first written) changes board D: it adds a
 `+5V_TX` rail (0.37 A typical, 1.15 A peak: 0.08 mm on one outer face, two 0.3 mm barrels) and draws PWR-F15's flange
 sensor (a Semitec 103AT-2 NTC on a two-wire lead to `J_FLANGE`, read by U22, a TI ADS1115 at 0x48 on the kit bus;
 `POWER-THERMAL.md` PWR-F15 row on that branch). Re-read this sheet on the merge commit's netlist.
@@ -66,7 +66,7 @@ milliamperes: the fabricator's floor governs there, not the current.
 | +5V_D8 | 5.0 (5.2) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 | from board A over J_PWR1 |
 | +3V3_D8 | 3.30 | 0.04 / 0.17 | 0.04, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |  |
 | +3V4_HUB | 3.4 (3.5) | 0.04 / 0.04 | 0.04, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |  |
-| +5V_TX | 5.0 (5.2) | 0.37 / 1.15 | 0.37, typical (PI-001) | 0.08 | 0.03 | 0.46 | 2 / 2 / 2 | **H2**, new in `76235aad` (round 8): "the transmit chain's 5 V behind the TPS22810 load switch U21" |
+| +5V_TX | 5.0 (5.2) | 0.37 / 1.15 | 0.37, typical (PI-001) | 0.08 | 0.03 | 0.46 | 2 / 2 / 2 | **H2**, new in `b99b8646` (round 8): "the transmit chain's 5 V behind the TPS22810 load switch U21" |
 | +5V_SA | 5.00 | 0.35 / 1.10 | 0.35, typical (PI-001) | 0.07 | 0.03 | 0.42 | 2 / 2 / 2 | the exciter, behind FB1; its layer transition needs the two barrels of this row (the first item below) |
 | +3V3 | 3.30 | 0.06 / 0.10 | 0.06, typical (PI-001) | 0.01 | 0.00 | 0.04 | 1 / 1 / 1 |  |
 

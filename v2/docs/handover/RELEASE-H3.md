@@ -19,9 +19,9 @@ and the independent review on the public repository at the paths named below. H3
 | File | `v2/release/handover/H3.zip` (with `H3.zip.sha256` and `H3.MANIFEST.tsv` beside it) |
 | sha256 | `6922a96d732442e99a65d8db3f0734378bd7ea636894fca283a4b3ca424dd07a` |
 | Size | 52,187,825 bytes, 2,275 entries: 2,265 files of the source commit, the six handover pages copied to the root and the four generated files (`MANIFEST.tsv`, `SOURCE.txt`, `EXCLUDED.tsv`, `REFERENCED-SOURCES.tsv`); 4,684 files of the commit excluded and 483 referenced, not bundled. The cap is 52,428,800 bytes |
-| Snapshot commit | `bd96bb61` (adds the ZIP, its checksum and its manifest, and closes S-79) |
-| Source commit | `75ad6ee5bc98d7213b9a61d1f64cfa7ea19cc669` (every file in the ZIP is this commit's blob; `H3.MANIFEST.tsv` lists each with its git blob sha and sha256) |
-| Suite on the source commit | in a git checkout with history at `75ad6ee5`: **1998 passed, 0 failed, 2 skipped** on the KiCad host (KiCad 9.0.9; the two skips are `test_finish_order.t_routeflow_validate_agrees_with_these_rules`, whose profiles pin that host's own clone, and `test_pairsearch.t_the_three_implementations_agree`, no numba there), and **1937 passed, 0 failed, 63 skipped** on the runner, which has no KiCad. A skip is not a pass. **From the ZIP alone**, measured on H3 by the usability check on the KiCad host: 1957 passed, 20 failed, 23 skipped, the 20 failures being the 20 that `REGENERATE.md` section 7 names, each for an input the ZIP leaves out |
+| Snapshot commit | `1b00e0c5` (adds the ZIP, its checksum and its manifest, and closes S-79) |
+| Source commit | `c3dd60f9a8d405ba3c9af8849a3fe01952051911` (every file in the ZIP is this commit's blob; `H3.MANIFEST.tsv` lists each with its git blob sha and sha256) |
+| Suite on the source commit | in a git checkout with history at `c3dd60f9`: **1998 passed, 0 failed, 2 skipped** on the KiCad host (KiCad 9.0.9; the two skips are `test_finish_order.t_routeflow_validate_agrees_with_these_rules`, whose profiles pin that host's own clone, and `test_pairsearch.t_the_three_implementations_agree`, no numba there), and **1937 passed, 0 failed, 63 skipped** on the runner, which has no KiCad. A skip is not a pass. **From the ZIP alone**, measured on H3 by the usability check on the KiCad host: 1957 passed, 20 failed, 23 skipped, the 20 failures being the 20 that `REGENERATE.md` section 7 names, each for an input the ZIP leaves out |
 | Public | both commits are on `main` of `github.com/meshsat/meshsat-fieldkit`: the source commit since 27 September 2026 21:18 UTC, before the build, so H3's `SOURCE.txt` marks it `public yes`; the snapshot commit since about 21:24 UTC. `python3 v2/docs/records/h3/public_check.py <commit>` asks it from a clone that holds the commit (from an extraction of the ZIP it cannot answer) |
 | Check | `sha256sum -c H3.zip.sha256`, then `python3 v2/ecad/tools/handover_pack.py verify H3.zip` (reads every manifest row) |
 
@@ -32,9 +32,9 @@ is the last one that changed the file. All review records are under `v2/docs/rev
 
 | Layer | Status in H3 | Baseline | Acceptance records |
 |---|---|---|---|
-| 1. Product definition | COMPLETE | definition baselined at `6b2a9965`; re-stamped BASELINED at `a9f212c7`, an editorial restructure with no definition change. `v2/docs/PRODUCT-BRIEF.md` is `85513b92ed0daf55` (`edd3c848`); it was `d36bf76b3dea8b30` in H2 | `REVIEW-A-LAYER-1-2026-09-27.md` (`d469a268fe0b8768`, `2ef6aa2a`), `REVIEW-LAYER-1-RELEASE-2026-09-27.md` (`2bd065d12f50298d`, `6209ec7e`), `REVIEW-LAYER-1-RELEASE-2-2026-09-27.md` (`a0d8e6be2dcebcf6`, `62f26a44`), `TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` (`ae70b1a7811ecea1`, `6b2a9965`); for the re-stamp, `DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md` (`4c09af64cb214448`, `a9f212c7`), CONTENT_PRESERVED |
-| 2. Concept of operations | COMPLETE | definition baselined at `79963b3b`; re-stamped BASELINED at `a9f212c7` the same way. `v2/docs/CONOPS.md` is `6ebe6760c4312bca` (`edd3c848`), its needs table byte-identical; it was `4483209659dc391c` in H2 | `REVIEW-A-LAYER-2-2026-09-27-pass1.md` (`e854c2a46ea3d542`, `08f3665a`), `REVIEW-A-LAYER-2-2026-09-27.md` (`77b20ca4042f0855`, `95e078a1`), `REVIEW-LAYER-2-RELEASE-2026-09-27.md` (`cb7c773b9b193e1f`, `6209ec7e`), `REVIEW-LAYER-2-RELEASE-2-2026-09-27.md` (`a4f0e88e48c304ee`, `62f26a44`); for the re-stamp, the same check of the restructure |
-| 3. Requirements | COMPLETE since commit `24e7bf5a` | `v2/ecad/tools/pcb_requirements.yaml`, `baseline_state` BASELINED at `a54b793b` (the file there is `c8fded5cb0a165d6`), written in `2c12be91`. The file H3 carries is `6eb35694e300abff` (`6ec37197`): against the baselined file it differs in the baseline's own lines, the closure of S-51, S-78 and S-80, S-79's title, the pin on CONOPS and the readings of three records rebound to the restructured CONOPS (REQ-005, CFL-014, CFL-016), and in no record's statement, acceptance, allocation, verification or release effect (`v2/docs/records/h3/design_difference.out`) | the five records `baseline_reviews` names, each by the hash given here: `REVIEW-B-LAYER-3-2026-09-27.md` (`7a6c679f446b1baa`, `95e078a1`), `REVIEW-LAYER-3-RELEASE-2026-09-27.md` (`1c3bc2d99f9efb51`, `6209ec7e`), `REVIEW-LAYER-3-RELEASE-2-2026-09-27.md` (`cf8c73fb288be2fb`, `62f26a44`), `TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` (`ae70b1a7811ecea1`, `6b2a9965`), `TARGETED-RECHECK-LAYER-3-2026-09-27.md` (`7831358b96b6f5ca`, `24e7bf5a`): B-1 CLOSED at `2c12be91` |
+| 1. Product definition | COMPLETE | definition baselined at `9406794f`; re-stamped BASELINED at `ab560ff5`, an editorial restructure with no definition change. `v2/docs/PRODUCT-BRIEF.md` is `85513b92ed0daf55` (`060212ea`); it was `d36bf76b3dea8b30` in H2 | `REVIEW-A-LAYER-1-2026-09-27.md` (`d469a268fe0b8768`, `ab19cd02`), `REVIEW-LAYER-1-RELEASE-2026-09-27.md` (`2bd065d12f50298d`, `087dd759`), `REVIEW-LAYER-1-RELEASE-2-2026-09-27.md` (`a0d8e6be2dcebcf6`, `179196c6`), `TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` (`ae70b1a7811ecea1`, `9406794f`); for the re-stamp, `DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md` (`4c09af64cb214448`, `ab560ff5`), CONTENT_PRESERVED |
+| 2. Concept of operations | COMPLETE | definition baselined at `b19c3228`; re-stamped BASELINED at `ab560ff5` the same way. `v2/docs/CONOPS.md` is `6ebe6760c4312bca` (`060212ea`), its needs table byte-identical; it was `4483209659dc391c` in H2 | `REVIEW-A-LAYER-2-2026-09-27-pass1.md` (`e854c2a46ea3d542`, `ac276902`), `REVIEW-A-LAYER-2-2026-09-27.md` (`77b20ca4042f0855`, `8a8d6b68`), `REVIEW-LAYER-2-RELEASE-2026-09-27.md` (`cb7c773b9b193e1f`, `087dd759`), `REVIEW-LAYER-2-RELEASE-2-2026-09-27.md` (`a4f0e88e48c304ee`, `179196c6`); for the re-stamp, the same check of the restructure |
+| 3. Requirements | COMPLETE since commit `82ee68c9` | `v2/ecad/tools/pcb_requirements.yaml`, `baseline_state` BASELINED at `518d2c55` (the file there is `c8fded5cb0a165d6`), written in `8593bd90`. The file H3 carries is `6eb35694e300abff` (`c76f45f0`): against the baselined file it differs in the baseline's own lines, the closure of S-51, S-78 and S-80, S-79's title, the pin on CONOPS and the readings of three records rebound to the restructured CONOPS (REQ-005, CFL-014, CFL-016), and in no record's statement, acceptance, allocation, verification or release effect (`v2/docs/records/h3/design_difference.out`) | the five records `baseline_reviews` names, each by the hash given here: `REVIEW-B-LAYER-3-2026-09-27.md` (`7a6c679f446b1baa`, `8a8d6b68`), `REVIEW-LAYER-3-RELEASE-2026-09-27.md` (`1c3bc2d99f9efb51`, `087dd759`), `REVIEW-LAYER-3-RELEASE-2-2026-09-27.md` (`cf8c73fb288be2fb`, `179196c6`), `TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` (`ae70b1a7811ecea1`, `9406794f`), `TARGETED-RECHECK-LAYER-3-2026-09-27.md` (`7831358b96b6f5ca`, `82ee68c9`): B-1 CLOSED at `8593bd90` |
 | 4 to 9 | IN_PROGRESS | | `v2/docs/handover/LAYER-STATUS.md`, sections "Status at handover H3" and "Status at handover H2", give each layer's remaining acceptance items |
 
 Layer 3's versioned package, its acceptance item 3.18, is this snapshot. The registry H3 carries still lists the item
@@ -47,7 +47,7 @@ W3T-F1), the failure stays visible in the requirements registry and in the imple
 
 ## H3's design content equals H2's
 
-Between H2's source commit `b89b50b4` and the commit these pages were written on, no design file differs: no
+Between H2's source commit `f4a275e7` and the commit these pages were written on, no design file differs: no
 schematic, committed netlist, intent, provenance sidecar, land, generator, board table, checking tool, export, CAD
 source, case release file, diagram or maker document. `v2/docs/records/h3/design_difference.py` prints every file
 that differs, by class, and asserts the statement (it reads git, so it needs a checkout with both commits). Under
@@ -55,13 +55,13 @@ that differs, by class, and asserts the statement (it reads git, so it needs a c
 
 | File | What differs | Commit |
 |---|---|---|
-| `tools/handover_pack.py`, `tools/tests/test_handover_pack.py` | the packer's `repo` subcommand and its test | `a54b1f4d` |
-| `tools/pcb_requirements.yaml` | the baseline, the open and closed items, the readings and notes of CON-010, REQ-005, CFL-014 and CFL-016 | `a54b793b`, `2c12be91`, `24e7bf5a`, `fa89c7c6`, `edd3c848` |
-| `tools/pcb_interfaces.yaml` | the `read_at` block of `board_to_board`, re-anchored to the H2 line's netlists; no contract | `90314d99` |
-| `pcb-*/routed/interfaces_<letter>.verdict.json`, seven files | INT-001's readings re-taken after that edit, each PASS as before on the same netlists | `ed988ba8` |
+| `tools/handover_pack.py`, `tools/tests/test_handover_pack.py` | the packer's `repo` subcommand and its test | `d2c63d1d` |
+| `tools/pcb_requirements.yaml` | the baseline, the open and closed items, the readings and notes of CON-010, REQ-005, CFL-014 and CFL-016 | `518d2c55`, `8593bd90`, `82ee68c9`, `40171783`, `060212ea` |
+| `tools/pcb_interfaces.yaml` | the `read_at` block of `board_to_board`, re-anchored to the H2 line's netlists; no contract | `84d916ab` |
+| `pcb-*/routed/interfaces_<letter>.verdict.json`, seven files | INT-001's readings re-taken after that edit, each PASS as before on the same netlists | `40517e8c` |
 
-The exports under `v2/release/handover/_generated/` are H2's (boards A, B, D and E made at `763bccdf`, C and P at
-`99cde56b`); each names the sha256 of the schematic and netlist it was made from, and both are the files H3 carries
+The exports under `v2/release/handover/_generated/` are H2's (boards A, B, D and E made at `25e8d524`, C and P at
+`fcf69d55`); each names the sha256 of the schematic and netlist it was made from, and both are the files H3 carries
 (`v2/docs/records/h3/handover_counts.out`). The headline and the layout-entry reasons are H2's: 0 boards ready for
 layout, 0 physically verified, 40 reasons (A 7, B 7, C 5, D 8, E 5, P 6, E5 2).
 
@@ -89,7 +89,7 @@ claims it does.
 
 | # | What is not fixed | Effect on a reader | Where it will be fixed |
 |---|---|---|---|
-| a | Each layout constraint sheet's sections other than its power table are readings at `e3aedb25`, as the sheet's own head says; the power tables are current on H3's netlists | a placement, protection or test-access line of a sheet may describe an older netlist; where it and a record disagree, the record governs. One such row was found and corrected for H3 (board A, section 7) | each sheet re-derived on its netlist by its board stream, before that board's layout entry |
+| a | Each layout constraint sheet's sections other than its power table are readings at `956feb28`, as the sheet's own head says; the power tables are current on H3's netlists | a placement, protection or test-access line of a sheet may describe an older netlist; where it and a record disagree, the record governs. One such row was found and corrected for H3 (board A, section 7) | each sheet re-derived on its netlist by its board stream, before that board's layout entry |
 | b | `LAYER-STATUS.md` mixes status with history | the page is long; read its sections "Status at handover H3" and "Status at handover H2" and each layer's acceptance table, and use Appendix A only to trace an item | a restructure of the page after H3 |
 | c | Re-taking one board in a repository built from the ZIP re-renders every other board's page as NO_EVIDENCE (`REGENERATE.md` section 9) | compare only the re-taken board's rows | the readings bundled with a later snapshot, or a re-take of every board |
 | d | `ENGINEERING-QUESTIONS.md` was not re-read row by row for H3; five blocks found stale were corrected in place (EQ-01, EQ-04, EQ-10, EQ-16, EQ-17) | another block's options or recommended action may predate its own attempts row; the attempts row is the newer | the page's next edition |
@@ -99,7 +99,7 @@ claims it does.
 **An erratum about H2.** `RELEASE-H2.md` says H2's two commits are on `main` of the public repository, while H2's
 own `SOURCE.txt` marks its source commit `public no`. Both are true of their time: `SOURCE.txt` records what the
 building clone knew when H2 was built, and the commits were published after it. Asked on 27 September 2026 at 20:38
-UTC, `b89b50b4` and `174d8466` are ancestors of `main` and the public repository serves both
+UTC, `f4a275e7` and `23b9a66f` are ancestors of `main` and the public repository serves both
 (`v2/docs/records/h3/public_check.out`). H2's files are not edited.
 
 ## Found after the build, by the two fresh checks and the independent review
@@ -109,7 +109,7 @@ travels in the next snapshot.
 
 | # | What was found | Effect on a reader | Where it is answered |
 |---|---|---|---|
-| g | `v2/docs/CURRENT-EVIDENCE.md` lines 8 to 9 still say the foundations are incomplete "because the requirements and architecture baselines are still open": fixed text of the renderer, true of the architecture baseline and no longer of the requirements baseline (the registry reads BASELINED at `a54b793b`) | the one unmarked sentence in a current page that contradicts layer 3's status; it errs on the cautious side, and the registry is the authority | the renderer's sentence, in the next candidate |
+| g | `v2/docs/CURRENT-EVIDENCE.md` lines 8 to 9 still say the foundations are incomplete "because the requirements and architecture baselines are still open": fixed text of the renderer, true of the architecture baseline and no longer of the requirements baseline (the registry reads BASELINED at `518d2c55`) | the one unmarked sentence in a current page that contradicts layer 3's status; it errs on the cautious side, and the registry is the authority | the renderer's sentence, in the next candidate |
 | h | REL-001's PASS on every board is a reading of a word list: the tool takes its population from twelve words in the parts' value text, so a connector whose value carries none of them (an RJ45 jack, the SIM sockets, the dock's spring pins among 61 parts found) is in no denominator, and with no netlist at all the tool reads PASS of zero (the independent review's H3-01, reproduced on four fixtures) | REL-001's completeness holds for its twelve words only; the reading is LIMITED | the checker repaired on an explicit inventory with a missing input reading INCONCLUSIVE (stream `d6rel`), then re-taken |
 | f, extended | erratum f (TRN-001 on board A does not judge VIN_RAW's entry; the independent review's H3-02) is not stated at three points of use: `LAYER-STATUS.md` items 8.10 and 8.14 and `PCB-RULE-STATUS-A.md` | TRN-001's PASS on board A is LIMITED wherever it is quoted | the declaration corrected and the checker made to refuse a declaration that names no supply or signal pin and to report an exposed pin no declaration covers (the protection review stream `d8dec31`), then re-taken |
 | i | `v2/docs/layout-constraints/E.md`, inside its power table and its masked 36 V sites, still names J_BLK as VIN_RAW's exit; in the packaged netlist VIN_RAW is on P_VR pin 1 and J_BLK pins 1 to 7 and 11 are ground. The numbers are right and the sheet's head states SC-55 | a layout engineer reading board E's sheet would place the 36 V clearance at the wrong connector | the sheet, when the sheets are re-read on the current netlists |
@@ -118,7 +118,7 @@ travels in the next snapshot.
 | l | acceptance item 3.15 of layer 3 ("MET in substance") was judged on ten open items that no record waits on; the registry H3 carries has twenty-four, and one of them decides a verdict (S-64, under which CON-010 reads FAIL without a `waits_on`) | the failure is visible in CON-010's evidence; the link and the count are missing | the registry's links, by its writer, as a change to the baseline's open items only |
 | m | the statement "no definition change" of the restructure is made without the two exceptions its own check names (the brief's definition no longer names SC-04 or the fit as a core condition, and no longer describes the EMCON lamp); `DEFINITION-STATUS.md` reports both | a reader of the short statement alone would not know of them | the short statements, at the pages' next edition |
 
-The other minor findings (the wording of "COMPLETE since `24e7bf5a`", the counts of the requirements validator from
+The other minor findings (the wording of "COMPLETE since `82ee68c9`", the counts of the requirements validator from
 the ZIP marked as H2's where H3's read 13 errors and 20 warnings, stale pointers, the record `design_difference.out`
 naming the commit before the source commit, which changes five record files and nothing else) are listed in the two
 check records and answered in `v2/docs/handover/H3-RESPONSE.md` when the pages are next edited.

@@ -1,17 +1,17 @@
 accepted: yes
 
-# Layer 4, L4-E9: The assistant's closing check of the connected power architecture at 3c09b3da (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E9: The assistant's closing check of the connected power architecture at 13514919 (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E9 are spent:
-- the focused check `astra-check-l4e9-1.md` on `6097922a`, NOT YET;
-- the targeted recheck `astra-check-l4e9-2.md` on `71486686`, NOT YET on overclaimed bounds.
+- the focused check `astra-check-l4e9-1.md` on `3cb33242`, NOT YET;
+- the targeted recheck `astra-check-l4e9-2.md` on `2127d22f`, NOT YET on overclaimed bounds.
 
-The final round, `3c09b3da`, states those bounds' conditions and takes in L4-E7R's accepted CS101 correction. **This check
+The final round, `13514919`, states those bounds' conditions and takes in L4-E7R's accepted CS101 correction. **This check
 accepts the record as a correct statement of the connected power architecture and its closure gate, which reads NOT CLOSED.
 Acceptance here is of the record, not of closure.**
 
 **Verified by the coordinator:**
-- *Reproduction:* `l4e9_power_path.py` re-run at `3c09b3da`, its output equal to the committed `.out` byte for byte;
+- *Reproduction:* `l4e9_power_path.py` re-run at `13514919`, its output equal to the committed `.out` byte for byte;
   `test_l4e9` with `test_public_hygiene` 35 passed, 0 failed, 0 skipped.
 - *D-09, in separate arithmetic:*
   - the start into VIN_RAW's 31 uF at 43.18 V with the 22.02 W power limit is about C V^2 / 2P = 1.31 ms (the record: 1.324 ms
@@ -22,7 +22,7 @@ Acceptance here is of the record, not of closure.**
   - Figure 10's 1.879 A at 10 ms, scaled by TI's power law (m = 0.43) to 11.871 ms, is 1.745 A at 25 C;
   - derated by (150 - 94.3) / 125 it becomes 0.777 A, against the 0.675 A pulse;
   - equal to the record. The breaker event and the timer's component bounds stay open evidence (R-118, R-119).
-- *D-01:* resolved in design from L4-E7R's accepted correction (`675b8068`, check 4); its figures and conditions are carried
+- *D-01:* resolved in design from L4-E7R's accepted correction (`04802c70`, check 4); its figures and conditions are carried
   into IF-01, IF-02, LH-02, LH-09, the energy budget and the register, with no row PENDING.
 - *The gate's two categories are kept apart:*
   - material defects: 9; open D-06 and D-09; resolved and drafted D-01 to D-05 and D-07; D-08 bounded with conditions;

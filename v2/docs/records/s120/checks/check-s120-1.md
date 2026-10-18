@@ -5,9 +5,9 @@ mergeable: no
 AI review (desk arithmetic on the makers' documents and the committed netlists, done by running and reproducing), not a
 qualified engineering review. 29 September 2026, 18:42 CEST. Checker did not write the work.
 
-Checked: branch `fnd/s120`, tip `0004b8a716b0ffc87bfdc437b2db843fdb386152` (confirmed with `git rev-parse`), three commits
-on main `e57a7365` (5a868570, 3ca20d5a, 0004b8a7), six files under `v2/docs/records/s120/`. Shared clone
-`<scratch>/chk-s120` at the tip; detached shared clone `<scratch>/chk-s120/_int14` at `fnd/int14` `32f26b41` (excluded
+Checked: branch `fnd/s120`, tip `02491fddb65c83338384eb8061ec5ca95151ee94` (confirmed with `git rev-parse`), three commits
+on main `557a0628` (ffce7add, d3699eeb, 02491fdd), six files under `v2/docs/records/s120/`. Shared clone
+`<scratch>/chk-s120` at the tip; detached shared clone `<scratch>/chk-s120/_int14` at `fnd/int14` `9cef5181` (excluded
 locally). The four held TI FET sheets were copied from `int14/v2/vendor/ti/held/` into the clone's ignored
 `v2/vendor/ti/held/` (`git check-ignore`: `.gitignore:47`); their sha256 equal `v2/vendor/sources.txt` lines 454 to 457
 (f1aad251 SLPS526, c8595fa8 SLPS516, 05fea7ab SLPS524, 99d50d88 SLPS630). No commit, no push, no agent, no box.
@@ -71,7 +71,7 @@ the bound, but SW2 sits on the pack side (VBAT in buck mode, Table 9-3 p.27); it
 event, 24.27 V, 7.73 V under 32 V. The SW1, SW2 and ACN margins lack the "before ringing" the README table carries.
 "BTST1 ... sits 2.51 V under 32 V" is the RECOMMENDED 32 V; say so (absolute 38 V: 8.51 V, p.8).
 
-m3. `closed_by` is written as typed: `close 0004b8a7` wrote "commit 0004b8a7" (my run), where every other closed item
+m3. `closed_by` is written as typed: `close 02491fdd` wrote "commit 02491fdd" (my run), where every other closed item
 carries 40 characters. Resolve with `git rev-parse` before writing (`apply_registry_s120.py` lines 60, 113, 179).
 
 m4. The largest L1 current inside U2's ratings is not the boost peak limit. In buck mode the peak is the valley limit
@@ -136,13 +136,13 @@ m11. `LOG.md` lines 32, 35 and 36 carry backslash escaped backticks that render 
 5. The ringing item carries a budget, an owner and remedies, and nothing in the stream claims ringing is bounded
    (README 7 and 12, `.out` 10 and 12, closing evidence all say INCONCLUSIVE or "not bounded at desk"). It lacks Q7's VSD
    (B1), a model free closure and a reference bus level (B3), the OVP reading (B2), and the turn on mechanism (m7).
-6. Registry script: on main's registry (`e57a7365`, sha256/16 c88d75284c96a02a) `--check` writes nothing; a scratch copy
+6. Registry script: on main's registry (`557a0628`, sha256/16 c88d75284c96a02a) `--check` writes nothing; a scratch copy
    takes one write (S-120 closed, S-123 opened, REQ-015 on S-106, S-107, S-111, S-123, S-111's title extended), the diff
-   equals `dryrun.out` section 9 apart from the commit, a second run refuses. On the set 13 line's registry (`32f26b41`,
+   equals `dryrun.out` section 9 apart from the commit, a second run refuses. On the set 13 line's registry (`9cef5181`,
    S-121 closed, S-122 and S-123 open) a scratch copy opens **S-124**, REQ-015 waits on S-106, S-107, S-111, S-124, S-120 is
    appended after S-121 in closed_items, a second run refuses. `rules_lib.py requirements` reads 144 records, 0 errors,
-   0 warnings on all four copies (main's tools for main, `_int14`'s tools for set 13). Refusals reproduced: e57a7365 and
-   5a868570 (records not carried), 3ca20d5a (README differs from HEAD's).
+   0 warnings on all four copies (main's tools for main, `_int14`'s tools for set 13). Refusals reproduced: 557a0628 and
+   ffce7add (records not carried), d3699eeb (README differs from HEAD's).
 7. Claimed as met but resting on less: the bus bound on a typical only threshold (B2); the item's layout branch on a
    model (B3); Q7's margin on the bus alone (B1). The dump, line and D1 figures are labelled MODEL or INFERRED correctly.
 

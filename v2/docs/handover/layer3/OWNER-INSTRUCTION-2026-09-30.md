@@ -96,7 +96,7 @@ is re-read against it.
 **Superseded in part by D-28:** the holds on rows L3-OD1, L3-OD2 and L3-OD4 end with the closure, the rows answered or closed.
 
 Relayed by the coordinating session with the independent check of the first draft of L3-R2 (branch `fnd/l3r2` at
-`9c26a641`, "accepted: no"), introduced as "the owner's review of the draft table (30 Sep 2026), which is binding". The
+`b4effa08`, "accepted: no"), introduced as "the owner's review of the draft table (30 Sep 2026), which is binding". The
 five paragraphs below are as quoted there, word for word; the registry records them as owner ruling D-22.
 
 > "The voltage is an engineering input, not an author's preference. Establish the applicable supply range under load
@@ -305,7 +305,7 @@ Relayed by the coordinating session into layer 3's closure pass, to be recorded 
 no requirement. The paragraph below is as quoted there, word for word, its omission marks included. The registry
 records it as owner ruling D-30. From this instruction on, this file together with the registry's `owner_rulings`
 (`v2/ecad/tools/pcb_requirements.yaml`) is the one decision register both agents consult; the Codex worker's side of it
-is `v2/docs/CODEX-WORKER.md` section 7 (on main since `7e4b7a87`).
+is `v2/docs/CODEX-WORKER.md` section 7 (on main since `46ff5c50`).
 
 > "Upgrade the existing Codex/GPT-6-Astra integration from a limited pilot to a standing engineering collaborator. ...
 > This authorises further bounded Astra assignments through the existing ChatGPT authentication and available

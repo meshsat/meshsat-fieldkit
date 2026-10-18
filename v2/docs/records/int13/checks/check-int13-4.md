@@ -1,11 +1,11 @@
 mergeable: yes
 
-# AI review: third focused re-check of integration set 12, fnd/int13 at d0717859 (MESHSAT-1357)
+# AI review: third focused re-check of integration set 12, fnd/int13 at 0179fb2f (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review.
 
 **Set-up**
-* Clone: `<scratch>/chk-int13b`, fetched and detached at `d0717859e6dbfcad69f288b85910ffde32f325f2` (checked with `git rev-parse fnd/int13`).
+* Clone: `<scratch>/chk-int13b`, fetched and detached at `0179fb2fcd299cee18481cc1cb7ed852eaf0fc70` (checked with `git rev-parse fnd/int13`).
 * The evidence archive `int13-evidence-69156cad.tar` and the 17 held vendor files are still installed; `git status` shows only my three reports.
 * Time: 29 September 2026, 16:43 to 16:51 CEST (from `date`).
 * Every rule tool ran from a scratch cwd with `VERDICT_DIR` in the session scratchpad. The replay ran in a scratchpad clone, which I removed afterwards.
@@ -21,9 +21,9 @@ This is an AI review, not a qualified engineering review.
 
 | Sentence | Against the record | Verdict |
 |---|---|---|
-| The entry of apply_conops_4b_set12 said the other documents were read by check-int13-2, which found nothing stale outside CONOPS.md | CFL-016's entry of 7a9f7b5b says exactly that | true |
+| The entry of apply_conops_4b_set12 said the other documents were read by check-int13-2, which found nothing stale outside CONOPS.md | CFL-016's entry of 162f24b6 says exactly that | true |
 | "That sentence is withdrawn: check-int13-2 read CONOPS.md only, and says so." | Of the documents CFL-016 names, check-int13-2 records a reading of CONOPS.md only; that is check-int13-3's statement (its B1, "Not read"). check-int13-2 itself never says what it did not read | first half true; "and says so" is not in check-int13-2's words (n1) |
-| The back-feed item went stale with 3115fc58; the board A rows with board A's round 8 (c0133147) | 3115fc58 first carries U537 to U554 in `gen_sch_b.py` and is not on main; c0133147's body opens "Round 8, board A" and first carries U35 to U38 and U26 as the outlet interlock | true |
+| The back-feed item went stale with b9ef5d38; the board A rows with board A's round 8 (a23d87fc) | b9ef5d38 first carries U537 to U554 in `gen_sch_b.py` and is not on main; a23d87fc's body opens "Round 8, board A" and first carries U35 to U38 and U26 as the outlet interlock | true |
 | "In the words of check-int13-3": PANEL.md line 156 lists the back-feed as open, which set 12 draws | check-int13-3, B1 | true |
 | "PANEL.md lines 155 and 156 still name U26 and board A's round 8 candidate at gen_sch_a.py:1240-1243" | check-int13-3 says line 156 names U26 (at `:1102`) and the candidate, and line 155 "carries the same candidate citation". Line 155 does not name U26 | misquoted (n2) |
 | V2-SPEC.md line 76 lists the RockBLOCK's ENABLE forced low as owed | check-int13-3, B1 | true |
@@ -54,8 +54,8 @@ This is an AI review, not a qualified engineering review.
 * **The status form is consistent.**
   * `rules_lib.py` allows CONFLICT_RESOLVED with FAIL. It forbids only FAIL without a phase or class, and CONFLICT_OPEN reading anything but FAIL.
   * The registry holds exactly two such records, CFL-006 (FAIL, waits on S-27 and S-86, resolved by D-06) and now CFL-016.
-  * The named conflict (the 45bde541 passages of its statement) stays resolved by S-07. What fails is the continuing acceptance on set 12, which is the same shape as CFL-006.
-  * `resolved_by` is dated to S-07 at 45bde541, so it stays true as history.
+  * The named conflict (the 3e42100d passages of its statement) stays resolved by S-07. What fails is the continuing acceptance on set 12, which is the same shape as CFL-006.
+  * `resolved_by` is dated to S-07 at 3e42100d, so it stays true as history.
 * **Rule checks.** `waits_on: [S-122]` names an open item. evidence_phase SCHEMATIC and class DESK_REVIEW are kept, and every `evidence_bound_to` is current (0 warnings).
 
 ## 3. What else moves
@@ -76,7 +76,7 @@ This is an AI review, not a qualified engineering review.
 
 | Run | Result |
 |---|---|
-| `rules_status.py`, 3 times | exit 1; stdout byte identical, and identical to the runs at 69156cad and 7a9f7b5b; FAIL of 338 (PASS 195, INCONCLUSIVE 104, FAIL 39); the seven board audits and `summary.json` byte identical across runs and to 7a9f7b5b's |
+| `rules_status.py`, 3 times | exit 1; stdout byte identical, and identical to the runs at 87d871d7 and 162f24b6; FAIL of 338 (PASS 195, INCONCLUSIVE 104, FAIL 39); the seven board audits and `summary.json` byte identical across runs and to 162f24b6's |
 | `rules_render.py`, 2 times | exit 0; `git status` clean |
 | `rules_render.py --check` | 16 documents, 0 out of date |
 | `--requirements --check` | current |
@@ -85,7 +85,7 @@ This is an AI review, not a qualified engineering review.
 | `rules_lib.py requirements` | 144 records, 0 errors, 0 warnings |
 | `claims_check.py` (scratch `VERDICT_DIR`) | PASS, 91 claims, 0 unqualified |
 | `tests/run.py test_requirements test_decision_register` | 71 passed, 0 failed |
-| Replay of `apply_cfl016_set12.py` on a scratch clone at 7a9f7b5b, then `rules_render.py --requirements` | the registry, the trace page, the script and the two changed checks byte identical to d0717859 |
+| Replay of `apply_cfl016_set12.py` on a scratch clone at 162f24b6, then `rules_render.py --requirements` | the registry, the trace page, the script and the two changed checks byte identical to 0179fb2f |
 
 ## 4. The re-filed checks
 

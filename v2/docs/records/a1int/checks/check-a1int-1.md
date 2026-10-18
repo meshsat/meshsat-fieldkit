@@ -1,11 +1,11 @@
 acceptable: no
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026). B1 and M3, M7 answered by reconcile_lid_panel.py's second issue (U3 at its minimum 6.1 A and the 6.0 A bracket, U3B at code 62, the model pinned); M1, M2, M6 stated in its notes; M4, M5 in RECONCILE.md; M8 recorded there. The checker's own scripts stay in its scratch clone. -->
 
-# AI review: independent check of the two-pack lid reconciliation, fnd/a1int at 7613c072 (MESHSAT-1357)
+# AI review: independent check of the two-pack lid reconciliation, fnd/a1int at d208c5a0 (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. Every figure below is a model result on the September
 reference day (nothing is built or measured). Checked 29 September 2026, 12:01 to about 12:40 CEST, in a shared clone
-detached at 7613c0720d4c56cb07c57ba5d4b718c478125c01. Read-only on every worktree; my scripts and outputs are in
+detached at d208c5a0961f76925408da3bacf8b7f712d1845b. Read-only on every worktree; my scripts and outputs are in
 `_chk/` (untracked): `indep.py` (my own two-store balance, which imports neither energy_budget.py nor
 energy_two_pack.py), `sens.py`, `prod_sens.py`, `ledger.py`, `planes.py`, their `.out` files, and `txt/` (pdftotext of
 SLUSE66A, the 35E spec and the XT60 sheet).
@@ -112,7 +112,7 @@ lower bound at the lid's 0.15 A a cell (energy_inputs.yaml), so the thresholds e
   stated rule is sufficient; "laid flat does not meet" is not true of 4S15P typical.
 - **M6**: the lid path's standby drain (TOPOLOGY 9: 1.38 to 1.73 mA) and board PL's own supply are outside the 42.8
   W: about 1.5 to 1.8 Wh over 72 h plus the gauge's draw, not read.
-- **M7**: the reconcile scripts import energy_two_pack.py without pinning it; its sha256 at 7613c072 (81694b2b...)
+- **M7**: the reconcile scripts import energy_two_pack.py without pinning it; its sha256 at d208c5a0 (81694b2b...)
   equals the pin in energy_runs.py.
 - **M8**: U3B at its 0.96 bracket costs 3.2 / 3.5 Wh at C (14P / 15P), nothing at B. The 4.0 A Low Temp clip never
   binds; with it, 4S15P C's threshold moves to +1.76 C (the capacity split's spill), not a loss.

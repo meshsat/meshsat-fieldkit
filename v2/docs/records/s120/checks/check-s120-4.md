@@ -5,9 +5,9 @@ mergeable: yes
 AI review (reproduced by running), not a qualified engineering review. 29 September 2026, 19:17 CEST. Checker did not
 write the work.
 
-Checked: `fnd/s120` at `1561ff88d89296037b9dd32c2d95b26f628baede` (confirmed), three commits on `8c504a24` (`2ab673ab`,
-`a997d08a`, `1561ff88`), all as the owner, no trailer, only the six s120 records touched, no en or em dash in them. Clone
-`<scratch>/chk-s120` detached at the tip; `_int14` at `b874b744` for main's tools.
+Checked: `fnd/s120` at `fa394e4999da1d39411e6f503ad3d84780647165` (confirmed), three commits on `cd34d6ee` (`6009d0ce`,
+`70c05b1a`, `fa394e49`), all as the owner, no trailer, only the six s120 records touched, no en or em dash in them. Clone
+`<scratch>/chk-s120` detached at the tip; `_int14` at `53804300` for main's tools.
 
 ## Blocking
 
@@ -42,13 +42,13 @@ None new.
    (200 ns, R146, R147, C121) it arrives as 0.079 V, the same with the exact single pole; labelled INFERRED.
 3. **`vbus20_bound.py`** reprints the committed `.out` byte for byte (exit 0). Against round 3's output only the header
    ("fourth issue") and four added lines in section 10 differ; every figure is unchanged.
-4. **Registry.** The tip's registry equals `b874b744`'s (sha256/16 1dde1fd16f4e260e); `--check` wrote nothing. On scratch
+4. **Registry.** The tip's registry equals `53804300`'s (sha256/16 1dde1fd16f4e260e); `--check` wrote nothing. On scratch
    copies of both:
-   * S-120 closed by `commit 1561ff88d89296037b9dd32c2d95b26f628baede`.
+   * S-120 closed by `commit fa394e4999da1d39411e6f503ad3d84780647165`.
    * S-124 opened (SESSION, OPEN).
    * REQ-015 waits on S-106, S-107, S-111, S-124.
-   * The two applied copies are byte identical; a second run refuses, and `8c504a24` is refused (README differs).
-   * `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings on all four copies (main's tools at `b874b744` and
+   * The two applied copies are byte identical; a second run refuses, and `cd34d6ee` is refused (README differs).
+   * `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings on all four copies (main's tools at `53804300` and
      the tip's).
 
 ## Counts

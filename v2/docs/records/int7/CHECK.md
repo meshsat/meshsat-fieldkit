@@ -1,12 +1,12 @@
-# Fresh check of the set 6 integration candidate at 1c4235ec (AI review), 28 September 2026
+# Fresh check of the set 6 integration candidate at 42a7ce3b (AI review), 28 September 2026
 
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357). The checker wrote none of the candidate; its scratch scripts are local (_scratch/chk-int7/). Its findings are answered one by one in CHECK-RESPONSE.md beside this file. -->
 
-# AI check of the set 6 integration candidate, `fnd/int7` at `1c4235ec` (MESHSAT-1357)
+# AI check of the set 6 integration candidate, `fnd/int7` at `42a7ce3b` (MESHSAT-1357)
 
 This is an AI review by a checker that wrote none of the candidate. It is not a qualified engineering review and replaces none. Prototype design: no V2 board has been built, ordered or measured; everything below is a reading of files.
 
-Checked 28 September 2026, 17:15 to 17:34 CEST, in `<worktrees>/int7` (read only; HEAD `1c4235ec`, `git status` empty before and after). Scratch scripts are in `<worktrees>/_scratch/chk-int7/`.
+Checked 28 September 2026, 17:15 to 17:34 CEST, in `<worktrees>/int7` (read only; HEAD `42a7ce3b`, `git status` empty before and after). Scratch scripts are in `<worktrees>/_scratch/chk-int7/`.
 
 ```
 mergeable: no
@@ -42,9 +42,9 @@ Three blocking findings, all in text the integration wrote. No reading, page cou
 **B-3, item 9: CLOSURE.md does not separate the kinds as it says it does.**
 
 - **Problem (a):** section 3 omits two set 6 instrument corrections:
-  - `tx_inhibit.py` in `910da406`, which RESULT.txt section 5 says moved eight of board B's eleven failed RF-002 rows.
-  - `block_contract.py` in `d5e12880`, which turned E5's INT-001 and SCH-003 to FAIL.
-- **Problem (b):** section 1 lists `d5e12880` as a circuit change while its own cell says "a contract, not a copper change".
+  - `tx_inhibit.py` in `bfd79196`, which RESULT.txt section 5 says moved eight of board B's eleven failed RF-002 rows.
+  - `block_contract.py` in `f1e26a47`, which turned E5's INT-001 and SCH-003 to FAIL.
+- **Problem (b):** section 1 lists `f1e26a47` as a circuit change while its own cell says "a contract, not a copper change".
 - **Problem (c):** section 2 says "None" while section 1 holds set 6's declaration changes. RESULT.txt attributes PWR-001's moves on C, D, E and P to declarations and filed sheets.
 - **Counter-example:** a reader of CLOSURE.md alone takes RF-002 on B, FAIL to INCONCLUSIVE, as a circuit closure. That is a checker repair readable as a circuit change, which the record's first paragraph says it prevents.
 
@@ -59,7 +59,7 @@ Three blocking findings, all in text the integration wrote. No reading, page cou
 | m5 | 4 | S-81's own closing condition is met ("or S-64 closes before that issue"). It was disposed, and its text still says CON-010 reads FAIL. |
 | m6 | 4 | S-13 to CON-025 is a weak link: an order code cannot move a TVS capacitance constraint that reads PASS. |
 | m7 | 4 | S-61 is rated major in its own text and carried "before board D's layout entry", yet is visible from no record or hold. I found no board D record to take it, so the reason holds as far as I searched. |
-| m8 | 2 | S-91's title reads as if `H3-RESPONSE.md` exists; it does not. Two things it lists were done by this integration (`b3d66c70`, `a4b157f0`). |
+| m8 | 2 | S-91's title reads as if `H3-RESPONSE.md` exists; it does not. Two things it lists were done by this integration (`5f76bbec`, `0738065c`). |
 | m9 | 2 | S-89 says "reproduced on four fixtures"; the review says four cases were run and two show a false PASS. |
 | m10 | 9 | No run record of the 28 September re-take is filed under `v2/docs/records/int7/`. "110.7 s, exit 0" and "252 gitignored readings" cannot be traced from the tree. |
 | m11 | 6 | Only 26 of the 90 re-written readings name `rules_lib.py` in their code bundle; the other 64 writers do not import it. |
@@ -67,11 +67,11 @@ Three blocking findings, all in text the integration wrote. No reading, page cou
 
 ## verified
 
-1. **Merge `069a5d97`:** parents are `7f3a4956` and `d04a4c4c`, base `6ec37197`.
+1. **Merge `2d4e440b`:** parents are `4734affa` and `5e7b0bea`, base `c76f45f0`.
    - The rule holds for every id: 59 open, 58 closed, none doubled, every block equal to a parent's.
    - Needs 19, rulings 29, choices 74 and records 144 equal the set 6 side; no entry lost.
    - Of 37 files `main` changed, 32 are byte-identical at the merge; the three hand-merged pages keep every added line of both sides.
-   - RELEASE-H3.md is identical to `main`, the H3 package and both reviews are present, and `a5350e81` carries `main`'s two files unchanged.
+   - RELEASE-H3.md is identical to `main`, the H3 package and both reviews are present, and `1fc8308b` carries `main`'s two files unchanged.
 2. **S-88 to S-92:** each read against its cited file. S-88, S-89, S-90 and S-92's counts are supported. S-91's twenty-eight is 13 plus 15 in the two checks. Exceptions are B-1, m8 and m9.
 3. **CON-010:** recomputed by me as INCONCLUSIVE.
    - `inhibit_chain_d` 0 failed, 1 undecided of 8; `inhibit_chain_a` 0 failed, 2 undecided of 9; `safe_lines_d` and `safe_lines_a` PASS; none missing.
@@ -81,8 +81,8 @@ Three blocking findings, all in text the integration wrote. No reading, page cou
 4. **Dispositions:** all 30 read. 16 links land on a record the item can move and 9 dispositions hold; the rest are B-2, m5, m6 and m7. The validator refuses an unlinked, undisposed item (`rules_lib.py` lines 1159 to 1172) and `test_requirements.py` line 848 tests it.
 5. **Renderer:** the head sentence comes from `baseline_state` and the seven feasibility records. The two limit notices come from `limits_reading` and leave with the item. TRN-001 is marked on A only and REL-001 on all seven pages. `derived_notices`: 3 passed.
 6. **Readings:** the layout-entry table has 35 rows (A 7, B 7, C 3, D 7, E 4, P 5, E5 2), equal to RESULT.txt, none AWAITING_REVALIDATION.
-   - 90 tracked readings were re-written, the same 90 files as retake6, all at version `a4b157f07618`.
-   - No verdict, count or evidence line changed against `7f3a4956`.
+   - 90 tracked readings were re-written, the same 90 files as retake6, all at version `0738065c1386`.
+   - No verdict, count or evidence line changed against `4734affa`.
 7. **Rebind:** the page is `ff781ceffbb41d80`. My own comparison gives 2 of 15 sections differing and 13 byte-identical. The rows named are on the page and both results are unchanged.
 8. **Validators:** all five exit 0 (16 documents, 0 out of date; 59 rules and 144 records with 0 errors). Four test files: 3, 71, 28 and 10 passed, 0 failed.
 9. **CLOSURE.md:** its numbers are the page's and RESULT.txt's (35 against 40 on `main`; 71, 10, 2; 209, 40, 89 of 338; 59, 58, 144). Nothing it calls closed is merely refreshed. Attribution is B-3.
@@ -90,7 +90,7 @@ Three blocking findings, all in text the integration wrote. No reading, page cou
 
 ## not_done
 
-- **Full suite on `1c4235ec`:** not run by me. `_scratch/int7-suite/suite-box.log` ends "2019 passed, 0 failed, 3 skipped", but its status file is empty and it names no commit, so I cannot attribute it.
+- **Full suite on `42a7ce3b`:** not run by me. `_scratch/int7-suite/suite-box.log` ends "2019 passed, 0 failed, 3 skipped", but its status file is empty and it names no commit, so I cannot attribute it.
 - **`rules_status` on the final commit:** not re-run. That the pages are a fixed point rests on the `--check` validators against the worktree's existing audit.
 - **The 252 gitignored readings:** not inspected.
 - **The walk itself:** not re-run; B-1's reason is read from EMCON.md and the tool's own text.
@@ -99,4 +99,4 @@ Three blocking findings, all in text the integration wrote. No reading, page cou
 - **S-61, S-67 and S-83:** judged on statements, not every record's acceptance text.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

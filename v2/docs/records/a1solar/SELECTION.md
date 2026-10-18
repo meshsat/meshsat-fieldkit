@@ -1,6 +1,6 @@
 # SELECTION: the panel for Option A(i) (stream a1solar, MESHSAT-1357, 29 September 2026)
 
-Second issue, after the independent AI check of `9f93a9fc` (`checks/check-1.md`): the decision's gate on
+Second issue, after the independent AI check of `715fe251` (`checks/check-1.md`): the decision's gate on
 REQ-016 (check minor 4), REQ-016's temperature reading (minor 5), the deployment rule from the plane grid (B1), the
 SunPower documents held back by their terms (minor 8) and "on this model" where a result is stated (minor 10).
 

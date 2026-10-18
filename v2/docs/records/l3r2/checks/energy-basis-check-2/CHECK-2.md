@@ -2,12 +2,12 @@ accepted: yes
 
 # CHECK-2: the energy basis, second round, and the owner's weather addendum (stream l3plane, MESHSAT-1357)
 
-**An AI check, not a qualified review.** 30 September 2026, 03:03 CEST. Branch `fnd/l3plane`, tip `ec415c09` (confirmed),
-three commits on `6a283b25` (`ac81f847`, `24acb9dc`, `ec415c09`). Scope: the changed sections and what they rest on. The
+**An AI check, not a qualified review.** 30 September 2026, 03:03 CEST. Branch `fnd/l3plane`, tip `24a2a9a5` (confirmed),
+three commits on `c194cfd2` (`c186b385`, `6e6e0d80`, `24a2a9a5`). Scope: the changed sections and what they rest on. The
 checker wrote none of the stream. Prototype design: nothing is built, powered or measured.
 
 **How it was checked.** A shared clone at the tip (`_scratch/chk-energy2`, removed after the check) with the int16
-worktree's held files copied in as ignored files, never committed. The checker read `git diff 6a283b25..ec415c09`, the new
+worktree's held files copied in as ignored files, never committed. The checker read `git diff c194cfd2..ec415c09`, the new
 `ENERGY-BASIS.md`, `weather_basis.py`, `curve_readings.py` and the changed parts of `energy_basis.py` and
 `vbus20_range.py`. It also read the makers' pages: LT8705A 8705af p.41, SNVSAI1D p.9 Figure 6-2, the Samsung 35E
 report pp.3 and 7, and POWER-THERMAL.md section 4. It checked board E's netlist for Q3 and Q4, and the table of

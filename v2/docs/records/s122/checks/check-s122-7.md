@@ -1,6 +1,6 @@
 mergeable: no
 
-# AI review: independent check of stream s122, round 7, fnd/s122c at b76e5fd3 (S-122, CFL-016, MESHSAT-1357)
+# AI review: independent check of stream s122, round 7, fnd/s122c at 575296a4 (S-122, CFL-016, MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. Everything below is what I read or ran myself.
 
@@ -10,10 +10,10 @@ netlist or a maker's page; a closing figure with no binding, or a binding that d
 breaks a replay or the integrator sequence; a scope statement that claims more than the gate does.
 
 **Set up**
-* `fnd/s122c` is at `b76e5fd3` (read with `git rev-parse`). The work is `c3490c9b` and `43b5a25c`, on `1c187977`.
+* `fnd/s122c` is at `575296a4` (read with `git rev-parse`). The work is `a8f572d0` and `3f1b59e4`, on `0d0b538a`.
   `checks/check-s122-6.md` is byte identical to my predecessor's CHECK-6.md.
 * Check clone: a shared clone at `<scratch>/chk-s122-7`, detached at the tip, remote removed.
-* Integration clone: a shared clone at `<scratch>/chk-s122-7-int`, on `fnd/int16`'s tip `36bb1d12`, remote removed
+* Integration clone: a shared clone at `<scratch>/chk-s122-7-int`, on `fnd/int16`'s tip `fa6d3b80`, remote removed
   before any commit, commits with the owner's `-c` flags, never pushed. int16's 945 ignored files under `v2/ecad` and
   `v2/vendor` (minus `__pycache__`) were copied in from its worktree.
 * Both clones are removed when this report is written. No real branch was committed to or pushed.
@@ -25,7 +25,7 @@ breaks a replay or the integrator sequence; a scope statement that claims more t
   used `cd`.
 
 **What I read**
-* CHECK-6.md, then `git diff 1c187977..b76e5fd3` of V2-SPEC.md, `apply_docs_s122_r7.py`, `judgements.py`,
+* CHECK-6.md, then `git diff 0d0b538a..b76e5fd3` of V2-SPEC.md, `apply_docs_s122_r7.py`, `judgements.py`,
   `s122lib.py`, `verdicts.py`, `close_s122.py`, `test_close_s122.py`, `apply_registry_s122_r4.py`, README.md (round 7
   section, the binding table, the run order) and LOG.md. The `.out` files I regenerated instead of reading.
 * The eight closing lines at the tip.
@@ -33,7 +33,7 @@ breaks a replay or the integrator sequence; a scope statement that claims more t
 * With pdftotext: the Samsung INR18650-35E sheet ("3.3 Nominal Voltage 3.60V"), the RA30H1317M1 sheet's page heading and
   description, the LM5069 sheet's section 7.3 and its footnote, the TE 2199119 sheet's "Service Temperature".
 * Board values through `s122lib.netlists`: D `U2`, `U6`, `U7`, `U15`, `U21`; A `Q27`, `Q38`, `U32`, `U6`, `U7`, `U15`.
-* `fnd/reviewdc` at `4795d5bf`: `apply_findings.py`'s docstring and README's run order.
+* `fnd/reviewdc` at `f8b5729f`: `apply_findings.py`'s docstring and README's run order.
 
 ## Blocking
 
@@ -44,7 +44,7 @@ drops them.**
   DS3231 and DS12887 shapes among them) and the EMC test methods' names (CE102, RE102) as part numbers, which a judgement
   must then excuse". Round 6's text said "a DS code of four digits (the shape of Maxim's DS3231)", which was true.
 * `s122lib.PN_LIT` holds `^DS\d{5}$`, so `is_partno` returns False for a five-digit DS code. Run through
-  `s122lib.partnos`, at the tip and with `1c187977`'s `s122lib.py`:
+  `s122lib.partnos`, at the tip and with `0d0b538a`'s `s122lib.py`:
   * "The clock is a DS12887 from Maxim." gives no part number;
   * "The Maxim DS12887 clock." gives none;
   * "the DS3231 clock" gives `DS3231` (four digits: read, as stated).
@@ -101,7 +101,7 @@ Say "among them", or list all.
 * Round 6's tokenizer reads no figure in "135-175 MHz" or "25 °C". Neither form is on the closing lines.
 * Carried from check 6 m4, unchanged: the registry sentence's "an upper-case commit" (1C187977 is read, 1BAFAB8C is not).
 
-**Integration note, not S-122's.** Merging `4795d5bf` onto `36bb1d12` conflicts in `v2/vendor/sources.txt`: both sides
+**Integration note, not S-122's.** Merging `f8b5729f` onto `fa6d3b80` conflicts in `v2/vendor/sources.txt`: both sides
 append lines after line 458. I resolved it as the union (int16's two passives lines, then review D's Arlitech line).
 
 ## What holds
@@ -139,7 +139,7 @@ append lines after line 458. I resolved it as the union (int16's two passives li
     values (D1 to D16 and D22); 2 PCA9555; `J_HS1`, `J_HS2`; `J_FAN1`, `J_FAN2`;
   * board files: the outlines, layer counts, board C's 240 x 176 cutout, board B's In4 zones on the +5V nets, board E's
     eleven clamp zones;
-  * records: decisions 43 and 27; `gen_sch_a.py` at `b2709118`, four AP64500 groups.
+  * records: decisions 43 and 27; `gen_sch_a.py` at `be826353`, four AP64500 groups.
 * Each states its figure as the kit's own value. None is a test condition, an example or another part's value.
 
 **3. m1 of check 6 is answered.**
@@ -176,7 +176,7 @@ append lines after line 458. I resolved it as the union (int16's two passives li
 **5. Minors 3 to 6.**
 * **`apply_docs_s122_r7.py`:**
   * on the tip it refuses (`4f1fd784`, not `c480bac2`);
-  * on `1c187977`'s V2-SPEC.md, `--check` locates 1 edit;
+  * on `0d0b538a`'s V2-SPEC.md, `--check` locates 1 edit;
   * pointing the CONOPS.md row of DEFINITION-STATUS.md's baselines table at V2-SPEC.md makes it refuse;
   * adding V2-SPEC.md to `s122lib.BASELINED` makes it refuse;
   * the real run writes a file identical to the tip, and a second run refuses.
@@ -200,13 +200,13 @@ append lines after line 458. I resolved it as the union (int16's two passives li
 **7. Replays and the set 15 sequence.**
 * **Replays at the tip, byte identical, nine of nine:**
   * `inventory.out`, `verdicts.out`;
-  * `inventory-base.out`, `verdicts-base.out` at `e57a7365` (938 sentences, 74 STALE);
-  * `inventory-set14.out`, `verdicts-set14.out` at `1bafab8c` (996, 10 STALE);
-  * `verdicts-r4.out` at `edead832` (1005, 5);
-  * `verdicts-r5.out` at `a6429e66` (1009, 1);
-  * `verdicts-r6.out` at `1c187977` (1011, 0).
-* **Review D first**, on `36bb1d12`:
-  * the merge of `4795d5bf` conflicted in `v2/vendor/sources.txt` only (the integration note above);
+  * `inventory-base.out`, `verdicts-base.out` at `557a0628` (938 sentences, 74 STALE);
+  * `inventory-set14.out`, `verdicts-set14.out` at `4da7cd86` (996, 10 STALE);
+  * `verdicts-r4.out` at `29d076eb` (1005, 5);
+  * `verdicts-r5.out` at `bd34cbd0` (1009, 1);
+  * `verdicts-r6.out` at `0d0b538a` (1011, 0).
+* **Review D first**, on `fa6d3b80`:
+  * the merge of `f8b5729f` conflicted in `v2/vendor/sources.txt` only (the integration note above);
   * `facts.py`: 55 facts, 0 FAIL;
   * `test_refusals.py`: 17 cases, 0 FAIL;
   * `apply_findings.py --check`: RD-C-01 extends S-101, RD-C-02 to RD-C-09 and RD-C-24 open S-126 to S-134, as its
@@ -214,7 +214,7 @@ append lines after line 458. I resolved it as the union (int16's two passives li
   * `apply_findings.py` wrote, and a second run refused;
   * `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings. The trace page was rendered and committed.
 * **Then S-122:**
-  * **Merge.** `git merge --no-ff b76e5fd3` merged with no conflict.
+  * **Merge.** `git merge --no-ff 575296a4` merged with no conflict.
   * **Step 1.** `apply_registry_s122_r4.py`:
     * rebound 5 records (CFL-010, CFL-013, CFL-014, CFL-016, REQ-005);
     * opened **S-135**, the next free number after review D's S-126 to S-134;
@@ -232,7 +232,7 @@ append lines after line 458. I resolved it as the union (int16's two passives li
     UNJUDGED. The only line that moved in each is the header, where `pcb_decisions.yaml` goes from `a41df5d1` to
     `823a6b32`. Committed with the registry and the pages.
   * **Step 5.** A fixture check (first line "mergeable: yes", naming check-int15-1, the nine documents, `verdicts.out` and
-    the eight lines) was refused while only staged ("not committed on a line that carries 097d2517"), then committed.
+    the eight lines) was refused while only staged ("not committed on a line that carries 911de5fb"), then committed.
   * **Step 6.** `test_close_s122.py`: ALL PASS.
   * **Step 7.** `close_s122.py` closed S-122; CFL-016 reads PASS with its `waits_on` dropped. S-42, S-123 to S-126, S-134
     and S-135 stay open, among others.
@@ -246,14 +246,14 @@ append lines after line 458. I resolved it as the union (int16's two passives li
 **8. Text rules.**
 * Added lines of the diff: no U+2013 or U+2014 (the Python sources name them only as backslash-u escape sequences).
 * No internal host name, user path or address.
-* CONOPS.md is the `c5430071` file (`6cb7b241cb84d729`) and PRODUCT-BRIEF.md is unchanged since `1bafab8c`. Neither
+* CONOPS.md is the `ed31219a` file (`6cb7b241cb84d729`) and PRODUCT-BRIEF.md is unchanged since `4da7cd86`. Neither
   moved in the integration run.
 
 **9. The eight closing lines** (what I verified on each, for the next round).
 * **V2-SPEC.md line 47.** 2 W is D `U2`'s value, "NiceRF SA868 VHF 2 W exciter". 30 W is the RA30H1317M1 sheet's rating.
   `U6` is the PCM2912A.
 * **V2-SPEC.md line 81.** Board A is 240 x 160 mm on six layers. 14.4 V is P's CELL4 (B1 answered). 9 to 36 V is E
-  `J_DCIN`. The three 5.1 V slot rails are `J_5V_S1` to `J_5V_S3`. Four AP64500 is `gen_sch_a.py` at `b2709118`. 13.8,
+  `J_DCIN`. The three 5.1 V slot rails are `J_5V_S1` to `J_5V_S3`. Four AP64500 is `gen_sch_a.py` at `be826353`. 13.8,
   12 and 54 V are the nets of `U13`, `U15` and `U16`. 45 W is `U18`, 3.3 V is `U12`. Eleven SMP-MAX is `J_BM1` to
   `J_BM11`. 2x13 is `J_AB1`.
 * **V2-SPEC.md line 82.** Board B is 330 x 200 mm on six layers, with In4 zones on the +5V nets. Decision 43 has eight
@@ -273,7 +273,7 @@ append lines after line 458. I resolved it as the union (int16's two passives li
 
 ## Counts
 
-Committed `verdicts.out` at `b76e5fd3`, reproduced byte for byte:
+Committed `verdicts.out` at `575296a4`, reproduced byte for byte:
 
 | Document | Sentences | TRUE | STALE | BASELINE | NOT DERIVABLE | UNJUDGED | Assertions |
 |---|---|---|---|---|---|---|---|

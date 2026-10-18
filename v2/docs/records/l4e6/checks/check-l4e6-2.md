@@ -3,8 +3,8 @@ accepted: yes
 # Layer 4, L4-E6: The assistant's verification of the two minors of the accepted check (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. The engineering collaborator's one check of L4-E6 (`astra-check-l4e6-1.md`, run
-20261001T125840Z-3029827 on `ae4f7e4c`) accepted the decision as a provisional engineering decision with two minors. The fix
-is commit `cc95a829`.
+20261001T125840Z-3029827 on `59f613dc`) accepted the decision as a provisional engineering decision with two minors. The fix
+is commit `bb5f3015`.
 
 - **M1, L1's temperature over the full VIN grid.** The script now sweeps 9 to 36 V at 1 mV: at most 84.99 C at 13.957 V
   (R11 8 mOhm) and 85.74 C at 15.680 V (7 mOhm), the collaborator's figures; the qualifying temperatures 85 and 86 C, the

@@ -1,12 +1,12 @@
 # L7-R2: the Layer 7 items other layers assigned, on the makers' drawings (MESHSAT-1357, 3 October 2026)
 
-Layer 7 record l7r2, round 2, written on branch `fnd/l7r2` from the integration candidate `fnd/int28` at `a1f696de`. **Prototype design,
+Layer 7 record l7r2, round 2, written on branch `fnd/l7r2` from the integration candidate `fnd/int28` at `9bdf58cd`. **Prototype design,
 desk arithmetic: nothing has been bought, built, powered or measured.** Every figure is printed by `l7r2_items.py` in `l7r2_items.out`
 (its section in brackets): a maker's printed figure is MAKER (each transcribed with its document's URL and sha256 in
 `inputs/makers-drawings-r2-2026-10-03.md`), this record's arithmetic MODELED, a reading not printed as such INFERRED, a stated
 assumption ASSUMPTION, a figure no held document prints NOT READ. The inputs from other branches are copied into `inputs/` with their
-commit, path and sha256 (Layer 5's TBD rows at `6902db8f`, record l8gnd's H1 row and F01, F07 at `226e9143`, record l8r2's cooler header
-at `a441651a`). No generator, CAD file, registry or other record is edited: the CAD change is a release-guarded draft
+commit, path and sha256 (Layer 5's TBD rows at `4499ee53`, record l8gnd's H1 row and F01, F07 at `975f9d44`, record l8r2's cooler header
+at `719a47d8`). No generator, CAD file, registry or other record is edited: the CAD change is a release-guarded draft
 (`apply_panel1450_coolers_r2.py`), the rest are FINDINGS naming their rows.
 
 ## In short

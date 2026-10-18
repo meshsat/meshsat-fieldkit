@@ -6,15 +6,15 @@ been built, powered or measured, and no figure below is a measurement. Every num
 by this stream (VERIFIED, with its clause), arithmetic on such numbers (INFERRED, with the arithmetic), a design
 declaration in a generator (DECLARED), or TBD with the effect of not knowing it.
 
-**Revision this page describes.** Every citation is anchored at `main` `01469100` (fifth cycle). `main` moved from
-`b69f20db` to `01469100` while this cycle ran; of the files this page cites by line, only `gen_sch_p.py` changed
-(board P's second-level over-temperature, `d90f30e4`), and its lines are re-pointed. The battery stream's review
+**Revision this page describes.** Every citation is anchored at `main` `4dcf99bb` (fifth cycle). `main` moved from
+`ef955b46` to `4dcf99bb` while this cycle ran; of the files this page cites by line, only `gen_sch_p.py` changed
+(board P's second-level over-temperature, `d0db2f49`), and its lines are re-pointed. The battery stream's review
 packet (`v2/docs/review-packets/battery/`) arrived in the same commits and is cited where it bears on PWR-F12. The
-model computes every board as generated at `1f614233`. Since then `458b2873` merged the round-4 and round-6
+model computes every board as generated at `f6c449fc`. Since then `09521e07` merged the round-4 and round-6
 corrections of boards A, B and D, among them the two candidates earlier cycles named: board A's (`fnd/r4a`: F-PR-01,
 F-PR-04, S-04, S-14, S-20, F-SQ-06) and board B's (`fnd/r4b`: F-PR-05). `main`'s `gen_sch_a.py` and `gen_sch_b.py` are
-byte-identical to those two candidates. `b69f20db` changed no generator (it records the case margins, appendix
-32.367). Where the merge changes a power figure the page gives both, "at `1f614233`" and "on `main`". The one change
+byte-identical to those two candidates. `ef955b46` changed no generator (it records the case margins, appendix
+32.367). Where the merge changes a power figure the page gives both, "at `f6c449fc`" and "on `main`". The one change
 that moves a D-11 floor, board A's charge shunt R17 in the pack's discharge path (S-04), is computed in sections 1 and
 7.2. The requirements registry (`fnd/i1`: REQ-014, REQ-018, CON-019) and `ARCHITECTURE.md` (`fnd/i3`) are still
 pending merge, and a candidate is not the design until it merges.
@@ -57,8 +57,8 @@ in section 12. Both are drafts for the integrator to file (proposal in section 1
      D's candidate carries since round 8 (PWR-F15: an NTC on the flange read by an ADS1115 at 0x48), read by firmware.
    - The basis is the gauge's 20 A over-current trip with 10 percent margin, and the cells' 60 C discharge window.
    - The distribution resistance carries the chemical fuse F2 (third cycle). On the boards as generated at
-     `1f614233` the all-transmit basis case needs 15.22 V, with 0.28 V of stated margin. On `main`, whose pack path
-     also carries board A's 5 mOhm charge shunt R17 since `458b2873`, it needs 15.31 V, with 0.19 V of margin. With
+     `f6c449fc` the all-transmit basis case needs 15.22 V, with 0.28 V of stated margin. On `main`, whose pack path
+     also carries board A's 5 mOhm charge shunt R17 since `09521e07`, it needs 15.31 V, with 0.19 V of margin. With
      the heater on it would need 15.79 V, which is why the heater is off during a key-down.
    - **A key-down near 18 A is above the chain's declared 10 A continuous current. So it holds only once the chain
      is re-declared with a short-time rating, board A's pack-node copper is judged at it, and the chemical fuse F2 is
@@ -118,10 +118,10 @@ in section 12. Both are drafts for the integrator to file (proposal in section 1
     lines 273 and 274);
   - INFERRED: about 9 mOhm of lead and contacts (W2 assumption A10, whose 20 mOhm predates F2; F2 is added in the
     third cycle, at its maximum, the conservative direction for every limit here).
-  - **On `main` since `458b2873`, 5 mOhm more.** Board A's charge-current shunt R17 ("5mOhm 1% 2512", a 3 W part)
+  - **On `main` since `09521e07`, 5 mOhm more.** Board A's charge-current shunt R17 ("5mOhm 1% 2512", a 3 W part)
     now carries the pack's discharge current too, because S-04 moved the loads to the charger's system side
     (`gen_sch_a.py` lines 26 to 37 and 716 to 722). It dissipates 1.62 W at 18 A. The tables keep 22.5 mOhm, the
-    boards as generated at `1f614233`. At 27.5 mOhm, battery W rises by at most 1.92 W, the pack current at 10.0 V
+    boards as generated at `f6c449fc`. At 27.5 mOhm, battery W rises by at most 1.92 W, the pack current at 10.0 V
     by at most 0.47 A, and the inside air by at most 1.6 K on the lowest conductance. Every "stack voltage below
     which" figure of section 7.1 moves up by 0.05 V at 10 A and 0.09 V at 18 A (`v2/docs/records/rv-pwr/pwr_budget.json`
     `d11.main_pack_path_R17`). The D-11 floors are re-solved with it in section 7.2.
@@ -178,7 +178,7 @@ and switching frequency is INFERRED. Board A's LM5176 stages run at 206 kHz with
 | Rail (part) | Plot used | PS-IDLE: current, efficiency PLAN (LOW to HIGH) | PS-TYP | PS-ALLTX | Declared floor |
 |---|---|---|---|---|---|
 | +5V_S1..3 (AP64500) | DS41979 Rev 5 Fig. 4 and 5, VOUT 5 V | S1 1.71 A, 0.926 (0.935 to 0.921) | S1 2.68 A, 0.929 | S1 4.65 A, 0.911 | 0.90 |
-| +5V_DEV (AP64500 at `1f614233`; an LM5176 stage on `main`, below) | same | 2.18 A, 0.930 | 3.44 A, 0.923 | **5.89 A on a 5 A part**, 0.908 | 0.90 |
+| +5V_DEV (AP64500 at `f6c449fc`; an LM5176 stage on `main`, below) | same | 2.18 A, 0.930 | 3.44 A, 0.923 | **5.89 A on a 5 A part**, 0.908 | 0.90 |
 | slot card and NVMe 3.3 V from 5.1 V (AP64500) | Fig. 4, VOUT 3.3 V at VIN 12 V: NOT PLOTTED at VIN 5 V, used as the conservative case | card 1: 1.21 A, 0.904 | 1.82 A, 0.913 | 2.76 A, 0.911 | 0.88 |
 | +3V3_DEV (AP63203 from 5 V) | DS41326 Rev 3 Fig. 4, VOUT 3.3 V at VIN 12 V: NOT PLOTTED at VIN 5 V | 1.15 A, 0.913 | 0.912 | 0.904 | 0.88 |
 | board E 5 V (AP63205 on CELL_F) | DS41326 Rev 3 Fig. 4 and 5 | 0.21 A, 0.916 | 0.916 | 0.916 | 0.88 |
@@ -194,7 +194,7 @@ and switching frequency is INFERRED. Board A's LM5176 stages run at 206 kHz with
 Distribution I2R at 14.4 V adds 0.17 W, 0.43 W, 0.92 W and 4.5 W respectively. The two outlets' stages add 7.8 W of
 loss inside when both deliver their contracts (declared floors 0.88 and 0.93, NOT PLOTTED).
 
-**Merged at `458b2873`.** On `main` +5V_S2 and +5V_DEV are LM5176 stages (F-PR-04; `gen_sch_a.py` lines 873 and
+**Merged at `09521e07`.** On `main` +5V_S2 and +5V_DEV are LM5176 stages (F-PR-04; `gen_sch_a.py` lines 873 and
 881). Their 5.1 V output is not plotted (Fig. 6-2 is VOUT 12 V), so on `main` those two rows are NOT PLOTTED,
 INFERRED near the AP64500's values the model uses, until a bench reading exists (FW-A15).
 
@@ -240,8 +240,8 @@ the real PS-BUSY sits between PS-TYP and this figure.
 2026:** PS-IDLE-SPEC, one of REQ-014's two requirement states, is computed with the kit-to-kit link card up and idle.
 This is the conservative reading of "radios idle". The link-off variant is the operator's saving.
 
-**Heater overlay (cold only).** At `1f614233` the mat was on unregulated VBAT: 10.8 W at 14.4 V and 14.7 W at 16.8 V
-(7.5 W at 12 V, RS PRO 245-556; W2 F-PR-06). On `main` since `458b2873` it is regulated to 12 V (TPS62933 U33,
+**Heater overlay (cold only).** At `f6c449fc` the mat was on unregulated VBAT: 10.8 W at 14.4 V and 14.7 W at 16.8 V
+(7.5 W at 12 V, RS PRO 245-556; W2 F-PR-06). On `main` since `09521e07` it is regulated to 12 V (TPS62933 U33,
 `gen_sch_a.py` line 1065), so 7.5 W plus the buck's loss. The model keeps the unregulated figure, which overstates the
 heater on `main`. It is switched by a software pin, HEAT_EN (U27 pin 6, line 1119), behind the eFuse U22 (line 1064).
 `CONOPS.md` lines 280 and 281 count it on the battery in the cold, still at the unregulated 10.8 W; the 4 September
@@ -253,7 +253,7 @@ conservative one: section 7.1 judges it over PS-TYP and PS-RED, and K4 keeps it 
 9.3): PoE 0.6 A at 54 V (32.4 W, 0.88) and USB-C 15 V 3 A (45 W, 0.93) add 85.2 W at VBAT, which gives 150.2 W at the
 pack terminals. 77.4 W of it leaves the enclosure through the outlets.
 
-**Off (PS-OFF), revised.** On `main` board P's SMBus clamp no longer drains the pack (F-BP-01 fixed at `faf8c981`,
+**Off (PS-OFF), revised.** On `main` board P's SMBus clamp no longer drains the pack (F-BP-01 fixed at `247db699`,
 `gen_sch_p.py` line 317), and the Geiger module is off the always-on domain (F-BP-02, `gen_sch_e.py` line 132). What
 is left is board E's always-on domain, 0.2 to 1.7 W depending on its firmware's sleep state (TBD), plus the gauge's 336
 uA. Storage uses the gauge's shutdown over SMBus (`gen_sch_e.py` line 213).
@@ -276,10 +276,10 @@ the loads. The 3.1 W between them is the same monitor and beacon increment plus 
 
 **Other boundaries of PS-IDLE-SPEC:**
 - **VBAT:** 42.6 W.
-- **Dock input on shore:** about 45 W. In `main`'s VSYS topology (S-04, since `458b2873`; `gen_sch_a.py` lines 26 to
+- **Dock input on shore:** about 45 W. In `main`'s VSYS topology (S-04, since `09521e07`; `gen_sch_a.py` lines 26 to
   48) shore carries the loads through the BQ25731 (about 0.98, Fig. 8-4) and the LM5176 front end (0.95 to 0.97,
   INFERRED: VOUT 20 V is not plotted).
-- **At `1f614233`:** every load sat behind the charge shunt (W2 F-CH-03), so shore carried the loads only up to
+- **At `f6c449fc`:** every load sat behind the charge shunt (W2 F-CH-03), so shore carried the loads only up to
   ChargeCurrent.
 
 ## 6. Battery energy after derating, and runtime
@@ -375,7 +375,7 @@ of section 7.2.
 | **the PA keyed alone over PS-TYP, PA at 75 W** | 143.9 (243.5) | 10.0 (16.9); 14.6 (25.1) | 14.4 V (every voltage); 18 A: never (13.6 V) | a burst: 0.9 to 2.1 K per 60 s at up to 14.6 A. Keyed continuously: 88.1 to 92.7; 87.8 to 188.4 | over 10 A for most of the discharge; under 18 A at every voltage; the every-load-at-maximum corner passes 18 A below 13.6 V | K1 to K5 and C4; the corner by K4 |
 | **the same, PA at 113 W, the rest at PLAN** | 184.0 | 12.8; 18.8 | every voltage; 18 A below 10.42 V | a burst: 1.4 to 3.2 K per 60 s at the 18 A C4 allows. Keyed continuously: 115.8 to 121.7; 112.9 to 253.2 | over 10 A at every voltage; over 18 A below a 10.42 V stack | **the PA-alone floor of 12.4 V (K5)**, C4 |
 | every transmitter keyed (PS-ALLTX) | 203.8 (272.0) | 14.2 (18.9); 20.9 (28.2) | every voltage | a burst: 1.4 to 3.2 K per 60 s at 18 A | above the 10 A continuous rating for the whole key-down | **only inside D-11's floor and the key-down rules (section 7.2), and only once the chain carries a short-time rating (PWR-F12)** |
-| any PA key-down with the heater on | the mat adds 8.5 W on `main`, regulated (10.1 W with `1f614233`'s unregulated mat) | | | | **no**: it would use the all-transmit floor's whole margin (section 7.2) | K4: HEAT_EN off before the PA keys |
+| any PA key-down with the heater on | the mat adds 8.5 W on `main`, regulated (10.1 W with `f6c449fc`'s unregulated mat) | | | | **no**: it would use the all-transmit floor's whole margin (section 7.2) | K4: HEAT_EN off before the PA keys |
 | PS-ALLTX with the outlets on (was PS-ALLTX-OUT) | 316 W on `main`'s old figures | | | | **no** (D-11) | S-14 (U30 on `main`); K4 |
 
 In the PA rows the heat inside counts the PA's 30 W of RF as heat, which overstates it; the continuous-keying figures
@@ -385,15 +385,15 @@ at its maximum with the PA at 113 W, which K4 excludes as it does for the all-tr
 mat at its 14.4 V power (PLAN) or its 16.8 V power (HIGH) at every stack voltage; a resistive mat draws less below
 those voltages, so its current is overstated there.
 
-How the outlets are held off during a PA key-down: on `main` since `458b2873` (S-14) the NAND U30 gives OUTLET_OK =
+How the outlets are held off during a PA key-down: on `main` since `09521e07` (S-14) the NAND U30 gives OUTLET_OK =
 NOT (TR_APRS AND PA_EN) (`gen_sch_a.py` line 1104), and U26's two spare gates make POE_EN = POE_SW_EN AND OUTLET_OK
-and PD_EN = PD_SW_EN AND OUTLET_OK (lines 1095 and 1103). At `1f614233` the outlet enables were software expander
+and PD_EN = PD_SW_EN AND OUTLET_OK (lines 1095 and 1103). At `f6c449fc` the outlet enables were software expander
 pins only. The floors and the key-down time are firmware (panel and bridge), reading the gauge's pack voltage,
 current and cell temperatures and, for K2 and C4, the PA's flange temperature (PWR-F15).
 
 Operating while charging on shore: in `main`'s VSYS topology (S-04) the front end gives about 100 W (5 A at
 20 V). PS-TYP takes 63.0 W, so the pack gets about 35 W, about 2.3 A (INFERRED). The charging row is computed at the
-full 3 A, which overstates the charge path's heat, so it errs on the safe side. At `1f614233` the loads sat behind
+full 3 A, which overstates the charge path's heat, so it errs on the safe side. At `f6c449fc` the loads sat behind
 the charge shunt, and shore carried load and pack together only up to ChargeCurrent (W2 F-CH-03). With both outlets on,
 PS-TYP's 150.2 W is more than the input carries, so the pack discharges and C2's temperature trigger still applies.
 
@@ -445,7 +445,7 @@ The parts along the path, each by its own document or declaration:
 - **Declared only:**
   - the 2 mOhm shunt R10, "2m 2512 2W (sense)" (`gen_sch_p.py` line 209). It dissipates 0.65 W at 18 A against a
     declared 2 W, and has no part number or maker sheet;
-  - on `main` since `458b2873`, board A's charge-current shunt R17, "5mOhm 1% 2512", in the discharge path (S-04). It
+  - on `main` since `09521e07`, board A's charge-current shunt R17, "5mOhm 1% 2512", in the discharge path (S-04). It
     dissipates 1.62 W at 18 A against the 3 W of its fitted part, whose maker's sheet is not held (`gen_sch_a.py`
     lines 716 to 722).
 - **Not proven at 18 A: the chemical fuse F2**, Eaton SCF9550-30-05, in series between the blade and Q1 on `main`
@@ -522,7 +522,7 @@ every rest voltage at 18 A. The rows marked "on `main`" carry it.
 | HIGH, every load at its maximum | 264.0 (272.0) | 14.67 V | 15.07 V | 15.91 / 16.27 / 16.51 V | 3.98 to 4.13 V: deliverable from full charge at every resistance in the range, but not covered by the floor below |
 | non-transmit loads at typical, standby card off, PLAN | 177.8 (181.3) | 9.88 V | 10.28 V | 11.12 / 11.48 / 11.72 V | 2.78 to 2.93 V |
 | the same, HIGH (the PA at 113 W, W2 F-PR-02) | 240.8 (247.5) | 13.38 V | 13.78 V | 14.62 / 14.98 / **15.22 V** | 3.66 to 3.81 V |
-| the same, HIGH, with the heater ON (what K4 prevents), `1f614233`'s unregulated mat | 240.8 plus the mat's 10.1 | 13.94 V | 14.35 V | 15.19 / 15.55 / **15.79 V** | 3.80 to 3.95 V |
+| the same, HIGH, with the heater ON (what K4 prevents), `f6c449fc`'s unregulated mat | 240.8 plus the mat's 10.1 | 13.94 V | 14.35 V | 15.19 / 15.55 / **15.79 V** | 3.80 to 3.95 V |
 | the same, the regulated mat of `main` (without R17) | 240.8 plus 8.5 | 13.85 V | 14.26 V | 15.10 / 15.46 / 15.70 V | 3.78 to 3.93 V |
 | **on `main`** (R17 in the pack path, 27.5 mOhm): non-transmit loads at typical, standby card off, HIGH | 240.8 (249.1) | 13.38 V | 13.87 V | 14.71 / 15.07 / **15.31 V** | 3.68 to 3.83 V |
 | **on `main`**, the same with the regulated mat on (what K4 prevents) | 249.4 (258.2) | 13.85 V | 14.35 V | 15.19 / 15.55 / **15.79 V** | 3.80 to 3.95 V |
@@ -530,13 +530,13 @@ every rest voltage at 18 A. The rows marked "on `main`" carry it.
 **Taken for all-transmit:**
 - **The declared floor stays a pack rest voltage of at least 15.5 V (3.88 V per cell).**
   - Its basis is the "non-transmit loads at typical, HIGH" row, which needs 15.22 V at the highest cell resistance
-    in the INFERRED range on the boards as generated at `1f614233`, and 15.31 V on `main`, with R17 in the pack path.
+    in the INFERRED range on the boards as generated at `f6c449fc`, and 15.31 V on `main`, with R17 in the pack path.
   - The other 0.28 V (0.19 V on `main`) is a deliberate margin, not arithmetic. With the heater off (K4) it keeps the
     floor good up to a cell DC resistance of 0.072 Ohm, 19 % above the top of the range (0.068 Ohm, 13 % above, on
     `main`). The floor is not raised for R17: the basis still sits inside it at every resistance in the range, and
     C4 enforces the 18 A where it mispredicts.
   - **The heater would use the whole margin.** With the mat on, the same row needs 15.79 V on `main` (the regulated
-    mat's 8.5 W plus R17), as it did at `1f614233` with the unregulated mat's 10.1 W at 13.94 V (15.70 V for the
+    mat's 8.5 W plus R17), as it did at `f6c449fc` with the unregulated mat's 10.1 W at 13.94 V (15.70 V for the
     regulated mat without R17). The floor would then cover a cell resistance only up to 0.048 Ohm. That is why K4
     turns it off. A key-down lasts at most 60 s, and its own I2R warms
     the cells by 1.4 to 3.2 K, so the heater's pause costs the cells nothing.
@@ -574,7 +574,7 @@ every rest voltage at 18 A. The rows marked "on `main`" carry it.
 - This is what the second cycle's "below the floor it serialises" now means: below 15.5 V the PA keys only alone,
   and below 12.4 V it does not key. Where 12.4 V sits in the pack's charge is TBD with the open-circuit-voltage curve.
 
-On `main` since `458b2873` the PA stage's average current loop limits at 7.2 to 9.5 A (F-PR-01, `gen_sch_a.py`
+On `main` since `09521e07` the PA stage's average current loop limits at 7.2 to 9.5 A (F-PR-01, `gen_sch_a.py`
 lines 903 to 914), so the PA path is bounded in hardware at 99 to 131 W. That is not a tighter bound than F-PR-02.
 Board D's gate bias is regulated on `main` too (VGG 4.30 to 4.68 V, `gen_sch_d.py` lines 624 to 645), which keeps the
 RA30H1317M1 sheet's "VGG<5V" condition for its 45 W output rating; the drain at 13.8 V is still a bench item, so the
@@ -664,7 +664,7 @@ minutes"**, taken by the session under the owner's standing rule of 26 September
   31 s at 68 W and 25 s at 83 W. Spreading lengthens these. So at the hot end of the envelope the flange, not K1,
   sets how long a key-down lasts. That is part of PWR-F13's cost.
 - **No board carries the sensor.** No temperature part on `main` sits on or near the flange: they are board P's four
-  cell thermistors, its second level's own thermistor (since `d90f30e4`) and the PTC element beside its FETs, board
+  cell thermistors, its second level's own thermistor (since `d0db2f49`) and the PTC element beside its FETs, board
   E's BME688 and board B's TMP117 under the coolers (PWR-F15).
 - **Without it,** the record's figure bounds one key-down from a +50 C plate at about 30 s (84.0 C at 68 W, 6 K under
   the 90 C for the interface; 91.5 C at 83 W), and gives no bound for repeated key-downs. That is OPEN. It is not a
@@ -706,7 +706,7 @@ diversity beyond the state definition. HIGH assumes none at all. The lowest colu
 **Converter peaks (PS-ALLTX PLAN / HIGH):**
 - **+5V_S1:** 4.65 / 4.66 A against the AP64500's 5 A. This is `fnd/r4a` open item O-15, now quantified with AsiaRF's
   9.1 W.
-- **+5V_DEV:** 5.89 / 7.8 A. At `1f614233` this was over the AP64500's 5 A (W2 F-PR-04). On `main` the rail is an
+- **+5V_DEV:** 5.89 / 7.8 A. At `f6c449fc` this was over the AP64500's 5 A (W2 F-PR-04). On `main` the rail is an
   LM5176 stage whose current loop holds 7.2 to 9.5 A (`gen_sch_a.py` lines 110 to 115): PLAN is under it, and HIGH,
   7.8 A, is inside that band, so a stage at the band's low end would limit there (INFERRED).
 - **+13V8_PA:** 5.4 / 8.2 A.
@@ -806,7 +806,7 @@ figure because 32.53 gives a single still-air conductance, 2.1 W/K.
 **Cells in PS-TYP at +20 C ambient, lid open, fans on: 45.4 to 81.3 C** (43.8 to 45.7 C on 32.53's conductance). At
 the pessimistic end of the independent bound, the runtime requirement's own condition would open the gauge's
 discharge FET. At the optimistic end it runs with 15 K to spare. Above the discharge window the protection is
-permanent: on `main` since `d90f30e4` the second level's own thermistor opens F2 at 62.7 to 77.5 C, and the battery
+permanent: on `main` since `d0db2f49` the second level's own thermistor opens F2 at 62.7 to 77.5 C, and the battery
 stream's proposed image adds the gauge's SOT permanent failure at 65 C for 5 s (`review-packets/battery/`
 `PROTECTION-ARCHITECTURE.md` line 170). So C1's +55 C and the gauge's +60 C, which act first and recover, are what keep
 a hot kit usable. Every other allowed combination is in the table of
@@ -888,7 +888,7 @@ The controls:
       trigger acted.
   - The software enables are `PD_SW_EN` (U28 pin 13) and `POE_SW_EN` (U27 pin 8) on `main` (`gen_sch_a.py` lines
     1124 and 1119). The stage enables PD_EN and POE_EN are those ANDed with the S-14 NAND's OUTLET_OK (lines 1095
-    and 1103). At `1f614233` the software pins were PD_EN and POE_EN themselves.
+    and 1103). At `f6c449fc` the software pins were PD_EN and POE_EN themselves.
   - The 9.0 A trigger sits 1.0 A under the declared continuous rating, for the current measurement's error. The
     coulomb counter's gain error is up to ±0.8 % of full-scale range, whose limits are ±VREF1/10, about ±0.12 V
     (SLUSC67B 6.14). Through the 2 mOhm shunt that is 0.5 A if the percentage is of one side of the range, and 1.0 A
@@ -932,7 +932,7 @@ The controls:
     PWR-F12).
   - **Which level carries what is OPEN with the battery stream** (fifth cycle). This page calls the declared 20 A for
     2 s trip (`pcb_pack_protection.yaml` lines 107 to 110) OCD2 and the backstop OCD1. The battery stream's proposed
-    golden image, on `main` at `01469100`, puts the 20 A for 2 s on OCD1 and proposes OCD2 at 24 A for 1 s, "TBD
+    golden image, on `main` at `4dcf99bb`, puts the 20 A for 2 s on OCD1 and proposes OCD2 at 24 A for 1 s, "TBD
     by the reviewer" (`review-packets/battery/PRIMARY-CONFIGURATION.md` lines 120 and 121). The gauge has two
     firmware levels (SLUUAQ3A 2.5), so the two proposals together ask for three settings. This page needs one level
     at 11 A for 90 s and one at the declared 20 A for 2 s; the names are immaterial. Above 20 A the AFE's AOLD (30 A
@@ -957,21 +957,21 @@ operator is PWR-F13.
 
 | ID | Finding | Status | Bound and owner |
 |---|---|---|---|
-| PWR-F01 | Board B declares the WiFi card rails +3V3_S1A and +3V3_S3A at 0.5 A typical and 1.5 A peak (`gen_sch_b.py` lines 154 and 158 on `main`, where `fnd/r4b` merged at `458b2873`: slot 2's socket went to 3.0 and 4.0 A for the RM520N-GL, F-PR-05, and the note for slots 1 and 3 still says "the AsiaRF AW7915-AED, 1.5 A", line 164). AsiaRF asks for a 3.3 V supply of 3 A (2.5 A minimum), or 3.5 A (3 A minimum) in its 2023 PDF, and gives a 9 to 9.1 W maximum (2.76 A). | VERIFIED maker figure; the declaration is below it | declare at least 3.0 A peak so dc_drop and derate judge the copper at the right current; board B's owner |
+| PWR-F01 | Board B declares the WiFi card rails +3V3_S1A and +3V3_S3A at 0.5 A typical and 1.5 A peak (`gen_sch_b.py` lines 154 and 158 on `main`, where `fnd/r4b` merged at `09521e07`: slot 2's socket went to 3.0 and 4.0 A for the RM520N-GL, F-PR-05, and the note for slots 1 and 3 still says "the AsiaRF AW7915-AED, 1.5 A", line 164). AsiaRF asks for a 3.3 V supply of 3 A (2.5 A minimum), or 3.5 A (3 A minimum) in its 2023 PDF, and gives a 9 to 9.1 W maximum (2.76 A). | VERIFIED maker figure; the declaration is below it | declare at least 3.0 A peak so dc_drop and derate judge the copper at the right current; board B's owner |
 | PWR-F02 | Slot 1's 5 V rail reaches 4.65 A in PS-ALLTX PLAN against the AP64500's 5 A, with the card at 9.1 W and the module at its declared 1.6 A. This is O-15 of `fnd/r4a` quantified. | INFERRED | 7 % margin; board A's owner |
 | PWR-F03 | KSZ9897R at 1000 Mb/s draws 1.21 A typical on its 1.2 V rails against +1V2_KSZ's 0.5 / 0.8 A declaration (`gen_sch_b.py` line 204), and 330 mA on AVDDH against +2V5_KSZ's 0.15 / 0.25 A (line 208). The parts (TPS62933 3 A, AP2112K 0.6 A) can carry it; the declarations cannot. | VERIFIED datasheet, declaration below it | board B's owner |
 | PWR-F04 | The supervisor LDOs dissipate (5.1 - 3.3) V x I in SOT-23-5 at 184 C/W. At the H743's own maximum they pass the 150 C junction limit. | VERIFIED data, INFERRED arithmetic | bound the supervisor firmware clock and peripheral set (at most 200 MHz VOS3 keeps the LDO under +63 K), or feed the LDOs from 3.3 V; board B's owner and the firmware contract |
 | PWR-F05 | TUSB8041's four-SS-devices row is 778 mA on VDD against +1V1_Sx's 0.7 A peak (`gen_sch_b.py` line 178). The kit's device mix (one SS device, the LimeSDR) uses the 395 mA row. | VERIFIED | minor; board B's owner |
-| PWR-F06 | The slot 3.3 V bucks are AP64500SP-13 (`gen_sch_b.py` lines 346 to 351 on `main`), while line 58 still calls "the twelve per-slot rails" AP63203. The rail note that did the same at `1f614233` (its line 144) was corrected when `fnd/r4b` merged (line 161 now says AP64500). | VERIFIED comment drift | minor; board B's owner |
+| PWR-F06 | The slot 3.3 V bucks are AP64500SP-13 (`gen_sch_b.py` lines 346 to 351 on `main`), while line 58 still calls "the twelve per-slot rails" AP63203. The rail note that did the same at `f6c449fc` (its line 144) was corrected when `fnd/r4b` merged (line 161 now says AP64500). | VERIFIED comment drift | minor; board B's owner |
 | PWR-F07 | The planning budget rose: PS-IDLE-SPEC 32.4 to 42.8 W, PS-TYP 60.1 to 63.0 W. Aged runtime falls to 2.5 h and 1.7 h. | PROVISIONAL | integrator: CONOPS 4a and 6, ARCHITECTURE 8 and 11 |
 | PWR-F08 | The +25 C charge restriction is not supported on 32.53's conductance with this page's heat (+19.5 to +21.6 C), and the +35 C one only at the optimistic end. | INFERRED | proposed controls stand; measured-current and measured-temperature controls taken (section 9.3); integrator: OPERATING-ENVELOPE section 3 wording |
 | PWR-F09 | AW7915-AED and LimeSDR Mini v2.4 are outside the envelope's cold end (and the LimeSDR its storage range), and neither is in `pcb_part_temps.yaml`. | VERIFIED | session (parts): accept as carve-outs warmed by the kit, or replace; rows proposed |
 | PWR-F10 | `pcb_part_temps.yaml` still lists the cells under `owed` (line 95) while `OPERATING-ENVELOPE.md` cites the Samsung sheet's 3.12 (line 55). | VERIFIED | integrator: move the cells to a real row with clause 3.12 |
 | PWR-F11 | The SGP41's short-term storage maximum is +70 C (Table 5), under the +71 C storage margin (D-02a), and its recommended storage is 5 to 30 C (Table 4). | VERIFIED | survive-and-recover judgement at E3; the battery or sensor stream |
-| PWR-F12 | **The pack chain's current contract needs re-declaring.** (1) Every stage declares 10 A continuous and 18 A peak, with no duration for the peak (`pcb_energy_chain.yaml` lines 48 and 49 and the six stages after; `pcb_pack_protection.yaml` lines 28 and 29). The protection test proves 10 A for an hour (line 114), and board A's copper is judged at 10 A (`dc_drop.py` lines 258 to 264). (2) Against it: modes the design can switch on sustain more than 10 A (section 7.1), and every PA key-down makes up to 18 A a service current for its 60 s, the all-transmit case and the PA keyed alone alike. That is the question appendix 32.244 left unwritten. (3) Nothing protective acts between 10 A and 20 A for any duration (section 9.3). (4) The parts on the path (section 7.2). Rated above 18 A: the cells, the blades, their Keystone 3568 holders, Q1 and Q2, the XT60, the dock block and the 2 oz bands. Declared only: the shunt R10 at 2 W, and on `main` board A's R17 (5 mOhm, 1.62 W at 18 A against a 3 W part whose sheet is not held). Not yet judged at 18 A: board A's pack node, 7.19 mm of 1 oz copper at 10 A and 16.18 mm at 18 A, or 3.60 and 8.09 mm at 2 oz (appendix 32.244); appendix 32.246 already found VBAT's 10 A under its own loads' 15.18 A typical. Not proven at 18 A: the chemical fuse F2 (SCF9550-30-05), -20 to +60 C with no current derating published, 0.32 to 0.81 W of its own at 18 A, at the block's temperature; its margin during a key-down from a +55 C cell is unknown (`gen_sch_p.py` lines 273 to 276; `fnd/r4p` O-8), and the energy chain does not carry it (O-13). (5) F2 is also a target of the gauge's permanent failures: Safety Overcurrent in Discharge at its default, 10 A for 5 s (SLUUAQ3A 3.5, 14.10.4), would fire it on most key-downs longer than 5 s. It is off by default (14.2.5.1), and the battery stream's proposed image keeps SOCD at 0 (`PRIMARY-CONFIGURATION.md` line 137). | VERIFIED declarations and documents; INFERRED arithmetic | **Taken by the session under the owner's standing rule of 26 September 2026:** declare 10 A continuous, held by C2 and C3; 18 A for 60 s as the service rating every PA key-down needs; 20 A for 2 s as the trip. Judge board A's pack-path copper at 18 A (on `main` CELL+, CELL_FUSED and VBAT, `gen_sch_a.py` lines 24, 34 and 47; VBAT and CH_SRP at `1f614233`), unless a transient analysis of that copper at 60 s shows otherwise. Carry F2 as a stage of the energy chain. Extend the protection test: 18 A for 60 s from a block at +55 C, with a thermocouple on F2's body reading at most +60 C. Keep Safety Overcurrent in Discharge off the FUSE list, or above OCD2. Set OCD1 at 11 A for 90 s with the default recovery (SLUUAQ3A 14.9.6, 14.9.8); which level carries it is OPEN with the battery stream, whose proposed image uses both levels (section 9.3). Draft: `v2/docs/records/rv-pwr/pwr-chain-redeclaration.yaml`. Owners: the battery-protection stream (the two YAML files, the gauge, the golden image, the test, and Eaton's answer on F2 above +60 C); board A's owner (the copper); the owner only for the price of 2 oz if that is the answer. **The 60 s of every PA key-down holds only once this closes** (and, on the PA side, PWR-F15). If F2's body reads above +60 C, K2's +55 C gate comes down by F2's measured rise over the cells. |
+| PWR-F12 | **The pack chain's current contract needs re-declaring.** (1) Every stage declares 10 A continuous and 18 A peak, with no duration for the peak (`pcb_energy_chain.yaml` lines 48 and 49 and the six stages after; `pcb_pack_protection.yaml` lines 28 and 29). The protection test proves 10 A for an hour (line 114), and board A's copper is judged at 10 A (`dc_drop.py` lines 258 to 264). (2) Against it: modes the design can switch on sustain more than 10 A (section 7.1), and every PA key-down makes up to 18 A a service current for its 60 s, the all-transmit case and the PA keyed alone alike. That is the question appendix 32.244 left unwritten. (3) Nothing protective acts between 10 A and 20 A for any duration (section 9.3). (4) The parts on the path (section 7.2). Rated above 18 A: the cells, the blades, their Keystone 3568 holders, Q1 and Q2, the XT60, the dock block and the 2 oz bands. Declared only: the shunt R10 at 2 W, and on `main` board A's R17 (5 mOhm, 1.62 W at 18 A against a 3 W part whose sheet is not held). Not yet judged at 18 A: board A's pack node, 7.19 mm of 1 oz copper at 10 A and 16.18 mm at 18 A, or 3.60 and 8.09 mm at 2 oz (appendix 32.244); appendix 32.246 already found VBAT's 10 A under its own loads' 15.18 A typical. Not proven at 18 A: the chemical fuse F2 (SCF9550-30-05), -20 to +60 C with no current derating published, 0.32 to 0.81 W of its own at 18 A, at the block's temperature; its margin during a key-down from a +55 C cell is unknown (`gen_sch_p.py` lines 273 to 276; `fnd/r4p` O-8), and the energy chain does not carry it (O-13). (5) F2 is also a target of the gauge's permanent failures: Safety Overcurrent in Discharge at its default, 10 A for 5 s (SLUUAQ3A 3.5, 14.10.4), would fire it on most key-downs longer than 5 s. It is off by default (14.2.5.1), and the battery stream's proposed image keeps SOCD at 0 (`PRIMARY-CONFIGURATION.md` line 137). | VERIFIED declarations and documents; INFERRED arithmetic | **Taken by the session under the owner's standing rule of 26 September 2026:** declare 10 A continuous, held by C2 and C3; 18 A for 60 s as the service rating every PA key-down needs; 20 A for 2 s as the trip. Judge board A's pack-path copper at 18 A (on `main` CELL+, CELL_FUSED and VBAT, `gen_sch_a.py` lines 24, 34 and 47; VBAT and CH_SRP at `f6c449fc`), unless a transient analysis of that copper at 60 s shows otherwise. Carry F2 as a stage of the energy chain. Extend the protection test: 18 A for 60 s from a block at +55 C, with a thermocouple on F2's body reading at most +60 C. Keep Safety Overcurrent in Discharge off the FUSE list, or above OCD2. Set OCD1 at 11 A for 90 s with the default recovery (SLUUAQ3A 14.9.6, 14.9.8); which level carries it is OPEN with the battery stream, whose proposed image uses both levels (section 9.3). Draft: `v2/docs/records/rv-pwr/pwr-chain-redeclaration.yaml`. Owners: the battery-protection stream (the two YAML files, the gauge, the golden image, the test, and Eaton's answer on F2 above +60 C); board A's owner (the copper); the owner only for the price of 2 oz if that is the answer. **The 60 s of every PA key-down holds only once this closes** (and, on the PA side, PWR-F15). If F2's body reads above +60 C, K2's +55 C gate comes down by F2's measured rise over the cells. |
 | PWR-F13 | **On battery at +20 C, the outlets, PS-BUSY and long transmissions are bounded, not sustained** (section 7.1). Under C2, with three typical modules, 32.53's conductance holds the cells under C2's +50 C only below about +15.3 to +17.4 C ambient with PoE alone, and +12.5 to +14.7 C with USB-C alone. Both outlets together stay on only near 0 C, or at the top of the charge, where the current stays under 9 A above a 16.6 V stack. On W4's bound it is far lower. PS-BUSY reaches C1's +55 C at +20 C on every conductance in the record; how long it runs first depends on heat capacities that are TBD (TEST-PLAN E3). A transmission lasts at most 60 s (K1), and less at the hot end of the envelope, where C4's flange cut ends it (on 32.56's figure about 25 to 47 s from a +50 C plate), and the PA keys again only once its flange is under +75 C (K2, PWR-F15). A key-down waits for C2 and C3 when the pack is over 9.0 A (K3), which can delay it by up to about 40 s (C3's 30 s plus the 10 s average). The PA stops keying below a 12.4 V rest voltage (K5). A backstop trip on battery leaves the kit dark until an input returns (section 9.3). | INFERRED | REQ-017 (outlets; deferred for prototype 1, `fnd/i1`) should carry "on battery, inside the outlet budget"; the runtime and PS-BUSY rows in CONOPS 4a should say "bounded"; the VHF rows should state the 60 s key-down. Session (requirements), through the `fnd/i1` integrator; the owner only if it becomes a product claim. |
 | PWR-F14 | **The PA keyed on its own, and the heater, were not judged in the second cycle.** (1) The PA keyed alone over PS-TYP draws 10.0 A at a 14.4 V stack and 14.6 A at 10.0 V; at the PA's 113 W it draws 10.9 A at a full 16.8 V stack to 18.8 A at 10.0 V, and passes 18 A below a 10.42 V stack (section 7.1). `CONOPS.md` line 345 gives its worst duty as "key-down for minutes (32.53 line 2860), inside the key-down bound of D-11", and the citation is right: appendix line 2860 (32.53's thermal basis) reads "The 200 W peak (PA key-down) lasts minutes and goes into about 8 to 10 kJ/K of thermal mass, about +10 K transient". The record's second key-down figure is 32.56, line 2940: "a 20 s key-down at 45 W warms the local patch about 15 K", the patch the PA's flange bolts to. The PA's own key-down heat is 32.52 item 6 (line 2852), "45 W at key-down at APRS duty". (Corrected in the fourth cycle: this row had said that line 2860 holds no duration. Corrected in the fifth: the fourth had called 32.53's "minutes" the record's only key-down duration.) (2) The heater is on VBAT behind a software pin (HEAT_EN, `gen_sch_a.py` line 1119 on `main`), and `CONOPS.md` lines 280 and 281 count it on the battery in the cold. Nothing turned it off during a key-down, and with it on the all-transmit basis needs 15.79 V, past the 15.5 V floor (section 7.2). | VERIFIED sources; INFERRED arithmetic | **Taken by the session under the owner's standing rule of 26 September 2026:** the key-down rules K1 to K5 for every PA key-down, the PA-alone floor of 12.4 V, and the in-key guard C4 (sections 7.2 and 9.3). K1's 60 s sits between the record's two figures. It is a PROVISIONAL tightening of 32.53's "lasts minutes", not a gap filled: the chain declares 10 A continuous and an 18 A peak with no duration (`pcb_pack_protection.yaml` lines 28 and 29), F2's margin at 18 A is unknown, and at the worst adiabatic rate the cells use the 5 K between K2's +55 C and the 60 C window in 93 s (section 7.2). It is three times 32.56's 20 s, so on the PA side it holds only with PWR-F15's flange limits. Owners: session, through the W5 contract (panel and bridge); the integrator for `CONOPS.md` line 345's duty, a change to the record from "minutes" to at most 60 s per key-down with its 32.53 citation kept and 32.56's added, and REQ-018's wording. |
-| PWR-F15 | **The PA's case during a key-down is bounded by nothing the design measures.** The design record gives the plate's local patch under the RA30H1317M1's flange +15 K for a 20 s key-down at 45 W (appendix 32.56, line 2940). Taken linear, a 60 s key-down from a +50 C plate ends at 95 C at 45 W and 118 C at 68 W, before the flange interface, which the sheet does not publish. The maker's limits are "below 90°C" for long-term reliability and -30 to +100 C in operation (RA30H1317M1 sheet, October 2011, Thermal Design of the Heat Sink and Maximum ratings; section 7.2). Repeated key-downs start from a hot patch. No temperature part on any board sits on or near the flange. On `main` they are board P's cell thermistors TS1 to TS4 (`gen_sch_p.py` lines 210 to 221), its second level's own thermistor on J_TS2 (line 418, since `d90f30e4`) and the PTC element RT1 beside Q1 and Q2 (line 243), board E's BME688 (`gen_sch_e.py` lines 543 to 545) and board B's TMP117 under the coolers (`gen_sch_b.py` line 1050). | VERIFIED record and datasheet; INFERRED arithmetic | **Taken by the session under the owner's standing rule of 26 September 2026 (PROVISIONAL):** a temperature sensor on the PA's flange, read by the panel and the bridge; K2 gates key-on at +75 C on it and C4 unkeys at +85 C (sections 7.2 and 9.3). Board D already sits on the kit I2C bus (its PCA9555 at 0x26, `gen_sch_d.py` line 15), as board B's TMP117 does. Owners: board D's owner (the sensor, its lead and its bus address; the flange is the module's RF ground, pin 5); the W5 contract (the two thresholds); bring-up or TEST-PLAN E3 (the flange against a thermocouple through 60 s key-downs at 13.8 V into a dummy load from a +50 C plate, and the patch's cooling after one). Until the sensor exists, one key-down from a +50 C plate is bounded at about 30 s on the record's figure, and repeated key-downs are OPEN. **Drawn on board D in round 8 (stream d, 26 September 2026), at desk:** a Semitec 103AT-2 NTC (10 kOhm, B25/85 3435 K, both +-1 percent, -50 to +110 C; Semitec catalogue 129M, held) bonded to the flange beside a mounting screw, on a two-wire lead to `J_FLANGE` (JST XH, keyed apart from the PH of `J_VGG`); U22, a TI ADS1115 at 0x48 on the kit bus (SBAS444E; the panel and the bridge read it), on the harness +3V3, reading the divider over 2.0k and +3V3 itself, so the ratio cancels the supply and the gain; about 1.7 K worst case at +85 C before the bead's offset, which the thermocouple reading of this row calibrates. A failed lead reads open or shorted, and the W5 contract keeps the PA from keying on either. **No hardware unkey is drawn, derived from this page:** section 9.3 makes C4 a firmware guard and says the controls "are firmware contract items for the panel and bridge (W5 contract), not board changes", so none is required. What that leaves is PWR-F16. |
+| PWR-F15 | **The PA's case during a key-down is bounded by nothing the design measures.** The design record gives the plate's local patch under the RA30H1317M1's flange +15 K for a 20 s key-down at 45 W (appendix 32.56, line 2940). Taken linear, a 60 s key-down from a +50 C plate ends at 95 C at 45 W and 118 C at 68 W, before the flange interface, which the sheet does not publish. The maker's limits are "below 90°C" for long-term reliability and -30 to +100 C in operation (RA30H1317M1 sheet, October 2011, Thermal Design of the Heat Sink and Maximum ratings; section 7.2). Repeated key-downs start from a hot patch. No temperature part on any board sits on or near the flange. On `main` they are board P's cell thermistors TS1 to TS4 (`gen_sch_p.py` lines 210 to 221), its second level's own thermistor on J_TS2 (line 418, since `d0db2f49`) and the PTC element RT1 beside Q1 and Q2 (line 243), board E's BME688 (`gen_sch_e.py` lines 543 to 545) and board B's TMP117 under the coolers (`gen_sch_b.py` line 1050). | VERIFIED record and datasheet; INFERRED arithmetic | **Taken by the session under the owner's standing rule of 26 September 2026 (PROVISIONAL):** a temperature sensor on the PA's flange, read by the panel and the bridge; K2 gates key-on at +75 C on it and C4 unkeys at +85 C (sections 7.2 and 9.3). Board D already sits on the kit I2C bus (its PCA9555 at 0x26, `gen_sch_d.py` line 15), as board B's TMP117 does. Owners: board D's owner (the sensor, its lead and its bus address; the flange is the module's RF ground, pin 5); the W5 contract (the two thresholds); bring-up or TEST-PLAN E3 (the flange against a thermocouple through 60 s key-downs at 13.8 V into a dummy load from a +50 C plate, and the patch's cooling after one). Until the sensor exists, one key-down from a +50 C plate is bounded at about 30 s on the record's figure, and repeated key-downs are OPEN. **Drawn on board D in round 8 (stream d, 26 September 2026), at desk:** a Semitec 103AT-2 NTC (10 kOhm, B25/85 3435 K, both +-1 percent, -50 to +110 C; Semitec catalogue 129M, held) bonded to the flange beside a mounting screw, on a two-wire lead to `J_FLANGE` (JST XH, keyed apart from the PH of `J_VGG`); U22, a TI ADS1115 at 0x48 on the kit bus (SBAS444E; the panel and the bridge read it), on the harness +3V3, reading the divider over 2.0k and +3V3 itself, so the ratio cancels the supply and the gain; about 1.7 K worst case at +85 C before the bead's offset, which the thermocouple reading of this row calibrates. A failed lead reads open or shorted, and the W5 contract keeps the PA from keying on either. **No hardware unkey is drawn, derived from this page:** section 9.3 makes C4 a firmware guard and says the controls "are firmware contract items for the panel and bridge (W5 contract), not board changes", so none is required. What that leaves is PWR-F16. |
 | PWR-F16 | **A hung controller with a push to talk held is bounded by nothing.** K1 (the 60 s), K2 and C4 are firmware (section 9.3), and board D's KEY follows a headset PTT or the CP2102N's RTS in hardware, with the PA keyed whenever PA_EN is high (board A's `PA_EN = TX_INHIBIT_n AND EMCON_HW AND PA_SW_EN` since its round 8, `PA_SW_EN` a software enable that holds its last state, so with EMCON released the PA's key follows KEY alone; the formula corrected at integration from the draft's pre-round-8 `EMCON_HW AND PA_SW_EN`). With the panel and the bridge hung and a PTT held, or RTS stuck low, a key-down has no time limit and the flange no temperature limit short of the module's own +100 C case rating (RA30H1317M1 sheet, Maximum ratings), on 32.56's patch figure (+15 K per 20 s at 45 W, taken linear) within about 45 s at 68 W and 67 s at 45 W from a +50 C plate. Found by stream d of round 8 while deriving whether PWR-F15 needs a hardware unkey: this page does not ask for one. | VERIFIED circuit (board D and A netlists of round 8); INFERRED time | Open. The candidates, both on board D and both needing no firmware: a comparator on `FLANGE_NTC` with a fixed threshold between C4's +85 C and the module's +100 C, ANDed into `PA_KEY`; or a hardware key-down timer (a retriggerable one-shot on KEY) that drops `PA_KEY` after a fixed time. Either touches the EMCON gate chain, so it is a decision for this page's writer with the EMCON stream (RF-002's walk would read the new gate), not taken here. Owners: this page's writer; board D's writer for the circuit if one is chosen. |
 
 **Corrections made in the second cycle (26 September 2026, the checker's blocking items), each in the conservative
@@ -1000,7 +1000,7 @@ conservative direction or neutral:**
 
 **Corrections made in the fourth cycle (26 September 2026, the checker's blocking item on 32.53):**
 - **The key-down duration.** PWR-F14 and integrator item 1 had said that appendix line 2860 "holds no duration" and
-  asked for `CONOPS.md` line 331's citation (line 345 at `01469100`) to be corrected. Both statements were wrong: line
+  asked for `CONOPS.md` line 331's citation (line 345 at `4dcf99bb`) to be corrected. Both statements were wrong: line
   2860 says the 200 W PA key-down "lasts minutes". The citation stands. K1's 60 s is now stated as a PROVISIONAL
   tightening of that record, with its three reasons (section 7.2), and the record's 8 to 10 kJ/K is compared with the
   cells' own heat capacity. No threshold moved. (This cycle also called 32.53's "minutes" the record's only key-down
@@ -1025,12 +1025,12 @@ conservative direction or neutral:**
   1.5 K on 32.53's 2.1 W/K and 2.0 to 4.0 K on W4's bound, in the safe direction. The 9.2 note now gives both
   readings: C1 acts on the 50.6 C air with the fans' power counted, and need not act (49.0 C air, 52.9 C cells) without
   it.
-- **`main` moved to `b69f20db` and then to `01469100`**, and every citation is re-anchored at `01469100` (section 12
+- **`main` moved to `ef955b46` and then to `4dcf99bb`**, and every citation is re-anchored at `4dcf99bb` (section 12
   lists what moved). The merged
   board A carries its charge shunt R17 in the pack's discharge path (S-04), 5 mOhm more than the tables' 22.5. The
   all-transmit basis moves from 15.22 V to 15.31 V and the PA-alone basis from 11.86 V to 11.95 V, inside the
   unchanged floors of 15.5 V and 12.4 V (section 7.2). R17 joins PWR-F12's parts list. The battery stream's proposed
-  golden image (`01469100`) uses both of the gauge's over-current-in-discharge levels, one of which PWR-F12's backstop
+  golden image (`4dcf99bb`) uses both of the gauge's over-current-in-discharge levels, one of which PWR-F12's backstop
   needs: that is now an open item with that stream (section 9.3).
 - **Wording.** 32.62 withdrew the BB-2590/U of 32.49 for a smaller pack of the same 14.4 V class, 4S Li-ion; section
   7.2 had said it replaced the pack "with a 4S one". The 7 to 8 minutes is this page's literal reading of 32.53, not
@@ -1038,7 +1038,7 @@ conservative direction or neutral:**
   not under it.
 - No threshold was loosened. Two were added: the flange gate and the flange cut. The model's output differs from the
   fourth cycle's only in three added records (`d11.pa_case_record_3256`, `d11.main_pack_path_R17`, the fans-off
-  row's fan power) and in the two heater labels, which now read `1f614233` and `main` instead of `main` and
+  row's fan power) and in the two heater labels, which now read `f6c449fc` and `main` instead of `main` and
   `fnd/r4a`.
 
 **The experiment this page recommends before more layout.** An **empty-case heat-balance test**:
@@ -1189,19 +1189,19 @@ which D-09 and the house rules keep with the owner: prepared here, not decided.
    section 7.2, including the PA's flange gate (K2, +75 C) and cut (C4, +85 C).
 10. **`pcb_requirements.yaml` (`fnd/i1`) REQ-017:** add "on battery, inside the outlet budget" (PWR-F13).
     **`CONOPS.md` section 4a, PS-BUSY row:** the sustained bound of section 4, marked "bounded mode" (section 7.1).
-11. **`main` is at `01469100`**, and every citation on this page is anchored there (fifth cycle). `458b2873`
+11. **`main` is at `4dcf99bb`**, and every citation on this page is anchored there (fifth cycle). `09521e07`
     merged the round-4 and round-6 corrections of boards A, B and D: board A carries the regulated heater (U33 at
     `gen_sch_a.py` line 1065, U22 at 1064), the outlet interlock (U30, line 1104), the VSYS topology with R17 in the
-    pack's discharge path (S-04), and HEAT_EN at line 1119; board D regulates the PA's gate bias. `b69f20db` changed
+    pack's discharge path (S-04), and HEAT_EN at line 1119; board D regulates the PA's gate bias. `ef955b46` changed
     `CONOPS.md` (the APRS row is now line 345, the heater's lines 280 and 281, D-11 line 419; content unchanged in the
     rows this page cites), `OPERATING-ENVELOPE.md` (sections 4 and 8; lines 55 and 91 unchanged) and
     `pcb_envelope.yaml`'s `document_sha256`, and appended 32.367 to the appendix; it changed no generator. On `main`
     the heater-on basis is 15.79 V (the regulated mat plus R17) and K4 still decides it. `gen_sch_e.py`,
     `gen_sch_p.py`, the two pack YAML files, `pcb_fuse_derating.yaml`, `pcb_part_temps.yaml`, `dc_drop.py`,
-    `ARCH-PCB-B-IOHA.md` and `open-picks.txt` are unchanged from `1f614233` to `b69f20db`, and every appendix line
-    this page cites keeps its number: the appendix only gained 32.367, at its end (from line 18871). From `b69f20db`
-    to `01469100` (eight commits, 18:05 to 18:25) the only file this page cites by line that changed is
-    `gen_sch_p.py` (`d90f30e4`: board P's second level gets its own thermistor, and F2's temperature reading is
+    `ARCH-PCB-B-IOHA.md` and `open-picks.txt` are unchanged from `f6c449fc` to `ef955b46`, and every appendix line
+    this page cites keeps its number: the appendix only gained 32.367, at its end (from line 18871). From `ef955b46`
+    to `4dcf99bb` (eight commits, 18:05 to 18:25) the only file this page cites by line that changed is
+    `gen_sch_p.py` (`d0db2f49`: board P's second level gets its own thermistor, and F2's temperature reading is
     redone), whose lines are re-pointed; the battery stream's review packet arrived in the same commits.
 
 ## 12. Sources
@@ -1251,9 +1251,9 @@ which D-09 and the house rules keep with the owner: prepared here, not decided.
 | `sensirion/sgp41-datasheet.pdf` (version 1.0, December 2021) | Tables 4, 5 | 331f35ed1f027a74 |
 
 **Design sources:**
-- the generators, registries and documents at `01469100`, lines as cited (fifth cycle). The earlier cycles read them
-  at `1f614233`; their entries below keep the lines they read, and the fifth-cycle entry maps the ones that moved;
-- second cycle, at `1f614233`:
+- the generators, registries and documents at `4dcf99bb`, lines as cited (fifth cycle). The earlier cycles read them
+  at `f6c449fc`; their entries below keep the lines they read, and the fifth-cycle entry maps the ones that moved;
+- second cycle, at `f6c449fc`:
   - `pcb_pack_protection.yaml` lines 28, 29, 101, 110, 114, 145 and 154;
   - `pcb_energy_chain.yaml` lines 48 to 153 (the continuous and peak declarations and the part ratings);
   - `pcb_fuse_derating.yaml` line 46 (the ATOF 25 A row, extracted from `battery/littelfuse-287-atof.pdf` and tested
@@ -1262,7 +1262,7 @@ which D-09 and the house rules keep with the owner: prepared here, not decided.
   - `gen_sch_a.py` lines 483 to 488, 542 and 547;
   - `gen_sch_p.py` lines 207 to 219;
   - `MESHSAT-709-geometry-appendix.md` 32.244 to 32.246 (lines 12813 to 12924);
-- third cycle, at `1f614233`:
+- third cycle, at `f6c449fc`:
   - `gen_sch_p.py` lines 62 to 74 (the FUSED and SCP_OUT nodes), 207 (R10) and 245 to 279 (F2, quoting Eaton ELX1135);
   - `gen_sch_a.py` lines 528 (the heater eFuse U22) and 542 (HEAT_EN on U27 pin 6);
   - `pcb_pack_protection.yaml` lines 101 and 110 (the CUV and OCD2 delays);
@@ -1271,14 +1271,14 @@ which D-09 and the house rules keep with the owner: prepared here, not decided.
   - `CONOPS.md` lines 266, 331 and 402;
   - `MESHSAT-709-geometry-appendix.md` 32.31 (line 2456), 32.32 (line 2466, the pad rule), 32.52 item 6 (line 2852)
     and 32.53 (line 2860);
-- fourth cycle, at `1f614233` and unchanged at `458b2873`:
+- fourth cycle, at `f6c449fc` and unchanged at `09521e07`:
   - `MESHSAT-709-geometry-appendix.md` 32.53, line 2860, re-read in full: "total about 2.1 W/K still, about 3.0 to
     3.3 W/K with fans" and "The 200 W peak (PA key-down) lasts minutes and goes into about 8 to 10 kJ/K of thermal
     mass, about +10 K transient"; 32.62 (line 3054, the pack ruling of 7 Sep 2026 13:10);
   - `pcb_pack_protection.yaml` lines 28, 29 and 154;
   - `v2/docs/records/r4p/r4-decisions.md` O-8, O-10 and O-13, and its `drafts/datasheets/eaton-scf9550-elx1135.pdf`, the same bytes as `v2/vendor/battery/eaton-scf9550-elx1135.pdf`
     (sha256 3ecc2424acfa1753);
-- fifth cycle, at `01469100`:
+- fifth cycle, at `4dcf99bb`:
   - `MESHSAT-709-geometry-appendix.md` 32.56, line 2940 (7 Sep 2026 01:17): "the plate is the heatsink (3 mm, 0.7 kg,
     660 J/K: a 20 s key-down at 45 W warms the local patch about 15 K; the average at APRS duty is a few watts)";
     32.49 item 12, line 2771 (the BB-2590/U, "10 A continuous and 18 A pulse per section"); 32.62, line 3054 and
@@ -1297,14 +1297,14 @@ which D-09 and the house rules keep with the owner: prepared here, not decided.
   - `v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md` lines 79, 120 to 122 and 137, and
     `PROTECTION-ARCHITECTURE.md` line 170 (the battery stream's proposed golden image and its permanent-fail map);
     `pcb_pack_protection.yaml` lines 107 to 110 (the declared 20 A for 2 s);
-  - the lines the earlier cycles read at `1f614233` that moved: `gen_sch_a.py` 483 to 488 are 977 to 982, 528 is
+  - the lines the earlier cycles read at `f6c449fc` that moved: `gen_sch_a.py` 483 to 488 are 977 to 982, 528 is
     1064, 542 is 1119, 547 is 1124; `gen_sch_b.py` 141 is 154 and 158, 144 is 161, 154 is 178, 180 is 204, 184 is
     208, 209 is 233, 318 to 321 are 346 to 351, 754 is 1050; `CONOPS.md` 232 is 241, 238 and 239 are 247 and 248,
-    244 is 253, 266 is 280, 331 is 345, 402 is 419; `gen_sch_p.py` (moved at `d90f30e4`) 62 to 74 are 64 to 76, 207
+    244 is 253, 266 is 280, 331 is 345, 402 is 419; `gen_sch_p.py` (moved at `d0db2f49`) 62 to 74 are 64 to 76, 207
     is 209, 208 to 219 are 210 to 221, 245 to 279 are 247 to 289, 253 and 254 are 255 and 256, 265 to 270 are 272 to
     276 (reworded), 307 is 317. The other files and lines are unchanged (section 11, item 11);
 - `v2/docs/records/r4a/r4-decisions.md` (S-14, S-20, F-PR-01, F-PR-04, F-PR-06) and `v2/docs/records/r4a/r4-open-items.md` (O-04, O-15);
-  the generator itself is `main`'s since `458b2873`;
+  the generator itself is `main`'s since `09521e07`;
 - `v2/docs/records/w2/w2-power.md` and `v2/docs/records/w2/w2-runtime.md`;
 - `v2/docs/records/w4/w4-mech-thermal-rf.md` section 4;
 - `fnd/i3` `ARCHITECTURE.md` sections 8 and 11;

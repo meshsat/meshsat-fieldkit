@@ -1,14 +1,14 @@
-# Second fresh check of stream d8dec31, tip 9057e668 (AI review), 28 September 2026, 19:54 to 20:15 CEST
+# Second fresh check of stream d8dec31, tip bcda4ef6 (AI review), 28 September 2026, 19:54 to 20:15 CEST
 
 Checker chk-d8dec31-2. This is an AI review, not a qualified engineering review. Nothing of the kit has been built,
-ordered or measured. Branch `fnd/d8dec31` at `9057e668` (two commits since the first check's `f8e61f05`:
-`ec77e6aa`, `9057e668`), worktree `<worktrees>/d8dec31`, read only and untouched.
+ordered or measured. Branch `fnd/d8dec31` at `bcda4ef6` (two commits since the first check's `731699bf`:
+`682860c5`, `bcda4ef6`), worktree `<worktrees>/d8dec31`, read only and untouched.
 Everything I wrote is under `_scratch/chk-d8dec31-2/`. The final message is `RESULT.md` beside this file.
 
 ## 1. The merge as it will happen
 
-- `git clone --shared` of the main checkout to `view`, `checkout -b chk origin/fnd/int8` (int8 tip `5e765762`, main
-  `6b419b02`, merge base of int8 and d8dec31 `73ae2f21`), `git merge --no-ff origin/fnd/d8dec31`.
+- `git clone --shared` of the main checkout to `view`, `checkout -b chk origin/fnd/int8` (int8 tip `3c9eb449`, main
+  `66c0d1d2`, merge base of int8 and d8dec31 `92f22e3f`), `git merge --no-ff origin/fnd/d8dec31`.
 - ONE conflict, `v2/vendor/sources.txt`, mechanical: both sides appended after the same line 348 (base 348 lines; int8
   added 12 lines, w5tray's materials sheets, the QMX pages and the MIL-STD-810H transcription; d8dec31 added 2 lines,
   the Infineon BSC039N06NS and TI TPS37 sheets). Resolved in the clone by base plus both blocks in that order (362
@@ -100,16 +100,16 @@ Everything I wrote is under `_scratch/chk-d8dec31-2/`. The final message is `RES
    AS COMMITTED IT ASSERTS ON INT8 (B2). Fixed copy: S-98 to S-111, `rules_lib: 144 requirement record(s), 0
    error(s), 0 warning(s)`, second run "already applied (its marker is in the file)".
 4. `apply_sources_d31.py` edits `v2/vendor/SOURCES.yaml`; second run refused. `apply_holds_review_pin.py` edits
-   `pcb_board_holds.yaml` (shared), pins the review as `094817023210d1b0` (the review at 9057e668; the first check
-   saw `2bb9167daa7974cb` at f8e61f05, so the sha follows the review, read at apply time); second run "expected three
+   `pcb_board_holds.yaml` (shared), pins the review as `094817023210d1b0` (the review at bcda4ef6; the first check
+   saw `2bb9167daa7974cb` at 731699bf, so the sha follows the review, read at apply time); second run "expected three
    unpinned review blocks, found 0".
 5. The box's re-take, then `--close-s88 <commit>`: refusals verified (no reading; netlist sha 0000...; tool sha
    2d69facd... against the tree's 7acd5333...; an INCONCLUSIVE reading; a commit not in history, in a checkout);
-   `--check` then apply: "S-88 closed by commit 9057e668 on the re-taken reading (PASS of 42, netlist
+   `--check` then apply: "S-88 closed by commit bcda4ef6 on the re-taken reading (PASS of 42, netlist
    0a2b59087bcc2678, tool 7acd5333fc59f8d0); waits_on dropped from REQ-015, REQ-017, REQ-029, CON-018"; second run
    "S-88 is already closed"; validator after: 0 errors. Registry after both stages: 80 open, 61 closed. BUT the
    reading's path (B3).
-6. The circuit round: the four `apply_gen_sch_*.py` (not re-run by me; the diff since f8e61f05 changes the
+6. The circuit round: the four `apply_gen_sch_*.py` (not re-run by me; the diff since 731699bf changes the
    docstrings of a_mainpb and e_cin only, the first check ran all four on copies), then `apply_interfaces_mainsw.py`
    (refuses until the netlist moves, verified).
 
@@ -121,7 +121,7 @@ removal.
 
 ## 6. Prose and scope
 
-22 files in `git diff --stat f8e61f05..9057e668`, as claimed. 0 U+2014 or U+2013 in added lines. "AI review" in the
+22 files in `git diff --stat 731699bf..9057e668`, as claimed. 0 U+2014 or U+2013 in added lines. "AI review" in the
 review's title and first paragraph and twice in the README; "Nothing of this kit has been built, ordered or measured"
 at review lines 4 to 5. The claimed results reproduced (61 tests, 21 cases, 0 errors after the rehearsal on MAIN;
 the rehearsal was on main plus the branch, which is why the int8 anchor was not seen). No protection lowered: the
@@ -142,4 +142,4 @@ the diff hunks not re-read.
 section 2). The two scratch clones `view` and `tree2` were removed at the end.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

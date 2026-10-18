@@ -1,8 +1,8 @@
 THE NEW TESTS ON THE UNFIXED TOOL, AND ON THE FIXED ONE
-Worker set6fix, MESHSAT-1357, 27 September 2026, branch fnd/r8int6 above a76a246e.
+Worker set6fix, MESHSAT-1357, 27 September 2026, branch fnd/r8int6 above 1b51eb36.
 
 HOW IT WAS RUN (from the worktree root; nothing is written under v2/ecad, the tests build their own temporary trees)
-  git show a76a246e:v2/ecad/tools/reliability.py > <dir outside the tree>/reliability.py
+  git show 1b51eb36:v2/ecad/tools/reliability.py > <dir outside the tree>/reliability.py
   PYTHONDONTWRITEBYTECODE=1 python3 v2/docs/records/r8int6/fix/tests_against_old_tool.py v2/ecad/tools <that dir>
   cd v2/ecad/tools && PYTHONDONTWRITEBYTECODE=1 python3 tests/run.py reliability
 

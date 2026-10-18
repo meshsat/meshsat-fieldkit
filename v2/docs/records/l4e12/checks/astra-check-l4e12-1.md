@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E12: the one check of the electronics against the inside air at the margins by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx31-l4e12-check`, run `20261002T030625Z-344227`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e12 at commit `bcd2353230bc`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e12 at commit `d12a90582cdd`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

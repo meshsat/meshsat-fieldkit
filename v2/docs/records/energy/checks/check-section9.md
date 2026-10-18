@@ -1,11 +1,11 @@
 acceptable: no
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026). Its blocking items B1 and B2 and its minor items are answered in ENERGY-RECONCILIATION.md section 9 (second issue) and the owner sheets. -->
 
-# AI review: fnd/energy2 at 3af58534, section 9 of the energy record (OD-02), MESHSAT-1357
+# AI review: fnd/energy2 at 002fa9c1, section 9 of the energy record (OD-02), MESHSAT-1357
 
-AI review, 29 September 2026, 01:27 to about 01:50 CEST. An independent assistant check by a session that wrote none of this work. It is not a qualified review. Prototype design: nothing has been built, ordered or measured. Everything below is read against the tree at 3af58534 and the maker's documents held under `v2/vendor/`.
+AI review, 29 September 2026, 01:27 to about 01:50 CEST. An independent assistant check by a session that wrote none of this work. It is not a qualified review. Prototype design: nothing has been built, ordered or measured. Everything below is read against the tree at 002fa9c1 and the maker's documents held under `v2/vendor/`.
 
-Scratch clone: `a scratch clone` (a `git clone --shared` of the main checkout, with `fnd/energy2` fetched from the `energy2` worktree and 3af58534 checked out detached). My own code and its output are beside this file: `recompute.py` and `recompute.out`. No commit was made, nothing was pushed, and no branch was touched.
+Scratch clone: `a scratch clone` (a `git clone --shared` of the main checkout, with `fnd/energy2` fetched from the `energy2` worktree and 002fa9c1 checked out detached). My own code and its output are beside this file: `recompute.py` and `recompute.out`. No commit was made, nothing was pushed, and no branch was touched.
 
 ## Verdict in one paragraph
 
@@ -125,7 +125,7 @@ All of these match section 9 and `energy_architecture.out`. Also matched: 4S3P c
 - SLVSET8A, PDF page 28, prints RILM = 903 / (ILIM - 0.0112), with the worked example 903 / (1 - 0.0112) = 913.2 ohm.
 - The table on page 6 gives 909 ohm as 0.949 / 1.005 / 1.051 A and 453 ohm as 1.83 / 2.004 / 2.147 A.
 - So the corrected sign, the 1.00 A, the 454 ohm and the 2.004 A are right.
-- The re-pin of `gen_sch_a.py` is justified. An AST dump of the three calls `energy_4s6p.py` parses (the VHEAT and VHEAT_IN rails, the U22 efuse) is identical between c4ad8350 and eb2e347e.
+- The re-pin of `gen_sch_a.py` is justified. An AST dump of the three calls `energy_4s6p.py` parses (the VHEAT and VHEAT_IN rails, the U22 efuse) is identical between 140588ba and eb2e347e.
 
 **Quotations checked against the tree.**
 - D-06 matches `pcb_requirements.yaml` (one 4S3P, about 145 Wh, east pocket). So do D-01's deferred list (second pack, tablet bracket, HF), REQ-016's statement (25 V at coldest, 17.6 V, at most 100 W), REQ-072, REQ-014's "80 percent" and "+20 C", SC-21 and SC-37.

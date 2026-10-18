@@ -1,11 +1,11 @@
 mergeable: no
 
-# AI review: independent check of stream s122, round 5, fnd/s122c at a6429e66 (S-122, CFL-016, MESHSAT-1357)
+# AI review: independent check of stream s122, round 5, fnd/s122c at bd34cbd0 (S-122, CFL-016, MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. Everything below is what I read or ran myself.
 
 **Set up**
-* `fnd/s122c` at `a6429e66`: two commits, `8d7874f5` and `a6429e66`, on `edead832`. They answer check-s122-4, which is filed as `checks/check-s122-4.md`, byte identical to my CHECK-4.md.
+* `fnd/s122c` at `bd34cbd0`: two commits, `2a4c632b` and `bd34cbd0`, on `29d076eb`. They answer check-s122-4, which is filed as `checks/check-s122-4.md`, byte identical to my CHECK-4.md.
 * Check clone: a new shared clone at `<scratch>/chk-s122` at the tip. It is removed when done.
 * Throwaway clone in my session scratchpad for the registry script and the closure:
   * one commit of two fixture checks, with the owner's `-c` flags;
@@ -24,14 +24,14 @@ This is an AI review, not a qualified engineering review. Everything below is wh
 * The documents:
   * `v2/docs/V2-SPEC.md` lines 47, 76 and 81 to 86, and correction 35 (lines 310 to 320);
   * `v2/docs/PANEL.md` line 182.
-  * Of the nine documents, only V2-SPEC.md changed since `edead832`:
+  * Of the nine documents, only V2-SPEC.md changed since `29d076eb`:
     * PANEL.md, CONOPS.md, OPERATING-ENVELOPE.md, TEST-PLAN.md and ASSEMBLY.md are unchanged;
     * so are `pcb_decisions.yaml` decisions 28 and 40, `feasibility/EMCON.md` and `handover/DEFINITION-STATUS.md`.
 * `verdicts.out`: every TRUE sentence that names a part number in PANEL.md, V2-SPEC.md, OPERATING-ENVELOPE.md, TEST-PLAN.md and ASSEMBLY.md (113 sentences). For each, I read the part's context against the netlist values that carry it.
 * The six set 14 netlists, read with `tx_inhibit.parse_netlist`: A `6c40250c`, B `3ef9b8c4`, C `c9f73945`, D `a2d48972`, E `2ed95a0e`, P `20c7b079`.
 * Generators:
-  * `gen_sch_a.py` and `gen_sch_d.py` at `b2709118`;
-  * `gen_sch_d.py` at `faf8c981^` and `faf8c981`, and at the tip (lines 9, 367 and 368);
+  * `gen_sch_a.py` and `gen_sch_d.py` at `be826353`;
+  * `gen_sch_d.py` at `247db699^` and `247db699`, and at the tip (lines 9, 367 and 368);
   * `gen_sch_e.py` line 800.
 * Sheets, read with pdftotext:
   * `v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf`;
@@ -44,7 +44,7 @@ This is an AI review, not a qualified engineering review. Everything below is wh
 * The line says "NiceRF SA868 1 W with a 30 W VHF amplifier stage".
 * The netlist and generator say otherwise:
   * Board D's `U2` value is "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)".
-  * `gen_sch_d.py` has carried "the NiceRF SA868 VHF exciter (bench-fitted, 2 W high / 0.5 W low)" since `bdfc7b3f` (7 September); it reads the same at `b2709118` and at the tip.
+  * `gen_sch_d.py` has carried "the NiceRF SA868 VHF exciter (bench-fitted, 2 W high / 0.5 W low)" since `dcd9f9a4` (7 September); it reads the same at `be826353` and at the tip.
 * The maker's sheet v1.3 gives:
   * output power, high: 31 / 32.5 / 33 dBm;
   * output power, low: 24 / 25 / 26 dBm;
@@ -127,8 +127,8 @@ All four hold:
 
 | Line | What the netlists and generators carry |
 |---|---|
-| 84 | D `U15` "TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high", pin 4 (EN) on `PA_KEY`. D `U21` "TPS22810DRV load switch, +5V_TX ...", VOUT on `+5V_TX`. At `b2709118`, `gen_sch_d.py` line 11: "bias switched by a TPS22810 on PA_KEY". The TLV75801 appears 0 times at `faf8c981^` and 10 times at `faf8c981`. |
-| 81 | A `U4` and `U6` AP64500SP-13 (`+5V_S1`, `+5V_S3`). A `U5` and `U7` LM5176PWPR (`+5V_S2`, `+5V_DEV`). INA226 `U8` to `U11` on the four rails. At `b2709118`, `buck5` (AP64500) built `U4` to `U7`. |
+| 84 | D `U15` "TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high", pin 4 (EN) on `PA_KEY`. D `U21` "TPS22810DRV load switch, +5V_TX ...", VOUT on `+5V_TX`. At `be826353`, `gen_sch_d.py` line 11: "bias switched by a TPS22810 on PA_KEY". The TLV75801 appears 0 times at `247db699^` and 10 times at `247db699`. |
+| 81 | A `U4` and `U6` AP64500SP-13 (`+5V_S1`, `+5V_S3`). A `U5` and `U7` LM5176PWPR (`+5V_S2`, `+5V_DEV`). INA226 `U8` to `U11` on the four rails. At `be826353`, `buck5` (AP64500) built `U4` to `U7`. |
 | 86 | E `U14` BME688 and `U15` BMI270, on `SDA1`/`SCL1`. No magnetometer on E. `J_POD` carries `SDA1` and `SCL1`. `gen_sch_e.py` line 800: "the magnetometer sits in the outside pod (32.57)". |
 | 83 | 17 parts on C: `D1` to `D16` and `D22` (EMCON). S-44 is OPEN. |
 
@@ -181,10 +181,10 @@ The answer to the question: yes, S-122 can close with a stale role left in the f
 
 * **Outputs.** Regenerated in the check clone, byte identical:
   * `inventory.out` and `verdicts.out`;
-  * `verdicts-base.out` (`S122_AT=e57a7365`): 934 sentences, 74 STALE;
-  * `verdicts-set14.out` (`S122_AT=1bafab8c`): 992 sentences, 10 STALE (CONOPS.md 1056, V2-SPEC.md 47, 81, 82, 83, 84 and 86, OPERATING-ENVELOPE.md 77 twice and 83);
-  * `verdicts-r4.out` (`S122_AT=edead832`): 4 STALE, V2-SPEC.md 81, 83, 84 and 86. Its FAILS lines carry the role rule's own findings for 81 ("AP64500 is given the slot rail; A:U5 is LM5176...") and for 84.
-* **Documents.** With V2-SPEC.md from `edead832`, `apply_docs_s122_r5.py` wrote "5 edits written, 33 assertions held first", and the file equals `a6429e66`'s (`9615190d8881790d`). A second run is refused.
+  * `verdicts-base.out` (`S122_AT=557a0628`): 934 sentences, 74 STALE;
+  * `verdicts-set14.out` (`S122_AT=4da7cd86`): 992 sentences, 10 STALE (CONOPS.md 1056, V2-SPEC.md 47, 81, 82, 83, 84 and 86, OPERATING-ENVELOPE.md 77 twice and 83);
+  * `verdicts-r4.out` (`S122_AT=29d076eb`): 4 STALE, V2-SPEC.md 81, 83, 84 and 86. Its FAILS lines carry the role rule's own findings for 81 ("AP64500 is given the slot rail; A:U5 is LM5176...") and for 84.
+* **Documents.** With V2-SPEC.md from `29d076eb`, `apply_docs_s122_r5.py` wrote "5 edits written, 33 assertions held first", and the file equals `bd34cbd0`'s (`9615190d8881790d`). A second run is refused.
 * **Registry.**
   * `apply_registry_s122_r4.py` rebinds CFL-010, CFL-013, CFL-014, CFL-016 and REQ-005, and re-pins the envelope and ENV-001 to `26e98ecfd2e4ec2f`.
   * A second run is refused.
@@ -196,7 +196,7 @@ The answer to the question: yes, S-122 can close with a stale role left in the f
 
 ## Counts
 
-Committed `verdicts.out` at `a6429e66`, reproduced:
+Committed `verdicts.out` at `bd34cbd0`, reproduced:
 
 | Document | Sentences | TRUE | STALE | BASELINE | NOT DERIVABLE | UNJUDGED | Assertions |
 |---|---|---|---|---|---|---|---|

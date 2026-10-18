@@ -1,6 +1,6 @@
 # Correction cx1-if-ab-power-c1
 
-28 September 2026. Launcher base `6e149d4660b3598af77f1f4b97f72d74ace0528c`.
+28 September 2026. Launcher base `b0033401b4b31e9982a40890c2b3a8782d4f9b0f`.
 Prototype design: no V2 board has been built, ordered or measured. Desk
 arithmetic and AI review, not qualified review or closure of I-03.
 `checks/check-1-RESULT.md` was read first, in full, then the comparison and

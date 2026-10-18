@@ -1,18 +1,18 @@
 accepted: yes
 
-# Layer 4, L4-E10: The assistant's closing check of the decision-ready comparison at 79b2f568 (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E10: The assistant's closing check of the decision-ready comparison at ee7430ba (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E10 are spent:
-- the focused check `astra-check-l4e10-1.md` on `9fe3b632`, NOT YET;
-- the targeted recheck `astra-check-l4e10-2.md` on `2316b107`, NOT YET; it confirmed the framing, with FEA-008 open and no owner
+- the focused check `astra-check-l4e10-1.md` on `6f8f24a4`, NOT YET;
+- the targeted recheck `astra-check-l4e10-2.md` on `84329069`, NOT YET; it confirmed the framing, with FEA-008 open and no owner
   decision forced.
 
-The final round, `79b2f568`, applied the owner's instructions of 2 October: separate cases, usable energy on one boundary, the
+The final round, `ee7430ba`, applied the owner's instructions of 2 October: separate cases, usable energy on one boundary, the
 actual profiles, and one bounded comparison of complete approaches. **This check accepts the record as a correct,
 decision-ready comparison and recommendation. It does NOT close FEA-008, and the thermal architecture criterion is NOT met.**
 
 **Verified by the coordinator:**
-- *Reproduction:* `l4e10_cell_thermal.py` re-run at `79b2f568`, its output equal to the committed `.out` byte for byte.
+- *Reproduction:* `l4e10_cell_thermal.py` re-run at `ee7430ba`, its output equal to the committed `.out` byte for byte.
   `test_l4e10` with `test_public_hygiene`: 20 passed, 0 failed, 0 skipped.
 - *LO-01a's threshold and the conditioned corner, in separate arithmetic:*
   - The complete pass line, 1.6664 W/K, holds the inside air on shore at most 15 K over +40 C. The kit's heat into the

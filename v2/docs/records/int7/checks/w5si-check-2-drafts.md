@@ -1,16 +1,16 @@
-# Fresh check, lens drafts, of stream w5si at 7f7721c4 (AI review), 28 September 2026
+# Fresh check, lens drafts, of stream w5si at bcd44366 (AI review), 28 September 2026
 
-**AI review, lens "drafts", of fnd/w5si at 7f7721c4. This is not a qualified engineering review. Prototype design: nothing built, ordered or measured.**
+**AI review, lens "drafts", of fnd/w5si at bcd44366. This is not a qualified engineering review. Prototype design: nothing built, ordered or measured.**
 
 `mergeable: no` as the branch and drafts stand. The engineering content holds and all five drafts apply at int7. What blocks is publication of the 13 IBIS models and two drafts that write wrong text at int7.
 
-Tested against int7 at 1c4235ec as instructed. int7 moved to 85ad1193 during the check; of the files involved only `pcb_requirements.yaml` changed, and the CFL-016 binding below is still there.
+Tested against int7 at 42a7ce3b as instructed. int7 moved to 0f53ec87 during the check; of the files involved only `pcb_requirements.yaml` changed, and the CFL-016 binding below is still there.
 
 ## blocking
 
 **B1. The 13 IBIS models are tracked on the branch, and the drafts assume they are committed.**
-- problem: a merge carries the 13 files into history, so a push publishes them. int7's standing decision holds them back (`v2/docs/EXECUTION-PLAN.md` lines 311 and 322 at 1c4235ec). No fetch script or ignore rule exists on either line.
-- evidence: `git -C .../w5si ls-tree -r --name-only 7f7721c4 -- v2/vendor/ti/ibis v2/vendor/st/ibis` lists 13; they enter in the first commit da0f6266, so every commit of the branch carries them. fnd/int7, fnd/r8int6, fnd/h3 and main hold 0.
+- problem: a merge carries the 13 files into history, so a push publishes them. int7's standing decision holds them back (`v2/docs/EXECUTION-PLAN.md` lines 311 and 322 at 42a7ce3b). No fetch script or ignore rule exists on either line.
+- evidence: `git -C .../w5si ls-tree -r --name-only bcd44366 -- v2/vendor/ti/ibis v2/vendor/st/ibis` lists 13; they enter in the first commit 6c55e8fa, so every commit of the branch carries them. fnd/int7, fnd/r8int6, fnd/h3 and main hold 0.
 - header wording, `sn74lvc08a.ibs` lines 32-33 and 52-54: "Property of Texas Instruments Incorporated. Unauthorized reproduction and/or distribution is strictly prohibited." and "You and your company shall not distribute, sell or give these models to anyone else without prior written permission from TI." `pca9555.ibs` lines 35-36 and 55-57 say the same.
 - that wording is in 5 of the 13 (pca9555, sn74lvc08a, sn74lvc1g04, sn74lvc1g57, sn74lvc32a). The other 7 TI files and ST's carry only a copyright line ("All rights reserved"; ST line 13), with no grant.
 - counter_example: simulated `rules_status._config_state` in memory on board C's scratch reading, with the CONFIG_INPUTS draft applied and git answers patched:
@@ -30,7 +30,7 @@ Tested against int7 at 1c4235ec as instructed. int7 moved to 85ad1193 during the
 
 **B3. `apply_decisions_w5si.py` applies silently at int7 with two stale pointers in its third row (decision 50).**
 - problem: the evidence reads "the committed netlist of board B (sha256/16 8b78c59754a6a0c7), gen_sch_b.py line 1151".
-- counter_example: at 1c4235ec the netlist is 028997a6c5e8810f, line 1151 is `elif nm in ("GND", "E_PAD"): k[n] = "GND"`, and the BOB line is 1191. The facts themselves hold on set 6 (BOB = R9.2, R10.2, C33.1; 75, 75, 1n 2kV). A two-token fix.
+- counter_example: at 42a7ce3b the netlist is 028997a6c5e8810f, line 1151 is `elif nm in ("GND", "E_PAD"): k[n] = "GND"`, and the BOB line is 1191. The facts themselves hold on set 6 (BOB = R9.2, R10.2, C33.1; 75, 75, 1n 2kV). A two-token fix.
 
 ## minor
 
@@ -57,7 +57,7 @@ Tested against int7 at 1c4235ec as instructed. int7 moved to 85ad1193 during the
 | `apply_coverage_si001.py` | `pcb_rules_coverage.yaml` | SI-001 note +2802 characters, remediation action |
 | `apply_decisions_w5si.py` | `pcb_decisions.yaml` | rows 48 to 51 |
 
-2. **Apply tests.** `git merge-tree` of 1c4235ec and 7f7721c4 conflicts only in `v2/vendor/sources.txt` and `vendor-status.txt`. `edge_length.py`, `gen_pcb_b3.py` and `pcb_decisions.yaml` are byte-identical at base and int7. Every anchor stands exactly once at int7.
+2. **Apply tests.** `git merge-tree` of 42a7ce3b and bcd44366 conflicts only in `v2/vendor/sources.txt` and `vendor-status.txt`. `edge_length.py`, `gen_pcb_b3.py` and `pcb_decisions.yaml` are byte-identical at base and int7. Every anchor stands exactly once at int7.
 
 | Draft | Base | int7 merged, models present | int7 merged, models absent | Second run refused |
 |---|---|---|---|---|
@@ -104,9 +104,9 @@ Tested against int7 at 1c4235ec as instructed. int7 moved to 85ad1193 during the
 - The USB-IF's own PDF is not held; the transcription was read.
 - The signal-class declarations (738 slow nets) and what class the four undeclared board C nets should take.
 - `recovery/replay.py`, the superseded first-pass drafts and the second half of `F-Q1-power-stage-nodes.md`.
-- Whether int7 at 85ad1193 changes any result beyond the file comparison above.
+- Whether int7 at 0f53ec87 changes any result beyond the file comparison above.
 
 The worktrees w5si and int7 and the main checkout are unchanged. Scratch evidence (1.5 MB, no model files) is kept in `<worktrees>/_scratch/chk-w5si-drafts-2/`.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

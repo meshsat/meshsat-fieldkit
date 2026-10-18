@@ -1,6 +1,6 @@
 # L8-GND002-SLOTEN: GND-002's four board changes and the SLOT_EN hold, drafted into the generators (Layer 8, MESHSAT-1357)
 
-Record `l8gnd`, branch `fnd/l8gnd` from the Layer 4 consolidation line at `22cb4c16`, 3 October 2026, one assistant author. The
+Record `l8gnd`, branch `fnd/l8gnd` from the Layer 4 consolidation line at `b26b57e4`, 3 October 2026, one assistant author. The
 MeshSat field kit V2 is a prototype design: no board of the set has been built, powered or measured, and **nothing in this record
 is applied to the tree**. Every circuit change is a DRAFT apply script that refuses the repository's own generator until a
 `RELEASE.md` beside it names an accepted check of this record; regeneration, parity and the gate re-takes are the rented box's
@@ -52,7 +52,7 @@ drawn since 27 September 2026 (S-57 closed by SC-70: board E's Q11 and R58 drive
 up, `HW-FW-CONTRACT.md` FW-C14 and FW-E10 read DRAWN); this record does not touch it. What row 5.6 still carries is **the SLOT_EN
 hold**, defined in three places that agree: `ARCHITECTURE.md` 4.3, adjudication A01 ("SLOT_EN powers up OFF (it does) **and holds
 its state across a panel reset** (for example a latch the panel sets and clears), so a panel reset or update no longer drops the
-running slots ... The hold is in no generator at `eadbe571`; it is owed on board C (the source of the lines) or board A (their
+running slots ... The hold is in no generator at `46ca63fb`; it is owed on board C (the source of the lines) or board A (their
 loads), and it changes the semantics of IF-BC-PANEL and IF-AB-RIBBON"); `HW-FW-CONTRACT.md` FW-C02 ("SLOT_EN held low by A's
 R30, R34, R38 (100 k) and the pad pull-downs ... a pad reset drops every slot (W5-F4); the SLOT_EN hold across a panel reset is not
 drawn ... the hold (ARCHITECTURE.md 4.3) OWED"); and `pcb_interfaces.yaml` IF-BC-PANEL `slot_power_semantics` ("OWED (the
@@ -70,7 +70,7 @@ and at the ZEROIZE cut, and must vanish with H2's PI_KILL so that a restart begi
 read of HOT-R1 (FW-C14). The reset, default and cable-out states it is judged against are `ARCHITECTURE.md` 4.3's line-state table
 (its first row lists SLOT_EN1..3 as deasserted by "100 k down on A: R30, R34, R38, and the RP2040 pad's reset pull-down") and
 IF-BC-PANEL's `cable_out_states` (`SLOT_EN1..3: LOW, every compute slot OFF`), and **Layer 5's `power_line_states`**, drafted by
-its power pass on branch `fnd/l5pwr` (commit `1e18a1ca`, record l5pwr, `apply_l5pwr.py`; not on this branch, so its two rows are
+its power pass on branch `fnd/l5pwr` (commit `ef8bf2d9`, record l5pwr, `apply_l5pwr.py`; not on this branch, so its two rows are
 copied byte for byte into `inputs/` with their sha256 and provenance in `inputs/SOURCES.txt`). Its SLOT_EN1..3 row reads reset
 "LOW (A R30, R34, R38 100 k to GND; the RP2040's pads reset as inputs)", default "every slot OFF until the panel's boot order raises
 them one at a time after ZEROIZE_SW is read (FW-C01 step 6)", cable_out "LOW: every slot off (IF-BC-PANEL, IF-AB-RIBBON)" and hold
@@ -331,9 +331,9 @@ Rows 4.5 ("the SLOT_EN hold in no generator") and 4.6 ("HOT-R1 in the generators
 | L8G-F08 | Placement entries for H1, R229 (beside J_DOCK on the back-wall side), U43, R230 to R232 and C240 (beside U4 to U6's enables) in `gen_pcb_a3.py`; and the land copied into `meshsat.pretty` before `check_land` reads it (the generator refuses an unreadable land where KiCad is) | Layer 10 entry, the integrator at release |
 | L8G-F09 | `lcsc_fill.py`: "0R 2512 (CHASSIS bond link)" is meant to meet the `^0R 2512` rule (C25469), "4.7k" and "100n" meet theirs; confirm on the regenerated BOM | the BOM re-take on the box |
 | L8G-F10 | `HW-FW-CONTRACT.md` V-C02 and `TEST-PLAN.md`: the extended row of 3h | the TEST-PLAN owner |
-| L8G-F11 | `ARCHITECTURE.md` 4.3's paragraph "The SLOT_EN pull-up is withdrawn" ends "The hold is in no generator at eadbe571": it would read "drafted on board A (record l8gnd), not applied" | the integrator |
+| L8G-F11 | `ARCHITECTURE.md` 4.3's paragraph "The SLOT_EN pull-up is withdrawn" ends "The hold is in no generator at 46ca63fb": it would read "drafted on board A (record l8gnd), not applied" | the integrator |
 | L8G-F12 | d8dec31's `apply_gen_sch_a_mainpb.py` takes the next free R and C at apply time and is in no row of L4-E9's change list: before the fixed-designator drafts it takes theirs (on the base generator R221 and C236, the bank's and the charger's; after L4-E9's seven, this record's R229 and C240), and those drafts then refuse. Proposed: a row in L4-E9 section 3 placing it LAST in board A's round (after R-06 and this record's two), or fixed references above every draft's (R233 and C241 today) | L4-E9's change-list owner (the Layer 4 coordinator) and d8dec31's draft owner |
-| L8G-F13 | Layer 5's `power_line_states` (record l5pwr, `fnd/l5pwr` at `1e18a1ca`, not yet on this branch): the SLOT_EN1..3 row's `hold` field would read "DRAFTED on board A (record l8gnd: keepers U43 with R230 to R232 hold each line at its last driven level while the panel's pad is in its reset state; not applied); criterion 5.6's item answered once released" and, once applied, its `cable_out` field "the LAST DRIVEN LEVEL, kept by A's U43 while A's +3V3 is up; LOW from a power-up (the ribbons are mated with the kit off, SC-61)"; its `reset` and `default` fields stand | Layer 5's author (l5pwr) or the integrator at set 28 |
+| L8G-F13 | Layer 5's `power_line_states` (record l5pwr, `fnd/l5pwr` at `ef8bf2d9`, not yet on this branch): the SLOT_EN1..3 row's `hold` field would read "DRAFTED on board A (record l8gnd: keepers U43 with R230 to R232 hold each line at its last driven level while the panel's pad is in its reset state; not applied); criterion 5.6's item answered once released" and, once applied, its `cable_out` field "the LAST DRIVEN LEVEL, kept by A's U43 while A's +3V3 is up; LOW from a power-up (the ribbons are mated with the kit off, SC-61)"; its `reset` and `default` fields stand | Layer 5's author (l5pwr) or the integrator at set 28 |
 
 ## 7. Owed, with the next action each
 

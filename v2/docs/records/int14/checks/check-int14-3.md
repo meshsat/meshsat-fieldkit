@@ -1,16 +1,16 @@
 mergeable: yes
 
-# AI review: third check of integration set 13, fnd/int14 at 32f26b41 (MESHSAT-1357)
+# AI review: third check of integration set 13, fnd/int14 at 9cef5181 (MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. Checked 29 September 2026 from 18:21 to 18:25 CEST (times read
 with `date`).
 
 **Set-up**
-* **Tip.** `fnd/int14` is `32f26b41b8fc0035b81126c4c0f26857546a2fe1`, one commit on a906b932, which is its parent.
-  bd1cbb07 is not on the branch. It was still the tip at 18:24.
-* **Clone.** `<scratch>/chk-int14`, detached at 32f26b41, with `int14-evidence-a906b932.tar` re-installed. `git status`
+* **Tip.** `fnd/int14` is `9cef518102fb73f668c92c237952ea821524f7e6`, one commit on 8611069e, which is its parent.
+  e4a64b0e is not on the branch. It was still the tip at 18:24.
+* **Clone.** `<scratch>/chk-int14`, detached at 9cef5181, with `int14-evidence-a906b932.tar` re-installed. `git status`
   shows only my three reports.
-* **Replay clone.** `c14/r6` in the scratchpad, at a906b932.
+* **Replay clone.** `c14/r6` in the scratchpad, at 8611069e.
 * Tools ran from a scratch cwd with `VERDICT_DIR` in the scratchpad. Nothing committed or pushed.
 
 **Counts: 0 blocking, 1 minor.** R2-B1, R2-B2 and n1 to n3 are answered.
@@ -21,7 +21,7 @@ None.
 
 ## 1. Every sentence the script writes
 
-**CFL-016's new entry** (unchanged from bd1cbb07):
+**CFL-016's new entry** (unchanged from e4a64b0e):
 * **The withdrawal.** It is right.
 * **PANEL.md.** The quoted rows are PANEL.md lines 89 and 90, in section 3.
 * **The netlist.** The committed netlist c9f7394594201045 matches the entry: U3 pins 4 to 7 on `EPD_*_R`, R53 to R56
@@ -53,9 +53,9 @@ None.
 | via_audit reads neither class, and its two values did not change on board C | 0.2 and 0.05 mm at main and at the tip | yes |
 | the closing condition | sound, and names the two readings that owe the re-take | yes |
 
-## 2. Replay on a906b932
+## 2. Replay on 8611069e
 
-`apply_check14_fixes.py` from 32f26b41, run once on a clean a906b932 clone, then `rules_render.py --requirements`. It
+`apply_check14_fixes.py` from 9cef5181, run once on a clean 8611069e clone, then `rules_render.py --requirements`. It
 gives these files byte for byte:
 * `pcb_requirements.yaml`;
 * `records/README.md` and `csi/README.md`;
@@ -66,7 +66,7 @@ gives these files byte for byte:
 A second run refuses (exit 2). The three hand-written files match the commit: `int14/README.md` and the two filed
 checks. Each filed check equals my report apart from the scratch path.
 
-**Registry, parsed a906b932 to 32f26b41:**
+**Registry, parsed 8611069e to 9cef5181:**
 * **Records:** CFL-016 gains 1 evidence entry, its old list kept as a prefix, and stays FAIL on S-122. CON-023 and
   CON-024 gain `waits_on` S-123; both stay NOT_JUDGED.
 * **Items:** S-122 is extended and S-123 added last in `open_items`. `closed_items` are identical, and nothing else
@@ -84,7 +84,7 @@ checks. Each filed check equals my report apart from the scratch path.
 * **Checks:** `--check` reads 16 documents, 0 out of date; `--requirements --check` reads current;
   `decisions_render.py --check` exits 0; `constraints_bound.py` reads PASS.
 * **`rules_lib.py`:** 59 rules, 0 errors, 0 warnings. `requirements`: 144 records, 0 errors, 0 warnings.
-* **Pages:** against a906b932 only REQUIREMENTS-TRACE.md moves:
+* **Pages:** against 8611069e only REQUIREMENTS-TRACE.md moves:
   * the header, 85 to 86 open items;
   * "waits on S-123" on CON-023 and CON-024;
   * CFL-016's entry;

@@ -13,12 +13,12 @@ Written 30 September 2026 (MESHSAT-1357) by the scrub of public files (`v2/docs/
 | Size | 52,203,750 bytes, 2275 entries (the same files as H3); the cap of `pack.yaml` is 52,428,800 bytes |
 | Manifest | `H3-R1.MANIFEST.tsv`, sha256 `c74930639fb009eb319e612ba6e00f1f78f94595041e5caf6616cece9c5ed724`, a byte copy of the ZIP's `MANIFEST.tsv` |
 | Supersedes | `v2/release/handover/H3.zip`, sha256 `6922a96d732442e99a65d8db3f0734378bd7ea636894fca283a4b3ca424dd07a` |
-| Source commit | `329fcfa64bdf27b86175ecdced361d954cab48e4`, the redaction commit (every file in the ZIP is its blob): its only parent is H3's source commit `75ad6ee5bc98d7213b9a61d1f64cfa7ea19cc669`, and it changes the files below and `v2/docs/handover/START-HERE.md` |
+| Source commit | `e21a2f632fe60165f4ccf39afd5fb8d3057dca3f`, the redaction commit (every file in the ZIP is its blob): its only parent is H3's source commit `c3dd60f9a8d405ba3c9af8849a3fe01952051911`, and it changes the files below and `v2/docs/handover/START-HERE.md` |
 | Snapshot commit | the commit of the scrub's set that adds this ZIP, its checksum, its manifest and this page |
 | Builder | `v2/ecad/tools/handover_pack.py` sha256 `fd7e353f0fcaaba2a166997ad68403321a280368b8513100d4ae4e7002f7f5fe`, the packer that built H3 |
 | Public | the redaction commit reaches main's history through the merge that keeps main's tree (`git merge -s ours`) in the scrub's set; `SOURCE.txt` marks it `public no` because it was built before that merge was published |
 | Check | `sha256sum -c H3-R1.zip.sha256`, then `python3 v2/ecad/tools/handover_pack.py verify H3-R1.zip` |
-| Rebuild | `python3 v2/ecad/tools/handover_pack.py build --commit 329fcfa64bdf --version H3-R1 --zip-only --out <folder>`: the ZIP is deterministic per host; across hosts compare `H3-R1.MANIFEST.tsv` |
+| Rebuild | `python3 v2/ecad/tools/handover_pack.py build --commit e21a2f632fe6 --version H3-R1 --zip-only --out <folder>`: the ZIP is deterministic per host; across hosts compare `H3-R1.MANIFEST.tsv` |
 
 ## What differs from H3
 
@@ -34,7 +34,7 @@ Written 30 September 2026 (MESHSAT-1357) by the scrub of public files (`v2/docs/
 | `START-HERE.md` and `v2/docs/handover/START-HERE.md` | | | opened by a box naming H3, why it is superseded, the table above and the files left |
 | `SOURCE.txt` | | | the redaction commit, its tree and date, the builder and the tool versions of the host that built H3-R1 |
 
-A hash that a page of H3-R1 cites for a changed file names H3's bytes; H3 and the public repository at `75ad6ee5` hold them. Each replacement is listed by file, line and token class in `v2/docs/records/scrub/MAP.md`.
+A hash that a page of H3-R1 cites for a changed file names H3's bytes; H3 and the public repository at `c3dd60f9` hold them. Each replacement is listed by file, line and token class in `v2/docs/records/scrub/MAP.md`.
 
 ## Left as H3 carried them
 

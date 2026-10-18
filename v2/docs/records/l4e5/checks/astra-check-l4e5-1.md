@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E5: the one check of the source-control decision by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx15-l4e5-check`, run `20261001T113719Z-2902583`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e5 at commit `0f894814c952`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e5 at commit `5d383f8f5509`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

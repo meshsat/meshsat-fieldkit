@@ -2,7 +2,7 @@
 
 AI review, MESHSAT-1357, written 28 September 2026 19:22 CEST by an independent checker session BEFORE any file
 under `v2/docs/records/cx1/` was opened. Prototype framing: nothing built, ordered or measured. Every figure below
-is from a document held in the cx1 worktree (commit b1c744db, base 6b419b02) or is arithmetic on such a figure;
+is from a document held in the cx1 worktree (commit 6da41a76, base 66c0d1d2) or is arithmetic on such a figure;
 the script `phase1.py` beside this page reproduces the arithmetic (its output `phase1.out`, inputs pinned by sha256).
 
 ## 0. The named mode

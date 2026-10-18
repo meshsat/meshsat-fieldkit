@@ -1,6 +1,6 @@
 # Check 1 of the S-99 analysis: a read-only AI review by the second model family (Codex, GPT-6 Astra at xhigh), 28 September 2026
 
-Run 20260928T190819Z-2822272 (thread 01a0e96b-0734-7ae2-9e44-8d42bcda33be, 951 s, 139 events, the client record: model ['gpt-6-astra'], effort ['xhigh'], sandbox ['read-only']). The launcher's computed outcome: DONE_CANDIDATE. Usage: input 5141872 (cached 4704384), output 28200 (reasoning 14524). Under the owner's ruling OD-12 of 28 September 2026 (check 1 of 2). The record checked: commit 16608ff1 of fnd/s99. Nothing here is accepted by itself: the author verifies every finding against the sources and corrects or rebuts it; a second reviewer then re-checks.
+Run 20260928T190819Z-2822272 (thread 01a0e96b-0734-7ae2-9e44-8d42bcda33be, 951 s, 139 events, the client record: model ['gpt-6-astra'], effort ['xhigh'], sandbox ['read-only']). The launcher's computed outcome: DONE_CANDIDATE. Usage: input 5141872 (cached 4704384), output 28200 (reasoning 14524). Under the owner's ruling OD-12 of 28 September 2026 (check 1 of 2). The record checked: commit 13205621 of fnd/s99. Nothing here is accepted by itself: the author verifies every finding against the sources and corrects or rebuts it; a second reviewer then re-checks.
 
 ## Summary
 

@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E7: the focused check of the qualification of the 100 W bound by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx20-l4e7q-check`, run `20261001T171330Z-3616813`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e7 at commit `ee9909a88286`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e7 at commit `010c3fecd91f`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

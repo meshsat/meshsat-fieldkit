@@ -93,7 +93,7 @@ The ruled fields below remain proposed SESSION text for integration, not a rulin
         declared demand without moving the lead protection point and preserves console availability.
         The interlock changes console behaviour and stays a fallback. M/P evidence, timing, collapse/recovery
         and thermal verification remain open; this choice is not acceptance of residual risk.
-      evidence: board A''s netlist at 2b7c9374 (sha256 0a2b5908...), the intents of boards A, B and D (sha256 3422910a...,
+      evidence: board A''s netlist at 417f7794 (sha256 0a2b5908...), the intents of boards A, B and D (sha256 3422910a...,
         96ee391b..., 8d9f3b22...), TI SNVSAI1D pp.3 to 7, 16 to 17, 23 to 26, TI SLPS414B p.3, Coilcraft 804-1 and 887-1,
         Vishay 30100 pp.1 to 2, TI SLVSET8A, TI SLUSEA4D, NiceRF SA868 v1.3 p.4, Ebyte E22-900M30S v1.20, Ground
         Control''s RockBLOCK 9704 hardware page (snapshot 2026-09-27), MyriadRF''s LimeSDR Mini pages, Microchip
@@ -114,7 +114,7 @@ The ruled fields below remain proposed SESSION text for integration, not a rulin
         INCONCLUSIVE until TEST-PLAN PT-4'
       status: 'ALIGNED at the lead (A 3.8 A, B 3.8 A typical); the child-peak tier of B (7.22 A on the lead) is above
         B''s own 6.0 A and is S-98''s reconciliation'
-      enable: DEV_EN, ON by design since 458b2873 (R42)
+      enable: DEV_EN, ON by design since 09521e07 (R42)
 
 ## 4. S-98: one sentence to add
 

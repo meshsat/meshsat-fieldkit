@@ -7,9 +7,9 @@ mergeable: no
 AI review, labelled as such: an independent check by an assistant session that did not write the work. It is not a
 qualified engineering review. 29 September 2026, 20:45 to 21:05 CEST (read from `date`).
 
-Branch `fnd/w5identc` at `633697a7` (confirmed), three commits on `6b03ef6f`, all authored and committed as the owner,
+Branch `fnd/w5identc` at `789a4cde` (confirmed), three commits on `efbf8678`, all authored and committed as the owner,
 no trailer, no dash characters added, no held file tracked (`git ls-tree` lists only the Yageo sheet under
-`v2/vendor/passives`). Checked in this shared clone at the tip, and in a sparse clone of `fnd/int15` at `1bafab8c` with the
+`v2/vendor/passives`). Checked in this shared clone at the tip, and in a sparse clone of `fnd/int15` at `4da7cd86` with the
 branch merged (clean, tree `761922aa`; the clone was removed afterwards, the disk is at 99 percent). The held Uniroyal
 sheet is the one fetched in the first check with `fetch_held_back.py` (sha256 `11cd644d...`).
 
@@ -78,7 +78,7 @@ reason citing line 126; counts become UNRESOLVED 41, NOT_A_PART 2; re-pin the re
    part on a resistor, a Uniroyal part on a capacitor and on the R43 shunt, an X7R part on the C0G selection, a wrong
    literal (BN, X5R), a scheme named for another document or page, an unknown scheme, rows cited from another position.
    A scheme written into the table is ignored (true part still DECODED, table still HOLDS). Accepted: BB1's two.
-3. B3 on `1bafab8c` plus the branch: before, `rules_lib.py requirements` 0 errors 0 warnings; `apply_decision_decoded.py`
+3. B3 on `4da7cd86` plus the branch: before, `rules_lib.py requirements` 0 errors 0 warnings; `apply_decision_decoded.py`
    wrote decision 59 and rebound CFL-016 `a41df5d12ff95995` to `c8c51927de7e345b` (evidence entry names decisions 28 and
    40 identical); second runs of it and of the rebind script refused; after it 0 errors 0 warnings; `apply_identities_c.py`
    opened S-125 and refused a second run; `validate` 0 errors; both renderers wrote; test_requirements,
@@ -93,7 +93,7 @@ reason citing line 126; counts become UNRESOLVED 41, NOT_A_PART 2; re-pin the re
    218, hardware design p. 11, not Abracon's: true); L1 (Arlitech p. 4 prints `ATNR4010100□T`: true); Fenghua (p. 4 "How
    To Order": true); R43 (CS03 part number page names CS03, 0603 given on p. 3: true as worded); J_PIJ2: not true (BB2).
 5. C1 and C2: `C326595` is YAGEO CC0805KKX7R7BB106, 10 uF, plus or minus 10 percent, 16 V, X7R, 0805, in w5ident's JLCPCB
-   and LCSC readings of 27 September (fnd/w5ident `c08f4d5a`, `identities-2026-09-27.json` lines 9600 and 15172), not in
+   and LCSC readings of 27 September (fnd/w5ident `76e050df`, `identities-2026-09-27.json` lines 9600 and 15172), not in
    this tree's reading, as the README says. It meets the selection (10 uF, 0805, X7R, at least 6.3 V, at most 20 percent),
    its part number decodes to the same on Yageo p. 2, and Yageo's range table p. 6 lists 0805 X7R 16 V 10 uF. The draft
    runs in check mode and writes nothing. Not judged by the table: it replaces a 25 V part with a 16 V one on +5 V, so DC

@@ -6,10 +6,10 @@ AI review (desk arithmetic on the makers' documents and the committed netlists, 
 qualified engineering review. 29 September 2026, 19:00 CEST. Checker did not write the work. Round 1: `CHECK.md` beside
 this file.
 
-Checked: `fnd/s120` at `afcdb557d2f189496d22a6229ff0a2a5edf5ba94` (confirmed), which merged main `b874b744` as `a757e840`
-(the merge differs from `b874b744` only by the six s120 records) and then made `fbed9a7b`, `5078ee24`, `afcdb557`, all as
+Checked: `fnd/s120` at `38902f307889aef38e7551bf794bfc1907b7d73e` (confirmed), which merged main `53804300` as `a4f2f3e9`
+(the merge differs from `53804300` only by the six s120 records) and then made `76864fc9`, `81d35506`, `38902f30`, all as
 the owner, no trailer. The clone `<scratch>/chk-s120` is detached at the tip; `<scratch>/chk-s120/_int14` was moved to
-`b874b744` for main's tools. The netlists of A and E are unchanged (`6c40250c47195ebb`, `2ed95a0e8069ebf8`); the four held
+`53804300` for main's tools. The netlists of A and E are unchanged (`6c40250c47195ebb`, `2ed95a0e8069ebf8`); the four held
 FET sheets are the ones verified in round 1. No commit, no push, no agent, no box.
 
 B1 to B3 of round 1 are answered. One new blocking item remains, in the closing condition of the new item S-124.
@@ -94,12 +94,12 @@ is conservative, so this is wording only.
    16 and 15. `vbus20_bound.py` reprints the committed `.out` byte for byte (exit 0). Four mutants of my own, different
    from the author's: a 100 nF bypass added on VBUS20 (membership FAIL), R27 at 20.0k (strap FAIL), R150 at 1k (CS filter
    FAIL), TI's 33 nF CACN added (sense filter FAIL): 4 of 4 exit 1.
-4. Registry: the tip's registry equals `b874b744`'s (sha256/16 1dde1fd16f4e260e). `--check` with the short `afcdb557` wrote
-   nothing (sha unchanged). On a scratch copy of each: S-120 closed by `commit afcdb557d2f189496d22a6229ff0a2a5edf5ba94`
+4. Registry: the tip's registry equals `53804300`'s (sha256/16 1dde1fd16f4e260e). `--check` with the short `38902f30` wrote
+   nothing (sha unchanged). On a scratch copy of each: S-120 closed by `commit 38902f307889aef38e7551bf794bfc1907b7d73e`
    (40 characters from the 8 typed), S-124 opened (SESSION, OPEN), REQ-015 waits on S-106, S-107, S-111, S-124, S-120
    appended after S-121; the two applied copies are byte identical; a second run refuses. `rules_lib.py requirements`: 144
-   records, 0 errors, 0 warnings on all four copies (main's tools at `b874b744` and the tip's). The commits a757e840 and
-   5078ee24 are refused (README and LOG differ from HEAD's): the integrator must pass the tip or the merge that carries it.
+   records, 0 errors, 0 warnings on all four copies (main's tools at `53804300` and the tip's). The commits a4f2f3e9 and
+   81d35506 are refused (README and LOG differ from HEAD's): the integrator must pass the tip or the merge that carries it.
 5. Nothing claims ringing is bounded: README 1, 7 and 11, `.out` 10 and 12, the closing evidence and S-124 all say
    INCONCLUSIVE or "not bounded at desk". The bound is labelled INFERRED in the README, the `.out` (sections 3, 8, 12) and
    both registry texts, with its sensitivity; the dump and line figures are labelled MODEL where stated, except the n6

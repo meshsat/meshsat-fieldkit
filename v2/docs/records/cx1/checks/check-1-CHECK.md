@@ -1,7 +1,7 @@
 # CHECK (phase 2): the cx1 candidate against the checker's own phase 1
 
-AI review, MESHSAT-1357, 28 September 2026 19:29 CEST. Independent checker; the candidate is commit b1c744db
-(base 6b419b02) on branch fnd/cx1, four files under `v2/docs/records/cx1/`, written by the Codex worker. Phase 1
+AI review, MESHSAT-1357, 28 September 2026 19:29 CEST. Independent checker; the candidate is commit 6da41a76
+(base 66c0d1d2) on branch fnd/cx1, four files under `v2/docs/records/cx1/`, written by the Codex worker. Phase 1
 (`PHASE1.md`, `phase1.py`, `phase1.out` beside this page) was written before any candidate file was opened.
 Prototype framing: nothing built, ordered or measured; every figure is a desk figure.
 
@@ -153,7 +153,7 @@ docstring says is intended), and `ALLOWED` limits targets to the two generators,
 
 ## 6. Scope and prose
 
-- `git show --stat b1c744db`: exactly the four files, 1,112 insertions, author Kyriakos Papadopoulos, no trailer.
+- `git show --stat 6da41a76`: exactly the four files, 1,112 insertions, author Kyriakos Papadopoulos, no trailer.
 - No em dash (U+2014) and no en dash (U+2013) in any of the four files (grep, exit 1).
 - "AI review" present (ANALYSIS.md lines 5, 268, 276; the .out's first line); prototype framing present ("no V2
   board has been built, ordered or measured"); the intents' word "measured" is explained as a desk figure.

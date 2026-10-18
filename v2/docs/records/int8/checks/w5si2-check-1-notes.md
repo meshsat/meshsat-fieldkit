@@ -3,8 +3,8 @@
 AI review by a checker session that wrote none of what it checked. It is not a qualified engineering review.
 Prototype design work: nothing has been built, ordered or measured. MESHSAT-1357, layer 9, rule SI-001.
 
-Checked: branch `fnd/w5si2`, tip `f84243ba`, worktree `<worktrees>/w5si2`
-(read only), base `85ad1193`. Integration line `fnd/int8`, at `097b6cf7` when the check began and at `a8607eab`
+Checked: branch `fnd/w5si2`, tip `71495c4d`, worktree `<worktrees>/w5si2`
+(read only), base `0f53ec87`. Integration line `fnd/int8`, at `28c57be0` when the check began and at `b4b81ba1`
 when it ended (five commits of the Codex pilot's records, `pcb_interfaces.yaml` and `pcb_requirements.yaml`).
 Everything I wrote is under `<worktrees>/_scratch/chk-w5si2/`. No worktree and
 no main checkout was written; no gate, `rules_status.py` or renderer was run in any tree other than my scratch
@@ -14,7 +14,7 @@ Times are from `date` on the runner: started 19:43 CEST, this page finished at 2
 
 ## 1. The merge as it will happen
 
-Scratch clone `view/` (`git clone --shared`), branch `chk` from `origin/fnd/int8` at `097b6cf7`,
+Scratch clone `view/` (`git clone --shared`), branch `chk` from `origin/fnd/int8` at `28c57be0`,
 `git merge --no-ff origin/fnd/w5si2`.
 
 Result: three conflicts, all append-append at the end of a file (both branches added lines after the same last
@@ -31,7 +31,7 @@ I resolved all three by keeping both sides, HEAD's lines first, and committed (`
 file conflicted; the registry and the trace page did NOT conflict (the stream changes neither on the branch, its
 registry changes are the drafts). Model files in the clone: `git ls-files | grep -c '\.ibs$'` = 0, on disk 0.
 
-Rehearsed again at int8's new tip `a8607eab` in a second clone (`int8-plain/`, branch `chk2`): the same three
+Rehearsed again at int8's new tip `b4b81ba1` in a second clone (`int8-plain/`, branch `chk2`): the same three
 files, the same single hunks at the same lines. Resolved the same way; the seven drafts then applied there in the
 absent state (all exit 0, decisions 48 to 54, CFL-016 rebound `b5f7162443d5ad91` to `4e1ff91f98e06b72`) and
 `rules_lib.py requirements` read 144 records, 0 errors; `rules_lib.py` 59 rules, 0 errors.
@@ -208,7 +208,7 @@ The brief speaks of an "edges" check with five minor items in `check-1/`. What t
   the clock inputs (6 occurrences); decisions as rows (draft 7); the remediation stays LAB and HARDWARE (verified in
   the clone after draft 6: `owner = LAB`, `execution = HARDWARE`); the search listing `edge-search.txt` is a declared
   input (`inputs.search_listing d08bc489782c976b`).
-- The "edges" lens check of the SECOND pass (`fnd/w5si` at 7f7721c4, 27 September) is not filed in the tree; it is in
+- The "edges" lens check of the SECOND pass (`fnd/w5si` at bcd44366, 27 September) is not filed in the tree; it is in
   the integrator's workflow journal (`wf_b5270c7e-b36/journal.jsonl` line 7): `mergeable: true`, no blocking item,
   TEN minor items M1 to M10. Of those, M5 (a [Ramp] cell's dV not checked; TMP117 sda 0.15 of the swing) is closed by
   ER-D16, and M9 (sources.txt labelled a 16-digit prefix as the sha256) is answered by the re-issued vendor lines
@@ -244,7 +244,7 @@ The brief speaks of an "edges" check with five minor items in `check-1/`. What t
   the zip, fetch dates, sha256/16 with a pointer to the full sha in the manifest, file rev, and the header's wording).
   UM10204 has a `sources.txt` line (341) and NO `vendor-status.txt` line; the two RP2040 documents are covered by
   folder-level lines only (`rp2040` in both lists). Those three files predate this stream (UM10204 is on main from
-  `0da2778b`), so it is a carry item for the vendor lists, not a defect of this stream.
+  `cf88153c`), so it is a carry item for the vendor lists, not a defect of this stream.
 - Every one of the 90 citations of the data file is checked by the tool on every run; my six readings in both
   states carried no citation failure (`contradicted_nets = 0` on every board).
 
@@ -275,7 +275,7 @@ Minor:
   check-1's third blocking item named for BOB. For these four nets the class's own question (does a reference EXIST)
   is arguably the right one (a lamp FET gate and a GPIO level), but the sentence belongs in
   `apply_board_c_declarations.py`'s docstring (lines 20 to 40) and README section 5, as the BOB basis has it.
-- m2. `fnd/int8` moved from `097b6cf7` to `a8607eab` during this check. The merge at the new tip conflicts in the same
+- m2. `fnd/int8` moved from `28c57be0` to `b4b81ba1` during this check. The merge at the new tip conflicts in the same
   three appended files only and the drafts apply there; rehearse once more at integration time if int8 moves again.
 - m3. Draft 6 writes the paragraph of the state it runs in. Run on this host's integration checkout, which holds no
   model, it writes the ABSENT counts (64 / 293 / 466) into the registry, honest but "of another state" as the draft
@@ -319,4 +319,4 @@ the only copies remain in the author's worktree.
   real evidence tree (none in the clone carries a SI-001 reading taken with the models).
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

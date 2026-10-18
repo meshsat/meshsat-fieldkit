@@ -1,10 +1,10 @@
 # Shared case rows (coordinator; plan of 4 October 2026, section 4a; PLAN-01). Local working copy; the plan entry carries them.
 
-Sources read at set 29's line (`e58e906a` when first fixed; the records named below are unchanged at the later tips unless a row says so).
+Sources read at set 29's line (`70ecd9f1` when first fixed; the records named below are unchanged at the later tips unless a row says so).
 A needed change is a new revision of the row, announced to every consumer. Nothing has been built, bought or measured.
 
 ## C-PROT rev 1 (14:19 CEST)
-Record l9stk `L9-STACKUPS.md` 15.1 (the owner's criterion), 15.6, 15.7 at `0d72880b`; L4-E11 section 19 at `e60a94a8`.
+Record l9stk `L9-STACKUPS.md` 15.1 (the owner's criterion), 15.6, 15.7 at `56b29bf5`; L4-E11 section 19 at `7ad698ef`.
 Fixed: 10 A held and 18 A for 60 s never interrupted; every series part within its limits below and above the trip; board P's FETs
 welded, no firmware; the breaker's band 18.32 to 23.93 A; start at L4-E12's 76.25 C plus own heating; docking included; each source
 (shore, solar, vehicle) present or absent. Unsettled: current sharing between the battery FETs; the LM5069's internal 1 MOhm tolerance.
@@ -38,7 +38,7 @@ Consumers: T5, V3. (W3 ran on rev 1 and reported both readings.)
 Rev 2's definition stands; its quoted figure did not belong to it. "16.214 V (253.61 W at VBAT)" is decision D-11's basis as rv-pwr
 models it (rv-pwr's `typ_nontx`), which keeps the STM32 supervisors, the hubs' cores, the QMX's USB/HDMI, board E's controller and the
 Geiger at their HIGH figures, while REQ-018 with CONOPS 4a says every other load at typical. Layer 9's T5 round (record l9pwr round 4,
-`fnd/l9t5` at `cce21ca7`, section 7b) computes the case from its own text, each pack-fed converter at the case's VBAT:
+`fnd/l9t5` at `e966f3f4`, section 7b) computes the case from its own text, each pack-fed converter at the case's VBAT:
 - THE CASE (REQ-018 + CONOPS 4a): 241.039 W at VBAT, need 15.5162 V at 18 A and R_cell 0.06 Ohm: deficit +0.0162 V nominal. F01 OPEN.
 - With the printed uncertainties bounded (the gauge's uncalibrated error, the dock contacts at their printed maximum): 16.0684 V.
 - Labelled scenarios, never substituted for the case: D-11's basis as rv-pwr models it (16.1825 V at the case's VBAT; 16.214 V
@@ -48,13 +48,13 @@ Geiger at their HIGH figures, while REQ-018 with CONOPS 4a says every other load
 Consumers: T5, V3; the set 30 records restate L9P-F01's figure as the scenario it is.
 
 ## C-DEV rev 1
-Layer 9's budget (`records/l9pwr`, round 2 at `51821143`), the device rail U7 at the least load voltage: 7.472 A demanded (4.9019 V,
+Layer 9's budget (`records/l9pwr`, round 2 at `cd93179a`), the device rail U7 at the least load voltage: 7.472 A demanded (4.9019 V,
 every load at constant power; 7.181 A at 5.1 V) against the LM5176 stage's 7.0957 A loop minimum. Connected: L9P-F04 (the PA rail,
 8.188 A against the same minimum), the JST-VH lead's 10 A rating (cx40 Q4: a resistor-only change has no value that both supplies
 C-DEV and keeps the loop's maximum under 10 A). Consumers: T5, V3.
 
 ## C-SHORE rev 1
-L4-E11 19e (DD-3) at `e60a94a8`: 7.136 A held by the input breaker from 76.25 C air. Consumers: T3, V2.
+L4-E11 19e (DD-3) at `7ad698ef`: 7.136 A held by the input breaker from 76.25 C air. Consumers: T3, V2.
 
 ## C-CU rev 1
 Record l9stk 14.6, the coordination table: continuous, transient and fault current until protection clears, per conductor.

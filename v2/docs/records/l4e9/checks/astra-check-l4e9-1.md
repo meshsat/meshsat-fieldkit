@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E9: the focused check of the connected power architecture and its closure gate by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx28-l4e9-check`, run `20261002T004904Z-179094`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e9 at commit `6097922aa7a2`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e9 at commit `3cb3324259b7`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

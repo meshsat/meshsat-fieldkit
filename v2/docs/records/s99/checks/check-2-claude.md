@@ -1,4 +1,4 @@
-# Check of the S-99 correction (commit e7d7f288, branch fnd/s99c): independent AI review (assistant), 28 September 2026
+# Check of the S-99 correction (commit 613ef2a8, branch fnd/s99c): independent AI review (assistant), 28 September 2026
 
 AI review, not a qualified review. Prototype design: nothing built, ordered or measured. Read-only on the worktree; all runs on scratch copies under this folder.
 
@@ -20,9 +20,9 @@ recommendation supported: yes (option B, the D8 split, as the next circuit candi
 
 ## Blocking item
 
-1. v2/docs/records/s99/apply_d8_split_draft.py line 69 (S99-DEV "old") and CORRECTION.md lines 179-183: on fnd/int9 (da844ef2) the committed draft's --check fails: "AssertionError: ('S99-DEV', 'old text must occur exactly once in the original')", and CORRECTION.md's expected s98 line also occurs 0 times. Replace S99-DEV "old" with the exact fnd/int9 block below (gen_sch_a.py lines 125 to 135, sha256 of the block plus a trailing newline e25c6e47...). Keep "new" as committed (it is CORRECTION.md's new block verbatim). With that one change, --check on a copy of fnd/int9's gen_sch_a.py passes all five entries (the other four anchors occur once there; the ten new references and +5V_D8IN are unused), and the AST of the result gives +5V_DEV 4.1 / 6.9 A, loads {J_5V_DEV 3.8, U32 0.3} (S-98's 3.8 A kept, typical recomputed without D8), +5V_D8IN 1.0 / 2.0 A from VBAT via U41, U23 on +5V_D8IN, VBAT gains U41 0.4 A.
+1. v2/docs/records/s99/apply_d8_split_draft.py line 69 (S99-DEV "old") and CORRECTION.md lines 179-183: on fnd/int9 (0aff0fc2) the committed draft's --check fails: "AssertionError: ('S99-DEV', 'old text must occur exactly once in the original')", and CORRECTION.md's expected s98 line also occurs 0 times. Replace S99-DEV "old" with the exact fnd/int9 block below (gen_sch_a.py lines 125 to 135, sha256 of the block plus a trailing newline e25c6e47...). Keep "new" as committed (it is CORRECTION.md's new block verbatim). With that one change, --check on a copy of fnd/int9's gen_sch_a.py passes all five entries (the other four anchors occur once there; the ten new references and +5V_D8IN are unused), and the AST of the result gives +5V_DEV 4.1 / 6.9 A, loads {J_5V_DEV 3.8, U32 0.3} (S-98's 3.8 A kept, typical recomputed without D8), +5V_D8IN 1.0 / 2.0 A from VBAT via U41, U23 on +5V_D8IN, VBAT gains U41 0.4 A.
 
-Exact old text for fnd/int9 (lines 125 to 135 of v2/ecad/tools/gen_sch_a.py at da844ef2):
+Exact old text for fnd/int9 (lines 125 to 135 of v2/ecad/tools/gen_sch_a.py at 0aff0fc2):
 
 ```python
 # F-PR-04, 26 September 2026: the device rail's converter is an LM5176 stage now, not an AP64500. W2 found this
@@ -50,7 +50,7 @@ Exact new text (unchanged from the committed draft and CORRECTION.md lines 187-1
 _intent.rail("+5V_DEV", 5.0, 4.1, 6.9, "R43", loads={"J_5V_DEV": 3.8, "U32": 0.3}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, fed_from="VBAT", note="the USB devices, LimeSDR bay and RockBLOCK behind board B's switches, plus the wall host port behind U32; D8 is supplied separately by U41 through U23 from +5V_D8IN. The net starts at the output ISNS shunt R43. LM5176 minimum average limit is 7.095710 A with initial +/-1 percent, or 7.056897 A with the assumed 50 K shunt temperature change and +/-110 ppm/K TCR. The 6.9 A declared peak (B 6.0 + wall 0.9) has 0.156897 A conditional margin; actual mode current, M/P reconciliation, timing, collapse/recovery and temperatures remain unverified (S-99).")
 ```
 
-(The same two blocks are filed byte for byte as int9_old_block.txt and int9_new_block.txt beside this file.) Optional wording nit for int9: S-98 is closed there (31d5edfe, declaration consistency only), so the new comment's "S-98 reconciliation" reads better as "I-03's M/P adequacy"; this does not change any figure.
+(The same two blocks are filed byte for byte as int9_old_block.txt and int9_new_block.txt beside this file.) Optional wording nit for int9: S-98 is closed there (db81a986, declaration consistency only), so the new comment's "S-98 reconciliation" reads better as "I-03's M/P adequacy"; this does not change any figure.
 
 ## Non-blocking items for the integrator (found here, outside the ten findings)
 

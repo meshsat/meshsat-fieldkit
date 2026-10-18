@@ -1,4 +1,4 @@
-The full suite on the KiCad host at the promoted candidate of the set 6 integration, fnd/int7 f2b8f98d5c8475e526f2c3a1318f082be395b4a6
+The full suite on the KiCad host at the promoted candidate of the set 6 integration, fnd/int7 d5c7fc1598c2d75f5d09316f2b260495c7edaf76
 (MESHSAT-1357, 28 September 2026), which is main since the fast-forward of 28 September. Driver: _bin/box_suite.sh int7s3 <commit>
 int7-evidence-f2b8f98d.tar int7-f2b8f98d.bundle fnd/int7, in /root/int7s3 on vast.ai 52646493 (KiCad 9.0.9, Python 3.12.3). Started 16:25:29 UTC.
 The clone's git status was empty before and after the run. The evidence archive installed in the clone (908 gitignored files, sha256
@@ -7,7 +7,7 @@ The log itself stays local (sha256 2e865b732a1a09ba36d2046f4558746780eb64f6beec3
 
 tests: 2019 passed, 0 failed, 3 skipped
 EXIT 0
-f2b8f98d5c8475e526f2c3a1318f082be395b4a6
+d5c7fc1598c2d75f5d09316f2b260495c7edaf76
 
 Skipped tests (each a property of that host, a skip is not a pass):
 tests: test_finish_order.t_routeflow_validate_agrees_with_these_rules SKIP the profiles pin /root/gitlab/products/meshsat/meshsat-fieldkit, which exists here and is not this tree, so validate's one-tree property is about the host rather than the profile

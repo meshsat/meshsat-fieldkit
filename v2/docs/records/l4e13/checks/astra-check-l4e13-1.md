@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E13: the focused check of U-03's panel by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx34-l4e13-check`, run `20261002T051048Z-490882`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e13 at commit `b3e01e25924e`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e13 at commit `59c5cba6f86f`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

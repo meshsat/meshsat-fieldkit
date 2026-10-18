@@ -1,6 +1,6 @@
 # Layer 3 feasibility: HF with the worst installation, the mission reference case, and the solar interface (stream l3feas, MESHSAT-1357)
 
-**Second issue, 30 September 2026:** it answers CHECK-1 of `24942a5f` (accepted: no; B1 and seven minors; section 4 maps
+**Second issue, 30 September 2026:** it answers CHECK-1 of `41c07ce2` (accepted: no; B1 and seven minors; section 4 maps
 them). Route R1 now carries its own Kelvin criterion, which the drafted one does not meet.
 
 **30 September 2026.** Branch `fnd/l3feas`, from main at set 16. This page answers the owner's review of the Layer 3

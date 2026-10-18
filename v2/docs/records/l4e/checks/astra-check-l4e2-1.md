@@ -3,7 +3,7 @@ accepted: no
 # Layer 4, L4-E2: the focused check by the engineering collaborator (an AI review, read-only)
 
 Collaborator job `cx8-l4e2-check`, run `20260930T221538Z-809994`, model `gpt-6-astra` at effort `xhigh` (the client's own
-record), on branch fnd/l4e at commit `0e641bd35bf5`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+record), on branch fnd/l4e at commit `3473a86ddd51`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
 collaborator's result as returned; the coordinator evaluated it before acting on it.
 
 ## Summary

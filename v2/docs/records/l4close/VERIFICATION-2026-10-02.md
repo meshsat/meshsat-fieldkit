@@ -8,7 +8,7 @@ through `records/hc2/pwr_red2.py`), used for the kit's heat in item 3. Every fig
 The verifier authored none of the records it checks. Where a record's figure or carrier is wrong, it is reported here and not
 fixed.
 
-**Basis.** Set 27, `fnd/int27` at `7037d714`, which carries the checkpoint `08841dfa` (items 2, 4 and 5) and L4-E10's parser
+**Basis.** Set 27, `fnd/int27` at `8f0a9217`, which carries the checkpoint `25699e2b` (items 2, 4 and 5) and L4-E10's parser
 fix, L4-E7's surge round, L4-E11's charger selection and L4-E12's thermal bound. Items 3, 6, 7, 9 and 11 were paused at the
 checkpoint and are settled here on that state. Items 2 and 4 were re-read on it, and item 5's last gap was re-read against
 L4-E9's round 5. The held makers' sheets were read from the ignored `held/` folders (`--held-root`; the BQ25730's sha256 is
@@ -179,7 +179,7 @@ Printed figures: `0.254167 K`, `54.095833 C`, `54.904167 C`, `49.095833 C`, `49.
 
 
 **RESOLVED by correction at set 27 (the coordinator, 2 October 2026).** The DIFFERS above stands as filed. Its correction is applied:
-R-139 in L4-E9's register (`DOWNSTREAM-REGISTER.md`, the round at `42f3a98e`) now reads "the TMP117 reading's lag behind a reference
+R-139 in L4-E9's register (`DOWNSTREAM-REGISTER.md`, the round at `df97b444`) now reads "the TMP117 reading's lag behind a reference
 thermocouple at the SGP41, on a ramp of at least 15 K/h, at most 0.254167 K at 54.0 C", which tests the sensor's time constant this
 item found untested. The coordinator read the restated row against this item's specification. The ledger's rows L4-E12:1.3 and 2.2
 are therefore CLOSED AS CONDITIONAL on that bench test.

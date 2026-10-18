@@ -1,14 +1,14 @@
 mergeable: no
 
-# AI review: independent check of stream s122, round 6, fnd/s122c at 1c187977 (S-122, CFL-016, MESHSAT-1357)
+# AI review: independent check of stream s122, round 6, fnd/s122c at 0d0b538a (S-122, CFL-016, MESHSAT-1357)
 
 This is an AI review, not a qualified engineering review. Everything below is what I read or ran myself.
 
 **Set up**
-* `fnd/s122c` is at `1c187977` (read with `git rev-parse`). The work is `19bddf75`; `1c187977` holds the README and LOG. Both sit on `a6429e66` and answer check-s122-5, filed as `checks/check-s122-5.md`, byte identical to my CHECK-5.md.
+* `fnd/s122c` is at `0d0b538a` (read with `git rev-parse`). The work is `4d6780fd`; `0d0b538a` holds the README and LOG. Both sit on `bd34cbd0` and answer check-s122-5, filed as `checks/check-s122-5.md`, byte identical to my CHECK-5.md.
 * Check clone: a shared clone at `<scratch>/chk-s122-6` at the tip, remote removed.
 * Throwaway clone for the integrator sequence: `<scratch>/chk-s122-6-int`, a shared clone:
-  * checked out at `fnd/int16`'s tip `36bb1d12` (set 15; S-125 open, CFL-016 FAIL waiting on S-122);
+  * checked out at `fnd/int16`'s tip `fa6d3b80` (set 15; S-125 open, CFL-016 FAIL waiting on S-122);
   * remote removed before any commit, commits with the owner's `-c` flags, never pushed;
   * int16's ignored files copied in from its worktree, as the integrator installs them.
 * Both clones are removed when this report is written.
@@ -16,7 +16,7 @@ This is an AI review, not a qualified engineering review. Everything below is wh
 * S-122 was extended at set 14 by check-int15-1's findings. Its scope is nine documents: PANEL.md, CONOPS.md, V2-SPEC.md, OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md, pcb_decisions.yaml (decisions 28 and 40), EMCON.md (section 0a.1) and DEFINITION-STATUS.md (its section). Their verdicts are in `verdicts.out`.
 
 **What I read**
-* CHECK-5.md, then `git diff a6429e66..1c187977` in full. I read every file except `verdicts-r5.out`, which I regenerated instead:
+* CHECK-5.md, then `git diff bd34cbd0..1c187977` in full. I read every file except `verdicts-r5.out`, which I regenerated instead:
   * V2-SPEC.md;
   * README.md and LOG.md;
   * `apply_docs_s122_r6.py`, `close_s122.py`, `test_close_s122.py`;
@@ -28,8 +28,8 @@ This is an AI review, not a qualified engineering review. Everything below is wh
   * On board D, U2, U6, U7, U15, U21 and K1, with their pin maps.
 * The board files through `verdicts.board_geo`: outlines, layer counts, inner cutouts, zone nets per inner layer, zone names.
 * Generators:
-  * `gen_sch_d.py` at the tip, at `bdfc7b3f` and at its parent;
-  * `gen_sch_a.py` at `b2709118` (its four rail groups);
+  * `gen_sch_d.py` at the tip, at `dcd9f9a4` and at its parent;
+  * `gen_sch_a.py` at `be826353` (its four rail groups);
   * `gen_sch_b.py` (the voters, lines 1877 to 1917);
   * `gen_sch_p.py` (the rail intents);
   * `git log -S` of the SA868 texts.
@@ -116,7 +116,7 @@ This is an AI review, not a qualified engineering review. Everything below is wh
   * I planted "an NVMe 2280 socket" on line 82 with the judgement moved; it reads TRUE and the scan passes it;
   * the true value is board B's "M.2 M-key 2242 socket", `J_M2N1` to `J_M2N3`.
   * Say "every figure with a unit, and every spelled count".
-* The closure's registry sentence and S-122's round 6 title name the binding sources as netlist values, board files, makers' pages and decisions' records. "all four AP64500 on 7 September" is bound to a generator's text at a commit (`CNT@b2709118`).
+* The closure's registry sentence and S-122's round 6 title name the binding sources as netlist values, board files, makers' pages and decisions' records. "all four AP64500 on 7 September" is bound to a generator's text at a commit (`CNT@be826353`).
 
 **m4. The finder.** I read every scoped sentence of the nine documents: 148 distinct part tokens found, 732 tokens with digits not found.
 * **Misses (real parts):** none stands as a claim that the part is on a board where the netlist says otherwise.
@@ -140,12 +140,12 @@ This is an AI review, not a qualified engineering review. Everything below is wh
 * **The registry sentence** says the finder "reads an upper-case commit". It reads some: "1C187977" yes, "1BAFAB8C" no (two digits).
 * **DS1234 kept as a part shape: sound.** A false part needs a `parts_ok` excuse and never passes silently. The premise "the shape of Maxim's parts" is not exclusive: ST's older datasheet codes are DS with four digits too.
 
-**m5. The run order on set 15.** Merged onto `36bb1d12`:
+**m5. The run order on set 15.** Merged onto `fa6d3b80`:
 * **The outputs' header.** `pcb_decisions.yaml` is `823a6b32` (set 15's decision 59), so the committed `inventory.out` and `verdicts.out` differ from the closure's re-run in their header line. The closure refuses ("the committed inventory.out is not this commit's"). The bodies are identical. The README's "If a document of the scope changes on main before step 5" covers it; the integrator must re-run and commit both.
 * **The render moves CURRENT-EVIDENCE.md.**
   * The full `rules_render.py` moves it from `c9b98931` to `0f2c59cb`: SGN-001's seven readings leave CURRENT_CANDIDATE (set: 83 to 76) after the registry and ENV-001 change.
   * So `rules_lib.py requirements` reads 0 errors and 2 warnings, CON-010 and REQ-044.
-  * On `36bb1d12` alone, status and render leave the tree clean.
+  * On `fa6d3b80` alone, status and render leave the tree clean.
   * The run order names neither the rebind nor the SGN-001 re-take.
 
 **m6. Robustness.**
@@ -165,12 +165,12 @@ This is an AI review, not a qualified engineering review. Everything below is wh
   * Line 47 carries no 1 W.
 * **Correction 36's history holds:**
   * appendix 32.49 is "owner, 6 Sep 2026 18:20 to 23:00", and row 8 reads "NiceRF SA868 1 W module plus a 30 W VHF amplifier stage";
-  * `bdfc7b3f` is 2026-09-07 07:15 and adds "2 W high / 0.5 W low", which is absent at its parent;
+  * `dcd9f9a4` is 2026-09-07 07:15 and adds "2 W high / 0.5 W low", which is absent at its parent;
   * `git log -S` shows no commit removing it since.
 * **V2-SPEC.md is not a baseline.** DEFINITION-STATUS.md's table has two rows, PRODUCT-BRIEF.md and CONOPS.md, and `s122lib.BASELINED` is CONOPS.md only.
 * **`apply_docs_s122_r6.py` refuses as it should:**
   * on the tip it refuses (sha `c480bac2`, not `9615190d`);
-  * on `a6429e66`'s V2-SPEC.md, `--check` locates 2 edits under 9 assertions, and the run writes the file byte identical to the tip;
+  * on `bd34cbd0`'s V2-SPEC.md, `--check` locates 2 edits under 9 assertions, and the run writes the file byte identical to the tip;
   * a second run refuses;
   * with the CONOPS.md row of the baselines table pointed at V2-SPEC.md, it refuses ("is a baselined document");
   * with `s122lib.BASELINED` monkeypatched to include V2-SPEC.md, it refuses.
@@ -180,7 +180,7 @@ This is an AI review, not a qualified engineering review. Everything below is wh
 | Line | What I read as the source of each figure |
 |---|---|
 | V2-SPEC.md 47 | 2 W: D `U2` value. 30 W: the RA30H1317M1 sheet's "135-175MHz 30W 12.5V" |
-| V2-SPEC.md 81 | 240 x 160 mm and six layers: board A's file. 9 to 36 V: E `J_DCIN` "vehicle and shore DC in 9 to 36 V". Three 5.1 V slot rails: `J_5V_S1` to `J_5V_S3` "5.1 V rail to B16". All four AP64500 on 7 September: `gen_sch_a.py` at `b2709118` (2026-09-07 11:11), the four groups "SLOT RAIL S1/S2/S3" and "DEVICE RAIL: AP64500 5.1 V + INA226". 13.8, 12 and 54 V: `U13`, `U15`, `U16` LM5176 on `+13V8_PA`, `+12V_HF`, `+54V_POE`. 45 W: `U18` TPS25740A "45 W outlet". 3.3 V: `U12` TPS62933 "3.3 V logic". Eleven sites: `J_BM1` to `J_BM11` Radiall_SMPMAX. 2x13: `J_AB1` "IDC 2x13". **14.4 V: B1** |
+| V2-SPEC.md 81 | 240 x 160 mm and six layers: board A's file. 9 to 36 V: E `J_DCIN` "vehicle and shore DC in 9 to 36 V". Three 5.1 V slot rails: `J_5V_S1` to `J_5V_S3` "5.1 V rail to B16". All four AP64500 on 7 September: `gen_sch_a.py` at `be826353` (2026-09-07 11:11), the four groups "SLOT RAIL S1/S2/S3" and "DEVICE RAIL: AP64500 5.1 V + INA226". 13.8, 12 and 54 V: `U13`, `U15`, `U16` LM5176 on `+13V8_PA`, `+12V_HF`, `+54V_POE`. 45 W: `U18` TPS25740A "45 W outlet". 3.3 V: `U12` TPS62933 "3.3 V logic". Eleven sites: `J_BM1` to `J_BM11` Radiall_SMPMAX. 2x13: `J_AB1` "IDC 2x13". **14.4 V: B1** |
 | V2-SPEC.md 82 | 330 x 200 mm and six layers: board B's file. 5 V planes: In4 zones on `+5V_S1` to `+5V_S3` and `+5V_DEV`. Eight layers: decision 43's outcome (OWNER, 2026-09-25). Three CM5 slots: three CM5_Conn_A footprints `U30A`, `U31A`, `U32A`. Three supervisors: `U41`, `U51`, `U61` STM32H743. Two CAN-FD fabrics: `U41`'s value. Seven voters: seven `_CA` nets, with seven `_AB` and seven `_BC`, one per voter by `gen_sch_b.py` line 1879 ("out = AB + BC + CA"), built on `U70` to `U79`. Two display switches: `U3`, `U4` TS3DV642. Two E72: `U13`, `U14` |
 | V2-SPEC.md 83 | 344 x 228: board C's outline. 240 x 176: its inner Edge.Cuts (x spans include 240, y spans include 176). Four layers: its file. Six: decision 27 "six layers for board C" (OWNER, 2026-09-25). Seventeen 3 mm: `D1` to `D16` and `D22`. Two PCA9555: `U1`, `U2` |
 | V2-SPEC.md 84 | 100 x 80 mm and four layers: board D's file. Two headset jacks: `J_HS1`, `J_HS2` |
@@ -248,13 +248,13 @@ With the key also rewritten:
 
 **8. Replays, all byte identical to the committed files:**
 * `inventory.out` and `verdicts.out` (no `S122_AT`);
-* `inventory-base.out` and `verdicts-base.out` (`e57a7365`: 931 sentences, 74 STALE);
-* `inventory-set14.out` and `verdicts-set14.out` (`1bafab8c`: 989, 10 STALE);
-* `verdicts-r4.out` (`edead832`: 998, 5 STALE);
-* `verdicts-r5.out` (`a6429e66`: 1002, 1 STALE, V2-SPEC.md line 47, `c60dec6ff0`).
+* `inventory-base.out` and `verdicts-base.out` (`557a0628`: 931 sentences, 74 STALE);
+* `inventory-set14.out` and `verdicts-set14.out` (`4da7cd86`: 989, 10 STALE);
+* `verdicts-r4.out` (`29d076eb`: 998, 5 STALE);
+* `verdicts-r5.out` (`bd34cbd0`: 1002, 1 STALE, V2-SPEC.md line 47, `c60dec6ff0`).
 
-**9. The integrator sequence on `fnd/int16`** (`36bb1d12`):
-* **The merge.** `git merge --no-ff 1c187977` merged with no conflict.
+**9. The integrator sequence on `fnd/int16`** (`fa6d3b80`):
+* **The merge.** `git merge --no-ff 0d0b538a` merged with no conflict.
 * **The registry script.** `apply_registry_s122_r4.py` rebound 5 records (CFL-010, CFL-013, CFL-014, CFL-016, REQ-005) and re-pinned the envelope and ENV-001 to `26e98ecfd2e4ec2f`. A second run refused ("already applied").
 * **Renders and status.**
   * `rules_render.py --requirements` ran.
@@ -275,11 +275,11 @@ With the key also rewritten:
 **10. Text rules.**
 * No U+2013 or U+2014 in any added line of the diff.
 * No internal host name, user path or address.
-* CONOPS.md (`6cb7b241cb84d729`, the `c5430071` file) and PRODUCT-BRIEF.md are untouched since `1bafab8c`.
+* CONOPS.md (`6cb7b241cb84d729`, the `ed31219a` file) and PRODUCT-BRIEF.md are untouched since `4da7cd86`.
 
 ## Counts
 
-Committed `verdicts.out` at `1c187977`, reproduced byte for byte:
+Committed `verdicts.out` at `0d0b538a`, reproduced byte for byte:
 
 | Document | Sentences | TRUE | STALE | BASELINE | NOT DERIVABLE | UNJUDGED | Assertions |
 |---|---|---|---|---|---|---|---|
@@ -294,7 +294,7 @@ Committed `verdicts.out` at `1c187977`, reproduced byte for byte:
 | DEFINITION-STATUS.md | 24 | 17 | 0 | 0 | 7 | 0 | 276 |
 | **Total** | **1004** | **422** | **0** | **40** | **542** | **0** | **3338** |
 
-The three sentences that left the inventory, by sentence id against `a6429e66`'s `verdicts.out`:
+The three sentences that left the inventory, by sentence id against `bd34cbd0`'s `verdicts.out`:
 * ASSEMBLY.md line 148 cell 2 ("the sealed RJ45 on the connector plate (PoE out on 1-2 and 3-6)");
 * ASSEMBLY.md line 148 cell 4 ("RJ45 both ends");
 * TEST-PLAN.md line 43 cell 1 ("RS103, radiated susceptibility, 2 MHz to 18 GHz at 50 V/m").

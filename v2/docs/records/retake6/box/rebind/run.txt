@@ -1,4 +1,4 @@
-HEAD 73ae2f2104c98bc39e5194f82a31e8862e12dbb5  start 2026-09-27T21:17:31Z
+HEAD 92f22e3fa2faba41d580b6bd83f9b75ebce56710  start 2026-09-27T21:17:31Z
 rebind exit 0
 rebind second run exit 1 (1 expected: refused)
 render-1 exit 0: 1 page(s) written

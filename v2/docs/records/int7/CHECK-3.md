@@ -1,18 +1,18 @@
-# Third check of the set 6 integration, candidate f2b8f98d (AI review), 28 September 2026
+# Third check of the set 6 integration, candidate d5c7fc15 (AI review), 28 September 2026
 
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357), after the promotion it allowed. The checker wrote none of the candidate and neither of the two earlier checks; its scratch is local (_scratch/chk-int7-3/). Its minor items are answered in CHECK-RESPONSE.md, third part. -->
 
-# Fresh check of the third candidate of the set 6 integration, `fnd/int7` at `f2b8f98d` (AI review), 28 September 2026
+# Fresh check of the third candidate of the set 6 integration, `fnd/int7` at `d5c7fc15` (AI review), 28 September 2026
 
 This is an AI review by a checker that wrote none of the candidate and neither of the two earlier checks. It is not a qualified engineering review and replaces none. Prototype design: no V2 board has been built, ordered or measured; everything below is a reading of files.
 
-Checked 28 September 2026, 18:26 to 18:42 CEST, in `<worktrees>/int7`, read only. HEAD is `f2b8f98d5c8475e526f2c3a1318f082be395b4a6`; `git status` was empty before and after, and no file in the worktree is newer than my first scratch file. Scratch is `<worktrees>/_scratch/chk-int7-3/` (`dump.py`, `walk-run.txt`, two empty markers); the other scripts ran on standard input. For part of the run the session's harness allowed read-only commands only; the two test files ran after that lifted.
+Checked 28 September 2026, 18:26 to 18:42 CEST, in `<worktrees>/int7`, read only. HEAD is `d5c7fc1598c2d75f5d09316f2b260495c7edaf76`; `git status` was empty before and after, and no file in the worktree is newer than my first scratch file. Scratch is `<worktrees>/_scratch/chk-int7-3/` (`dump.py`, `walk-run.txt`, two empty markers); the other scripts ran on standard input. For part of the run the session's harness allowed read-only commands only; the two test files ran after that lifted.
 
 ```
 mergeable: yes
 ```
 
-R-1 is answered by the walk's own measure. Nothing moved that should not have, and the answers introduced no blocking defect. The result holds for `f2b8f98d` exactly.
+R-1 is answered by the walk's own measure. Nothing moved that should not have, and the answers introduced no blocking defect. The result holds for `d5c7fc15` exactly.
 
 ## blocking
 
@@ -33,7 +33,7 @@ None.
 | p9 | n7 | CLOSURE.md says "12 ERC reports with their provenance files". The manifest holds 6 ERC reports and their 6 provenance files. The sum, 240 and 12 of 252, is right. |
 | p10 | n8 | The README's d6rel row says "no blocking item". The file adds a condition: "if you meant the board reading, treat m1 as blocking". The row does not carry it. |
 | p11 | n8 | Six new files cite scratch folders by the runner's absolute path, which no reader of the repository can open. `main` already holds 13 files with that path. |
-| p12 | D | CLOSURE.md section 6 says the suite read the same at `85ad1193`. The local log agrees (`_scratch/int7-suite2/suite-box.log`: 2019 passed, 0 failed, 3 skipped, EXIT 0, the commit's full hash). No record of it is in the tree, where the first candidate's is (`box/suite-1c4235ec.txt`). |
+| p12 | D | CLOSURE.md section 6 says the suite read the same at `0f53ec87`. The local log agrees (`_scratch/int7-suite2/suite-box.log`: 2019 passed, 0 failed, 3 skipped, EXIT 0, the commit's full hash). No record of it is in the tree, where the first candidate's is (`box/suite-1c4235ec.txt`). |
 | p13 | D | CHECK-RESPONSE.md's first part (m4) still says 96 links; CLOSURE.md says 99. The first part is the second candidate's record and is unchanged; a reader may take 96 for the current figure. |
 
 ## verified
@@ -55,15 +55,15 @@ None.
   - SNVSAI1D 7.4.1 reads "Shutdown: VCC off, No switching" (`v2/vendor/ti/lm5176-datasheet.pdf`, `98191bec36d43771`).
   - EMCON.md lines 185, 186 and 1036 to 1039 name the LM5176 residual and board D's Q1, as S-93 says.
   - The designator assertion alone would not be enough (p2); the prose is.
-- **A3:** CON-010 has `waits_on: [S-92, S-93]` and reads INCONCLUSIVE; statement and acceptance equal `e224ea36`. Entry 35 names every ground per row and equals my list. S-92 closes only when the re-take reads its row decided, S-93 only when both rows do. With CHECK-2's counter-examples applied, a row that stays undecided on a remaining ground keeps its item open. CON-010 cannot stand INCONCLUSIVE on these rows with nothing to wait on. The hole R-1 described is closed.
+- **A3:** CON-010 has `waits_on: [S-92, S-93]` and reads INCONCLUSIVE; statement and acceptance equal `c84c461b`. Entry 35 names every ground per row and equals my list. S-92 closes only when the re-take reads its row decided, S-93 only when both rows do. With CHECK-2's counter-examples applied, a row that stays undecided on a remaining ground keeps its item open. CON-010 cannot stand INCONCLUSIVE on these rows with nothing to wait on. The hole R-1 described is closed.
 - **A4:** seven records rest on RF-002. REQ-030, REQ-032 and REQ-071 read FAIL and wait on S-94. REQ-031 is NOT_JUDGED. CFL-004 reads PASS on board B alone, on the six Compute Module rows, which the walk reads PASS. FEA-002 is p7. No record reads PASS on a row the walk leaves undecided.
 - **B n1:** REQ-032 waits on S-01, S-94, S-65.
 - **B n2:** CFL-006 (bound to `pcb_energy_chain.yaml@a09ca0293afd1f7c`) and FEA-005 (bound to two packet documents) wait on S-86.
-- **B n3:** CLOSURE.md section 1 lists R51. `e28f91a6` drew it (10 k, RAIL_SENSE to GND); RESULT.txt names it nowhere.
+- **B n3:** CLOSURE.md section 1 lists R51. `e7721c52` drew it (10 k, RAIL_SENSE to GND); RESULT.txt names it nowhere.
 - **B n4:** S-81's closing evidence no longer points at S-91's list.
 - **B n5:** CON-010's entry says the review was pasted by the owner; the filed review's header agrees. The registry and the trace page no longer carry the old words. See p8.
 - **B n6:** every statement in S-61's reason is true.
-  - `fnd/d8dec31` (`f8e61f05`) is an ancestor of neither `main` nor the candidate; the review file is on that branch only.
+  - `fnd/d8dec31` (`731699bf`) is an ancestor of neither `main` nor the candidate; the review file is on that branch only.
   - D-F3 (lines 71 and 391) names J_USB3 and asks for a clamp, a bulk capacitor and a ferrite, not a current limit.
   - `pcb_board_holds.yaml` names neither S-61 nor J_USB3, on the candidate and on that branch.
   - SC-63 points at S-61 for the current limit.
@@ -74,17 +74,17 @@ None.
 - **D:** the five validators exit 0 (16 documents, 0 out of date; trace page current; 59 rules and 144 records, 0 errors). Tests: `derived_notices` 3 passed, `requirements` 71 passed, 0 failed.
   - Counts recomputed: 65 open, 59 closed, 144 records; 54 linked by 99 links on 60 records; 11 disposed; none both, none neither.
   - No em or en dash and no claim word in the five changed registry texts, no dash in the 861 added lines.
-  - All 25 commits of `e224ea36..HEAD` are authored and committed by Kyriakos Papadopoulos, carry the issue tag and no trailer. `main` is an ancestor, so a fast-forward is possible.
+  - All 25 commits of `c84c461b..HEAD` are authored and committed by Kyriakos Papadopoulos, carry the issue tag and no trailer. `main` is an ancestor, so a fast-forward is possible.
 
 ## not_done
 
-- **Full suite on `f2b8f98d`:** not run; it is the box's.
+- **Full suite on `d5c7fc15`:** not run; it is the box's.
 - **`rules_status` on the final commit:** not run.
 - **`apply_check2_answers.py`:** not replayed. I compared its texts with the registry and the parsed differences with its declared edits.
 - **The walk:** run through `tx_inhibit.judge` in memory only, not through `check_contracts.py`, which writes the reading.
 - **The grounds of U14, Q14, Q24 and Q1:** named and compared, not judged as circuit matters. The INA226's sheet was not read.
-- **The suite at `85ad1193`:** the local log's last lines only.
+- **The suite at `0f53ec87`:** the local log's last lines only.
 - **The streams' checks:** their findings were counted and compared, not re-verified.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.

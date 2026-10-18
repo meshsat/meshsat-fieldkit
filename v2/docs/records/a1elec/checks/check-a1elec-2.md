@@ -1,16 +1,16 @@
 acceptable: yes
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357, 29 September 2026); the scratch paths are redacted. -->
 
-# Focused re-check of fnd/a1elec at 06568798 (answers to CHECK.md), MESHSAT-1357
+# Focused re-check of fnd/a1elec at 8d28d2eb (answers to CHECK.md), MESHSAT-1357
 
 **AI review** (the same independent assistant checker; wrote none of the work), 29 September 2026, 03:17 to 03:22 CEST.
 Not a qualified review. Scope as asked: only whether B1, B2 and M1 to M10 are answered correctly, plus the new k = 3
-claim. Scratch clone `_scratch/chk-a1elec`, detached at 06568798 (commits 546e25f6, a55ab834, 70c059ec, 2ea329f4,
-06568798 after a21eca38; they touch only records/a1elec/). Nothing committed or pushed; no box, Agent or Codex call.
+claim. Scratch clone `_scratch/chk-a1elec`, detached at 8d28d2eb (commits ed4a36d2, d467f488, e56f2c6b, 4015b851,
+8d28d2eb after f15e0173; they touch only records/a1elec/). Nothing committed or pushed; no box, Agent or Codex call.
 
 ## Reproduced
 
-- `energy_two_pack.py`, `gauge_scale.py`, `checks/recheck_two_pack.py` rerun at 06568798: exit 0, all three outputs
+- `energy_two_pack.py`, `gauge_scale.py`, `checks/recheck_two_pack.py` rerun at 8d28d2eb: exit 0, all three outputs
   byte-identical to the committed ones; the clone stays clean apart from my check files.
 - My own model (`CHECK-own_two_pack.py`, no shared code; ceilings at 3.968 and 7.936 A): E1, U3 at 4.15 A: stops at 44
   and 32 (`.out`: [44, 32]). E2, U3 at 6.2 A: lowest 30.3 base, 0.7 lid, 31.05 together (`.out` 31.1); lid 20 C 88.98,

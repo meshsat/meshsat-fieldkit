@@ -1,8 +1,8 @@
 mergeable: no
 
-# AI review: focused re-check of set 12's walk fix and circuit minors, fnd/rf2walk2 at 06eb61ef (MESHSAT-1357)
+# AI review: focused re-check of set 12's walk fix and circuit minors, fnd/rf2walk2 at 9b5ccdde (MESHSAT-1357)
 
-This is an AI review, not a qualified engineering review. Read from the shared scratch clone detached at `06eb61efed3f508c273654e92c96ca8afc6f55a5` (fetched from the rf2walk2 worktree, `w/rf2walk2` at the same sha), 29 Sep 2026 14:10 to 14:17 CEST (times from `date`). Nothing in any worktree or the main checkout was written. Rule tools ran from a scratch cwd with `VERDICT_DIR` in the scratchpad. My scripts are in `_chk/`: `cx_walk.py`, `cx5b.py`, `cx_main.py` from the first check, and new `cx_walk2.py`, `cx_walk3.py`, `rb12_mutants.py`. `git status` shows only `CHECK.md`, `CHECK-2.md` and `_chk/` untracked.
+This is an AI review, not a qualified engineering review. Read from the shared scratch clone detached at `9b5ccdde41aef32f796988ace22690a80013b595` (fetched from the rf2walk2 worktree, `w/rf2walk2` at the same sha), 29 Sep 2026 14:10 to 14:17 CEST (times from `date`). Nothing in any worktree or the main checkout was written. Rule tools ran from a scratch cwd with `VERDICT_DIR` in the scratchpad. My scripts are in `_chk/`: `cx_walk.py`, `cx5b.py`, `cx_main.py` from the first check, and new `cx_walk2.py`, `cx_walk3.py`, `rb12_mutants.py`. `git status` shows only `CHECK.md`, `CHECK-2.md` and `_chk/` untracked.
 
 Counts: 1 blocking, 5 minor. The circuit draft `apply_b_chk12.py` checks against the makers' figures. Its read-back discriminates. Every reading reproduces byte for byte.
 
@@ -16,9 +16,9 @@ Counts: 1 blocking, 5 minor. The circuit draft `apply_b_chk12.py` checks against
    - **Scope:** no kit board carries a SW on an asserted line other than C's SW_EMCON (checked on all six netlists), so no set 12 reading changes.
    - **Fix:** declare the toggle, the way ACCESSORIES are declared (board C, SW_EMCON, far pin on GND). Use only that declaration in `_switch_board`, `_line_sources` and `fail_safe`'s `down`. Treat any other SW on an asserted line as an ordinary part: a switch to a rail drives the line up, a switch to ground can only assert it. Add CX10 (both forms) and CX14 as defective fixtures.
 
-## (1) B1: the walk change (149b15f7)
+## (1) B1: the walk change (30c27c21)
 
-- **Tests:** `env -C <clone>/v2/ecad/tools python3 tests/run.py test_tx_inhibit` gives 138 passed, 0 failed. On the previous walk (a444cb37's `tx_inhibit.py` in a scratch copy) the two new tests FAIL, as recorded.
+- **Tests:** `env -C <clone>/v2/ecad/tools python3 tests/run.py test_tx_inhibit` gives 138 passed, 0 failed. On the previous walk (410012af's `tx_inhibit.py` in a scratch copy) the two new tests FAIL, as recorded.
 - **First check's counterexamples on the new walk:** CX3, CX3b, CX3c, CX9 and CX9c (board B) now FAIL on both lines. CX1, CX2, CX4a, CX5, CX6 and CX7 still FAIL, CX4b stays UNDECIDED, and CX0 and CX8 still PASS, all as before. CX5b (a pull-up on EMCON_HW with a TX_INHIBIT_n reader on board B) FAILs both lines through D23. The author's fixture covers the latch on board C run from the received +5V.
 
 | New counterexample (new walk) | Physically | Walk | Judgement |
@@ -29,7 +29,7 @@ Counts: 1 blocking, 5 minor. The circuit draft `apply_b_chk12.py` checks against
 | CX12 latch on board C from C's own +3V3 | unpowered with board C down | PASS, PASS | correct |
 | CX13 toggle alone on board C, EMCON_HW made on board B by a buffer from TX_INHIBIT_n | fail-safe (R59 holds its input low) | EMCON_HW FAIL (PASS on the previous and main's walk) | conservative false FAIL: minor 1 |
 
-## (2) The apply script, its read-back and self-test (cb717e93)
+## (2) The apply script, its read-back and self-test (e74f8535)
 
 `apply_b_chk12.py` on a scratch copy of HEAD's `gen_sch_b.py`: dry run finds every anchor once, the apply takes 5 edits, and a second run is refused. The LCSC codes (C23184 49.9k, C13167 2.7k, C4184 20.0k) match `lcsc_fill.py`. Regenerating was not possible on the runner (the KiCad symbol libraries are absent), so the netlist figures below are arithmetic on set 12's netlist.
 
@@ -54,11 +54,11 @@ Counts: 1 blocking, 5 minor. The circuit draft `apply_b_chk12.py` checks against
 
 - **Readings:** `check_contracts.py` into scratch, each output `cmp`-identical to its file in `records/rf2walk/readings/b1/`:
   - set 12 HEAD, new walk: 0 FAIL, 11 UNDECIDED, 15 PASS; inhibit_chain A 7/2, B 12/8, C PASS, D 8/1, E PASS, P PASS.
-  - set 12 at eafb324d with the previous walk: identical bytes.
+  - set 12 at 2e6dbf93 with the previous walk: identical bytes.
   - main with the new walk equals main with the previous walk, and equals the first round's main-fixed file.
   - main with its own walk: 7 UNDECIDED, 18 PASS.
 - **Fail-safe bounds on the new walk** are unchanged: EMCON_HW 0.401 V and 0.584 V; TX_INHIBIT_n 0.354 V, 0.339 V and 0.578 V.
-- **New since the first check (integration commits on this branch):** board C's netlist at HEAD equals e41df395's in every part and pin (export path and date only). The EMCON_HW node declaration in `gen_sch_c.py` matches the net (U13 pin 2 and U14 pin 6 read it on board C).
+- **New since the first check (integration commits on this branch):** board C's netlist at HEAD equals 1cb60746's in every part and pin (export path and date only). The EMCON_HW node declaration in `gen_sch_c.py` matches the net (U13 pin 2 and U14 pin 6 read it on board C).
 
 ## Minor items
 

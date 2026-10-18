@@ -22,4 +22,4 @@ crossing, not yet designed. D-01's deferral of HF, the bracket and a second pack
 
 **Session's view.** Option 1: it keeps a radio bearer inside.
 
-Details: a1mech README section 3; energy: fnd/a1int `reconcile_lid.out` (b6e5ee70).
+Details: a1mech README section 3; energy: fnd/a1int `reconcile_lid.out` (1694d8ba).

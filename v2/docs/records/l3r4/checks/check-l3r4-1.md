@@ -1,9 +1,9 @@
 mergeable: no
 
-# CHECK-1 of layer 3 round 4 (`fnd/l3r4` at `3afdc2d6`): the definition re-issue prepared (L3-C26)
+# CHECK-1 of layer 3 round 4 (`fnd/l3r4` at `f26f555f`): the definition re-issue prepared (L3-C26)
 
 An AI check by a session that wrote none of the round, not a qualified review. Written 30 September 2026, 08:30 CEST.
-Scope: the one commit `3afdc2d6` on main `8fec0733` (nine files: `v2/docs/records/l3r4/` with `reissue.py`,
+Scope: the one commit `f26f555f` on main `963740cd` (nine files: `v2/docs/records/l3r4/` with `reissue.py`,
 `PASSAGE-MAP.md`, `README.md` and `apply_layer_status_l3_r4.py`, `v2/ecad/tools/tests/test_l3r4.py`, and one row each
 in `l3r2.yaml`, `L3-RECONCILIATION.md`, `LAYER-STATUS.md` and `v2/docs/records/README.md`). Everything below was run
 in a `--no-local --single-branch` clone of `fnd/l3r4` with the set 17 evidence archive (`int17-evidence-de11cc4e.tar`)
@@ -144,7 +144,7 @@ inadequate path as capability ("no figure of it is demonstrated capability, and 
 internal host name and no absolute path (1766 added lines scanned), and neither generated draft does; the author is the
 owner's identity with no trailer.
 
-**6. The integrator run order on main.** On a branch from `8fec0733` in the clone, the README's six commands ran in
+**6. The integrator run order on main.** On a branch from `963740cd` in the clone, the README's six commands ran in
 order with no failure (layer status script check then write, map check, render and render check, `rules_lib`, tests
 102 passed); the resulting tree is byte identical to `fnd/l3r4` in every tracked file.
 
