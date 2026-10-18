@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E6: Claude's verification of the two minors of the accepted check (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E6: The assistant's verification of the two minors of the accepted check (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. The engineering collaborator's one check of L4-E6 (`astra-check-l4e6-1.md`, run
 20261001T125840Z-3029827 on `ae4f7e4c`) accepted the decision as a provisional engineering decision with two minors. The fix

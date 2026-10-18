@@ -3,7 +3,7 @@ acceptable: yes
 
 # Focused re-check of fnd/a1elec at 06568798 (answers to CHECK.md), MESHSAT-1357
 
-**AI review** (the same independent Claude checker; wrote none of the work), 29 September 2026, 03:17 to 03:22 CEST.
+**AI review** (the same independent assistant checker; wrote none of the work), 29 September 2026, 03:17 to 03:22 CEST.
 Not a qualified review. Scope as asked: only whether B1, B2 and M1 to M10 are answered correctly, plus the new k = 3
 claim. Scratch clone `_scratch/chk-a1elec`, detached at 06568798 (commits 546e25f6, a55ab834, 70c059ec, 2ea329f4,
 06568798 after a21eca38; they touch only records/a1elec/). Nothing committed or pushed; no box, Agent or Codex call.

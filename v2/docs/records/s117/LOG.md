@@ -3,7 +3,7 @@
 Newest last. Times CEST, read from `date`. Prototype framing: nothing is built; every reading is of a committed netlist or
 a maker's document. No agent, no other model, no box, no purchase, no contact.
 
-## 29 September 2026 (brief `_runs/claude/s117/BRIEF.md`)
+## 29 September 2026 (brief `_runs/assistant/s117/BRIEF.md`)
 
 - 12:37 Brief read. Worktree `<worktrees>/s117`, branch `fnd/s117` from main
   `867a18a7`. Read S-117 (`tools/pcb_requirements.yaml`), `records/int11/CHECK.md` B1 and `CHECK-2.md` N1 and N2,

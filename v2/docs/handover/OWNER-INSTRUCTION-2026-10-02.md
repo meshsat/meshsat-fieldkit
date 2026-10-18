@@ -89,7 +89,7 @@ Separate permission to construct an evidence-gathering prototype from final desi
 
 Prepare vendor questions and engineer briefs ready for action. Continue independent engineering while answers or measurements are pending.
 
-**6. Use Claude and Astra deliberately**
+**6. Use the assistant and Astra deliberately**
 
 Keep the existing authorized concurrency limit and one author per branch/artifact.
 

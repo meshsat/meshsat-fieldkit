@@ -2,7 +2,7 @@ accepted: CONFIRMED AS CONDITIONAL
 
 # Record l9stk: the independent checker's check 3, PROTECTION: CONFIRMED AS CONDITIONAL (filed as received)
 
-MESHSAT-1357. An AI review by a fresh Claude session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `474e6bcea42cb591ff4b4bfd6ec54641d5910d6f` (branch `fnd/l9stk`). Time: 4 October 2026, 02:20 to 02:25 CEST. Nothing in the kit has been built, bought or measured.
+MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `474e6bcea42cb591ff4b4bfd6ec54641d5910d6f` (branch `fnd/l9stk`). Time: 4 October 2026, 02:20 to 02:25 CEST. Nothing in the kit has been built, bought or measured.
 
 Scope, from the coordinator's brief: the targeted recheck of section 15's revision (B-P1, the make-last dock enable into UVLO; B-P2, the battery FETs' junction limit and the third FET), `l9stk_protection.py` and its output, `l9stk_copper.out` section 8 (option 4) and findings L9C-F20 to F22.
 

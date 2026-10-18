@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E3, B1: Claude's verification of the relabelled panel (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E3, B1: The assistant's verification of the relabelled panel (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. Scope: B1 of the engineering collaborator's check of L4-E3 (`astra-check-l4e3-1.md`, run
 20261001T001305Z-988756 on `fd82f4cc`), which reproduced the panel model, the reruns, the loads and the wording and found one

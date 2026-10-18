@@ -2,7 +2,7 @@ mergeable: no
 
 # Check 1 of integration set 15, `fnd/int16` at `845a4fd1` against main `2f0b034a` (MESHSAT-1357)
 
-AI review, labelled as such: an independent check by a Claude session that did not build this integration. It is not a
+AI review, labelled as such: an independent check by an assistant session that did not build this integration. It is not a
 qualified engineering review. 30 September 2026, 00:45 to 01:15 CEST (read from `date`). Everything below is what I read
 or ran myself.
 

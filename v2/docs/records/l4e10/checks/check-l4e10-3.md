@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E10: Claude's closing check of the decision-ready comparison at 79b2f568 (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E10: The assistant's closing check of the decision-ready comparison at 79b2f568 (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E10 are spent:
 - the focused check `astra-check-l4e10-1.md` on `9fe3b632`, NOT YET;

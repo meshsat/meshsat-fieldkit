@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E7Q: Claude's verification of the qualification of the 100 W bound (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E7Q: The assistant's verification of the qualification of the 100 W bound (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. The owner asked for L4-E7's 96.25 W result to be qualified precisely. The author's answer is
 `L4E7-QUALIFICATION.md` (`ee9909a8`). The collaborator's focused check (`astra-check-l4e7q-1.md`, on `ee9909a8`) read NOT

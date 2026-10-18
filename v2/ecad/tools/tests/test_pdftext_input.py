@@ -13,7 +13,7 @@ The predicates, each on a fixture in a temporary directory except the last two, 
     an absent declared PDF refused; (d) no converted generator calls pdftotext (parsed with ast, never grepped); (e) every extraction
     a converted record declares is present and current for every PDF present in this tree.
 
-Added by W37 on 6 October 2026, each closing a finding of W36's review of W34's branch (`_runs/claude/w36rev/REPORT-AS-RECEIVED.md`):
+Added by W37 on 6 October 2026, each closing a finding of W36's review of W34's branch (`_runs/assistant/w36rev/REPORT-AS-RECEIVED.md`):
 (f) F-R1: three converted generators (efuse, l5r2, l9t5_case) run in a subprocess with a refusing pdftotext AND a refusing pdftocairo
     first on PATH, their output captured in a temporary file (never a tree's .out): exit 0, no call of either, every declared text's
     input line printed, the record's folder unchanged; and l4e9 and l4e11 run with a refusing pdftotext and a logging pdftocairo: no

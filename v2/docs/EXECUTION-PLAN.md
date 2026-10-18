@@ -359,13 +359,13 @@ workers at a time, no automatic orchestration.
 |---|---|
 | Environment ready | **yes.** Codex CLI 0.158.0 (linux x86_64), installed for the coordinator's own user by the maker's standalone installer (sha256 `150e3cf675682efeaac115aa3747add3f27887896d04ce6d0b56478d8b428bf6`, read before it was run), pinned to that version; no shell profile changed; the existing tools untouched. Signed in by the owner with a device code (ChatGPT sign-in; no API key, no API credit). One real task completed on `gpt-6-astra` at `xhigh`: a read-only read of a known file in a disposable fixture returned its content exactly, the fixture unchanged (git status empty, sha256 equal), one completed turn, no failed turn, no error. **Requested and observed configuration:** the event stream names no model; the CLI's own session record gives model `gpt-6-astra`, effort `xhigh`, approval `never`, sandbox `read-only`. That is the client's record of what it asked for, not the server's attestation, and the task used no reasoning tokens, as a one-line read may |
 | Delegation ready | **yes, for bounded jobs.** The launcher's 13 tests pass with a fake child and no model call (a good review and a good authoring job; a nonzero exit with an optimistic result; a failed turn; a missing, malformed, wrong-job and unfitting result; a blocked job; a timeout that ends the child's own process group and keeps its partial output; a second author refused; a stale lock kept as a record; edits outside the permitted files, a moved branch, a missing deliverable; a rerun that leaves the first run byte-identical; refusals before launch; a substituted model or effort). The smoke call ran through the launcher. The tool's own sub-agents, plugins, skill discovery and goals are on by default and are switched off per job |
-| Pilot | **not run yet.** Chosen: finding I-03 on the board A to board B power leads (contract `IF-AB-POWER`; layer 4 item 4.10 and layer 5 item 5.5), where the two ends declare different currents on `+5V_S2` and `+5V_DEV`. Author the Codex worker, reviewer a Claude worker who reproduces the sums from the makers' documents, acceptance the coordinator's |
+| Pilot | **not run yet.** Chosen: finding I-03 on the board A to board B power leads (contract `IF-AB-POWER`; layer 4 item 4.10 and layer 5 item 5.5), where the two ends declare different currents on `+5V_S2` and `+5V_DEV`. Author the Codex worker, reviewer an assistant worker who reproduces the sums from the makers' documents, acceptance the coordinator's |
 
 ### Checkpoint, 28 September 2026 20:02 CEST: the pilot of the second model family accepted as a record; integration set 7 open
 
 | Field | State |
 |---|---|
-| Delivered | **The Codex pilot's record on finding I-03** (the board A to board B power leads, contract `IF-AB-POWER`), accepted by the coordinator after an independent Claude check that derived every figure blind from the makers' pages first and compared second: `v2/docs/records/cx1/` (ANALYSIS.md, if_ab_power.py with its output reproduced byte for byte, an unexecuted declarations draft whose `--check` passes against the generators as held, CORRECTION.md, and the check's five files under `checks/`). Its finding: no held document decides the all-transmit mode current of any of the five rails (INCONCLUSIVE on all five, each with the exact missing evidence named); the two ends are aligned INTERIM to the end that derives its figures from held pages (board A's +5V_S2 4.2 A typical and 5.63 A peak, J_5V_S2 5.63 A, Q28 2.22 A; board B's +5V_S2 peak 5.63 A; board A's J_5V_DEV 3.8 A and +5V_DEV typical 5.1 A); and a design finding beyond I-03: board A's +5V_DEV stage declares 6.9 A peak while its loads' coincident peak is 7.9 A with the D8 mezzanine at typical and 8.9 A at every declared limit, both above the LM5176 average loop's 7.10 to 7.17 A threshold. **Set 7 on `fnd/int8`** (tip `43e4a244`, 21 commits over `main`): the lid tray stream w5tray integrated (SC-75 closes S-63; S-95 the lid harness's crossing of the sealed face, S-96 the r2 set's verification on the model; FEA-007 and REQ-021 relinked); the third check's carried items (S-92 both voltages and bench E-01's gap, FEA-002 waits on S-92 and S-93, S-97 the walk report's three-ground cap); finding I-03's items S-98 (DECLARATION, for the generator owners) and S-99 (REQ-018 waits on it); the contract's contact rating rewritten from the held JST VH catalogue. Validators 0 errors; the registry 69 open, 60 closed, 144 records. Streams checked or finished since 18:50: d8dec31's follow-up done at `9057e668` (a reviewed set of external pins that the tool holds every declaration against; 61 tests), w5si2 done at `f84243ba` (board C does not pass SI-001 at the desk in either model state: 8 nets closable, 15 not). |
+| Delivered | **The Codex pilot's record on finding I-03** (the board A to board B power leads, contract `IF-AB-POWER`), accepted by the coordinator after an independent assistant check that derived every figure blind from the makers' pages first and compared second: `v2/docs/records/cx1/` (ANALYSIS.md, if_ab_power.py with its output reproduced byte for byte, an unexecuted declarations draft whose `--check` passes against the generators as held, CORRECTION.md, and the check's five files under `checks/`). Its finding: no held document decides the all-transmit mode current of any of the five rails (INCONCLUSIVE on all five, each with the exact missing evidence named); the two ends are aligned INTERIM to the end that derives its figures from held pages (board A's +5V_S2 4.2 A typical and 5.63 A peak, J_5V_S2 5.63 A, Q28 2.22 A; board B's +5V_S2 peak 5.63 A; board A's J_5V_DEV 3.8 A and +5V_DEV typical 5.1 A); and a design finding beyond I-03: board A's +5V_DEV stage declares 6.9 A peak while its loads' coincident peak is 7.9 A with the D8 mezzanine at typical and 8.9 A at every declared limit, both above the LM5176 average loop's 7.10 to 7.17 A threshold. **Set 7 on `fnd/int8`** (tip `43e4a244`, 21 commits over `main`): the lid tray stream w5tray integrated (SC-75 closes S-63; S-95 the lid harness's crossing of the sealed face, S-96 the r2 set's verification on the model; FEA-007 and REQ-021 relinked); the third check's carried items (S-92 both voltages and bench E-01's gap, FEA-002 waits on S-92 and S-93, S-97 the walk report's three-ground cap); finding I-03's items S-98 (DECLARATION, for the generator owners) and S-99 (REQ-018 waits on it); the contract's contact rating rewritten from the held JST VH catalogue. Validators 0 errors; the registry 69 open, 60 closed, 144 records. Streams checked or finished since 18:50: d8dec31's follow-up done at `9057e668` (a reviewed set of external pins that the tool holds every declaration against; 61 tests), w5si2 done at `f84243ba` (board C does not pass SI-001 at the desk in either model state: 8 nets closable, 15 not). |
 | Remaining | For set 7: the w5si2 check (running) and its seven apply scripts with SI-001 re-taken on six boards; the d8dec31 re-check (running) and its declaration, registry and hold scripts with TRN-001 re-taken; the d6rel re-check of `3d7c98d2` and its scripts with REL-001 re-taken; p3bind last; one box re-take (`_bin/box_retake.sh`), the suite, the isolated clone check, a fresh check of the merge, promotion. The layout-entry count reads 41 until the re-take (INT-001 CONFIG_CHANGED on every board for the contract's edited configuration input; 35 before). Then the queue: d6dec, d4emcon, w5ident's board C slice, d5dock, d4chain, d7fit, d4energy, w5stack, w5i2c, p3guard. |
 | Engineering | I-03 stays open: its closure is the generator owners' application of the interim entries in the circuit round with the regeneration, the contract's currents rows and ARCHITECTURE.md's IF-AB-POWER row rewritten, INT-001 and PWR-001 re-taken; the mode figures are the bench's (TEST-PLAN power tests at J_5V_S2 and J_5V_DEV under PS-ALLTX). S-99 needs a session decision with more than one option standing (raise the stage's average limit by its sense resistor within the FETs' and inductor's ratings; interlock D8 or the wall port against the PA key-down; or declare the 8.9 A bound with fold-back as the limiter and judge REQ-018 on it); board A's generator owner in the circuit round. Board C's edge-rate answer: 8 nets at the desk (four e-paper series resistors, two SWD allowances, EPD_SW's net class, Q3_G's declaration), 15 not (the RP2040's QSPI wired direct with no published edge, HB1 to HB3 driven from board B, the kit I2C across four boards, XIN/XOUT until CLK-001 states a length). |
 | Resources | Box credit 117.75 USD at 20:02 (cap 20 USD for the foundation work; the box idle since the set 6 suite). Model usage in the table above: the coordinator plus the workers named there; the two Codex engineering calls (the pilot and its one correction, the owner's bound) cost no API credit (ChatGPT sign-in). Two worker slots occupied by checks at this checkpoint. |
@@ -423,7 +423,7 @@ Your correction is applied: M1 and REQ-072 are unchanged and REQ-072 reads FAIL.
 - **Workers:** the case list, resumed at 22:39, and the energy correction, started at 22:55.
 - **Box:** idle. Spend is 10.65 of 20 USD, confirmed from the provider's balance.
 - **Codex:** 1 check and 1 correction remain.
-- **Claude since 18:48:** 0.45 M output tokens from 618 messages. A usage limit stopped work from 21:52 to 22:39.
+- **The assistant since 18:48:** 0.45 M output tokens from 618 messages. A usage limit stopped work from 21:52 to 22:39.
 
 **6. Blockers and next milestone**
 - **Owner:** none now. Coming: the checkout list, then the energy decision.
@@ -435,7 +435,7 @@ Your correction is applied: M1 and REQ-072 are unchanged and REQ-072 reads FAIL.
 | Item | Next action | Prerequisite | Worker | Acceptance evidence |
 |---|---|---|---|---|
 | S-98, the A and B declarations | regenerate A and B on the box at `fff04e64` (set 8), install the pack, re-read IF-AB-POWER | none: running since 23:10 | box job, then the integrator | netlist parity on both boards; the contract AGREE on the regenerated intents; INT-001 and PWR-001 current |
-| S-99, the +5V_DEV stage | the ten review findings corrected, each with source, corrected calculation and verification | none: running since 23:12 | Codex, the one authorised correction (isolated worktree `s99c`) | an independent Claude check passes the correction and its interfaces |
+| S-99, the +5V_DEV stage | the ten review findings corrected, each with source, corrected calculation and verification | none: running since 23:12 | Codex, the one authorised correction (isolated worktree `s99c`) | an independent assistant check passes the correction and its interfaces |
 | Board A, second regeneration | the corrected D8 split applied on set 8, its `+5V_DEV` entry rebased onto S-98's line, board A regenerated | S-99's check | integrator, box | parity; the declared demand under the loop minimum with tolerance |
 | Set 8 | suite, isolated clone, fresh check, then the last authorised Codex check on S-98's integrated scope | the three rows above | integrator; Codex check | suite 0 failed; AGREE; check mergeable. This accepts set 8 for integration only: it closes neither I-03's adequacy nor any layout entry |
 | I-03 adequacy | stays open: the mode currents are INCONCLUSIVE until measured | set 8 | TEST-PLAN power rows | measured currents at J_5V_S2 and J_5V_DEV under PS-ALLTX |
@@ -463,7 +463,7 @@ byte-identical, and the last authorised Codex check mergeable. I-03's adequacy, 
 drop stay open. No layer closed.
 
 **Next critical action:** set 9, S-99's D8 split on board A (checked, accepted): the box regeneration runs; then the
-registry texts, a re-take, rebinds, the suite and a Claude check. **Box:** 10.85 USD of 20 spent (credit 117.14). **Codex:**
+registry texts, a re-take, rebinds, the suite and an assistant check. **Box:** 10.85 USD of 20 spent (credit 117.14). **Codex:**
 none left.
 
 ### Milestone, 29 September 2026 01:53 CEST: integration set 9 on main (S-99, the D8 split)
@@ -917,7 +917,7 @@ acceptance; the CONOPS and PRODUCT-BRIEF re-issue authorised (D-38), its re-stam
 governing until then).
 
 **Evidence:** the engineering collaborator's closure check (`astra-check-l3r5-1`, not accepted) and targeted recheck
-(`astra-check-l3r5-2`, not accepted; B1, B3 and M1 accepted); Claude's check 3 (`check-l3r5-3`, accepted: B2's final
+(`astra-check-l3r5-2`, not accepted; B1, B3 and M1 accepted); the assistant's check 3 (`check-l3r5-3`, accepted: B2's final
 correction and D-22's trace at `a66c4e5b`, by its own check and the targeted tests; not a model review and not an Astra
 check); the merge verified mechanically; a clone of the candidate branch alone reproducing every page (132 passed, 0
 failed); the box suite at `b4b199d0` 2369 passed, 0 failed, 3 skipped, 200 of 200 modules, judged by the promotion gate
@@ -932,7 +932,7 @@ thermal design with the pack fitted (FEA-008); DR-07 the lid pack's consequences
 PRODUCT-BRIEF (L3-C63). `run.py`'s name filter reports success when a named module is absent (recorded; the promotion
 suite runs unfiltered and is judged on its log).
 
-**Next executable action:** Layer 4, task L4-E1 (brief `_runs/claude/brief-l4-energy.md`): the engineering
+**Next executable action:** Layer 4, task L4-E1 (brief `_runs/assistant/brief-l4-energy.md`): the engineering
 collaborator names the dominant constraints of the energy objective and at most four architectures to compare under one
 assumption set (D-06's 4S3P and the two-pack base 4S6P plus lid 4S9P among them); then L4-E2, one comparison page with
 the power-path corrections as architecture decisions; one check; the power-architecture packet for an electronics
@@ -958,7 +958,7 @@ because the old budget is exhausted." His operating rules, as given:
   supersedes the earlier 24-hour idle rule."
 - "Determine activity from job state and actual progress, not GPU utilisation alone. Preserve healthy long-running jobs;
   diagnose stalled jobs."
-- "Enforce the idle rule through a persistent watchdog or provider mechanism that continues working if this Claude
+- "Enforce the idle rule through a persistent watchdog or provider mechanism that continues working if this assistant
   session ends."
 - "Save checkpoints, logs, results and uncommitted work off the instance. Before destroying a finished instance, verify
   those backups."
@@ -970,7 +970,7 @@ because the old budget is exhausted." His operating rules, as given:
 
 This supersedes the foundation cap of 20 USD (the session's figure of 25 September, raised to 20 USD on 28 September) and
 the 24-hour idle rule. The earlier box-money rulings of 6 and 7 September stand as history. How it is applied: a
-watchdog on the runner (run by cron every ten minutes, independent of any Claude session) reads each rented instance's
+watchdog on the runner (run by cron every ten minutes, independent of any assistant session) reads each rented instance's
 job markers, its processes' CPU time and its newest file changes; an instance with none of these for two hours is backed
 up (its job outboxes pulled to the runner) and stopped through the provider's API, and every action is logged. Destroying
 stays the coordinator's, after the backups are verified. State at this ruling: no instance rented (vast.ai 52646493 was
@@ -999,7 +999,7 @@ nothing there and the watchdog's logs live on the runner.
 **Layer 3: accepted baseline, accepted again at `3b4b92cf` after the amendment; independent review findings
 dispositioned (L3-R01 to L3-R05).** Accepted under the owner's conditional authorisation D-39 once set 19's gates passed,
 recorded at `c1321ebc`; the acceptance binds the reviewed content (a content manifest the revision and the tree must both
-hold, L3-R04) and the record at `b4b199d0` is kept as history. The findings are closed by Claude's check 4 of the
+hold, L3-R04) and the record at `b4b199d0` is kept as history. The findings are closed by the assistant's check 4 of the
 amendment (`check-l3am-4`, at `8146b4cc`), not by the reviewer, who has not re-read it; the collaborator's two checks of the
 amendment did not accept it. Requirements maturity only (D-28, D-29): neither design compliance nor fab readiness holds.
 
@@ -1268,7 +1268,7 @@ Electrical feasibility and endurance are separate questions.
    - U-01: published specifications sufficient, or a vendor answer genuinely necessary; at most three candidates within the
      approved arrangement; else the exact missing fact and the smallest experiment.
    Then the panel lead's surge derivation (L4-E7).
-3. *The consolidation,* one Claude author in L4-E9:
+3. *The consolidation,* one assistant author in L4-E9:
    - one connected diagram, one budget, one circuit-change list;
    - the operating behaviour (source changes, simultaneous operation, startup, shutdown, faults, thermal management, control
      dependencies);
@@ -1452,7 +1452,7 @@ Layer 9's power budget; Layer 5's slot-fault rule; the firmware's round 4; the p
 The instruction is filed as received at `v2/docs/handover/OWNER-INSTRUCTION-2026-10-04.md` with the owner's review of the plan
 as its part 2 and his later instructions and reviews of that day as parts 3 to 6; Part A of the instruction is `v2/docs/EXECUTION-CONSTITUTION.md`, the one
 authoritative process text. This entry applies both once. Where the plan of 2 October 23:42 conflicts on process it is superseded:
-THREE author or reviewer workers (Claude and the collaborator together) plus the coordinator, one writer per branch, a checker
+THREE author or reviewer workers (the assistant and the collaborator together) plus the coordinator, one writer per branch, a checker
 takes a slot; the closure contract per task type replaces "one design-out attempt, then an experiment". Product requirements,
 technical rulings and filed reviews stand. Promotion of an integration set is not power-design closure and releases nothing.
 

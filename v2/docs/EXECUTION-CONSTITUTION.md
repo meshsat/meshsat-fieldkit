@@ -58,7 +58,7 @@ An assigned test is not a corrected circuit. Missing evidence is not automatical
 
 ### 7. Keep execution bounded and autonomous
 
-- The owner authorises up to three author/reviewer workers across Claude and Codex/Astra, plus the coordinator. One writer owns a branch at a time. Scheduling a checker consumes a worker slot. Use the third slot for ready independent work or a ready review; do not hold it idle for a review whose inputs are unfinished.
+- The owner authorises up to three author/reviewer workers across the assistant and Codex/Astra, plus the coordinator. One writer owns a branch at a time. Scheduling a checker consumes a worker slot. Use the third slot for ready independent work or a ready review; do not hold it idle for a review whose inputs are unfinished.
 - The coordinator owns integration, scheduling and small verified record corrections. Do not occupy an engineering worker merely to copy a checked status or checksum. Coordinate ownership before editing an active author's files.
 - Preserve healthy jobs, successful outputs and uncommitted work. Before replacing a failed/context-exhausted worker, check whether its child calculation survived. Resume one writer from its checkpoint with a concise brief, not the entire accumulated transcript.
 - Continue the next ready item without waiting for this chat's review. When an external dependency blocks one item, dispatch independent work. If no authorised task is ready, report that fact precisely and retain a recoverable checkpoint.

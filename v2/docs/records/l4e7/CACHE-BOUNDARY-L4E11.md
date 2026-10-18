@@ -93,7 +93,7 @@ restated for the new parts (they read the committed cache, so they hold after th
 
 ## 7. Adoption prepared (W67, 6 October 2026, 19:30 to 20:00 CEST)
 
-W64 read WP-B at 849e66c7 independently (an AI review, not a qualified one; `_runs/claude/w64revkey/REPORT-AS-RECEIVED.md`) and
+W64 read WP-B at 849e66c7 independently (an AI review, not a qualified one; `_runs/assistant/w64revkey/REPORT-AS-RECEIVED.md`) and
 found it fit for adoption on four conditions, with four findings. This branch carries everything but the re-key and the
 regeneration. Nothing was re-keyed, no `_R()` test of test_l4e7 was run and no `.out` was regenerated.
 
@@ -162,7 +162,7 @@ regen_targeted, `repin_l4e9.py`, regen_targeted again, the KEY-only check):
 
 ## 8. W70's recheck answered (W71, 6 October 2026, 20:10 to 20:35 CEST)
 
-W70 rechecked W67's delta 849e66c7..2d81d8b2 (an AI review, not a qualified one; `_runs/claude/w70rechkkey/REPORT-AS-RECEIVED.md`):
+W70 rechecked W67's delta 849e66c7..2d81d8b2 (an AI review, not a qualified one; `_runs/assistant/w70rechkkey/REPORT-AS-RECEIVED.md`):
 fit for set 32's one re-key on five conditions, with findings R-1 to R-7, none touching `l4e7_stage_settings.py`. W71 corrected R-2 to
 R-6 OUTSIDE the l4e7 KEY: `l4e7_stage_settings.py` and every file of the cache's files part are byte-identical to 2d81d8b2, so set 32's
 one re-key at this tip equals one at 2d81d8b2 (proof below). R-1 and R-7 are set 32's chain items (the coordinator's): written into

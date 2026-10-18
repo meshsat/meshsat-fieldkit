@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E5: Claude's verification of the recheck's two items (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E5: The assistant's verification of the recheck's two items (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. Scope: the two acceptance statements the engineering collaborator's targeted recheck left open
 (`astra-check-l4e5-2.md`, run 20261001T115956Z-2934193 on `03a52063`, which accepted the revised arithmetic, the fallback

@@ -7,8 +7,8 @@ W127's check 1a and finding 2). Prototype design: nothing in this kit has been b
 a measurement. Every figure is printed by `l9t5_hoe.py` into `l9t5_hoe.out` ("OUT n" below is its section). Labels: PRINTED (a maker's
 limit or tested row), TYPICAL, DIAGRAM (read from a maker's drawn figure), DECLARED, DRAFTED (not applied), MODEL, ASSUMPTION, SESSION.
 This task closes no cx46 item: cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand. The focused check (W144,
-`_runs/claude/w144chkhoe/REPORT-FULL-AS-RECEIVED.md`) read W140's page as SUPPORTED AS CONDITIONAL with conditions C1 to C5; section 9
-lists each finding and its correction here. The one targeted recheck (W150, `_runs/claude/w150rechkhoe/REPORT-FULL-AS-RECEIVED.md`)
+`_runs/assistant/w144chkhoe/REPORT-FULL-AS-RECEIVED.md`) read W140's page as SUPPORTED AS CONDITIONAL with conditions C1 to C5; section 9
+lists each finding and its correction here. The one targeted recheck (W150, `_runs/assistant/w150rechkhoe/REPORT-FULL-AS-RECEIVED.md`)
 read W148's tip `99861c69` as SUPPORTED AS CONDITIONAL (C1 met as a draft, S5 retired) with should-fix F1 to F3 and notes F4 to F6;
 W152 corrected them (section 9b). Every thermal limit below is at ONE supply corner, the rail's top 3.3577 V (SESSION W145-4, W144's
 F8): W140 mixed T10's 3.3 V state with a rail-top step.
@@ -203,7 +203,7 @@ to S4 (S5 retired by W148-1; S2 extended for the self-reset loop S-m by W152-3).
   publication changes; one approach stands after the reading (H-1 drops out on the documents, H-3 is not established on printed
   figures), so the ruling's second half (more than one option standing) fails; the residuals are measurable on a specimen (S1 to S4):
   amendment 1's supplier tasks (S5 retired), not a risk no measurement can remove.
-- **ruled_by:** W140 (Claude), MESHSAT-1357. **ruled_on:** 7 October 2026. **reversed_by:** none.
+- **ruled_by:** W140 (assistant), MESHSAT-1357. **ruled_on:** 7 October 2026. **reversed_by:** none.
 - **To reverse:** drop `apply_gen_sch_b_vcoremon.py`; HO-E returns to REMAINING ENGINEERING with the owner item below.
 - **End condition:** S1 reads the controller's ZthJA at t_resp over 3.65 K/W on board B (3.05 K/W in the reset loop, W152-2); or S2 reads a
   sense delay long enough that S1 fails at the longer interval; or two negative independent checks of this selection (W145's "S5 fails"
@@ -238,15 +238,15 @@ to S4 (S5 retired by W148-1; S2 extended for the self-reset loop S-m by W152-3).
 
 Each W145 decision: authority SESSION under the same rules; authority_why an engineering value or method inside the drafted circuit and
 its rows, no requirement, class, case row, purchase or publication changed, one option standing after the focused check's reading;
-ruled_by W145 (Claude), MESHSAT-1357; ruled_on 7 October 2026; reversed_by none, except W145-1 and W145-5 (reversed_by W148-1).
+ruled_by W145 (assistant), MESHSAT-1357; ruled_on 7 October 2026; reversed_by none, except W145-1 and W145-5 (reversed_by W148-1).
 Each W148 decision: authority SESSION under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026;
 authority_why an engineering selection inside the drafted circuit and its rows: the ruling's first half fails (no line a protected
 class holds, no money spent, nothing bought, the parts drafted; no change to what the kit is claimed to be; no residual risk accepted
 that a measurement cannot remove), so although HS-1a also stands the choice is an engineering value taken on section 11's figures;
-ruled_by W148 (Claude), MESHSAT-1357; ruled_on 7 October 2026; reversed_by none (W148-3's values restated by W152-1).
+ruled_by W148 (assistant), MESHSAT-1357; ruled_on 7 October 2026; reversed_by none (W148-3's values restated by W152-1).
 Each W152 decision: authority SESSION under the same rules; authority_why an engineering value, a method or a test row inside the
 drafted circuit and its rows (no line a protected class holds, no money, nothing bought, no change to what the kit is claimed to be,
-no residual risk accepted); ruled_by W152 (Claude), MESHSAT-1357; ruled_on 7 October 2026; reversed_by none.
+no residual risk accepted); ruled_by W152 (assistant), MESHSAT-1357; ruled_on 7 October 2026; reversed_by none.
 
 ## 6. The draft (OUT 8)
 

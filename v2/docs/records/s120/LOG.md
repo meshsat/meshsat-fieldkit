@@ -3,7 +3,7 @@
 Newest last. Times CEST, read from `date`. Prototype framing: nothing is built; every reading is of a committed netlist or
 a maker's document. AI engineering work, not a qualified review. No agent, no other model, no box, no purchase, no contact.
 
-## 29 September 2026 (brief `_runs/claude/s120/BRIEF.md`)
+## 29 September 2026 (brief `_runs/assistant/s120/BRIEF.md`)
 
 - 17:11 Brief and `_bin/WORKER-RULES.md` read. Worktree `<worktrees>/s120`, branch
   `fnd/s120` from main `e57a7365` (set 12: decision 57's FETs on board A, S-117 and S-118 closed, S-120 open). The four held

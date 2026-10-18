@@ -3,7 +3,7 @@ mergeable: no
 
 # Check of integration set 9, fnd/int10 at 27d8a129 onto main 9147db5d (MESHSAT-1357, 29 September 2026)
 
-**AI review, not a qualified review.** One Claude checker who wrote none of the candidate, working read-only in the
+**AI review, not a qualified review.** One assistant checker who wrote none of the candidate, working read-only in the
 scratch clone `_scratch/chk-int10`.
 - **The final commit judged is 27d8a129b64718c0341a58385aec4a34505ac027.** It is 03237888 plus one change: board
   A's EMC sheet gains U41 (section 6).
@@ -22,12 +22,12 @@ committed, not what it contains.
 
 ## 1. Blocking
 
-**B1. Four commits on the line are authored and committed as a Claude identity.** `3ea5a994`, `8eca1ef3`,
+**B1. Four commits on the line are authored and committed as an assistant identity.** `3ea5a994`, `8eca1ef3`,
 `b11e6a16` and `cef7cb77` (the merges of streams energy, od01 and s99reg, and of main 9147db5d) carry
 `author the runner's service identity (address redacted by the integrator)` and the same committer (`git cat-file -p cef7cb77`). Main has
 none: 0 of its history, and all of its recent merges, are `Kyriakos Papadopoulos <ncpjfuzl@mxmx.email>`. The other 37
 commits of the set are the owner's identity. The repository's standing rule is "commits as the owner, never as any
-Claude identity". The owner ruling of 3 September 2026 rewrote this history to remove Claude attribution, and
+The assistant identity". The owner ruling of 3 September 2026 rewrote this history to remove the assistant attribution, and
 GitLab mirror 34 publishes `main` to github.com/meshsat/meshsat-fieldkit within minutes. Promoting the line as it is,
 the way set 8 was promoted (main's history contains fnd/int9's commits unchanged), would publish these four.
 - 27d8a129 itself is the owner's, but it still has all four in its ancestry.
@@ -169,7 +169,7 @@ the way set 8 was promoted (main's history contains fnd/int9's commits unchanged
 - **Merged streams.** The energy and od01 merges touch only their own records folders. Neither contains any personal
   data: the postcode is a placeholder, and Leiden is SC-37's site, already in the tree. Neither records any order,
   payment or contact: the RFQ is "NOT SENT", the checkout list says nothing was carted, and ordering, quotes and the
-  operator stay the owner's in `od01/README.md`. No `.ibs` file is tracked, and no CLAUDE.md or `.claude/` file is
+  operator stay the owner's in `od01/README.md`. No `.ibs` file is tracked, and no local session-notes file is
   either.
 
 ## 6. The added EMC row, 27d8a129 (the coordinator's question)

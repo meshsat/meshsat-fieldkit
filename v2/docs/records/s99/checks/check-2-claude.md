@@ -1,4 +1,4 @@
-# Check of the S-99 correction (commit e7d7f288, branch fnd/s99c): independent AI review (Claude), 28 September 2026
+# Check of the S-99 correction (commit e7d7f288, branch fnd/s99c): independent AI review (assistant), 28 September 2026
 
 AI review, not a qualified review. Prototype design: nothing built, ordered or measured. Read-only on the worktree; all runs on scratch copies under this folder.
 

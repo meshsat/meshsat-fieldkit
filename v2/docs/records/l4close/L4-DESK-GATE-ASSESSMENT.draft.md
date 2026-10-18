@@ -84,7 +84,7 @@ names, every count this file states, and each other-branch citation where that c
   [T5R:1]) with the remaining-engineering ledger merged and L4-E9's change-list rows R-220 to R-245 applied to the change list
   ("the drafted change list carries rows R-220 to R-245 (no R-241: route B2 out)" [CON:365]).
 - After the base, on `fnd/p0pwr`: the merge `6fe398e9` of Slot H's set 31 (`fnd/l4e9s31`: `bca7b0dc`, `14082416`, `17ce29d5`; read
-  with `git log`). The coordinator's note of 01:56 CEST (`<worktrees>/_runs/claude/dgate/INBOX.md`, outside the repository) says the
+  with `git log`). The coordinator's note of 01:56 CEST (`<worktrees>/_runs/assistant/dgate/INBOX.md`, outside the repository) says the
   candidate merged it because the release suite on the applied change list needs its page, generator data and `test_l4e9`
   expectations, so set 31 is part of THIS candidate and its commits are intervening commits to classify (class (b), claim-narrowing
   record text). The coordinator's commit 2b (the regenerated cascade outputs) is not committed at the base (Slot H: "commit 2b (the
@@ -180,7 +180,7 @@ names, every count this file states, and each other-branch citation where that c
   as Slot D read them at `1c6d56f5` [I30:80-82]); this draft did not re-read them at the base.
 - A2.8 At the base itself L4-E9's record tests fail: Slot H read "55 passed, 13 failed" on the base with the same four outputs
   [H31:26], and the coordinator's note gives the thirteen `test_l4e9` failures as the reason the candidate merged set 31
-  (`<worktrees>/_runs/claude/dgate/INBOX.md`). This draft ran no suite.
+  (`<worktrees>/_runs/assistant/dgate/INBOX.md`). This draft ran no suite.
 
 ## 3. Part three: review evidence
 
@@ -211,7 +211,7 @@ names, every count this file states, and each other-branch citation where that c
   result needs targeted verification before being credited" [OWN:844].
 - A3.3 Integration 1 and 2a (`7070f106`, `bbba3e53`) and set 31's claim changes [H31:32-55], merged at `6fe398e9`, come after Slot
   D's classification, which binds `1c6d56f5` only [I30:25]; the coordinator's note classes set 31's commits (b), claim-narrowing record
-  text (`<worktrees>/_runs/claude/dgate/INBOX.md`), and part 25 owes each substantive change its targeted verification before credit.
+  text (`<worktrees>/_runs/assistant/dgate/INBOX.md`), and part 25 owes each substantive change its targeted verification before credit.
 - A3.4 Five checks the records cite are not filed in the tree: V2RG, V2RF and V2R are "the integrator's" to file [E11R:7], [E11R:23],
   [E11R:38]; record l8p's V1 and V2 are read only through its own text [BRK:778-779].
 - A3.5 The eFuse record's round 2 says it has no independent check ("round 2 has none" [EFS:213]) while the P0 row that carries round 2

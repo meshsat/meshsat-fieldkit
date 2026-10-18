@@ -263,7 +263,7 @@ commands and the moved line citations (F-K4).
    package (`_bin/pack_supplier.py`, runner-local) bundles records whose generators load `_lib/pdftext.py` but carries no `_lib` file
    (W36's F-S2); the rule to add is named in the plan draft.
 
-## 7. W37's changes on W36's findings (6 October 2026; the review as received: `_runs/claude/w36rev/REPORT-AS-RECEIVED.md`)
+## 7. W37's changes on W36's findings (6 October 2026; the review as received: `_runs/assistant/w36rev/REPORT-AS-RECEIVED.md`)
 
 - **F-P1** (provenance): section 5's closing sentence was false; restated there as what still reads the host's poppler (pdftocairo at
   four call sites in l4e9 and l4e11; pdftotext through `l4e_replay` and `r11_dep`) and which tests and boxes still need it.

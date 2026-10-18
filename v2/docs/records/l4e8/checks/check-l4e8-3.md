@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E8: Claude's verification of the conservative bound and the cold-envelope loop (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E8: The assistant's verification of the conservative bound and the cold-envelope loop (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. The collaborator's check (`astra-check-l4e8-1.md`, on `5ff06474`) and its targeted recheck
 (`astra-check-l4e8-2.md`, on `cc95fe1f`) did not accept the bank. The second failure on the same issue changed the method:

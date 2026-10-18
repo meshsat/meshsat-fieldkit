@@ -5,7 +5,7 @@ Newest last. Times CEST, read from `date`. Worktree `<worktrees>/rf2walk`, branc
 boards B and C regenerated, `readback_d4e.py` holding on both). Author: stream d4emcon's author. Prototype framing: every
 reading is of a committed netlist or a maker's document; nothing is built.
 
-- 13:16 Brief read (`_runs/claude/rf2walk/BRIEF.md`); worktree created. `check_contracts.py` run into a scratch directory
+- 13:16 Brief read (`_runs/assistant/rf2walk/BRIEF.md`); worktree created. `check_contracts.py` run into a scratch directory
   (`env -C <scratch> VERDICT_DIR=<scratch>`, never from `v2/ecad`): 21 FAIL, byte for byte the coordinator's
   `contracts-int13-e41df395.txt`; the tree stays clean. Main (`2c7730a4`) read in a scratch copy of its whole `v2/ecad`
   (`git archive`): main's own tool gives main's file back unchanged (0 FAIL); the set 12 tool on main's netlists reads 0 FAIL,

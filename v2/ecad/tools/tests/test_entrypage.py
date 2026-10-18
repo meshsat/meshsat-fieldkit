@@ -74,7 +74,7 @@ ADD = "v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md"
 REM = "v2/docs/records/l4close/REMAINING-ENGINEERING.md"
 ANX = "v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md"
 S, H, B, F = "S", "H", "SH", ""   # on the supplier page, on START-HERE, on both, a fact read in the source only
-# Restated by W33 (6 October 2026). Basis: W32's read of the adoption (`<worktrees>/_runs/claude/w32read/REPORT-AS-RECEIVED.md`),
+# Restated by W33 (6 October 2026). Basis: W32's read of the adoption (`<worktrees>/_runs/assistant/w32read/REPORT-AS-RECEIVED.md`),
 # finding 2 (the Packaged row named dd1aed00 as "the commit every file of this revision is taken from", while RESULT.md and both
 # pages' section 0 are absent at dd1aed00) and its citation finding (the owner-file lines bound to 6fe398e9 are one line later at
 # dd1aed00, part 26's inserted row), with the coordinator's rulings 2 and 6 in W33's brief. The revisions table names four

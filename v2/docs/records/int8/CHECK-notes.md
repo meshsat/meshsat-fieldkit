@@ -1,6 +1,6 @@
 # Independent check of integration set 7 (branch fnd/int8 at 7f6de345, onto main 6b419b02), AI review
 
-Checker: an independent Claude session (an AI review, not a qualified engineering review). 28 September 2026,
+Checker: an independent assistant session (an AI review, not a qualified engineering review). 28 September 2026,
 21:35 to 21:52 CEST. Nothing of the kit has been built, ordered or measured; every verdict quoted below is a desk
 reading of a prototype design. The worktree `<worktrees>/int8` was read only.
 Everything written is under `<worktrees>/_scratch/chk-int8/` (this file, RESULT.md,

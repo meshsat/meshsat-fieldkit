@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E2, B2: Claude's verification of O-2's final bound (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E2, B2: The assistant's verification of O-2's final bound (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. Scope: B2 only, the one item the engineering collaborator's targeted recheck left open
 (`astra-check-l4e2-2.md`, run 20260930T224030Z-833954 on `21a9a6fe`), at the revision `197350a7`. B1, M1 and the Layer 3

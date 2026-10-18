@@ -2,7 +2,7 @@ accepted: no
 
 # Record l9stk: the independent checker's check 2, PROTECTION: NOT CONFIRMED (filed as received)
 
-MESHSAT-1357. An AI review by a fresh Claude session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `3ab55e8d50ea638cb5d4a13e9a60dbb253c85feb` (branch `fnd/l9stk`). Time: 4 October 2026, 01:45 to 02:00 CEST. Nothing in the kit has been built, bought or measured.
+MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `3ab55e8d50ea638cb5d4a13e9a60dbb253c85feb` (branch `fnd/l9stk`). Time: 4 October 2026, 01:45 to 02:00 CEST. Nothing in the kit has been built, bought or measured.
 
 Scope, from the coordinator's brief: the targeted recheck of the copper corrections (B1 to B3 of check 1) and the new protection design: section 14 re-derived, section 15 (W4DP-F2's element), `l9stk_protection.py` and its output, the closure text and findings L9C-F3 and L9C-F16 to F19, against the owner's current-and-time criterion; TI's SLVA673A fetched into the scratch clone by the record's fetch script.
 

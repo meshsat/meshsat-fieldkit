@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E4, B2: Claude's verification of the outlet bench's hold windows (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E4, B2: The assistant's verification of the outlet bench's hold windows (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. Scope: the one blocker the engineering collaborator's targeted recheck left open
 (`astra-check-l4e4-2.md`, run 20261001T033707Z-1842303 on `b9d01448`, which accepted B1 and the three minors of the first

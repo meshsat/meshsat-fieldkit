@@ -2,9 +2,9 @@
 
 # T10 round 11: row (b)'s corrections after its focused check
 
-- **Author:** W159 (Claude), MESHSAT-1357, 7 October 2026 from 10:57 CEST (times from `date`, Europe/Amsterdam). Branch `fnd/l4hod`,
+- **Author:** W159 (assistant), MESHSAT-1357, 7 October 2026 from 10:57 CEST (times from `date`, Europe/Amsterdam). Branch `fnd/l4hod`,
   base `e51c1bd9` (W151's round 10), then `925a1efd` (fnd/l4small merged) and `f83879dc` (fnd/l4lim merged).
-- **Failure cases read against:** W157's report (`_runs/claude/w157chkrowb/REPORT-FULL-AS-RECEIVED.md`, an AI review): row (b) NOT
+- **Failure cases read against:** W157's report (`_runs/assistant/w157chkrowb/REPORT-FULL-AS-RECEIVED.md`, an AI review): row (b) NOT
   SUPPORTED AS COMPOSED on one clerical blocker F1; RE-5 and HO-C SUPPORTED; RE-6 and RE-7 SUPPORTED AS CONDITIONAL (E-17); HO-D
   SUPPORTED AS CONDITIONAL (W146-F10); findings F2 to F8 should fix, F9 to F11 notes. No verdict is upgraded here: this round is a
   correction, and the verdicts are the recheck's (Q-183).
@@ -52,7 +52,7 @@ meets both), so it is left as W135 computed it; the current band is record l4reg
 
 ## 3. SESSION decisions of this round
 
-Each under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026; ruled_by W159 (Claude), MESHSAT-1357;
+Each under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026; ruled_by W159 (assistant), MESHSAT-1357;
 ruled_on 2026-10-07; reversed_by none (the way back is the last column).
 
 | Id | Decision | authority | authority_why | To reverse |

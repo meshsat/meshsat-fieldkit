@@ -151,21 +151,21 @@ commit; no predicate was weakened in a row this record read.
 ### 2a. W38's review of the lineage to `f0748b49` and its findings F1 to F10 (queue item Q-57)
 
 W38, a reviewer reading beside this record (an AI review, not a qualified one), read `dd1aed00..f0748b49` from 15:23 to 15:43 CEST:
-`<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:3` `The lineage is record text as claimed, but it is not fit for the freeze yet`. Its findings, each with W38's class and what
+`<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:3` `The lineage is record text as claimed, but it is not fit for the freeze yet`. Its findings, each with W38's class and what
 became of it (W48's readings are section 2c's):
 
 | Finding | W38's words (its report, the line named) | W38's class | What was done, and where |
 |---|---|---|---|
-| F1 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:22` `are not in the lineage. 18 files differ on both sides` (main's commits `836f711b` to `eff28be3`) | provenance | the coordinator merged main `eff28be3` into the lineage, `d5d9c252` (row 31); W48: closed |
-| F2 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:23` `placeholders are unfilled. No recorded deferral in the QUEUE` (eleven, for set 30's promoted sha; OW-4 pinned to the unfilled bytes) | provenance | W41 filled them with `dd1aed00` and took OW-4 after the fill (`3057ae43`, row 32); W48: closed |
-| F3 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:24` `The l4e7 KEY MISMATCH at the tip.` | provenance | known and owed: the re-key after W41's commit, done since, the cache commit `aa332280` with its KEY MATCH (sections 3e and 3g); W48: open as expected |
-| F4 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:25` `A W11 statement is stale at the tip.` | figure | W41 restated it (`3057ae43`), printed at `31928583`; W48: closed, one residual (section 2c) |
-| F5 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:26` `The annex contradicts a row applied in the same lineage` | figure (K-06) | W41 restated it (`3057ae43`); W48: closed |
-| F6 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:27` `The section now cites on two bases.` | provenance | W41 restated the basis (`3057ae43`); W48: closed |
-| F7 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:28` `test_l5pwr's prose contradicts its restated body.` | test | W41 restated the prose (`3057ae43`), which removed W20-18's applied words (W48's N2), kept again at `31928583`; W48: closed, with N2 |
-| F8 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:29` `Tests changed in the lineage were not run on it` | test | W48 ran them on `3057ae43`; W41 ran them on the tree committed as `31928583` (section 3d); the 47 `test_l4e7` tests that reach the solver are owed after the re-key (section 4) |
-| F9 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:30` `This matches its source and is not wider than it, so it is not an upgrade made in this lineage.` | verdict | nothing to do; W48: unchanged |
-| F10 | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md:31` `NOT CLOSED is attributed to cx45.` | verdict (minor) | W41 restated it (`3057ae43`), printed at `31928583`; W48: closed at its site, one residual (section 2c) |
+| F1 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:22` `are not in the lineage. 18 files differ on both sides` (main's commits `836f711b` to `eff28be3`) | provenance | the coordinator merged main `eff28be3` into the lineage, `d5d9c252` (row 31); W48: closed |
+| F2 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:23` `placeholders are unfilled. No recorded deferral in the QUEUE` (eleven, for set 30's promoted sha; OW-4 pinned to the unfilled bytes) | provenance | W41 filled them with `dd1aed00` and took OW-4 after the fill (`3057ae43`, row 32); W48: closed |
+| F3 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:24` `The l4e7 KEY MISMATCH at the tip.` | provenance | known and owed: the re-key after W41's commit, done since, the cache commit `aa332280` with its KEY MATCH (sections 3e and 3g); W48: open as expected |
+| F4 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:25` `A W11 statement is stale at the tip.` | figure | W41 restated it (`3057ae43`), printed at `31928583`; W48: closed, one residual (section 2c) |
+| F5 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:26` `The annex contradicts a row applied in the same lineage` | figure (K-06) | W41 restated it (`3057ae43`); W48: closed |
+| F6 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:27` `The section now cites on two bases.` | provenance | W41 restated the basis (`3057ae43`); W48: closed |
+| F7 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:28` `test_l5pwr's prose contradicts its restated body.` | test | W41 restated the prose (`3057ae43`), which removed W20-18's applied words (W48's N2), kept again at `31928583`; W48: closed, with N2 |
+| F8 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:29` `Tests changed in the lineage were not run on it` | test | W48 ran them on `3057ae43`; W41 ran them on the tree committed as `31928583` (section 3d); the 47 `test_l4e7` tests that reach the solver are owed after the re-key (section 4) |
+| F9 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:30` `This matches its source and is not wider than it, so it is not an upgrade made in this lineage.` | verdict | nothing to do; W48: unchanged |
+| F10 | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md:31` `NOT CLOSED is attributed to cx45.` | verdict (minor) | W41 restated it (`3057ae43`), printed at `31928583`; W48: closed at its site, one residual (section 2c) |
 
 W38's own classification of the 73 commits is a report as received; section 2d gives how it was reconciled with this record's.
 
@@ -194,7 +194,7 @@ W41, the writer of fnd/int31regen, corrected W38's F2, F4 to F7 and F10 at `3057
 - **The annex's citations after the merge of main:** `3057ae43:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:169` `HO-H to HO-K [REM:552-584]`; its alias P0L names revision 2
   of the P0 list at its dated file.
 - **N1:** one locus for TP-E11-29's first condition, `31928583:v2/docs/test-procedures/TP-E11-29.md:21` `which adopts this page's restated condition`,
-  and the annex at its line 207; W48: `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:100` `TP-E11-29 stays NOT EXECUTABLE either way.`
+  and the annex at its line 207; W48: `<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md:100` `TP-E11-29 stays NOT EXECUTABLE either way.`
 - **test_w11l9t5:** `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W41 at about 18:12 CEST", `test_w11l9t5's two older failures restated with bases`
   (W48's N3 read the restatement's basis as true).
 
@@ -205,19 +205,19 @@ neither is a checked correction, and neither is credited.
 ### 2c. W48's targeted recheck (queue item Q-67)
 
 The constitution's one targeted recheck of W38's findings (an AI review, not a qualified one), read from 16:56 to 17:54 CEST on
-`3057ae43`; the converged commit had not landed: `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:29` `**Converged commit:** not landed.`
+`3057ae43`; the converged commit had not landed: `<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md:29` `**Converged commit:** not landed.`
 
 | Item | W48's reading on `3057ae43` | Since |
 |---|---|---|
 | F1, F2, OW-4, F4, F5, F6, F7, F8, F10 | `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W48 at about 17:56 CEST", `F1, F2, OW-4, F4, F5, F6, F7, F8 (42 passed on W38's list in a scratch clone), F10 CLOSED` | unchanged at `31928583` by W41's account; not re-read by W48 |
-| F3 | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:15` `**Open as expected:** F3, the KEY` | open until the re-key; the re-key's cache commit `aa332280` since, its KEY MATCH (section 3e); W48 did not read it |
-| F9 | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:16` `**Unchanged:** F9.` | no action |
-| N1, new (minor provenance) | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:100` `Fix: state one locus in both pages.` | corrected at `31928583` (row 33; section 2b) |
-| N2, new (a test regression) | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:19` `the F7 rewrite removed W20-18's applied text. Three tests now fail` | corrected at `31928583`; W41's set A, which runs `test_w20oneliners` and `test_w25tests`, 284 passed, 0 failed (section 3d) |
-| N3, new (an observation) | `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:20` `was restated to read W11's tip. Its basis is true.` | no action |
-| Residuals, not new | F4's change table at record l9t5's README lines 449 and 452; F10's shorter words at three sites (`<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:91` `held by four tests`) | set 32's: `<worktrees>/_runs/int30/QUEUE.md`, entry "17:56 (clock) N1 and N2 relayed", `the F10 and F4 residuals for set 32` |
+| F3 | `<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md:15` `**Open as expected:** F3, the KEY` | open until the re-key; the re-key's cache commit `aa332280` since, its KEY MATCH (section 3e); W48 did not read it |
+| F9 | `<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md:16` `**Unchanged:** F9.` | no action |
+| N1, new (minor provenance) | `<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md:100` `Fix: state one locus in both pages.` | corrected at `31928583` (row 33; section 2b) |
+| N2, new (a test regression) | `<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md:19` `the F7 rewrite removed W20-18's applied text. Three tests now fail` | corrected at `31928583`; W41's set A, which runs `test_w20oneliners` and `test_w25tests`, 284 passed, 0 failed (section 3d) |
+| N3, new (an observation) | `<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md:20` `was restated to read W11's tip. Its basis is true.` | no action |
+| Residuals, not new | F4's change table at record l9t5's README lines 449 and 452; F10's shorter words at three sites (`<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md:91` `held by four tests`) | set 32's: `<worktrees>/_runs/int30/QUEUE.md`, entry "17:56 (clock) N1 and N2 relayed", `the F10 and F4 residuals for set 32` |
 
-W48's conditions for the re-key (`<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:137` `conditionally on the converged commit. The conditions:`), as the coordinator
+W48's conditions for the re-key (`<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md:137` `conditionally on the converged commit. The conditions:`), as the coordinator
 recorded them: `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W41 at about 18:12 CEST", `W48's four conditions for the re-key: MET (1 to 3)`;
 condition (4), the 47 `test_l4e7` tests that reach the solver, runs after the re-key (section 4, `the runner pass on 5f25daf3 (_runs/int31s1/runner/suite-runner.log): test_l4e7 64 passed, 1 skipped (t_recompute_reproduces_the_committed_output, explained), its 47 solver-backed tests served from the re-keyed cache (l4e7 KEY MATCH b8fc6fe2d285112c)`). W48 did not read
 `31928583`: its KEY line is the chain's, verified by the coordinator (the same entry, `verified by the coordinator`), and its tests are
@@ -226,8 +226,8 @@ W41's (section 3d); no independent reader has read row 33.
 ### 2d. The classification reconciled: W49, the coordinator's ruling, W50, W51 and W56
 
 - **W49** (queue item Q-68; read-only, an AI review) compared W38's table with this one row by row:
-  `<worktrees>/_runs/claude/w49recon/REPORT-AS-RECEIVED.md:5` `W38 and W39 differ on 16 of the 73 shared commits.` It found set 30's rule ambiguous in its second sentence and gave both
-  readings, `<worktrees>/_runs/claude/w49recon/REPORT-AS-RECEIVED.md:9` `B follows how set 30 applied it at row 26; A reads the second sentence literally.`
+  `<worktrees>/_runs/assistant/w49recon/REPORT-AS-RECEIVED.md:5` `W38 and W39 differ on 16 of the 73 shared commits.` It found set 30's rule ambiguous in its second sentence and gave both
+  readings, `<worktrees>/_runs/assistant/w49recon/REPORT-AS-RECEIVED.md:9` `B follows how set 30 applied it at row 26; A reads the second sentence literally.`
 - **The coordinator's ruling** (17:13 CEST, authority SESSION under the owner's standing rule of 26 September 2026):
   `<worktrees>/_runs/int30/QUEUE.md`, entry "17:13 (clock) COORDINATOR'S RULING", `READING A for set 31 and set 32`; its reason, in the same entry,
   `more commits labelled unreviewed since cx46, never fewer`; its consequence for set 30, in the same entry,
@@ -406,7 +406,7 @@ The re-key that counts ran on `31928583` (section 3e; its cache commit `aa332280
 | Runner pass (`test_l4e7`, and the modules that read `_runs`, section 8) | `_runs/int31s1/runner/suite-runner.log` | `tests: 150 passed, 0 failed, 1 skipped; EXIT 0` |
 | suite_gate with G7 over the logs | `_runs/int31s1/suite_gate.txt` | `suite_gate: candidate 5f25daf3762e; result lines 3366 (3363 PASS, 3 SKIP, 0 FAIL); modules 261 of 261 ran; suite_gate: PASS` |
 | Promotion: fast-forward of main, push, the mirror, the guard on main | `_runs/int31/promote-2257.log: GitHub main at 5f25daf3762ecd69c8764bf60de81a80f4119eab` | `5f25daf3` |
-| Targeted verification of the 25 unreviewed changes of section 2 | the coordinator's choice of verifier, not the ended review method: W90's read (queue item Q-111; an AI review, not a qualified one), `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md` | performed by W90 (read 23:04:21 to 23:16:00 CEST), each of the 25 classed by its most material change: FIGURE or CLAIM 20 (13 carrying a FIGURE, 7 CLAIM without a FIGURE), STATE 2, PIN 1, CITATION 1, TEXT 1; four of the 20 (rows 3.1, 31.3, 31.5 and 31.16) change only files outside the 62 cx46 read. Its first re-check items: D-16 moved off OPEN, record l4e7's paragraph 0a at the tip, the figures of the P0 list's revision 3 and the stability claim "met for `4d0ff8a2`". In its words, `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md:54` `this is one bounded AI read. No verdict is changed and nothing is credited; every change above stays UNREVIEWED since cx46 until a qualified check reads it.` The 25 stay UNREVIEWED since cx46: no verdict changes and nothing is credited; section 2's classes are unchanged by it |
+| Targeted verification of the 25 unreviewed changes of section 2 | the coordinator's choice of verifier, not the ended review method: W90's read (queue item Q-111; an AI review, not a qualified one), `<worktrees>/_runs/assistant/w90ric31/REPORT-AS-RECEIVED.md` | performed by W90 (read 23:04:21 to 23:16:00 CEST), each of the 25 classed by its most material change: FIGURE or CLAIM 20 (13 carrying a FIGURE, 7 CLAIM without a FIGURE), STATE 2, PIN 1, CITATION 1, TEXT 1; four of the 20 (rows 3.1, 31.3, 31.5 and 31.16) change only files outside the 62 cx46 read. Its first re-check items: D-16 moved off OPEN, record l4e7's paragraph 0a at the tip, the figures of the P0 list's revision 3 and the stability claim "met for `4d0ff8a2`". In its words, `<worktrees>/_runs/assistant/w90ric31/REPORT-AS-RECEIVED.md:54` `this is one bounded AI read. No verdict is changed and nothing is credited; every change above stays UNREVIEWED since cx46 until a qualified check reads it.` The 25 stay UNREVIEWED since cx46: no verdict changes and nothing is credited; section 2's classes are unchanged by it |
 
 ### 4a. The first candidate `d0e283aa`: its gate FAILED; the correction, the re-take and the known item
 
@@ -520,8 +520,8 @@ adoption from the second freeze's logs (never from the first's).
 
 **Set 31 closes NO power item.** It adopts record text prepared during set 30's integration, with the regenerated outputs and pins that
 text moves. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, section 2). Its 25
-REVIEWED-INPUT CHANGED commits are not all narrowing (restated by W91 after W92's finding: the earlier wording, "narrow, tighten, restate, carry, re-take, re-adopt or annotate", read softer than the evidence). W90's read of them (section 4; an AI review, not a qualified one) names upgrades, `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md:22` `Upgrades (a state or claim moved toward done): D-16 off OPEN (rows 3.1, 31.3, 31.5, 31.12, 31.16); "B6-ENG-2 answered at the desk" (3.1); the change list APPLIED (4.4, 13, 25: restates a set 30 fact, no draft accepted); P0-6 stability "met for`
-`4d0ff8a2`" (31.12); KEY holds (35), and of the rest `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md:22` `Everything else narrows, tightens, withdraws or restates.` None is a checked correction, none is credited, and each stays UNREVIEWED since cx46; W90's read changes no class or count of section 2.
+REVIEWED-INPUT CHANGED commits are not all narrowing (restated by W91 after W92's finding: the earlier wording, "narrow, tighten, restate, carry, re-take, re-adopt or annotate", read softer than the evidence). W90's read of them (section 4; an AI review, not a qualified one) names upgrades, `<worktrees>/_runs/assistant/w90ric31/REPORT-AS-RECEIVED.md:22` `Upgrades (a state or claim moved toward done): D-16 off OPEN (rows 3.1, 31.3, 31.5, 31.12, 31.16); "B6-ENG-2 answered at the desk" (3.1); the change list APPLIED (4.4, 13, 25: restates a set 30 fact, no draft accepted); P0-6 stability "met for`
+`4d0ff8a2`" (31.12); KEY holds (35), and of the rest `<worktrees>/_runs/assistant/w90ric31/REPORT-AS-RECEIVED.md:22` `Everything else narrows, tightens, withdraws or restates.` None is a checked correction, none is credited, and each stays UNREVIEWED since cx46; W90's read changes no class or count of section 2.
 
 **Layer 4's DESK gate stays NOT PASSED** as the coordinator judged it on set 30, in the assessment's words (quoted from the verbatim
 copy of `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` at main `eff28be3`; set 31 changes no line of it):
@@ -550,7 +550,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 | Set 30's adopted records | `v2/docs/records/int30/RESULT.md`, `CLASSIFICATION.md`, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` at main | on main since the adoption `836f711b` and the follow-up `eff28be3`, in the lineage since `d5d9c252`; not in this record's branch history, so the assessment and the two entry pages are copied verbatim under `inputs/` |
 | The drafts set 31 adopts as files | `v2/docs/records/int30/RESULT.draft2.md`, `RESULT.draft3.md`, `CLASSIFICATION.draft.md`, `NEXT-SET-SMALL-ITEMS.patch.md`; `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md`, `.draft3.md`, `.patch.md`, `L4-DESK-GATE-ASSESSMENT.draft.md`, `.draft2.md`; `v2/docs/records/l4e9/L4E9-4588-PATCH.md`, `L4E9-W5-PATCH.md` | history and patch files; where main holds the adopted record, the adopted record governs |
 | The chain's logs | `<worktrees>/_runs/int31/CHAIN-LOG.md`, `chain-1059.log`, `chain2-1241.log`, `chain3-1614.log`, the re-key logs and the test logs cited in section 3 | outside the repository; cited, never copied (they carry host paths) |
-| The reviews and the reconciliation, as received | `<worktrees>/_runs/claude/w38rev31/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/claude/w49recon/REPORT-AS-RECEIVED.md` | outside the repository; each an AI review saved verbatim by the coordinator; cited in section 2, never copied |
+| The reviews and the reconciliation, as received | `<worktrees>/_runs/assistant/w38rev31/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/assistant/w48rechk31/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/assistant/w49recon/REPORT-AS-RECEIVED.md` | outside the repository; each an AI review saved verbatim by the coordinator; cited in section 2, never copied |
 
 ## 8. Left out, and why
 

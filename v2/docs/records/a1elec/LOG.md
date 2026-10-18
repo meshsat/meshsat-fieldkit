@@ -1,6 +1,6 @@
 # a1elec running log (MESHSAT-1357, Option A(i) electrical work package)
 
-Stream a1elec, branch `fnd/a1elec` from integration set 10's line `13b5352b`, worktree `a1elec`. One Claude author,
+Stream a1elec, branch `fnd/a1elec` from integration set 10's line `13b5352b`, worktree `a1elec`. One assistant author,
 an AI; nothing here is a qualified review. Prototype design: nothing built, ordered or measured.
 
 | time (CEST, 29 Sep 2026, read from `date`; the commits carry the same clock) | what |

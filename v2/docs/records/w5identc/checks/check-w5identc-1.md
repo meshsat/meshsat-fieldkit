@@ -4,7 +4,7 @@ mergeable: no
 
 # Check of stream w5identc (board C's part identities), MESHSAT-1357
 
-AI review, labelled as such: an independent check by a Claude session that did not write the work. It is not a
+AI review, labelled as such: an independent check by an assistant session that did not write the work. It is not a
 qualified engineering review. 29 September 2026, 19:56 to 20:25 CEST (read from `date`).
 
 Branch `fnd/w5identc`, tip `6b03ef6f` (confirmed with `git rev-parse`), five commits on main `b874b744`, all authored and

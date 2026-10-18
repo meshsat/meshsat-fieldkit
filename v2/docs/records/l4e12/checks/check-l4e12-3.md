@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E12: Claude's closing check of the electronics' thermal record at a86be47b (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E12: The assistant's closing check of the electronics' thermal record at a86be47b (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1478 under MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E12 are spent:
 - the focused check `astra-check-l4e12-1.md` on `bcd23532`, NOT YET; the hold changed E3-O's configuration;

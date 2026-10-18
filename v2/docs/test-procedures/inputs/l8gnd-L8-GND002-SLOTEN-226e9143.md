@@ -1,6 +1,6 @@
 # L8-GND002-SLOTEN: GND-002's four board changes and the SLOT_EN hold, drafted into the generators (Layer 8, MESHSAT-1357)
 
-Record `l8gnd`, branch `fnd/l8gnd` from the Layer 4 consolidation line at `22cb4c16`, 3 October 2026, one Claude author. The
+Record `l8gnd`, branch `fnd/l8gnd` from the Layer 4 consolidation line at `22cb4c16`, 3 October 2026, one assistant author. The
 MeshSat field kit V2 is a prototype design: no board of the set has been built, powered or measured, and **nothing in this record
 is applied to the tree**. Every circuit change is a DRAFT apply script that refuses the repository's own generator until a
 `RELEASE.md` beside it names an accepted check of this record; regeneration, parity and the gate re-takes are the rented box's

@@ -32,8 +32,8 @@ on that lineage (`git merge-base --is-ancestor be07863b 06d064ff` and `git merge
 
 No range but fnd/l4hod's holds a merge. The tips were read with `git rev-parse` at 11:55 CEST; the brief pins fnd/l4rowc `653cb1bc`
 as final and fnd/l4hod `23384006` until the coordinator names the tip that row (b)'s targeted recheck reads
-(`<worktrees>/_runs/claude/w165res33/BRIEF.md:12` `fnd/l4hod 23384006 (holds fnd/l4small and fnd/l4lim; its targeted recheck W163 running: pin it when the coordinator names it),`).
-W170 read the tips again at about 13:01 CEST against the pins its brief names (`<worktrees>/_runs/claude/w170res33b/BRIEF.md:8` `The pins set 33's chain will use: fnd/l4k ff0c79f0, fnd/l4hoe 531c4754, fnd/l4hod 92d81690 (holds l4small 77866143 and l4lim aa6704b2), fnd/l4rowc`):
+(`<worktrees>/_runs/assistant/w165res33/BRIEF.md:12` `fnd/l4hod 23384006 (holds fnd/l4small and fnd/l4lim; its targeted recheck W163 running: pin it when the coordinator names it),`).
+W170 read the tips again at about 13:01 CEST against the pins its brief names (`<worktrees>/_runs/assistant/w170res33b/BRIEF.md:8` `The pins set 33's chain will use: fnd/l4k ff0c79f0, fnd/l4hoe 531c4754, fnd/l4hod 92d81690 (holds l4small 77866143 and l4lim aa6704b2), fnd/l4rowc`):
 three commits by W167 (queue item Q-189) lie past W165's tips, `531c4754` on fnd/l4hoe and `e1687b89` and `92d81690` on fnd/l4hod,
 none a merge; the coordinator verified them as clerical (`<worktrees>/_runs/int30/QUEUE.md`, entry "12:59 (clock) the coordinator's CLERICAL verification of W167's round", `no gen_sch, apply_gen_sch or draft file changed`).
 **D-W170-1, the late rows' numbers** (W170, SESSION under the owner's standing rule of 26 September 2026): each takes its branch's
@@ -42,7 +42,7 @@ table's and RESULT's prose, the fill tool's set 33 suggestions (rows 65 and 66) 
 them the same way from git. Reversed by renumbering every row in the chain's merge order and restating each citation of a row number.
 
 **Rows 64.1 to 66 written from git (7 October 2026, from 23:44 CEST, to 00:01).** Worker W219 (queue item Q-242, the ONE writer of fnd/adopt33 cut at
-set 33's candidate `b5b4b2a0`; brief `<worktrees>/_runs/claude/w219fill33/BRIEF.md:1` `# W219: Q-242 = set 33's adoption fill`) did section 3's procedure, items 2 to 6, before the adoption, as W154 did for set 32 (`<worktrees>/_runs/claude/w154fill32/BRIEF.md`,
+set 33's candidate `b5b4b2a0`; brief `<worktrees>/_runs/assistant/w219fill33/BRIEF.md:1` `# W219: Q-242 = set 33's adoption fill`) did section 3's procedure, items 2 to 6, before the adoption, as W154 did for set 32 (`<worktrees>/_runs/assistant/w154fill32/BRIEF.md`,
 `REPORT-FULL-AS-RECEIVED.md`), item 1 left to the fill: section 1's row 64 is replaced by one row per first-parent commit of
 `46d4fe58..b5b4b2a0` that is not the cache commit or the candidate (`git rev-list --first-parent --reverse`: twelve, rows 64.1 to 64.6 and
 64.7.1 to 64.7.6, the latter the six commits between C1 and the re-key that the prepared row 64.7 foresaw as one row each), each merge's

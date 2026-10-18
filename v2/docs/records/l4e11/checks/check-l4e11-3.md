@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E11: Claude's closing check of the source-only and vehicle-entry record at 3298d1f1 (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E11: The assistant's closing check of the source-only and vehicle-entry record at 3298d1f1 (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E11 are spent:
 - the focused check `astra-check-l4e11-1.md` on `3f9cf283`, NOT YET;

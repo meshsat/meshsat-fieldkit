@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E7: Claude's verification of B1's fix and the recheck's residue (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E7: The assistant's verification of B1's fix and the recheck's residue (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. The engineering collaborator's check of L4-E7 (`astra-check-l4e7-1.md`, run
 20261001T140747Z-3274169 on `2d7e331e`) read NOT YET on B1: the 94.2k over 7.5k hold and its 16.3 V declaration changed

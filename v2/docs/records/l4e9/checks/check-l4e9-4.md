@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E9: Claude's closing check of the connected power architecture's update at 170f5daf (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E9: The assistant's closing check of the connected power architecture's update at 170f5daf (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. The update round, `170f5daf` on `c715b762`, integrates the accepted results of:
 - L4-E10 (`79b2f568`, check `573c8b8f`);

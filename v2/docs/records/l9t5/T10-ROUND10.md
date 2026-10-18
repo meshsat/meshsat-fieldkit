@@ -4,7 +4,7 @@
 
 # T10 round 10: the selected regulator stage's acceptance and row (b)'s propagation
 
-Record l9t5, task T10, MESHSAT-1357; Layer 4 tasks L4A-57 and L4A-61 (`_runs/l4ai/register.tsv`). Author W151 (Claude), the one writer of
+Record l9t5, task T10, MESHSAT-1357; Layer 4 tasks L4A-57 and L4A-61 (`_runs/l4ai/register.tsv`). Author W151 (assistant), the one writer of
 `fnd/l4hod` after W146, from 09:31 CEST on 7 October 2026 (times from `date`, Europe/Amsterdam). Prototype design: nothing in this kit
 has been built, bought, powered or measured, and no figure here is a measurement. Every junction is a MODEL on printed figures. Nothing
 here closes a cx46 item or moves a state: cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand; RE-5 to RE-8 stay NOT

@@ -52,7 +52,7 @@ Three blocking findings, all in text the integration wrote. No reading, page cou
 
 | id | item | note |
 |---|---|---|
-| m1 | 3 | "the owner's review of the restart plan, amendment XH-04" is cited in the registry, REQUIREMENTS-TRACE.md line 2113, `rules_lib.py` line 1160 and a test docstring. No file in the repository holds it; it exists only in `~/.claude/plans/fancy-cuddling-flask.md`. Not classed blocking because the predicate is written out in full. File the review under `v2/docs/reviews/`. |
+| m1 | 3 | "the owner's review of the restart plan, amendment XH-04" is cited in the registry, REQUIREMENTS-TRACE.md line 2113, `rules_lib.py` line 1160 and a test docstring. No file in the repository holds it; it exists only in the local plan `fancy-cuddling-flask.md`. Not classed blocking because the predicate is written out in full. File the review under `v2/docs/reviews/`. |
 | m2 | 3 | The script computes the result but types the facts around it (SC-67's values, S-64's closure), which I verified true. Its undecided branch tests `counts.undecided`, not the verdict, so a `safe_lines` reading INCONCLUSIVE would fall through to PASS. No effect today. |
 | m3 | 1, 9 | Set 6 also closed S-57 (SC-70). The merge script's docstring and CLOSURE.md name only S-64, S-45 and S-76 between them. CLOSURE.md does not name REQ-077's FAIL to INCONCLUSIVE, which reaches `main` with this promotion. |
 | m4 | 9 | "17 items linked from 28 records" is 28 links on 24 distinct records. |

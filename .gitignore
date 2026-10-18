@@ -1,9 +1,5 @@
-# Claude Code files are local-only, never committed (owner rule)
-CLAUDE.md
-.claude/
-claude-*/
+# Local-only working files, never committed (owner rule)
 memory/
-*claude*prompt*
 ORDER-SESSION-PROMPT.md
 
 # Python
@@ -33,7 +29,7 @@ desktop.ini
 .DS_Store
 Thumbs.db
 
-# Agent instruction files are local-only, never committed (the same rule as CLAUDE.md): the launcher of
+# Agent instruction files are local-only, never committed (the same rule as the session notes): the launcher of
 # v2/docs/CODEX-WORKER.md writes one into a job's worktree and removes it after the job
 AGENTS.md
 # Makers' IBIS models (stream w5si, SI-001): held locally and fetched by their manifest, never committed,

@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E9: Claude's closing check of update round 3 at fc0f23ef (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E9: The assistant's closing check of update round 3 at fc0f23ef (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Update round 3 brings the gate in line with L4-E13, which the coordinator accepted at `fae419d1`
 (check 3). The round sits on set 25 at `50a44371`, after its readers' fix `bab8d460`. Commits: `f5c87033` merges L4-E13,

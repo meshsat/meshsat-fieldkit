@@ -3,7 +3,7 @@ acceptable: no
 
 # Independent check of the Option A(i) electrical package, fnd/a1elec at a21eca38 (MESHSAT-1357)
 
-**AI review** (one Claude checker who wrote none of the work), 29 September 2026, 02:53 to 03:12 CEST. Not a
+**AI review** (one assistant checker who wrote none of the work), 29 September 2026, 02:53 to 03:12 CEST. Not a
 qualified review. Read-only: scratch clone `_scratch/chk-a1elec` (git clone --shared of the main checkout, fnd/a1elec
 fetched from the a1elec worktree, detached at a21eca38). Nothing committed, pushed or run on a box; no Agent, Workflow or
 Codex call. Scope: the a1elec commits 1e12b9e1..a21eca38 (records/a1elec/ and the three files under v2/vendor/ti/); the

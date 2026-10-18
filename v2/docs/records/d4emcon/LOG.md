@@ -3,7 +3,7 @@
 Newest last. Times CEST, read from `date`. Prototype framing: nothing is built; every reading is of a committed netlist
 or a maker's document.
 
-## Resumed 29 September 2026 (brief `_runs/claude/d4emcon/20260929T0200/BRIEF.md`)
+## Resumed 29 September 2026 (brief `_runs/assistant/d4emcon/20260929T0200/BRIEF.md`)
 
 - 01:56 Brief and WORKER-RULES read. Branch `fnd/d4emcon` at `88013380` (4 commits ahead of main, 175 behind).
 - 01:55 Main (`c5f93464`, set 9) merged with `--no-ff` under the owner's identity: merge commit `fe501d26`, no conflict

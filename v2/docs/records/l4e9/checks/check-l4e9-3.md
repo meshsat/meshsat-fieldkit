@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E9: Claude's closing check of the connected power architecture at 3c09b3da (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E9: The assistant's closing check of the connected power architecture at 3c09b3da (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E9 are spent:
 - the focused check `astra-check-l4e9-1.md` on `6097922a`, NOT YET;

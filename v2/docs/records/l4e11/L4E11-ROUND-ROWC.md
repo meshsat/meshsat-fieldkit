@@ -72,7 +72,7 @@ figures, against the record's own windows, with tests that fail when a row no lo
 
 ## 5. After the focused check L4A-69 (W149, 7 October 2026, with record l8p's round 12; [ROWC 1] and [ROWC 5])
 
-The check (W147, an AI review, `_runs/claude/w147chkrowc/REPORT-FULL-AS-RECEIVED.md`) read this round as SUPPORTED AS CONDITIONAL and
+The check (W147, an AI review, `_runs/assistant/w147chkrowc/REPORT-FULL-AS-RECEIVED.md`) read this round as SUPPORTED AS CONDITIONAL and
 its replay as reproduced. What it found that reaches this record:
 
 - **F8 (DD-7's timeline).** Record l8p's L8P-R11-F1 rule (the inverters' off leakage doubling every 10 K, ASSUMED) also stretches the
@@ -96,9 +96,9 @@ Nothing here is verified, built or measured; UNVERIFIED until the targeted reche
 
 ## 6. After the targeted recheck and Q-179 (W161, 7 October 2026, with record l8p's rounds 13 and 14; [ROWC 1])
 
-The targeted recheck (W153, `_runs/claude/w153rechkrowc/REPORT-FULL-AS-RECEIVED.md`) read row (c) as SUPPORTED AS CONDITIONAL and this
+The targeted recheck (W153, `_runs/assistant/w153rechkrowc/REPORT-FULL-AS-RECEIVED.md`) read row (c) as SUPPORTED AS CONDITIONAL and this
 record's replay as reproduced; record l8p's round 13 redrew the trip's PGD-low disarm, and Q-179 (W158,
-`_runs/claude/w158chkr13/REPORT-FULL-AS-RECEIVED.md`), the one bounded check of that redraw, read it SUPPORTED AS CONDITIONAL. Both are
+`_runs/assistant/w158chkr13/REPORT-FULL-AS-RECEIVED.md`), the one bounded check of that redraw, read it SUPPORTED AS CONDITIONAL. Both are
 AI reviews. What reaches this record:
 
 - **The trip's nets.** Since record l8p's round 13 R143 runs from BRK_VIN, and Q113's gate is the trip's only part on BRK_PGD (Q113,

@@ -1,6 +1,6 @@
 # ORDER-LOG.md: JLCPCB ordering of the MeshSat field-kit carrier boards (MESHSAT-709)
 
-Order session started 2026-09-03. Operator: Claude Code on the laptop via the Chrome extension, JLCPCB account already logged in. Nothing is paid by this session; every board stops at the cart. The order gate is the 12 Sep review with Nick and the owner's "order now".
+Order session started 2026-09-03. Operator: The assistant on the laptop via the Chrome extension, JLCPCB account already logged in. Nothing is paid by this session; every board stops at the cart. The order gate is the 12 Sep review with Nick and the owner's "order now".
 
 ## 1. Intake checks (step 1 of the method), 2026-09-03
 

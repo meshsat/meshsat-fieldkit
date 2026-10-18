@@ -10,7 +10,7 @@ promotes nothing and changes no verdict: it reads git. Prototype framing: nothin
 the candidate is a desk design.
 
 **Reconciled under set 30's rule (6 October 2026, from 17:13 CEST).** Worker W50 applied W49's reconciliation
-(`_runs/claude/w49recon/REPORT-AS-RECEIVED.md`, section 4) to this table under the coordinator's ruling (reading A, quoted below):
+(`_runs/assistant/w49recon/REPORT-AS-RECEIVED.md`, section 4) to this table under the coordinator's ruling (reading A, quoted below):
 rows 3.1, 10.1, 23, 31.3, 31.5 and 31.16 now read `REVIEWED-INPUT CHANGED` first, row 28 gains `GENERATOR DATA (text)`, the merges that
 bring the moved rows name them, the rule is set 30's quoted verbatim, and section 2 is recomputed from the table. No verdict, figure or
 claim of any file was changed, and set 30's adopted record was not edited. Worker W51 then read the five rows W49 left not determined
@@ -45,8 +45,8 @@ second candidate). Row 36 is a classified row like any other; the fill writes th
 **Brought to W86's N6 (7 October 2026, from 23:54 CEST on 6 October).** Worker W98, on fnd/res31n6 from main `ad757edb` (set 31
 adopted), wrote into the reason of each of the 25 `REVIEWED-INPUT CHANGED` rows, before its last words "UNREVIEWED since cx46", one
 clause opening "the cx46 item (W98, W86's N6):", which names the cx46 item the change touches: set 30's rule's first sentence asks
-for it and no row named it (W86's N6, `_runs/claude/w86rechk31b/REPORT-FULL-AS-RECEIVED.md`). Source: W90's column "cx46 judged it?"
-(`_runs/claude/w90ric31/REPORT-FULL-AS-RECEIVED.md`, section 1; an AI review), each of cx46's words re-read on its line of the filed
+for it and no row named it (W86's N6, `_runs/assistant/w86rechk31b/REPORT-FULL-AS-RECEIVED.md`). Source: W90's column "cx46 judged it?"
+(`_runs/assistant/w90ric31/REPORT-FULL-AS-RECEIVED.md`, section 1; an AI review), each of cx46's words re-read on its line of the filed
 check (`cx46:N`), and each changed line located at `4d0ff8a2` by its text or, where it was not there, by `git blame` of the commit's
 parent (first written after cx46). A clause names an item, a blocker or a finding only with cx46's words on a line cx46 itself gives
 that number, and says whether a changed line is among the lines cx46 cites or only its subject is; otherwise it opens "no cx46 item"
@@ -342,7 +342,7 @@ state words counted on each side with their line numbers; each word or figure fo
   `dd1aed00..5f25daf3` only. Dated note (W83, 6 October 2026): W69's placeholder row 35 is replaced by rows 35 and 36.
 - W38's independent table, its count over the 73 commits to `f0748b49` as the queue records it (`_runs/int30/QUEUE.md`, entry "native
   completion of W38 at about 15:44 CEST"): REVIEWED-INPUT CHANGED 15, RECORD TEXT 25, MERGE 15, TEST 12, DIGEST RE-PIN 3, TOOLING 2,
-  GENERATOR DATA (text) 1. Dated note, 6 October 2026: W49 compared it with this table row by row (`_runs/claude/w49recon/REPORT-AS-RECEIVED.md`,
+  GENERATOR DATA (text) 1. Dated note, 6 October 2026: W49 compared it with this table row by row (`_runs/assistant/w49recon/REPORT-AS-RECEIVED.md`,
   section 1: the two differ on 16 of the 73 shared commits, 7 of them on the REVIEWED-INPUT CHANGED judgement) and its section 4 is
   applied here under reading A; W38's table, a report as received, is not changed, and no third reader has read the reconciled rows.
 - Large outputs were classified by counts of changed lines with and without digests and by the phrases quoted, not line by line:

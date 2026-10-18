@@ -2,7 +2,7 @@ mergeable: yes
 
 # Check 3 (delta confirmation) of integration set 15, `fnd/int16` at `e5322674` (MESHSAT-1357)
 
-AI review, labelled as such: an independent check by a Claude session that did not build this integration. It is not a
+AI review, labelled as such: an independent check by an assistant session that did not build this integration. It is not a
 qualified engineering review. 30 September 2026, 02:22 to 02:26 CEST (read from `date`). Scope: `git diff
 4012429e..e5322674` against check 2's R1 and minors. Everything below is what I read or ran myself, in a shared clone
 `_scratch/chk-int16c` with `archives/int16-evidence-e5322674.tar` extracted (`git status` clean after extraction), now

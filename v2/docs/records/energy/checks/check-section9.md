@@ -3,7 +3,7 @@ acceptable: no
 
 # AI review: fnd/energy2 at 3af58534, section 9 of the energy record (OD-02), MESHSAT-1357
 
-AI review, 29 September 2026, 01:27 to about 01:50 CEST. An independent Claude check by a session that wrote none of this work. It is not a qualified review. Prototype design: nothing has been built, ordered or measured. Everything below is read against the tree at 3af58534 and the maker's documents held under `v2/vendor/`.
+AI review, 29 September 2026, 01:27 to about 01:50 CEST. An independent assistant check by a session that wrote none of this work. It is not a qualified review. Prototype design: nothing has been built, ordered or measured. Everything below is read against the tree at 3af58534 and the maker's documents held under `v2/vendor/`.
 
 Scratch clone: `a scratch clone` (a `git clone --shared` of the main checkout, with `fnd/energy2` fetched from the `energy2` worktree and 3af58534 checked out detached). My own code and its output are beside this file: `recompute.py` and `recompute.out`. No commit was made, nothing was pushed, and no branch was touched.
 

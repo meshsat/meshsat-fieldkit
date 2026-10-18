@@ -2,7 +2,7 @@ accepted: CONFIRMED AS CONDITIONAL
 
 # Record l9stk: the independent checker's check 5, PROTECTION: CONFIRMED AS CONDITIONAL (B-R2 excluded) (filed as received)
 
-MESHSAT-1357. An AI review by a fresh Claude session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `0d72880b34e337a6f2e26c1420507b813784b533` (branch `fnd/l9stk`). Time: 4 October 2026, begun 04:29 CEST, interrupted by the usage limit, finished 12:21 CEST. Nothing in the kit has been built, bought or measured.
+MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `0d72880b34e337a6f2e26c1420507b813784b533` (branch `fnd/l9stk`). Time: 4 October 2026, begun 04:29 CEST, interrupted by the usage limit, finished 12:21 CEST. Nothing in the kit has been built, bought or measured.
 
 Scope, from the coordinator's brief: the targeted recheck of B-R1's correction (one SOA criterion for both variants; C-1c, the restart inhibit on the breaker pad) and the minors, sections 15.4, 15.4b, 15.6, 15.7 and 15.8, `l9stk_protection.py` and its output; B-R2 (charging through a latched breaker) left out by the coordinator's brief, for L4-E11's round 9.
 

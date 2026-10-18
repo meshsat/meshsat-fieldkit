@@ -2,7 +2,7 @@ mergeable: yes
 
 # Check 1 of integration set 17, `fnd/int18` at `1f34bf92` against main `8fec0733` (MESHSAT-1357)
 
-AI review, labelled as such: an independent check by a Claude session that did not build this integration. It is not a
+AI review, labelled as such: an independent check by an assistant session that did not build this integration. It is not a
 qualified review. 30 September 2026, 13:10 to 13:24 CEST (read from `date`).
 
 **Scope.** The integration only: the scrub is accepted by its CHECK-2, and l3r4 by its CHECK-3 and CHECK-4 (the last

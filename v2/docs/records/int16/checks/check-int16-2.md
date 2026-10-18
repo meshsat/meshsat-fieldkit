@@ -2,7 +2,7 @@ mergeable: no
 
 # Check 2 (narrow re-check) of integration set 15, `fnd/int16` at `4012429e` (MESHSAT-1357)
 
-AI review, labelled as such: an independent check by a Claude session that did not build this integration. It is not a
+AI review, labelled as such: an independent check by an assistant session that did not build this integration. It is not a
 qualified engineering review. 30 September 2026, 02:10 to 02:16 CEST (read from `date`). Scope: `git diff
 845a4fd1..4012429e` against check 1's B1, B2 and minors. Everything below is what I read or ran myself, in a shared
 clone `_scratch/chk-int16b` with `archives/int16-evidence-4012429e.tar` extracted (`git status` clean after extraction),

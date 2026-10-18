@@ -4,7 +4,7 @@ Times are CEST, read from `date` at the step.
 
 | Time | Action | Result |
 |---|---|---|
-| 00:33 | Resumed author read BRIEF.md (_runs/claude/d6dec/20260929T0032) and WORKER-RULES.md | branch fnd/d6dec at 3c98a88e, 4 ahead of main, 130 behind; box/escape_parity.py modified, box/basis_check.py untracked |
+| 00:33 | Resumed author read BRIEF.md (_runs/assistant/d6dec/20260929T0032) and WORKER-RULES.md | branch fnd/d6dec at 3c98a88e, 4 ahead of main, 130 behind; box/escape_parity.py modified, box/basis_check.py untracked |
 | 00:36 | Checkpoint of the previous author's two files as they stand | committed (see git log) |
 | 00:36 | Merged main 9147db5d into fnd/d6dec with `merge --no-ff` | no conflict; no file changed on both sides since the merge base 73ae2f21 (609 on main, 25 on the branch) |
 | 00:36 | Ran tests test_decoupling_rules and test_escape_cost on this host | 30 passed, 0 failed, 0 skipped; 8 passed, 0 failed, 0 skipped |

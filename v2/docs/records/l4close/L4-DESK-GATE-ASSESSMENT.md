@@ -153,7 +153,7 @@ every sha and branch named here.
   8. Commit 2b, the regenerated outputs: sha pending (the coordinator's) when draft 2 was written; NOT read here. Calculations; every
      `.out` citation and every pin comparison below is re-read on 2b. Dated note (the adoption at `836f711b`, 11:25 CEST): 2b is
      `d83d9f2d`, bound and re-read at the adoption (section 9).
-- **The pre-freeze branches named in the coordinator's note** (`<worktrees>/_runs/claude/w12dgate/INBOX.md`): `fnd/w1l5pwr`
+- **The pre-freeze branches named in the coordinator's note** (`<worktrees>/_runs/assistant/w12dgate/INBOX.md`): `fnd/w1l5pwr`
   `6ab17e21`, `fnd/w2applier` `2080a0ff`, `fnd/w6tp` `9802dfde`, `fnd/ledgerfix` `99bbc0c6` and `fnd/l4e9s31` `17ce29d5`, each an
   ancestor of the candidate (held by the test).
 - **The reviewed revision** is `4d0ff8a2` (cx46, [CX46:8]); no check has read anything after it ([P0L3:11-12]).
@@ -607,7 +607,7 @@ The coordinator's reading, as its judgement of 10:45 CEST words it in the sectio
 
 ## 7. The DESIGN gate, the coordinator's words (not this gate's)
 
-As the coordinator's note gives them (`<worktrees>/_runs/claude/w12dgate/INBOX.md`) and set 31's page writes them [PAGE:1003] (in the
+As the coordinator's note gives them (`<worktrees>/_runs/assistant/w12dgate/INBOX.md`) and set 31's page writes them [PAGE:1003] (in the
 candidate since the merge `6fe398e9`), each with the reason Slot L's draft carries [DG1:413-416] or, where Slot L's draft gives none,
 the reason set 31's page prints beside the word [PAGE:1003]:
 

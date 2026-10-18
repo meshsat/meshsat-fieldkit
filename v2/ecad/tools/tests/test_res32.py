@@ -56,7 +56,7 @@ no true re-key meets on the lineage the chain builds (set 31's promoted revision
 adoption, never on main's first-parent line); restated: BASE is an ancestor of the re-key's cache commit and of the chain's base, and
 the chain's base is on the re-key's first-parent line before it (a mutant naming the chain's base itself as the re-key is refused).
 
-W128's restatement (7 October 2026, from 03:44 CEST, on W109's phase 2 finding 4, `<worktrees>/_runs/claude/w109read32/
+W128's restatement (7 October 2026, from 03:44 CEST, on W109's phase 2 finding 4, `<worktrees>/_runs/assistant/w109read32/
 REPORT-PHASE2A-AS-RECEIVED.md`, and the coordinator's ruling on W110's N3): the coordinator merged fnd/l3r5keep (W114's restoration of
 test_l3r5.py and the inventory's note) after C1, so the record names commits that are in no history this branch reads until the
 adoption: OUTSIDE declares them (the lineage after the five merges, C1, the two commits and their merge; never C1b, which did not exist
@@ -66,7 +66,7 @@ are; p_prepared reads them back as p_columns reads section 1's rows (sha, author
 branch, UNREVIEWED since cx46 where a file of cx46's delta is touched), checks that they are exactly the commits the merge brings from
 its second parent (git rev-list), and that they follow the merge's row, which names them. No existing predicate changes.
 
-W154's restatement (7 October 2026, from 10:09 CEST, queue item Q-176, on W132's condition 2, `<worktrees>/_runs/claude/
+W154's restatement (7 October 2026, from 10:09 CEST, queue item Q-176, on W132's condition 2, `<worktrees>/_runs/assistant/
 w132rechkadopt/REPORT-FULL-AS-RECEIVED.md`; the NEXT line of both records): the classification's row 31 is replaced, before the
 adoption, by the integration's rows written from git (rows 31.1 to 31.9.1), and rows 32 and 33 carry git's date, subject, files and a
 class while their sha cells keep the fill tool's tokens. The basis of each changed expectation: (1) _real() reads the branch rows alone

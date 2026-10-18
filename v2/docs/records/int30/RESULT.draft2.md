@@ -10,7 +10,7 @@ promotes nothing and changes no verdict. **Power-design closure: BLOCKED. Fabric
 the coordinator's assessment, kept apart from both (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:798`;
 `v2/docs/EXECUTION-CONSTITUTION.md:23`). Prototype framing: nothing in the kit is built, bought, powered or measured.
 
-**After this draft's base.** The coordinator's note of 01:56 CEST (`<worktrees>/_runs/claude/recpack/INBOX.md`): the candidate branch
+**After this draft's base.** The coordinator's note of 01:56 CEST (`<worktrees>/_runs/assistant/recpack/INBOX.md`): the candidate branch
 has merged Slot H's set 31 record (`6fe398e9`, carrying `bca7b0dc`, `14082416` and `17ce29d5`), because the release suite on the
 applied change list needs the page, the generator's data and the `test_l4e9` expectations that match it; the final integrated revision
 is not yet known (the cascade regenerates again, a re-key follows). Citations stay at `bbba3e53`; the four commits are classified in

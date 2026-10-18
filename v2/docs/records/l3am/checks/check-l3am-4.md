@@ -2,7 +2,7 @@ accepted: yes
 scope: Layer 3 amendment l3am (L3-R01 to L3-R05)
 reviewed-revision: 8146b4cc09223c5486e7d553d8711854a3d7678c
 
-# Layer 3 amendment, check 4: Claude's re-verification after a test of the amendment was corrected (the coordinator's check; not a model review, not an Astra check)
+# Layer 3 amendment, check 4: The assistant's re-verification after a test of the amendment was corrected (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 1 October 2026. Check 3 (`check-l3am-3.md`, reviewed revision `cd231260`) closed the review findings and
 held while every file of the amendment stayed byte for byte as it read them. Set 19 was promoted at `41881d8f` and the

@@ -66,7 +66,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 REC = "v2/docs/records/int33"
 RESULT, CLASS, PATCH = REC + "/RESULT.md", REC + "/CLASSIFICATION.md", REC + "/ENTRY-PAGES.patch.md"
 BE, B06 = "be07863bbca206a81ab42b9f96a7684c5c10a746", "06d064ffa58a1211139d0f1d8e7b536675a67948"
-# The tips: W170's restatement (Q-192) of W165's (basis: the pins of W170's brief, `_runs/claude/w170res33b/BRIEF.md` line 8, and the
+# The tips: W170's restatement (Q-192) of W165's (basis: the pins of W170's brief, `_runs/assistant/w170res33b/BRIEF.md` line 8, and the
 # coordinator's clerical verification of W167's round, QUEUE.md "12:59 (clock)": ROW (b) FINAL fnd/l4hod 92d81690, HO-E FINAL
 # fnd/l4hoe 531c4754). fnd/l4hoe was 003338e3 and fnd/l4hod 23384006 in W165's draft; LATE names those old tips, whose ranges keep
 # their row numbers, and the commits past them take a letter (W170-D1).

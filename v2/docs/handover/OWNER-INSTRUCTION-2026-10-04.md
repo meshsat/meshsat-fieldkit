@@ -25,7 +25,7 @@ entry of 4 October 2026 14:25 CEST.
 
 Update the active MeshSat plan using this entire instruction. Everything needed for the process change is contained below; Part A is the standing constitution and Part B is the immediate planning task.
 
-The owner authorises **up to three author/reviewer workers in total across Claude and Codex/Astra, plus the coordinator**. Preserve healthy running work, completed calculations and existing authorisations.
+The owner authorises **up to three author/reviewer workers in total across the assistant and Codex/Astra, plus the coordinator**. Preserve healthy running work, completed calculations and existing authorisations.
 
 While in Plan mode, inspect and produce one concise approval-ready plan within the mode's restrictions. After the normal plan approval, adopt these rules and execute the next ready tasks continuously. Do not turn each milestone into another request for the owner to review routine work.
 
@@ -81,7 +81,7 @@ An assigned test is not a corrected circuit. Missing evidence is not automatical
 
 ### 7. Keep execution bounded and autonomous
 
-- The owner authorises up to three author/reviewer workers across Claude and Codex/Astra, plus the coordinator. One writer owns a branch at a time. Scheduling a checker consumes a worker slot. Use the third slot for ready independent work or a ready review; do not hold it idle for a review whose inputs are unfinished.
+- The owner authorises up to three author/reviewer workers across the assistant and Codex/Astra, plus the coordinator. One writer owns a branch at a time. Scheduling a checker consumes a worker slot. Use the third slot for ready independent work or a ready review; do not hold it idle for a review whose inputs are unfinished.
 - The coordinator owns integration, scheduling and small verified record corrections. Do not occupy an engineering worker merely to copy a checked status or checksum. Coordinate ownership before editing an active author's files.
 - Preserve healthy jobs, successful outputs and uncommitted work. Before replacing a failed/context-exhausted worker, check whether its child calculation survived. Resume one writer from its checkpoint with a concise brief, not the entire accumulated transcript.
 - Continue the next ready item without waiting for this chat's review. When an external dependency blocks one item, dispatch independent work. If no authorised task is ready, report that fact precisely and retain a recoverable checkpoint.
@@ -141,7 +141,7 @@ Starting context, to verify rather than replay:
 
 ### 2. Adopt one authoritative process document
 
-After approval, extract Part A into `v2/docs/EXECUTION-CONSTITUTION.md`; keep the live task details in the existing execution plan. Reconcile conflicting process guidance in the existing instruction files; preserve technical requirements, valid repository rules and historical reviews. Have the root `CLAUDE.md` import it with `@v2/docs/EXECUTION-CONSTITUTION.md` on a line outside Markdown code formatting, and explicitly pass it and the current owner brief to Codex/Astra jobs. Confirm the running session and workers have read the relevant rules; do not assume a file edit updates an already-running worker's context.
+After approval, extract Part A into `v2/docs/EXECUTION-CONSTITUTION.md`; keep the live task details in the existing execution plan. Reconcile conflicting process guidance in the existing instruction files; preserve technical requirements, valid repository rules and historical reviews. Have the root the session notes import it with `@v2/docs/EXECUTION-CONSTITUTION.md` on a line outside Markdown code formatting, and explicitly pass it and the current owner brief to Codex/Astra jobs. Confirm the running session and workers have read the relevant rules; do not assume a file edit updates an already-running worker's context.
 
 Keep instruction changes out of an already frozen candidate unless its scope and dependencies require them. Use the next normal governance commit. Do not build a new scheduler, status framework or blanket collection of hooks.
 
@@ -178,11 +178,11 @@ After plan approval, act on results and dispatch the next ready work without wai
 
 ## Implementation references
 
-Claude Code's documented imports use `@path`, resolved relative to the containing instruction file, outside code formatting. Imports add to context, so keep one authoritative copy and remove conflicting duplicated process guidance. The official references are [project memory](https://code.claude.com/docs/en/memory) and [planning and verification practices](https://code.claude.com/docs/en/best-practices). These explain the client behaviour; the project rules above define the work.
+The assistant's documented imports use `@path`, resolved relative to the containing instruction file, outside code formatting. Imports add to context, so keep one authoritative copy and remove conflicting duplicated process guidance. The official references are project memory (the assistant vendor's documentation) and planning and verification practices (the assistant vendor's documentation). These explain the client behaviour; the project rules above define the work.
 
 ## 2. The owner's review of the plan (as received)
 
-# MeshSat: review of Claude's constitution-adoption plan
+# MeshSat: review of the assistant's constitution-adoption plan
 
 Date: 4 October 2026, Europe/Amsterdam  
 Reviewed input: `Pasted text(20261004-121023).txt`, 290 lines.  
@@ -200,7 +200,7 @@ This is a plan review. The reported live branch states, tool implementations, sc
 
 ## What now follows the constitution
 
-- Three author/reviewer slots across Claude and Astra, with the coordinator integrating separately.
+- Three author/reviewer slots across the assistant and Astra, with the coordinator integrating separately.
 - Recovery of interrupted authors and reuse of the completed freeze instead of automatic recomputation.
 - Intended merges and regeneration before the final candidate; checks and promotion tied to that candidate.
 - F01 remains OPEN and FAN_OK remains conditional/unimplemented in set 29; set 30 carries its later work.
@@ -333,7 +333,7 @@ If a fresh host is needed, assess setup and transfer progress early and use the 
 
 F-L7-12's correction and the revised electrical figures are asserted by this plan, not independently verified here. Keep their evidence and exact revisions in the existing acceptance checks. Set 29 promotion remains an integration milestone; power defects and physical qualification remain open as listed.
 
-## Suggested response to Claude
+## Suggested response to the assistant
 
 > Proceed with the resume plan, with two small amendments. Schedule the board-B/l8r2 composition correction in the next suitable free slot before V3, and verify the actual current-capacity basis rather than simply increasing the declaration. Explicitly include C4's changed technical claims in the existing V2 review; reserve coordinator-only verification for genuinely editorial changes. Keep set 29's pending gates and independent worker tasks moving. Ground the suite ETA in the matching logged run. Continue from the completed checkpoint verification after confirming no conflicting process or newer state appeared; do not restart the project or add another general review.
 
@@ -406,7 +406,7 @@ The next useful milestones remain the completed set 29 gate and promotion, follo
 - **DELTA-02:** correctly remains open; changing the thermal limit didn’t fix the measurement method.
 - **I-03:** correctly remains open after Astra found a ground contact carrying **10.64 A against 10 A**.
 
-**One gap needs explicit ownership:** the reported **0.900 A supervisor demand versus 0.600 A regulator capacity**. Claude should verify its applicable operating conditions and give it a named correction and acceptance criterion. Adding a dedicated ground return does not address that separate deficit.
+**One gap needs explicit ownership:** the reported **0.900 A supervisor demand versus 0.600 A regulator capacity**. The assistant should verify its applicable operating conditions and give it a named correction and acceptance criterion. Adding a dedicated ground return does not address that separate deficit.
 
 No broad new plan is needed. Continue the three active workers, then verify the dedicated return across the permitted aged-contact combinations and resolve the regulator finding before claiming the affected supply path complete.
 
@@ -530,7 +530,7 @@ Next update: completed artifacts and commits, actual check results, remaining bl
 
 **This is real progress. No new broad prompt is needed right now.**
 
-- **DELTA-01:** Claude reports that the original failure probe now passes—useful evidence of a candidate fix.
+- **DELTA-01:** assistant reports that the original failure probe now passes—useful evidence of a candidate fix.
 - **DELTA-02 and ground return:** actively being corrected.
 - **Three-SDR research:** underway.
 - **Power closure:** still blocked; the ground-return correction and T10’s regulator deficit are separate obligations.

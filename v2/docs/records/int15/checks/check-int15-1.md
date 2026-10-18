@@ -306,7 +306,7 @@ Its sha256 equals `needs_document_sha256`.
 * `1f3dd306`: CURRENT-EVIDENCE.md, REQUIREMENTS-TRACE.md and the requirements file.
 
 The 29 commits all carry the owner's identity as author and committer and `[MESHSAT-1357]`, with no trailer. There is
-no em or en dash in added text or in messages. No vendor, held, IBIS or Claude file is committed.
+no em or en dash in added text or in messages. No vendor, held, IBIS or assistant file is committed.
 
 ## Minor items
 

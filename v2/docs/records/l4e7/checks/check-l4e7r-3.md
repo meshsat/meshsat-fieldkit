@@ -1,6 +1,6 @@
 accepted: no
 
-# Layer 4, L4-E7R: Claude's closing check of the control decision at 237cd9be (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E7R: The assistant's closing check of the control decision at 237cd9be (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Both collaborator runs on L4-E7R are spent:
 - the independent check `astra-check-l4e7r-1.md` on `26cdf5bd`, NOT YET, six blockers;

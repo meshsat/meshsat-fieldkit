@@ -310,10 +310,10 @@ is `v2/docs/CODEX-WORKER.md` section 7 (on main since `7e4b7a87`).
 > "Upgrade the existing Codex/GPT-6-Astra integration from a limited pilot to a standing engineering collaborator. ...
 > This authorises further bounded Astra assignments through the existing ChatGPT authentication and available
 > subscription allowance. It replaces the exhausted pilot-call count. Preserve existing spending, sandbox and
-> publication limits; no automatic paid-API fallback. Claude remains the coordinator and integrator. ... Both agents
+> publication limits; no automatic paid-API fallback. The assistant remains the coordinator and integrator. ... Both agents
 > must consult the same authoritative decision register. Record my latest instructions there so I do not have to relay
 > them repeatedly. ... Astra cannot change my requirements or approve its own authored work. Agreement between agents
-> is not a substitute for calculations, sources or tests. Keep at most two active workers across Claude and Codex,
+> is not a substitute for calculations, sources or tests. Keep at most two active workers across the assistant and Codex,
 > with one author per worktree."
 
 ## The owner's operating instruction: one authoritative interpretation (30 September 2026), as quoted
@@ -323,7 +323,7 @@ there, word for word. The registry records them as owner ruling D-31. The curren
 file is kept under it.
 
 > "Maintain one authoritative interpretation of the product. Keep a concise current owner brief in the existing
-> decision register, with links to the original decisions. Both Claude and Astra must use it. The current constraints
+> decision register, with links to the original decisions. Both the assistant and Astra must use it. The current constraints
 > are: Battery storage inside the Peli 1450; NO external battery. Battery and solar required; HF and tablet retained.
 > 48-72 hours is a baseline design objective under a stated operating profile. Optional tablet charging consumes
 > available energy and reduces endurance, including below that target. All other explicitly approved requirements

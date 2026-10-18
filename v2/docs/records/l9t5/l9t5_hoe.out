@@ -432,12 +432,12 @@ printed thermal resistances, never a measured temperature
        publication changes; one approach stands after the reading (H-1 drops out on the documents, H-3 is not established on printed
        figures), so the ruling's second half (more than one option standing) fails; the residuals are measurable on a specimen (S1 to
        S5), so the selection accepts no risk a measurement cannot remove: amendment 1's supplier tasks, not an owner's risk acceptance
-     ruled_by: W140 (Claude), MESHSAT-1357; ruled_on: 7 October 2026; reversed_by: none
+     ruled_by: W140 (assistant), MESHSAT-1357; ruled_on: 7 October 2026; reversed_by: none
      to reverse: drop apply_gen_sch_b_vcoremon.py; HO-E returns to REMAINING ENGINEERING with the owner item below
      end condition: S1 reads the controller's ZthJA at t_resp over 3.65 K/W on board B (3.05 K/W in the reset loop, from its mean state, W152-2); or S2
        reads the sense delay at VOS0's overdrive long enough that S1's reading fails at the longer interval; or two negative independent
        checks of this selection (W145's 'S5 fails' clause retired with S5 by W148-1)
-   W145's decisions (each authority: SESSION, under the same rules; ruled_by: W145 (Claude), MESHSAT-1357; ruled_on: 7 October 2026;
+   W145's decisions (each authority: SESSION, under the same rules; ruled_by: W145 (assistant), MESHSAT-1357; ruled_on: 7 October 2026;
    reversed_by: none unless named below; authority_why: an engineering value or method inside the drafted circuit and its rows, no
    requirement, class, case row, purchase or publication changed, one option standing after the focused check's reading):
      W145-1  the reset hold: 100n from CTR1/MR to GND per monitor (C813, C814, C815), read at +-20 %; REVERSED by W148-1
@@ -451,7 +451,7 @@ printed thermal resistances, never a measured temperature
      W145-5  the loop's bound left CONDITIONAL on S5; the fixed-delay stage named, not drafted; REVERSED by W148-1
              why: the brief fixed the CTR1 hold; the stage needs a second part per supervisor, a latch-breaking element and its own check; to reverse: W148-1 drafted the stage
    W148's decisions (each authority: SESSION, under the owner's standing rule of 26 September 2026 and his ruling of 21 September
-   2026; ruled_by: W148 (Claude), MESHSAT-1357; ruled_on: 7 October 2026; reversed_by: none; authority_why: an engineering selection
+   2026; ruled_by: W148 (assistant), MESHSAT-1357; ruled_on: 7 October 2026; reversed_by: none; authority_why: an engineering selection
    inside the drafted circuit and its rows; the ruling's first half fails: no line a protected class holds, no money spent (nothing is
    bought; the parts are drafted), no change to what the kit is claimed to be, and no residual risk accepted that a measurement cannot
    remove; HS-1a also stands after the reading, so the choice between them is an engineering value, taken on 5h's figures):
@@ -474,7 +474,7 @@ printed thermal resistances, never a measured temperature
                an entry there would move them all, outside this task
              to reverse: move the entry into l9t5's script in a set whose dependency pass re-pins l9t5_a1.out and its dependants
    W152's decisions (on W150's targeted recheck, its should-fix F1 to F3 and notes F4 to F6; each authority: SESSION, under the owner's
-   standing rule of 26 September 2026 and his ruling of 21 September 2026; ruled_by: W152 (Claude), MESHSAT-1357; ruled_on: 7 October
+   standing rule of 26 September 2026 and his ruling of 21 September 2026; ruled_by: W152 (assistant), MESHSAT-1357; ruled_on: 7 October
    2026; reversed_by: none; authority_why: an engineering value, a method or a test row inside the drafted circuit and its rows; no
    line a protected class holds, no money, nothing bought, no change to what the kit is claimed to be, no residual risk accepted):
      W152-1  FW-B23's hold check on the RTC clocked by the LSI (RTCSEL = LSI, never the HSE), PREDIV_A + 1 at most 8, threshold 12 ms

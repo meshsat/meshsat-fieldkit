@@ -77,7 +77,7 @@ assignments are authorised through the existing ChatGPT sign-in and the plan's a
 pilot's exhausted call count. The spending, sandbox and publication limits above stay as they are, and there is no
 automatic fallback to a paid API.
 
-- **Roles.** The coordinator (Claude) coordinates, integrates, performs the authorised work, verifies it and continues.
+- **Roles.** The coordinator (assistant) coordinates, integrates, performs the authorised work, verifies it and continues.
   The collaborator (`gpt-6-astra`, effort `xhigh`) resolves ambiguous engineering blockers before they are escalated to
   the owner; distinguishes owner requirements, design objectives, modelling assumptions, component limitations,
   implementation defects, missing evidence and genuine contradictions between requirements; proposes corrections,

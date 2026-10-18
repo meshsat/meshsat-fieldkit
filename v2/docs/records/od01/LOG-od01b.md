@@ -1,6 +1,6 @@
 # Stream od01b: running log (MESHSAT-1357, 29 September 2026)
 
-Author: one AI session (Claude), worktree `od01b`, branch `fnd/od01b` from `40dd2690`. Brief: the owner's instruction of 29
+Author: one AI session (assistant), worktree `od01b`, branch `fnd/od01b` from `40dd2690`. Brief: the owner's instruction of 29
 September 2026 on OD-01 (R4, R5, R6) and the outside AI review of the package. Prototype: nothing here is bought, made, sent
 or measured. Times are CEST, read from the host clock and the commit times (a first draft of this log carried estimated times; corrected at 01:43).
 

@@ -1,7 +1,7 @@
 # Stream a1mech: running log (MESHSAT-1357, Option A(i) mechanical work package)
 
-Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b`. Brief:
-`_runs/claude/a1mech/20260929T0228/BRIEF.md`. Prototype design, AI review: nothing built, bought or fitted.
+Worker: one assistant author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b`. Brief:
+`_runs/assistant/a1mech/20260929T0228/BRIEF.md`. Prototype design, AI review: nothing built, bought or fitted.
 
 - 02:11 CEST: brief and WORKER-RULES read; ENERGY-RECONCILIATION sections 8 and 9, CASE-MARGINS sections 2 and 3 (the M rows),
   ASSEMBLY steps 10 and 11, the r2 QMX set and its check record, the lid STEP's face list, panel1450's face parts read.

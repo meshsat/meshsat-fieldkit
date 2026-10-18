@@ -167,7 +167,7 @@ commits. Five files are touched twice:
 * `boards/c.json`: 266ee532 and 63d64238.
 * `pcb_requirements.yaml` and REQUIREMENTS-TRACE.md: 1b9f543c and a906b932.
 
-No vendor, held, IBIS or Claude file is committed. All 35 commits carry the owner's identity as author and committer,
+No vendor, held, IBIS or assistant file is committed. All 35 commits carry the owner's identity as author and committer,
 [MESHSAT-1357] in the subject, no trailer, and no em or en dash in added text. Nothing is unexplained.
 
 ## Minor items

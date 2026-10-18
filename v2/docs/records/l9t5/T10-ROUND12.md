@@ -2,9 +2,9 @@
 
 # T10 round 12: row (b)'s last corrections after its targeted recheck
 
-- **Author:** W167 (Claude), MESHSAT-1357, 7 October 2026 from 12:08 CEST (times from `date`, Europe/Amsterdam). Branch `fnd/l4hod`
+- **Author:** W167 (assistant), MESHSAT-1357, 7 October 2026 from 12:08 CEST (times from `date`, Europe/Amsterdam). Branch `fnd/l4hod`
   from `23384006` (W159's round 11); `fnd/l4hoe` from `003338e3` (W152) for N4's HO-E item only.
-- **Failure cases read against:** W163's report (`_runs/claude/w163rechkrowb/REPORT-FULL-AS-RECEIVED.md`, an AI review): row (b)
+- **Failure cases read against:** W163's report (`_runs/assistant/w163rechkrowb/REPORT-FULL-AS-RECEIVED.md`, an AI review): row (b)
   SUPPORTED AS CONDITIONAL on E-17, W146-F10, F6's assumption under V-B25 and N1's E-17 reading; N1 to N3 to be fixed before set 33,
   N4 to N6 notes. Row (b)'s focused check (W157) and its targeted recheck (W163) are spent (constitution section 6): this round changes
   no circuit, raises no verdict and asks for no further check; the coordinator reads it as clerical.
@@ -37,7 +37,7 @@
 
 ## 3. SESSION decisions of this round
 
-Each under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026; ruled_by W167 (Claude), MESHSAT-1357;
+Each under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026; ruled_by W167 (assistant), MESHSAT-1357;
 ruled_on 2026-10-07; reversed_by none (the way back is the last column).
 
 | Id | Decision | authority | authority_why | To reverse |

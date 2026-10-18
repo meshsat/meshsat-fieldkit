@@ -2,7 +2,7 @@ accepted: no
 
 # Record l9stk: the independent checker's check 4, PROTECTION: NOT CONFIRMED (filed as received)
 
-MESHSAT-1357. An AI review by a fresh Claude session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `d449375b07bfbb6560f0d5396f6d2898e768cc2c` (branch `fnd/l9stk`). Time: 4 October 2026, 04:12 to 04:18 CEST. Nothing in the kit has been built, bought or measured.
+MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `d449375b07bfbb6560f0d5396f6d2898e768cc2c` (branch `fnd/l9stk`). Time: 4 October 2026, 04:12 to 04:18 CEST. Nothing in the kit has been built, bought or measured.
 
 Scope, from the coordinator's brief: the targeted recheck of section 15.4b (the owner's reviewer's retry question on the d834e6a7 package: the LM5069-2's repeated fault and restart waveform and its accumulated heating over the breaker FETs and every protected series part; the latch-off -1 selected), the updated table and defect lists, `l9stk_protection.py` and its output.
 

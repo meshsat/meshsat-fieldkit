@@ -2,7 +2,7 @@ accepted: no
 
 # Record l9stk: the independent checker's check 1, COPPER: NOT CONFIRMED (filed as received)
 
-MESHSAT-1357. An AI review by a fresh Claude session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `f76564ebe513b4603d677e43a665d2b426a12fbc` (branch `fnd/l9stk`). Time: 4 October 2026, 00:21 to 00:40 CEST. Nothing in the kit has been built, bought or measured.
+MESHSAT-1357. An AI review by a fresh assistant session that authored none of the record (an independent checker, not a qualified engineering review, not an Astra check), read-only in a disposable scratch clone at `f76564ebe513b4603d677e43a665d2b426a12fbc` (branch `fnd/l9stk`). Time: 4 October 2026, 00:21 to 00:40 CEST. Nothing in the kit has been built, bought or measured.
 
 Scope, from the coordinator's brief: the copper question: section 14 of `L9-STACKUPS.md`, `l9stk_copper.py` and its output, `apply_decisions_l9stk.py` and `apply_energy_chain_l9stk.py`; the decision-critical figures derived blind from the sources first (the currents, the ruled method, the face split, the adiabatic check, the decision and its scope, the drafts).
 

@@ -1,6 +1,6 @@
 accepted: yes
 
-# Layer 4, L4-E7R: Claude's closing check of the CS101 correction at 675b8068 (the coordinator's check; not a model review, not an Astra check)
+# Layer 4, L4-E7R: The assistant's closing check of the CS101 correction at 675b8068 (the coordinator's check; not a model review, not an Astra check)
 
 MESHSAT-1357, 2 October 2026. Check 3 (`check-l4e7r-3.md`, at `237cd9be`) confirmed the static bound, the dynamic allowance and
 the off-by-default threshold. It did not accept the decision, on one material defect: the backstop tripped under TEST-PLAN M2
