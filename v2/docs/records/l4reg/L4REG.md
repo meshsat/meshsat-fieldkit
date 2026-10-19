@@ -5,8 +5,8 @@
 # Record l4reg: the supervisors' regulator stage (Layer 4 task L4A-56, re-scoped by W135's CHANGE-METHOD; RE-6 and RE-7)
 
 - **Author:** W138 (assistant), MESHSAT-1357, 7 October 2026 from 05:46 CEST (times from `date`, Europe/Amsterdam). Branch `fnd/l4reg`
-  from `fnd/int32` `543b33df224669291cb9215c93eab072d22d465b`.
-- **Why:** W135's screen (record l4lim, `fnd/l4lim` `00989767`, copied verbatim to `inputs/`) read CHANGE-METHOD for L4A-56: a
+  from `fnd/int32` `0e3471b00eba6d6028b155ee1ccdee73f225e00a`.
+- **Why:** W135's screen (record l4lim, `fnd/l4lim` `13aea924`, copied verbatim to `inputs/`) read CHANGE-METHOD for L4A-56: a
   limiter ahead of the AP2112K has no window on printed limits (its 125 C current at the corner, 0.3056 A, sits under row 7's served
   peak 0.4240 A). It recommended (SESSION W135-1) the TPS2553-1 at 49.9 kOhm with a replacement regulator of printed junction-to-ambient
   at most 98.6 C/W, at least 0.57 A and a dropout that keeps T10-A3, with K1 as the fallback. Constitution section 4: an unresolved
@@ -108,7 +108,7 @@ entries; +5V_IOC's load allocations on U45, U55, U65; the rail's source text.
 - Mutations, each FAIL: the limiter bypassed; the LDO's IN and OUT exchanged; the LDO's EN on ground; the limiter's EN on ground;
   RILIM's ground end on the EN pull-up's rail; RILIM at 102 kOhm (W135's band under the AP2112K); the AP2112K back on U40; U40
   ordered without M3.
-- With W137's canmb (its checkpoint `7c6e3a3f`, copied to `inputs/`): DRAWN in either order, the two netlists identical. **Shared:**
+- With W137's canmb (its checkpoint `c86d36d5`, copied to `inputs/`): DRAWN in either order, the two netlists identical. **Shared:**
   no designator, no signal net, no controller pin; both attach parts to the rails +5V_IOC, +3V3_IOCA, +3V3_IOCB, +3V3_IOCC and GND.
 - Refused: a generator without iocguard; a second application; the tree's own generator (NOT RELEASED).
 - Record l9t5's own I-03 check reads LDO FAIL on this composition (it expects round 6's sense resistor): L4REG-F1.

@@ -1,13 +1,13 @@
 # Board C (control panel backer): layout constraints
 
-**Bound to the set 6 candidate (27 September 2026, read at `00e74bbb`).** This sheet's inputs stand in the block below,
+**Bound to the set 6 candidate (27 September 2026, read at `c11c01c9`).** This sheet's inputs stand in the block below,
 one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
 computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
 table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
 table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
 the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 10**,
-which are the readings at `956feb28` with the H2 line's changes marked where they stand (`c62ee56b`, the paragraph
-below). Set 6 changed board C's netlist and intent file in `e7721c52` (TX_INHIBIT_n fails safe with the panel unpowered;
+which are the readings at `956feb28` with the H2 line's changes marked where they stand (`d3cc3dec`, the paragraph
+below). Set 6 changed board C's netlist and intent file in `1c13eb50` (TX_INHIBIT_n fails safe with the panel unpowered;
 the supplies PWR-001 refused are declared): **+3V3 moved and EPD_VCC, LED_RAIL_SW and LED_RAIL are new rows**, each
 marked **SET 6** in the table. A line of the older sections that names a part, a net, a current or a count is compared
 with the netlist and the intent file below before it is followed, and where this sheet and a record disagree the record
@@ -17,17 +17,17 @@ current on this candidate; a count of reasons in a paragraph below is its own bi
 ```bound
 sheet      C
 board      c
-read       2026-09-29 at 695e36ce
+read       2026-09-29 at 5c20483b
 current    section 2: the power table, and the figures the text under it quotes from it
-older      sections 1 and 3 to 10: read at 956feb28, with the H2 line's changes marked at c62ee56b
-netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 c9f7394594201045 changed 695e36ce
-intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 6db304b8ce504a09 changed 695e36ce
+older      sections 1 and 3 to 10: read at 956feb28, with the H2 line's changes marked at d3cc3dec
+netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 c9f7394594201045 changed 5c20483b
+intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 6db304b8ce504a09 changed 5c20483b
 board_file v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb sha256/16 2a273803757c68fb changed 996fcf1f
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `c62ee56b`: phase C24, netlist
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `d3cc3dec`: phase C24, netlist
 `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net` sha256/16 `11eabc2dddca5161` (round 8, `1be7b93c`), intent
 `pcb-c-display-intent.json` `854436c729322993`; the committed board file `2a273803757c68fb` is the four-layer C24.
 The power figures of this sheet are checked against `calc/rail_widths.py` on that intent: +5V and +3V3 read the same.
@@ -66,10 +66,10 @@ milliamperes: the fabricator's floor governs there, not the current.
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill | note |
 |---|---|---|---|---:|---:|---:|---|---|
 | +5V | 5.00 | 0.60 / 1.00 | 0.60, typical (PI-001) | 0.15 | 0.06 | 0.89 | 2 / 2 / 1 | from board B's PANEL_5V over J_PANEL |
-| +3V3 | 3.30 | 0.15 / 0.72 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **SET 6**, moved in `e7721c52` (W4C-F5): 0.12 / 0.20 A at the H2 line. The intent file: "the figures cover the child EPD_VCC: its own loads' 0.119 A typical and 0.199 A peak plus EPD_VCC's 0.030 and 0.521 A". The outer widths do not move at two decimals and the inner goes from 0.10 to 0.13 mm. The LDO U5 (TLV75533) is rated under the declared peak: "U5 is rated 500 mA (TI SBVS320D): the excess at the peak is 0.35 uC per on-phase, 24 mV on C2, C28 and C29 at most; U5's average through a refresh is an open item read at bring-up" |
-| EPD_VCC | 3.30 | 0.03 / 0.52 | 0.03, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **SET 6**, new in `e7721c52`, one of the supplies PWR-001 refused at H2: "the e-paper's switched supply: Q5 (AO3401A) from +3V3 to the panel's VDDIO and VDD and to the boost inductor L1". Of its 30 mA typical 10 mA is INFERRED for the boost; the peak is "0.5 A peak into L1 = the boost switch's current class" |
-| LED_RAIL_SW | 5.00 | 0.16 / 0.46 | 0.16, typical (PI-001) | 0.02 | 0.01 | 0.14 | 1 / 1 / 1 | **SET 6**, new in `e7721c52`, one of the supplies PWR-001 refused at H2: "the lighting supply behind the LIGHTING toggle". Declared at 0.1593 A typical and 0.4619 A peak: "Typical: the lamps at their design currents; peak: every lamp with no forward drop at 5.25 V" |
-| LED_RAIL | 5.00 | 0.14 / 0.44 | 0.14, typical (PI-001) | 0.02 | 0.01 | 0.12 | 1 / 1 / 1 | **SET 6**, new in `e7721c52`, one of the supplies PWR-001 refused at H2: "the PWM'd lamp rail: Q1 (AO3401A) from LED_RAIL_SW"; "18 lamps behind their series resistors, 8 mA each by design" |
+| +3V3 | 3.30 | 0.15 / 0.72 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **SET 6**, moved in `1c13eb50` (W4C-F5): 0.12 / 0.20 A at the H2 line. The intent file: "the figures cover the child EPD_VCC: its own loads' 0.119 A typical and 0.199 A peak plus EPD_VCC's 0.030 and 0.521 A". The outer widths do not move at two decimals and the inner goes from 0.10 to 0.13 mm. The LDO U5 (TLV75533) is rated under the declared peak: "U5 is rated 500 mA (TI SBVS320D): the excess at the peak is 0.35 uC per on-phase, 24 mV on C2, C28 and C29 at most; U5's average through a refresh is an open item read at bring-up" |
+| EPD_VCC | 3.30 | 0.03 / 0.52 | 0.03, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **SET 6**, new in `1c13eb50`, one of the supplies PWR-001 refused at H2: "the e-paper's switched supply: Q5 (AO3401A) from +3V3 to the panel's VDDIO and VDD and to the boost inductor L1". Of its 30 mA typical 10 mA is INFERRED for the boost; the peak is "0.5 A peak into L1 = the boost switch's current class" |
+| LED_RAIL_SW | 5.00 | 0.16 / 0.46 | 0.16, typical (PI-001) | 0.02 | 0.01 | 0.14 | 1 / 1 / 1 | **SET 6**, new in `1c13eb50`, one of the supplies PWR-001 refused at H2: "the lighting supply behind the LIGHTING toggle". Declared at 0.1593 A typical and 0.4619 A peak: "Typical: the lamps at their design currents; peak: every lamp with no forward drop at 5.25 V" |
+| LED_RAIL | 5.00 | 0.14 / 0.44 | 0.14, typical (PI-001) | 0.02 | 0.01 | 0.12 | 1 / 1 / 1 | **SET 6**, new in `1c13eb50`, one of the supplies PWR-001 refused at H2: "the PWM'd lamp rail: Q1 (AO3401A) from LED_RAIL_SW"; "18 lamps behind their series resistors, 8 mA each by design" |
 
 The project file's PWR and RAIL classes are 0.5 mm wide; all five rails are far inside them. Board C's feed is protected
 upstream on board B (F1, since round 8 an MF-MSMF110 with a 1.1 A hold, whose copper there is the constraint, `B.md` section 2).

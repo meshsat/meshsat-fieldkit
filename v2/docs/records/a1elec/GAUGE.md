@@ -1,6 +1,6 @@
 # GAUGE: the lid pack's gauge under Option A(i) (stream a1elec, MESHSAT-1357)
 
-29 September 2026. **Prototype design, AI review: no gauge is programmed, no pack is built, nothing is measured.**
+29 September 2026. **Prototype design, automated review: no gauge is programmed, no pack is built, nothing is measured.**
 Every figure below is printed by `gauge_scale.py` (beside this page; output `gauge_scale.out`), which parses TI's
 manual itself, or is quoted from a maker's document held under `v2/vendor/` with its section and page.
 

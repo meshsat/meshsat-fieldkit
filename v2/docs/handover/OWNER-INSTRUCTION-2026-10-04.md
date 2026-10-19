@@ -25,7 +25,7 @@ entry of 4 October 2026 14:25 CEST.
 
 Update the active MeshSat plan using this entire instruction. Everything needed for the process change is contained below; Part A is the standing constitution and Part B is the immediate planning task.
 
-The owner authorises **up to three author/reviewer workers in total across the assistant and Codex/Astra, plus the coordinator**. Preserve healthy running work, completed calculations and existing authorisations.
+The owner authorises **up to three author/reviewer workers in total across the assistant and the second worker, plus the coordinator**. Preserve healthy running work, completed calculations and existing authorisations.
 
 While in Plan mode, inspect and produce one concise approval-ready plan within the mode's restrictions. After the normal plan approval, adopt these rules and execute the next ready tasks continuously. Do not turn each milestone into another request for the owner to review routine work.
 
@@ -74,14 +74,14 @@ An assigned test is not a corrected circuit. Missing evidence is not automatical
 
 ### 6. Make independent checking decisive and proportionate
 
-- Use Astra through the existing launcher to challenge decision-critical assumptions before expensive downstream work, and to check material corrections independently. The checker must see the owner brief, exact candidate, relevant sources and acceptance criteria.
+- Use the second worker through the existing launcher to challenge decision-critical assumptions before expensive downstream work, and to check material corrections independently. The checker must see the owner brief, exact candidate, relevant sources and acceptance criteria.
 - Default to one focused check and one targeted recheck for a candidate, within authorised usage. Further checking requires a materially changed approach and an explicit bounded reason in the existing task record; do not invent a new issue ID to reset a limit.
 - Exhausting review calls never changes a verdict. The coordinator may verify clerical/integration fixes, but cannot turn a material unresolved rejection into an independently accepted design by self-signing. Record the actual checker's role and retain previous verdicts.
 - A changed design or new material evidence can justify another check under the applicable authorisation. Otherwise retain UNVERIFIED/CONDITIONAL status and the dependent release hold. Do not reopen previously accepted work solely because this process policy changed.
 
 ### 7. Keep execution bounded and autonomous
 
-- The owner authorises up to three author/reviewer workers across the assistant and Codex/Astra, plus the coordinator. One writer owns a branch at a time. Scheduling a checker consumes a worker slot. Use the third slot for ready independent work or a ready review; do not hold it idle for a review whose inputs are unfinished.
+- The owner authorises up to three author/reviewer workers across the assistant and the second worker, plus the coordinator. One writer owns a branch at a time. Scheduling a checker consumes a worker slot. Use the third slot for ready independent work or a ready review; do not hold it idle for a review whose inputs are unfinished.
 - The coordinator owns integration, scheduling and small verified record corrections. Do not occupy an engineering worker merely to copy a checked status or checksum. Coordinate ownership before editing an active author's files.
 - Preserve healthy jobs, successful outputs and uncommitted work. Before replacing a failed/context-exhausted worker, check whether its child calculation survived. Resume one writer from its checkpoint with a concise brief, not the entire accumulated transcript.
 - Continue the next ready item without waiting for this chat's review. When an external dependency blocks one item, dispatch independent work. If no authorised task is ready, report that fact precisely and retain a recoverable checkpoint.
@@ -134,14 +134,14 @@ Read the current owner brief, execution plan, integration notes and the exact ac
 Starting context, to verify rather than replay:
 
 - Layers 1–3 have accepted document baselines. Their scope must not be confused with verified hardware.
-- The supplier baseline is `dbe1a1ba`; addendum revision 3 of 4 October at 13:02 resolves the latest document findings. Its SHA-256 is `ea3dcc3260875abc925f74c56ebbb01937ea59d7032240b0a1ecc5d9ba4ddfad`. The quotation remains unsent.
-- Set 29's freeze was running at 13:29. L4-E9 part A3 is reported committed at `22035998`; part B, FAN_OK, belongs in set 30. Preserve any subsequent progress.
+- The supplier baseline is `5216830f`; addendum revision 3 of 4 October at 13:02 resolves the latest document findings. Its SHA-256 is `ea3dcc3260875abc925f74c56ebbb01937ea59d7032240b0a1ecc5d9ba4ddfad`. The quotation remains unsent.
+- Set 29's freeze was running at 13:29. L4-E9 part A3 is reported committed at `0e223341`; part B, FAN_OK, belongs in set 30. Preserve any subsequent progress.
 - The reported current I-03 case is 7.472 A against 7.0957 A. REQ-018 remains 15.5 V; the 16.1 V floor was withdrawn. FAN_OK is conditional and unimplemented. These are context, not independently verified calculations.
 - The protection candidate now selects latch-off LM5069-1. B-R2, DD-3, DD-5 and E11-37 have remaining work. Confirm their latest state before assigning anything.
 
 ### 2. Adopt one authoritative process document
 
-After approval, extract Part A into `v2/docs/EXECUTION-CONSTITUTION.md`; keep the live task details in the existing execution plan. Reconcile conflicting process guidance in the existing instruction files; preserve technical requirements, valid repository rules and historical reviews. Have the root the session notes import it with `@v2/docs/EXECUTION-CONSTITUTION.md` on a line outside Markdown code formatting, and explicitly pass it and the current owner brief to Codex/Astra jobs. Confirm the running session and workers have read the relevant rules; do not assume a file edit updates an already-running worker's context.
+After approval, extract Part A into `v2/docs/EXECUTION-CONSTITUTION.md`; keep the live task details in the existing execution plan. Reconcile conflicting process guidance in the existing instruction files; preserve technical requirements, valid repository rules and historical reviews. Have the root the session notes import it with `@v2/docs/EXECUTION-CONSTITUTION.md` on a line outside Markdown code formatting, and explicitly pass it and the current owner brief to the second worker jobs. Confirm the running session and workers have read the relevant rules; do not assume a file edit updates an already-running worker's context.
 
 Keep instruction changes out of an already frozen candidate unless its scope and dependencies require them. Use the next normal governance commit. Do not build a new scheduler, status framework or blanket collection of hooks.
 
@@ -164,7 +164,7 @@ At each repeated failure, follow the constitution's change-of-method rule. A kno
 
 ### 5. Keep all layers moving toward deliverable boundaries
 
-Schedule with up to three author/reviewer workers total, Astra included; the coordinator integrates separately. The owner has increased the previous two-worker limit to three. Assign the additional slot to ready independent engineering work or a ready review, without duplicating branch ownership. Give independent downstream work a slot when a critical task is externally blocked. Cover the remaining architecture, interfaces, component identities, mechanical sources, composed schematics, analyses, board-specific layout entry, manufacturing package and firmware/qualification deliverables.
+Schedule with up to three author/reviewer workers total, the second worker included; the coordinator integrates separately. The owner has increased the previous two-worker limit to three. Assign the additional slot to ready independent engineering work or a ready review, without duplicating branch ownership. Give independent downstream work a slot when a critical task is externally blocked. Cover the remaining architecture, interfaces, component identities, mechanical sources, composed schematics, analyses, board-specific layout entry, manufacturing package and firmware/qualification deliverables.
 
 Retain each layer's real acceptance criteria. No blanket pause of Layers 5–12, and no claim that a conditional architecture or an assigned experiment makes a layer fully verified. Supplier requests and purchases remain subject to existing authority; complete their concrete scope and costed options before seeking an owner decision.
 
@@ -200,7 +200,7 @@ This is a plan review. The reported live branch states, tool implementations, sc
 
 ## What now follows the constitution
 
-- Three author/reviewer slots across the assistant and Astra, with the coordinator integrating separately.
+- Three author/reviewer slots across the assistant and the second worker, with the coordinator integrating separately.
 - Recovery of interrupted authors and reuse of the completed freeze instead of automatic recomputation.
 - Intended merges and regeneration before the final candidate; checks and promotion tied to that candidate.
 - F01 remains OPEN and FAN_OK remains conditional/unimplemented in set 29; set 30 carries its later work.
@@ -226,7 +226,7 @@ This permits the same loads, temperatures, fault states or recovery rules to div
 
 **P1, verification-scheduling ambiguity; high confidence in the gap.**
 
-Evidence: W3 challenges FAN_OK and asks what should correct I-03 before drafting (lines 198–200); T5's author then works for an estimated three hours after W3, while its checker is described as Astra's “one focused check (W3 first)” (lines 157–164). T2 and T4 are assigned to T1's check even though T2 follows T1 and T4 is queued separately (lines 133–154, 195–203).
+Evidence: W3 challenges FAN_OK and asks what should correct I-03 before drafting (lines 198–200); T5's author then works for an estimated three hours after W3, while its checker is described as the second worker's “one focused check (W3 first)” (lines 157–164). T2 and T4 are assigned to T1's check even though T2 follows T1 and T4 is queued separately (lines 133–154, 195–203).
 
 An early challenge is useful, but cannot establish correctness of material design changes not yet made. Likewise, a check cannot cover T2/T4 changes absent from its candidate.
 
@@ -404,7 +404,7 @@ The next useful milestones remain the completed set 29 gate and promotion, follo
 
 - **DELTA-01:** firmware correction running.
 - **DELTA-02:** correctly remains open; changing the thermal limit didn’t fix the measurement method.
-- **I-03:** correctly remains open after Astra found a ground contact carrying **10.64 A against 10 A**.
+- **I-03:** correctly remains open after the second worker found a ground contact carrying **10.64 A against 10 A**.
 
 **One gap needs explicit ownership:** the reported **0.900 A supervisor demand versus 0.600 A regulator capacity**. The assistant should verify its applicable operating conditions and give it a named correction and acceptance criterion. Adding a dedicated ground return does not address that separate deficit.
 
@@ -500,7 +500,7 @@ The plan must contain:
 - Active engineering effort and dependencies separated from procurement, supplier response and physical-test lead times. Give estimates with their basis, not another unsupported completion promise.
 - Only the adoption decisions I genuinely need to make, with your recommended answer and consequences.
 
-Use one focused independent Astra challenge of the recommendation and consequential budgets within the worker limit, followed by a bounded correction and targeted recheck if warranted. Preserve the review's actual verdict. Unresolved evidence must remain explicit; do not iterate indefinitely to manufacture acceptance. Use existing repository gates; add no new freeze/replay infrastructure and repeat no unrelated reviews for this research proposal.
+Use one focused independent second-worker challenge of the recommendation and consequential budgets within the worker limit, followed by a bounded correction and targeted recheck if warranted. Preserve the review's actual verdict. Unresolved evidence must remain explicit; do not iterate indefinitely to manufacture acceptance. Use existing repository gates; add no new freeze/replay infrastructure and repeat no unrelated reviews for this research proposal.
 
 At the first checkpoint report the draft recommendation and missing evidence. Finish with the actual integration plan and a short decision summary: recommended hardware, expected capability, incremental resource cost, affected layers, next implementation task and decisions required. Do not stop at an options catalogue or wait for another instruction to complete this authorized research.
 
@@ -512,11 +512,11 @@ Read `~/worktrees/meshsat-fieldkit/_runs/resume-20261004-evening.md`. Check actu
 
 Finish the three interrupted candidates:
 
-1. **Ground return — fnd/l8r4, checkpoint 133f84d5:** finish connecting the rewritten model to its main routine, regenerate the stale output and restore the targeted tests. Compare every calculated current against the actual connector, contact, wire and ribbon ratings under the applicable conditions. Include the required contact combinations and fault cases. Scratch figures are provisional.
+1. **Ground return — fnd/l8r4, checkpoint 07264f33:** finish connecting the rewritten model to its main routine, regenerate the stale output and restore the targeted tests. Compare every calculated current against the actual connector, contact, wire and ribbon ratings under the applicable conditions. Include the required contact combinations and fault cases. Scratch figures are provisional.
 
-2. **DELTA-01 — fnd/fw-r5, checkpoint be5e1236:** finish the firmware correction and reproduce both reported persistence failures against the old code. Verify the corrected behavior across reset and rollover, intended re-arming, and wipe-journal separation.
+2. **DELTA-01 — fnd/fw-r5, checkpoint 3d2c93e2:** finish the firmware correction and reproduce both reported persistence failures against the old code. Verify the corrected behavior across reset and rollover, intended re-arming, and wipe-journal separation.
 
-3. **DELTA-02 — fnd/l4e11r11, checkpoint 0eeb501d:** complete the selected measurement method, reconcile the procedure and calculations, and run its focused check. Keep TP-E11-29 non-executable until its method and acceptance conditions are ready for supplier agreement.
+3. **DELTA-02 — fnd/l4e11r11, checkpoint 21f96a49:** complete the selected measurement method, reconcile the procedure and calculations, and run its focused check. Keep TP-E11-29 non-executable until its method and acceptance conditions are ready for supplier agreement.
 
 Then follow the recorded queue. Start T11’s three-SDR research at the next suitable free slot; it need not wait for physical power qualification.
 
@@ -541,7 +541,7 @@ Sending the quotation and choosing copper weight affect supplier engagement and 
 
 ## 11. T11 clarified: three SDRs and the fit assessment (as received)
 
-Add this clarification to T11 and Astra’s current challenge without restarting either task.
+Add this clarification to T11 and the second worker’s current challenge without restarting either task.
 
 **The intended final configuration remains three SDRs, one per CM5.** Evaluating one enclosed B206mini-i first is a validation stage, not approval to reduce the final radio count.
 
@@ -555,6 +555,6 @@ Before recommending a hardware purchase:
 
 4. If no three-radio arrangement is demonstrated, distinguish a confirmed dimensional conflict from missing dimensions or an incomplete placement study. Present the smallest proposed trade-off and its consequences. Any reduction in radio count, lost function or enclosure change requires my decision.
 
-Deliver one concise fit result with an annotated layout, dimensions, remaining uncertainties and its effect on the recommended SDR selection. Incorporate it into the existing integration plan and Astra’s current review.
+Deliver one concise fit result with an annotated layout, dimensions, remaining uncertainties and its effect on the recommended SDR selection. Incorporate it into the existing integration plan and the second worker’s current review.
 
 Keep the current power, firmware and coupon corrections running within the three-worker limit. Do not start another broad planning cycle or wait for physical qualification to finish this desk assessment. No hardware purchase or baseline change is authorized by this clarification.

@@ -2,7 +2,7 @@
 
 Stream w5si, second pass, 27 September 2026 (MESHSAT-1357, pre-PCB layer 9). For the integrator. Prototype design work:
 nothing has been built or measured. This page proposes; it changes no rule, no board table and no count. The checks
-behind it are desk checks by the stream (an AI review where a second reader looked), not a qualified engineering review.
+behind it are desk checks by the stream (an automated review where a second reader looked), not a qualified engineering review.
 
 ## 1. What is found
 

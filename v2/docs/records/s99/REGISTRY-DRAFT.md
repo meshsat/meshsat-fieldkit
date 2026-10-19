@@ -1,10 +1,10 @@
 # Draft registry text for S-99 (for the integrator, the one writer of the shared files)
 
-Stream s99, MESHSAT-1357, 28 September 2026. AI engineering analysis; prototype design, nothing built or measured.
+Stream s99, MESHSAT-1357, 28 September 2026. automated engineering analysis; prototype design, nothing built or measured.
 Three texts: the re-statement of S-99 in `v2/ecad/tools/pcb_requirements.yaml`, decision 55 for
 `v2/ecad/tools/pcb_decisions.yaml`, and the lines for IF-AB-POWER's currents row in `v2/ecad/tools/pcb_interfaces.yaml`
 and for S-98. The integrator lands them by its own apply script (the pattern of the earlier streams); nothing here
-edits a shared file. Corrected after the first AI review; CORRECTION.md carries the verification.
+edits a shared file. Corrected after the first automated review; CORRECTION.md carries the verification.
 The ruled fields below remain proposed SESSION text for integration, not a ruling made by this bounded job.
 
 ## 1. S-99, re-stated (OPEN, class SESSION, disposition CIRCUIT)
@@ -93,7 +93,7 @@ The ruled fields below remain proposed SESSION text for integration, not a rulin
         declared demand without moving the lead protection point and preserves console availability.
         The interlock changes console behaviour and stays a fallback. M/P evidence, timing, collapse/recovery
         and thermal verification remain open; this choice is not acceptance of residual risk.
-      evidence: board A''s netlist at 417f7794 (sha256 0a2b5908...), the intents of boards A, B and D (sha256 3422910a...,
+      evidence: board A''s netlist at bdbfff5a (sha256 0a2b5908...), the intents of boards A, B and D (sha256 3422910a...,
         96ee391b..., 8d9f3b22...), TI SNVSAI1D pp.3 to 7, 16 to 17, 23 to 26, TI SLPS414B p.3, Coilcraft 804-1 and 887-1,
         Vishay 30100 pp.1 to 2, TI SLVSET8A, TI SLUSEA4D, NiceRF SA868 v1.3 p.4, Ebyte E22-900M30S v1.20, Ground
         Control''s RockBLOCK 9704 hardware page (snapshot 2026-09-27), MyriadRF''s LimeSDR Mini pages, Microchip

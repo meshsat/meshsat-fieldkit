@@ -4,7 +4,7 @@ MESHSAT-1357, layer 9): the session decisions of the two streams as rows of v2/e
 and the integrator runs it, or does not: the independent check asked that it be CONSIDERED, because three of the
 decisions change what rule SI-001 counts as decided and until now they were written only in a data file's header.
 
-RE-ISSUED on the drafts check (AI review, 28 September 2026):
+RE-ISSUED on the drafts check (automated review, 28 September 2026):
   B3   the third row cited board B's netlist by a sha256/16 and gen_sch_b.py by a line number that were TYPED, and both
        were stale on the integration line (8b78c59754a6a0c7 and line 1151, where the tree had 028997a6c5e8810f and line
        1191). NOW THE CITATION IS DERIVED from the tree the draft runs on and the FACTS IT STANDS FOR ARE ASSERTED: the
@@ -74,13 +74,13 @@ ROWS = [
                 "tools/edge_length.py is the criterion (net_edge).",
      "reversed_by": "in tools/edge_length.py, make net_edge take the fastest candidate's kind as the net's and restore the "
                     "maker-held test the first pass had; 40 nets then read as held by a maker's figure again, which the "
-                    "independent check (AI review) of 27 September 2026 refused.",
+                    "independent check (automated review) of 27 September 2026 refused.",
      "ask": "count a layout-bound net as held by a maker's figure when ANY maker's figure on it gives a length, or only when "
             "EVERY driver on it has a published minimum",
      "recommendation": "ONLY WHEN EVERY DRIVER HAS ONE. The critical length is what a layout is handed; with a driver of "
                        "unknown edge on the net that length is the bound's, and naming the net by another driver's figure "
                        "hands a layout a number that does not govern it.",
-     "evidence": "the independent check (AI review) of the first pass, 27 September 2026, from its own run of the tool on the "
+     "evidence": "the independent check (automated review) of the first pass, 27 September 2026, from its own run of the tool on the "
                  "netlists at c23c5e76: 40 of the 83 nets the records called maker-held had a bound as their fastest "
                  "candidate and a critical length of 0.0 mm in the tool's own table (v2/docs/records/w5si/check-1/). After "
                  "the change the readings hold 43 nets by a maker's figure and 281 by a bound, of 324 layout-bound "
@@ -167,7 +167,7 @@ ROWS = [
      "recommendation": "NO FIGURE. Reading it as written is right only by luck (both cells found erred short); leaving it out "
                        "and reading the next cell would give a slower figure than the table the cell was contradicted by may "
                        "hold.",
-     "evidence": "two AI reviews of 27 and 28 September 2026 (the first lens's M5, the drafts check's M8), and the measurement "
+     "evidence": "two automated reviews of 27 and 28 September 2026 (the first lens's M5, the drafts check's M8), and the measurement "
                  "on the thirteen models the manifest pins: of 585 driven cells 537 have a table of their edge, 522 of them "
                  "hold and 15 do not, all of TI's PCA9555 INT models (dt at 0.14 to 0.49 of the table's time) and TMP117 SDA "
                  "models (dV at 11 to 39 percent of the swing); 48 have no table and cannot be contradicted "
@@ -193,7 +193,7 @@ ROWS = [
      "ask": "commit the models, declare them as inputs and leave them uncommitted, or pin them by a tracked manifest",
      "recommendation": "PIN THEM. Committing publishes files whose headers forbid it or grant nothing; declaring them "
                        "uncommitted makes the only state that reads current the one that publishes.",
-     "evidence": "the drafts check of 28 September 2026 (AI review), blocking item B1, with its simulation of the three "
+     "evidence": "the drafts check of 28 September 2026 (automated review), blocking item B1, with its simulation of the three "
                  "states; the headers' own words, quoted per file with their lines in v2/vendor/ibis-manifest.yaml (five "
                  "forbid distribution, eight carry a copyright line and no grant); and the fetch proven once into a scratch "
                  "folder (v2/docs/records/w5si2/readings/ibis-fetch-scratch-2026-09-28.txt).",

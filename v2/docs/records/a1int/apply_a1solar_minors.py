@@ -33,7 +33,7 @@ def edit(name, pairs):
 
 def main():
     if os.path.exists(os.path.join(A, "checks/check-2.md")): refuse("already applied")
-    for src, dst, note in (("CHECK.md", "check-1.md", "the independent AI check of 9f93a9fc; its items answered in the second issue"),
+    for src, dst, note in (("CHECK.md", "check-1.md", "the independent automated check of 9f93a9fc; its items answered in the second issue"),
                            ("CHECK-2.md", "check-2.md", "the focused re-check of 066e6b97; N1 to N3 answered by records/a1int/apply_a1solar_minors.py, N4 labelled in energy_runs.out")):
         t = open(os.path.join(SCR, src), encoding="utf-8").read()
         first, rest = t.split("\n", 1)

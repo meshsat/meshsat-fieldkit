@@ -10,7 +10,7 @@ Builds, from v2/cad/lid_pack_a1.py (imported: the one source of every number), f
 and reports every intersection volume, which must be 0.000 wherever lid_pack_a1.out reads a margin of 1.0 or more at the worst, and
 positive wherever it reads less (two controls prove the check can fail). Then exports arrangement B in the case frame at the nominal
 ceiling Z 154.44: the lid plate, every cell (d 18.55, L 65.25, the sheet's maxima), the cover envelope and P2's envelope, as STEP and STL.
-Usage: lid_pack_a1_cad.py <out dir>   (build123d; the CAD venv of v2/cad/requirements-cad.lock). Prototype design, AI review."""
+Usage: lid_pack_a1_cad.py <out dir>   (build123d; the CAD venv of v2/cad/requirements-cad.lock). Prototype design, automated review."""
 import os, sys
 from build123d import Box, Cylinder, Location, Vector, Compound, export_step, export_stl, Axis
 
@@ -66,7 +66,7 @@ def inter(a, b):
 def main():
     lines = ["Solids check of v2/cad/lid_pack_a1.py (build123d): the module's zones at the WORST room (face top Z 0, ceiling Z %.2f), lowered by their own" % L.ROOM_WORST,
              "allowances, against the face parts grown %.2f in plan and standing %.1f above their height (a TBD part to the ceiling)." % (L.PLAN_ALLOW, L.MIN_CLEAR),
-             "Every intersection must be 0.000 mm3 where lid_pack_a1.out reads 1.0 or more at the worst. Prototype design, AI review.", ""]
+             "Every intersection must be 0.000 mm3 where lid_pack_a1.out reads 1.0 or more at the worst. Prototype design, automated review.", ""]
     arr = {a["name"].split(":")[0]: a for a in L.arrangements()}
     faces = face_solids(L.ROOM_WORST)
     total_bad = 0

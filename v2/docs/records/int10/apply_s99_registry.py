@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """S-99 re-stated and its two follow-ups opened in the requirements registry (MESHSAT-1357, integration set 9, stream
-s99reg, 29 September 2026). AI engineering text; prototype design, nothing built, ordered or measured.
+s99reg, 29 September 2026). automated engineering text; prototype design, nothing built, ordered or measured.
 
   S-99   re-stated from v2/docs/records/s99a/REGISTRY-DRAFT.md section 1 (which supersedes records/s99/REGISTRY-DRAFT.md):
          the declared-demand question answered by decision 55 and the circuit, and the still-open items (a) to (g) with

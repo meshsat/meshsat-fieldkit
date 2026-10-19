@@ -1,11 +1,11 @@
 # Runtime and battery: Option A (48 h required, 72 h desired) against Option B (72 h required, upgraded battery) (stream l3batt, MESHSAT-1357)
 
-**30 September 2026.** Branch `fnd/l3batt`, from main `2edb74b8`. This page answers the owner's instruction of that day:
+**30 September 2026.** Branch `fnd/l3batt`, from main `837054d1`. This page answers the owner's instruction of that day:
 
 > "I am questioning the 72-hour requirement. Evaluate alternatives before asking me to sacrifice functions or accept
 > restrictive deployment conditions."
 
-**What this page is.** The author's analysis, AI arithmetic, not a qualified review and not the independent check.
+**What this page is.** The author's analysis, automated arithmetic, not a qualified review and not the independent check.
 - It is **prototype design**: nothing is bought, built, powered or measured. **Neither option is adopted**, and neither
   passes because its wording changes.
 - HF and the tablet are kept in every row (a1mech arrangement A), with the same approved profile.
@@ -152,7 +152,7 @@ M-02). No in-case arrangement found carries either 48 or 72 hours.
 **Nothing else is asked.** The cell choice and the pack's integration are engineering tasks. The 72 hours themselves are
 the session's figure (PROVENANCE.md): the owner's choice here sets M1's duration for the first time.
 
-**Second issue** (CHECK-1 of `5cd34c0b`, minors 1 to 4): the HF-receiving store in Wh in the table; the profile's limits
+**Second issue** (CHECK-1 of `c2010841`, minors 1 to 4): the HF-receiving store in Wh in the table; the profile's limits
 named in the functions row (HF not receiving, the tablet not charged; tablet charging unquantified, its missing figures
 named); the external pack's joins read against D-20 and EQ-13 routes (b) and (d); the baseline marked as Option A(i),
 pending L3-OD1.

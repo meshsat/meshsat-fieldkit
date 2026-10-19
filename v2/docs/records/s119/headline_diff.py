@@ -6,7 +6,7 @@ For each output it selects the headline lines by a pattern on the line (parsed p
 in prose is interpreted) and prints the base's line and HEAD's line side by side, marked CHANGED or same; it also prints
 how many lines of each output differ in all, and the charger rows of energy_inputs.yaml and energy_two_pack.py read with
 a YAML reader and an ast reader. Usage (repository root): python3 v2/docs/records/s119/headline_diff.py [--base <rev>]
-AI arithmetic on the record's model; nothing is measured.
+automated arithmetic on the record's model; nothing is measured.
 
 Second round (item M5 of the stream's check): the first issue named HEAD's commit, which is one commit behind as soon as
 its own output is committed; this issue names each file's sha256 (first 16) at the base and now instead, so the output

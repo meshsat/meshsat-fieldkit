@@ -2,16 +2,16 @@
 
 Prototype design: nothing is bought, built, powered or measured. Every figure here is printed by `l6r2_passives.py`
 (`l6r2_passives.out`, "out N" below), which reads only this tree and the dated catalogue reading in `inputs/`; this page is the
-short form. Based on `fnd/int28` at `9bdf58cd`. Round 3, the same day on `fnd/l6r2` from `b7fb0578`: `lcsc_fill.py`'s table
+short form. Based on `fnd/int28` at `2377713b`. Round 3, the same day on `fnd/l6r2` from `d9ac3761`: `lcsc_fill.py`'s table
 corrected to this record's selections with a property test (F1), and the three Coilcraft rows drawn on another body's footprint
-drafted onto their own (F4); section 8. Round 4, from `880437f4`: the codes written in the generators' calls corrected in the LCSC
-drafts and the property test extended to them (F7); section 8.3. Round 5, from `1784bac4`: the open requirements of F3 derived at
+drafted onto their own (F4); section 8. Round 4, from `c6a5dcfe`: the codes written in the generators' calls corrected in the LCSC
+drafts and the property test extended to them (F7); section 8.3. Round 5, from `9625b5fe`: the open requirements of F3 derived at
 the desk where the circuit bounds them, drafted as intent declarations, and the rows they close selected; section 8.4. Since round
 5 the record judges its rows as if those declarations were applied (`l6r2_intent.overlay`).
 
 ## 1. What was asked, and the denominator (out 1)
 
-The supplier package's reader (`inputs/bom_from_netlist.py`, copied from `fnd/int27` at `f7e0a9b5`, sha256 recorded) reads
+The supplier package's reader (`inputs/bom_from_netlist.py`, copied from `fnd/int27` at `3e209493`, sha256 recorded) reads
 **2707 references, 1879 without an LCSC field** from the six committed netlists. It counts every `(comp)` block, the parts the
 schematics mark `exclude_from_bom` (mounting holes, test points, fiducials) included. This record's denominator is the identity
 tool's: the **fitted** rows (`part_identities.rows`), **2485, of which 1657 carry no LCSC field**. Each board's uncoded rows are

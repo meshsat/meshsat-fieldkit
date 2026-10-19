@@ -1,13 +1,13 @@
 # Board B (compute): layout constraints
 
-**Bound to the set 6 candidate (27 September 2026, read at `00e74bbb`).** This sheet's inputs stand in the block below,
+**Bound to the set 6 candidate (27 September 2026, read at `c11c01c9`).** This sheet's inputs stand in the block below,
 one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
 computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
 table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
 table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
 the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 11**,
-which are the readings at `956feb28` with the H2 line's changes marked where they stand (`c62ee56b`, the paragraph
-below). Set 6 changed board B's netlist and intent file in `bfd79196` (EMCON forces the RockBLOCK's ENABLE low and
+which are the readings at `956feb28` with the H2 line's changes marked where they stand (`d3cc3dec`, the paragraph
+below). Set 6 changed board B's netlist and intent file in `04967ae1` (EMCON forces the RockBLOCK's ENABLE low and
 drives each card rail's enable from its slot's own 5 V): four decoupling entries (C607, C637, C667, C559), the gates
 U116, U216, U316 and U536 entered as loads of 1 to 2 mA, and the switch and enable net of +5V_LORA, +5V_LIME and +5V_RB
 declared. No rail's declared typical or peak current changed: **no row of the power table moved**. A line of the older
@@ -19,27 +19,27 @@ paragraph below is its own binding's).
 ```bound
 sheet      B
 board      b
-read       2026-09-29 at dccd1ad7
+read       2026-09-29 at 850000af
 current    section 2: the power table, and the figures the text under it quotes from it
-older      sections 1 and 3 to 11: read at 956feb28, with the H2 line's changes marked at c62ee56b
-netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 3ef9b8c49a01b728 changed dccd1ad7
-intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 6e46bc5651e17d8d changed dccd1ad7
+older      sections 1 and 3 to 11: read at 956feb28, with the H2 line's changes marked at d3cc3dec
+netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 3ef9b8c49a01b728 changed 850000af
+intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 6e46bc5651e17d8d changed 850000af
 board_file v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb sha256/16 2e64b5bf2d9cd3bc changed 88a5501e
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `c62ee56b`: phase B21, netlist
-`v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net` sha256/16 `8b78c59754a6a0c7` (board B's round 8 at `1fb8ebf1`, last
-changed by set 5 at `6d15af78`), intent `pcb-b-compute-intent.json` `162fcb9b95f680a7`; the committed board file
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `d3cc3dec`: phase B21, netlist
+`v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net` sha256/16 `8b78c59754a6a0c7` (board B's round 8 at `4e8d18c1`, last
+changed by set 5 at `45d0fb91`), intent `pcb-b-compute-intent.json` `162fcb9b95f680a7`; the committed board file
 `2e64b5bf2d9cd3bc` carries B21's older netlist (SCH-002 FAIL) and 416 unrouted connections. Section 2's table is
 checked against `calc/rail_widths.py` on that intent: every rail it lists reads the same; the H2 intent declares seventeen
 more supplies, each at most 0.3 A typical (the added row, marked **H2**). Board B is not at layout entry: **7 reasons at H2**
 (`CURRENT-EVIDENCE.md`): SI-001 INCONCLUSIVE, RF-002 FAIL (EQ-25), FEA-001, FEA-002, FEA-003, FEA-006, FEA-007. Known
-changes of the H2 line to the rest of this sheet: round 8 is merged (`1fb8ebf1`: the fabric's locked break-before-make,
+changes of the H2 line to the rest of this sheet: round 8 is merged (`4e8d18c1`: the fabric's locked break-before-make,
 FAB-01 to FAB-04, EMCON on each module's own rail, the 5G module's supply removed in hardware, the M.2 socket's
 locating holes, F1 the MF-MSMF110), and set 5 declared every supply from its maker's sheet with decision 42's class on
-every decoupling entry (`6d15af78`); PANEL_5V's row is corrected below. Every other line below is the reading at `956feb28`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+every decoupling entry (`45d0fb91`); PANEL_5V's row is corrected below. Every other line below is the reading at `956feb28`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
 
 As first written: a view over the records at `main` `956feb28` (conventions and shared rules: [README.md](README.md)),
 candidate then netlist `669d02d07aeaae4b`, intent `cf461c0b75ce368b`, 16 blocker lines, round 8 not yet integrated
@@ -114,25 +114,25 @@ milliamperes: the fabricator's floor governs there, not the current.
 | +5V_HDMI | 5.00 | 0.10 / 0.50 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |  |
 | +54V_POE | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | spacing governs, section 8 |
 | GND | 0.00 | 10.00 / 21.00 | 10.00, typical (PI-001) | 8.15 | 2.76 | 66.76 (over 40 mm) | 29 / 24 / 20 | the return of the four input rails, carried by the In1 plane and the outer pours: the widths are what one conductor would need and no band is asked for; the barrels are per transition, at the 21 A peak |
-| VBUS_FLASH1 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "it feeds only the USBLC6-2SC6's VBUS reference (pin 5)"; nanoamperes, which print as 0.00 |
-| SIM1_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "SIM 1's supply from the module's USIM1_VDD"; the 50 mA peak is INFERRED, the intent file says |
-| SIM2_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "SIM 2's supply from the module's USIM2_VDD" |
-| SIMC2_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "SIM 2's supply at the holder, past the 0 Ohm eSIM option link R272" |
-| VBUS_FLASH2 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `6d15af78`: as VBUS_FLASH1 |
-| VBUS_FLASH3 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `6d15af78`: as VBUS_FLASH1 |
-| VBAT_RTC | 3.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "the CR2032's 3 V to the three modules' RTC inputs (pin 76)"; microamperes, which print as 0.00 |
-| POE_P | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "a series segment of +54V_POE at the port's 0.60 A peak"; spacing governs, section 8 |
-| MDI_A_P | 54.00 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "a series segment of POE_P carrying half its current, and a 1000BASE-T signal conductor"; spacing governs, section 8 |
-| MDI_A_N | 54.00 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `6d15af78`: as MDI_A_P |
-| MDI_B_P (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "half the port's return from the jack's pin 3"; "up to 57 V with it off", so spacing governs, section 8 |
-| MDI_B_N (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `6d15af78`: as MDI_B_P |
-| POE_DRAIN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "the port's return from T1's centre tap MCT2 (pin 21) to the drain of the port switch Q1"; "up to 57 V with it off" |
-| POE_SEN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "the port's return from Q1's source to the 0.25 Ohm sense resistor R12" |
-| GNSS_VDD_RF | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "the active antenna's supply from the LG290P's VDD_RF to R23"; the currents are INFERRED, the intent file says |
-| GNSS_BIAS | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "a series segment of GNSS_VDD_RF" |
-| GNSS_ANT | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **H2**, new in `6d15af78`: "a series segment of GNSS_VDD_RF" |
+| VBUS_FLASH1 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "it feeds only the USBLC6-2SC6's VBUS reference (pin 5)"; nanoamperes, which print as 0.00 |
+| SIM1_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "SIM 1's supply from the module's USIM1_VDD"; the 50 mA peak is INFERRED, the intent file says |
+| SIM2_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "SIM 2's supply from the module's USIM2_VDD" |
+| SIMC2_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "SIM 2's supply at the holder, past the 0 Ohm eSIM option link R272" |
+| VBUS_FLASH2 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: as VBUS_FLASH1 |
+| VBUS_FLASH3 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: as VBUS_FLASH1 |
+| VBAT_RTC | 3.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "the CR2032's 3 V to the three modules' RTC inputs (pin 76)"; microamperes, which print as 0.00 |
+| POE_P | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "a series segment of +54V_POE at the port's 0.60 A peak"; spacing governs, section 8 |
+| MDI_A_P | 54.00 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "a series segment of POE_P carrying half its current, and a 1000BASE-T signal conductor"; spacing governs, section 8 |
+| MDI_A_N | 54.00 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: as MDI_A_P |
+| MDI_B_P (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "half the port's return from the jack's pin 3"; "up to 57 V with it off", so spacing governs, section 8 |
+| MDI_B_N (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: as MDI_B_P |
+| POE_DRAIN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "the port's return from T1's centre tap MCT2 (pin 21) to the drain of the port switch Q1"; "up to 57 V with it off" |
+| POE_SEN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "the port's return from Q1's source to the 0.25 Ohm sense resistor R12" |
+| GNSS_VDD_RF | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "the active antenna's supply from the LG290P's VDD_RF to R23"; the currents are INFERRED, the intent file says |
+| GNSS_BIAS | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "a series segment of GNSS_VDD_RF" |
+| GNSS_ANT | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **H2**, new in `45d0fb91`: "a series segment of GNSS_VDD_RF" |
 | VBUS_QMX | 5.00 | 0.30 / 0.30 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
-| PANEL_5V | 5.00 | 0.60 / 0.60 | 0.60, typical (PI-001) | 0.15 | 0.06 | 0.89 | 1 / 1 / 1 | behind F1, an MF-MSMF110 (1.1 A hold, 2.2 A trip) since round 8, `1fb8ebf1` (`boards/b.json` `_panel_5v_fuse_r8_why`): the copper must clear the fuse's hold, which the width of this row does not say. The record's answer is the PANEL class at 0.8 mm in `gen_pcb_b3.py` for the next cut (`pcb_energy_chain.yaml` stage B_PANEL_5V); board C declares 1.0 A peak on the same conductor |
+| PANEL_5V | 5.00 | 0.60 / 0.60 | 0.60, typical (PI-001) | 0.15 | 0.06 | 0.89 | 1 / 1 / 1 | behind F1, an MF-MSMF110 (1.1 A hold, 2.2 A trip) since round 8, `4e8d18c1` (`boards/b.json` `_panel_5v_fuse_r8_why`): the copper must clear the fuse's hold, which the width of this row does not say. The record's answer is the PANEL class at 0.8 mm in `gen_pcb_b3.py` for the next cut (`pcb_energy_chain.yaml` stage B_PANEL_5V); board C declares 1.0 A peak on the same conductor |
 
 Sized at the maker's figure, above the declaration (`calc/rail_widths.py` SIZED_TO;
 `v2/docs/feasibility/POWER-THERMAL.md` section 10). The declaration is unchanged and is board B's owner's to correct;

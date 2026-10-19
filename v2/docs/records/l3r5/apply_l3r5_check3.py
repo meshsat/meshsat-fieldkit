@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """File check 3 of layer 3's closure (MESHSAT-1357, 30 September 2026): Claude's verification of the final correction of
-B2 (the coordinator's mechanical check and the targeted tests; not a model review and not an Astra check), appended to
+B2 (the coordinator's mechanical check and the targeted tests; not a model review and not a second-worker check), appended to
 l3r2.yaml's `independent_check` as ACCEPTED after the engineering collaborator's two checks (NOT_ACCEPTED). The record's
 first line must read `accepted: yes` (the renderer verifies it, never trusts it). Applied once: a second run refuses.
 
@@ -15,7 +15,7 @@ PREV = "v2/docs/records/l3r5/checks/astra-check-l3r5-2.md"
 SCOPE = ("B2 of the engineering collaborator's check 2 (astra-check-l3r5-2, which accepted B1, B3 and M1), verified "
          "against that check's own closure criterion as the owner clarified it, at the verified revision a66c4e5b (B2 at "
          "9f3eab0b), with D-22's trace into REQ-072: Claude's (the coordinator's) verification by its own check "
-         "verify_b2.py and the targeted tests, not a model review and not an Astra check; Astra never examined these revisions")
+         "verify_b2.py and the targeted tests, not a model review and not a second-worker check; the second worker never examined these revisions")
 
 
 def refuse(m): print("apply_l3r5_check3: REFUSED: %s" % m); sys.exit(1)

@@ -1,6 +1,6 @@
-THE RUNNER VALIDATORS ON THE SET 6 CANDIDATE AT 00e74bbb
+THE RUNNER VALIDATORS ON THE SET 6 CANDIDATE AT c11c01c9
 Worker set6fix, MESHSAT-1357, 27 September 2026 22:42 to 22:46 CEST, the runner (no KiCad here).
-Tree: branch fnd/r8int6 at 00e74bbbbb16f3e78bbd38960b01b35815dc7a0d, with the candidate's gitignored evidence
+Tree: branch fnd/r8int6 at c11c01c9bbf0b5b0818bcdf2a2a6858268370535, with the candidate's gitignored evidence
 restored from the box's /root/r8int6/evidence-head.tar (sha256 814ea3eb1427e736f2224b7266355548a0976bceaa111d2b17f8b6c0a988aa6d).
 Run from v2/ecad/tools with PYTHONDONTWRITEBYTECODE=1. After every command git status --short was empty, and no
 file in the tree was written by any of them.
@@ -43,14 +43,14 @@ changed to answer it. The cause is where the restored audit points:
   * SHOWN, without writing in the tree: the seven audits were copied OUTSIDE the tree with that prefix
     replaced by this worktree's path, where the same verdict files do exist (all 293 resolve), and
     rules_render.open_pairs_doc(open_pairs.collect(out_dir=<the copy>)) was compared with the page on disk:
-    "PCB-OPEN-PAIRS.md rendered from the re-based copy EQUALS the committed page", at 00e74bbb, with the
+    "PCB-OPEN-PAIRS.md rendered from the re-based copy EQUALS the committed page", at c11c01c9, with the
     changed reliability.py in place. REL-001 reads PASS on every board, so no reliability reading decides an
     open pair and the change cannot move this page.
   * WHY THE BOX DOES NOT SEE IT. The box's clone holds the same audit with the same dead paths (read there at
     20:47 UTC while the suite ran: 49 such paths in a.json, none under /root/r8int6/suite, and /tmp/<session temp>
     does not exist on the box). The suite's check passes there all the same
-    (test_rule_gate_mapping.t_the_documents_are_generated_and_not_hand_maintained PASS, at 1b51eb36 in the
-    archived log and at 00e74bbb in suite-box-760d7f41.log line 2410), because the test before it,
+    (test_rule_gate_mapping.t_the_documents_are_generated_and_not_hand_maintained PASS, at f700bfe5 in the
+    archived log and at c11c01c9 in suite-box-760d7f41.log line 2410), because the test before it,
     t_one_render_converges_when_a_rule_judges_a_page_the_same_run_writes, runs a full rules_render WRITE against
     the real tree, which re-takes the audit there with that tree's own paths (read on the box after the run:
     a.json rewritten at 20:48:54 UTC, 49 paths under /root/r8int6/suite, none under /tmp/<session temp>). On this
@@ -75,8 +75,8 @@ WHAT THE CHANGE MAKES STALE, for the re-take on the box (not taken here, by the 
   This is not a forecast of the re-take, which is taken on the box by the integrator.
 
 ONE GENERATED PAGE THE CHANGE MAKES STALE, seen on the box and not on this host:
-  after the suite at 00e74bbb the box's clone reads " M v2/docs/CURRENT-EVIDENCE.md" (suite-box-status-760d7f41.txt;
-  the same file was empty after the run at 1b51eb36). The suite's own render wrote one line differently:
+  after the suite at c11c01c9 the box's clone reads " M v2/docs/CURRENT-EVIDENCE.md" (suite-box-status-760d7f41.txt;
+  the same file was empty after the run at f700bfe5). The suite's own render wrote one line differently:
     -**3 of 338 required rows changed class; 127 more changed only their first failing cause.**
     +**3 of 338 required rows changed class; 120 more changed only their first failing cause.**
   Seven rows fewer, and they are the seven reliability readings. The page compares the cause the entry-script
@@ -84,7 +84,7 @@ ONE GENERATED PAGE THE CHANGE MAKES STALE, seen on the box and not on this host:
     restored audit (taken 18:07 UTC, reliability.py as it wrote the readings):
         evidence_cause TOOL_CHANGED, writer_only_cause PREDATES_ARTEFACT on A, B, C, D, E and P and
         UNBOUND on E5                                                           the two causes differ
-    the box clone's audit, re-taken by the suite at 20:48 UTC at 00e74bbb:
+    the box clone's audit, re-taken by the suite at 20:48 UTC at c11c01c9:
         evidence_cause TOOL_CHANGED, writer_only_cause TOOL_CHANGED             the two causes agree
         "reliability.py has changed since this reading (wrote 149a48e5f2419955, now 71d0872195905c9d)"
   The class is AWAITING_REVALIDATION in both, before and after, so no row changes class and no board's

@@ -1,6 +1,6 @@
 # IF-AB-POWER: every remaining INCONCLUSIVE, made actionable (item 4 of the owner's instruction of 28 September 2026)
 
-Stream s99, MESHSAT-1357. AI engineering analysis following an AI review; correction cx3-s99-correction. Prototype design: nothing built, ordered or measured. Each row
+Stream s99, MESHSAT-1357. automated engineering analysis following an automated review; correction cx3-s99-correction. Prototype design: nothing built, ordered or measured. Each row
 names the exact missing parameter, the requirement it bears on, the source or owner, the next action, the acceptance
 check, whether documentation or calculation resolves it or only a measurement does, a conservative bound where one
 suffices and what it decides, the gate it blocks, and the prototype test kept as a separate obligation.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """U41 (TPS62933, board A, +5V_D8IN) output band for candidate feedback dividers: stream s99a item 4.
 
-AI engineering arithmetic, prototype design (nothing built or measured). Sources, all held:
+automated engineering arithmetic, prototype design (nothing built or measured). Sources, all held:
   TI SLUSEA4D (June 2021, revised August 2022), v2/vendor/ti/ti-tps62933.pdf, printed p.6, 8.5: VFB 792/800/808 mV at
   TJ 25 C, 788/812 mV at 0 to 85 C, 784/800/816 mV at TJ -40 to 150 C; IFB 0.15 uA maximum at VFB 0.8 V (no sign given,
   so it is applied in both directions through the top resistor).

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record the owner's instruction of 30 September 2026 on the Codex worker and the decision register as owner ruling D-30
+"""Record the owner's instruction of 30 September 2026 on the second worker and the decision register as owner ruling D-30
 (MESHSAT-1357, layer 3 round 5, the closure pass). Applied once: a second run refuses. It changes no requirement.
 
 The instruction reached this work through the coordinating session and is filed, as quoted there, in
@@ -17,9 +17,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import l3edit as E  # noqa: E402
 
 INSTR = "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"
-QUOTES = ['Upgrade the existing Codex/GPT-6-Astra integration from a limited pilot to a standing engineering collaborator. ... This authorises further bounded Astra assignments through the existing ChatGPT authentication and available subscription allowance. It replaces the exhausted pilot-call count. Preserve existing spending, sandbox and publication limits; no automatic paid-API fallback. Claude remains the coordinator and integrator. ... Both agents must consult the same authoritative decision register. Record my latest instructions there so I do not have to relay them repeatedly. ... Astra cannot change my requirements or approve its own authored work. Agreement between agents is not a substitute for calculations, sources or tests. Keep at most two active workers across Claude and Codex, with one author per worktree.']
+QUOTES = ['Upgrade the existing second-worker integration from a limited pilot to a standing engineering collaborator. ... This authorises further bounded the second worker assignments through the existing authentication with the maker and available subscription allowance. It replaces the exhausted pilot-call count. Preserve existing spending, sandbox and publication limits; no automatic paid-API fallback. Claude remains the coordinator and integrator. ... Both agents must consult the same authoritative decision register. Record my latest instructions there so I do not have to relay them repeatedly. ... The second worker cannot change my requirements or approve its own authored work. Agreement between agents is not a substitute for calculations, sources or tests. Keep at most two active workers across Claude and the second worker, with one author per worktree.']
 RID = "D-30"
-TITLE = "the owner's instruction on the Codex worker as a standing collaborator and on one decision register (30 September 2026)"
+TITLE = "the owner's instruction on the second worker as a standing collaborator and on one decision register (30 September 2026)"
 RULING = ("The owner's instruction of 30 September 2026, relayed by the coordinating session and quoted in " + INSTR + ", "
           "recorded in the decision register; it changes no requirement. In his words: \"" + QUOTES[0] + "\" The decision "
           "register both agents consult is that file together with this registry's owner_rulings.")

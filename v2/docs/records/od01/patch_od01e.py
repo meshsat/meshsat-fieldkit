@@ -129,9 +129,9 @@ def main():
     ])
     edit(OD + "README.md", [
         ("page CL-4 gives S-M3-2", "page CL-5 gives S-M3-2"),
-        ("| `checks/check-1.md`, `checks/check-2.md` | The two independent AI checks of 28 September (the lead exit's bias under 1 percent and H2's size rest on check-2) |\n",
-         "| `checks/check-1.md`, `checks/check-2.md` | The two independent AI checks of 28 September (the lead exit's bias under 1 percent and H2's size rest on check-2) |\n"
-         "| `checks/check-3.md` to `checks/check-5.md` | The independent AI checks of 29 September of this revision, each answered by the patch the log names |\n"),
+        ("| `checks/check-1.md`, `checks/check-2.md` | The two independent automated checks of 28 September (the lead exit's bias under 1 percent and H2's size rest on check-2) |\n",
+         "| `checks/check-1.md`, `checks/check-2.md` | The two independent automated checks of 28 September (the lead exit's bias under 1 percent and H2's size rest on check-2) |\n"
+         "| `checks/check-3.md` to `checks/check-5.md` | The independent automated checks of 29 September of this revision, each answered by the patch the log names |\n"),
         ("| `patch_rfq_od01b.py`, `patch_checkout_od01b.py`, `make_package.py` |",
          "| `patch_rfq_od01b.py`, `patch_checkout_od01b.py`, `patch_od01c.py`, `patch_od01d.py`, `patch_od01e.py`, `make_package.py` |"),
     ])

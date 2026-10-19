@@ -1,5 +1,5 @@
-THE TWO APPLY SCRIPTS EXERCISED ON A SCRATCH COPY OF fnd/int7 AT 42a7ce3b (worker d6rel, MESHSAT-1357, 28 September 2026 17:56 CEST)
-The copy: git archive 42a7ce3b of v2/ecad/tools, v2/docs, the two vendor source records, the seven declared-phase artefacts and the seven
+THE TWO APPLY SCRIPTS EXERCISED ON A SCRATCH COPY OF fnd/int7 AT 95b93d53 (worker d6rel, MESHSAT-1357, 28 September 2026 17:56 CEST)
+The copy: git archive 95b93d53 of v2/ecad/tools, v2/docs, the two vendor source records, the seven declared-phase artefacts and the seven
 boards' routed/ evidence folders (which hold the integration line's re-take of reliability with the UNREPAIRED tool, PASS on every board,
 taken 2026-09-28T14:54:53Z to 14:54:58Z, that is 16:54 CEST), with this branch's reliability.py, wear_inventory.py, pcb_reliability.yaml,
 the two test files, sources.txt and the 30 documents the list cites laid over it (as the merge would). It is not a git checkout, so --commit
@@ -85,7 +85,7 @@ exit 0
    P   INCONCLUSIVE ts 2026-09-28T15:56:21Z list 40f2a98323b1f9ce netlist 760ac6f74d62d194 bound True unjudged 0 held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13
 == 10. stage close-s89 after the re-take
 apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not checked here
-apply_rel001_coverage: close-s89: S-89 moved to closed_items in v2/ecad/tools/pcb_requirements.yaml (closed_by commit adbbd5ee); the wait on it cited instead in REQ-022, REQ-024, REQ-026, REQ-028, REQ-064; re-parsed
+apply_rel001_coverage: close-s89: S-89 moved to closed_items in v2/ecad/tools/pcb_requirements.yaml (closed_by commit d3a46eca); the wait on it cited instead in REQ-022, REQ-024, REQ-026, REQ-028, REQ-064; re-parsed
 apply_rel001_coverage: what holds each board, as the closing evidence says it: A held by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held by REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5 held by REL-O-06, REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13
 apply_rel001_coverage: rules_lib.py requirements: 36 error(s) before this change, 36 after, 0 new
 exit 0
@@ -94,7 +94,7 @@ apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not c
 apply_rel001_coverage: REFUSED: S-89 is already in closed_items: this stage has run
 exit 2
 == 12. the registry re-parsed
-   S-89 open: False ; closed_by: commit adbbd5ee ; keys: ['closed_by', 'closing_evidence', 'id', 'title']
+   S-89 open: False ; closed_by: commit d3a46eca ; keys: ['closed_by', 'closing_evidence', 'id', 'title']
    open items: 63 ; closed items: 59 ; S-88 and S-90 still open: True
    REQ-022 waits_on None; history cites S-89: True
    REQ-024 waits_on ['S-55']; history cites S-89: True
@@ -103,7 +103,7 @@ exit 2
    REQ-064 waits_on None; history cites S-89: True
    closing evidence: ... What holds each board, read from its own reading and equal to what the list holds it by: A held by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held by REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5 held by REL-O-06, REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13. A board reads PASS only where the list holds it by nothing; a class whose maker publishes no figure, an owed figure, an owed measure and an open item that names the board each keep it INCONCLUSIVE. RE
 == 13. the validator on the patched copy: its last line and its lines that name S-89
-warn  closed item S-89: git cannot say here whether commit adbbd5ee exists
+warn  closed item S-89: git cannot say here whether commit d3a46eca exists
 rules_lib: 144 requirement record(s), 36 error(s), 22 warning(s)
 == 14. apply_config_inputs_reliability.py
 apply_config_inputs_reliability: CONFIG_INPUTS['reliability.py'] declares the list and 30 cited document(s); pcb_board_facts.yaml is gone from it; re-parsed with ast, 24 other entries unchanged

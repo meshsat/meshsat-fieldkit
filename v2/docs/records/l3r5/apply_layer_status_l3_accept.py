@@ -36,7 +36,7 @@ def main():
     lines[hits[0]] = ("| An independent check accepts the handover | MET | the engineering collaborator's closure check "
                       "astra-check-l3r5-1 and its targeted recheck astra-check-l3r5-2 read NOT ACCEPTED, the recheck accepting "
                       "B1, B3 and M1; B2's final correction and D-22's trace are verified by Claude's check 3 (check-l3r5-3, "
-                      "accepted: yes, at `a66c4e5b`; not a model review and not an Astra check; `v2/docs/records/l3r5/checks/`) |")
+                      "accepted: yes, at `a66c4e5b`; not a model review and not a second-worker check; `v2/docs/records/l3r5/checks/`) |")
     new = "\n".join(lines)
     EDITS = [
         ("**Now (30 September 2026): IN_PROGRESS, reopened for the current target configuration (L3-R2).**",

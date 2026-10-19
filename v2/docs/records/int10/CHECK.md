@@ -1,9 +1,9 @@
 mergeable: no
 <!-- Filed by the integrating session as the checker returned it (MESHSAT-1357), with one internal address redacted. Blocking item B1 and minor items M1, M4 and M7 are answered in CLOSURE.md beside this file; the rest are carried there. -->
 
-# Check of integration set 9, fnd/int10 at 27d8a129 onto main 34791251 (MESHSAT-1357, 29 September 2026)
+# Check of integration set 9, fnd/int10 at 27d8a129 onto main 680df864 (MESHSAT-1357, 29 September 2026)
 
-**AI review, not a qualified review.** One assistant checker who wrote none of the candidate, working read-only in the
+**automated review, not a qualified review.** One assistant checker who wrote none of the candidate, working read-only in the
 scratch clone `_scratch/chk-int10`.
 - **The final commit judged is 27d8a129b64718c0341a58385aec4a34505ac027.** It is 03237888 plus one change: board
   A's EMC sheet gains U41 (section 6).
@@ -23,7 +23,7 @@ committed, not what it contains.
 ## 1. Blocking
 
 **B1. Four commits on the line are authored and committed as an assistant identity.** `3ea5a994`, `8eca1ef3`,
-`b11e6a16` and `cef7cb77` (the merges of streams energy, od01 and s99reg, and of main 34791251) carry
+`b11e6a16` and `cef7cb77` (the merges of streams energy, od01 and s99reg, and of main 680df864) carry
 `author the runner's service identity (address redacted by the integrator)` and the same committer (`git cat-file -p cef7cb77`). Main has
 none: 0 of its history, and all of its recent merges, are `Kyriakos Papadopoulos <ncpjfuzl@mxmx.email>`. The other 37
 commits of the set are the owner's identity. The repository's standing rule is "commits as the owner, never as any

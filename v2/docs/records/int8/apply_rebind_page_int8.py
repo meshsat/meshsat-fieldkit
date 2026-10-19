@@ -129,7 +129,7 @@ def main():
     if (sd["verdict"], sa["verdict"]) != ("PASS", "PASS"): refuse("safe_lines reads %s, %s" % (sd["verdict"], sa["verdict"]))
 
     how = ("%s re-read at the FINAL render of integration set 7 of 28 September 2026 (branch fnd/int8: the lid tray stream "
-           "w5tray with its two drafts; the third check's carried items; the Codex pilot's records on finding I-03 with its items "
+           "w5tray with its two drafts; the third check's carried items; the second-worker pilot's records on finding I-03 with its items "
            "S-98 and S-99 and the contract's contact rating from the held JST VH catalogue; the edge-rate stream w5si2 with its "
            "seven drafts and the makers' pinned models; decision 31's stream d8dec31 with the reviewed set of external pins; the "
            "reliability stream d6rel; the constraint-binding stream p3bind; then the consolidated re-take of every schematic-phase "

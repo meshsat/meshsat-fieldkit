@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """apply_hw_fw_contract_rowb.py: DRAFT apply script on v2/docs/HW-FW-CONTRACT.md (Layer 9 record l9t5, round 10; Layer 4 task L4A-61,
-the propagation of row (b) of the AI-scope register; MESHSAT-1357, 7 October 2026, W151). UNAPPLIED: the integrator runs it; this record
+the propagation of row (b) of the automation-scope register; MESHSAT-1357, 7 October 2026, W151). UNAPPLIED: the integrator runs it; this record
 runs it only on scratch copies (v2/ecad/tools/tests/test_l9t5_rowb.py).
 
 WHAT IT IS: the Layer 5 rows row (b)'s drafts change, restated, and the in-service limiter test added as a new row pair. Row (b)'s drafts
@@ -169,7 +169,7 @@ CHANGE = ("| 4 (row b) | 7 October 2026 | By record l9t5's round 10, Layer 4 tas
           "controller-protection role named as HO-E's; restated by round 12 (W167, `records/l9t5/T10-ROUND12.md`, on row (b)'s targeted "
           "recheck Q-183): V-B20 reads E-17 also at FW-B24's pass top, V-B23's hold-off vector a short holding the rail under BOR, "
           "FW-B22's hold-off across a peer's own reset; OWED (DRAFTED, PROVISIONAL: row (b) read SUPPORTED AS CONDITIONAL by Q-183, "
-          "an AI review) |\n")
+          "an automated review) |\n")
 
 
 def refuse(msg):

@@ -1,8 +1,8 @@
 # S-99 correction record, 28 September 2026
 
-Job `cx3-s99-correction`, base `71bacbf6ed35aabe08fb9b5e53de54c6cf84eab2`.
+Job `cx3-s99-correction`, base `8652e3486d66bb333d3da9646dac07ba93e1ad73`.
 Prototype design: no board has been built, ordered or measured. This is an author correction following the
-**AI review** in `checks/codex-check-1.md`, not acceptance or qualified review. Only this record folder changed.
+**automated review** in `checks/codex-check-1.md`, not acceptance or qualified review. Only this record folder changed.
 ACCEPTED below means the finding is accepted for correction, never that S-99 is closed. The review has eleven
 bullets: its final arithmetic and counts/authority bullets are grouped as F10, as this job requires.
 The valid sense paths, topology, original input hashes and load arithmetic are reused. No input was changed or

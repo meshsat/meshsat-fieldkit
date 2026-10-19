@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""l4e11_fet.py: record l4e11, ROUND FET (Layer 4 AI-scope register tasks L4A-70 and L4A-71; MESHSAT-1357, 7 October 2026).
+"""l4e11_fet.py: record l4e11, ROUND FET (Layer 4 automation-scope register tasks L4A-70 and L4A-71; MESHSAT-1357, 7 October 2026).
 
 L4A-70 (HO-L, E11-37): search the makers' sheets for a battery-FET set whose gate load is under TI's 5 nF on PRINTED maxima (Ciss or
 QG(tot)) and that meets E-1's 40.78 K/W bar at the breaker's held 23.93 A; if none does, (i)(a) stays CONDITIONAL on E-05 and the fallback

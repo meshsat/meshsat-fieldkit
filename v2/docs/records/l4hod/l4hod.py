@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""l4hod.py: record l4hod, Layer 4 task L4A-58 (the ledger's HO-D under W138's limiter, row (b) of the AI-scope register; W146,
+"""l4hod.py: record l4hod, Layer 4 task L4A-58 (the ledger's HO-D under W138's limiter, row (b) of the automation-scope register; W146,
 MESHSAT-1357, 7 October 2026): the peers' in-service test of each supervisor's TPS2553-1, drafted on board B as record l9t5's
 apply_gen_sch_b_hodtest.py. PROTOTYPE DESIGN: nothing in this kit has been built, bought, powered or measured; no figure printed here
 is a measurement. It closes no cx46 item and moves no state.

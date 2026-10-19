@@ -60,7 +60,7 @@ def build(root):
             "reviewed_on": "2026-09-28",
             "netlist": APD.NETLIST[letter],
             "netlist_sha256_16": hashlib.sha256(raw).hexdigest()[:16],
-            "why": ("the review of decision 31 (an AI review, stream d8dec31) enumerated every connector pin of this "
+            "why": ("the review of decision 31 (an automated review, stream d8dec31) enumerated every connector pin of this "
                     "board's netlist that carries a supply or a signal and classed each as external or internal; the "
                     "external pins are these, and the declaration is corrected to them by "
                     "v2/docs/records/d8dec31/apply_port_declarations.py"),

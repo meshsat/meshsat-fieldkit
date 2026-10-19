@@ -1957,7 +1957,7 @@ def t_p0sol_d10_is_written_as_an_unresolved_defect_and_b2_never_as_its_closure()
 
 
 def t_p0sol_b2_cold_guarantee_withdrawn_and_pair_faults_tabled():
-    """Astra's focused check cx45 (5 October 2026, Q6): B2's cold-connection guarantee was claimed without a selected sequenced
+    """the second worker's focused check cx45 (5 October 2026, Q6): B2's cold-connection guarantee was claimed without a selected sequenced
     connector or a contact and control timing proof, and "a shorted presence core can only hold INP low" was false. The output
     withdraws the guarantee (5e: the time leads, BST kept charged from VS, bounce, the enable path not simulated), solves the pair's
     faults as a circuit and tables them (5f), and takes no protection credit; no text, the draft's included, keeps either claim."""
@@ -2022,7 +2022,7 @@ def t_p0sol_the_baseline_does_not_depend_on_b2():
 
 
 def t_p0sol_b2_is_unselected_and_withdrawn_as_drafted_with_no_owner_request():
-    """Astra's recheck cx46 (item 18) and the owner's review part 25: route B2 is UNSELECTED and WITHDRAWN AS DRAFTED throughout; no
+    """the second worker's recheck cx46 (item 18) and the owner's review part 25: route B2 is UNSELECTED and WITHDRAWN AS DRAFTED throughout; no
     text calls it selected, describes a prevention it achieves, asks a decision or recommends adoption; no owner action rests on it
     (the approved interface stands); its defects P2 and P3 stay explicit REMAINING ENGINEERING outside the baseline."""
     import re

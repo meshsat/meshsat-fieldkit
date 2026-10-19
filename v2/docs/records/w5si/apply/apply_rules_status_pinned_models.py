@@ -6,7 +6,7 @@ script makes the change and the integrator runs it.
 WHY. The makers' IBIS models SI-001 reads are withheld from the repository (v2/vendor/ibis-manifest.yaml, its header).
 rules_status binds a reading to its configuration by the sha the reading recorded or by the instant the file was
 committed, and a declared input no commit holds "cannot be dated by a commit": CONFIG_CHANGED. The drafts check of
-28 September 2026 (AI review) showed what follows from declaring the models as ordinary inputs:
+28 September 2026 (automated review) showed what follows from declaring the models as ordinary inputs:
     models committed          BOUND            (the one state that publishes them)
     present, never committed  CONFIG_CHANGED   "cannot be dated by a commit"
     absent                    CONFIG_CHANGED   "the reading recorded sha ... and the file is absent"

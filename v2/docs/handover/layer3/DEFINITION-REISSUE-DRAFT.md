@@ -26,11 +26,11 @@ Rows and rulings: L3-OD7 `objective-48-72`, D-32; L3-OD2 `both-kept`, D-33; L3-O
 
 **Baselined text:**
 
-> **Status: layer 2 of the foundation baseline (MESHSAT-1357), BASELINED at `ab560ff5`,**
+> **Status: layer 2 of the foundation baseline (MESHSAT-1357), BASELINED at `9e2587a3`,**
 
 **Proposed text:**
 
-> **Status: layer 2 of the foundation baseline (MESHSAT-1357), RE-ISSUED on the owner's rulings on layer 3 (the re-issue note below), pending its layer's review; BASELINED at `ab560ff5`,**
+> **Status: layer 2 of the foundation baseline (MESHSAT-1357), RE-ISSUED on the owner's rulings on layer 3 (the re-issue note below), pending its layer's review; BASELINED at `9e2587a3`,**
 
 ### C02. the head, after the rule of reopening: the re-issue note (line 15 to 16)
 
@@ -260,11 +260,11 @@ Rows and rulings: L3-OD7 `objective-48-72`, D-32; L3-OD2 `both-kept`, D-33; L3-O
 
 **Baselined text:**
 
-> **Status: layer 1 of the foundation baseline (MESHSAT-1357), BASELINED at `ab560ff5`,**
+> **Status: layer 1 of the foundation baseline (MESHSAT-1357), BASELINED at `9e2587a3`,**
 
 **Proposed text:**
 
-> **Status: layer 1 of the foundation baseline (MESHSAT-1357), RE-ISSUED on the owner's rulings on layer 3 (the re-issue note below), pending its layer's review; BASELINED at `ab560ff5`,**
+> **Status: layer 1 of the foundation baseline (MESHSAT-1357), RE-ISSUED on the owner's rulings on layer 3 (the re-issue note below), pending its layer's review; BASELINED at `9e2587a3`,**
 
 ### B02. the head, after the rule of reopening: the re-issue note (line 15)
 

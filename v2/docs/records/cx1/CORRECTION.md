@@ -1,8 +1,8 @@
 # Correction cx1-if-ab-power-c1
 
-28 September 2026. Launcher base `b0033401b4b31e9982a40890c2b3a8782d4f9b0f`.
+28 September 2026. Launcher base `43881e8d5b326ba11d5f09fda821a655839676ad`.
 Prototype design: no V2 board has been built, ordered or measured. Desk
-arithmetic and AI review, not qualified review or closure of I-03.
+arithmetic and automated review, not qualified review or closure of I-03.
 `checks/check-1-RESULT.md` was read first, in full, then the comparison and
 blind reproduction. All requested items are accepted. Mode figures remain
 INCONCLUSIVE. All edits are under `v2/docs/records/cx1/`.
@@ -174,7 +174,7 @@ with the fitted standard header, for which JST states no current rating.
 
 ## Correction checks
 
-All four requested checks ran and passed. These are reproduction and AI
+All four requested checks ran and passed. These are reproduction and automated
 review checks, not electrical acceptance. Only the draft's `--check` path
 ran; the application stays unexecuted.
 
@@ -231,7 +231,7 @@ python3 -c "import ast; ast.parse(open('v2/docs/records/cx1/apply_declarations_d
 
 ### (d) Updated hand arithmetic
 
-AI review of `ANALYSIS.md`'s displayed +5V_DEV calculations, independently
+automated review of `ANALYSIS.md`'s displayed +5V_DEV calculations, independently
 recomputed using inline Python `decimal.Decimal` at precision 40. The
 harness asserted the rounded results and their presence in the analysis;
 it also checked the percentages and the 5.1/5.3 A typical alternatives.

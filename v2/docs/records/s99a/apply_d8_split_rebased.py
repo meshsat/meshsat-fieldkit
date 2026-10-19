@@ -7,7 +7,7 @@ mezzanine's eFuse (2.0 A limit, OVLO, D8_EN) fed from the new rail +5V_D8IN. The
 its loads (typical 4.1 A = board B's 3.8 A interim plus the wall port's 0.3 A; peak 6.9 A = B 6.0 + wall 0.9, which
 is what the line already says and now becomes true). VBAT's load map takes U41 at 0.4 A typical.
 
-Prototype design, AI engineering analysis. Only --check is run by the author: it validates every anchor occurs once,
+Prototype design, automated engineering analysis. Only --check is run by the author: it validates every anchor occurs once,
 that each replacement changes the text, that the whole result parses with ast, and writes nothing. The application
 path (no flag) writes the generator once and refuses a second run by an exclusive marker; the owner regenerates
 board A on the KiCad box afterwards and reads the intent, the netlist and ERC before anything is committed.

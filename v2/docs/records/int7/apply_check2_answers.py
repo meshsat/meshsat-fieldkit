@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """The registry's answers to the RE-CHECK of the set 6 integration (MESHSAT-1357, 28 September 2026;
-v2/docs/records/int7/CHECK-2.md, an AI review, which read the corrected candidate 85ad1193 NOT mergeable on one
+v2/docs/records/int7/CHECK-2.md, an automated review, which read the corrected candidate 85ad1193 NOT mergeable on one
 finding, R-1: CON-010's dependency items S-92 and S-93 each named ONE ground where RF-002's walk names up to three for
 the row). It was the second failure on the same point, so the METHOD changed: the grounds are read from the walk's own
 report (walk_grounds.py, walk-grounds.txt) and this script ASSERTS that every part the walk's undecided grounds name,
@@ -84,7 +84,7 @@ ENTRY_EDITS = [
 S81_EDIT = ("The brief's row is still to be worded at its next issue, which is S-91's list; no layer is reopened.",
             "With S-64 closed the wording this item asked of the brief is moot; no layer is reopened.")
 S61_OLD = A.S61_ADD.strip()
-S61_NEW = ("On the unmerged branch fnd/d8dec31 (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md there, an AI review that "
+S61_NEW = ("On the unmerged branch fnd/d8dec31 (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md there, an automated review that "
            "is not on main yet) the same port is finding D-F3 of decision 31's review of board D, which asks for a clamp, a "
            "bulk capacitor and a ferrite on it and not for this current limit; until that review is on main and its registry "
            "items name this one, nothing but this item carries the current limit, and tools/pcb_board_holds.yaml names "

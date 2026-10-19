@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """The registry's answers to the fresh check of the set 6 integration (MESHSAT-1357, 28 September 2026;
-v2/docs/records/int7/CHECK.md, an AI review, which read the candidate 1c4235ec NOT mergeable on three findings in text
+v2/docs/records/int7/CHECK.md, an automated review, which read the candidate 1c4235ec NOT mergeable on three findings in text
 this integration wrote). Run by the registry's writer; v2/docs/records/int7/CHECK-RESPONSE.md answers every finding.
 
 B-1  CON-010's link and S-92's text left out board A's two undecided rows, and the entry gave a reason the files do not:
@@ -59,7 +59,7 @@ S13_WHY = ("An order code named before an eSIM build of the RM520N-GL is bought 
            "parasitic capacitance of the TVS arrays at the SIM holders, which reads PASS on the drawn parts and which an "
            "order code of the module cannot move; the link first written at this integration was withdrawn after its fresh "
            "check (v2/docs/records/int7/CHECK.md, m6).")
-S61_ADD = (" Decision 31's protection review of board D (stream d8dec31, an AI review checked on 28 September 2026 and "
+S61_ADD = (" Decision 31's protection review of board D (stream d8dec31, an automated review checked on 28 September 2026 and "
            "applied after this integration) names the same port as its finding D-F3, which brings it under board D's hold "
            "before that board's layout entry.")
 S81_EVIDENCE = ("v2/ecad/tools/pcb_requirements.yaml at the set 6 integration: S-64 is closed by session choice SC-67 (board C's "

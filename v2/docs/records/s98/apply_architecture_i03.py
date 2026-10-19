@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The IF-AB-POWER row of v2/docs/ARCHITECTURE.md (the contracts table, "Open items" column) brought to the interim
 alignment of S-98 and to the held JST VH catalogue (stream s98, MESHSAT-1357, 28 September 2026; finding I-03; the
-Codex pilot's correction item M8 and its check).
+Second-worker pilot's correction item M8 and its check).
 
 The row's open-items cell said "the two ends' current declarations disagree (I-03 ...); the JST-VH rating document is
 not held". Both halves are stale: the two generators carry the interim alignment (fnd/s98) and the catalogue is held

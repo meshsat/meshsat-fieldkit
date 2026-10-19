@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """UNEXECUTED APPLICATION DRAFT: INTERIM alignment; mode figure INCONCLUSIVE.
 
-Prototype design, AI review. See CORRECTION.md B1/B2 and ANALYSIS.md.
+Prototype design, automated review. See CORRECTION.md B1/B2 and ANALYSIS.md.
 Only --check is authorised in this job. It validates in memory and writes
 nothing: no generator, marker, cache or other file. The application path is
 for the generator owners after review and the integrating session's decision.

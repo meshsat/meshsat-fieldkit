@@ -1,4 +1,4 @@
-# the full suite on the box at fb1660cf (box_suite.sh, evidence /root/r8int6/evidence-head.tar), 2026-09-27T21:43:06Z
+# the full suite on the box at 0f38fa5b (box_suite.sh, evidence /root/r8int6/evidence-head.tar), 2026-09-27T21:43:06Z
 # every line of tests/run.py that is not a PASS line, then its last lines
 tests: test_finish_order.t_routeflow_validate_agrees_with_these_rules SKIP the profiles pin /root/gitlab/products/meshsat/meshsat-fieldkit, which exists here and is not this tree, so validate's one-tree property is about the host rather than the profile
 tests: test_pairsearch.t_the_three_implementations_agree        SKIP no numba on this host: the heapq original and the array kernel agree, the compiled one was not run
@@ -7,7 +7,7 @@ tests: 2050 passed, 0 failed, 3 skipped
 # the log ends:
 tests: 2050 passed, 0 failed, 3 skipped
 EXIT 0
-fb1660cfae459ab44e1f8d346ad29a2032c82cf4
+0f38fa5b2f437c8ff9d6852144082da003147ce3
 # git status before the run:
 # git status after the run:
  M v2/docs/CURRENT-EVIDENCE.md

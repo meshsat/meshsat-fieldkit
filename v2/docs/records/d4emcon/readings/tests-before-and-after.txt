@@ -1,6 +1,6 @@
 Stream d4emcon: the instrument's tests before and after (python3 tests/run.py tx_inhibit, the runner, 2026-09-27T22:09Z)
 
-BEFORE: the new test file (sha256/16 d7004e42232f09f3) against tools/tx_inhibit.py of 92f22e3f (sha256/16 7dd14f45f5d62cb4), in a scratch copy of that commit's v2/ecad/tools (git archive)
+BEFORE: the new test file (sha256/16 d7004e42232f09f3) against tools/tx_inhibit.py of bec528d1 (sha256/16 7dd14f45f5d62cb4), in a scratch copy of that commit's v2/ecad/tools (git archive)
 tests: test_tx_inhibit.t_a_fet_whose_symbol_names_its_pins_after_their_nets_is_read_by_its_makers_pinout FAIL {'ok': None, 'text': 'test PA: EMCON reaches it in hardware (A power on J_PA)', 'detail': "board A, power: +13V8_PA off: U13 enable pin 1 through EMCO
 tests: test_tx_inhibit.t_a_monitor_across_a_gated_rail_is_read_by_its_makers_words FAIL {'ok': None, 'text': 'test LoRa: EMCON reaches it in hardware (B power on U12)', 'detail': "board B, power: +5V_X off: U21 enable pin 5 through EMCON_HW (asserted LOW) > U5
 tests: test_tx_inhibit.t_a_part_that_only_mentions_a_firmware_family_is_named_and_never_passed PASS

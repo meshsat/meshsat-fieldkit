@@ -6,7 +6,7 @@ a maker's document. No agent, no other model, no box, no purchase, no contact.
 ## 29 September 2026 (brief `_runs/assistant/s117/BRIEF.md`)
 
 - 12:37 Brief read. Worktree `<worktrees>/s117`, branch `fnd/s117` from main
-  `5928c6bb`. Read S-117 (`tools/pcb_requirements.yaml`), `records/int11/CHECK.md` B1 and `CHECK-2.md` N1 and N2,
+  `489bd29e`. Read S-117 (`tools/pcb_requirements.yaml`), `records/int11/CHECK.md` B1 and `CHECK-2.md` N1 and N2,
   `records/r4a/r4-open-items.md` O-24 and `r4-decisions.md` R4A-N9, `records/int11/apply_s117_restate.py`, and stream
   d4emcon's LOG row 3 (S-93, board A's LM5176 gate hold: not taken on; this stream touches no LM5176 line). No other branch
   changes `gen_sch_a.py`, `pcb_emc.yaml`, `pcb_decisions.yaml` or `HW-FW-CONTRACT.md` against main.
@@ -24,18 +24,18 @@ a maker's document. No agent, no other model, no box, no purchase, no contact.
   its own item.
 - 12:58 to 13:00 `charger_l_f.py` and `.out`; `apply_gen_sch_a_s117.py` (--check, then a write and a refused second run on a
   scratch copy); `readback_s117.py` (FAIL on the committed netlist, 4 of 17) and `selftest_readback_s117.py` (every case as
-  it must). Checkpoint `5c37d480`.
+  it must). Checkpoint `09068ea6`.
 - 13:00 to 13:02 `apply_emc_s117.py` (emc_sheet.judge in memory: board A 0 failures before and after) and
-  `apply_hwfw_s117.py` (FW-A17, V-A05; dry run on a scratch copy, second run refused). Checkpoint `14142622`.
+  `apply_hwfw_s117.py` (FW-A17, V-A05; dry run on a scratch copy, second run refused). Checkpoint `fabae59b`.
 - 13:03 to 13:11 `apply_decision_s117.py` (decision 56 on this tree, SESSION) and `apply_registry_s117.py` (open: F1 as
   S-118, REQ-015 linked, S-115 extended; close: gated on sch_prov, the read-back, the EMC row, FW-A17 and the decision).
   Full dry run in a disposable worktree of this branch (`dryrun.out`), removed afterwards.
-- 13:05 main found at `0ff18eb4` (set 11, committed 12:54: OD-01's package, Option A(i)'s records). None of this stream's
-  target files moved; merged at 13:06 as `463a24a2` under the owner's identity after the pre-commit check. The a1elec references now
+- 13:05 main found at `e0b48637` (set 11, committed 12:54: OD-01's package, Option A(i)'s records). None of this stream's
+  target files moved; merged at 13:06 as `2f65df71` under the owner's identity after the pre-commit check. The a1elec references now
   point at `v2/docs/records/a1elec/` on main.
 - 13:12 README written; the U3B statement read from `records/a1elec/TOPOLOGY.md` 3b and `CHARGER.md` 2 (read only).
-- 13:13 to 13:16 README and LOG committed (`115f3819`); `readback_s117.py` gains `--against <old.net>` (the regenerated
-  netlist held to exactly the drawn change) with three more self-test cases (`f8621592`); README corrected in five places
+- 13:13 to 13:16 README and LOG committed (`d76a1eac`); `readback_s117.py` gains `--against <old.net>` (the regenerated
+  netlist held to exactly the drawn change) with three more self-test cases (`cb9e3b66`); README corrected in five places
   (the front end's limit cited to SNVSAI1D 6.5, the nominal-pack figure stated with its condition, the XAL1010 order codes,
   Table 9-1's rows, the buck-boost expectation marked INFERRED).
 
@@ -49,11 +49,11 @@ a maker's document. No agent, no other model, no box, no purchase, no contact.
   rendered and read. TI's terms forbid redistribution and Nexperia's reserve all rights: five files pinned by sha256 in
   `v2/vendor/sources.txt`, held in ignored folders, fetched by `fetch_held_back.py` (11:47Z and 12:00Z).
 - 13:51 to 13:54 `efficiency.py`: the check's method (IL solved, R16 and R17, four readings) reproduced to the third decimal
-  on the drawn FETs; the energy model's reference day read through `energy_two_pack.py` unchanged. Checkpoint `e8228d2f`.
+  on the drawn FETs; the energy model's reference day read through `energy_two_pack.py` unchanged. Checkpoint `337d0347`.
 - 13:55 to 14:00 The choice: Q7 CSD17578Q5A (fast), Q8 to Q10 CSD17577Q5A (low resistance), 0.979 at the peak by TI's
   method; REGN 10.5 mA; Q9 and Q10 replaced too because TI does not bound the buck-boost region. Drafts: the FET generator
   script, PWR-001's pin roles, the read-back's `--fets`, the FET decision, the registry's F1 restated, F2 opened for the
-  energy writer and linked from REQ-072, and a `close-fets` phase. The check's m1 to m7 answered. Checkpoint `fde58417`.
+  energy writer and linked from REQ-072, and a `close-fets` phase. The check's m1 to m7 answered. Checkpoint `54654252`.
 - 14:03 Second dry run in a disposable worktree (`dryrun2.out`), removed; stray bytecode from 12:44 removed from the tools
   folder.
 - 14:05 to 14:08 `U3B-NOTE.md`, the energy table, README sections 6 to 12.

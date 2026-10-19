@@ -1,17 +1,17 @@
-# The Codex worker: how a bounded job is given to a second model (MESHSAT-1357)
+# The second worker: how a bounded job is given to a second model (MESHSAT-1357)
 
 Written 28 September 2026. Prototype design: no V2 board has been built, ordered or measured. This note describes a
 working arrangement, not a product feature. It changes nothing of the layered plan in `EXECUTION-PLAN.md`, of the stage
 gates, or of who decides: the integrating session (the coordinator) commits, integrates and accepts; a worker of either
-model family returns a candidate. An AI check is an AI review, never a qualified engineering review.
+worker kind returns a candidate. An automated check is an automated review, never a qualified engineering review.
 
 ## 1. What is installed
 
 | Item | Value |
 |---|---|
-| Tool | Codex CLI, installed for the coordinator's own operating-system user by the maker's standalone installer (`https://chatgpt.com/codex/install.sh`, read before it was run; its sha256 and the installed version are in the checkpoint of `EXECUTION-PLAN.md`), pinned to the installed version so that it does not update itself |
-| Sign-in | the owner's ChatGPT sign-in by device code, completed by the owner in a browser. No API key is used and no API credit is spent. The credential stays where the tool stores it, readable by that user alone; it is never printed, copied or committed |
-| Model | `gpt-6-astra` at reasoning effort `xhigh`, requested on every invocation; the tool's global defaults are left as installed |
+| Tool | The second worker's command-line tool, installed for the coordinator's own operating-system user by the maker's standalone installer (the maker's install script, read before it was run; its sha256 and the installed version are in the checkpoint of `EXECUTION-PLAN.md`), pinned to the installed version so that it does not update itself |
+| Sign-in | the owner's sign-in with the maker by device code, completed by the owner in a browser. No API key is used and no API credit is spent. The credential stays where the tool stores it, readable by that user alone; it is never printed, copied or committed |
+| Model | the second model at its highest reasoning effort, requested on every invocation; the tool's global defaults are left as installed |
 | Launcher | `run_codex_task.py` with `codex-job-result.v2.schema.json` (version 1 kept for the earlier runs), its tests and the worker's instruction template: local tooling of the coordinator, beside the box helpers, not in this repository |
 | Run records | one new directory per launch, outside the repository and outside `/tmp`: the job, the prompt, the configuration and version, the event stream, the error stream, the result and the coordinator's assessment |
 
@@ -35,7 +35,7 @@ plugins, skill discovery and goals for the job. It never uses the tool's unrestr
 - A job's worktree is new, made from a recorded commit. No occupied worktree is lent to a job.
 - A worker edits only its permitted files. It never commits, pushes, rebases or touches a shared registry: those are
   the coordinator's. The permitted files are enforced by inspection after the run, since a sandbox is not a per-file list.
-- The author of an item never closes it. A candidate written by one model family is reviewed by a reviewer who did not
+- The author of an item never closes it. A candidate written by one worker kind is reviewed by a reviewer who did not
   see the author's reasoning and who reproduces the calculation or the check from the sources. Two models agreeing is
   not evidence by itself; the reproduced numbers are.
 
@@ -51,13 +51,13 @@ integrated revision.
 
 ## 5. Limits
 
-- One coordinator and at most three active workers across both model families, reviewers included (the owner's execution
+- One coordinator and at most three active workers across both worker kinds, reviewers included (the owner's execution
   constitution of 4 October 2026, `v2/docs/EXECUTION-CONSTITUTION.md` section 7; two until then). No worker starts
   another agent or calls another model.
 - A time limit per job (five minutes for a fixture call, twenty for a bounded engineering job); at the limit the
   launcher ends the child's own process group, keeps what was written and records a timeout.
 - Usage is read from the event stream per run and reconciled before the next job. A dollar figure computed from list
-  prices is an estimate, not a bill; under the ChatGPT sign-in the usage draws on the plan's allowance.
+  prices is an estimate, not a bill; under the sign-in with the maker the usage draws on the plan's allowance.
 - Two failures on the same fault change the diagnosis or return one precise blocker. For a collaborator job the
   launcher enforces this per issue: one assessment and one targeted follow-up on unchanged inputs; a third run needs
   new evidence (a changed input, register or question) or an approach no earlier run stated (section 7).
@@ -73,12 +73,12 @@ deleted and no accepted change is rolled back.
 ## 7. The standing engineering collaborator (owner instruction of 30 September 2026)
 
 The owner upgraded the arrangement from a limited pilot to a standing engineering collaborator. Further bounded
-assignments are authorised through the existing ChatGPT sign-in and the plan's available allowance; this replaces the
+assignments are authorised through the existing sign-in with the maker and the plan's available allowance; this replaces the
 pilot's exhausted call count. The spending, sandbox and publication limits above stay as they are, and there is no
 automatic fallback to a paid API.
 
 - **Roles.** The coordinator (assistant) coordinates, integrates, performs the authorised work, verifies it and continues.
-  The collaborator (`gpt-6-astra`, effort `xhigh`) resolves ambiguous engineering blockers before they are escalated to
+  The collaborator (the second model, highest effort) resolves ambiguous engineering blockers before they are escalated to
   the owner; distinguishes owner requirements, design objectives, modelling assumptions, component limitations,
   implementation defects, missing evidence and genuine contradictions between requirements; proposes corrections,
   bounded investigations and architecture options; and independently checks consequential calculations and
@@ -99,7 +99,7 @@ automatic fallback to a paid API.
   next action (a correction or the next evidence to gather), its measurable closure criterion, and whether an actual
   owner decision is required and which. A result without a next action or a closure criterion, or one that says an
   owner decision is required without naming it, is an invalid result.
-- **Bounds.** At most three active workers across both model families (two until 4 October 2026), one author per worktree, the per-job time limit
+- **Bounds.** At most three active workers across both worker kinds (two until 4 October 2026), one author per worktree, the per-job time limit
   of section 5; one assessment and one targeted follow-up per unchanged issue, enforced by the launcher's issue ledger;
   independent tasks continue while an issue stays open.
 - **Reporting.** The coordinator reports accepted engineering outcomes, the remaining genuine owner decisions, the

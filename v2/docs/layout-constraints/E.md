@@ -1,13 +1,13 @@
 # Board E1 (dock strip): layout constraints
 
-**Bound to the set 6 candidate (27 September 2026, read at `00e74bbb`).** This sheet's inputs stand in the block below,
+**Bound to the set 6 candidate (27 September 2026, read at `c11c01c9`).** This sheet's inputs stand in the block below,
 one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
 computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
 table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
 table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
 the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 10**,
-which are the readings at `956feb28` with the H2 line's changes marked where they stand (`c62ee56b`, the paragraph
-below). Set 6 changed board E's netlist and intent file in `140588ba` (the hot stop line HOT-R1 drawn; the nodes FAN1_SW
+which are the readings at `956feb28` with the H2 line's changes marked where they stand (`d3cc3dec`, the paragraph
+below). Set 6 changed board E's netlist and intent file in `ebc7e355` (the hot stop line HOT-R1 drawn; the nodes FAN1_SW
 and FAN2_SW declared). A node is not a rail: **no row of the power table moved**. A line of the older sections that
 names a part, a net, a current or a count is compared with the netlist and the intent file below before it is followed,
 and where this sheet and a record disagree the record governs (README). Board E is not at layout entry: no board is
@@ -17,26 +17,26 @@ below is its own binding's).
 ```bound
 sheet      E
 board      e
-read       2026-09-29 at 75460813
+read       2026-09-29 at 58061856
 current    section 2: the power table, and the figures the text under it quotes from it
-older      sections 1 and 3 to 10: read at 956feb28, with the H2 line's changes marked at c62ee56b
-netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8 changed 75460813
-intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 4b328380172ff2c7 changed 75460813
+older      sections 1 and 3 to 10: read at 956feb28, with the H2 line's changes marked at d3cc3dec
+netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8 changed 58061856
+intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 4b328380172ff2c7 changed 58061856
 board_file v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb sha256/16 a462ac2620b9b8d3 changed 93972efc
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC04161H-7628 outer 0.0350 mm inner 0.0152 mm
 ```
 
-**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `c62ee56b`: phase E17, netlist
-`v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` sha256/16 `d6137f50059e5cbc` (round 8 at `7ce797c4`, set 5 at `ae922e4d`),
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `d3cc3dec`: phase E17, netlist
+`v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` sha256/16 `d6137f50059e5cbc` (round 8 at `7ce797c4`, set 5 at `14471269`),
 intent `pcb-e1-dock-intent.json` `5913e38b20333d35`; the committed board file `a462ac2620b9b8d3` is E17. Section 2's
 table is regenerated from `calc/rail_widths.py` on that intent: VIN_RAW at 14.10 A and TRK_OUT at 10.33 A are now the
 committed figures, not a round 8 note, and SGP_VDD is declared (marked **H2**). Board E is not at layout entry: **5
 reasons at H2** (`CURRENT-EVIDENCE.md`): PWR-001 INCONCLUSIVE (FAN1_SW and FAN2_SW, S-76), SI-001 INCONCLUSIVE,
 decision 31's protection review, FEA-006, FEA-007. Known changes of the H2 line: **section 6.1 item 1's defect is
-corrected in the generator** (set 5, `ae922e4d`: the tracker senses its current on its bottom leg, HC9-E1, S-47's
+corrected in the generator** (set 5, `14471269`: the tracker senses its current on its bottom leg, HC9-E1, S-47's
 core; the item stays below as the reading that found it), and VIN_RAW crosses the dock on four 9 A power pins with
-board A's half (SC-55, `ae922e4d`). Every other line below is the reading at `956feb28`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+board A's half (SC-55, `14471269`). Every other line below is the reading at `956feb28`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
 
 As first written: a view over the records at `main` `956feb28` (conventions and shared rules: [README.md](README.md)),
 candidate then netlist `d910e49c5f5f50b2`, intent `9ae33eb17d04670e`, 15 blocker lines. **Round 8** (`fnd/r8int1`, which reached `main` as `f5be4954` after this sheet was first
@@ -115,7 +115,7 @@ milliamperes: the fabricator's floor governs there, not the current.
 | PV_P | 17.6 (25.0) | 5.68 / 6.25 | 5.68, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 | the solar input |
 | PV_IN | 17.6 (25.0) | 5.68 / 6.25 | 5.68, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 | the solar input |
 | TRK_OUT | 15.10 | 10.33 / 10.33 | 10.33, typical (PI-001) | 8.65 | 2.89 | 70.84 (over 40 mm) | 14 / 12 / 10 | **H2**: 10.33 A since `7ce797c4` (round 8); at `956feb28` it was 6.16 A, which is 3.68 mm on one outer face and 9 / 7 / 6 barrels. The intent file: "Declared at 10.33 A typical and peak (R4A-N12, 26 September 2026): the panel's 93 W at the 9 V bus floor, when a vehicle holds the bus under 15.1 V; 6.16 A is the figure at 15.1 V" |
-| SGP_VDD | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `ae922e4d`: "the SGP41's VDD behind its RC element"; 4.6 mA, which prints as 0.00 |
+| SGP_VDD | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `14471269`: "the SGP41's VDD behind its RC element"; 4.6 mA, which prints as 0.00 |
 
 What the table asks of the layout:
 

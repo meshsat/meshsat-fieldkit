@@ -2,12 +2,12 @@
 
 Written 27 September 2026, 22:40 CEST (MESHSAT-1357, layer 9, rule SI-001). Prototype design work: nothing has been
 built or measured. This page is the record of a recovery, not of a check: the recovered work is committed UNCHECKED at
-this point, and the three blocking items of the independent check (AI review) of pass 1 are answered after it.
+this point, and the three blocking items of the independent check (automated review) of pass 1 are answered after it.
 
 ## What happened
 
 Pass 1 of this stream worked on 27 September 2026 in a worktree under `/tmp`, committed nothing, and a reboot deleted
-the worktree. An independent checker (AI review) had judged pass 1 not mergeable with three blocking items; a second
+the worktree. An independent checker (automated review) had judged pass 1 not mergeable with three blocking items; a second
 author pass read files for 20 commands and was cut off before it changed anything. What survived is under
 `<worktrees>/_recovered/` (outside the repository): the files pass 1 wrote with
 the Write tool, six Edit calls whose base file was not held, and the shell transcripts of both passes and of the check.
@@ -18,8 +18,8 @@ the Write tool, six Edit calls whose base file was not held, and the shell trans
 |---|---|---|
 | `v2/ecad/tools/ibis_read.py` | copied as recovered | sha256/16 `8fd2e9d1f6cb1f4c`, the value the transcript's command 158 printed; 182 lines, as pass 2 counted |
 | `v2/ecad/tools/pcb_edge_rates.yaml` | the recovered first write (`d35130f1162a65ee`), then pass 1's ten patch commands run again in order (78, 88, 89, 94, 115, 119, 121, 132, 136, 137) | sha256/16 `26ef827a1d9ff277`, the value command 158 printed and the record names; 899 lines; 6 interface records, 58 families, 29 far ends, as command 159 counted |
-| `v2/ecad/tools/edge_length.py` | `e6c71e82`'s file, the three Edit calls, then commands 74, 75, 85, 94, 97, 98, 111, 118, 132, 138, 160 | at command 158's point sha256/16 `ea1b2211c8ff4f7a`, the value it printed; after command 160 (a comment block) `6818fc98e88aa08b`, 1159 lines and a diff of 621 lines against `e6c71e82`, as pass 2's `git diff --stat` and `wc -l` showed |
-| `v2/ecad/tools/tests/test_edge_length.py` | `e6c71e82`'s file, command 113's appended text, command 114's `sed`, the fourth Edit call, command 120 | 28 tests, 564 lines, 261 lines inserted, as commands 159 and pass 2's `git diff --stat` showed. No hash of this file is in any transcript |
+| `v2/ecad/tools/edge_length.py` | `268cd241`'s file, the three Edit calls, then commands 74, 75, 85, 94, 97, 98, 111, 118, 132, 138, 160 | at command 158's point sha256/16 `ea1b2211c8ff4f7a`, the value it printed; after command 160 (a comment block) `6818fc98e88aa08b`, 1159 lines and a diff of 621 lines against `268cd241`, as pass 2's `git diff --stat` and `wc -l` showed |
+| `v2/ecad/tools/tests/test_edge_length.py` | `268cd241`'s file, command 113's appended text, command 114's `sed`, the fourth Edit call, command 120 | 28 tests, 564 lines, 261 lines inserted, as commands 159 and pass 2's `git diff --stat` showed. No hash of this file is in any transcript |
 | `v2/docs/records/w5si/recovery/pass1-drafts/apply_rules_status_config_inputs.py.superseded-do-not-run` | recovered write, then command 131 | 5117 bytes, the size pass 2's `ls -la` showed |
 | `v2/docs/records/w5si/recovery/pass1-drafts/apply_sources_yaml_ibis.py.superseded-do-not-run` | copied as recovered | 6939 bytes, as pass 2 showed |
 | `v2/docs/records/w5si/recovery/pass1-drafts/apply_coverage_si001.py.superseded-do-not-run` | recovered write, then command 149's `sed` | 6752 bytes, as pass 2 showed |
@@ -72,24 +72,24 @@ with the files fetched today.
 
 ## Moved
 
-Pass 1 kept its drafts in `drafts/w5si/` at the repository root. At the checkpoint (commit `6c55e8fa`) they were filed
-under the records folder's `drafts/`, byte for byte. Since commit `b6948bc6` they are under
+Pass 1 kept its drafts in `drafts/w5si/` at the repository root. At the checkpoint (commit `46a01ec8`) they were filed
+under the records folder's `drafts/`, byte for byte. Since commit `89000d32` they are under
 `v2/docs/records/w5si/recovery/pass1-drafts/`, which is where the table above names them, and the four apply scripts
 carry the suffix `.superseded-do-not-run`: one of them deletes four USB pair classes from `gen_pcb_b3.py` (the
 independent check's second blocking item) and none may be run by mistake. Their bytes are unchanged;
-`git show 6c55e8fa:` gives each under its first name. The drafts the integrator runs are the re-issued ones under
+`git show 46a01ec8:` gives each under its first name. The drafts the integrator runs are the re-issued ones under
 `v2/docs/records/w5si/apply/`.
 
 ## After the checkpoint: what the recovered work gave when it was run
 
-Run on 27 September 2026 after commit `6c55e8fa`, before anything of the second pass was written.
+Run on 27 September 2026 after commit `46a01ec8`, before anything of the second pass was written.
 
 | What | Result |
 |---|---|
 | `python3 run.py test_edge_length.` from `v2/ecad/tools/tests`, in the worktree | 28 passed, 0 failed, 0 skipped: the count pass 1 reported |
 | the ibis reader's tests | they are two of those 28 (`t_ibis_reader_*`); no separate test file exists |
 | the recovered tool on the six committed netlists, written to scratch outside any tree | the six "after" headlines of pass 1's `headlines.txt`, word for word; the tree's own evidence untouched |
-| the tool of `e6c71e82` on the same netlists, in a scratch extract | the six "before" headlines of the same file, word for word: decided 64, undecided 765 |
+| the tool of `268cd241` on the same netlists, in a scratch extract | the six "before" headlines of the same file, word for word: decided 64, undecided 765 |
 
 So the recovered instrument is the one pass 1 described and the independent check read. What the check found wrong
 with it is answered in `w5si-record.md`.

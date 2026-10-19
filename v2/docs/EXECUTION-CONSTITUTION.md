@@ -51,14 +51,14 @@ An assigned test is not a corrected circuit. Missing evidence is not automatical
 
 ### 6. Make independent checking decisive and proportionate
 
-- Use Astra through the existing launcher to challenge decision-critical assumptions before expensive downstream work, and to check material corrections independently. The checker must see the owner brief, exact candidate, relevant sources and acceptance criteria.
+- Use the second worker through the existing launcher to challenge decision-critical assumptions before expensive downstream work, and to check material corrections independently. The checker must see the owner brief, exact candidate, relevant sources and acceptance criteria.
 - Default to one focused check and one targeted recheck for a candidate, within authorised usage. Further checking requires a materially changed approach and an explicit bounded reason in the existing task record; do not invent a new issue ID to reset a limit.
 - Exhausting review calls never changes a verdict. The coordinator may verify clerical/integration fixes, but cannot turn a material unresolved rejection into an independently accepted design by self-signing. Record the actual checker's role and retain previous verdicts.
 - A changed design or new material evidence can justify another check under the applicable authorisation. Otherwise retain UNVERIFIED/CONDITIONAL status and the dependent release hold. Do not reopen previously accepted work solely because this process policy changed.
 
 ### 7. Keep execution bounded and autonomous
 
-- The owner authorises up to three author/reviewer workers across the assistant and Codex/Astra, plus the coordinator. One writer owns a branch at a time. Scheduling a checker consumes a worker slot. Use the third slot for ready independent work or a ready review; do not hold it idle for a review whose inputs are unfinished.
+- The owner authorises up to three author/reviewer workers across the assistant and the second worker, plus the coordinator. One writer owns a branch at a time. Scheduling a checker consumes a worker slot. Use the third slot for ready independent work or a ready review; do not hold it idle for a review whose inputs are unfinished.
 - The coordinator owns integration, scheduling and small verified record corrections. Do not occupy an engineering worker merely to copy a checked status or checksum. Coordinate ownership before editing an active author's files.
 - Preserve healthy jobs, successful outputs and uncommitted work. Before replacing a failed/context-exhausted worker, check whether its child calculation survived. Resume one writer from its checkpoint with a concise brief, not the entire accumulated transcript.
 - Continue the next ready item without waiting for this chat's review. When an external dependency blocks one item, dispatch independent work. If no authorised task is ready, report that fact precisely and retain a recoverable checkpoint.

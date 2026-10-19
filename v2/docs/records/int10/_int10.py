@@ -1,6 +1,6 @@
 """Shared helpers of the integration set 9 apply scripts for S-99 (stream s99reg, MESHSAT-1357, 29 September 2026).
 
-AI engineering work; prototype design, nothing built, ordered or measured. Not a script to run: the apply_*.py scripts
+automated engineering work; prototype design, nothing built, ordered or measured. Not a script to run: the apply_*.py scripts
 beside it import it.
 
 Every script takes `--root <tree>` (default: the repository this file is in) and edits files under that root only. The

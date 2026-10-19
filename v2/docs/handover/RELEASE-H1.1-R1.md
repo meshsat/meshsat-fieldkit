@@ -13,12 +13,12 @@ Written 30 September 2026 (MESHSAT-1357) by the scrub of public files (`v2/docs/
 | Size | 51,145,129 bytes, 1660 entries (the same files as H1.1); the cap of `pack.yaml` is 52,428,800 bytes |
 | Manifest | `H1.1-R1.MANIFEST.tsv`, sha256 `47b6060ddc2988c152f939e68e6f5118a3974ba9647f5e882dd209695afd3428`, a byte copy of the ZIP's `MANIFEST.tsv` |
 | Supersedes | `v2/release/handover/H1.1.zip`, sha256 `fc563395439db348d070e5ae710014d354b907dc886287f6734f742e4e6ff6ca` |
-| Source commit | `7c517a62031a63adae4dd8542f0494faa649b3bc`, the redaction commit (every file in the ZIP is its blob): its only parent is H1.1's source commit `9931f146f361d9d54faa5896f2c21de9791ef393`, and it changes the files below and `v2/docs/handover/START-HERE.md` |
+| Source commit | `49eae811b010e6799838be3021fc4c463e153a3c`, the redaction commit (every file in the ZIP is its blob): its only parent is H1.1's source commit `458ef692f8b83db1857a8e74d35f27c7c033b316`, and it changes the files below and `v2/docs/handover/START-HERE.md` |
 | Snapshot commit | the commit of the scrub's set that adds this ZIP, its checksum, its manifest and this page |
 | Builder | `v2/ecad/tools/handover_pack.py` sha256 `fd7e353f0fcaaba2a166997ad68403321a280368b8513100d4ae4e7002f7f5fe`, the packer that built H3; `SOURCE.txt` names it as the builder that ran, beside the older builder the commit holds |
 | Public | the redaction commit reaches main's history through the merge that keeps main's tree (`git merge -s ours`) in the scrub's set; `SOURCE.txt` marks it `public no` because it was built before that merge was published |
 | Check | `sha256sum -c H1.1-R1.zip.sha256`, then `python3 v2/ecad/tools/handover_pack.py verify H1.1-R1.zip` |
-| Rebuild | `python3 v2/ecad/tools/handover_pack.py build --commit 7c517a62031a --version H1.1-R1 --zip-only --out <folder>`: the ZIP is deterministic per host; across hosts compare `H1.1-R1.MANIFEST.tsv` |
+| Rebuild | `python3 v2/ecad/tools/handover_pack.py build --commit 49eae811b010 --version H1.1-R1 --zip-only --out <folder>`: the ZIP is deterministic per host; across hosts compare `H1.1-R1.MANIFEST.tsv` |
 
 ## What differs from H1.1
 
@@ -34,7 +34,7 @@ Written 30 September 2026 (MESHSAT-1357) by the scrub of public files (`v2/docs/
 | `START-HERE.md` and `v2/docs/handover/START-HERE.md` | | | opened by a box naming H1.1, why it is superseded, the table above and the files left |
 | `SOURCE.txt` | | | the redaction commit, its tree and date, the builder and the tool versions of the host that built H1.1-R1 |
 
-A hash that a page of H1.1-R1 cites for a changed file names H1.1's bytes; H1.1 and the public repository at `9931f146` hold them. Each replacement is listed by file, line and token class in `v2/docs/records/scrub/MAP.md`.
+A hash that a page of H1.1-R1 cites for a changed file names H1.1's bytes; H1.1 and the public repository at `458ef692` hold them. Each replacement is listed by file, line and token class in `v2/docs/records/scrub/MAP.md`.
 
 ## Left as H1.1 carried them
 

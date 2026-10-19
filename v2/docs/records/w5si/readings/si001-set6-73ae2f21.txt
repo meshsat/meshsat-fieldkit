@@ -1,4 +1,4 @@
-SI-001 AT THE SCHEMATIC PHASE, readings taken in scratch outside any tree: the netlists of fnd/r8int6 at 92f22e3f (set 6, not merged), in a scratch extract of that tree with this stream's tool, data and test laid over it and none of its drafts applied
+SI-001 AT THE SCHEMATIC PHASE, readings taken in scratch outside any tree: the netlists of fnd/r8int6 at bec528d1 (set 6, not merged), in a scratch extract of that tree with this stream's tool, data and test laid over it and none of its drafts applied
 Prototype design work: nothing has been built or measured. Every reading is INCONCLUSIVE; none is a PASS.
 
 THE COUNTS. Denominator: the signal nets outside LOW_SPEED_OR_DC (the class the rule asks no edge of).

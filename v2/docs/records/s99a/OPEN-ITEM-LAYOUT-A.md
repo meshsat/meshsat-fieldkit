@@ -1,6 +1,6 @@
 # Open item text for the integrator's registry script: board A's layout generator after decision 55
 
-Stream s99a, MESHSAT-1357, 28 September 2026. AI engineering work; prototype design, nothing built or measured.
+Stream s99a, MESHSAT-1357, 28 September 2026. automated engineering work; prototype design, nothing built or measured.
 The layout generator `v2/ecad/tools/gen_pcb_a3.py` is NOT changed by this stream (the task's instruction). The
 schematic-phase regeneration of board A is not affected by it: `gen_pcb_a3.py` runs only when board A's layout is
 drawn. Proposed entry for `v2/ecad/tools/pcb_requirements.yaml` (the next free S number on set 8's line is S-115;

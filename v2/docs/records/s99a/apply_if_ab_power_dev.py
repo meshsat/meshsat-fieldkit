@@ -2,7 +2,7 @@
 """FOR THE INTEGRATOR (the one writer of v2/ecad/tools/pcb_interfaces.yaml): IF-AB-POWER's +5V_DEV row and the wall
 port's eFuse limit after decision 55 and stream s99a's TPS2596 sign correction (MESHSAT-1357, 28 September 2026).
 
-AI engineering text; prototype design, nothing built or measured. Two replacements: (1) the whole +5V_DEV currents row
+automated engineering text; prototype design, nothing built or measured. Two replacements: (1) the whole +5V_DEV currents row
 (a_declares with the split and the corrected wall limit, b_declares unchanged, status restated: the old text described
 the D8 mezzanine at zero with 7.9 and 8.9 A coincident); (2) "limit 0.89 A" on the wall port's usb line.
 --check validates that each old text occurs once, that each new text differs, that the result parses as YAML with the

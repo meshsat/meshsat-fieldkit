@@ -439,7 +439,7 @@ PARTS = [
          provisional=None, identity=("RESOLVED", None, None, None)),
     dict(id="L6P-28", board="P (pack build)", refs=["the PROPOSAL only: 4 cells, 4S1P"], maker="Saft", mpn="MP 176065 xtd", package="prismatic cell, 18.65 x 60.5 x 68.7 mm (sleeved, including terminals), 135 g typical (p.1)",
          land="not a placed part; a prismatic holder and the pocket's fit are OPEN (R-167)", draft="none: a labelled PROPOSAL (L4-E10 section 15, U-01's supported route); adoption is the owner's",
-         selected_by="L4-E10 section 15 (restated after Astra's B5) and 16: 'a supported route exists on published manufacturer evidence for the temperature windows'; NOT adopted",
+         selected_by="L4-E10 section 15 (restated after the second worker's B5) and 16: 'a supported route exists on published manufacturer evidence for the temperature windows'; NOT adopted",
          grade=dict(kind="industrial cell (the sheet: 'unregulated temperature environments from -40 C to +85 C')", op=(-40, 85, "saft", 1, "Discharge -40 C"),
                     charge=(-30, 85, "saft", 1, "Charge -30 C"), stg=(-40, 85, "saft", 1, "Allowable")),
          ratings=["typical capacity 5.6 Ah (C/5, +25 C, 2.5 V cut-off), 3.65 V, 20.4 Wh (p.1): 4S1P 81.6 Wh nominal against the 35E pack's 144.72 Wh; 53.5 to 58.8 Wh usable MODELLED (L4-E10 16)",

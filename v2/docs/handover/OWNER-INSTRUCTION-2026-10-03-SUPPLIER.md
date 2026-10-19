@@ -28,7 +28,7 @@ Continue our own supported engineering work alongside that handover. Preserve La
 
 Keep the two-worker limit and one author per branch. Finish L4-E7 round 5 and the GND-002/HOT-R1 composition work from their recovered state. Preserve successful regeneration and committed fixes. Integrate the remaining consolidation, QR01's evidence-transfer correction and QR02's pack-fit dependency.
 
-Use the existing regeneration, targeted verification and promotion gates on the actual candidate. Retain Astra's original verdicts and label the coordinator's checks accurately. Promote a truthful, reviewable design candidate when its applicable gates pass; this does not declare power qualification or fabrication release complete.
+Use the existing regeneration, targeted verification and promotion gates on the actual candidate. Retain the second worker's original verdicts and label the coordinator's checks accurately. Promote a truthful, reviewable design candidate when its applicable gates pass; this does not declare power qualification or fabrication release complete.
 
 ## 3. Produce a handover that a supplier can act on
 

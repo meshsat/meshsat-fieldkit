@@ -1,9 +1,9 @@
 THE INVENTORY OF REL-001 ON THE SET 6 ARTEFACTS, BEFORE AND AFTER (worker d6rel, MESHSAT-1357, taken 28 September 2026 17:55 CEST, after the fixes of the fresh check)
-Written by v2/docs/records/d6rel/measure_inventory.py (read only; the old list is git show 92f22e3f:v2/ecad/tools/pcb_reliability.yaml written to $SP/old/):
+Written by v2/docs/records/d6rel/measure_inventory.py (read only; the old list is git show bec528d1:v2/ecad/tools/pcb_reliability.yaml written to $SP/old/):
   python3 v2/docs/records/d6rel/measure_inventory.py v2/ecad/tools --old $SP/old
 No board has been built; these are readings of netlists and of board E5's board file. The population is the NETLIST's (board E5: its board file's): footprints only a board file carries are open item REL-O-13.
 
-old list  : $SP/old/pcb_reliability.yaml sha16 fbf56eb06df1d007 (git show 92f22e3f:v2/ecad/tools/pcb_reliability.yaml)
+old list  : $SP/old/pcb_reliability.yaml sha16 fbf56eb06df1d007 (git show bec528d1:v2/ecad/tools/pcb_reliability.yaml)
 new list  : ecad/tools/pcb_reliability.yaml sha16 40f2a98323b1f9ce
 tool      : reliability.py sha16 c50f2b8b35d1d57b, wear_inventory.py sha16 503a05eedb8a0a29
 

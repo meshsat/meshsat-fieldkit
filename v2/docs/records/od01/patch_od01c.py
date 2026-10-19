@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""OD-01, the coordinator's corrections after the independent AI check of fnd/od01b at b9b9b32a (checks/check-3.md):
+"""OD-01, the coordinator's corrections after the independent automated check of fnd/od01b at b9b9b32a (checks/check-3.md):
 B1 one gate table (MACHINING-RFQ.md section 6) and every other document citing it by part; B2 TS3 moved wholly inside the
 frame window; m2 a second relay in series; m3 a diode across each coil; m4 "supply loss"; m5 V3 shows each installed
 thermostat in the chain; m6 the fuses named F1 and F2 and F1 placed before K1; m7 the patch runs lift and refit H1 and repeat

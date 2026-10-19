@@ -1,9 +1,9 @@
 # L5-R4: a compute module lost while running, the panel firmware's finding F-14 (MESHSAT-1357, set 29, 3 October 2026)
 
 Prototype design: nothing here has been built, powered or measured. Layer 5's round 4 decides one finding the panel firmware's author
-raised after round 3 (`fnd/fw-r3` at `e5eb34f0`, its README's F-14) and writes the decision into the two files Layer 5 owns for the
+raised after round 3 (`fnd/fw-r3` at `ab8b567b`, its README's F-14) and writes the decision into the two files Layer 5 owns for the
 panel: `v2/docs/PANEL.md` section 5 and `v2/docs/HW-FW-CONTRACT.md` (FW-C05, FW-C02, V-C05, the change record). Branch `fnd/l5r4` from
-set 28's `32d6ff8c`. No requirement is changed and `CONOPS.md` is not edited: it is the source.
+set 28's `bdd997cb`. No requirement is changed and `CONOPS.md` is not edited: it is the source.
 
 ## 1. The finding
 
@@ -78,7 +78,7 @@ re-arms nor clears it; a power-on reset clears it, read as `CHIP_RESET`'s `HAD_P
   FW-C01's order would raise a slot left off, which is an automatic retry by another path.
 - **Rejected:** a re-armed retry after a stable run (for example 30 minutes, as the hot stop's restore), because it would give more
   than CONOPS's "cycled once" and REQ-062 states once; it is the change to bring if the owner wants unattended repeated recovery.
-- **The follow-up of the same day (the panel firmware's F-15 and S-37, `fnd/fw-r4` at `6849292d`).** The first text read a power-on
+- **The follow-up of the same day (the panel firmware's F-15 and S-37, `fnd/fw-r4` at `876e3355`).** The first text read a power-on
   as `HAD_POR` alone; the held datasheet bears the firmware out (section 2's last row): a watchdog reset is not a chip-level reset,
   so `HAD_POR` stays 1 after a power-on followed by a watchdog reset, and on `HAD_POR` alone an ordinary watchdog reset would clear a
   slot left off. The power-on is now `HAD_POR` set and `REASON` zero in PANEL.md section 5, FW-C05, FW-C02 and V-C05. The slot record's
@@ -121,7 +121,7 @@ REQ-062 is not edited (layer 3 accepted; its statement is the start-up case of t
 4. `cycled` and `SLOT_FAULT_OFF` per slot are written beside the wipe-pending record, never inside its journal (S-37), and read at
    boot: after any reset that is not a power-on (a watchdog, RUN or SWD reset: `CHIP_RESET`'s `HAD_POR` clear, or the watchdog's
    `REASON` not zero) a slot recorded off stays `SLOT_FAULT_OFF` when FW-C02 reads its line low, and a slot read high keeps its spent
-   retry; after a power-on reset (`HAD_POR` set and `REASON` zero, F-15) the record is cleared. Round 4 of the firmware (`6849292d`)
+   retry; after a power-on reset (`HAD_POR` set and `REASON` zero, F-15) the record is cleared. Round 4 of the firmware (`876e3355`)
    already reads it so.
 5. The constants stay (`PANEL_SLOT_FLAT_MS` 60000, `PANEL_SLOT_CYCLE_OFF_MS` 5000, `PANEL_HB_LOST_MS` 3000); a host test per case
    (lost at start-up, lost while running, lost again after a successful cycle, a controller reset with a slot left off, a power-on
@@ -131,7 +131,7 @@ REQ-062 is not edited (layer 3 accepted; its statement is the start-up case of t
 
 `test_l5r4.py`: CONOPS (4e, M5, Startup) and PANEL.md section 5 agree (the same hold-off parsed from each, one cycle, the rail-off
 time, the operator), PANEL.md covers the running case and cites CONOPS; FW-C05 states the same figures and FW-C02 keeps a slot left
-off; REQ-062's case is in the rule; `apply_l5r4.py` reads already applied on the tree, applies once to the files at `32d6ff8c`, is
+off; REQ-062's case is in the rule; `apply_l5r4.py` reads already applied on the tree, applies once to the files at `bdd997cb`, is
 idempotent and refuses a mixed state; the rebind script checks or reads already applied; the reset reading rests on the held
 datasheet (its 2.12.1, 2.12.7 and Table 548 sentences read from the PDF), and PANEL.md, FW-C05, FW-C02 and V-C05 read a power-on as
 `HAD_POR` set and `REASON` zero, with the slot record beside the journal; no dash in the record.

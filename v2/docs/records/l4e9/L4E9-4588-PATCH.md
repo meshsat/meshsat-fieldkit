@@ -1,17 +1,17 @@
-**DONE:** the remaining 45.88 K/W statements of L4-E9's page written as twelve exact rows (P-01 to P-12) for the coordinator, each with its old and new text at the base `a78a84cb`, its paired generator data and its source; every occurrence of 45.88 K/W in records l4e11 and l4e10's hand pages classified (section 4: none is stated outside its dated history as the current per-FET bar, so none is edited). **NOT DONE:** nothing applied: the page, the register, the generator and its output are the integration's files; the regeneration and its pins are the coordinator's. **NEXT:** the coordinator applies P-01 to P-12 in the next set, regenerates `l4e9_power_path.out` (its lines 614, 655 and 1650 change; the page's gen:classes block with it) and re-pins what pins the page.
+**DONE:** the remaining 45.88 K/W statements of L4-E9's page written as twelve exact rows (P-01 to P-12) for the coordinator, each with its old and new text at the base `8529e741`, its paired generator data and its source; every occurrence of 45.88 K/W in records l4e11 and l4e10's hand pages classified (section 4: none is stated outside its dated history as the current per-FET bar, so none is edited). **NOT DONE:** nothing applied: the page, the register, the generator and its output are the integration's files; the regeneration and its pins are the coordinator's. **NEXT:** the coordinator applies P-01 to P-12 in the next set, regenerates `l4e9_power_path.out` (its lines 614, 655 and 1650 change; the page's gen:classes block with it) and re-pins what pins the page.
 
 # L4-E9's remaining 45.88 K/W statements: the patch for the coordinator (W7, MESHSAT-1357, 6 October 2026)
 
 **What this is.** A list of exact text corrections to L4-E9's page `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` and to the
 generator data that renders or checks the same texts, `v2/docs/records/l4e9/l4e9_power_path.py`, written by worker W7 on branch
-`fnd/w7rem` from set 30's integration commit 2c, `a78a84cbf27dda7a468d307d85c85c50c17c1301`. Neither file is edited here: the page is
+`fnd/w7rem` from set 30's integration commit 2c, `8529e7410df966826b8597268816623484ee805c`. Neither file is edited here: the page is
 the integration's file, and every row below is for the coordinator to apply in the next set. The rows narrow or label a claim; none
 designs anything, computes a figure, consumes a review or changes a verdict. Prototype framing: nothing in the kit is built, bought,
 powered or measured; every figure below is desk arithmetic printed by a record (MODEL or INFERRED as that record labels it).
 
 **The finding it answers.** Slot H's set 31 record left "45.88 K/W outside PC-05's stated places: 8a's D-14 row and data, the exit
 table's D-14 row, U-04's choice row, UDC-1's comparison and the 8a history paragraph still state set 29's per-FET bar"
-(`v2/docs/records/l4e9/SET31-CHANGES.md:120-122`); the DESK-gate draft carries it as K-06 (branch `fnd/dgate` at `f2721953`,
+(`v2/docs/records/l4e9/SET31-CHANGES.md:120-122`); the DESK-gate draft carries it as K-06 (branch `fnd/dgate` at `eb91e190`,
 `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft.md:316`, cited as text only). Those are exactly the places below.
 
 ## 1. The figure, its date, and what superseded it
@@ -20,8 +20,8 @@ table's D-14 row, U-04's choice row, UDC-1's comparison and the 8a history parag
   limit: "the installed three, each FET's (Zself + 2 Zmut) at most 45.88 K/W steady with R17 placed apart, R17's coupling into each
   junction at most 1 K/W" (`v2/docs/records/l4e11/l4e11_power.out:1174`, 19c), under the heading "## 19. Round 9: record l9stk's
   protection and record l8p's breaker (4 October 2026; out 19)" (`v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md:1817`). It
-  entered L4-E9 with set 29: the page at set 29's commit `f964d45f` (4 October 2026, 15:24) prints it, the page at set 27's
-  `9e0c6767` and at set 28's `dbe1a1ba` does not (read with `git grep`; the test of this record re-reads it where those commits are in
+  entered L4-E9 with set 29: the page at set 29's commit `0e9d5179` (4 October 2026, 15:24) prints it, the page at set 27's
+  `b63fed3d` and at set 28's `5216830f` does not (read with `git grep`; the test of this record re-reads it where those commits are in
   the object store). **SESSION reading:** the brief named it "the superseded set 27/28 figure"; the tree dates it to set 29, 4 October
   2026, and every row below says set 29. Reversed by: a commit of set 27 or 28 shown to print it on L4-E9's page.
 - **Superseded as the per-FET bar** by L4-E11's round 11 (21d: "E-1's installed acceptance becomes the worst split's, (Zself + 2 Zmut)
@@ -43,7 +43,7 @@ table's D-14 row, U-04's choice row, UDC-1's comparison and the 8a history parag
 Apply P-01 to P-12 together in one commit of the next set: the page's tables are tested equal to the generator's data
 (`v2/ecad/tools/tests/test_l4e9.py`: `t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register` for 8a and 8b, the exit
 table in `t_consolidation_the_handover_the_exit_and_the_status`), so a page row applied without its data row fails that test. Each
-Old text occurs exactly once in its file at `a78a84cb` (a whole line where the Kind reads line or lines, else a fragment of the named
+Old text occurs exactly once in its file at `8529e741` (a whole line where the Kind reads line or lines, else a fragment of the named
 line); the New text replaces it. Then regenerate `l4e9_power_path.out` through `_bin/regen_out.py` (its lines 614, 655 and 1650
 change, and the page's `gen:classes` block is rendered again with P-09's text) and re-pin what pins the page (records l4e10 and
 l4e11) at the freeze. The module `v2/ecad/tools/tests/test_w7rem.py` holds every row: the Old text where it is said to be, each page
@@ -304,7 +304,7 @@ each FET's installed (Zself + 2 Zmut) at most 40.78 K/W without m (E11-29 as L4-
 
 ## 4. Records l4e11 and l4e10: every 45.88 K/W, classified (nothing edited)
 
-Read on `a78a84cb` in every Markdown page of `v2/docs/records/l4e11/` and `v2/docs/records/l4e10/` (their `checks/` and
+Read on `8529e741` in every Markdown page of `v2/docs/records/l4e11/` and `v2/docs/records/l4e10/` (their `checks/` and
 `clarification/` folders included). Record l4e10 prints no 45.88 K/W in any hand page. Record l4e11's pages print it on the lines
 below; each is either inside a dated round (its section or round heading carries the round and its date) or a current statement
 that uses 45.88 K/W in one of its two standing roles (section 1). **None states 45.88 K/W as the current per-FET bar outside a dated
@@ -353,7 +353,7 @@ prints 45.88 and refuses one this table does not list.
   as written; R-159 already labels "round 9's 45.88 K/W per FET" as history (`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:255`);
   5d's E11-29 row (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:750`) already reads "at most 40.78 K/W without m (each junction's
   worst-split figure at its own m at most 45.88 K/W)" since set 31, and its "R17's coupling at most 0.29 K/W" is the row's two-place
-  print of the one target L4-E11 prints as 0.294 K/W (K-12, answered on the annex's side by W3 on `fnd/w3annex` at `48c147a9`).
+  print of the one target L4-E11 prints as 0.294 K/W (K-12, answered on the annex's side by W3 on `fnd/w3annex` at `8da38edf`).
 - **K items of the DESK-gate draft's section 5 touched here:** K-06's L4-E9 side (P-01 to P-12). K-08 (one identifier E-1 for two
   items): every new text above names the junction limit as E11-29's row or record l9stk's and adds no bare "E-1". Left to their files:
   K-03, K-04 and K-15 (the P0 list and LH-12: K-04 and K-15 in `v2/docs/records/l4close/P0-POWER-LIST.rev3.patch.md`), K-09, K-12,

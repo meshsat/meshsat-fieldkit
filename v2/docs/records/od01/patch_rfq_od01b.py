@@ -12,7 +12,7 @@ R.append(("""# OD-01: request for quote, the made parts of the heat test and the
 
 """, """# OD-01: request for quote, the made parts of the heat test and the case mock-up (NOT SENT)
 
-> **Revised 29 September 2026 (stream od01b)** after the owner's instruction of that day and an outside AI review: H1 is
+> **Revised 29 September 2026 (stream od01b)** after the owner's instruction of that day and an outside automated review: H1 is
 > now ordered to its own definition (sheet H1-1, DXF, STEP in `h1-heat-test-plate/`), not as "C1's CAD plus prose that
 > overrides the drawing" (R6); H2's finish is one instruction (R6); the HS100's mounting holes are Arcol's L 4.4 +-0.25,
 > not the "3.2 max" the first issue and the check read (that figure is the solder tag's hole); a new section 6 states

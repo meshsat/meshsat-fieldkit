@@ -1,10 +1,10 @@
 # Board A's charge path: the circuit as drawn, the resistor-only proposal, and the corrected path (stream r11dep, MESHSAT-1357)
 
-**Third issue, 30 September 2026:** CHECK-4 of `cf9e3909` accepted the second issue with five minors, answered here
+**Third issue, 30 September 2026:** CHECK-4 of `4d16c7cc` accepted the second issue with five minors, answered here
 (section 9): the derated setting is 4.00 A, L1's schedule is written as a register setting, the collapse bound's other
 sources of pessimism are named, A-2's status is stated, and B-2's remedies are named concretely.
 
-**Second issue, 30 September 2026.** It answers the independent check CHECK-3 of `a9761fcb`, which read "accepted: no" on
+**Second issue, 30 September 2026.** It answers the independent check CHECK-3 of `ce6a788a`, which read "accepted: no" on
 two blocking items and seven minors (section 9 maps each to its answer). It also carries the owner's amendments of the same
 day. They are quoted here because they set what this page is:
 
@@ -17,7 +17,7 @@ day. They are quoted here because they set what this page is:
 > evidence. [...] Record necessary engineering corrections with measurable closure criteria. Component selection and Kelvin
 > routing are engineering tasks."
 
-**Every finding here is PROVISIONAL until the next independent check.** This page is the author's record, AI arithmetic, not
+**Every finding here is PROVISIONAL until the next independent check.** This page is the author's record, automated arithmetic, not
 a qualified review. It is **prototype design**: nothing is built, powered or measured. No generator is edited, no requirement
 is changed, and nothing is implemented.
 

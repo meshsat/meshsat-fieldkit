@@ -2,7 +2,7 @@
 
 # T10 round 9: row (b)'s CAN draft corrected on W139's quorum analysis
 
-Record l9t5, task T10, MESHSAT-1357; Layer 4 task L4A-54 (row (b) of the AI-scope register, `_runs/l4ai/REGISTER.draft.md`), round 9
+Record l9t5, task T10, MESHSAT-1357; Layer 4 task L4A-54 (row (b) of the automation-scope register, `_runs/l4ai/REGISTER.draft.md`), round 9
 after W137's round 7 (`T10-ROUND6.md`) and W139's round 8 (`T10-CANQ.md`). Prototype design: nothing in this kit has been built,
 bought, powered or measured, and no figure here is a measurement. Figures are printed by `l9t5_canmb.py` into `l9t5_canmb.out`
 ("canmb N" below is its section) and by record l4canen's `l4canen.py` into `v2/docs/records/l4canen/l4canen.out` ("canen N"). Labels:
@@ -12,7 +12,7 @@ like every draft of L4-E9's change list, None is APPLIED; `apply_gen_sch_b_canen
 
 ## 1. Why
 
-W139 analysed the quorum on W137's draft (fnd/l4canmb `cd823769`) and W138's regulator stage (fnd/l4reg `2eee008d`): every row held,
+W139 analysed the quorum on W137's draft (fnd/l4canmb `1d64da16`) and W138's regulator stage (fnd/l4reg `9c470f60`): every row held,
 contained, or lost as row 8 accepts, with one REQUIRED change and four findings this round corrects before row (b)'s check:
 
 | Item | W139's finding, as received | This round |

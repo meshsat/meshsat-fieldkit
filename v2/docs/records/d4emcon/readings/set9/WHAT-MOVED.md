@@ -1,7 +1,7 @@
 # What moved between set 6 and set 9 on the EMCON paths (stream d4emcon, 29 September 2026)
 
-Read on the committed netlists of main `5ac1deab` (merged into `fnd/d4emcon` as `856625ab`) against those of
-`92f22e3f` (the set 6 line this stream's first readings were taken on). Tools: `tools/netdiff.py`,
+Read on the committed netlists of main `b57d1662` (merged into `fnd/d4emcon` as `86d46ea0`) against those of
+`bec528d1` (the set 6 line this stream's first readings were taken on). Tools: `tools/netdiff.py`,
 `tools/path_walk.py`, `tools/walk_report.py`, `tools/fault_levels.py`; nothing here needed KiCad.
 
 | Board | set 6 sha256/16 | set 9 sha256/16 | What changed (`netdiff-*.txt`) | Effect on an EMCON path |

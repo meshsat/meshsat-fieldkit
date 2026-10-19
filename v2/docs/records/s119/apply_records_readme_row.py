@@ -12,7 +12,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT = os.path.join(HERE, "..", "README.md")
-ANCHOR = "| `a1solar/` | stream a1solar (29 September 2026, branch `fnd/a1solar`, second issue after its AI check)"
+ANCHOR = "| `a1solar/` | stream a1solar (29 September 2026, branch `fnd/a1solar`, second issue after its automated check)"
 NEW_ROW = ("| `s119/` | stream s119 (29 September 2026, branch `fnd/s119` from `a1f8ec70`, S-119, two rounds): the energy "
            "chain's charger rows restated from the FETs' losses (U3 0.98 to 0.979 with decision 57's FETs; U3B 0.975 to "
            "0.972 on U3's 400 kHz row, the session decision drafted by `apply_decision_s119.py`, weighted over the model's "

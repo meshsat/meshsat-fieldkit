@@ -1,13 +1,13 @@
 # S-98: what closes it and what stays open (draft for the integrator's registry script, stream s98, 28 September 2026)
 
-Prototype design; AI engineering work. The registry (`tools/pcb_requirements.yaml`) is the integrator's; this is the text
+Prototype design; automated engineering work. The registry (`tools/pcb_requirements.yaml`) is the integrator's; this is the text
 and the evidence list for the item's move from `open_items` to `closed_items` (fields as the closed items carry them:
 `id`, `closed_by`, `closing_evidence`, `title`), to be run AFTER the box regeneration's pack is installed and the pages
 re-rendered, never before.
 
 ## Preconditions (all four, in this order, in ONE integration set)
 
-1. `fnd/s98` merged: the two generators carry the interim entries (commit `fde30c2c`: the four entries of
+1. `fnd/s98` merged: the two generators carry the interim entries (commit `5007e971`: the four entries of
    `records/cx1/apply_declarations_draft.py`, the notes rewritten INTERIM, board B's M7 branches).
 2. `python3 v2/docs/records/s98/apply_contract_i03.py` run from the integration worktree's root (it asserts the
    generator lines it cites and refuses if they moved), then `python3 v2/docs/records/s98/apply_architecture_i03.py`.
@@ -26,7 +26,7 @@ re-rendered, never before.
 - `closed_by: <the integration commit that installs the pack>` (the integrator fills it; the pattern of the closed items,
   a commit or the session choice that settled the item)
 - `closing_evidence:` (one paragraph; the shas are read from the pack, never typed)
-  > The interim alignment applied by the generator owners of boards A and B (fnd/s98, fde30c2c): board A's +5V_S2 4.2 A
+  > The interim alignment applied by the generator owners of boards A and B (fnd/s98, 5007e971): board A's +5V_S2 4.2 A
   > typical and 5.63 A peak with J_5V_S2 5.63 A and the VBAT load Q28 2.22 A, board B's +5V_S2 peak 5.63 A, board A's
   > J_5V_DEV 3.8 A and +5V_DEV typical 5.1 A, the intent notes rewritten as INTERIM with the PS-ALLTX mode figures
   > INCONCLUSIVE; board B's M7 branches reconciled (U21 0.70 A, the child rail's declared burst bounding Ebyte's 650 mA
@@ -56,6 +56,6 @@ re-rendered, never before.
   (records/s98/README.md, residual R1).
 - **The contract's `ends` src line numbers** (gen_sch_a.py:967-968, 1038; gen_sch_b.py:434, 831, 875) were stale before
   this stream and are outside apply_contract_i03.py's scope; the connectors are at gen_sch_a.py:1037-1038 and 1135 and
-  gen_sch_b.py:551, 1119 and 1210 at fde30c2c (residual R2).
+  gen_sch_b.py:551, 1119 and 1210 at 5007e971 (residual R2).
 - **The lead's own drop is in no board's share of the 2 percent budget** (records/cx1/ANALYSIS.md; both checks agree):
   a contract or budget item the integrator may open; no id.

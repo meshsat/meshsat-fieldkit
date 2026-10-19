@@ -418,7 +418,7 @@ def t_u01c_suitability_and_conductance_needs():
         assert all(v in allowed for v, _ in d["charge"] + d["discharge"] + d["storage"]), cell
     s35 = " ".join(w for v, w in c["suit"]["35E"]["storage"] if v.startswith("UNSUITABLE"))
     assert "LO-01f" in s35 and "LO-01g" in s35 and "LO-01e" in s35
-    # Astra's B5: the Saft's windows are published, its current at temperature and storage dwell are awaited
+    # the second worker's B5: the Saft's windows are published, its current at temperature and storage dwell are awaited
     sx = c["suit"]["MP 176065 xtd"]
     for m in ("charge", "discharge", "storage"):
         assert [v for v, _ in sx[m]] == ["SUITABLE ON PUBLISHED EVIDENCE", "AWAITING SAFT OR THE LIMITED SAMPLE QUALIFICATION"], m

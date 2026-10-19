@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """S-99: board A's +5V_DEV LM5176 stage against the PS-ALLTX coincident demand. Desk arithmetic, standard
-library only, stdout is the only output. Prototype design, AI engineering analysis: nothing has been built or
+library only, stdout is the only output. Prototype design, automated engineering analysis: nothing has been built or
 measured. Stream s99, MESHSAT-1357, 28 September 2026.
 
 Inputs are the four committed design files named below, pinned by sha256: a changed input is refused by name

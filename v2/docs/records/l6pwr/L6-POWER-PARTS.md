@@ -5,8 +5,8 @@ by `l6pwr_parts.py` (`l6pwr_parts.out`, "out N" below); this page is the short f
 L4-E11) in release-guarded drafts on no committed netlist; this record records and sources them and **reselects nothing**. A
 mismatch is a FINDING with the Layer 4 row it affects (section 3), never a change.
 
-**Re-read at set 28 (finding F-13, 3 October 2026, on `fnd/l6pwr2` from set 28's `fe046060`).** The record was written on
-`fnd/l4e9` at `31bcc327`; L4-E7's rounds 3 to 5 in set 27 restated its output, so the reader now PARSES every L4-E7 figure the
+**Re-read at set 28 (finding F-13, 3 October 2026, on `fnd/l6pwr2` from set 28's `e215a153`).** The record was written on
+`fnd/l4e9` at `28cfedf6`; L4-E7's rounds 3 to 5 in set 27 restated its output, so the reader now PARSES every L4-E7 figure the
 record states (the rating table at round 2's reference loop, the guard's thresholds, the step's turn-off, the cold connection's
 ring, D4's and D11's rows, the trip's current, the divider parts the guard draft names) from `l4e7_stage_settings.out` and the guard
 draft, and refuses if a part it calls the guard's is no longer named there. Nothing is reselected; the guard's parts are the same.

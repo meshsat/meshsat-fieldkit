@@ -3,7 +3,7 @@
 The owner's item 3 of 2 October 2026: for the final candidates, map every previously rejected material finding to its
 correction and targeted verification, name the reviewer and the exact revision, and preserve the collaborator's original
 verdicts. FINDINGS-LEDGER.md does that for L4-E7, L4-E7Q, L4-E7R, L4-E8, L4-E9, L4-E10, L4-E11, L4-E12 and L4-E13;
-findings_inventory.py lists the blocking items of every collaborator (Astra) check of those tasks from the filed check files.
+findings_inventory.py lists the blocking items of every collaborator (the second worker) check of those tasks from the filed check files.
 
 The predicates: every blocking item the inventory finds has exactly one row, by check file and item ID, and no row names an
 item the inventory does not find; every row quotes its check file's first line as filed, and names the job and the revision

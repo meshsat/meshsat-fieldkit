@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""l4e11_rowc.py: record l4e11, round 19 (Layer 4 AI-scope register row (c), tasks L4A-67 and L4A-68; MESHSAT-1357, 7 October 2026).
+"""l4e11_rowc.py: record l4e11, round 19 (Layer 4 automation-scope register row (c), tasks L4A-67 and L4A-68; MESHSAT-1357, 7 October 2026).
 
 Record l8p's round 11 (L8P-BREAKER.md section 16, l8p_cprot.out) corrected L8P-R10-F1 in draft with a held-overcurrent trip on board P
 that touches neither the enable loop nor UVLO, and printed the thermal guard's allowance on DOCK_EN_OUT for its consumers (record

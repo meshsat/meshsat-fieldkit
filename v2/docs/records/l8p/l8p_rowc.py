@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""l8p_rowc.py: record l8p, round 10 (Layer 4 AI-scope register row (c), tasks L4A-66 and L4A-65; MESHSAT-1357, 7 October 2026).
+"""l8p_rowc.py: record l8p, round 10 (Layer 4 automation-scope register row (c), tasks L4A-66 and L4A-65; MESHSAT-1357, 7 October 2026).
 
 L4A-66, RE-10 and HO-A by method M-A (selected by record l4e11's decision L4E11-FET-D2, branch fnd/l4fet at 49d4f9e6): every series
 part of the pack path held INDEFINITELY at the breaker's held 23.93 A from the 76.25 C inside air inside its PRINTED limits, the

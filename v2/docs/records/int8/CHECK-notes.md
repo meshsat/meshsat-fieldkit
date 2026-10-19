@@ -1,38 +1,38 @@
-# Independent check of integration set 7 (branch fnd/int8 at 17d4823b, onto main 66c0d1d2), AI review
+# Independent check of integration set 7 (branch fnd/int8 at 00493048, onto main be659bf6), automated review
 
-Checker: an independent assistant session (an AI review, not a qualified engineering review). 28 September 2026,
+Checker: an independent assistant session (an automated review, not a qualified engineering review). 28 September 2026,
 21:35 to 21:52 CEST. Nothing of the kit has been built, ordered or measured; every verdict quoted below is a desk
 reading of a prototype design. The worktree `<worktrees>/int8` was read only.
 Everything written is under `<worktrees>/_scratch/chk-int8/` (this file, RESULT.md,
 CLOSURE-draft.md, the registry diffs, the page copies and the five scenario logs).
 
-Target: fnd/int8 moved to 82dd1980 at 21:36:37, one commit past the brief's 17d4823b, filing the box logs and the
+Target: fnd/int8 moved to 8570ff12 at 21:36:37, one commit past the brief's 00493048, filing the box logs and the
 suite log under v2/docs/records/int8/box/ (6 files, 3708 insertions, no tool, page or registry change). This check
-reads 17d4823b by hash; 82dd1980 was checked for identity, tag, trailer and dashes only (clean).
+reads 00493048 by hash; 8570ff12 was checked for identity, tag, trailer and dashes only (clean).
 
 ## 1. Commits and content hygiene (main..7f6de345)
 
 - 82 commits; 0 not authored as Kyriakos Papadopoulos <ncpjfuzl@mxmx.email>; 0 subjects without [MESHSAT-1357];
   0 commit bodies with a co-author trailer; 0 em or en dashes in commit messages.
 - Added lines carrying the trailer's literal name: 1. File v2/docs/records/w5tray/pass1/RESULT-w5tray-check-1.json
-  line 27 (added by b5271138, "the w5tray stream recovered from its transcripts, unchecked"): the sentence
+  line 27 (added by 542350e5, "the w5tray stream recovered from its transcripts, unchecked"): the sentence
   "... no the co-author trailer (its name is not written here) trailer in this repo." inside a quoted suggested commit body. scripts/pre-commit-check.sh
   rule 7 greps the staged diff for ^\+.*the co-author trailer (its name is not written here) (case-insensitive) and exits 1, so that checkpoint was committed
-  without the check. A fast-forward of main makes no commit and runs no check; the string stays in b5271138 either
+  without the check. A fast-forward of main makes no commit and runs no check; the string stays in 542350e5 either
   way. Rated minor by me (it attributes no commit); the brief's literal criterion is not met.
 - Em or en dashes in added lines: 4, all inside two fetched third-party pages, not drafted prose:
   v2/vendor/rf/amphenol-rf-132134-11-part-page-wayback-20260217.html (2) and
   v2/vendor/rf/amphenol-rf-132134-part-page-wayback-20260213.html (2). Every drafted line is clean.
-- Tracked IBIS models at 17d4823b: 0 (git ls-tree -r | grep -c '\.ibs$'); .gitignore line 41 reads
+- Tracked IBIS models at 00493048: 0 (git ls-tree -r | grep -c '\.ibs$'); .gitignore line 41 reads
   v2/vendor/*/ibis/*.ibs and git check-ignore -v v2/vendor/ti/ibis/pca9555.ibs names that line (w5si2 check m4).
 
-## 2. The registry (v2/ecad/tools/pcb_requirements.yaml, PyYAML, main against 17d4823b)
+## 2. The registry (v2/ecad/tools/pcb_requirements.yaml, PyYAML, main against 00493048)
 
 Counts: owner_rulings 29 -> 31 (D-19, D-20 added, none changed); session_choices 74 -> 75 (SC-75 added);
 open_items 65 -> 82 (20 added, S-95 to S-114; 3 removed, S-63, S-88, S-89; 3 titles extended, L-07, M-02, S-92);
-closed_items 59 -> 62 (S-63 closed_by SC-75; S-88 and S-89 closed_by commit eee624e3, each with closing_evidence);
+closed_items 59 -> 62 (S-63 closed_by SC-75; S-88 and S-89 closed_by commit d2840081, each with closing_evidence);
 records 144 -> 144, 28 changed, needs 19 unchanged; needs_document_sha256 6ebe6760... -> 6cb7b241..., which is the
-sha256 of v2/docs/CONOPS.md at 17d4823b (computed). Full dumps: registry-diff.txt, registry-items.txt,
+sha256 of v2/docs/CONOPS.md at 00493048 (computed). Full dumps: registry-diff.txt, registry-items.txt,
 records-changed.txt beside this file.
 
 Changed records, by field: waits_on only on REQ-007, REQ-009, REQ-015, REQ-016, REQ-017, REQ-018, REQ-021, REQ-029,
@@ -45,26 +45,26 @@ No record's statement, acceptance, evidence_result, allocation or phase changed 
 REQ-072's three protected fields compared explicitly: SAME, SAME, FAIL).
 
 Closures, each opened in the tree:
-- S-88 by commit eee624e3: v2/ecad/pcb-a-power-a23/routed/port_protect_a.verdict.json at 17d4823b reads verdict
+- S-88 by commit d2840081: v2/ecad/pcb-a-power-a23/routed/port_protect_a.verdict.json at 00493048 reads verdict
   PASS, denominator 42, inputs.netlist.sha256_16 0a2b59087bcc2678 (board A's declared phase A32 on the page),
-  writer port_protect.py sha16 7acd5333fc59f8d0 (equals sha256/16 of the file at 17d4823b), port_reviews
+  writer port_protect.py sha16 7acd5333fc59f8d0 (equals sha256/16 of the file at 00493048), port_reviews
   dcaa890424a8d15f, counts ports 18, internal_pins 60, declarations_refused 0, uncovered_pins 0,
   review_disagreements 0, as the closing evidence states. The file in the tree is the second re-take's (ts
-  2026-09-28T19:15:25Z, commit f1ec1d66); the same file at eee624e3 (ts 18:42:46Z) carries the same verdict, counts
+  2026-09-28T19:15:25Z, commit 52c036c6); the same file at d2840081 (ts 18:42:46Z) carries the same verdict, counts
   and shas. The regression the evidence cites exists (tests/test_port_protect.py, 60 tests;
   records/d8dec31/readings/regress-reclassify.txt).
-- S-89 by commit eee624e3: the seven routed/reliability.verdict.json at 17d4823b read INCONCLUSIVE with
-  writer c50f2b8b35d1d57b (equals reliability.py at 17d4823b), list tools/pcb_reliability.yaml 40f2a98323b1f9ce,
+- S-89 by commit d2840081: the seven routed/reliability.verdict.json at 00493048 read INCONCLUSIVE with
+  writer c50f2b8b35d1d57b (equals reliability.py at 00493048), list tools/pcb_reliability.yaml 40f2a98323b1f9ce,
   bound true, citations_unjudged 0, refused 0, and per board the artefact sha, held_by list and
   candidates/classed/excluded stated in the evidence: A 0a2b59087bcc2678 82/57/25 [REL-O-01, 02, 07, 08, 12, 13];
   B 028997a6c5e8810f 155/56/99 [02, 03, 07, 08, 09, 12, 13]; C 3fddbb3edcd4248a 74/24/50 [04, 05, 07, 08];
   D 7a2c0ac2190b141a 40/11/29 [07, 08, 10, 12, 13]; E 56adc9746d61c4e0 35/21/14 [02, 07, 08, 12, 13];
   E5 board file 686b29a734c55b9a 17/17/0 [06, 07]; P 760ac6f74d62d194 26/9/17 [07, 08, 11, 12, 13]. Their ts
-  (19:17:38Z to 19:17:44Z) and the first re-take's (18:44:59Z to 18:45:05Z, at eee624e3, same values) are both after
+  (19:17:38Z to 19:17:44Z) and the first re-take's (18:44:59Z to 18:45:05Z, at d2840081, same values) are both after
   the coverage floor evidence_not_before 2026-09-28T20:33:53+02:00.
 - S-63 by SC-75: the session choice names v2/cad/lid_tray_qmx_r2.py and v2/release/case-2026-09-27/lid-tray-qmx-r2/
   (README, MANIFEST.sha256, check.out, drawing PDF, STEP and STL of tray, frame and plate), all in the tree at
-  17d4823b; lid-tray-qmx-r2-check.out ends "RESULT: PASS: the table is what was built, nothing intersects in place
+  00493048; lid-tray-qmx-r2-check.out ends "RESULT: PASS: the table is what was built, nothing intersects in place
   or on the way in, and every control fails as it must" (a model check, nothing printed).
 
 New open items S-95 to S-114: every one is either waited on by a record or carries a disposition with a reason:
@@ -96,7 +96,7 @@ acceptance and evidence_result are unchanged from main; M-02 stays OPEN with its
 Validator, run in the worktree: rules_lib.py 59 rule(s), 0 error(s), 0 warning(s), fingerprint 635ff031f210f48c;
 rules_lib.py requirements 144 requirement record(s), 0 error(s), 0 warning(s).
 
-## 3. The pages (v2/docs/CURRENT-EVIDENCE.md, main 35 layout-entry reasons, 17d4823b 34)
+## 3. The pages (v2/docs/CURRENT-EVIDENCE.md, main 35 layout-entry reasons, 00493048 34)
 
 Per board main -> candidate: A 7 -> 6, B 7 -> 8, C 3 -> 4, D 7 -> 6, E 4 -> 3, P 5 -> 5, E5 2 -> 2 (sums 35 and 34,
 recomputed from the page). Row by row, from the readings:
@@ -117,12 +117,12 @@ recomputed from the page). Row by row, from the readings:
 - Every PASS row: 69 rows on the candidate page, 62 name a netlist or board sha, each equal to the board table's
   declared-phase sha (0 mismatches; the 7 rows without a sha are the registry and package readings, the same 7 at
   main). Checked on the page, not by re-rendering.
-- Tool age: no file under v2/ecad/tools changed between the second re-take's HEAD d981f528 and 17d4823b
-  (git diff --stat empty); the writers of the readings I opened equal the files at 17d4823b (port_protect.py
+- Tool age: no file under v2/ecad/tools changed between the second re-take's HEAD d01c4003 and 00493048
+  (git diff --stat empty); the writers of the readings I opened equal the files at 00493048 (port_protect.py
   7acd5333fc59f8d0, reliability.py c50f2b8b35d1d57b, edge_length.py 21d61d18e18e56a8). The page's TOOL_CHANGED count
   is 176 on both pages (readings of all revisions awaiting revalidation; "of which a re-take alone makes current" 9);
   the 83 CURRENT_CANDIDATE readings are by construction not TOOL_CHANGED.
-- The models: the six SI-001 readings at 17d4823b record inputs.model_state PRESENT for A (5 models), B (10), C (6),
+- The models: the six SI-001 readings at 00493048 record inputs.model_state PRESENT for A (5 models), B (10), C (6),
   D (5), each model_N with sha256_16 equal to pinned_sha256_16, and NOT_ASKED for E and P (no model pinned for their
   drivers); every verdict INCONCLUSIVE, missing_input null. rules_status.py's _pinned_state (lines 1057 to 1112): a
   reading that read a model at the pinned sha is BOUND whether or not the model is in the checkout; a checkout without
@@ -134,15 +134,15 @@ recomputed from the page). Row by row, from the readings:
 ## 4. The merge itself
 
 - git merge-base --is-ancestor main fnd/int8: holds.
-- Stream tips are ancestors of 17d4823b: w5tray 20f3d772, w5si2 71495c4d, d8dec31 bcda4ef6, d6rel 3e7ee4e3,
-  p3bind 0204db6d, cx1 fcd428c3 (each also the current tip of its fnd/ branch).
-- Seven merge commits: 23a550c6 (w5tray), 3c9eb449 (cx1 records), 9ec8917d (w5si2), 55a22b38 (d8dec31),
-  6a5cd826 (cx1 check 2), e047b84a (d6rel), 5894189f (p3bind, last, as its check asked).
+- Stream tips are ancestors of 00493048: w5tray ec3aff46, w5si2 74e5822e, d8dec31 7623f4d4, d6rel 8b0f64ed,
+  p3bind 6956ad53, cx1 130a61df (each also the current tip of its fnd/ branch).
+- Seven merge commits: 19340ead (w5tray), 1bb7369c (cx1 records), 2df6a2d2 (w5si2), 0728d9ce (d8dec31),
+  e29b4446 (cx1 check 2), 91e1c4fb (d6rel), 1c63d52e (p3bind, last, as its check asked).
 - Append-append files, compared with comm against each parent of every merge that touched them (sorted line sets):
-  v2/vendor/sources.txt at 23a550c6, 9ec8917d, 55a22b38, e047b84a; v2/vendor/vendor-status.txt at 23a550c6, 9ec8917d;
-  .gitignore at 9ec8917d: lines of a parent missing from the merge result = 0 in every case (sources.txt 348+354 ->
+  v2/vendor/sources.txt at 19340ead, 2df6a2d2, 0728d9ce, 91e1c4fb; v2/vendor/vendor-status.txt at 19340ead, 2df6a2d2;
+  .gitignore at 2df6a2d2: lines of a parent missing from the merge result = 0 in every case (sources.txt 348+354 ->
   360, 360+361 -> 373, 373+350 -> 375, 375+364 -> 391; vendor-status 267+274 -> 279, 279+280 -> 292; .gitignore
-  38+38 -> 41). At 17d4823b no line of main's version is missing from any of the three; the only duplicated line in
+  38+38 -> 41). At 00493048 no line of main's version is missing from any of the three; the only duplicated line in
   sources.txt and vendor-status.txt is a bare "#" separator that main already had.
 - The checks' minor items the integrator said were answered: w5si2 m1 (the note at
   records/w5si/apply/apply_board_c_declarations.py line 53, w5si2/README.md and pcb_rules_coverage.yaml name the
@@ -152,38 +152,38 @@ recomputed from the page). Row by row, from the readings:
   block on its own line whether or not a blank line precedes closed_items, with the fix comment) and B3 (lines 289
   to 297 resolve the reading at <phase>/out, <phase>/routed, then v2/ecad/out, as rules_status does); d6rel minor 1
   (the stage does not compare the writer's sha: the seven readings' writer c50f2b8b35d1d57b equals reliability.py at
-  17d4823b, checked by me). Carried: d8dec31 N1 to N6, d6rel 2 to 5 and w5si2 m2, m3, m7 are in the filed check
+  00493048, checked by me). Carried: d8dec31 N1 to N6, d6rel 2 to 5 and w5si2 m2, m3, m7 are in the filed check
   records under records/int8/checks/ (with the checkers' notes); I found no carry list in EXECUTION-PLAN.md or the
   registry that names them with an owner (minor item 7).
 
 ## 5. The apply scripts under v2/docs/records/int8/
 
 Each was run on a scratch clone (git clone --shared, sparse) checked out at the parent of the commit that ran it,
-with the script copied in from 17d4823b (each is byte-identical to the version its commit ran, except
-apply_rebind_page_int8.py, changed at fc985e93 to compare with the bound page from history); the result was diffed
+with the script copied in from 00493048 (each is byte-identical to the version its commit ran, except
+apply_rebind_page_int8.py, changed at bafbd79b to compare with the bound page from history); the result was diffed
 against that commit's files; then the script was run again. Logs: scenario1-carried_check3.log,
 scenario2-i03.log, scenario3-owner_rulings.log, scenario4-rebind.log, scenario5-tray.log.
-- apply_carried_check3.py at 20c2fa27: "S-92 reworded (p4, p5); FEA-002 waits on S-92 and S-93 (p7); S-97 opened
-  with disposition TOOLING (p3)", exit 0; the registry identical to 1d564bd9's; second run "REFUSED: S-97 exists
+- apply_carried_check3.py at 52c56d80: "S-92 reworded (p4, p5); FEA-002 waits on S-92 and S-93 (p7); S-97 opened
+  with disposition TOOLING (p3)", exit 0; the registry identical to b83676d5's; second run "REFUSED: S-97 exists
   already (a second run)", exit 2. Docstring states the four items and what it does.
-- apply_i03_items.py and apply_contract_contact_rating.py at 3c9eb449: both exit 0; the registry and
-  pcb_interfaces.yaml identical to b4b81ba1's; second runs refused (S-98 exists; the old line occurs 0 times), exit 2.
-- apply_owner_rulings_2026_09_28.py then apply_needs_sha_conops.py at 554fa039: "D-19 and D-20 recorded; S-114
+- apply_i03_items.py and apply_contract_contact_rating.py at 1bb7369c: both exit 0; the registry and
+  pcb_interfaces.yaml identical to 690833d5's; second runs refused (S-98 exists; the old line occurs 0 times), exit 2.
+- apply_owner_rulings_2026_09_28.py then apply_needs_sha_conops.py at d4abf5fa: "D-19 and D-20 recorded; S-114
   opened (REQ-072 and REQ-016 wait on it); M-02 and L-07 extended; CONOPS.md section 7 and M1 written and REQ-005,
   CFL-016, CFL-014 rebound (6ebe6760c4312bca -> 6cb7b241cb84d729); EQ-13's table extended" and "needs table
-  byte-identical; pin moved"; the registry, CONOPS.md and ENGINEERING-QUESTIONS.md identical to ed31219a's; second
+  byte-identical; pin moved"; the registry, CONOPS.md and ENGINEERING-QUESTIONS.md identical to 1579ea7f's; second
   runs refused, exit 2. It asserts that the CONOPS-bound records carry the tree's sha before it edits, that only the
   two named CONOPS sections changed (by heading), that REQ-072's result did not move, and re-parses.
-- apply_rebind_page_int8.py at 17cbde87 (HEAD's page 719cca08a0823263, the records bound to a46365d4112c54ba, the
+- apply_rebind_page_int8.py at 55eb340e (HEAD's page 719cca08a0823263, the records bound to a46365d4112c54ba, the
   history branch): "comparing with the bound page from history", both records rebound, "layout-entry reasons 41 to
-  34 (A 8 to 6, B 8 to 8, C 4 to 4, D 8 to 6, E 5 to 3, P 6 to 5, E5 2 to 2)", the registry identical to fc985e93's;
-  second run "REFUSED: the tree's page is the page the records are bound to (719cca08a0823263)". At f1ec1d66 with
-  17d4823b's page copied in it refuses the same way and the registry equals 17d4823b's: the final commit rendered a
-  page with the sha the records already carried, so the rebind of fc985e93 is the one that binds the final page.
+  34 (A 8 to 6, B 8 to 8, C 4 to 4, D 8 to 6, E 5 to 3, P 6 to 5, E5 2 to 2)", the registry identical to bafbd79b's;
+  second run "REFUSED: the tree's page is the page the records are bound to (719cca08a0823263)". At 52c036c6 with
+  00493048's page copied in it refuses the same way and the registry equals 00493048's: the final commit rendered a
+  page with the sha the records already carried, so the rebind of bafbd79b is the one that binds the final page.
   The history lookup walks rev-list of the page for the sha the RECORDS carry (lines 92 to 98), not HEAD's.
-- The tray: stream w5tray's apply_w5tray.py (f6830196's version) then apply_frame_seat_r2.py then
-  apply_tray_links.py at 23a550c6: ids taken SC-75, S-95, S-96, EQ-31 as committed; the registry and eleven documents
-  identical to f6830196's; second runs refused ("AssertionError: already applied"; "FEA-007 already waits on S-95").
+- The tray: stream w5tray's apply_w5tray.py (262c080b's version) then apply_frame_seat_r2.py then
+  apply_tray_links.py at 19340ead: ids taken SC-75, S-95, S-96, EQ-31 as committed; the registry and eleven documents
+  identical to 262c080b's; second runs refused ("AssertionError: already applied"; "FEA-007 already waits on S-95").
   My first attempt in a clone without v2/vendor/materials stopped in the draft at a missing PDF after it had written
   ASSEMBLY.md, CASE-MARGINS.md and ENGINEERING-QUESTIONS.md and before the registry (minor item 6).
 - The validator in a sparse clone prints 75 errors of the form "evidence_bound_to names
@@ -198,7 +198,7 @@ Drafted as CLOSURE-draft.md beside this file, by kind.
 
 - I did not re-render the pages (rules_status.py and rules_render.py are verdict writers; the brief's own reading of
   the integrator's isolated clone check stands) and did not run the suite (the box did: 2171 passed, 0 failed,
-  3 skipped, EXIT 0 at 17d4823b).
+  3 skipped, EXIT 0 at 00493048).
 - The re-take's readings were compared for the closures and SI-001 only; the other 96 changed evidence files were
   not opened one by one.
 - The engineering content of the streams (the tray's geometry, the port protection review, the reliability list,
@@ -206,4 +206,4 @@ Drafted as CLOSURE-draft.md beside this file, by kind.
   records/int8/checks/ and records/cx1/checks/ did that and I read only their verdict lines and minor items.
 
 ---
-Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `963740cd` and before.
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `adc6fc2f` and before.

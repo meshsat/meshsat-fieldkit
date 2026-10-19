@@ -1,5 +1,5 @@
 THE CONSOLIDATED RE-TAKE ON THE SET 6 NETLISTS: WHAT WAS RUN AND WHAT IT READ
-Worker retake6, MESHSAT-1357, 27 September 2026, 20:57 to 21:50 UTC. Branch fnd/retake6, base 92f22e3f (the tip of
+Worker retake6, MESHSAT-1357, 27 September 2026, 20:57 to 21:50 UTC. Branch fnd/retake6, base bec528d1 (the tip of
 the set 6 candidate fnd/r8int6). Prototype design: no V2 board has been fabricated, ordered, assembled or measured;
 every reading here is a reading of a netlist, a board file or a document. Every number below is read from a file this
 folder or the tree holds; the file is named beside it.
@@ -7,7 +7,7 @@ folder or the tree holds; the file is named beside it.
 1. WHERE AND HOW
    Box: the rented KiCad host (KiCad 9.0.9, Python 3.12.3, 64 cores), only under /root/retake6.
    Clone: /root/r8int6/repo plus _recovered/r8int6-7.bundle (sha256 083cc13e...), fetched under the new ref
-   retake6-73ae2f21; git clone to /root/retake6/rtk, checkout 92f22e3f, HEAD checked, git status empty.
+   retake6-73ae2f21; git clone to /root/retake6/rtk, checkout bec528d1, HEAD checked, git status empty.
    Evidence restored: /root/r8int6/evidence-head.tar (sha256 814ea3eb..., 902 regular files, all ignored, none tracked,
    none present before); git status empty after it (box/evidence-head.lst).
    Plan (box/plan.txt): 73 commands over 7 boards (A 12, B 12, C 9, D 10, E 12, E5 6, P 12), 76 rule-board pairs
@@ -55,7 +55,7 @@ folder or the tree holds; the file is named beside it.
    The pages give each of these rows its counts and not its first cause (PCB-RULE-STATUS-<board>.md, column "why").
 
 4. LAYOUT ENTRY, PER BOARD (analysis/layout-entry-rows.txt, parsed from CURRENT-EVIDENCE.md)
-        main c76f45f0   candidate 92f22e3f (before)   after
+        main c09d0bef   candidate bec528d1 (before)   after
    A         7                18                        7   SI-001 INC, RF-002 INC, decision 31's review, FEA-006,
                                                             FEA-004, FEA-002, FEA-007
    B         7                17                        7   SI-001 INC, RF-002 INC, FEA-003, FEA-006, FEA-002, FEA-001,
@@ -74,40 +74,40 @@ folder or the tree holds; the file is named beside it.
    analysis/readings-before-after.txt, analysis/rf002-attribution.txt)
    WORSE (2 rows, one reading): E5's SCH-003 (PASS of 33, awaiting revalidation, to FAIL on current evidence) and E5's
      INT-001 (PASS and unbound to FAIL on current evidence), both check_contracts_e5, 10 failed of 38. Cause: since
-     f1e26a47 block_contract.py judges the block against board A's current netlist and INT-001 reads that contract;
-     board A carries SC-55 (ae922e4d: J_DOCK pins 1 to 4 ground, VIN_RAW on J_VR1 to J_VR4 with J_VN1 to J_VN4) and
+     fda98756 block_contract.py judges the block against board A's current netlist and INT-001 reads that contract;
+     board A carries SC-55 (14471269: J_DOCK pins 1 to 4 ground, VIN_RAW on J_VR1 to J_VR4 with J_VN1 to J_VN4) and
      E5's board file (686b29a734c55b9a) has not followed. It is the expected reading of open item S-74.
    MOVED BY A CIRCUIT OR DECLARATION CHANGE OF SET 6 (8 rows leave the layout-entry list or improve in it):
-     PWR-001 C  FAIL to PASS (intent_rails PASS of 6): the supplies declared, +3V3 covering EPD_VCC, e7721c52.
-     PWR-001 D  INCONCLUSIVE to PASS (of 7): RLY_K settled by the flyback diode's filed sheet, 864fdb59.
-     PWR-001 E  INCONCLUSIVE to PASS (of 16): FAN1_SW and FAN2_SW settled by the fan flyback sheet, 140588ba.
-     PWR-001 P  FAIL to PASS (of 11): the supplies declared, 864fdb59.
-     RF-002 C   FAIL to PASS (inhibit_chain_c PASS of 6): TX_INHIBIT_n's level with the panel unpowered, e7721c52.
-     RF-002 A, D  FAIL to INCONCLUSIVE: the same line's check no longer fails (e7721c52); what stays is undecided.
-     RF-002 B   FAIL to INCONCLUSIVE: of its eleven failed rows three moved by circuit changes (the line, e7721c52;
-                the two WiFi link cards, bfd79196) and EIGHT BY THE INSTRUMENT'S CORRECTION in bfd79196 (tx_inhibit.py
+     PWR-001 C  FAIL to PASS (intent_rails PASS of 6): the supplies declared, +3V3 covering EPD_VCC, 1c13eb50.
+     PWR-001 D  INCONCLUSIVE to PASS (of 7): RLY_K settled by the flyback diode's filed sheet, 7d0a81a2.
+     PWR-001 E  INCONCLUSIVE to PASS (of 16): FAN1_SW and FAN2_SW settled by the fan flyback sheet, ebc7e355.
+     PWR-001 P  FAIL to PASS (of 11): the supplies declared, 7d0a81a2.
+     RF-002 C   FAIL to PASS (inhibit_chain_c PASS of 6): TX_INHIBIT_n's level with the panel unpowered, 1c13eb50.
+     RF-002 A, D  FAIL to INCONCLUSIVE: the same line's check no longer fails (1c13eb50); what stays is undecided.
+     RF-002 B   FAIL to INCONCLUSIVE: of its eleven failed rows three moved by circuit changes (the line, 1c13eb50;
+                the two WiFi link cards, 04967ae1) and EIGHT BY THE INSTRUMENT'S CORRECTION in 04967ae1 (tx_inhibit.py
                 learned the SN74LVC2G06 family board B has carried since its round 8): an instrument defect closed,
                 not a design finding (section 3 of analysis/rf002-attribution.txt).
    SAME RESULT, OTHER GROUNDS: BAT-001 P stays FAIL, 1 of 45 checks before and 3 of 63 now: the table was brought to
-     the drawn circuit (864fdb59), the floor's absence is no longer what fails, three hardware-level limits are (S-85).
+     the drawn circuit (7d0a81a2), the floor's absence is no longer what fails, three hardware-level limits are (S-85).
    REFRESHES (the row became current evidence and its result did not move): of the 90 tracked readings 58 carry the
      same result, counts and evidence, 23 the same result with other counts or evidence (the netlists grew: for
-     example safe_lines_a 6 to 7 lines with DOCK_SPARE, safe_lines_e 1 to 2 with BLK_SPARE, both HOT-R1's, 140588ba),
+     example safe_lines_a 6 to 7 lines with DOCK_SPARE, safe_lines_e 1 to 2 with BLK_SPARE, both HOT-R1's, ebc7e355),
      9 another result (the rows above). Evidence classes over the 338 required pairs, candidate to after:
      CURRENT_CANDIDATE 12 to 83, VALID_HISTORICAL 1 to 0, PASS on either 13 to 71, AWAITING_REVALIDATION 283 to 213,
      DESK_REVIEW 21, NO_EVIDENCE 21 (main read 62, 19, 66, 215, 21, 21).
    REQ-077 (the hot stop) is no row of the evidence page: it is a desk-review record with no rule. Set 6 moved it from
-     FAIL to INCONCLUSIVE when HOT-R1 was drawn (140588ba); the re-take does not touch it. The re-taken readings that
+     FAIL to INCONCLUSIVE when HOT-R1 was drawn (ebc7e355); the re-take does not touch it. The re-taken readings that
      show HOT-R1 on the netlists are SCH-004's: safe_lines_a PASS of 7 and safe_lines_e PASS of 2.
 
 6. THE SEVEN RELIABILITY READINGS (box/other-writers.log; analysis/wear-history.txt)
    All PASS, writer reliability.py 71d0872195905c9d. Parts covered, classes declared, denominator:
      A 39, 6, 45   B 38, 6, 44   C 9, 2, 11   D 10, 4, 14   E 8, 3, 11   P 7, 3, 10   E5 0, 2, 2 (no netlist).
    On 21 September: A 39, B 41, C 9, D 9, E 7, P 6, E5 0.
-   B: three fewer, the PCIe switches U101, U201, U301 (00e74bbb); six parts carry a wear word only in the description
+   B: three fewer, the PCIe switches U101, U201, U301 (c11c01c9); six parts carry a wear word only in the description
      of what they do and are not asked for (U101, U116, U201, U216, U301, U316).
    D, E and P: one more each, and NOT a part of set 6. Each was added by an earlier round, after the reading of 21
-     September, and is on main c76f45f0 already:
+     September, and is on main c09d0bef already:
        D  J_FLANGE, JST-XH 1x2, the power amplifier flange's NTC lead, with its own fourth class (b99b8646, 27 Sep)
        E  J_TAMP, JST-XH 1x2, the lid and tamper reed sensor lead (247db699, 26 Sep)
        P  J_TS2, JST-PH 1x2, the second-level cell thermistor socket (d0db2f49, 26 Sep)
@@ -116,21 +116,21 @@ folder or the tree holds; the file is named beside it.
      board had one candidate, its declared phase's (box/which-netlist.txt). For that reason the rows read
      AWAITING_REVALIDATION (UNBOUND) after the re-take, where they read TOOL_CHANGED before: a re-take cannot bind them.
 
-7. THE TOOLS SET 6 CHANGED (git diff --name-only c76f45f0 92f22e3f -- v2/ecad/tools/*.py), EACH ANSWERED
-   block_contract.py (f1e26a47)      writes check_contracts_e5: RE-TAKEN BY THE DRIVER on E5.
-   tx_inhibit.py (bfd79196)          imported by check_contracts.py, which writes inhibit_chain_<letter>: RE-TAKEN BY
+7. THE TOOLS SET 6 CHANGED (git diff --name-only c09d0bef bec528d1 -- v2/ecad/tools/*.py), EACH ANSWERED
+   block_contract.py (fda98756)      writes check_contracts_e5: RE-TAKEN BY THE DRIVER on E5.
+   tx_inhibit.py (04967ae1)          imported by check_contracts.py, which writes inhibit_chain_<letter>: RE-TAKEN BY
                                      THE DRIVER on A, B, C, D, E and P.
-   reliability.py (00e74bbb)         RE-TAKEN HERE, per board, with gate_sweep.sh's arguments.
-   rules_status.py, rules_render.py (f1e26a47)   the audit's own writers (rules_status, rules_complete): re-taken by
+   reliability.py (c11c01c9)         RE-TAKEN HERE, per board, with gate_sweep.sh's arguments.
+   rules_status.py, rules_render.py (fda98756)   the audit's own writers (rules_status, rules_complete): re-taken by
                                      the three rules_status runs; SGN-001 reads PASS on current evidence on all seven.
-   check_pcb_b.py (bfd79196)         MEC-001 on B, verified on the PLACED board. NOT RE-TAKEN, and it cannot be at the
+   check_pcb_b.py (04967ae1)         MEC-001 on B, verified on the PLACED board. NOT RE-TAKEN, and it cannot be at the
                                      schematic phase: its set 6 lines assert pads of parts set 6 added (U536, U116, U216,
                                      U316, the UVLO nodes) on the placed board, and the board file of the phase
                                      (2e64b5bf2d9cd3bc, B21) predates them. rules_status's own projection for the row is
                                      AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT): "the layout it judged is not the
                                      candidate's: SCH-002 (netlist against board) reads FAIL on it". It read TOOL_CHANGED
                                      on main already.
-   retake_schematic_phase.py (f1e26a47)   the driver; it writes no reading.
+   retake_schematic_phase.py (fda98756)   the driver; it writes no reading.
    gen_sch_a, b, c, d, e, p.py       generators; they write no reading. Their outputs are the committed netlists the
                                      re-take read.
    The five test files aside, no other tool file differs. After the re-take no row reads CONFIG_CHANGED and every
@@ -150,7 +150,7 @@ folder or the tree holds; the file is named beside it.
    byte-identical. The first wording of REQ-044's entry put a claim word on the trace page that the ENV-002 screen read
    as unqualified (92 sentences, 1 unqualified, in a scratch verdict directory); the entry was re-worded, the script
    now refuses an entry the screen's CLAIM pattern matches, and the screen reads 91 and 0 on the final documents.
-   OPEN, FOR THE REGISTRY'S WRITER: CON-010 stands FAIL as it was set at 4ece0866 on RF-002's FAIL rows on D and A;
+   OPEN, FOR THE REGISTRY'S WRITER: CON-010 stands FAIL as it was set at 8752f135 on RF-002's FAIL rows on D and A;
    those rows read INCONCLUSIVE now. Whether the record returns to INCONCLUSIVE is a re-read of the record, which a
    re-take does not take.
 
@@ -162,21 +162,21 @@ folder or the tree holds; the file is named beside it.
    in _recovered/retake6/ with SHA256SUMS. The audit's own outputs (10 files) are NOT in it: rules_status re-takes them
    in the tree the pages are judged in, and they name verdicts by the clone's absolute paths; they are kept beside it
    as audit-box.tar for comparison only.
-   In this worktree: the readings applied and committed (60334e49), the candidate's evidence and the tar installed
+   In this worktree: the readings applied and committed (9ae2ee04), the candidate's evidence and the tar installed
    (ignored files only, MANIFEST checked file by file), rules_status three times, rules_render, the rebind,
    rules_render: all 107 tracked files byte for byte the box clone's (worktree/pages-compare.txt). The audits differ
    in the path prefix (293 paths) and in the writer named on SGN-001's row (worktree/audit-compare.txt); no page
-   prints either. Re-judged at the pages' own commit e8a54d13: no page written, every check current
+   prints either. Re-judged at the pages' own commit a91d545a: no page written, every check current
    (worktree/after-commit/run.txt).
 
 11. THE FULL SUITE ON THE BOX AT THE BRANCH'S COMMIT (box/retake6_suite.sh, box/suite/, box/suite-attempt1/)
-   Commit 16d5bb62 (the readings 60334e49, the pages e8a54d13 and records; the commits after it add records only), in
+   Commit 8cb053e0 (the readings 9ae2ee04, the pages a91d545a and records; the commits after it add records only), in
    a fresh clone under /root/retake6/suite with the candidate's evidence and the re-take's 258 ignored readings.
    Second run, 21:53:21 to 22:03:42 UTC: the audit converged first (rules_status three times, the same last line as
    everywhere above; rules_render --check 16 documents, 0 out of date; git status empty), then
    "tests: 2015 passed, 0 failed, 3 skipped", exit 0, git status empty after it. The three skips are the candidate's
    own (test_finish_order's routeflow validate, test_pairsearch without numba, test_per_board_contract_verdict with
-   pcbnew importable). The candidate read 2015 passed, 0 failed, 3 skipped at 00e74bbb.
+   pcbnew importable). The candidate read 2015 passed, 0 failed, 3 skipped at c11c01c9.
    First run, 21:38:46 to 21:49:07 UTC: 2015 passed, 1 failed, 3 skipped, and the one failure is the suite's guard,
    "THIS RUN CHANGED THIS TREE'S OWN EVIDENCE: out/rule-audit/rules_status.verdict.json". The cause was this worker's
    set-up and not the commit: the clone held the candidate's audit from before the re-take, because the tar of

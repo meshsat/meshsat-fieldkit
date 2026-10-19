@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """IF-AB-POWER's contact_rating line in tools/pcb_interfaces.yaml said the JST VH document was not held (MESHSAT-1357,
-set 7, 28 September 2026; the Codex pilot's correction item M8 and its check). The catalogue is held at
+set 7, 28 September 2026; the second-worker pilot's correction item M8 and its check). The catalogue is held at
 v2/vendor/connectors/jst-vh-catalogue.pdf: page 1 states 10 A per contact when using AWG 16 with the standard header and
 7 A when using AWG 18 with the shrouded header; page 3 lists the fitted B2P-VH standard header. So the AWG 18 lead of
 J_54V on the standard header carries no stated rating (INCONCLUSIVE, as the pilot's record says). The contract file is

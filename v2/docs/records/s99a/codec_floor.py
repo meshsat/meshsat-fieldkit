@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The PCM2912A's supply floor on board D behind U41, U23 and the two drop budgets (stream s99a, check fix 1).
 
-AI engineering arithmetic, prototype design (nothing built or measured). Positive quantities are volts and amperes.
+automated engineering arithmetic, prototype design (nothing built or measured). Positive quantities are volts and amperes.
 Chain: U41's regulation point (+5V_D8IN at its divider) -> +5V_D8IN copper (declared budget 2 percent of 5.0 V) ->
 U23's pass FET (RON x I) -> +5V_D8 copper on boards A and D (declared budget 6 percent of 5.0 V, shared) -> the codec.
 Sources: U41's DC set-point minimum from u41_divider.py (SLUSEA4D p.6); U23's RON from TI SLVSET8A (revised August

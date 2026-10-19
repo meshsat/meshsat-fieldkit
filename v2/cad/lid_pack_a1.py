@@ -6,7 +6,7 @@ Plain Python (no CAD import): every number printed comes from a constant below, 
 The drawing set is v2/cad/lid_pack_a1_drawing.py, which imports this module. Usage: lid_pack_a1.py [out file]  (default: stdout).
 
 Frame: case X along the long axis (east +), Y toward the hinge (back) wall, Z up from the base floor, the lid closed. A lid item is
-placed by its plan rectangle and its DEPTH below the lid's inner ceiling. Prototype design, AI review: nothing built, bought or fitted.
+placed by its plan rectangle and its DEPTH below the lid's inner ceiling. Prototype design, automated review: nothing built, bought or fitted.
 
 Status words: VERIFIED (read from a maker's file), INFERRED (derived, or a class figure), ESTIMATE (a stated guess), ASSUMPTION (a
 figure another stream owns, carried until it reports), TBD (no source). Verdicts follow CASE-MARGINS.md section 1: MET only if the
@@ -480,7 +480,7 @@ def sensitivity():
 def main(fp):
     w = lambda s="": fp.write(s + "\n")
     w("Option A(i) lid pack, hinge harness, mass and stability, base pockets: v2/cad/lid_pack_a1.py (MESHSAT-1357, stream a1mech, 29 Sep 2026)")
-    w("Prototype design, AI review: nothing built, bought or fitted. Analytical success is not physical verification or fabrication readiness.")
+    w("Prototype design, automated review: nothing built, bought or fitted. Analytical success is not physical verification or fabrication readiness.")
     w()
     w("1. THE LID, at Peli's figures")
     w("   face top Z %.2f nominal (104.77 to 108.27), ceiling Z %.2f nominal (152.66 at the worst: rim 108.97 - 0.76 + web lid 44.45)" % (FACE_Z_NOM, CEIL_Z_NOM))

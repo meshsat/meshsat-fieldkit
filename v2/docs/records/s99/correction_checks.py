@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Bounded S-99 correction checks. Stdout only, except temporary scratch copies removed in finally.
 
-No generator application, registry update or gate. AI review support for an unbuilt prototype.
+No generator application, registry update or gate. automated review support for an unbuilt prototype.
 Run: python3 v2/docs/records/s99/correction_checks.py
 """
 import ast
@@ -49,7 +49,7 @@ def snapshot():
 
 
 def main():
-    print("S-99 correction checks. Prototype, AI review support; no acceptance or physical result.")
+    print("S-99 correction checks. Prototype, automated review support; no acceptance or physical result.")
     stage = runpy.run_path(str(HERE / "dev_stage.py"))
     first = run(HERE / "dev_stage.py")
     second = run(HERE / "dev_stage.py")

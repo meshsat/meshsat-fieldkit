@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Set 10's AI check, blocking item B1 and minor item M9, answered (MESHSAT-1357, 29 September 2026). The U3 row of board A's
+"""Set 10's automated check, blocking item B1 and minor item M9, answered (MESHSAT-1357, 29 September 2026). The U3 row of board A's
 EMC sheet and open item S-117 said the BQ25731 starts at 400 kHz from its PWM_FREQ register default. TI's datasheet says the
 charger reads its switching frequency and its inductance from the resistor on its IADPT pin before the converter starts
 (SLUSE66A 9.3.11 and Table 9-4, printed page 27: 169 kOhm, 3 percent or better, for 3.3 uH at 800 kHz; 191 or 187 kOhm for
@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.join(TOP, "v2/docs/records/int7"))
 import apply_check1_answers as A
 REG = os.path.join(TOP, "v2/ecad/tools/pcb_requirements.yaml")
 EMC = os.path.join(TOP, "v2/ecad/tools/pcb_emc.yaml")
-TITLE = ("(set 10's AI check, blocking item B1; round 4's finding O-24, records/r4a/r4-open-items.md) Board A's charger U3 "
+TITLE = ("(set 10's automated check, blocking item B1; round 4's finding O-24, records/r4a/r4-open-items.md) Board A's charger U3 "
          "(BQ25731) reads its switching frequency and its inductance from the resistor on its IADPT pin before the converter starts "
          "(TI SLUSE66A 9.3.11 and Table 9-4, printed page 27: 169 kOhm, 3 percent or better, for 3.3 uH at 800 kHz; 191 or 187 kOhm "
          "for 4.7 uH at 400 kHz). Board A's IADPT net carries only U3 pin 8 and TP19: no resistor, and not the 100 pF capacitor the "

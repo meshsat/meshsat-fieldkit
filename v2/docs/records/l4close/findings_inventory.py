@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Layer 4's findings inventory (MESHSAT-1357, 2 October 2026; v2/docs/records/l4close/).
 
-Reads every check the engineering collaborator (Astra) filed for the Layer 4 tasks L4-E7, L4-E7Q, L4-E7R, L4-E8, L4-E9,
+Reads every check the engineering collaborator (the second worker) filed for the Layer 4 tasks L4-E7, L4-E7Q, L4-E7R, L4-E8, L4-E9,
 L4-E10, L4-E11, L4-E12 and L4-E13 (`<task>/checks/astra-check-*.md`) and prints its blocking items: the file, the item's
 ID and the item's first 120 characters. FINDINGS-LEDGER.md beside this script has one row per item printed here, and
 `v2/ecad/tools/tests/test_l4close.py` holds the two together.
@@ -31,7 +31,7 @@ REV = re.compile(r"at commit `([0-9a-f]+)`")
 
 
 def check_files():
-    """Every Astra check file of the tasks in scope, in task order, then by name."""
+    """Every second-worker check file of the tasks in scope, in task order, then by name."""
     out = []
     for task in TASKS:
         for path in sorted(glob.glob(os.path.join(RECORDS, task, "checks", "astra-check-*.md"))):

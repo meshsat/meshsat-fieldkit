@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """gauge_scale.py: the lid pack's BQ4050 data-flash words under a current-scale calibration (stream a1elec, MESHSAT-1357).
 
-PROTOTYPE DESIGN, AI arithmetic: no gauge is programmed and no pack is built.
+PROTOTYPE DESIGN, automated arithmetic: no gauge is programmed and no pack is built.
 
 The problem (outside review, point 2). A 4S12P pack of the ruled Samsung INR18650-35E holds 12 x 3.35 Ah = 40,200 mAh
 and 40.2 Ah x 14.4 V = 578.88 Wh = 57,888 cWh at the specification minimum; TI's BQ4050 technical reference manual,
@@ -176,7 +176,7 @@ def main():
     o = []
     P = o.append
     P("THE LID PACK'S BQ4050 WORDS UNDER A CURRENT-SCALE CALIBRATION OF k = %d (gauge_scale.py, stream a1elec, MESHSAT-1357)" % K)
-    P("PROTOTYPE DESIGN; AI arithmetic; every true value a design requirement, NOT_YET_TESTED. Source: TI SLUUAQ3A (sha256 %s...)," % TRM_SHA256[:16])
+    P("PROTOTYPE DESIGN; automated arithmetic; every true value a design requirement, NOT_YET_TESTED. Source: TI SLUUAQ3A (sha256 %s...)," % TRM_SHA256[:16])
     P("Table 14-1 as its text layer prints it; the page is the PDF page, which is the manual's printed page number.")
     P("")
     scaled = [r for r in rows if r[6] in SCALED_UNITS]

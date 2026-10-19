@@ -1,8 +1,8 @@
 # Stream w5si: rule SI-001's edge rates as data, second pass (layer 9, MESHSAT-1357)
 
-Written 27 September 2026, 23:40 CEST, on branch `fnd/w5si` from `e6c71e82`. Prototype design work: nothing here has
+Written 27 September 2026, 23:40 CEST, on branch `fnd/w5si` from `268cd241`. Prototype design work: nothing here has
 been built or measured. Every edge is a maker's figure, a standard's, or a bound stated with its derivation, and no
-reading of this page is a PASS. The checks named here are the stream's own and an AI review of the first pass; none is
+reading of this page is a PASS. The checks named here are the stream's own and an automated review of the first pass; none is
 a qualified engineering review.
 
 **CONTINUED BY STREAM w5si2 (28 September 2026), whose record is `v2/docs/records/w5si2/README.md`.** That page
@@ -22,7 +22,7 @@ feasibility, keep that decision open."
 ## 1. The result in one table
 
 SI-001 at the schematic phase, taken in scratch outside any tree. The denominator is the signal nets outside
-LOW_SPEED_OR_DC, the class the rule asks no edge of. Netlists at `e6c71e82`; data file sha256/16 `bbeb1a47f7d8710b`.
+LOW_SPEED_OR_DC, the class the rule asks no edge of. Netlists at `268cd241`; data file sha256/16 `bbeb1a47f7d8710b`.
 
 | Board | Signal nets | Slow | Non-slow | Decided by a maker's figure | Decided by a bound | Undecided | Verdict |
 |---|---|---|---|---|---|---|---|
@@ -58,11 +58,11 @@ The nets behind every figure, with the driver that governs each: `readings/si001
 
 ## 2. The same on set 6
 
-The integration candidate `fnd/r8int6` (read at `92f22e3f`, NOT merged by this stream) regenerates every netlist. The
+The integration candidate `fnd/r8int6` (read at `bec528d1`, NOT merged by this stream) regenerates every netlist. The
 readings were taken in a scratch extract of that tree with this stream's tool, data file and test laid over it and
 none of its drafts applied. Listing: `readings/si001-set6-73ae2f21.txt`.
 
-| Board | Netlist sha256/16 at e6c71e82 | at set 6 | Non-slow (e6c71e82, set 6) | Maker's figure | Bound | Undecided (e6c71e82, set 6) | Layout-bound: maker-held + BOUND_DECIDES |
+| Board | Netlist sha256/16 at 268cd241 | at set 6 | Non-slow (268cd241, set 6) | Maker's figure | Bound | Undecided (268cd241, set 6) | Layout-bound: maker-held + BOUND_DECIDES |
 |---|---|---|---|---|---|---|---|
 | A | da05dc02bc1e612f | 0a2b59087bcc2678 | 120, 120 | 7, 7 | 75, 75 | 38, 38 | 63 = 1 + 62, the same |
 | B | 8b78c59754a6a0c7 | 028997a6c5e8810f | 562, 562 | 103, 103 | 451, 451 | 8, 8 | 193 = 40 + 153, the same |
@@ -78,7 +78,7 @@ decided count moves and every reading is INCONCLUSIVE on both.
 
 ## 3. Before this stream, and the correction of the first pass's sentence
 
-With the tool of `e6c71e82` (re-taken in scratch on 27 September 2026; it gives the six headlines the first pass
+With the tool of `268cd241` (re-taken in scratch on 27 September 2026; it gives the six headlines the first pass
 recorded, word for word): decided A 6, B 30, C 4, D 20, E 4, P 0, in all **64**; undecided 114, 532, 33, 27, 37, 22,
 in all **765**; together the same 829 non-slow nets. The decided were the USB 2.0 lines only.
 
@@ -314,8 +314,8 @@ not settle, so that decision stays open under Q4.
    nothing that writes evidence before the three files above are in the tree, or every SI-001 reading reads
    CONFIG_CHANGED. As first written on 27 September this item said the 13 files "are committed on this branch"; that
    branch (`fnd/w5si`) is not the one that is integrated.
-2. **The drafts**, each refusing a second run, each checked on a scratch copy of `e6c71e82` and of `fnd/r8int6` at
-   `92f22e3f`. Run from anywhere; `--dry-run` writes nothing.
+2. **The drafts**, each refusing a second run, each checked on a scratch copy of `268cd241` and of `fnd/r8int6` at
+   `bec528d1`. Run from anywhere; `--dry-run` writes nothing.
 
    | Order | Draft | What it changes |
    |---|---|---|
@@ -354,10 +354,10 @@ not settle, so that decision stays open under Q4.
 | the same after the second pass | the worktree | 36 passed, 0 failed, 0 skipped |
 | `apply/selftest.py` | a temporary directory | 11 checks, 0 failures |
 | `tools/verify_citations.py` on the two evidence files | read-only | 46 and 9 citations, 0 do not hold |
-| the five drafts, each run, run again and dry-run | scratch copies of `e6c71e82` and `92f22e3f` | each applies once and refuses the second run, on both |
+| the five drafts, each run, run again and dry-run | scratch copies of `268cd241` and `bec528d1` | each applies once and refuses the second run, on both |
 | with all five applied: `test_edge_length.`, `test_signal_class.`, `test_netclass.`, `test_netlist_classes.`, `test_rules_registry.` | both scratch copies | 36, 8, 8, 2, 5 passed; 0 failed, on both |
-| with all five applied: `test_rules_status.` | scratch copy of `e6c71e82` | 35 passed, 0 failed, 1 skipped |
-| the same | scratch copy of `92f22e3f` | 34 passed, 1 failed, 1 skipped. The failure is the scratch copy's, not a draft's: it fails the same way with NO draft applied, because the copy puts set 6's registry beside this branch's generated pages |
+| with all five applied: `test_rules_status.` | scratch copy of `268cd241` | 35 passed, 0 failed, 1 skipped |
+| the same | scratch copy of `bec528d1` | 34 passed, 1 failed, 1 skipped. The failure is the scratch copy's, not a draft's: it fails the same way with NO draft applied, because the copy puts set 6's registry beside this branch's generated pages |
 | with all five applied: `test_evidence_class.`, `test_decision_register.` | both scratch copies | 26 passed, 0 failed, 1 skipped; 3 passed, 0 failed, 2 skipped, on both (the skips are the copies': no git, no set-level evidence) |
 | `test_certify_mismatch.`, `test_review_packet.`, `test_handover_pack.`, which read the vendor lists | the worktree | 26, 15 and 15 passed; 0 failed |
 | the readings | scratch, outside any tree | sections 1 to 3 |

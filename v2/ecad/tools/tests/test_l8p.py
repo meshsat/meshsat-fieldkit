@@ -431,7 +431,7 @@ def t_the_page_is_clean_and_names_the_rows_owed():
               "**The question to TI (DRAFTED, UNSENT", "**The question to Murata (DRAFTED, UNSENT", "**SESSION decision (round 5, its reason corrected in round 6):**",
               "| L8P-F06 | P, with A |", "| L8P-F07 | A, with P |", "**E-14c** (new)",
               "| C4: `l8p_drafts.out` regenerated on the merged line;", "No stand-in is used since round 5",
-              "**Round 6 (4 October 2026 evening, the independent check V2, an AI review).**", "| V2-B2: the F06 figures", "| V2-B3: TDK's",
+              "**Round 6 (4 October 2026 evening, the independent check V2, an automated review).**", "| V2-B2: the F06 figures", "| V2-B3: TDK's",
               "| Left for the breaker pair | 473.9 uA (461.5 uA with BRK_VIN at the clamp) | 786.8 uA |",
               "| In hand with the pair at its ASSUMED 388.0 uA | **85.9 uA** (73.5 uA at the clamp) | 398.8 uA |",
               "| The case at which the pair alone fills it | **103.9 C, 2.9 K over the held case** (103.5 C at the clamp) | 111.2 C |",

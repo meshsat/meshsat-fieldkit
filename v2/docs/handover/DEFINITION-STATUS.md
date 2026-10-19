@@ -16,16 +16,16 @@ where the two differ the review's words govern (finding m6 of the check of the r
 
 ## The two baselines
 
-| Layer | Document | BASELINED at | sha256/16 of the file baselined | Release record (AI reviews and checks, none a qualified engineering review) |
+| Layer | Document | BASELINED at | sha256/16 of the file baselined | Release record (automated reviews and checks, none a qualified engineering review) |
 |---|---|---|---|---|
-| 1, product definition | `v2/docs/PRODUCT-BRIEF.md` | `ab560ff5`, re-stamped: an editorial restructure with no definition change of the text first baselined at `9406794f` | `026d9ab493d35ed8` at `ab560ff5`, the file the check of the restructure read at `40171783`; `85513b92ed0daf55` with the re-stamped status paragraph, its only difference; `d36bf76b3dea8b30` at `9406794f` (unchanged through `461f02ed`) | `v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`, the check of the restructure (CONTENT_PRESERVED), on `v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md`, the narrow verification of the targeted fix, after `v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md` |
-| 2, concept of operations | `v2/docs/CONOPS.md` | `ab560ff5`, re-stamped: an editorial restructure with no definition change of the text first baselined at `b19c3228` | `bbcab7c9876f7993` at `ab560ff5`, the file the check of the restructure read at `40171783`; `6ebe6760c4312bca` with the re-stamped status paragraph, its only difference, the needs table byte-identical; `3ff59edc96a3f8f4` as the release check read it at `82a303eb`; `4483209659dc391c` with its status line written (`179196c6`, unchanged through `461f02ed`), the file handover H2 carries; `6cb7b241cb84d729` at `ed31219a`, the owner's rulings of 28 September on the re-stamped text (D-19, D-20 and M1's owner instruction, `v2/docs/records/s122/checks/check-s122-2.md`), the file `CONOPS.md` carries since stream s122 restored it | `v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`, the check of the restructure (CONTENT_PRESERVED), on `v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md` |
+| 1, product definition | `v2/docs/PRODUCT-BRIEF.md` | `9e2587a3`, re-stamped: an editorial restructure with no definition change of the text first baselined at `7055e52e` | `026d9ab493d35ed8` at `9e2587a3`, the file the check of the restructure read at `75f5d646`; `85513b92ed0daf55` with the re-stamped status paragraph, its only difference; `d36bf76b3dea8b30` at `7055e52e` (unchanged through `0424772b`) | `v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`, the check of the restructure (CONTENT_PRESERVED), on `v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md`, the narrow verification of the targeted fix, after `v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md` |
+| 2, concept of operations | `v2/docs/CONOPS.md` | `9e2587a3`, re-stamped: an editorial restructure with no definition change of the text first baselined at `b66a1a55` | `bbcab7c9876f7993` at `9e2587a3`, the file the check of the restructure read at `75f5d646`; `6ebe6760c4312bca` with the re-stamped status paragraph, its only difference, the needs table byte-identical; `3ff59edc96a3f8f4` as the release check read it at `e7e44736`; `4483209659dc391c` with its status line written (`9626a0ff`, unchanged through `0424772b`), the file handover H2 carries; `6cb7b241cb84d729` at `1579ea7f`, the owner's rulings of 28 September on the re-stamped text (D-19, D-20 and M1's owner instruction, `v2/docs/records/s122/checks/check-s122-2.md`), the file `CONOPS.md` carries since stream s122 restored it | `v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`, the check of the restructure (CONTENT_PRESERVED), on `v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md` |
 
 `v2/docs/handover/LAYER-STATUS.md`, layers 1 and 2, names every review record of both layers with its evidence.
 
 ## The restructure of 27 September 2026
 
-On 27 September 2026 (branch `fnd/defstab`, from `461f02ed`) both documents were restructured as the review asks.
+On 27 September 2026 (branch `fnd/defstab`, from `0424772b`) both documents were restructured as the review asks.
 Each keeps its definition, meaning its purpose, scope, users, prototype scope, exclusions, fixed constraints, operating
 intentions, needs, missions, modes, scenarios and product decisions, with every sentence word for word, and states at
 its head the rule above and one sentence per dependency naming where that dependency's current state lives. The
@@ -38,9 +38,9 @@ table row but its revision notes; each document's head says that such a figure o
 
 The map of every move is `v2/docs/records/defstab/moves.json`, written with the build script that asserts it
 (`build.py`, `cuts.py` and `heads.py` beside it) and re-derived independently by `verify.py`. They were written in the
-branch's worktree as `drafts/defstab/`, the path the three registry entries of `40171783` name, and are filed byte for
+branch's worktree as `drafts/defstab/`, the path the three registry entries of `75f5d646` name, and are filed byte for
 byte with `apply_registry.py` in the commit that files the check below (`v2/docs/records/README.md`, section "Filed 27
-September 2026: the definition restructure's map"); the map describes the two files at `40171783`. For every moved block it gives the old line range at `461f02ed`, the new location and the
+September 2026: the definition restructure's map"); the map describes the two files at `75f5d646`. For every moved block it gives the old line range at `0424772b`, the new location and the
 sha256; for every block of each definition it gives the sha256 before and after, and which moves closed it up. The
 script checks that each kept block equals its original with the moved text removed, that every sentence of a kept
 block is a sentence of the original, and that every moved text stands byte for byte at its new place. CONOPS's needs
@@ -51,8 +51,8 @@ stating that the statements it rests on are unchanged. No reading is bound to th
 **The check of the map: HELD, CONTENT_PRESERVED.** The restructure did not take either baseline again; whether the
 restructured text carries its baseline unchanged was left to a check of the map by a session or person that wrote
 none of the restructure. A session that wrote none of it, and used neither the map nor its scripts to reach a result,
-checked the carry-over of content at `40171783` against `461f02ed`:
-`v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md` (headed "AI check (not a qualified engineering review)",
+checked the carry-over of content at `75f5d646` against `0424772b`:
+`v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md` (headed "automated check (not a qualified engineering review)",
 sha256/16 `4c09af64cb214448`, filed byte for byte in the commit that carries this paragraph). Its verdict is
 **CONTENT_PRESERVED**: both definitions are present word for word, with no word added or reworded below either head;
 every moved block is status or history, save the two partly definition moves m1 and m2, whose definition content the
@@ -79,12 +79,12 @@ rule of 26 September 2026:
 - **Observation O3** (which rule governs the re-read of the layer 1 pages from now on) is answered on
   `v2/docs/handover/LAYER-STATUS.md`, layer 1's integrator line.
 
-**Re-stamped at `ab560ff5`.** `ab560ff5` is the commit that files the check and these answers, and carries both
-documents byte-identical to the files the check read at `40171783`. The commit after it sets each document's status
-paragraph to BASELINED at `ab560ff5`, an editorial restructure with no definition change, citing the check and the
+**Re-stamped at `9e2587a3`.** `9e2587a3` is the commit that files the check and these answers, and carries both
+documents byte-identical to the files the check read at `75f5d646`. The commit after it sets each document's status
+paragraph to BASELINED at `9e2587a3`, an editorial restructure with no definition change, citing the check and the
 release records the baseline rests on (the table above); nothing else in either file changes, so the brief is
 `85513b92ed0daf55` and CONOPS `6ebe6760c4312bca` with that paragraph. A re-stamp is not a new review: the
-definition is the one baselined at `9406794f` and `b19c3228` on the release records in the table, and the check
+definition is the one baselined at `7055e52e` and `b66a1a55` on the release records in the table, and the check
 establishes only that the restructured text carries it. The requirements registry's pin on CONOPS (`needs_document_sha256`) is re-taken on the status paragraph
 alone, with the needs table byte-identical, and the three readings bound to CONOPS (REQ-005, CFL-014 and CFL-016)
 are rebound with an entry each naming that change. No reading is bound to the brief.
@@ -106,8 +106,8 @@ are rebound with an entry each naming that change. No reading is bound to the br
 
 ## Current values of CONOPS's circuit passages (stream s122, 29 September 2026)
 
-`CONOPS.md` is restored to its text at `ed31219a` (the owner's rulings of 28 September, the last change the rule
-above allows; stream s122 withdrew set 12's circuit edits `b6ab12e7` and `162f24b6` and its own round 1), and its
+`CONOPS.md` is restored to its text at `1579ea7f` (the owner's rulings of 28 September, the last change the rule
+above allows; stream s122 withdrew set 12's circuit edits `de7e8d63` and `0ac712dc` and its own round 1), and its
 circuit statements are read through this page (CFL-016 and S-122 of the requirements registry). A statement of
 `CONOPS.md` about the circuit, and a figure, a commit, a generator line or an "as generated" remark inside it, is its
 value when the document was baselined or last reopened. Where the committed netlists now differ, or where the value
@@ -123,13 +123,13 @@ integration set 13: board A `6c40250c47195ebb`, B `3ef9b8c49a01b728`, C `c9f7394
 |---|---|---|---|
 | DC-01 | section 4's EMCON row; section 4b's preamble and table | what EMCON drives and removes, radio by radio, as set 12 draws it and set 13 keeps it: the RockBLOCK's ENABLE forced low in hardware (`U536`, `U543`), the back-feed gates of the RockBLOCK, the E22 and the E72 (`U537` to `U553`), the card bucks' enables from `U116`, `U216` and `U316`, and board A's PA and HF gates `U35` to `U38` | `feasibility/EMCON.md` section 0a.1; FEA-002, REQ-030 and REQ-071 in the registry |
 | DC-02 | section 4's Heat stage and Hot stop rows; section 4c's HOT-R1 passages; section 4f's row of the pack's safety; section 7a's HOT-R1 row | HOT-R1 is drawn on boards A and E since stream w4ae: board E's `Q11` (2N7002), its gate on `HOT_R1_G` from `U10` pin 30 and held off by `R58`, pulls the dock line `BLK_SPARE` at `J_BLK` pin 12; board A reads it as `DOCK_SPARE` at `J_DOCK` pin 12, pulled up by `R216`, on `U27` pin 18 (IO1_5); REQ-077 reads INCONCLUSIVE and waits on S-58 | REQ-077 in the registry |
-| DC-03 | section 4e, the panel controller lost | EMCON and MAIN PWR act without the panel controller, and so does the EMCON lamp `D22`, fed from `LED_RAIL_SW` through `R47`; the TX lamp `D3` does not: its feed `LED_RAIL` is `Q1`'s drain, which only `Q2` turns on, from `PANEL_PWM` (GPIO 8); the baseline's text was already wrong at its reading: at `3e42100d` and at `ab560ff5` board C's `R36` fed `D3` from `LED_RAIL`, `Q1`'s drain, as it does now | `PANEL.md` sections 1 and 4; `feasibility/EMCON.md` section 8 |
-| DC-04 | section 4e, a device rail lost | `+5V_DEV` is made by board A's `U7` (LM5176) and `+3V3_DEV` by board B's `U25` (AP63203) from `+5V_DEV`; the baseline's text was already wrong at its reading: at `3e42100d` and at `ab560ff5` board B's `U25` made `+3V3_DEV` from `+5V_DEV`, as it does now | this row; `V2-SPEC.md` correction 32 |
+| DC-03 | section 4e, the panel controller lost | EMCON and MAIN PWR act without the panel controller, and so does the EMCON lamp `D22`, fed from `LED_RAIL_SW` through `R47`; the TX lamp `D3` does not: its feed `LED_RAIL` is `Q1`'s drain, which only `Q2` turns on, from `PANEL_PWM` (GPIO 8); the baseline's text was already wrong at its reading: at `3e42100d` and at `9e2587a3` board C's `R36` fed `D3` from `LED_RAIL`, `Q1`'s drain, as it does now | `PANEL.md` sections 1 and 4; `feasibility/EMCON.md` section 8 |
+| DC-04 | section 4e, a device rail lost | `+5V_DEV` is made by board A's `U7` (LM5176) and `+3V3_DEV` by board B's `U25` (AP63203) from `+5V_DEV`; the baseline's text was already wrong at its reading: at `3e42100d` and at `9e2587a3` board B's `U25` made `+3V3_DEV` from `+5V_DEV`, as it does now | this row; `V2-SPEC.md` correction 32 |
 | DC-05 | section 4e, a device rail lost, what the loss releases | a loss of `+3V3_DEV` releases no module radio: each slot makes `EMCON_ON1..3` from its own 3.3 V (`U112`, `U212`, `U312`; EMCON.md L3, closed at desk in board B's round 8), and `U543`, run from `+5V_DEV`, holds the RockBLOCK's ENABLE (`RB_IEN`) low while `+3V3_DEV` is below its threshold | `feasibility/EMCON.md` sections 0a.1 and 7 |
-| DC-06 | every generator or tool line number the definition cites (sections 4, 4c and 4e among them) | the line of the commit the citation names, or, undated, of the commit its passage was written at; where stream s122 read the parts at `557a0628`: `R42` at `gen_sch_a.py:1104`, `R2`, `R184` and `R4` at 338 to 339, `R103` and `R104` at 1598, `R111` at 1611, `U21` at 1340, `U22` at 1372, `R26` and `R27` at 972, `J_USBC_OUT` at 1306, `J_USBW` at 1668, and `J_TAMP` at `gen_sch_e.py:796` | the generators at the commit read; `v2/docs/records/s122/verdicts.out` |
-| DC-07 | section 4's Reduced row (its Guarantee cell) and section 4c's `SLOT_EN1` passage: the supervisors' I2C status path, called absent or owed as generated | the three supervisors are targets on the kit bus the panel controller masters: `U41`, `U51` and `U61` have pin 93 (PB7) on `SDA` and pin 92 (PB6) on `SCL`, which reach `J_PANEL`, since `09521e07` (both pins unconnected at its parent `f6c449fc`); the baseline's text was already wrong at its reading, at `3e42100d`, at `8a8d6b68` where the passages were written, and at `ed31219a`; what is owed is the TCA9517A segment of SC-HF-02, which board B does not carry | `ARCH-PCB-B-IOHA.md` section 6; `HW-FW-CONTRACT.md` FW-B08 and section 6.5 |
-| DC-08 | the same two passages: the break-before-make order (FAB-03, CON-003) and a bank detached from a host that has lost its power (FAB-02, CON-022), called owed or not done as generated | both drawn in board B's round 8, present at `8a8d6b68` where the passages were written and at `ed31219a`, absent at `3e42100d`: each slot's power-good `PG{s}` is its module's own 3.3 V through 1 k with 100 k to ground (`R191` and `R192` for slot 1), buffered by a 74LVC1G17 (`U530` to `U532`) and inverted (`U533` to `U535`); per bank a 74LVC1G157 (`U513` to `U515`) selects the dark flag of the host the delayed select passes, and the bank's enable `BOE{b}_n` (`U516` to `U518`) is forced high while the break-before-make term `BBM{b}` is up and is that flag otherwise; the display switches' enables are the power-good of the slot each passes (`U519` for `U3`, `U520` for `U4`); S-42 stays OPEN, its title listing FAB-02 (b) and (c) and the break-before-make with the gate's assertion and its mutation, and CON-003 and CON-022 read INCONCLUSIVE, waiting on it | `ARCH-PCB-B-IOHA.md` section 5; `feasibility/FAILOVER-FABRIC.md` sections 9 and 9a; S-42, CON-003 and CON-022 in the registry |
-| DC-09 | section 7's D-17 row: board A's USB-C CC pins, the array riding on a board A update called owed | the array is drawn: board A's `U31` (TPD2E2U06) on `PD_CC1` and `PD_CC2`, the CC pins of `J_USBC_OUT`, since `09521e07`, and so at `3e42100d` and at `ed31219a`; the row was written at `306984e5`, before `09521e07` drew it | this row |
+| DC-06 | every generator or tool line number the definition cites (sections 4, 4c and 4e among them) | the line of the commit the citation names, or, undated, of the commit its passage was written at; where stream s122 read the parts at `a913dc1e`: `R42` at `gen_sch_a.py:1104`, `R2`, `R184` and `R4` at 338 to 339, `R103` and `R104` at 1598, `R111` at 1611, `U21` at 1340, `U22` at 1372, `R26` and `R27` at 972, `J_USBC_OUT` at 1306, `J_USBW` at 1668, and `J_TAMP` at `gen_sch_e.py:796` | the generators at the commit read; `v2/docs/records/s122/verdicts.out` |
+| DC-07 | section 4's Reduced row (its Guarantee cell) and section 4c's `SLOT_EN1` passage: the supervisors' I2C status path, called absent or owed as generated | the three supervisors are targets on the kit bus the panel controller masters: `U41`, `U51` and `U61` have pin 93 (PB7) on `SDA` and pin 92 (PB6) on `SCL`, which reach `J_PANEL`, since `09521e07` (both pins unconnected at its parent `f6c449fc`); the baseline's text was already wrong at its reading, at `3e42100d`, at `8a1ffd8a` where the passages were written, and at `1579ea7f`; what is owed is the TCA9517A segment of SC-HF-02, which board B does not carry | `ARCH-PCB-B-IOHA.md` section 6; `HW-FW-CONTRACT.md` FW-B08 and section 6.5 |
+| DC-08 | the same two passages: the break-before-make order (FAB-03, CON-003) and a bank detached from a host that has lost its power (FAB-02, CON-022), called owed or not done as generated | both drawn in board B's round 8, present at `8a1ffd8a` where the passages were written and at `1579ea7f`, absent at `3e42100d`: each slot's power-good `PG{s}` is its module's own 3.3 V through 1 k with 100 k to ground (`R191` and `R192` for slot 1), buffered by a 74LVC1G17 (`U530` to `U532`) and inverted (`U533` to `U535`); per bank a 74LVC1G157 (`U513` to `U515`) selects the dark flag of the host the delayed select passes, and the bank's enable `BOE{b}_n` (`U516` to `U518`) is forced high while the break-before-make term `BBM{b}` is up and is that flag otherwise; the display switches' enables are the power-good of the slot each passes (`U519` for `U3`, `U520` for `U4`); S-42 stays OPEN, its title listing FAB-02 (b) and (c) and the break-before-make with the gate's assertion and its mutation, and CON-003 and CON-022 read INCONCLUSIVE, waiting on it | `ARCH-PCB-B-IOHA.md` section 5; `feasibility/FAILOVER-FABRIC.md` sections 9 and 9a; S-42, CON-003 and CON-022 in the registry |
+| DC-09 | section 7's D-17 row: board A's USB-C CC pins, the array riding on a board A update called owed | the array is drawn: board A's `U31` (TPD2E2U06) on `PD_CC1` and `PD_CC2`, the CC pins of `J_USBC_OUT`, since `09521e07`, and so at `3e42100d` and at `1579ea7f`; the row was written at `306984e5`, before `09521e07` drew it | this row |
 | DC-10 | section 7's D-13 row: the STM32H753 in the schematic, the component mismatch with the H743 called open (check-s122-3 m1) | the three supervisors' schematic text is the H743 the project buys: board B's `U41`, `U51` and `U61` read STM32H743VIT6 since `09521e07` (STM32H753VITx at `306984e5`, where the row was written), and CON-017, which asks that text, the BOM and regeneration parity, reads PASS | CON-017 in the registry; `V2-SPEC.md` correction 32 |
 
 ## Layer 3's definition re-issue (30 September 2026): the approved change record governs until the re-stamp
@@ -156,8 +156,8 @@ page's current values, copied from it:
 
 ## What the two documents carried at their baselines
 
-Moved here word for word on 27 September 2026 from the running text of the two documents at `461f02ed` (for the
-brief, the text baselined at `9406794f`; for CONOPS, the text it has carried since `179196c6`). Each entry is the state
+Moved here word for word on 27 September 2026 from the running text of the two documents at `0424772b` (for the
+brief, the text baselined at `7055e52e`; for CONOPS, the text it has carried since `9626a0ff`). Each entry is the state
 as it stood then, not a current reading: the current state is the source the table above names, and a later change is
 recorded there, never by editing the baselines. Paths in the moved text are relative to `v2/docs/`, as in the
 documents it came from.
@@ -168,7 +168,7 @@ Eight entries, in the brief's order.
 
 #### B-S1. From the head (the framing paragraph)
 
-*`PRODUCT-BRIEF.md` lines 34 to 36 at `461f02ed`: the evidence headline's counts, quoted.*
+*`PRODUCT-BRIEF.md` lines 34 to 36 at `0424772b`: the evidence headline's counts, quoted.*
 
 What the design has and has not shown
 today is `CURRENT-EVIDENCE.md`, whose headline reads **"Foundations incomplete; 0 boards ready for layout; 0
@@ -176,7 +176,7 @@ physically verified."**
 
 #### B-S2. From the section "What the V2 kit is" (emission and light discipline)
 
-*`PRODUCT-BRIEF.md` lines 116 to 121 at `461f02ed`: what the EMCON line is drawn to do as generated, with board B's round 8.*
+*`PRODUCT-BRIEF.md` lines 116 to 121 at `0424772b`: what the EMCON line is drawn to do as generated, with board B's round 8.*
 
 As generated at `3e42100d` the line is drawn to remove the supply of the
   SDR, the RockBLOCK, the LoRa module, both Zigbee and Thread radios, the HF unit and both WiFi link cards, to turn off
@@ -187,7 +187,7 @@ As generated at `3e42100d` the line is drawn to remove the supply of the
 
 #### B-S3. From the section "What the V2 kit is" (emission and light discipline)
 
-*`PRODUCT-BRIEF.md` lines 123 to 137 at `461f02ed`: the transmitter counts (17, 15 of 17 local, 0 of 17 end to end) and their open rows.*
+*`PRODUCT-BRIEF.md` lines 123 to 137 at `0424772b`: the transmitter counts (17, 15 of 17 local, 0 of 17 end to end) and their open rows.*
 
 Read transmitter by
   transmitter against that (`feasibility/EMCON.md` section 0a, sixth revision, with board B's round 8), the kit has 17
@@ -207,7 +207,7 @@ Read transmitter by
 
 #### B-S4. From the section "What the V2 kit is" (emission and light discipline)
 
-*`PRODUCT-BRIEF.md` lines 139 to 142 at `461f02ed`: the bench state and the lamps as drawn (D22, the TX lamp's supply).*
+*`PRODUCT-BRIEF.md` lines 139 to 142 at `0424772b`: the bench state and the lamps as drawn (D22, the TX lamp's supply).*
 
 No row has been shown on a bench; EMCON is feasibility blocker FEA-002 of the requirements registry. The one panel
   indication of EMCON that is independent of firmware is that lamp, lit while both EMCON lines read low, fed ahead of
@@ -216,16 +216,16 @@ No row has been shown on a bench; EMCON is feasibility blocker FEA-002 of the re
 
 #### B-S5. From the section "What the V2 kit is" (antenna entries)
 
-*`PRODUCT-BRIEF.md` lines 164 to 167 at `461f02ed`: which commit's generators and release folders carry the case choices.*
+*`PRODUCT-BRIEF.md` lines 164 to 167 at `0424772b`: which commit's generators and release folders carry the case choices.*
 
 The case generators carry C1 to C6
-  since `6ff4c9e2`, and the current case set (CAD, drawings and 1:1 templates) is `v2/release/case-2026-09-27/`; the
+  since `e04f8be0`, and the current case set (CAD, drawings and 1:1 templates) is `v2/release/case-2026-09-27/`; the
   committed board files and the deliverable folders of `v2/release/revA/` predate it and still carry the earlier
   eleven coupler sites at 88 mm, which is history.
 
 #### B-S6. From the section "What it is not, today" (not ready for layout)
 
-*`PRODUCT-BRIEF.md` lines 181 to 184 at `461f02ed`: board readiness and the circuit corrections the deliverable folders predate.*
+*`PRODUCT-BRIEF.md` lines 181 to 184 at `0424772b`: board readiness and the circuit corrections the deliverable folders predate.*
 
 No board of the set is ready for layout, and no layout of boards A, B, C, D, E
   or P carries its board's corrected schematic (board E5 has no schematic; its board file is its design): the
@@ -234,16 +234,16 @@ No board of the set is ready for layout, and no layout of boards A, B, C, D, E
 
 #### B-S7. From the section "What it is not, today" (runtime)
 
-*`PRODUCT-BRIEF.md` lines 214 to 217 at `461f02ed`: the power model's current runtime figures and the commit that aligned CONOPS.*
+*`PRODUCT-BRIEF.md` lines 214 to 217 at `0424772b`: the power model's current runtime figures and the commit that aligned CONOPS.*
 
 The current PROVISIONAL model
   gives an aged pack 2.5 h in the idle mode and 1.7 h in the typical mode, within bounds of 1.3 to 3.3 h and 0.9 to
   2.3 h (`feasibility/POWER-THERMAL.md` section 6, PWR-F07); `CONOPS.md` sections 4a and 6 carry the same
-  PWR-F07 figures since the layer 2 merge (`8a8d6b68`).
+  PWR-F07 figures since the layer 2 merge (`8a1ffd8a`).
 
 #### B-S8. From the section "What the first prototype has to show"
 
-*`PRODUCT-BRIEF.md` lines 261 to 265 at `461f02ed`: the count of open feasibility blockers on the core.*
+*`PRODUCT-BRIEF.md` lines 261 to 265 at `0424772b`: the count of open feasibility blockers on the core.*
 
 Seven feasibility blockers on the core are not closed (FEA-001 ZEROIZE, FEA-002 EMCON, FEA-003 the
 failover fabric, FEA-004 power and thermal, FEA-005 pack protection, FEA-006 decoupling, and FEA-007 the kit's fit in
@@ -257,7 +257,7 @@ Seven entries, in the document's order.
 
 #### C-S1. From section 3, mission M4
 
-*`CONOPS.md` lines 275 to 285 at `461f02ed`: the gaps as generated, board B's round 8 and the transmitter counts.*
+*`CONOPS.md` lines 275 to 285 at `0424772b`: the gaps as generated, board B's round 8 and the transmitter counts.*
 
 As
 generated since `09521e07` the two gaps this mission first named are closed in the schematic: the compute modules'
@@ -273,7 +273,7 @@ it, and no row has been shown on a bench.
 
 #### C-S2. From section 4b (the D-05 paragraph)
 
-*`CONOPS.md` lines 455 to 468 at `461f02ed`: the transmitter counts, board B's round 8 and the open shared items.*
+*`CONOPS.md` lines 455 to 468 at `0424772b`: the transmitter counts, board B's round 8 and the open shared items.*
 
 Read transmitter by transmitter
 (`feasibility/EMCON.md` section 0a, sixth revision), the radio's own chain meets that meaning at desk for 15 of the 17
@@ -292,14 +292,14 @@ of which can use the kit's own SDR, whose supply EMCON removes).
 
 #### C-S3. From section 4b (its closing paragraph)
 
-*`CONOPS.md` lines 473 to 474 at `461f02ed`: the commits that drew the two switches.*
+*`CONOPS.md` lines 473 to 474 at `0424772b`: the commits that drew the two switches.*
 
 The WiFi cards' converter enables are drawn since `09521e07`; the 5G supply
 switch, SD-EMC-1's, is drawn since board B's round 8 (SD-EMC-1r8, EMCON.md section 4b).
 
 #### C-S4. From section 4b.1 (what the operator does with it)
 
-*`CONOPS.md` lines 505 to 507 at `461f02ed`: the transmitter counts against REQ-071.*
+*`CONOPS.md` lines 505 to 507 at `0424772b`: the transmitter counts against REQ-071.*
 
 **State at this revision:** this is a requirement on the design (REQ-071), and no row meets it end to end at desk yet
 (`feasibility/EMCON.md` sections 0a and 5a: locally 15 of the 17 rows close at desk, rows 1 and 4, the SA868 and the RockBLOCK 9704, are open, and every row inherits the shared items of
@@ -307,7 +307,7 @@ its section 3, so 0 of 17 close end to end).
 
 #### C-S5. From section 4c (HOT-R1)
 
-*`CONOPS.md` lines 677 to 679 at `461f02ed`: the hot stop requirement's reading on the generated boards.*
+*`CONOPS.md` lines 677 to 679 at `0424772b`: the hot stop requirement's reading on the generated boards.*
 
 **Until HOT-R1 is in both generators the hot stop's requirement reads FAIL on the generated boards,** a finding
 reported to the owner, not asked: the stop then acts only where the bridge links the two controllers (the normal and
@@ -315,7 +315,7 @@ reduced modes, and the heat stage after BANK-R1, up to H1 itself), and falls bac
 
 #### C-S6. From section 4c (BANK-R1)
 
-*`CONOPS.md` lines 738 to 740 at `461f02ed`: REQ-052's reading on board B as generated.*
+*`CONOPS.md` lines 738 to 740 at `0424772b`: REQ-052's reading on board B as generated.*
 
 **Until BANK-R1 is in board B's generator,
 REQ-052 is not met by board B as generated** (its one-module stage lacks the LoRa mesh and APRS): a finding against the
@@ -323,6 +323,6 @@ generated board, reported to the owner at the next checkpoint, not asked.
 
 #### C-S7. From section 4c (the recovery and delivery targets)
 
-*`CONOPS.md` lines 869 to 869 at `461f02ed`: the registry items the targets closed.*
+*`CONOPS.md` lines 869 to 869 at `0424772b`: the registry items the targets closed.*
 
 These close S-37 and REQ-003's latency TBD for the kit's part.

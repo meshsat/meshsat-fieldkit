@@ -1086,7 +1086,7 @@ def t_the_board_e_drafts_add_disjoint_designators():
     hold, input_limit, backstop, f1, hotswap, entry, solar_guard, aux; the timer only as the LM5069 alternative after hotswap): the designators
     each adds are read from the text it writes, as new names (in part-call position and as tokens outside comments, which catches a loop
     such as the solar guard's `for _cf in (...)`) and as duplicate literal part calls (which catches a draft that writes a name another draft
-    already took). No designator this record's drafts add may meet another draft's (Astra's recheck of set 27, blocking discrepancy 1; the
+    already took). No designator this record's drafts add may meet another draft's (the second worker's recheck of set 27, blocking discrepancy 1; the
     set 27 run's C135 and C136). Collisions between other records' drafts are theirs: the record's 17e names the one known (C65)."""
     _M()
     recs = os.path.join(ROOT, "v2", "docs", "records")

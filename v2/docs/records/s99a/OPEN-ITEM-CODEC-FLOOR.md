@@ -1,6 +1,6 @@
 # Open item text for the integrator's registry script: board D's codec supply floor at the +5V_D8 peak
 
-Stream s99a, MESHSAT-1357, 29 September 2026, from the independent check of the stream (minor item 1). AI
+Stream s99a, MESHSAT-1357, 29 September 2026, from the independent check of the stream (minor item 1). automated
 engineering arithmetic; prototype design, nothing built or measured. Figures: `codec_floor.out` (script
 `codec_floor.py`, which reuses `u41_divider.py`). No declared figure was changed to make anything pass. Proposed
 entry for `v2/ecad/tools/pcb_requirements.yaml` (the next free number after S-115 is S-116; the integrator assigns it):

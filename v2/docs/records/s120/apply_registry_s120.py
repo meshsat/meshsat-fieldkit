@@ -179,7 +179,7 @@ def texts(F, commit, ring_id):
         "the protection are outside every requirement (ASM-001, SC-39) and noted on S-111: for a Q2 short no order is "
         "claimed while the charger still switches through ACOV's deglitch (Q7 at 28.7 V or more before ringing), and once "
         "ACOV has stopped it U3 passes its own 32 V before Q7 reaches 30 V while the pack is above about 1.2 V; for R6 open "
-        "or FB shorted no order is claimed. AI desk work on the makers' figures, nothing built or measured."
+        "or FB shorted no order is claimed. automated desk work on the makers' figures, nothing built or measured."
         % (commit, F["sha_a"], F["sha_e"], F["facts"] - F["facts_bad"], F["facts"], F["v_lo"], F["v_hi"], F["ovp_hi"],
            F["v_steady"], F["i_l1_max"], F["v_first"], F["i_first"], s29, s30, ring_id, F["dump"], F["line"], F["ov_lo"],
            F["ov_hi"], F["q8_m"][2], F["q7_m"][2], F["vbus_abs_m"][2], F["rec26_m"][2], F["btst_rec_m"][2],

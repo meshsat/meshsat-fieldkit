@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""l8p_cprot.py: record l8p, round 11 (Layer 4 AI-scope register row (c), tasks L4A-67 and L4A-68; MESHSAT-1357, 7 October 2026).
+"""l8p_cprot.py: record l8p, round 11 (Layer 4 automation-scope register row (c), tasks L4A-67 and L4A-68; MESHSAT-1357, 7 October 2026).
 
 L8P-R10-F1 (record l8p round 10, L8P-BREAKER.md 15c): at the breaker's held 23.93 A from the 76.25 C inside air the three 25 A MINI
 blades carry 103.6 % of their printed rerated current. This round treats it as an unresolved design choice (constitution section 4:
@@ -32,7 +32,7 @@ CHANGED): 4k answers W158's findings as record text, conditions and compared alt
 as a bounded provisional choice with its supplier task E-12p, and the stiffer PGD divider compared and not adopted; F5 Q114's IGSS
 counted (check_l8p_och.py) and the ASSUMED rule's margin; F7 D107's bound at the site; F8; F9; 4g adds R144 shorted, R143 shorted's
 consequence, D107 open in a clamp surge and the gate shorts of Q113 and Q114 with its scope (F2, F3, F10); 4j scopes the start
-service to a power-on start on record l9stk's IF-1 (F4); section 8 restates row (c)'s status from the three AI reviews.
+service to a power-on start on record l9stk's IF-1 (F4); section 8 restates row (c)'s status from the three automated reviews.
 
 This script prints:
   0. its pins (the records and the makers' documents it reads, sha256);
@@ -1086,7 +1086,7 @@ def render(R, K):
         fmt(R["derate_air"], 3), fmt(R["p_rated"], 1), fmt(R["train_need"] * 1e3, 1), fmt(R["train_need_src"] * 1e3, 0), fmt(R["train_tmin"] * 1e3, 2)))
     w("       a faster train is NOT BOUNDED (named: the kit's loads, Layer 7's list, must show none re-enters the window within %s ms of a" % fmt(R["train_need_src"] * 1e3, 0))
     w("       trip; the smallest correction for a next round, not drafted: a re-arm hold-off on U107's CTR2 longer than that period)")
-    w("   4k. ROUND 14 (Q-179, W158's one bounded check of round 13's disarm, an AI review: SUPPORTED AS CONDITIONAL; its findings answered")
+    w("   4k. ROUND 14 (Q-179, W158's one bounded check of round 13's disarm, an automated review: SUPPORTED AS CONDITIONAL; its findings answered")
     w("     as record text, conditions and compared alternatives; NO CIRCUIT CHANGED)")
     w("     F1, THE TRIP BETWEEN BRK_VIN 7.6 AND %s V (Amendment 1, item 2):" % fmt(R["v_pgd5"], 2))
     w("       THE CLAIM: the trip armed whenever the breaker runs, over the -1's run from 7.6 V (C-PROT rev 1, 12d), so L8P-R10-F1's")
@@ -1211,7 +1211,7 @@ def render(R, K):
     w("     IF-1 and the power-on scope; F2, 4g completed in round 14; 4k), E-10")
     w("     (the key-down excursions under 0.282 ms: a bench item, the check's F7), E-12f, E-12s (round 12, 4i) and the latent-failure")
     w("     residual of 4g; round 12 corrects the band of 4i (a demonstrated defect of round 11's drawing) by the on-time bound, composed,")
-    w("     read DRAWN and mutated (section 5); the focused check (W147) and the targeted recheck (W153), AI reviews, read the correction")
+    w("     read DRAWN and mutated (section 5); the focused check (W147) and the targeted recheck (W153), automated reviews, read the correction")
     w("     SUPPORTED AS CONDITIONAL (round 12's text 'UNVERIFIED until the targeted recheck' answered); the approaches (A) NOT SUPPORTED")
     w("     and (C) NOT SELECTED on printed figures")
     w("   L4A-67: C-PROT rev 1 for the guard on the corrected circuit: every series part within its printed limits below and above the trip")
@@ -1222,7 +1222,7 @@ def render(R, K):
     w("     trip's silent failures (4g) and the guard's on a board that misses E-1's bar have no detection interval (REMAINING ENGINEERING;")
     w("     the check's F6; round 11's 'DONE on the desk' withdrawn); L8P-R12-F1 (a shorted crowbar with a source, 4g) OPEN")
     w("   L4A-68: the allowance stated for its consumers (section 7, two apply scripts, NOT APPLIED); the replay is record l4e11's round 19")
-    w("   ROW (C) AS A WHOLE (restated in round 14 from the three AI reviews, W147, W153 and W158; no verdict upgraded): SUPPORTED AS")
+    w("   ROW (C) AS A WHOLE (restated in round 14 from the three automated reviews, W147, W153 and W158; no verdict upgraded): SUPPORTED AS")
     w("     CONDITIONAL; no cx46 item closes unconditionally. Its conditions: W147's E-05, E11-29, E11-36 and E-9 (RE-10 and HO-A by M-A,")
     w("     the battery FETs), RE-9's two apply scripts applied by their owners, E-6, E-6b, E-12f and E-10 (the trip); W153's E11-29u (each")
     w("     built board's path), E-6b as restated, E-12s, Q111's SOA with a source (E-2, E-3), the PGD-low disarm's correction (round 13)")

@@ -77,7 +77,7 @@ would be a mechanical task.
 - **The present cell (35E) stays the best in-case choice on the evidence held.** The upgrade that a 72 hour (or a 48
   hour) requirement asks for is therefore a question of arrangement, not of cell: see `COMPARISON.md`.
 
-The author's analysis, AI arithmetic. Not a qualified review and not the independent check.
+The author's analysis, automated arithmetic. Not a qualified review and not the independent check.
 
-**Second issue** (CHECK-1 of `5cd34c0b`, minor 7): the cost and stock column is labelled as distributor pages read on
+**Second issue** (CHECK-1 of `c2010841`, minor 7): the cost and stock column is labelled as distributor pages read on
 30 September 2026 and not filed.

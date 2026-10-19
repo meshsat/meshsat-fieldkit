@@ -46,7 +46,7 @@ Usage: apply_rel001_coverage.py --stage coverage  (--commit <merge> | --floor <I
             and that fixed instant would have let seven word-list PASS readings stand. Either stage refuses a floor
             that is not after every reading of the unrepaired tool the tree holds (a reading with no `candidates`
             count); the close-s89 stage reads the floor the coverage entry carries.
-Prototype work: nothing here has been built or measured. An AI review, never a qualified review.
+Prototype work: nothing here has been built or measured. An automated review, never a qualified review.
 """
 import os, re, sys, json, glob, hashlib, subprocess
 

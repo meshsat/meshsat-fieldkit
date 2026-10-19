@@ -1,4 +1,4 @@
-"""Record l8p round 11 (Layer 4 AI-scope register row (c), tasks L4A-67 and L4A-68, finding L8P-R10-F1; MESHSAT-1357, 7 October 2026;
+"""Record l8p round 11 (Layer 4 automation-scope register row (c), tasks L4A-67 and L4A-68, finding L8P-R10-F1; MESHSAT-1357, 7 October 2026;
 v2/docs/records/l8p/l8p_cprot.py, l8p_cprot.out, apply_gen_sch_p_ocheld.py, check_l8p_och.py, the two allowance apply scripts,
 L8P-BREAKER.md section 16).
 

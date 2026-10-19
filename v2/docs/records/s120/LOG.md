@@ -1,12 +1,12 @@
 # Stream s120, running log (MESHSAT-1357, S-120)
 
 Newest last. Times CEST, read from `date`. Prototype framing: nothing is built; every reading is of a committed netlist or
-a maker's document. AI engineering work, not a qualified review. No agent, no other model, no box, no purchase, no contact.
+a maker's document. automated engineering work, not a qualified review. No agent, no other model, no box, no purchase, no contact.
 
 ## 29 September 2026 (brief `_runs/assistant/s120/BRIEF.md`)
 
 - 17:11 Brief and `_bin/WORKER-RULES.md` read. Worktree `<worktrees>/s120`, branch
-  `fnd/s120` from main `557a0628` (set 12: decision 57's FETs on board A, S-117 and S-118 closed, S-120 open). The four held
+  `fnd/s120` from main `a913dc1e` (set 12: decision 57's FETs on board A, S-117 and S-118 closed, S-120 open). The four held
   TI FET sheets copied from `int13/v2/vendor/ti/held/` into this worktree's ignored `v2/vendor/ti/held/`; their sha256 match
   `v2/vendor/sources.txt` lines 454 to 457 (c8595fa8 CSD17577Q5A, f1aad251 CSD17578Q5A, 05fea7ab CSD17579Q5A, 99d50d88
   CSD17581Q5A). `git check-ignore` confirms the folder is ignored.
@@ -25,11 +25,11 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
 - 17:26 to 17:28 `vbus20_bound.py` (parses both netlists, 18 circuit facts, then sections 2 to 12) and `.out`: bus bound
   23.19 V (the OVP trip at VREF maximum and the worst divider ratio, plus L1's energy at its peak limit), 6.81 V under the
   FETs' 30 V; the switch node INCONCLUSIVE with a 9.04 V budget over the steady bus.
-- 17:28 Checkpoint `ffce7add` (the script, its output, this log).
+- 17:28 Checkpoint `d8dba20a` (the script, its output, this log).
 - 17:29 to 17:33 `vbus20_bound.py` leaves its figures in `FIG` for the registry script (output unchanged byte for byte);
   the CH_ACN figure is worded as the square root of L it is. `apply_registry_s120.py` drafted (one phase, `close <commit>`).
   `README.md` written: answer (a).
-- 17:33 Dry run into `dryrun.out` at `d3699eeb`: `--check` on the tree's registry writes nothing (sha256/16 c88d7528
+- 17:33 Dry run into `dryrun.out` at `9dc42cc0`: `--check` on the tree's registry writes nothing (sha256/16 c88d7528
   before and after); on a scratch copy one write (S-120 closed, S-123 opened, REQ-015 on S-106, S-107, S-111, S-123, S-111's
   title extended) and a refused second run; refusals for a commit without the records, no commit, and an uncommitted change
   to LOG.md (appended, refused, restored byte for byte); `rules_lib.py requirements` 0 errors and 0 warnings on both copies;
@@ -39,8 +39,8 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
 
 ## 29 September 2026, second round (the check `_scratch/chk-s120/CHECK.md`: not mergeable, B1 to B3, m1 to m11)
 
-- 18:44 Check read in full. Merged main `53804300` (set 13: S-121 closed, S-122 and S-123 open) into `fnd/s120` as
-  `a4f2f3e9` with the owner's flags; `vbus20_bound.py` reprinted the committed `.out` byte for byte after the merge (the
+- 18:44 Check read in full. Merged main `d3f6fdc7` (set 13: S-121 closed, S-122 and S-123 open) into `fnd/s120` as
+  `639d54c2` with the owner's flags; `vbus20_bound.py` reprinted the committed `.out` byte for byte after the merge (the
   netlists of A and E did not move).
 - 18:46 to 18:50 `vbus20_bound.py` rewritten whole (second issue). B1: Q7 and Q8 on separate rows, Q7 carrying Q8's VSD
   1.0 V (SLPS516 p.3) in the margins, the budget and the allowances. B2: the bound printed INFERRED wherever it is stated,
@@ -54,14 +54,14 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
   ACOV, SYSOVP and BATOVP p.14. m9: detail strings print what the netlist holds; VBUS20's whole membership (39 pins) and the
   CELL_BATPRESZ strap (74.76 to 75.51 percent of VDDA against 68.4 to 81.5, p.18) and the CS filter are facts: 21 of 21.
   m1: section 11 rewritten (SW1 near VBAT through Q10's body diode; the order shown for a Q2 short only). Checkpoint
-  `76864fc9`.
+  `e5735457`.
 - 18:50 to 18:53 `apply_registry_s120.py`: the three texts rewritten from the new figures (B1, B2, B3, m1, m2, m7, m8);
   `closed_by` resolved to the full sha (m3); `--check` on the merged tree opens S-124 (m10). This log's escaped backticks
   removed (m11). README rewritten whole.
-- 18:53 Commit `81d35506` (README rewritten whole, the registry script, this log). Dry run into `dryrun.out` at `81d35506` on
+- 18:53 Commit `af3448fd` (README rewritten whole, the registry script, this log). Dry run into `dryrun.out` at `af3448fd` on
   the merged line: `--check` writes nothing (the tree's registry sha256/16 1dde1fd1 before and after); a scratch copy takes one
   write (S-120 closed by the full sha, S-124 opened, REQ-015 on S-106, S-107, S-111, S-124, S-111's title extended) and
-  refuses a second run; refusals for 557a0628 (records not carried), 02491fdd (README differs), no commit, and an
+  refuses a second run; refusals for a913dc1e (records not carried), 037014ca (README differs), no commit, and an
   uncommitted change to LOG.md (appended, refused, restored byte for byte); `rules_lib.py requirements` 144 records, 0
   errors and 0 warnings on both copies; `vbus20_bound.py` exit 1 on four mutants (R6 249k, U3 pin 5 off GND, a diode on
   VBUS20, a new part on VBUS20). (Correction, third round: three of those FAIL lines still carried fixed text, the
@@ -77,14 +77,14 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
   from 23.198 to 23.40 V (Q7 5.60 V, Q8 6.60 V at it; sensitivities 36.7 and 41.5 %), with the note that the energy term
   weighs little (245 mJ, 20 times the figure, would be needed to put the bus at 29.0 V). n3: the 26 V allowance moved to Q7's
   turn-on edge (1.52 / 1.76 / 2.38 nH). n4: the strap's percentages from the parsed values, conclusions printed only when
-  they hold. n5: U3's input sense filter out of the gate, a record line (20 facts). n1, n6: wording. Checkpoint `302afa48`.
+  they hold. n5: U3's input sense filter out of the gate, a record line (20 facts). n1, n6: wording. Checkpoint `f9e7f65c`.
 - 19:06 to 19:07 `apply_registry_s120.py`: the three texts rewritten (B1 rating list and closing test with the negative
-  limits, n1, n2, n7), the docstring names which commit to pass. `--check` at `a860b8af` opens S-124. Checkpoint
-  `a860b8af`. README rewritten whole (third issue).
-- 19:09 to 19:11 Commit `6bfe001d` (README, this log). Dry run into `dryrun.out` at `6bfe001d`: `--check` writes nothing
+  limits, n1, n2, n7), the docstring names which commit to pass. `--check` at `bdec395a` opens S-124. Checkpoint
+  `bdec395a`. README rewritten whole (third issue).
+- 19:09 to 19:11 Commit `6c7b6d69` (README, this log). Dry run into `dryrun.out` at `6c7b6d69`: `--check` writes nothing
   (the tree's registry sha256/16 1dde1fd1); a scratch copy takes one write (S-120 closed by the full sha, S-124 opened,
-  REQ-015 on S-106, S-107, S-111, S-124, S-111's title extended) and refuses a second run; refusals for 557a0628 (records
-  not carried), 02491fdd and 38902f30 (README differs from HEAD's), no commit, and an uncommitted change to LOG.md (appended,
+  REQ-015 on S-106, S-107, S-111, S-124, S-111's title extended) and refuses a second run; refusals for a913dc1e (records
+  not carried), 037014ca and 1b8731a2 (README differs from HEAD's), no commit, and an uncommitted change to LOG.md (appended,
   refused, restored byte for byte); `rules_lib.py requirements` 144 records, 0 errors and 0 warnings on both copies;
   `vbus20_bound.py` exit 1 on five gated mutants (R6 249k, U3 pin 5 off GND, a diode on VBUS20, a new part on VBUS20, R27
   20.0k), each FAIL line printing the values the mutant holds, and exit 0 on TI's 33 nF CACN added, which the record line
@@ -95,13 +95,13 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
 - 19:15 Check read. r1: S-124's test now refers CH_SW2's overshoot over the measured VBAT to 20.0 V (SYSOVP, p.14) and takes
   Q9's and Q10's VDS on that basis; r2: ACP less ACN (0.5 V absolute, p.8) in the rating list and the test, read across
   U3's pins, with its INFERRED size in `.out` section 10 (about 0.08 V through the 200 ns filter); r3: the `.out` header
-  reads "fourth issue". Every other clause of the test kept. Checkpoint `6009d0ce`; README's quotation regenerated from the
+  reads "fourth issue". Every other clause of the test kept. Checkpoint `691876cf`; README's quotation regenerated from the
   applied text.
-- 19:16 to 19:17 Commit `70c05b1a` (README, this log). Dry run into `dryrun.out` at `70c05b1a`: `--check` writes nothing
-  (the tree's registry sha256/16 1dde1fd1, equal to main `53804300`'s); scratch copies of the tip's registry and of main
-  `53804300`'s each take one write (S-120 closed by the full sha, S-124 opened, REQ-015 on S-106, S-107, S-111, S-124,
+- 19:16 to 19:17 Commit `2995ef12` (README, this log). Dry run into `dryrun.out` at `2995ef12`: `--check` writes nothing
+  (the tree's registry sha256/16 1dde1fd1, equal to main `d3f6fdc7`'s); scratch copies of the tip's registry and of main
+  `d3f6fdc7`'s each take one write (S-120 closed by the full sha, S-124 opened, REQ-015 on S-106, S-107, S-111, S-124,
   S-111's title extended), each refuses a second run, and the two applied copies are byte identical; the refusals as before
-  (557a0628, 02491fdd, 38902f30, no commit, an uncommitted LOG.md change, restored byte for byte); `rules_lib.py
+  (a913dc1e, 037014ca, 1b8731a2, no commit, an uncommitted LOG.md change, restored byte for byte); `rules_lib.py
   requirements` 144 records, 0 errors and 0 warnings on all four copies (this branch changes no file under v2/ecad/tools
-  against 53804300); the six mutants as in the third round. The README's quotation of S-124's closing condition equals the
+  against d3f6fdc7); the six mutants as in the third round. The README's quotation of S-124's closing condition equals the
   applied text (compared parsed).

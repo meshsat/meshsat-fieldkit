@@ -1,6 +1,6 @@
 # Draft decision sheet: the lid pack of Option A(i)
 
-**Prototype design, AI review; desk results.**
+**Prototype design, automated review; desk results.**
 
 **Question.** Option A(i) needs 48 lid cells. They fit only if one lid function you approved on 6 September leaves. Which?
 
@@ -22,4 +22,4 @@ crossing, not yet designed. D-01's deferral of HF, the bracket and a second pack
 
 **Session's view.** Option 1: it keeps a radio bearer inside.
 
-Details: a1mech README section 3; energy: fnd/a1int `reconcile_lid.out` (1694d8ba).
+Details: a1mech README section 3; energy: fnd/a1int `reconcile_lid.out` (d1220871).

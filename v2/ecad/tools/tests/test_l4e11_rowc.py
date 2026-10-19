@@ -1,4 +1,4 @@
-"""Record l4e11 round 19 (Layer 4 AI-scope register row (c), tasks L4A-67 and L4A-68; MESHSAT-1357, 7 October 2026;
+"""Record l4e11 round 19 (Layer 4 automation-scope register row (c), tasks L4A-67 and L4A-68; MESHSAT-1357, 7 October 2026;
 v2/docs/records/l4e11/l4e11_rowc.py, l4e11_rowc.out, L4E11-ROUND-ROWC.md).
 
 The predicates: the committed .out is what the script prints and every predicate it prints reads yes; the replay of 28a reproduces

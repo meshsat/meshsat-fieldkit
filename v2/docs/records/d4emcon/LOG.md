@@ -5,10 +5,10 @@ or a maker's document.
 
 ## Resumed 29 September 2026 (brief `_runs/assistant/d4emcon/20260929T0200/BRIEF.md`)
 
-- 01:56 Brief and WORKER-RULES read. Branch `fnd/d4emcon` at `cd68f4fd` (4 commits ahead of main, 175 behind).
-- 01:55 Main (`5ac1deab`, set 9) merged with `--no-ff` under the owner's identity: merge commit `856625ab`, no conflict
+- 01:56 Brief and WORKER-RULES read. Branch `fnd/d4emcon` at `8d3ebd43` (4 commits ahead of main, 175 behind).
+- 01:55 Main (`b57d1662`, set 9) merged with `--no-ff` under the owner's identity: merge commit `86d46ea0`, no conflict
   (main had touched none of `tools/tx_inhibit.py`, `tests/test_tx_inhibit.py`, `EMCON.md` or this folder since the
-  branch point `92f22e3f`).
+  branch point `bec528d1`).
 - 01:55 to 01:58 Re-run on main's committed netlists, on this host (pure Python, no KiCad needed: the netlists are
   committed files and the tools parse them with `tx_inhibit.parse_netlist`): `tools/path_walk.py`,
   `tools/walk_report.py` (RF-002's walk, `tx_inhibit.py` sha256/16 `326d0a4832273004`, this branch's) and
@@ -58,9 +58,9 @@ E-02); (6) an apply script for FEA-002's evidence line once EMCON.md's new hash 
 
 ## Resumed 29 September 2026, second time (the integrator's brief of set 10)
 
-- 12:02 Brief read; branch `fnd/d4emcon` at `a5bc4680`. Read this log, EMCON.md (sections 0, 0a, 2, 3, 4, 4.4, 4.5,
+- 12:02 Brief read; branch `fnd/d4emcon` at `785a7b0e`. Read this log, EMCON.md (sections 0, 0a, 2, 3, 4, 4.4, 4.5,
   4b, 4c, 5a, 6, 7), `apply_c_d4e_f1.py`, FEA-002 (its LAYOUT_ENTRY stage) and S-01, S-02, S-44, S-65, S-87, S-92, S-93.
-- 12:03 Main (`9f023422`, set 10) merged with `--no-ff` under the owner's identity: merge commit `3da1fac8`, no conflict.
+- 12:03 Main (`1d854bc3`, set 10) merged with `--no-ff` under the owner's identity: merge commit `54e02164`, no conflict.
 - 12:03 to 12:04 Re-run on set 10's committed netlists (`readings/set10/`): `netdiff.py` finds no part or net
   difference on any of the six boards against set 9 (only the `source` and `date` header lines moved); the path walk,
   RF-002's walk, the fault levels and the lamp check are byte-identical to set 9 but for the six hashes
@@ -83,7 +83,7 @@ E-02); (6) an apply script for FEA-002's evidence line once EMCON.md's new hash 
   result parses, a second run refused. `tools/readback_d4e.py` written (net by net MUST and MUST NOT nodes, values and
   supply pins, for B and C); on set 10's committed netlists it reads B 56 checks FAIL and C 4 FAIL
   (`readings/set10/readback/`), as it must before regeneration. `apply_c_d4e_f1.py` re-run on a scratch copy of set 10's
-  `gen_sch_c.py` (unchanged since `e7721c52`): applies once, refuses a second run.
+  `gen_sch_c.py` (unchanged since `1c13eb50`): applies once, refuses a second run.
 - 12:22 to 12:30 EMCON.md section 4d written (at sha256/16 `c8f0d1f2e370b294`; three pointer sentences in the head, after
   section 0a's counts and at the top of section 7): 4d.1 the row table on set 10, every transmitter with its dominant chain,
   L_max, F1 to F3, F6, F7 and latency terms: **CLOSED AT DESK 0, OPEN 15 (rows 3 to 17), NEEDS HARDWARE 2 (rows 1, 2)**; with

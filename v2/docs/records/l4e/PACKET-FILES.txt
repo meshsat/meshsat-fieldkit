@@ -13,11 +13,11 @@ v2/docs/records/l4e/L4-ENERGY-ARCHITECTURE.md                        TRACKED  th
 v2/docs/records/l4e/l4e_replay.py                                    TRACKED  the replay: reproduces the checked records, the service ledger, O-2's enumerated bound with its refusal
 v2/docs/records/l4e/l4e_replay.out                                   TRACKED  its output, cited as 'out N' (section 11: O-2's rows, setting, corners and consequence)
 v2/docs/records/l4e/README.md                                        TRACKED  files, run order and the checks the replay makes
-v2/docs/records/l4e/ASTRA-L4E1.md                                    TRACKED  the collaborator's L4-E1 assessment that directed this work (an AI assessment)
+v2/docs/records/l4e/ASTRA-L4E1.md                                    TRACKED  the collaborator's L4-E1 assessment that directed this work (an automated assessment)
 v2/docs/records/l4e/checks/astra-check-l4e2-1.md                     TRACKED  the first check: the stopped-hour double count (B1), O-2's power bound (B2)
 v2/docs/records/l4e/checks/astra-check-l4e2-2.md                     TRACKED  the recheck: the omitted line-regulation row (B2 again)
 v2/docs/records/l4e/checks/check-l4e2-3.md                           TRACKED  the coordinator's verification of O-2's final bound; the acceptance
-v2/docs/records/l4e/REVIEW-POWER-ARCHITECTURE-AS-RECEIVED.md         TRACKED  the independent power review of the packet at 185edc75 (CONDITIONAL; L4-R01 to L4-R04), as received
+v2/docs/records/l4e/REVIEW-POWER-ARCHITECTURE-AS-RECEIVED.md         TRACKED  the independent power review of the packet at 4d62b713 (CONDITIONAL; L4-R01 to L4-R04), as received
 v2/docs/records/l4e/checks/astra-check-l4e3-1.md                     TRACKED  the check of the fourth issue: the panel's compliance label (B1), answered by the fifth
 
 # REGISTRY

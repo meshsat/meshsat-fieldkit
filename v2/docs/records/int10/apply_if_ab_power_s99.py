@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """The contract pcb_interfaces.yaml after decision 55 (MESHSAT-1357, integration set 9, stream s99reg, 29 September 2026).
-AI engineering text; prototype design, nothing built, ordered or measured.
+automated engineering text; prototype design, nothing built, ordered or measured.
 
 It WRAPS v2/docs/records/s99a/apply_if_ab_power_dev.py (whose --check passes): that script's two replacements are
 imported and applied verbatim (IF-AB-POWER's +5V_DEV currents row restated after the split, and IF-AB-WALL's "limit

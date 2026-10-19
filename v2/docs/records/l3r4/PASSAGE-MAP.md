@@ -40,7 +40,7 @@ Rows answered by the owner's clarifications (rulings D-32 to D-37: row L3-OD7 `o
 
 The status line of the head. Changed by: every answer.
 
-> **Status: layer 2 of the foundation baseline (MESHSAT-1357), BASELINED at `ab560ff5`,**
+> **Status: layer 2 of the foundation baseline (MESHSAT-1357), BASELINED at `9e2587a3`,**
 
 ### C02. CONOPS.md, lines 15 to 16 (DEFINITION)
 
@@ -297,7 +297,7 @@ Section 7a, M1's mission duration row: its reversal. Changed by: L3-OD7: `72-req
 
 The status line of the head. Changed by: every answer.
 
-> **Status: layer 1 of the foundation baseline (MESHSAT-1357), BASELINED at `ab560ff5`,**
+> **Status: layer 1 of the foundation baseline (MESHSAT-1357), BASELINED at `9e2587a3`,**
 
 ### B02. PRODUCT-BRIEF.md, line 15 (DEFINITION)
 
@@ -679,7 +679,7 @@ A statement of the one pack's circuit as generated. Changed by: L3-OD1: `approve
 
 A statement of the one pack's circuit as generated. Changed by: L3-OD1: `approve`.
 
-> **Who does it, and over which path (from the netlists at `fa777376`).** *Detector:* board E's sensor controller `U10`,
+> **Who does it, and over which path (from the netlists at `e2d276df`).** *Detector:* board E's sensor controller `U10`,
 > the pack gauge's only SMBus host (`gen_sch_e.py` line 264, `J_SMB`; line 581, `U10`'s GPIO2 and GPIO3 on `SMBD` and
 > `SMBC`), which runs on board E's always-on domain (the buck `U12`, line 565, its EN tied to the pack node `CELL_F`):
 > on the pack, and on an input, where the charger's system node holds the pack node through the sense resistor

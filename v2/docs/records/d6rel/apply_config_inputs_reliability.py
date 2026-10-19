@@ -24,7 +24,7 @@ with `ast` and reads the entry back (and that no other entry changed), and refus
 the list later is added to the entry by hand or by a successor of this script: the instrument sees what is declared.
 
 Usage: apply_config_inputs_reliability.py [--root <tree>]
-Prototype work: nothing here has been built or measured. An AI review, never a qualified review.
+Prototype work: nothing here has been built or measured. An automated review, never a qualified review.
 """
 import os, sys, ast
 

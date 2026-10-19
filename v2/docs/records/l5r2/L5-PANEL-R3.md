@@ -1,10 +1,10 @@
 # L5-R3: the panel's contract against its firmware (MESHSAT-1357, 3 October 2026)
 
-Prototype design: nothing here has been built, powered or measured. Layer 5's third round on `fnd/l5r2` from `4499ee53`, owning
+Prototype design: nothing here has been built, powered or measured. Layer 5's third round on `fnd/l5r2` from `2e11740a`, owning
 `v2/docs/PANEL.md`, `v2/docs/ASSEMBLY.md` and `v2/docs/HW-FW-CONTRACT.md` for the round. Two inputs come from commits not in this
 branch's history and are copied verbatim into `inputs/` with their source and sha256: the panel firmware author's findings F-01 to
-F-13 and session choices S-01 to S-36 (`fnd/fw-panel` at `d5c0ba29`, `v2/firmware/panel/README.md` sections 5 and 6), and record
-l8r2's section 3d, board C's PI button (`fnd/l8r2` at `a5e26ab9`). `apply_l5r3.py` wrote the three files once; `l5r3_panel.py`
+F-13 and session choices S-01 to S-36 (`fnd/fw-panel` at `5bdf35ba`, `v2/firmware/panel/README.md` sections 5 and 6), and record
+l8r2's section 3d, board C's PI button (`fnd/l8r2` at `f488b9a9`). `apply_l5r3.py` wrote the three files once; `l5r3_panel.py`
 reads them back (its output pins every file and refuses an excerpt not in its target, a figure no source prints, a finding without
 a resolution or a session choice unaccounted for). No requirement is changed, nothing is bought or sent, no generator is edited.
 
@@ -65,7 +65,7 @@ other texts stay the firmware's.
 | R3-F12 | F-12 the margin hold's SOS text | PANEL.md | "SOS QUEUED: MARGIN HOLD, COOLING" | fw-panel-sections-5-6-42c27369.md; the firmware's F-12 and S-12 | RULE (SESSION; the firmware's text adopted) | none | 5.11 |
 | R3-F12h | F-12 in FW-C15 | HW-FW-CONTRACT.md | the e-paper showing "SOS QUEUED: MARGIN HOLD, COOLING" (F-12 | fw-panel-sections-5-6-42c27369.md; the firmware's F-12 | RULE (SESSION) | none | 5.11 |
 | R3-F13 | F-13 the HDMI select encoding | PANEL.md | slot 1 = both selects low; slot 2 = `HDMI_SEL1` high, `HDMI_SEL2` low; slot 3 = `HDMI_SEL2` high | gen_sch_b.py; fw-panel-sections-5-6-42c27369.md; gen_sch_b.py lines 1336 to 1348 (U3, U4, U519, U520) with TI SCDS343F Table 1 | NETLIST (the generator) | a change of board B's display switches | 5.8, 5.13 |
-| R3-PI1 | PI: PANEL.md section 1 | PANEL.md | DRAFTED by record l8r2 at `a5e26ab9` | l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 1 | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.7, 5.13 |
+| R3-PI1 | PI: PANEL.md section 1 | PANEL.md | DRAFTED by record l8r2 at `f488b9a9` | l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 1 | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.7, 5.13 |
 | R3-PI4 | PI: PANEL.md section 4 | PANEL.md | PI_BTN_n, the PI button, low = pressed (PIJ2_A2; R57 10 k to +3V3, C27 100 nF to GND, tau 1.0 ms); raises EXP_INT on a change | l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 4 | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.7 |
 | R3-PI5 | PI: PANEL.md section 5 | PANEL.md | (read on U1 P1.3, PI_BTN_n, at every EXP_INT and the once-a-second poll | l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 5 | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.11 |
 | R3-PIA | PI: ASSEMBLY.md line 127 | ASSEMBLY.md | (the panel controller reads it on U1 P1.3; nothing leaves the backer | l8r2-section-3d-29ffb518.md; l8r2 3d's text for ASSEMBLY.md | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.13 |

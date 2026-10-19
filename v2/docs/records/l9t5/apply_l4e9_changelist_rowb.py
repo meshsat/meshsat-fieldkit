@@ -19,7 +19,7 @@ THE CLASS AGAINST THE ACCEPTANCE (W167 on W163-N5, SESSION W167-D3: noted, not r
 B (DRAFTED), no open question" because L4-E9's own cons_classes gives that class and next action to every DRAFTED step-B implementation
 row outside its RE_ROWS, DESK_ROWS, KED_ROWS, UDC_ROWS and PHY_EXTRA tables, and test_l9t5 holds the applied register to it; the class
 names the row's STEP (a defined correction that only owes its application), never its acceptance. Read each Acceptance cell for the
-conditions: R-247 PROVISIONAL (RE-5 and HO-C read SUPPORTED by row (b)'s focused check and recheck, AI reviews); R-248 CONDITIONAL on
+conditions: R-247 PROVISIONAL (RE-5 and HO-C read SUPPORTED by row (b)'s focused check and recheck, automated reviews); R-248 CONDITIONAL on
 E-17 at the limiter's maximum and at HO-D's pass top; R-249 PROVISIONAL with FW-B22's hold-off (V-B23's vector corrected, W163-N2);
 R-250 CONDITIONAL on E-17 at the pass top, W146-F10 and F6's assumption. Restating a class here would need L4-E9's generator tables
 (PHY_EXTRA or RE_ROWS) and test_l9t5's class rule changed together, the integrator's and L4-E9's owner's work at set 33; the page's

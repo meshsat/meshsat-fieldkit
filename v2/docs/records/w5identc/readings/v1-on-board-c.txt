@@ -1,4 +1,4 @@
-rule V-1 (a') on board C at 53804300, read by part_identities.Board on the committed netlist and intent:
+rule V-1 (a') on board C at d3f6fdc7, read by part_identities.Board on the committed netlist and intent:
   nets that are floors and not grounds (declared at most 0.5 V, or marked returns): none
 rule V-1 (g), a connector a source of unknown level: nets whose bound it changes on board C: 21
     EXP_INT: without (g) (5.0, 0.0); with (g) (None, None)

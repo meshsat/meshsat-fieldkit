@@ -1,15 +1,15 @@
-**HO-E COMPARISON (Layer 4 task L4A-59, 7 October 2026; W140, branch `fnd/l4hoe` from `543b33df`; corrected by W145 the same day on the focused check L4A-100, W144's findings F1 to F11; its reset-loop hold made indifferent to S5 by W148 the same day, W145's finding W145-F1; corrected by W152 the same day on the targeted recheck W150's F1 to F6, section 9b; the limiter's band restated on W159's envelope, 0.5878 A, by W167 the same day on W163-N4, section 1): DONE: three approaches compared on the makers' pages (H-1 DROPS OUT: RM0433 Rev 8, DS12110 Rev 11 and AN4938 Rev 7 show the voltage scale chosen by software, no strap and no option byte, PWR_CR3's POR-only lock recorded; H-3 NOT ESTABLISHED ON PRINTED FIGURES: no package and no printed heat path reaches the 15.57 C/W VOS0 needs at 76.25 C air at one supply corner; H-2 STANDS as the one design, PROVISIONAL: a drafted VCORE monitor per supervisor that resets the controller on any VOS1 or VOS0 entry it registers, whatever its firmware does); the reset loop's hold compared (section 11) and SESSION W148-1 taken (a TPS3703F6050 hold stage per monitor, its printed 14 ms minimum for any manual-reset pulse of 1 us, S5 retired); W152's corrections: C2 a pair (S1's limits by U-02's local air: 76.25 C as written, none for the loop at or over 78.81 C, no ending at or over 79.32 C), the loop's rise on T10's feedback (0.806 K, S1's loop limit 3.05 K/W), S-k worded for the excursions the monitor registers and the self-reset loop its own row S-m CONDITIONAL on S2 extended (row R-4), the hold check on the LSI-clocked RTC at 12 ms, the reader reading FAIL on R812 not fitted (a tenth mutation), and the clerical items; the selection SESSION W140-1, the decisions of W145, W148 and W152 with their authority fields; the draft `apply_gen_sch_b_vcoremon.py` (24 parts) composed on board B (also with W137's canmb and W138's regstage, either order), read by pin, ten mutations FAIL, refusals; the firmware row FW-B23 (`apply_hw_fw_contract_hoe.py`); the register rows (`HO-E-REGISTER-ROWS.md`, R-1 to R-4); the test module `test_l9t5_hoe.py`. NOT DONE: nothing applied; nothing physical (S1 to S4, S2 extended); no further check (the focused check and the targeted recheck are spent). NEXT: the coordinator's clerical and integration reading of W152's corrections.**
+**HO-E COMPARISON (Layer 4 task L4A-59, 7 October 2026; W140, branch `fnd/l4hoe` from `0e3471b0`; corrected by W145 the same day on the focused check L4A-100, W144's findings F1 to F11; its reset-loop hold made indifferent to S5 by W148 the same day, W145's finding W145-F1; corrected by W152 the same day on the targeted recheck W150's F1 to F6, section 9b; the limiter's band restated on W159's envelope, 0.5878 A, by W167 the same day on W163-N4, section 1): DONE: three approaches compared on the makers' pages (H-1 DROPS OUT: RM0433 Rev 8, DS12110 Rev 11 and AN4938 Rev 7 show the voltage scale chosen by software, no strap and no option byte, PWR_CR3's POR-only lock recorded; H-3 NOT ESTABLISHED ON PRINTED FIGURES: no package and no printed heat path reaches the 15.57 C/W VOS0 needs at 76.25 C air at one supply corner; H-2 STANDS as the one design, PROVISIONAL: a drafted VCORE monitor per supervisor that resets the controller on any VOS1 or VOS0 entry it registers, whatever its firmware does); the reset loop's hold compared (section 11) and SESSION W148-1 taken (a TPS3703F6050 hold stage per monitor, its printed 14 ms minimum for any manual-reset pulse of 1 us, S5 retired); W152's corrections: C2 a pair (S1's limits by U-02's local air: 76.25 C as written, none for the loop at or over 78.81 C, no ending at or over 79.32 C), the loop's rise on T10's feedback (0.806 K, S1's loop limit 3.05 K/W), S-k worded for the excursions the monitor registers and the self-reset loop its own row S-m CONDITIONAL on S2 extended (row R-4), the hold check on the LSI-clocked RTC at 12 ms, the reader reading FAIL on R812 not fitted (a tenth mutation), and the clerical items; the selection SESSION W140-1, the decisions of W145, W148 and W152 with their authority fields; the draft `apply_gen_sch_b_vcoremon.py` (24 parts) composed on board B (also with W137's canmb and W138's regstage, either order), read by pin, ten mutations FAIL, refusals; the firmware row FW-B23 (`apply_hw_fw_contract_hoe.py`); the register rows (`HO-E-REGISTER-ROWS.md`, R-1 to R-4); the test module `test_l9t5_hoe.py`. NOT DONE: nothing applied; nothing physical (S1 to S4, S2 extended); no further check (the focused check and the targeted recheck are spent). NEXT: the coordinator's clerical and integration reading of W152's corrections.**
 
 # HO-E: the supervisor's STM32H743 past its own 105 C VOS0 limit, compared and selected
 
-Record l9t5, Layer 4 task L4A-59 of the AI-scope register (`_runs/l4ai/REGISTER.draft.md`, draft 2, rows L4A-59 and L4A-100, written on
+Record l9t5, Layer 4 task L4A-59 of the automation-scope register (`_runs/l4ai/REGISTER.draft.md`, draft 2, rows L4A-59 and L4A-100, written on
 W127's check 1a and finding 2). Prototype design: nothing in this kit has been built, bought, powered or measured, and no figure here is
 a measurement. Every figure is printed by `l9t5_hoe.py` into `l9t5_hoe.out` ("OUT n" below is its section). Labels: PRINTED (a maker's
 limit or tested row), TYPICAL, DIAGRAM (read from a maker's drawn figure), DECLARED, DRAFTED (not applied), MODEL, ASSUMPTION, SESSION.
 This task closes no cx46 item: cx46 CORRECTIONS NOT CLOSED and Layer 4's DESK gate NOT PASSED stand. The focused check (W144,
 `_runs/assistant/w144chkhoe/REPORT-FULL-AS-RECEIVED.md`) read W140's page as SUPPORTED AS CONDITIONAL with conditions C1 to C5; section 9
 lists each finding and its correction here. The one targeted recheck (W150, `_runs/assistant/w150rechkhoe/REPORT-FULL-AS-RECEIVED.md`)
-read W148's tip `b22c8c95` as SUPPORTED AS CONDITIONAL (C1 met as a draft, S5 retired) with should-fix F1 to F3 and notes F4 to F6;
+read W148's tip `4ce2bbff` as SUPPORTED AS CONDITIONAL (C1 met as a draft, S5 retired) with should-fix F1 to F3 and notes F4 to F6;
 W152 corrected them (section 9b). Every thermal limit below is at ONE supply corner, the rail's top 3.3577 V (SESSION W145-4, W144's
 F8): W140 mixed T10's 3.3 V state with a rail-top step.
 
@@ -20,10 +20,10 @@ F8): W140 mixed T10's 3.3 V state with a rail-top step.
   own 76.25 C air and LQFP100's 45.0 C/W (DS12110 Rev 11 Table 222, p.344).
 - The 105 C is ST's: Table 112 note 5, p.210, "5. TJMax = 105 °C." on the VOS0 rows; Table 113, p.210, VOS0 Max TJ 105 C, VOS1 to VOS3
   125 C.
-- W138 (record l4reg, `fnd/l4reg` 2eee008d, filed in `inputs/`) selected a TPS2553-1 with IOS 0.4702 to 0.5704 A ahead of a
+- W138 (record l4reg, `fnd/l4reg` 9c470f60, filed in `inputs/`) selected a TPS2553-1 with IOS 0.4702 to 0.5704 A ahead of a
   TPS73733DCQRM3 (76.0 C/W) and removed round 6's rail trip; its L4REG-F7 hands the controller's protection to this task. The band
   this record uses is W159's envelope of TI's tested row and its Equation 1, 0.4702 to 0.5878 A (SESSION W159-D2; record l4reg at
-  `fnd/l4hod` a65d4418, filed in `inputs/` by W167 on W163-N4): at 0.5878 A all in the controller its junction would read 163.5 C
+  `fnd/l4hod` 6674dec2, filed in `inputs/` by W167 on W163-N4): at 0.5878 A all in the controller its junction would read 163.5 C
   (161.0 C at W138's 0.5704 A), and H-3's theta at that current is at most 14.82 C/W (W138's edge gave a larger figure).
 - On the printed maxima (Table 119, p.215, revision V) no VOS0 row has an operating point inside 105 C at this air. The largest printed
   VOS0 current at 105 C is Table 119's 550 mA (Table 120 prints 546, Table 121 504; p.216), inside the limiter's band. So HO-E is not a
@@ -335,7 +335,7 @@ limit at or over 78.81 C, no VOS0 ending at or over 79.32 C).
 
 ## 9b. W150's targeted recheck: its findings and their corrections (W152)
 
-W150 read `b22c8c95` as SUPPORTED AS CONDITIONAL: C1 met as a draft (the hold stage bounds the monitor's own loop for any fault length
+W150 read `4ce2bbff` as SUPPORTED AS CONDITIONAL: C1 met as a draft (the hold stage bounds the monitor's own loop for any fault length
 on printed minima; S5 truly retired), the draft composed in both orders, DRAWN, nine mutations FAIL, the `.out` reproduced. Its
 conditions C1' and C2' and its notes are corrected here; the verdict is not upgraded and no further check is spent (constitution 6:
 the focused check and the one targeted recheck are used; the coordinator verifies these as clerical and integration items).
@@ -387,5 +387,5 @@ feedback (W148 read 0.518 K open loop), inside the 3.05 K/W limit S1 is read at 
 independent checks of this selection; then HS-1a is the reversal. **S5's fate: RETIRED**, with W145's capacitor; V-B24's scope of the
 hold is a confirmation, not a gate. HO-E's acceptance stays CONDITIONAL on S1 and S2 (and C2, C3), as the brief requires; this narrows
 it, it upgrades nothing; W150's targeted recheck read it SUPPORTED AS CONDITIONAL, and W152's corrections (section 9b) add the
-self-reset loop's condition (S-m) and change no selection. AI review only where reviews are named; prototype design, nothing built or
+self-reset loop's condition (S-m) and change no selection. automated review only where reviews are named; prototype design, nothing built or
 measured.

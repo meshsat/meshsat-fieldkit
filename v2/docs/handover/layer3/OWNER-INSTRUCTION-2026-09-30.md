@@ -96,7 +96,7 @@ is re-read against it.
 **Superseded in part by D-28:** the holds on rows L3-OD1, L3-OD2 and L3-OD4 end with the closure, the rows answered or closed.
 
 Relayed by the coordinating session with the independent check of the first draft of L3-R2 (branch `fnd/l3r2` at
-`b4effa08`, "accepted: no"), introduced as "the owner's review of the draft table (30 Sep 2026), which is binding". The
+`7f7af2d0`, "accepted: no"), introduced as "the owner's review of the draft table (30 Sep 2026), which is binding". The
 five paragraphs below are as quoted there, word for word; the registry records them as owner ruling D-22.
 
 > "The voltage is an engineering input, not an author's preference. Establish the applicable supply range under load
@@ -299,21 +299,21 @@ for word, their omission mark included. The registry records them as owner rulin
 > unresolved engineering obligations explicitly ... Requirements completion must remain separate from demonstrated
 > hardware compliance."
 
-## The owner's instruction on the Codex worker and the decision register (30 September 2026), as quoted
+## The owner's instruction on the second worker and the decision register (30 September 2026), as quoted
 
 Relayed by the coordinating session into layer 3's closure pass, to be recorded in the decision register; it changes
 no requirement. The paragraph below is as quoted there, word for word, its omission marks included. The registry
 records it as owner ruling D-30. From this instruction on, this file together with the registry's `owner_rulings`
-(`v2/ecad/tools/pcb_requirements.yaml`) is the one decision register both agents consult; the Codex worker's side of it
-is `v2/docs/CODEX-WORKER.md` section 7 (on main since `46ff5c50`).
+(`v2/ecad/tools/pcb_requirements.yaml`) is the one decision register both agents consult; the second worker's side of it
+is `v2/docs/CODEX-WORKER.md` section 7 (on main since `858326a6`).
 
-> "Upgrade the existing Codex/GPT-6-Astra integration from a limited pilot to a standing engineering collaborator. ...
-> This authorises further bounded Astra assignments through the existing ChatGPT authentication and available
+> "Upgrade the existing second-worker integration from a limited pilot to a standing engineering collaborator. ...
+> This authorises further bounded the second worker assignments through the existing authentication with the maker and available
 > subscription allowance. It replaces the exhausted pilot-call count. Preserve existing spending, sandbox and
 > publication limits; no automatic paid-API fallback. The assistant remains the coordinator and integrator. ... Both agents
 > must consult the same authoritative decision register. Record my latest instructions there so I do not have to relay
-> them repeatedly. ... Astra cannot change my requirements or approve its own authored work. Agreement between agents
-> is not a substitute for calculations, sources or tests. Keep at most two active workers across the assistant and Codex,
+> them repeatedly. ... The second worker cannot change my requirements or approve its own authored work. Agreement between agents
+> is not a substitute for calculations, sources or tests. Keep at most two active workers across the assistant and the second worker,
 > with one author per worktree."
 
 ## The owner's operating instruction: one authoritative interpretation (30 September 2026), as quoted
@@ -323,7 +323,7 @@ there, word for word. The registry records them as owner ruling D-31. The curren
 file is kept under it.
 
 > "Maintain one authoritative interpretation of the product. Keep a concise current owner brief in the existing
-> decision register, with links to the original decisions. Both the assistant and Astra must use it. The current constraints
+> decision register, with links to the original decisions. Both the assistant and the second worker must use it. The current constraints
 > are: Battery storage inside the Peli 1450; NO external battery. Battery and solar required; HF and tablet retained.
 > 48-72 hours is a baseline design objective under a stated operating profile. Optional tablet charging consumes
 > available energy and reduces endurance, including below that target. All other explicitly approved requirements
@@ -453,7 +453,7 @@ layer3_baseline`): a CONDITIONAL authorisation.
   FEA-008 carries the layer 4 component-selection and thermal-design obligation, each mode with its gap, its
   uncertainty and its closure criterion (`cell_modes`, LO-01a to LO-01h). No genuine contradiction between mandatory
   requirements remains, so no owner decision is asked.
-- **The Codex worker (D-30)**: it changes no requirement; this file and the registry's `owner_rulings` are the one
+- **The second worker (D-30)**: it changes no requirement; this file and the registry's `owner_rulings` are the one
   decision register both agents consult, and nothing either agent authors is an approval.
 - **One authoritative interpretation (D-31)**: the current owner brief at the top of this file is that interpretation;
   every line of it names the ruling that carries it, and an instruction a later ruling supersedes stays in place with a

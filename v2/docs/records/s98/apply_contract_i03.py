@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """IF-AB-POWER's `currents` rows in tools/pcb_interfaces.yaml rewritten to the interim alignment of S-98 (stream s98,
-MESHSAT-1357, 28 September 2026; finding I-03, the Codex pilot's record v2/docs/records/cx1/ and its two checks).
+MESHSAT-1357, 28 September 2026; finding I-03, the second-worker pilot's record v2/docs/records/cx1/ and its two checks).
 
 The integrator runs it (the contract file is the integrator's; this stream owns the two generators only), AFTER the two
 generators carry the alignment (fnd/s98) and BEFORE the box re-take: the file is a configuration input of interfaces.py,

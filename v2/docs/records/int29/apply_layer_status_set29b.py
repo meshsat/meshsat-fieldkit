@@ -17,7 +17,7 @@ EDITS = [
     ("CONDITIONAL on C4-1 to C4-6, the coordinator's closing check CLOSED AS CONDITIONAL (`records/l8r2/checks/check-l9pf02-coordinator.md`), "
      "OPEN in the register until the drafts are applied and C4-1 to C4-6 pass.",
      "CONDITIONAL on C4-1 to C4-6. The collaborator's focused check read NOT CONFIRMED and its targeted recheck NOT CLOSED "
-     "(`records/l8r2/checks/astra-check-l9pf02-1.md` and `-2.md`, AI reviews); each item was corrected afterwards and no independent "
+     "(`records/l8r2/checks/astra-check-l9pf02-1.md` and `-2.md`, automated reviews); each item was corrected afterwards and no independent "
      "check has read the corrections, so the correction is UNVERIFIED; the coordinator's own reading (`records/l8r2/checks/check-l9pf02-coordinator.md`, "
      "not an independent check) finds the items answered, CONDITIONAL on C4-1 to C4-6. OPEN in the register until the drafts are applied "
      "and C4-1 to C4-6 pass."),

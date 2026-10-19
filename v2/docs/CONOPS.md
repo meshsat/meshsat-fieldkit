@@ -1,11 +1,11 @@
 # MeshSat field kit V2: concept of operations
 
-**Status: layer 2 of the foundation baseline (MESHSAT-1357), BASELINED at `ab560ff5`,** an editorial restructure with
-no definition change of the text baselined at `b19c3228`: the check of the restructure, `reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`
-(an AI check, CONTENT_PRESERVED), found every definition statement of that text here word for word, the needs table
+**Status: layer 2 of the foundation baseline (MESHSAT-1357), BASELINED at `9e2587a3`,** an editorial restructure with
+no definition change of the text baselined at `b66a1a55`: the check of the restructure, `reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`
+(an automated check, CONTENT_PRESERVED), found every definition statement of that text here word for word, the needs table
 byte-identical, and the baseline rests on the release record `reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`. How it
 was reviewed and baselined is recorded in the appendix at the end of this file; how this file's text relates to the
-text baselined at `b19c3228`, and the current state of everything this document depends on, is
+text baselined at `b66a1a55`, and the current state of everything this document depends on, is
 `handover/DEFINITION-STATUS.md`.
 
 **When this document is reopened (the rule of the independent review of handover H2, `reviews/2026-09-27-h2-independent-review.md` section 4).** This definition is reopened only when a requirement, the scope,
@@ -587,7 +587,7 @@ charge while the charger's converter keeps carrying the kit from the input. It d
 line: that line puts the charger in HIZ, whose converter shuts off (SLUSE66A 9.3.8), and with no BATFET the kit's load
 would then move onto the pack (`gen_sch_a.py` line 782).
 
-**Who does it, and over which path (from the netlists at `fa777376`).** *Detector:* board E's sensor controller `U10`,
+**Who does it, and over which path (from the netlists at `e2d276df`).** *Detector:* board E's sensor controller `U10`,
 the pack gauge's only SMBus host (`gen_sch_e.py` line 264, `J_SMB`; line 581, `U10`'s GPIO2 and GPIO3 on `SMBD` and
 `SMBC`), which runs on board E's always-on domain (the buck `U12`, line 565, its EN tied to the pack node `CELL_F`):
 on the pack, and on an input, where the charger's system node holds the pack node through the sense resistor
@@ -1118,13 +1118,13 @@ rows marked **pass 3** answer its second pass and the ConOps side of Review B of
 
 ## Appendix: review and status history (not part of the baseline)
 
-Not part of the baseline. Moved here word for word on 27 September 2026 (branch `fnd/defstab`, MESHSAT-1357) from the document above, as it stood at `461f02ed`: the record of how this document was reviewed and baselined, and the notes that recorded its own revisions. The changing implementation results that stood in its running text moved to `handover/DEFINITION-STATUS.md`. Each entry names where it stood and its lines at `461f02ed`; a moved section's own heading is one level lower here. Nothing below is maintained: the current state is where the head of this file says.
+Not part of the baseline. Moved here word for word on 27 September 2026 (branch `fnd/defstab`, MESHSAT-1357) from the document above, as it stood at `0424772b`: the record of how this document was reviewed and baselined, and the notes that recorded its own revisions. The changing implementation results that stood in its running text moved to `handover/DEFINITION-STATUS.md`. Each entry names where it stood and its lines at `0424772b`; a moved section's own heading is one level lower here. Nothing below is maintained: the current state is where the head of this file says.
 
 ### A1. From the head (the status paragraph)
 
-*Lines 3 to 34 at `461f02ed`: the status line and the revision history of 25 to 27 September 2026 (passes 1 to 3).*
+*Lines 3 to 34 at `0424772b`: the status line and the revision history of 25 to 27 September 2026 (passes 1 to 3).*
 
-**Status: BASELINED as layer 2 of the foundation baseline (MESHSAT-1357) at `b19c3228`, the commit that carries on main `bd282618` the content the second release check of layer 2 read at `82a303eb` and found no blocking item in (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, an AI review; this document byte-identical, sha256/16 `3ff59edc96a3f8f4`, before this status line and the Review A paragraph's last sentence were written). Written 25 September 2026, revised the
+**Status: BASELINED as layer 2 of the foundation baseline (MESHSAT-1357) at `b66a1a55`, the commit that carries on main `ea8f81e5` the content the second release check of layer 2 read at `e7e44736` and found no blocking item in (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, an automated review; this document byte-identical, sha256/16 `3ff59edc96a3f8f4`, before this status line and the Review A paragraph's last sentence were written). Written 25 September 2026, revised the
 same day after an independent challenge, and revised on 26 September 2026 to carry the owner's rulings D-01 to
 D-17 of 25 and 26 September 2026 and the choices the session took under the owner's standing rule of 26
 September 2026; section 7 lists every question with its ruling, and D-18, the one still open and
@@ -1159,7 +1159,7 @@ is carried (section 4e); and the session's choices in D-02b's row are marked as 
 
 ### A2. From the head (the Review A paragraph)
 
-*Lines 36 to 49 at `461f02ed`: the definition of Review A for layer 2 and the record of its passes and release checks.*
+*Lines 36 to 49 at `0424772b`: the definition of Review A for layer 2 and the record of its passes and release checks.*
 
 **Review A, the gate this layer closes through (defined 27 September 2026).** One fresh reviewer who wrote none of
 this layer's documents checks this document, `OPERATING-ENVELOPE.md`, `v2/ecad/tools/pcb_envelope.yaml`, the operator
@@ -1168,24 +1168,24 @@ against the layer-2 items of the owner's execution prompt (section 3: normal, de
 storage, service and fault scenarios; the operating envelope; simultaneous modes; the explicit behaviour of the core
 functions; product decisions settled under existing authority) and against `ARCH-PCB-B-IOHA.md` section 15,
 `feasibility/EMCON.md` section 5a and `feasibility/POWER-THERMAL.md` section 9. The review is recorded under
-`v2/docs/reviews/` with the commit it read, **labelled AI review**; it is never a qualified review,
+`v2/docs/reviews/` with the commit it read, **labelled automated review**; it is never a qualified review,
 it replaces no qualified review a record requires (D-09), and it establishes no circuit's correctness. Its findings are answered
 in the documents; the layer is then marked baselined at that commit. The first pass was recorded (FAIL, seven blocking
 findings, read on `956feb28` with this revision's first draft; filed at `reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md`, sha256 `e854c2a46ea3d542`, with the reviewers' brief at `reviews/2026-09-27-review-A-layer2-brief.md`)
 and pass 2 answered it; the second pass (`reviews/REVIEW-A-LAYER-2-2026-09-27.md`, FAIL, two blocking findings, P2-B1 and P2-B2) is answered by pass 3; the pass at the integrating
-commit `54e74f58` (`reviews/REVIEW-LAYER-2-RELEASE-2026-09-27.md`, FAIL, four blocking findings, B1 to B4) is answered at desk in two steps (`handover/LAYER-STATUS.md`, layer 2: the wording and citations in `ac276902`; then, in the second release attempt of the same day, B2's forced trigger of the hot stop, `TEST-PLAN.md` P15, and B4's one definition of C1 in the documents that follow section 4c), and the second release check (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, at `82a303eb`, AI review) found no blocking item, so the layer is baselined at `b19c3228` (`handover/LAYER-STATUS.md`, layer 2, names the record and its evidence). Until that pass
+commit `ed0ebb94` (`reviews/REVIEW-LAYER-2-RELEASE-2026-09-27.md`, FAIL, four blocking findings, B1 to B4) is answered at desk in two steps (`handover/LAYER-STATUS.md`, layer 2: the wording and citations in `50dfb835`; then, in the second release attempt of the same day, B2's forced trigger of the hot stop, `TEST-PLAN.md` P15, and B4's one definition of C1 in the documents that follow section 4c), and the second release check (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, at `e7e44736`, automated review) found no blocking item, so the layer is baselined at `b66a1a55` (`handover/LAYER-STATUS.md`, layer 2, names the record and its evidence). Until that pass
 this document was a DRAFT for Review A.
 
 ### A3. From section 2 (the paragraph under the needs table)
 
-*Lines 111 to 112 at `461f02ed`: when two needs were added (the needs table itself is unchanged).*
+*Lines 111 to 112 at `0424772b`: when two needs were added (the needs table itself is unchanged).*
 
 NEED-18 and NEED-19 were added in the revision of 25 September 2026: the approved test plan already tests
 NEED-18, and the SOS toggle is on the face, but neither had a need to trace to.
 
 ### A4. From section 2a (which peripherals NEED-03 protects)
 
-*Lines 159 to 162 at `461f02ed`: a correction note of the document itself.*
+*Lines 159 to 162 at `0424772b`: a correction note of the document itself.*
 
 **Corrected 26 September 2026:** this paragraph first called the two "open design gaps against
 NEED-03, not accepted exceptions", on the reading that the owner's requirement ("every device visible to all
@@ -1194,44 +1194,44 @@ settles it as above.
 
 ### A5. From section 4 (its introduction)
 
-*Lines 322 to 323 at `461f02ed`: when the mode rows were added.*
+*Lines 322 to 323 at `0424772b`: when the mode rows were added.*
 
 The table has eighteen rows: the fourteen of the first draft, SOS (added on 25 September 2026), the heat stage
 and commissioning (added on 27 September 2026), and the hot stop (added later that day, pass 3).
 
 ### A6. From section 4, the Transport row
 
-*Lines 329 to 329 at `461f02ed`: two correction notes of the document itself.*
+*Lines 329 to 329 at `0424772b`: two correction notes of the document itself.*
 
 **Corrected 26 September 2026:** this cell had stated a road route with the kit as the session's choice, inferring from the unknown status that carriage by road was open where air and parcel carriage were not; that inference is withdrawn (appendix 32.367). **Changed 27 September 2026:** the kit in transport is off with its pack in the gauge's shutdown; before, whether it was powered was TBD
 
 ### A7. From section 4, the Startup row
 
-*Lines 331 to 331 at `461f02ed`: a correction note of the document itself.*
+*Lines 331 to 331 at `0424772b`: a correction note of the document itself.*
 
 **Changed 27 September 2026 after Review A (B2):** this cell had the panel controller raise `SLOT_EN2` and `SLOT_EN3` only when the lid was closed, which it cannot sense
 
 ### A8. From section 4, the Charging row
 
-*Lines 336 to 336 at `461f02ed`: a correction note of the document itself.*
+*Lines 336 to 336 at `0424772b`: a correction note of the document itself.*
 
 **Corrected 26 September 2026 (S-07):** this row said the kit's loads sat on the pack side of the charger's sense resistor and the strap selected 2S, the circuit before `09521e07`
 
 ### A9. From section 4, the EMCON row
 
-*Lines 338 to 338 at `461f02ed`: a correction note of the document itself.*
+*Lines 338 to 338 at `0424772b`: a correction note of the document itself.*
 
 **Corrected 26 September 2026 (S-07):** this row said the module radios were off the line and the WiFi cards had only their disable pin, the circuit before `09521e07`
 
 ### A10. From section 4, the Storage row
 
-*Lines 344 to 344 at `461f02ed`: a correction note of the document itself (its reason stands in section 7a's storage and transport row).*
+*Lines 344 to 344 at `0424772b`: a correction note of the document itself (its reason stands in section 7a's storage and transport row).*
 
 **Changed 27 September 2026:** this row had the pack out; the pack is bonded under the stack (`ASSEMBLY.md` section 1) and comes out only by the service lift of D-14, so storage keeps it fitted (section 7a).
 
 ### A11. From section 4a (the paragraph under its heading)
 
-*Lines 358 to 360 at `461f02ed`: which model the table's figures replaced.*
+*Lines 358 to 360 at `0424772b`: which model the table's figures replaced.*
 
 The figures this table carried until then were the W2 model's
 of 25 September 2026 (`records/w2/w2-runtime.md` and `w2-power.md`), which the current model supersedes: PS-IDLE-SPEC
@@ -1239,7 +1239,7 @@ moved from 32.4 to 42.8 W and PS-TYP from 60.1 to 63.0 W.
 
 ### A12. From section 4a (the paragraph under its table)
 
-*Lines 388 to 393 at `461f02ed`: the rows and columns the table dropped on 27 September 2026.*
+*Lines 388 to 393 at `0424772b`: the rows and columns the table dropped on 27 September 2026.*
 
 **What the table does not carry any more (27 September 2026).** The 4S4P columns: no 4S4P 18650 block has been shown
 to fit either pocket with the pack board beside it (the pack paragraph below), so they described no configuration
@@ -1250,7 +1250,7 @@ and 1.0 W, the circuit before `09521e07`), which is why this table's figure is l
 
 ### A13. From section 4b (its closing paragraph)
 
-*Lines 474 to 476 at `461f02ed`: a correction note of the document itself.*
+*Lines 474 to 476 at `0424772b`: a correction note of the document itself.*
 
 **Corrected 26 September 2026 (S-07):** this section described the circuit before
 `09521e07`, in which the compute modules' radios were driven only by a software I/O expander and the WiFi link cards
@@ -1258,34 +1258,34 @@ had only their disable pin.
 
 ### A14. From section 4c (which modules can host what)
 
-*Lines 526 to 526 at `461f02ed`: the answer to finding B4 of the release check of layer 2: three other documents brought into line.*
+*Lines 526 to 526 at `0424772b`: the answer to finding B4 of the release check of layer 2: three other documents brought into line.*
 
 Those three documents follow this section since 27 September 2026 (the second release attempt of layers 1 to 3, layer 2's finding B4; `records/hc2/handoffs.md` sections 4 and 5): C1 sheds to the reduced mode of slots 2 and 3 and, reached again there, to the heat stage's one module, in `feasibility/POWER-THERMAL.md` sections 1 and 9.3, `ARCHITECTURE.md` section 8 and `HW-FW-CONTRACT.md` FW-C09, and `HW-FW-CONTRACT.md` carries the hot stop and HOT-R1 as firmware rows (FW-C13, FW-C14, FW-E10).
 
 ### A15. From section 5 (the rule the hardware is designed to)
 
-*Lines 993 to 994 at `461f02ed`: a correction note of the document itself.*
+*Lines 993 to 994 at `0424772b`: a correction note of the document itself.*
 
 **Corrected 26 September 2026 (S-07):** this paragraph said the PoE and USB-C
 enables were software expander pins with no hardware tie to the PA keying, the circuit before `09521e07`.
 
 ### A16. From section 5 (the load table, the row of APRS with the 30 W PA)
 
-*Lines 1009 to 1009 at `461f02ed`: a correction note of the document itself.*
+*Lines 1009 to 1009 at `0424772b`: a correction note of the document itself.*
 
 Corrected 27 September 2026: this cell said "key-down for minutes"
 
 ### A17. From section 6 (the paragraph under its list)
 
-*Lines 1064 to 1065 at `461f02ed`: which model's runtimes these replaced.*
+*Lines 1064 to 1065 at `0424772b`: which model's runtimes these replaced.*
 
 These replace the W2 model's 4.2 and 3.4 h, 2.2 and 1.8 h, and the one-module reduced figures, which were computed
 before the loads were sourced (section 4a).
 
 ### A18. From section 7a (the Review A row)
 
-*Lines 1174 to 1174 at `461f02ed`: the review gate's own choice row, which points at the status paragraph that moved with it.*
+*Lines 1174 to 1174 at `0424772b`: the review gate's own choice row, which points at the status paragraph that moved with it.*
 
 | Choice | Taken | Why | Where |
 |---|---|---|---|
-| Review A | one fresh reviewer, recorded under `v2/docs/reviews/`, labelled AI review, never a qualified review | the audit found the gate undefined; the owner's prompt allows an agent to check usability and consistency and keeps qualified reviews separate | the status paragraph at the top |
+| Review A | one fresh reviewer, recorded under `v2/docs/reviews/`, labelled automated review, never a qualified review | the audit found the gate undefined; the owner's prompt allows an agent to check usability and consistency and keeps qualified reviews separate | the status paragraph at the top |

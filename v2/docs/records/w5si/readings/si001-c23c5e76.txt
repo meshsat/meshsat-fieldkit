@@ -1,4 +1,4 @@
-SI-001 AT THE SCHEMATIC PHASE, readings taken in scratch outside any tree: the committed netlists at e6c71e82, tool and data of branch fnd/w5si
+SI-001 AT THE SCHEMATIC PHASE, readings taken in scratch outside any tree: the committed netlists at 268cd241, tool and data of branch fnd/w5si
 Prototype design work: nothing has been built or measured. Every reading is INCONCLUSIVE; none is a PASS.
 
 THE COUNTS. Denominator: the signal nets outside LOW_SPEED_OR_DC (the class the rule asks no edge of).

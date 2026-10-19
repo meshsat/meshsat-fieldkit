@@ -205,7 +205,7 @@ group alone, so they decide inhibit_chain_<letter> and move neither check_contra
 verdict. 27 September 2026 (stream w4r): block_contract.py reads board A's CURRENT netlist and the J_DOCK
 land it names, mounted as gen_pcb_a3.py mounts it, and no longer board A's board file, whose committed layout
 predates EQ-16; it also judges every blind-mate power pin of board A's netlist against a target of its kind.
-On main bd282618's files the reading went from PASS 33 of 33 (against the board file) to FAIL, 28 of 38
+On main ea8f81e5's files the reading went from PASS 33 of 33 (against the board file) to FAIL, 28 of 38
 (against the netlist): E5's targets under J_DOCK pins 1 to 4 and their wire lands still carry VIN_RAW and no
 target takes J_VR1 to J_VR4 or J_VN1 to J_VN4 (S-74). The same reading decides INT-001 on E5 (its row's
 verdict_by_board and _verdict_by_board_why).
@@ -1421,7 +1421,7 @@ decided nets are the USB 2.0 lines (0.5 ns high speed, 4 ns full speed, both fro
 transcription). Every one is answered in the netlist except board D's HUB_DM4 and HUB_DP4, which carry no
 impedance target (board D's USB class has none) and no series resistor, so a layout must hold them under
 their critical length or the schematic gives them one. No reading moved class: all six were INCONCLUSIVE
-already. 28 September 2026 (streams w5si and w5si2, MESHSAT-1357, layer 9, after two AI reviews, neither a
+already. 28 September 2026 (streams w5si and w5si2, MESHSAT-1357, layer 9, after two automated reviews, neither a
 qualified engineering review): THE EDGE RATES ARE DATA. tools/pcb_edge_rates.yaml (sha256/16 0689086680f7a4a4
 when this paragraph was written), a configuration input of the edge_length verdict, holds every edge the
 reading uses. Each record carries its document with the sha256/16 of the held file, the page or the IBIS
@@ -1757,7 +1757,7 @@ move from FAIL (they inherited the EMCON_HW line's FAIL, the path of the line th
 UNDECIDED on round 8's netlist; nothing else moved against 38b98de4's readings, and the verdicts per board
 are the same. Board C's and board P's round 8 netlists, committed after this, are read at the consolidated
 re-take. READING WITH EQ-18's ROW (stream w3t, 27 September 2026, verdicts written to the stream's scratch)
-on main 78808fef's six netlists (A 3a786cf3, B adcc3c67, C 11eabc2d, D 0dad82b4, E f3c1ad61, P 085f8333):
+on main 0598e8e5's six netlists (A 3a786cf3, B adcc3c67, C 11eabc2d, D 0dad82b4, E f3c1ad61, P 085f8333):
 inhibit_chain A FAIL (1 fail, 6 pass, 2 undecided), B FAIL (11 fail, 6 pass, 3 undecided), C FAIL (1 fail, 5
 pass), D FAIL (2 fail, 6 pass), E PASS, P PASS, where the file before the row read A INCONCLUSIVE (5 pass, 4
 undecided), B FAIL (10 fail, 3 pass, 7 undecided), C INCONCLUSIVE (4 pass, 2 undecided), D INCONCLUSIVE (6
@@ -1773,7 +1773,7 @@ which reads the line when only board C is off): a FAIL under that convention, no
 item W3T-F1 in pcb_requirements.yaml, corrected at the r8int5 integration from the independent check). FIXED
 ON BOARD C BY STREAM w4c (EQ-25, 27 September 2026, SC-67, which closes S-64; verdicts in the stream's
 scratch on the KiCad box): R14 2.2k 1 percent and R50 10k 1 percent on board C's candidate netlist
-3fddbb3edcd4248a, the other five at main bd282618: the TX_INHIBIT_n line PASS (0.243 V with board C
+3fddbb3edcd4248a, the other five at main ea8f81e5: the TX_INHIBIT_n line PASS (0.243 V with board C
 unpowered, which read 1.085 V; 0.178 V with the A-D mezzanine out as well, which read 1.103 V), inhibit_chain
 A INCONCLUSIVE (0 fail, 7 pass, 2 undecided), B FAIL (10 fail, 7 pass, 3 undecided), C PASS (6 of 6), D
 INCONCLUSIVE (0 fail, 7 pass, 1 undecided: the SA868 keying back to its own UNDECIDED, the SA_PTT_n threshold
@@ -1858,7 +1858,7 @@ netlist instead of its board file, because board A's committed layout predates E
 from that same layout, so the old reading's PASS 33 of 33 compared two stale files with each other. The land
 mounted as the tool mounts it gives the same twelve pad offsets as J_DOCK on board A's committed board file
 (58e26c67987b1daa, KiCad 9.0.9 on the box), so the geometry is unchanged and only the source of the nets
-moved. Re-taken in scratch on the box with the re-take driver on main bd282618's files (E5 686b29a734c55b9a,
+moved. Re-taken in scratch on the box with the re-take driver on main ea8f81e5's files (E5 686b29a734c55b9a,
 board A's netlist da05dc02bc1e612f): check_contracts_e5 FAIL, 28 of 38 checks passing, where main's tool on
 the same files read PASS 33 of 33 against board A's board file. The ten failures: the four targets under
 J_DOCK pins 1 to 4 and their four wire lands carry VIN_RAW where board A's netlist has GND, and board A's

@@ -15,7 +15,7 @@ THE COUNTS ARE NOT TYPED HERE. They are taken when the script runs, in memory, b
 declared netlist of each board OF THE TREE IT RUNS IN, so the paragraph describes the integrated netlists and not
 this stream's. Nothing is written by taking them. The sums are checked before the paragraph is composed.
 
-RE-ISSUED on the drafts check's B2 (AI review, 28 September 2026). The draft of 27 September wrote two sentences that
+RE-ISSUED on the drafts check's B2 (automated review, 28 September 2026). The draft of 27 September wrote two sentences that
 were typed and not read: "13 models filed under v2/vendor/ti/ibis and v2/vendor/st/ibis", and, of EVERY undecided net,
 "the nets no signal-class declaration names". With the models withheld it exited 0 and would have written both, false:
 of 470 undecided nets 73 had that reason and 397 waited on a model that was not in the tree. NOW NOTHING THE PARAGRAPH
@@ -130,7 +130,7 @@ def paragraph(rd, sha):
     assert non == tot("maker_edge_nets") + tot("bound_edge_nets") + tot("undecided_nets") + tot("contradicted_nets")
     verdicts = sorted({v for _L, _s, _c, v, _f in rd})
     text = (
-        "\n     28 September 2026 (streams w5si and w5si2, MESHSAT-1357, layer 9, after two AI reviews, neither a qualified"
+        "\n     28 September 2026 (streams w5si and w5si2, MESHSAT-1357, layer 9, after two automated reviews, neither a qualified"
         " engineering review): " + MARK + "."
         " tools/pcb_edge_rates.yaml (sha256/16 " + str(sha) + " when this paragraph was written), a configuration input of the"
         " edge_length verdict, holds every edge the reading uses. Each record carries its document with the sha256/16 of the"

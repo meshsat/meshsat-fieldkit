@@ -1,6 +1,6 @@
 # Registry draft text after stream s99a (for the integrator, the one writer of the shared files)
 
-Stream s99a, MESHSAT-1357, 28 September 2026. AI engineering work; prototype design, nothing built, ordered or
+Stream s99a, MESHSAT-1357, 28 September 2026. automated engineering work; prototype design, nothing built, ordered or
 measured. These texts supersede the matching parts of `v2/docs/records/s99/REGISTRY-DRAFT.md` where they differ (the
 wall limit, the declared peak and margin, U41's divider and voltage, the disposition word). Nothing here edits a
 shared file; the integrator lands them by its own apply script.

@@ -1,14 +1,14 @@
 # ENERGY-BASIS: the energy basis of layer 3's decisions L3-OD1, L3-OD2 and L3-OD4 (stream l3plane, MESHSAT-1357)
 
-**Second issue, 30 September 2026**, branch `fnd/l3plane` (from `fnd/int16` at `d79248c6`). It answers the independent
-check `CHECK-1` of the first issue (`c194cfd2`, accepted: no), which found two blocking items (B1, B2) and ten minors
+**Second issue, 30 September 2026**, branch `fnd/l3plane` (from `fnd/int16` at `1b5de945`). It answers the independent
+check `CHECK-1` of the first issue (`f328bf42`, accepted: no), which found two blocking items (B1, B2) and ten minors
 (section 11 maps each to its answer). It also answers the owner's instruction of the same day on the weather basis: the
 modelled historical coverage of all three lids on the corrected inputs (section 8), decision L3-OD6 as a quantified choice
 (section 8a), and a bounded table of credible improvements (section 8b). **Third issue, 30 September 2026:** the
-independent check `CHECK-2` of `24a2a9a5` accepted the second issue with seven minors; this issue answers them (section 11),
+independent check `CHECK-2` of `bfbf90bd` accepted the second issue with seven minors; this issue answers them (section 11),
 and three change figures the owner sees: the cell counts and multiples of section 8a, and one coverage row of section 8.
-**Fourth issue, 30 September 2026:** it carries the owner's amendments of that day and CHECK-3 of `a9761fcb` (stream r11dep).
-CHECK-4 of `cf9e3909` accepted it with five minors. They move one set of figures here, the derated variant's, now at 4.00 A
+**Fourth issue, 30 September 2026:** it carries the owner's amendments of that day and CHECK-3 of `ce6a788a` (stream r11dep).
+CHECK-4 of `4d16c7cc` accepted it with five minors. They move one set of figures here, the derated variant's, now at 4.00 A
 (`three_cases.out` regenerated), and add the collapse bound's limits to section 0.
 - **Three power-path cases are kept apart:** AS DRAWN, RESISTOR-ONLY and the CORRECTED PATH, with the DERATED VARIANT beside
   AS DRAWN (section 0).
@@ -16,7 +16,7 @@ CHECK-4 of `cf9e3909` accepted it with five minors. They move one set of figures
   listed prominently in section 0, and its tables are labelled so.
 - **New figures:** `three_cases.py` gives M1 and the coverage for the other cases. No other output of this folder moves.
 
-**What this page is.** It is the stream's own analysis for the owner's decisions, AI arithmetic, not a qualified review and
+**What this page is.** It is the stream's own analysis for the owner's decisions, automated arithmetic, not a qualified review and
 not the independent check. It is not a decision:
 - no requirement, record or decision is changed (`pcb_requirements.yaml` is untouched);
 - every operating condition below is PROPOSED, or CONDITIONAL where it rests on an undocumented figure, and none is accepted;

@@ -1,7 +1,7 @@
 # Stream a1mech: running log (MESHSAT-1357, Option A(i) mechanical work package)
 
-Worker: one assistant author, worktree `a1mech`, branch `fnd/a1mech` from `d77b2a51`. Brief:
-`_runs/assistant/a1mech/20260929T0228/BRIEF.md`. Prototype design, AI review: nothing built, bought or fitted.
+Worker: one assistant author, worktree `a1mech`, branch `fnd/a1mech` from `0d92e4a6`. Brief:
+`_runs/assistant/a1mech/20260929T0228/BRIEF.md`. Prototype design, automated review: nothing built, bought or fitted.
 
 - 02:11 CEST: brief and WORKER-RULES read; ENERGY-RECONCILIATION sections 8 and 9, CASE-MARGINS sections 2 and 3 (the M rows),
   ASSEMBLY steps 10 and 11, the r2 QMX set and its check record, the lid STEP's face list, panel1450's face parts read.
@@ -33,22 +33,22 @@ Worker: one assistant author, worktree `a1mech`, branch `fnd/a1mech` from `d77b2
 - 02:52: the plate-side harness tie moved from the rebated band (5.0 wide under the lid wall at Y 130.9: a 4.4 lead does not fit)
   to the full face at Y 122; the lead grows to 169.7, bending at R 94 to 102. A tipping-line sensitivity added (feet 14.5 further
   in: 5.7 degrees at 100 degrees of opening). Hand counts of two other constructions (holders, cells along Y) recorded as ESTIMATE.
-- 02:53: the solids and their check re-run on the box at `2f1b4223`: PASS for A, B, C, C10, D, both controls fail as they must.
+- 02:53: the solids and their check re-run on the box at `659dccf7`: PASS for A, B, C, C10, D, both controls fail as they must.
 - 02:54: `DECISION-A1.md` (274 words) drafted for the integrator; the lid's growth stated from 1.4 kg (shell and QMX set).
 - 02:55: the QMX DC lead's start corrected to the jack's place (X 106.3: the unit spans X 95.6 to 158.6, its knob edge west, the
   DC jack 10.2 to 11.2 from it; the first issue used 94.5); the case's centre of mass printed for the central estimate.
 - 02:56: the light toggle's height read from NKK's sheet (M2044SD3A01: S bat 10.5 on a D3 bushing 8.9, 16.40 above the face) in
   place of the APEM bound; no arrangement moves (it lies under no lid item). README: REQ-023's margin, the lid pack's temperature
   handed to the thermal and energy streams.
-- 02:57: the solids and their check re-run on the box at `ce319a8b`: PASS for A, B,
+- 02:57: the solids and their check re-run on the box at `6bb241a8`: PASS for A, B,
   C, C10 and D, both controls fail as they must. The box's `/root/a1mech/` keeps only this stream's clone and outputs.
 - 02:59: a sensitivity of the counts to the module's INFERRED allowances added to the generator (most and least favourable
   settings, every face row re-judged): A 35, B 56, C 58 at both ends; C10 47 and 45; D 77 and 74. The finding does not hinge on them.
-- 03:00: the solids and their check re-run at `2163bf2f`, where `lid_pack_a1.py` has its final content: PASS, both controls fail.
-- 03:15 to 03:25: correction pass after the independent AI check (`_scratch/chk-a1mech/CHECK.md`, acceptable: no). B1: the rule
+- 03:00: the solids and their check re-run at `e568572a`, where `lid_pack_a1.py` has its final content: PASS, both controls fail.
+- 03:15 to 03:25: correction pass after the independent automated check (`_scratch/chk-a1mech/CHECK.md`, acceptable: no). B1: the rule
   keeping P2 off the tablet's plan dropped (no reason; P2 lies above the cover, the tablet below it): A 39, 4S9P, 4S15P in all;
   C 61, C10 48. M1 P2 on 2.5 standoffs; M2 the plate per slice; M3 1.0 beside the guard caps; M4 hinge Z swept; M5 the stay
   sized; M6 operator pushes; M7 C's mass and angles; M8 to M11 in the README. DECISION-A1.md option 3 restated from the
   coordinator's two-pack run for a 4S9P lid.
-- 03:25: the solids and their check (the lid plate per slice, judged as zones) re-run on the box at `bad4fb5b`: PASS for A, B, C, C10 and D, both controls fail; `lid_pack_a1.out` reproduced byte for byte on the runner; sheet A1-3 footer corrected.
-- 03:30 to 03:33: the focused re-check (`CHECK-2.md`) answered: B2 the interim slope limit at the feet-inboard bound (B 3.6, A 4.8, C 1.2 degrees; option 1 under about 3, option 2 level ground only), m1 C's push normal to its tablet (7.3 N centre, 6.1 N far edge), m2 12 mm webbing at X -176 and the magnet south of it, m3 the two-pack citation (fnd/a1int reconcile_lid.out, 1694d8ba), m4 stale figures, m5 the disconnect at X -168..-134, Z 126..136, m6 C10 without spare. `lid_pack_a1.out` reproduced byte for byte; no geometry changed, so the solids of `bad4fb5b` stand.
+- 03:25: the solids and their check (the lid plate per slice, judged as zones) re-run on the box at `649a3e57`: PASS for A, B, C, C10 and D, both controls fail; `lid_pack_a1.out` reproduced byte for byte on the runner; sheet A1-3 footer corrected.
+- 03:30 to 03:33: the focused re-check (`CHECK-2.md`) answered: B2 the interim slope limit at the feet-inboard bound (B 3.6, A 4.8, C 1.2 degrees; option 1 under about 3, option 2 level ground only), m1 C's push normal to its tablet (7.3 N centre, 6.1 N far edge), m2 12 mm webbing at X -176 and the magnet south of it, m3 the two-pack citation (fnd/a1int reconcile_lid.out, d1220871), m4 stale figures, m5 the disconnect at X -168..-134, Z 126..136, m6 C10 without spare. `lid_pack_a1.out` reproduced byte for byte; no geometry changed, so the solids of `649a3e57` stand.

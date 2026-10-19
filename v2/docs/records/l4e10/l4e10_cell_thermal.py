@@ -2572,7 +2572,7 @@ def u01_lines(R):
 
 # ------------------------------------------------------------------------------------------------ 10: U-01, the consolidation (2 October 2026)
 SUIT_PUB, SUIT_VENDOR, UNSUIT = "SUITABLE ON PUBLISHED EVIDENCE", "SUITABLE ONLY WITH A VENDOR ANSWER", "UNSUITABLE ON PUBLISHED EVIDENCE"
-AWAIT_SQ = "AWAITING SAFT OR THE LIMITED SAMPLE QUALIFICATION"   # Astra's B5 (2 October 2026): current and temperature together
+AWAIT_SQ = "AWAITING SAFT OR THE LIMITED SAMPLE QUALIFICATION"   # the second worker's B5 (2 October 2026): current and temperature together
 Q_TEMPS = (-20.0, -10.0, 45.0, 60.0, 70.0, 80.0)                 # the modelled cell temperatures the current rows need (10g)
 SQ_RECOVERY = 0.95        # SESSION: the sample's capacity after each step against its own before (the 35E's 7.10 recovery; TEST-PLAN's 5 % line)
 SQ_IMPEDANCE = 1.20       # SESSION: the 1 kHz impedance after each step against its own before
@@ -2813,7 +2813,7 @@ def u01c_lines(R):
         w("      rows covered: %s" % cd["rows"])
         w("      energy: %s; fit: %s" % (cd["energy"], cd["fit"]))
         w("      cost: %s; downstream: %s" % (cd["cost"], cd["downstream"]))
-    w("   Verdict (restated after Astra's B5): Saft's published datasheet supports the TEMPERATURE WINDOWS of every cell limit row for the MP 176065 xtd; it does not")
+    w("   Verdict (restated after the second worker's B5): Saft's published datasheet supports the TEMPERATURE WINDOWS of every cell limit row for the MP 176065 xtd; it does not")
     w("   support current and temperature together, since its currents 'Can vary depending on temperatures' (footnote 2), nor the storage dwell and recovery: those")
     w("   rows are AWAITING Saft or the limited sample qualification (10g). The HL18650V's rows need a vendor answer; the LiFePO4 cell fails the hot rows on its own")
     w("   page and leaves the 14.4 V class.")

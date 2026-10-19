@@ -1,7 +1,7 @@
 # U3B: a drafted note for Option A(i)'s electrical record (stream s117, second issue, MESHSAT-1357)
 
 29 September 2026. **DRAFT ONLY, for the writer of `v2/docs/records/a1elec/` (TOPOLOGY.md 3b, CHARGER.md 2) and the
-energy record's writer: nothing in `records/a1elec`, `records/a1int` or `records/energy` is edited by this stream.** AI
+energy record's writer: nothing in `records/a1elec`, `records/a1int` or `records/energy` is edited by this stream.** automated
 engineering work, desk arithmetic on the makers' documents; nothing is built or measured. Every figure is
 `efficiency.out` (sections 4, 5 and 7) beside this file, SLUSE66A Equations 6 to 22 (printed pages 86 to 88) with R16B
 and R17B counted and the inductor's core loss excluded.

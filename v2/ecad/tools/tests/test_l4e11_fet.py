@@ -1,4 +1,4 @@
-"""Record l4e11 round FET (Layer 4 AI-scope register tasks L4A-70 and L4A-71; MESHSAT-1357, 7 October 2026; v2/docs/records/l4e11/
+"""Record l4e11 round FET (Layer 4 automation-scope register tasks L4A-70 and L4A-71; MESHSAT-1357, 7 October 2026; v2/docs/records/l4e11/
 l4e11_fet.py, L4E11-ROUND-FET.md, fallback/apply_gen_sch_a_fetpair.py, fallback/check_fetpair_netlist.py,
 fallback/apply_check_dd7_fetpair.py).
 

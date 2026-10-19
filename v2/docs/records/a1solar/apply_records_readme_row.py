@@ -13,7 +13,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT = os.path.join(HERE, "..", "README.md")
 ANCHOR = "| `energy/` | stream energy (28 September 2026, branch `fnd/energy` from `038037ed`)"
-NEW_ROW = ("| `a1solar/` | stream a1solar (29 September 2026, branch `fnd/a1solar`, second issue after its AI check): "
+NEW_ROW = ("| `a1solar/` | stream a1solar (29 September 2026, branch `fnd/a1solar`, second issue after its automated check): "
            "Option A(i)'s solar panel selected from makers' documents (six candidates; the design basis four Renogy "
            "RNG-100DB-H in 2S2P, a session decision gated on the owner's REQ-016), the array's cold Voc, hot and "
            "edge-of-cloud Isc, the stage's 34.3 V fixed input point, the entry at 20 A and 56.3 V, REQ-016 per "

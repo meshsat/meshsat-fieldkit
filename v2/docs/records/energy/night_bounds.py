@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """night_bounds.py: the night state PS-NIGHT-RELAY computed with the tree's own power model (stream energy, MESHSAT-1357,
-28 September 2026). PROTOTYPE DESIGN: nothing built, powered or measured; an AI review.
+28 September 2026). PROTOTYPE DESIGN: nothing built, powered or measured; an automated review.
 
 It imports v2/docs/records/rv-pwr/pwr_budget.py UNCHANGED (pinned by sha256, refused if it changed), exactly as
 records/hc2/pwr_red2.py does, and evaluates the model's RED state (slot 3 alone) with the overrides below, at the model's
@@ -48,7 +48,7 @@ def main():
         # the LoRa module keeps the model's RED figure up(0.07, 0.3, 3.25): receive plus about 9 percent airtime (CONOPS section 5)
     }
     out = []
-    out.append("NIGHT STATE BOUNDS with the tree's model (records/rv-pwr/pwr_budget.py, sha256 %s, imported unchanged). AI review." % MODEL_SHA256[:16])
+    out.append("NIGHT STATE BOUNDS with the tree's model (records/rv-pwr/pwr_budget.py, sha256 %s, imported unchanged). automated review." % MODEL_SHA256[:16])
     out.append("battery W at the pack terminals: LOW / PLAN / HIGH (the model's scenarios)")
     rows = [("PS-SURV-R (check: pwr_red2.out 12.78 / 23.27 / 46.94)", {"VHF PA 30 W": beacons}),
             ("PS-NIGHT-RELAY", night)]

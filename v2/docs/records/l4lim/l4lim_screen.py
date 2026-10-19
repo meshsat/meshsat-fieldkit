@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """l4lim_screen.py: Layer 4 task L4A-101 (MESHSAT-1357, 7 October 2026), the limiter window screen before L4A-56 and L4A-57 (the
-challenge W127's finding 3 on the AI-scope register's method M-A for RE-6 and RE-7). PROTOTYPE DESIGN: nothing in this kit has been
+challenge W127's finding 3 on the automation-scope register's method M-A for RE-6 and RE-7). PROTOTYPE DESIGN: nothing in this kit has been
 built, bought, powered or measured; no figure printed here is a measurement. A SCREEN, not an acceptance: it closes no cx46 item.
 
 M-A, as registered: a current limiter with a PRINTED limit and a PRINTED response at each supervisor LDO's input, so that the LDO's

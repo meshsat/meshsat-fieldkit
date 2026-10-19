@@ -1,10 +1,10 @@
 # SELECTION: the panel for Option A(i) (stream a1solar, MESHSAT-1357, 29 September 2026)
 
-Second issue, after the independent AI check of `715fe251` (`checks/check-1.md`): the decision's gate on
+Second issue, after the independent automated check of `7d333ea2` (`checks/check-1.md`): the decision's gate on
 REQ-016 (check minor 4), REQ-016's temperature reading (minor 5), the deployment rule from the plane grid (B1), the
 SunPower documents held back by their terms (minor 8) and "on this model" where a result is stated (minor 10).
 
-Prototype design: nothing is bought, built or measured. AI review, not a qualified review. Every figure is the maker's
+Prototype design: nothing is bought, built or measured. automated review, not a qualified review. Every figure is the maker's
 own, quoted from the file named, or is printed by `array_calc.py` (`array_calc.out`, section named). The owner's
 instruction of 29 September 2026: about 400 Wp into a 200 W solar stage, and real panel specifications selected before
 the array's wiring and the stage's input ratings are fixed. M1, REQ-072 and REQ-016 are not changed here.

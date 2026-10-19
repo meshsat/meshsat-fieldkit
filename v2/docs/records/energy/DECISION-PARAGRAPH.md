@@ -1,6 +1,6 @@
 # Decision sheet: the 72-hour relay mission (M1)
 
-MESHSAT-1357, 29 September 2026 (second issue). Prototype; AI analysis; figures in `ENERGY-RECONCILIATION.md` section 9.
+MESHSAT-1357, 29 September 2026 (second issue). Prototype; automated analysis; figures in `ENERGY-RECONCILIATION.md` section 9.
 
 The mission as written needs about 655 Wh of battery (today 108 Wh). Option A meets it on the reference-day model, not
 yet drawn: two packs, the base pockets and a lid module, with either a 200 W solar stage and four panels or today's

@@ -3,7 +3,7 @@
 MESHSAT-1357, 29 September 2026; second issue after the independent check `_scratch/chk-s120/CHECK.md`, B1 to B3 and m1 to
 m11; third issue after the re-check `CHECK-2.md`, B1 and n1 to n7; fourth issue after `CHECK-3.md`, r1 to r3). Desk
 arithmetic on the makers' figures and the
-committed netlists: nothing is built, powered or measured, and nothing here is a qualified review (AI engineering work).
+committed netlists: nothing is built, powered or measured, and nothing here is a qualified review (automated engineering work).
 
 WHAT IT DOES. It PARSES board A's and board E's committed netlists (v2/ecad/tools/netlist_sexp.py; nothing is grepped) and
 asserts every circuit fact the bound rests on (section 1): the front end U2's feedback divider, its pins, its sense

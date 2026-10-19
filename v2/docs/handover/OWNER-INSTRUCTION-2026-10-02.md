@@ -89,13 +89,13 @@ Separate permission to construct an evidence-gathering prototype from final desi
 
 Prepare vendor questions and engineer briefs ready for action. Continue independent engineering while answers or measurements are pending.
 
-**6. Use the assistant and Astra deliberately**
+**6. Use the assistant and the second worker deliberately**
 
 Keep the existing authorized concurrency limit and one author per branch/artifact.
 
 You own integration and the complete system model. Use available worker slots for independent tasks on the critical path or the next ready layer.
 
-Use Astra to challenge decision-critical assumptions, calculations, datasheet conditions and cross-board consequences. Give it the exact candidate, relevant sources and a bounded question. Avoid having every session repeat the whole project history.
+Use the second worker to challenge decision-critical assumptions, calculations, datasheet conditions and cross-board consequences. Give it the exact candidate, relevant sources and a bounded question. Avoid having every session repeat the whole project history.
 
 Normally use one focused independent review and one targeted recheck. Preserve unresolved findings honestly. Coordinator verification must be labelled as such and must not overwrite an independent rejection.
 

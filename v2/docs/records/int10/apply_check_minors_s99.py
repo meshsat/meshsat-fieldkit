@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Set 9's AI check (records/int10/CHECK.md), three of its minor items answered in place (MESHSAT-1357, 29 September 2026):
+"""Set 9's automated check (records/int10/CHECK.md), three of its minor items answered in place (MESHSAT-1357, 29 September 2026):
   M1  four judged rebind entries (CFL-005, CON-010, CFL-016, CFL-014) said U39 and R209 appear "only in an earlier rebind
       entry"; U39 also appears in each record's re-read of PANEL.md or EMCON.md about its overvoltage lockout and fault
       line. The script proves that from the record itself (U39 named in an entry that is not a rebind entry) before
@@ -27,7 +27,7 @@ MARK = "apply_rebind_after_circuit a 599ee964a9c23d6e"
 OLD1 = "U39 and R209 appear only in an earlier rebind entry that lists the H2 differences; both are the same parts"
 NEW1 = ("U39 and R209 appear in an earlier rebind entry that lists the H2 differences, and U39 also in this record's re-read "
         "of PANEL.md or EMCON.md about its overvoltage lockout and fault line, which the change leaves as it was (sentence "
-        "corrected after set 9's AI check, minor item M1); both are the same parts")
+        "corrected after set 9's automated check, minor item M1); both are the same parts")
 OLD7 = ("Closes when: board A is regenerated from fnd/s99a on the box and its intent, netlist and ERC are read; PWR-001 and "
         "INT-001 are re-taken on it; the IF-AB-POWER +5V_DEV row reads the new figures; (a) is decided")
 NEW7 = ("Done at integration set 9: board A regenerated from fnd/s99a on the box with its intent, netlist and ERC read, "
@@ -35,7 +35,7 @@ NEW7 = ("Done at integration set 9: board A regenerated from fnd/s99a on the box
         "decided")
 OLD4 = "The next review of board A (owed anyway after the regeneration) should quote 0.9142 A."
 NEW4 = ("Any later review of board A should quote 0.9142 A; none is owed by the regeneration itself, since the decision 31 "
-        "hold's review pin moved to the new netlist on a parsed proof and reads met (set 9's AI check, minor item M4).")
+        "hold's review pin moved to the new netlist on a parsed proof and reads met (set 9's automated check, minor item M4).")
 RIDS = ("CFL-005", "CON-010", "CFL-016", "CFL-014")
 
 
@@ -45,7 +45,7 @@ def refuse(m):
 
 def main():
     t = open(P, encoding="utf-8").read()
-    if "set 9's AI check, minor item M1" in t: refuse("already applied (a second run)")
+    if "set 9's automated check, minor item M1" in t: refuse("already applied (a second run)")
     before = yaml.safe_load(t)
     rec = {r["id"]: r for r in before["records"]}
     for rid in RIDS:

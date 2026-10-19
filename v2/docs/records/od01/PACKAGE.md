@@ -1,7 +1,7 @@
 # OD-01: the package an engineer needs, by path and sha256
 
 MESHSAT-1357, stream od01b, 29 September 2026. Written by `make_package.py` beside this file (stdlib; it refuses to run if a
-listed file is missing) at tree `807cc82a` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
+listed file is missing) at tree `a2daf299` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
 Prototype: nothing in the package has been made, bought, sent or run. **Export:** copy every path below keeping the
 repository paths, then from the repository root `sha256sum -c v2/docs/records/od01/PACKAGE.sha256` reads OK for all 79 files
 (14.9 MB in all). Groups A to G are what a shop needs for the quotes (each part's drawing PDF governs its DXF and STEP); A, H, I and J
@@ -17,8 +17,8 @@ what the operator needs for the tests; K regenerates H1; L holds the later indep
 | `v2/docs/records/od01/TEST-PROCEDURE.md` | 46002 | `708e2ac6e027441dafb844d25cab8ade0e5ab2fd2a74cd220f89dd49efeb40c9` | the complete procedure: what the heat test proves, the shutdown and its verification, set-up, steps, patch runs, test B, stop limits, records |
 | `v2/docs/records/od01/MACHINING-RFQ.md` | 20773 | `f12c13949b0c6b284a57bc1cfefe48b55bf522e486a8071e2cde3e67c7275c78` | the request for quote (NOT SENT) and section 6, the receipt checks R1 to R8 that gate cutting |
 | `v2/docs/records/od01/CHECKOUT-LIST.md` | 31055 | `f4a879f4346d27f271e3de54c329b8311d7d191e6a281b453a32000b5fbaac48` | what to buy, priced, with sources; lines 10 to 15 the shutdown |
-| `v2/docs/records/od01/checks/check-1.md` | 5919 | `c0fe6fbabb7ac861e37a1ff7172b4496d71014fbd0bde5b26153ccd39efd1be7` | independent AI check 1 of the package (28 Sep) |
-| `v2/docs/records/od01/checks/check-2.md` | 8584 | `2cd0f10fee406e0ba1fc3018d9c4a938701779cb529b437321075680c70ee7bf` | independent AI check 2: the lead exit's bias under 1 percent, H2's size |
+| `v2/docs/records/od01/checks/check-1.md` | 5919 | `c0fe6fbabb7ac861e37a1ff7172b4496d71014fbd0bde5b26153ccd39efd1be7` | independent automated check 1 of the package (28 Sep) |
+| `v2/docs/records/od01/checks/check-2.md` | 8584 | `2cd0f10fee406e0ba1fc3018d9c4a938701779cb529b437321075680c70ee7bf` | independent automated check 2: the lead exit's bias under 1 percent, H2's size |
 
 ### B. Quote: H1 (heat test)
 
@@ -133,15 +133,15 @@ what the operator needs for the tests; K regenerates H1; L holds the later indep
 
 | Path | Bytes | sha256 | For |
 |---|---|---|---|
-| `v2/docs/records/od01/checks/check-3.md` | 13523 | `445f092220cd3f67e2612be2a1a755d33d34e4b5a13de8a65e9e1d16ea5fa96c` | independent AI check 3 (29 Sep) of the corrected package; its items answered by patch_od01c.py |
-| `v2/docs/records/od01/checks/check-4.md` | 9601 | `0cbfcf7701c5d8d81bef1e6eca232e9e72277a146858a614ad104bd750840140` | independent AI check 4 (29 Sep): N1 and N2 and the minor items answered by patch_od01d.py, n6 carried |
-| `v2/docs/records/od01/checks/check-5.md` | 10595 | `a3a8ee59bf6e8305595521dbd382eeb78dcb1555c679aedc4d97973e085c2e01` | independent AI check 5 (29 Sep): B1 (V4) and the minor items answered by patch_od01e.py |
-| `v2/docs/records/od01/checks/check-6.md` | 12396 | `45860065af4409b81bba5b446cc046bce0de2285ce3f481e3b19ab8a4e5f22f4` | independent AI check 6 (29 Sep), the first end-to-end: B1 to B3 and q1 to q16 answered by patch_od01f.py |
-| `v2/docs/records/od01/checks/check-7.md` | 13621 | `cf8f454c29484d9b51d2c95e033b41a7f954d637746df86851819eebc4326465` | independent AI check 7 (29 Sep), the second end-to-end: B1, B2 and r1 to r14 answered by patch_od01g.py |
-| `v2/docs/records/od01/checks/check-8.md` | 8292 | `6583cddfef5e044a682fec85980eab9cb7646b51a781409d13935a2c3dd4af0b` | independent AI check 8 (29 Sep), check 7's re-check: C1, s1 and s2 answered by patch_od01h.py |
-| `v2/docs/records/od01/checks/check-9.md` | 5105 | `171e0d99983a7664cfdf13a8aae171d02ef523ab75c1262cce5dacd5ef7596ce` | independent AI check 9 (29 Sep): acceptable, no blocking item; its wording items answered by patch_od01i.py |
-| `v2/docs/records/od01/checks/check-10.md` | 11330 | `b61116050f5e48f726fdb17ea0109d10796e258140e7483ca25a88a88f74d69c` | targeted AI check 10 (29 Sep) of the T1 correction and the applicability table: B1 and m1 to m8 answered by patch_od01k.py |
-| `v2/docs/records/od01/checks/check-11.md` | 7054 | `99b481cbcc3fc8a421af57067bf74b4268ed1d510d4cf84ee878385d37d560d4` | AI check 11 (29 Sep): acceptable, no blocking item; n1 to n3 answered by patch_od01l.py |
+| `v2/docs/records/od01/checks/check-3.md` | 13523 | `445f092220cd3f67e2612be2a1a755d33d34e4b5a13de8a65e9e1d16ea5fa96c` | independent automated check 3 (29 Sep) of the corrected package; its items answered by patch_od01c.py |
+| `v2/docs/records/od01/checks/check-4.md` | 9601 | `0cbfcf7701c5d8d81bef1e6eca232e9e72277a146858a614ad104bd750840140` | independent automated check 4 (29 Sep): N1 and N2 and the minor items answered by patch_od01d.py, n6 carried |
+| `v2/docs/records/od01/checks/check-5.md` | 10595 | `a3a8ee59bf6e8305595521dbd382eeb78dcb1555c679aedc4d97973e085c2e01` | independent automated check 5 (29 Sep): B1 (V4) and the minor items answered by patch_od01e.py |
+| `v2/docs/records/od01/checks/check-6.md` | 12396 | `45860065af4409b81bba5b446cc046bce0de2285ce3f481e3b19ab8a4e5f22f4` | independent automated check 6 (29 Sep), the first end-to-end: B1 to B3 and q1 to q16 answered by patch_od01f.py |
+| `v2/docs/records/od01/checks/check-7.md` | 13621 | `cf8f454c29484d9b51d2c95e033b41a7f954d637746df86851819eebc4326465` | independent automated check 7 (29 Sep), the second end-to-end: B1, B2 and r1 to r14 answered by patch_od01g.py |
+| `v2/docs/records/od01/checks/check-8.md` | 8292 | `6583cddfef5e044a682fec85980eab9cb7646b51a781409d13935a2c3dd4af0b` | independent automated check 8 (29 Sep), check 7's re-check: C1, s1 and s2 answered by patch_od01h.py |
+| `v2/docs/records/od01/checks/check-9.md` | 5105 | `171e0d99983a7664cfdf13a8aae171d02ef523ab75c1262cce5dacd5ef7596ce` | independent automated check 9 (29 Sep): acceptable, no blocking item; its wording items answered by patch_od01i.py |
+| `v2/docs/records/od01/checks/check-10.md` | 11330 | `b61116050f5e48f726fdb17ea0109d10796e258140e7483ca25a88a88f74d69c` | targeted automated check 10 (29 Sep) of the T1 correction and the applicability table: B1 and m1 to m8 answered by patch_od01k.py |
+| `v2/docs/records/od01/checks/check-11.md` | 7054 | `99b481cbcc3fc8a421af57067bf74b4268ed1d510d4cf84ee878385d37d560d4` | automated check 11 (29 Sep): acceptable, no blocking item; n1 to n3 answered by patch_od01l.py |
 | `v2/docs/reviews/READY-TO-ACT.md` | 73938 | `bdaf61a4991afb8ca1c45d0c1f71330dd8954e493af357503e01e350b8ed8fff` | the ready-to-act review the checkout list and RFQ cite |
 | `v2/docs/ASSEMBLY.md` | 66445 | `ee4eff52fc5df3070f0871021380c3e9a75b12c83314ec16b78916d3399658dc` | the assembly steps the RFQ and the procedure cite |
 | `v2/release/case-2026-09-27/lid-tray-qmx-r2/README.md` | 20290 | `3d3bbcfe240596398783956c15d850e36d9dc31495e8a86b49f9bcc386d2e558` | the lid tray r2 the RFQ names as printed, not machined |

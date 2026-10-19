@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Decision 55 recorded in v2/ecad/tools/pcb_decisions.yaml (MESHSAT-1357, integration set 9, stream s99reg, 29 September
-2026). AI engineering text; prototype design, nothing built, ordered or measured.
+2026). automated engineering text; prototype design, nothing built, ordered or measured.
 
 The decision is stream s99's (v2/docs/records/s99/REGISTRY-DRAFT.md section 2, option B of ANALYSIS.md section 5) with
 the field changes of stream s99a (v2/docs/records/s99a/REGISTRY-DRAFT.md section 2): the outcome at 5.002 V nominal on
@@ -76,7 +76,7 @@ ROW = {
         "IFB), TI SLES230A 7.3 p.5 (PCM2912A VBUS 4.35 to 5.25 V), NiceRF SA868 v1.3 p.4, Ebyte E22-900M30S v1.20, Ground "
         "Control's RockBLOCK 9704 hardware page (snapshot 2026-09-27), MyriadRF's LimeSDR Mini pages, Microchip "
         "DS00002330D p.169; v2/docs/records/s99/dev_stage.py (reproduced byte for byte, inputs refused by name when "
-        "changed); v2/docs/records/s99a/u41_divider.out; the independent AI reviews v2/docs/records/s99/checks/"
+        "changed); v2/docs/records/s99a/u41_divider.out; the independent automated reviews v2/docs/records/s99/checks/"
         "check-2-claude.md and the check of stream s99a (accepted, no blocking item)."),
     "blocks": {},
     "holds_nothing_today": (

@@ -1859,7 +1859,7 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
 
 
 def t_the_escalation_rule_after_the_recheck():
-    """Astra's targeted recheck (astra-check-l4close-2, blocking discrepancy 6): a DEMONSTRATED CONFLICT needs the measured failure of
+    """the second worker's targeted recheck (astra-check-l4close-2, blocking discrepancy 6): a DEMONSTRATED CONFLICT needs the measured failure of
     every arrangement the design admits or a bound that none can meet the limit; one arrangement's failed local test is that
     arrangement's shortfall. Held as properties: the rule is one text, L4-E12's (read back from its output), stated on both pages and
     both outputs; no current text defines a conflict by one measured arrangement; OW-1, OW-10, U-02 and the behaviour row turn on the

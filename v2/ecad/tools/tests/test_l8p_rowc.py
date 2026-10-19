@@ -1,4 +1,4 @@
-"""Record l8p round 10 (Layer 4 AI-scope register row (c), tasks L4A-66 and L4A-65; MESHSAT-1357, 7 October 2026;
+"""Record l8p round 10 (Layer 4 automation-scope register row (c), tasks L4A-66 and L4A-65; MESHSAT-1357, 7 October 2026;
 v2/docs/records/l8p/l8p_rowc.py, l8p_rowc.out, L8P-BREAKER.md section 15).
 
 The predicates: the committed .out is what the script prints; the battery FETs' figures reproduce the records' own (the 21.136 mOhm

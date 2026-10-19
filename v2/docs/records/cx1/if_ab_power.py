@@ -160,7 +160,7 @@ def main():
     checked = pinned_inputs()
     a = json.loads(checked[A_PATH])["rails"]
     b = json.loads(checked[B_PATH])["rails"]
-    print("# IF-AB-POWER calculation: prototype, AI review arithmetic")
+    print("# IF-AB-POWER calculation: prototype, automated review arithmetic")
     print("Mode: PS-ALLTX, REQ-018 / CONOPS section 5, case S3 over S2. Condition: three CM5s loaded; standby WiFi in slot 3, PoE, USB-C outlet and heater off.\n")
     print("No sourced typical or guaranteed coincident peak is established. Generic declarations and conditional stresses follow; they are not alternate operating modes.\n")
     for path in (A_PATH, B_PATH):

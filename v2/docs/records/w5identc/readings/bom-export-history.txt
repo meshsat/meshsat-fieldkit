@@ -1,10 +1,10 @@
-the export: v2/release/handover/_generated/pcb-c-display-c8/NOT_FOR_FAB-pcb-c-display-bom-per-reference.csv, sha256 e9e7e0a8585341d8, 167 rows; written by one commit (git log): 29201151, from the schematic of fcf69d55
-netlist at fcf69d55   (fcf69d55) sha256 11eabc2dddca5161: 167 BOM parts; export agrees: YES
-netlist at 29201151   (29201151) sha256 11eabc2dddca5161: 167 BOM parts; export agrees: YES
-netlist at e7721c52^  (bfd79196) sha256 11eabc2dddca5161: 167 BOM parts; export agrees: YES
-netlist at e7721c52   (e7721c52) sha256 3fddbb3edcd4248a: 169 BOM parts; export agrees: NO; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export
-netlist at 75460813   (75460813) sha256 fef4df255c00f4db: 169 BOM parts; export agrees: NO; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export
-netlist at 1cb60746   (1cb60746) sha256 f442354f60f4214f: 171 BOM parts; export agrees: NO; D23 not in the export; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export; R52 not in the export
-netlist at d0c578b6   (d0c578b6) sha256 87b69472ac83ca5a: 171 BOM parts; export agrees: NO; D23 not in the export; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export; R52 not in the export
-netlist at 695e36ce   (695e36ce) sha256 c9f7394594201045: 175 BOM parts; export agrees: NO; D23 not in the export; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export; R52 not in the export; R53 not in the export; R54 not in the export; R55 not in the export; R56 not in the export
-netlist at 53804300   (53804300) sha256 c9f7394594201045: 175 BOM parts; export agrees: NO; D23 not in the export; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export; R52 not in the export; R53 not in the export; R54 not in the export; R55 not in the export; R56 not in the export
+the export: v2/release/handover/_generated/pcb-c-display-c8/NOT_FOR_FAB-pcb-c-display-bom-per-reference.csv, sha256 e9e7e0a8585341d8, 167 rows; written by one commit (git log): 821c26de, from the schematic of 452a1fb1
+netlist at 452a1fb1   (452a1fb1) sha256 11eabc2dddca5161: 167 BOM parts; export agrees: YES
+netlist at 821c26de   (821c26de) sha256 11eabc2dddca5161: 167 BOM parts; export agrees: YES
+netlist at 1c13eb50^  (04967ae1) sha256 11eabc2dddca5161: 167 BOM parts; export agrees: YES
+netlist at 1c13eb50   (1c13eb50) sha256 3fddbb3edcd4248a: 169 BOM parts; export agrees: NO; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export
+netlist at 58061856   (58061856) sha256 fef4df255c00f4db: 169 BOM parts; export agrees: NO; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export
+netlist at 2b8c31b2   (2b8c31b2) sha256 f442354f60f4214f: 171 BOM parts; export agrees: NO; D23 not in the export; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export; R52 not in the export
+netlist at 2538ebf0   (2538ebf0) sha256 87b69472ac83ca5a: 171 BOM parts; export agrees: NO; D23 not in the export; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export; R52 not in the export
+netlist at 5c20483b   (5c20483b) sha256 c9f7394594201045: 175 BOM parts; export agrees: NO; D23 not in the export; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export; R52 not in the export; R53 not in the export; R54 not in the export; R55 not in the export; R56 not in the export
+netlist at d3f6fdc7   (d3f6fdc7) sha256 c9f7394594201045: 175 BOM parts; export agrees: NO; D23 not in the export; R14 value '10k' vs '2.2k 1%'; R14 LCSC 'C25804' vs 'C4190'; R50 not in the export; R51 not in the export; R52 not in the export; R53 not in the export; R54 not in the export; R55 not in the export; R56 not in the export

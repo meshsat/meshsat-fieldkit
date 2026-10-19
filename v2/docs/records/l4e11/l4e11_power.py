@@ -4544,7 +4544,7 @@ def render_fix21(R, p):
     p("")
 
 
-# ---- round 12 (4 October 2026): the independent check V2 of round 11 (an AI review, as the coordinator received it): V2-B1, the cost of
+# ---- round 12 (4 October 2026): the independent check V2 of round 11 (an automated review, as the coordinator received it): V2-B1, the cost of
 # R256, as an unresolved design choice over V2's three corrections, and the minors that are this record's (V2-m1 to m5, m9)
 R12_PINS = {"csd18510": ("v2/vendor/battery/ti-csd18510q5b.pdf", "cb747de812f6685995917335ec78c663fbf1cee0942db9a3e5b1c375147a601a"),
             "l8p_f06": ("v2/docs/records/l4e11/inputs/l8p-section12j-f06-69156072.md", "aa4e1fe9a3ec164c03cd2be06d77d6c7433e7005149ae67f9c17879ddccafcd0")}
@@ -4762,7 +4762,7 @@ def render_fix22(R, p):
     sel, O = S["sel"], S["opts"]
     vst = S["v_states"]
     p("22. ROUND 12: THE CHECK V2'S FINDING V2-B1 (THE COST OF R256) AS A DESIGN CHOICE, AND ITS MINORS FOR THIS RECORD (4 October 2026; C-PROT rev 1)")
-    p("   22a. THE CLAIM THAT DID NOT STAND, AND V2'S ARITHMETIC REPRODUCED (V2 is an AI review, as received; INFERRED)")
+    p("   22a. THE CLAIM THAT DID NOT STAND, AND V2'S ARITHMETIC REPRODUCED (V2 is an automated review, as received; INFERRED)")
     p("     round 11 (21f) gave CELL+'s bleed with the breaker off as %s s, inside the hold's least %s s, beside a static limit of %s mA for the"
       % (fmt(O["a"]["v"]["bleed_zero"], 3), fmt(S["hold_min"], 3), fmt(O["a"]["v"]["isrc_max"] * 1e3, 3)))
     p("       sources into CELL+: the bleed was taken towards 0 V, as if no source fed the node. A source I lifts the level CELL+ falls towards to")
@@ -6495,7 +6495,7 @@ def render_fix27(R, p):
     S, S20 = R["S27"], R["S20"]
     p("")
     p("27. ROUND 17: DD-7 ON A BOARD A THAT CARRIES THE THERMAL GUARD (the check V6's V6-m2 on candidate 7a82e82a; record l8p's L8P-R8-F1; C-PROT rev 1)")
-    p("   V6 (an AI review; RECORD) found this record's DD-7 netlist check reading FAIL on any board A that carries record l8p's guard (it")
+    p("   V6 (an automated review; RECORD) found this record's DD-7 netlist check reading FAIL on any board A that carries record l8p's guard (it")
     p("     required RT1 on DOCK_EN_RET and DOCK_EN_OUT), and the guard's C261 and 30 uA counted in no row of 20c or 20f. Record l8p's round 8")
     p("     drafted the guard (apply_gen_sch_a_thguard.py, after DD-7) and its rounds 8 and 9 judged it (l8p_c4.out). Nothing here changes a")
     p("     circuit (RECORD, INFERRED)")
@@ -6589,7 +6589,7 @@ def render_fix28(R, p):
     S, S20, S27 = R["S28"], R["S20"], R["S27"]
     p("")
     p("28. ROUND 18: 20c AND 20f WITH RECORD l8p's FAIL-SAFE GUARD (the check cx45's Q5 on candidate 06077cee; record l8p round 9, 10c)")
-    p("   cx45 (an AI review; RECORD) found 27a and 27b still on round 8's 30 uA and C261 alone; its recheck cx46 read this section's first form")
+    p("   cx45 (an automated review; RECORD) found 27a and 27b still on round 8's 30 uA and C261 alone; its recheck cx46 read this section's first form")
     p("     CORRECTIONS NOT CLOSED: the method ends and this section is a DISPOSITION (every row PROVISIONAL, nothing closed).")
     p("   THE CHANGED CIRCUIT AND CASE, stated: 27a and 27b judge round 8's guard (one path, its draw 30 uA, C261 1 uF); this section judges")
     p("     record l8p's delta (apply_gen_sch_a_thgfs.py, after the guard, NOT APPLIED), which keeps round 8's shunt Q60 on the return (path 1)")

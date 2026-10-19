@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """The pages that quote the wrong-sign 0.89 A, and set 8's lead-drop wording, corrected (MESHSAT-1357, integration set 9,
-stream s99reg, 29 September 2026). AI engineering text; prototype design, nothing built, ordered or measured.
+stream s99reg, 29 September 2026). automated engineering text; prototype design, nothing built, ordered or measured.
 
 TPS2596 equation 7 (TI SLVSET8A, May 2019, revised August 2019, printed p.28) is RILM = 903 / (ILIM - 0.0112); its
 worked example 903 / (1 - 0.0112) = 913.2 fixes the sign. So U32 at 1.00 kOhm limits at 903 / 1000 + 0.0112 = 0.9142 A

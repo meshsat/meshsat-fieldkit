@@ -1,7 +1,7 @@
-# Integration set 7 (fnd/int8 at 17d4823b onto main 66c0d1d2): closure record, DRAFT by the independent checker
+# Integration set 7 (fnd/int8 at 00493048 onto main be659bf6): closure record, DRAFT by the independent checker
 
-An AI review's draft for the integrator to file as v2/docs/records/int8/CLOSURE.md; every count below was read from
-git at 17d4823b against main 66c0d1d2 (375 files, 128657 insertions, 2191 deletions, 82 commits). Nothing of the kit
+An automated review's draft for the integrator to file as v2/docs/records/int8/CLOSURE.md; every count below was read from
+git at 00493048 against main be659bf6 (375 files, 128657 insertions, 2191 deletions, 82 commits). Nothing of the kit
 has been built, ordered or measured; every verdict named is a desk reading of a prototype design.
 
 ## Circuit changes
@@ -41,15 +41,15 @@ E5 686b29a734c55b9a). The one generator touched, gen_pcb_b3.py (5 lines), change
   the tracked manifest v2/vendor/ibis-manifest.yaml pins the file present, fails closed and says its state when the
   models are withheld, holds every Ramp cell to the model's own V-t table; pcb_edge_rates.yaml (+1136);
   tests/test_edge_length.py, test_ibis_models.py, test_pinned_models.py. Two fixes after the first suite:
-  ibis_fetch.py reads its two flag values through verdict.opt (554fa039); edge_length.py's note no longer says a
-  model is not in the tree when none is absent (d981f528).
+  ibis_fetch.py reads its two flag values through verdict.opt (d4abf5fa); edge_length.py's note no longer says a
+  model is not in the tree when none is absent (d01c4003).
 - rules_status.py (+157 net): the manifest as a configuration input of edge_length.py and the pinned-state rule
   (PINNED_INPUTS, _pinned_state); CONFIG_INPUTS for reliability.py; rules_render.py's derived notices.
 - constraints_bound.py (new, 885) with tests/test_constraints_bound.py (687).
 - The tray's record tools: v2/cad/lid_tray_qmx_r2.py, _check.py, _drawing.py; tests/test_lid_tray_qmx_r2.py (315);
   test_frame_seat_inputs.py carries the r2 module.
 - Apply scripts under v2/docs/records/int8/ (seven), each asserting its precondition, re-parsing what it writes and
-  refusing a second run; the box helpers box_retake.sh and install_pack.sh (filed in 82dd1980).
+  refusing a second run; the box helpers box_retake.sh and install_pack.sh (filed in 8570ff12).
 - v2/docs/handover/pack.yaml classifies v2/docs/CODEX-WORKER.md in group EV.
 
 ## Registry changes (tools/pcb_requirements.yaml +732 net; pcb_decisions.yaml +280; pcb_rules_coverage.yaml)
@@ -61,7 +61,7 @@ E5 686b29a734c55b9a). The one generator touched, gen_pcb_b3.py (5 lines), change
   S-114 (the energy reconciliation of M1 under D-20).
 - Closed: S-63 by SC-75 (the r2 lid tray); S-88 (H3-02) by TRN-001 PASS of 42 on board A against the reviewed set;
   S-89 (H3-01) by REL-001 re-taken on every board with the repaired tool (every board INCONCLUSIVE, held by named
-  items), both landed by the re-take of eee624e3 and re-taken again in f1ec1d66.
+  items), both landed by the re-take of d2840081 and re-taken again in 52c036c6.
 - Linked: FEA-007 (SC-75; waits on S-95, S-96, no longer S-63), REQ-021 (S-95), FEA-002 (S-92, S-93), REQ-018
   (S-99), REQ-072 and REQ-016 (S-114), REQ-007, REQ-009, REQ-015, REQ-017, REQ-029, REQ-041, REQ-058, CON-018,
   CHO-003 (S-100 to S-113 by finding); REQ-022, REQ-024, REQ-026, REQ-028, REQ-064 stop waiting on S-89 and cite it
@@ -77,14 +77,14 @@ E5 686b29a734c55b9a). The one generator touched, gen_pcb_b3.py (5 lines), change
 
 ## Evidence refreshes
 
-- The consolidated re-take of every schematic-phase reading on the KiCad box at 4618ec47 (commit eee624e3: the
+- The consolidated re-take of every schematic-phase reading on the KiCad box at 197ac166 (commit d2840081: the
   driver retake_schematic_phase.py in place, reliability.py per board, claims_check; the makers' models present for
   SI-001; the tracked readings by patch, the ignored ones by tar).
-- The second re-take at d981f528 after the two tool fixes (commit f1ec1d66; 96 tracked routed/*.verdict.json changed
-  against main); driver logs filed in 82dd1980 under records/int8/box/ (retake-2.log, retake-2-other-writers.log,
-  retake-2-run.txt: HEAD d981f528, retake exit 0, 19:14:50Z to 19:17:48Z).
+- The second re-take at d01c4003 after the two tool fixes (commit 52c036c6; 96 tracked routed/*.verdict.json changed
+  against main); driver logs filed in 8570ff12 under records/int8/box/ (retake-2.log, retake-2-other-writers.log,
+  retake-2-run.txt: HEAD d01c4003, retake exit 0, 19:14:50Z to 19:17:48Z).
 - The pages rendered on it: 34 layout-entry reasons (A 6, B 8, C 4, D 6, E 3, P 5, E5 2), 83 CURRENT_CANDIDATE
-  readings, no reading limited by an open item; the suite at 17d4823b 2171 passed, 0 failed, 3 skipped.
+  readings, no reading limited by an open item; the suite at 00493048 2171 passed, 0 failed, 3 skipped.
 
 ## Documents
 
@@ -93,11 +93,11 @@ E5 686b29a734c55b9a). The one generator touched, gen_pcb_b3.py (5 lines), change
   r2 tray; M3 and M19 re-read from frame_seat.out), v2/BUILD.md, v2/README.md, v2/cad/README.md.
 - handover/LAYER-STATUS.md (layer 7 reads the r2 tray; item (2) answered by SC-75), handover/ENGINEERING-QUESTIONS.md
   (EQ-24 answered, EQ-31 added, EQ-13's owner instruction row), handover/START-HERE.md, handover/pack.yaml.
-- EXECUTION-PLAN.md (the checkpoints of 28 September 18:50 and 20:02, the Codex worker's usage and outcomes);
+- EXECUTION-PLAN.md (the checkpoints of 28 September 18:50 and 20:02, the second worker's usage and outcomes);
   OWNER-DECISIONS-OPEN.md; the generated pages CURRENT-EVIDENCE.md, REQUIREMENTS-TRACE.md, PCB-RULE-STATUS-*.md,
   PCB-GAP-REGISTER.md, PCB-GOLDEN-RULES.md, PCB-OPEN-PAIRS.md, PCB-ETA.md, PCB-RULE-COVERAGE.md,
   PCB-PROTOTYPE-UNKNOWNS.md; the layout-constraints sheets.
-- reviews/DECISION-31-PROTECTION-TOPOLOGY.md (775 lines, AI review: 32 exposed conductors on boards A, D and E).
+- reviews/DECISION-31-PROTECTION-TOPOLOGY.md (775 lines, automated review: 32 exposed conductors on boards A, D and E).
 - The records: cx1 (the pilot's ANALYSIS.md, CORRECTION.md, two checks), d6rel, d8dec31 (52 files), p3bind, w5si
   and w5si2, w5tray, int8 (the three checks with their notes, seven apply scripts, the box logs), and the vendor
   filings (28 files: the Infineon and TI sheets, the QMX materials and standards transcriptions, the seven maker
@@ -108,9 +108,9 @@ E5 686b29a734c55b9a). The one generator touched, gen_pcb_b3.py (5 lines), change
 
 | From | Item | Owner | Where it goes |
 |---|---|---|---|
-| set 7 check, 5 | S-88's and S-89's closing evidence name the first re-take's commit (eee624e3) while the tree's readings are the second re-take's (f1ec1d66), identical in content | integrator | wording only; noted here |
+| set 7 check, 5 | S-88's and S-89's closing evidence name the first re-take's commit (d2840081) while the tree's readings are the second re-take's (52c036c6), identical in content | integrator | wording only; noted here |
 | set 7 check, 6 | `apply_w5tray.py` writes six documents before the registry and does not roll back on a missing vendor file | the drafts' template (next stream's author) | a rollback or a pre-check in the template |
 | d8dec31 check 2, N1 to N6 | the reviewed set's enforcement (pin the per-board map in the test or read the review's tables), a ref listed twice inflates the denominator, duplicate JSON keys, a review file that exists is the only check, the tests leave fixtures under /tmp, `make_pin_tables.py` on the committed shape | port_protect.py's owner (stream d8dec31's successor) | a tool item in the next set |
 | d6rel check 2, 2 to 5 | the tests leave 108 fixtures per run; CONFIG_INPUTS must follow the list's citations by hand; no board reads PASS on REL-001 until REQ-028 rules a service life; REL-O-03's Amphenol M.2 documents and the series sheets' order-code rows | reliability.py's owner; the parts stream | a tool item and a parts item in the next set |
 | w5si2 check, m2, m3, m7 | rehearse the merge again if int8 moves (done: it moved and merged); draft 6 writes the state it runs in (run with the models present: done); the board B draft applies without the stream (kept in order: done) | integrator | answered at integration |
-| Codex check 1 of S-99 | ten findings for the S-99 author (the wall port's current-limit equation sign; a false PASS at 5.0 mOhm; the loop time constant; the LDO model; the burst and capacitor claim; S3's zero; POE's 7 mA; the thermal scenario; the draft's stale note; two arithmetic slips) | stream s99's author, then an assistant re-check | set 8 |
+| second-worker check 1 of S-99 | ten findings for the S-99 author (the wall port's current-limit equation sign; a false PASS at 5.0 mOhm; the loop time constant; the LDO model; the burst and capacitor claim; S3's zero; POE's 7 mA; the thermal scenario; the draft's stale note; two arithmetic slips) | stream s99's author, then an assistant re-check | set 8 |

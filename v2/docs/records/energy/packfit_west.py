@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """packfit_west.py: a second 4S3P block in the west pocket, judged with adjudication A06's own tool (stream energy,
-MESHSAT-1357, 28 September 2026). PROTOTYPE DESIGN: nothing built; an AI review of a committed geometry study.
+MESHSAT-1357, 28 September 2026). PROTOTYPE DESIGN: nothing built; an automated review of a committed geometry study.
 
 It imports v2/docs/records/adj/A06-pack-geometry/drafts/pack_fit.py UNCHANGED (pinned by sha256, refused if changed;
 importing it runs A06's own search, about 0.3 s, and prints nothing) and reuses its pockets, obstruction zones (board B's

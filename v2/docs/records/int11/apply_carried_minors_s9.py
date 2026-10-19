@@ -57,7 +57,7 @@ def main():
             '    class: SESSION\n'
             '    status: OPEN\n'
             '    title: >-\n'
-            '      (set 9\'s AI check, minor item M10) Board A\'s charger U3 (BQ25731) switches at the frequency its PWM_FREQ bit\n'
+            '      (set 9\'s automated check, minor item M10) Board A\'s charger U3 (BQ25731) switches at the frequency its PWM_FREQ bit\n'
             '      selects: 400 kHz at power-on, 800 kHz when firmware clears it (SLUSE66A, ChargeOption0). The maker recommends\n'
             '      4.7 uH at 400 kHz and 2.2 uH at 800 kHz; board A fits 3.3 uH (L2, XAL6030-332ME) and no firmware setting is\n'
             '      declared in HW-FW-CONTRACT.md. The inductor ripple current and the EMC sheet\'s frequency follow from the\n'

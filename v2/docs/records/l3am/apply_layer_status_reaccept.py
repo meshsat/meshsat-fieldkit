@@ -72,7 +72,7 @@ def edits(rev, chk, rr):
          "conditional authorisation; the coordinator runs `apply_l3r5_accept.py --supersede`, the record at `b4b199d0` kept "
          "as history).",
          "The amendment changed the requirements registry, and the acceptance at `b4b199d0` carried no content manifest, so "
-         "it bound no content. The amendment was then checked (`%s`, Claude's verification at `%s`, not an Astra check "
+         "it bound no content. The amendment was then checked (`%s`, Claude's verification at `%s`, not a second-worker check "
          "and not the reviewer's%s; the collaborator's two checks of it read NOT ACCEPTED) and the findings closed; after set "
          "19's clean-clone check and box suite passed on %s "
          "(`v2/docs/records/int20/README.md`), the baseline was accepted again there under D-39 (`apply_l3r5_accept.py "
@@ -90,9 +90,9 @@ def edits(rev, chk, rr):
          "amendment's check and the gates." % OPEN,
          "The requirements baseline: accepted again at %s, the amended registry with its content manifest (first accepted "
          "at `b4b199d0`); %s, closed by the coordinator's check of the amendment." % (r8, status)),
-        ("(check-l3r5-3, accepted: yes, at `a66c4e5b`; not a model review and not an Astra check; "
+        ("(check-l3r5-3, accepted: yes, at `a66c4e5b`; not a model review and not a second-worker check; "
          "`v2/docs/records/l3r5/checks/`) |",
-         "(check-l3r5-3, accepted: yes, at `a66c4e5b`; not a model review and not an Astra check; "
+         "(check-l3r5-3, accepted: yes, at `a66c4e5b`; not a model review and not a second-worker check; "
          "`v2/docs/records/l3r5/checks/`); the amendment on the independent review: the collaborator's two checks read NOT "
          "ACCEPTED, Claude's verification accepts it (%s at `%s`, `v2/docs/records/l3am/checks/`) |" % (name, rr[:8])),
     ]

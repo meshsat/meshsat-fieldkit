@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """File the Layer 3 amendment's check 4 (check-l3am-4: Claude's re-verification after the supersede test of test_l3am.py
-was corrected at 8146b4cc; not a model review and not an Astra check) as the newest entry of l3r2.yaml's
+was corrected at 8146b4cc; not a model review and not a second-worker check) as the newest entry of l3r2.yaml's
 `independent_check`, ACCEPTED (MESHSAT-1357, 1 October 2026). Check 3 held only while the amendment's files were
 unchanged since cd231260; a corrected test changed one of them, so the closing check is re-issued for the revision that
 holds it. The record's three header lines are verified first (the format apply_l3am_findings_closed.py requires); a second
@@ -13,7 +13,7 @@ Y = "v2/docs/handover/layer3/l3r2.yaml"
 REC = "v2/docs/records/l3am/checks/check-l3am-4.md"
 SCOPE = ("the Layer 3 amendment l3am (L3-R01 to L3-R05) at 8146b4cc, check 3's amendment with the supersede test's expected "
          "history corrected: verify_l3am.py 16 of 16 and the diff since cd231260 read by Claude (the coordinator); not a "
-         "model review and not an Astra check")
+         "model review and not a second-worker check")
 
 
 def refuse(m): print("apply_l3am_check4: REFUSED: %s" % m); sys.exit(1)

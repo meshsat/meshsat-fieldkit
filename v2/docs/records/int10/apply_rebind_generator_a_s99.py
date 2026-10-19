@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Records bound to board A's schematic generator by sha, rebound after stream s99a (MESHSAT-1357, integration set 9,
-stream s99reg, 29 September 2026). AI engineering work; prototype design, nothing built, ordered or measured.
+stream s99reg, 29 September 2026). automated engineering work; prototype design, nothing built, ordered or measured.
 
 Stream s99a applied decision 55 to v2/ecad/tools/gen_sch_a.py, so four records bound to the file at set 8's sha no
 longer validate (three PASS records read as errors): CON-019, CON-018, CFL-014 and REQ-077. This script PROVES from the

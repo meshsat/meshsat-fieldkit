@@ -1,7 +1,7 @@
 # L5-PWR: Layer 4's power results written into Layer 5's interface contracts (MESHSAT-1357, set 27, 3 October 2026)
 
 Prototype design: nothing here has been built, powered or measured. This page records Layer 5's power pass on the integration
-candidate `fnd/l4e9` at `31bcc327` (L4-E9's consolidation with L4-F01 to L4-F04 and CP01 to CP03 carried): the handover entries
+candidate `fnd/l4e9` at `28cfedf6` (L4-E9's consolidation with L4-F01 to L4-F04 and CP01 to CP03 carried): the handover entries
 LH-01 to LH-11 of `../l4e9/LAYER5-HANDOVER.md`, the set 27 rows and the power lines' states, written into the three files Layer 5
 owns (`v2/ecad/tools/pcb_interfaces.yaml`, `v2/docs/HW-FW-CONTRACT.md`, `v2/docs/PANEL.md` section 10) by `apply_l5pwr.py`, read
 back by `l5pwr_contracts.py` (its output `l5pwr_contracts.out` pins every file by sha256 and refuses an excerpt that is not in
@@ -61,17 +61,17 @@ for every entry, the source row its figures are printed by.
   read; every entry on it names B6-ENG-1, section 4a), U-04's start (E11-06, E11-31), L4-F03's fault qualification (E11-38) and
   the other open rows named in section 7.
 - **Set 28's restatement (F-12).** A row whose cited figure set 27's Layer 4 corrections changed is restated, never edited: the
-  text written stays what the targets carried at `ef8bf2d9`; its figures that no longer stand are checked as printed by the row's
-  sources at `31bcc327` (read from this branch's history); the Layer 4 text that replaced them is a pattern with no typed number,
+  text written stays what the targets carried at `04c9844b`; its figures that no longer stand are checked as printed by the row's
+  sources at `28cfedf6` (read from this branch's history); the Layer 4 text that replaced them is a pattern with no typed number,
   matched exactly once in the tree's source, and its figures are parsed from the match; the targets are read at set 28's
-  `fe046060` to say whether record l5r2 restated the row in place or a withdrawn text is still there. The restated mark and
+  `e215a153` to say whether record l5r2 restated the row in place or a withdrawn text is still there. The restated mark and
   trigger replace the written ones in section 4's table and in section 7.
 - **Traceability.** Every excerpt in the table is verbatim in its target and every figure is printed by the cited Layer 4 file;
   `l5pwr_contracts.py` refuses otherwise, and `test_l5pwr.py` holds it.
 - **One script per target**, run once by the author who owns the targets, kept as the change's exact statement; it refuses a
   second run and asserts after patching the yaml that every anchor of L4-E11's dock draft still occurs once.
 - **L4-E5's draft applied first** (`../l4e5/apply_fw_a16.py --write`), because register row R-23 assigns its application to
-  Layer 5; `test_l4e5.py`'s apply fixture is re-stated on the contract as committed at `31bcc327` (a rule that fails when its
+  Layer 5; `test_l4e5.py`'s apply fixture is re-stated on the contract as committed at `28cfedf6` (a rule that fails when its
   subject is fixed is a rule about history).
 
 ## 4. The table
@@ -130,7 +130,7 @@ for every entry, the source row its figures are printed by.
 ## 4a. Restated at set 28 (finding F-12)
 
 `l5pwr_contracts.out` section 1a prints the same with the line of every citation. "The targets at set 28" reads
-`pcb_interfaces.yaml` and `HW-FW-CONTRACT.md` at `fe046060`: RESTATED IN PLACE (the text written is gone and record l5r2's text
+`pcb_interfaces.yaml` and `HW-FW-CONTRACT.md` at `e215a153`: RESTATED IN PLACE (the text written is gone and record l5r2's text
 stands), SUPERSEDED IN PLACE (l5r2's sentence stands beside the text written) or NOT RESTATED; a withdrawn text still there is a
 finding of section 9. The figures that no longer stand are the ones the row cited; the replacing text is quoted from the file.
 
@@ -141,7 +141,7 @@ L4-E9's page or handover. The `service` strings of IF-AE-DOCK `pack_pins` and IF
 carry the withdrawn pointer: NOT RESTATED, finding L5-F13 of section 9.
 
 **At set 31 (record l5pwr's correction W1, 6 October 2026, after the set 30 integration's refusal).** L4-E9's set 31
-(`../l4e9/SET31-CHANGES.md` items 2, 10 and 23, merged into the candidate at `3ca1193e`) restated D-10 from record l4e7's P0-7 as an
+(`../l4e9/SET31-CHANGES.md` items 2, 10 and 23, merged into the candidate at `9d0f98d9`) restated D-10 from record l4e7's P0-7 as an
 UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1 (the failing cases F1 to F4
 and the lower-source back-feed), with U5's absolute-rating violation corrected in draft by P0-7 (R-240, not applied), and withdrew
 R-186 under R-240. The D-10 sentence S27-B6 quoted at set 28 ("OPEN for the guard-on case: an absolute-rating violation at a connector
@@ -154,7 +154,7 @@ printed and its prose names no withdrawn item: unchanged. The targets column sti
 set 28's D-10 reading are finding L5-F14 of section 9.
 
 <!-- l5pwr-restated:begin -->
-| id | cited at `31bcc327`, no longer standing | why (the Layer 4 change: set 27's, or L4-E9's rounds 7 and 8 for a row restated at set 29; set 31's re-read for S27-B6 and S27-03) | what replaced it (file: the text, its figures parsed) | contract value | the targets at set 28 (`fe046060`) |
+| id | cited at `28cfedf6`, no longer standing | why (the Layer 4 change: set 27's, or L4-E9's rounds 7 and 8 for a row restated at set 29; set 31's re-read for S27-B6 and S27-03) | what replaced it (file: the text, its figures parsed) | contract value | the targets at set 28 (`e215a153`) |
 |---|---|---|---|---|---|
 | S27-B6 | 0.2396, 0.5287, 60.3, 3.30 uH | L4-E7's round 5 withdrew round 2's reference loop as a passing floor: at that loop a fault at the connector puts U5's pins past their absolute maximum, so D-10's guard-on case is OPEN and no loop is claimed to pass; set 31 (SET31-CHANGES.md items 2 and 23, the owner's part 23) restated D-10 from record l4e7's P0-7: an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1 (the port-level transient's failing cases F1 to F4 and the lower-source back-feed), with U5's absolute-rating violation corrected in draft by P0-7 (R-240, not applied), so set 28's D-10 sentence is no longer printed | L4-POWER-ARCHITECTURE.md: "OPEN: an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1: the guard's port-level transient (F1 and F2 absolute-rating violations below about 2.4 uH, F1 PV_F 321.9 V MODEL against the port's 100 V; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH; F4 the arriving source's slew over its 54 V/us line) and the lower-source back-feed (S1's row (b)); U5's absolute-rating violation corrected in draft by P0-7 (R-240)"; L4-POWER-ARCHITECTURE.md: "E-1, then S1 and S2 on the correction (R-180 and R-187 inputs, no passing route; R-186 WITHDRAWN under R-240)"; L4-POWER-ARCHITECTURE.md: "OPEN, REMAINING ENGINEERING: D-10 is an UNRESOLVED PROTECTION DEFECT in the present model ([P0SOL:101]), the receiving company's item E-1 (set 29's B6-ENG-1 as P0-7 restates it"; L4-POWER-ARCHITECTURE.md: "PROVISIONAL until E-1's correction: IF-01's D-10 protection claim, R-173 as a protection, R-176 rows 2 and 3, R-180, the port's parts and layout"; L4-POWER-ARCHITECTURE.md: "D-16 addressed in drafts (corrected in draft, R-240, PROVISIONAL on S3 and S4); D-10 restated as an unresolved protection defect, the receiving company's E-1"; L4-POWER-ARCHITECTURE.md: "at round 2's 3.30 uH reference loop, no loop claimed to pass (L4-E7's round 5)"; L4-POWER-ARCHITECTURE.md: "U5's pins, the complete budget, -0.3021 to +0.2591 V at a fault at the connector (past the -0.3 V ABSOLUTE MAXIMUM)"; L4-POWER-ARCHITECTURE.md: "inside 20 V; at 1.00 uH U5 0.5858 V"; L4-POWER-ARCHITECTURE.md: "turns Q12 off: at most 62.7 A within 11.4 us" | CHANGES: the guard-on case is no longer every rating with its margin from the reference loop; D-10 is OPEN, NOT CLOSED, an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's E-1 (the failing cases F1 to F4, MODELED, their figures as parsed above), and no loop is claimed to pass; U5's pins at the reference loop and at the low loop (the absolute-rating violation P0-7 corrects in draft, R-240, not applied) and the turn-off current are as section 4e still prints them (L4-E7's round 5); the stage question, set 29's B6-ENG-1, is E-1 | NOT RESTATED; the text written still at pcb_interfaces.yaml:1243; finding L5-F09 |
 | LH-04b | 11.48, 10.42 | L4-E9's round 7 corrected LH-04's pointer, which had read rv-pwr's PS-ALLTX PLAN line and not the floor's basis (decision D-11's all-transmit basis), and its round 8 restated it on Layer 9's final drafts | LAYER5-HANDOVER.md: "decision D-11's all-transmit basis at 18 A from a 13.898 V stack as drawn and 14.774 V on the final drafts, OCD1's 20 A only below a 13.442 V stack there"; L4-POWER-ARCHITECTURE.md: "decision D-11's all-transmit basis at 18 A from a 13.9 V stack as drawn, 14.77 V on the final drafts, needing 16.214 V rest against REQ-018's 15.5 V (D-17 OPEN" | CHANGES: the pointer is no longer the PS-ALLTX PLAN line's stack voltages; it is decision D-11's all-transmit basis and OCD1's stack as parsed above, and that basis is not supplied from REQ-018's pass line (D-17 OPEN); the continuous and the peak service currents stand | NOT RESTATED; the text written still at pcb_interfaces.yaml:768; withdrawn text still at pcb_interfaces.yaml:768: "PS-ALLTX's 18 A at an 11.48 V stack and OCD1's 20 A below 10.42 V"; finding L5-F13 |
@@ -172,7 +172,7 @@ in the tree, before any edit and after the last one:
 
 | Run | Set verdict | Contracts | The RF-002 walk (its own group) |
 |---|---|---|---|
-| before (`31bcc327`) | PASS of 99 | 99 pass, 0 fail, 0 unjudged, 0 undecided, 0 rails unsplit | 15 PASS, 11 UNDECIDED |
+| before (`28cfedf6`) | PASS of 99 | 99 pass, 0 fail, 0 unjudged, 0 undecided, 0 rails unsplit | 15 PASS, 11 UNDECIDED |
 | after (this pass) | PASS of 99 | the same | the same |
 
 The two stdouts are identical line for line, and the two set verdicts differ only in their `ts`, `tools` and `version` fields (provenance, not an answer: the tools folder holds `pcb_interfaces.yaml` and the tests, both edited). **Why
@@ -230,7 +230,7 @@ Section 3 of `l5pwr_contracts.out` lists them by id; the groups:
 ## 8. Decisions taken by the session (authority: SESSION, under the owner's standing rule of 26 September 2026)
 
 1. **L4-E5's draft applied to the tree** by its own script, because R-23 assigns its application to Layer 5; `test_l4e5.py`'s
-   apply fixture re-stated on the contract at `31bcc327`. *Reverse:* revert the contract's FW-A16, FW-A18 and V rows by the
+   apply fixture re-stated on the contract at `28cfedf6`. *Reverse:* revert the contract's FW-A16, FW-A18 and V rows by the
    script's own edits (it is reversible line for line).
 2. **The dock's `pins` map kept as the committed netlists'** and the drafted pin 1 written as its own field `pin1_vsys_dock`,
    with L4-E11's dock draft's anchors kept intact. *Why:* criterion 5.3 and `check_contracts.py` judge the committed netlists,
@@ -249,10 +249,10 @@ Section 3 of `l5pwr_contracts.out` lists them by id; the groups:
 
 8. **Set 28's restatement (F-12).** The six rows whose cited figures set 27's L4-E7 round 5 and L4-E11 section 18 changed are
    restated beside the table (section 4a), not edited in it: the table states what the first round wrote, and the reader reads
-   the targets at `ef8bf2d9`, so rewriting it would make the record claim a text the targets never carried. This record edits no
+   the targets at `04c9844b`, so rewriting it would make the record claim a text the targets never carried. This record edits no
    target (`pcb_interfaces.yaml` is the integrator's file, and the three targets are pinned by sha256 in L4-E9, L4-E11 and L4-E5);
    the withdrawn texts still in them are findings L5-F09 and L5-F10. The figures that no longer stand are checked at the record's
-   base `31bcc327` and the replacing texts are matched in the tree, so a later Layer 4 change refuses again rather than passing
+   base `28cfedf6` and the replacing texts are matched in the tree, so a later Layer 4 change refuses again rather than passing
    silently. *Reverse:* delete the RESTATED entries; the reader then refuses as it did on set 28's line.
 9. **L5-F09 and L5-F10 closed in the contracts for set 28 (the coordinator's instruction of 3 October 2026: set 28 must not publish
    withdrawn claims in the contracts; this record's author made the author of those six texts).** `apply_l5pwr2_contracts.py` is the
@@ -284,7 +284,7 @@ Section 3 of `l5pwr_contracts.out` lists them by id; the groups:
    restatements read L4-E9's page and register as set 31 left them (section 4a), every replacing text matched once with its
    figures parsed, the row's meaning unchanged and nothing widened; the figures parsed from the D-10 row are the ones record l4e7
    prints (`l4e7_p0sol.out` section 3, and "about 2.4 uH" at `L4E7-P0SOL.md` line 151). (b) `apply_l5pwr2_contracts.py` and
-   `apply_l5f11_contracts.py` read the Layer 4 files at `d3366d40`, where both were applied (their `L4_AT`), no longer from the tree:
+   `apply_l5f11_contracts.py` read the Layer 4 files at `8ecd72ce`, where both were applied (their `L4_AT`), no longer from the tree:
    each quotes set 28's D-10 sentence, so both refused on the set 30 candidate although the contracts carry what they wrote; an
    applied script is history, the same rule as `L5PWR_COMMIT` (decision 8). That the contracts now lag the page is L5-F14, not
    something the scripts decide. *Reverse:* (a) restore the set 28 patterns (the script then refuses on any tree after set 31); (b)
@@ -302,9 +302,9 @@ Section 3 of `l5pwr_contracts.out` lists them by id; the groups:
 | L5-F06 | Layer 8 (board C or A) | The SLOT_EN hold across a panel reset is still in no generator (FW-C02 OWED): criterion 5.6's item named at H2 stays open after this pass | the hold drawn |
 | L5-F07 | the CONOPS owner | CONOPS section 4 carries neither the margin hold as a mode nor the source-only statement | `apply_conops_l5pwr.py --write`, then the rebinds |
 | L5-F08 | the integrator (E5) | IF-AE-DOCK's E5 end has no `part`, `src` or ref because the block has no schematic; hc5's field checker reports it as information | a `what` end is the honest form; no action unless the checker's rule changes |
-| L5-F09 | Layer 5's contract owner (the round after l5r2), the integrator | At set 28 (`fe046060`) the solar guard's texts this pass wrote still carry L4-E7's round 2 reading, which its round 5 withdrew: `pcb_interfaces.yaml` IF-EXT-DC `protection` (line 1243: every rating with its margin only from round 2's reference loop, with round 2's U5 figures) and `bench` (line 1274: row 3 a pass only from that loop); `HW-FW-CONTRACT.md` V-E16 (line 313: row 2's PV_F bound, row 3's turn-off current and its pass) and section 4.1's R-173 row (line 261). Section 4a quotes each and the texts that replaced them | DONE for set 28 by `apply_l5pwr2_contracts.py` (decision 9; the integrator's script, applied on `fnd/l5pwr2`): the four texts restated to the Layer 4 text with every figure parsed from L4-E9's page, the register and L4-E11's output, PROVISIONAL with B6-ENG-1 and B6-ENG-2; owed: L4-E9's pins of `hwfw` and `ifaces` and L4-E11's of `hwfw` (their outputs change in those pin lines only), and the `interfaces.py` re-take (CONFIG_INPUTS) |
+| L5-F09 | Layer 5's contract owner (the round after l5r2), the integrator | At set 28 (`e215a153`) the solar guard's texts this pass wrote still carry L4-E7's round 2 reading, which its round 5 withdrew: `pcb_interfaces.yaml` IF-EXT-DC `protection` (line 1243: every rating with its margin only from round 2's reference loop, with round 2's U5 figures) and `bench` (line 1274: row 3 a pass only from that loop); `HW-FW-CONTRACT.md` V-E16 (line 313: row 2's PV_F bound, row 3's turn-off current and its pass) and section 4.1's R-173 row (line 261). Section 4a quotes each and the texts that replaced them | DONE for set 28 by `apply_l5pwr2_contracts.py` (decision 9; the integrator's script, applied on `fnd/l5pwr2`): the four texts restated to the Layer 4 text with every figure parsed from L4-E9's page, the register and L4-E11's output, PROVISIONAL with B6-ENG-1 and B6-ENG-2; owed: L4-E9's pins of `hwfw` and `ifaces` and L4-E11's of `hwfw` (their outputs change in those pin lines only), and the `interfaces.py` re-take (CONFIG_INPUTS) |
 | L5-F10 | the same | At set 28 `pcb_interfaces.yaml` IF-AE-DOCK `pin1_vsys_dock` still calls the hard short's figure "a ceiling" (line 706; L4-E11 17a now: a resistive extrapolation and E11-38's test target, not a bound) and still words the stagger "with a PWM ramp, ... never while U12 starts" (line 714; L4-E11 18c and FW-E11 at `HW-FW-CONTRACT.md` line 187: a PWM-duty ramp into the fan's PWM input, never while U12 or U22 starts); record l5r2's round 2 sentence (line 723) supersedes the start rule's figures only | DONE for set 28 by `apply_l5pwr2_contracts.py` (decision 9; the integrator's script, applied on `fnd/l5pwr2`): both sentences restated to the Layer 4 text with every figure parsed from L4-E9's page, the register and L4-E11's output, PROVISIONAL with E11-38 (and E11-35 for the stagger); owed: L4-E9's pins of `hwfw` and `ifaces` and L4-E11's of `hwfw` (their outputs change in those pin lines only), and the `interfaces.py` re-take (CONFIG_INPUTS) |
-| L5-F11 | Layer 5's contract owner, the coordinator | Outside the rows of L5-F09 and L5-F10, `pcb_interfaces.yaml` IF-AE-DOCK `pin1_vsys_dock` still carries set 27's first fan basis: the feed "(U12, C31, the mixer fans, D7 and D8)" and "1.0 A declared (U12 0.8 A, the fans 0.1 A each), ... 28.6 percent" (lines 698 and 699 at `760e404d`; R-177 removes D7 and D8, L4-E11 18b declares the branch afresh), the drop and VSYS_E at the floor (line 702) and the start rule's currents on VSYS_E (line 716), each superseded in place by record l5r2's round 2 sentence (line 728), and the STATE's "(E11-35, R-179: no fan is named)" (line 722; Layer 7's D-18 names them), which nothing supersedes; `FAN1_SW_FAN2_SW.start` (line 322) opens with the PWM ramp and U12 alone before its own section 18 sentence; IF-EXT-DC `l4_defects` (line 1289) says D-10's guard-on case NOT CLOSED where L4-E9 8a says OPEN | DONE for set 28 by `apply_l5f11_contracts.py` (decision 10), with the sweep's four further rows; owed: the same re-pins as L5-F09 and the `interfaces.py` re-take |
+| L5-F11 | Layer 5's contract owner, the coordinator | Outside the rows of L5-F09 and L5-F10, `pcb_interfaces.yaml` IF-AE-DOCK `pin1_vsys_dock` still carries set 27's first fan basis: the feed "(U12, C31, the mixer fans, D7 and D8)" and "1.0 A declared (U12 0.8 A, the fans 0.1 A each), ... 28.6 percent" (lines 698 and 699 at `3ead12c5`; R-177 removes D7 and D8, L4-E11 18b declares the branch afresh), the drop and VSYS_E at the floor (line 702) and the start rule's currents on VSYS_E (line 716), each superseded in place by record l5r2's round 2 sentence (line 728), and the STATE's "(E11-35, R-179: no fan is named)" (line 722; Layer 7's D-18 names them), which nothing supersedes; `FAN1_SW_FAN2_SW.start` (line 322) opens with the PWM ramp and U12 alone before its own section 18 sentence; IF-EXT-DC `l4_defects` (line 1289) says D-10's guard-on case NOT CLOSED where L4-E9 8a says OPEN | DONE for set 28 by `apply_l5f11_contracts.py` (decision 10), with the sweep's four further rows; owed: the same re-pins as L5-F09 and the `interfaces.py` re-take |
 | L5-F13 | Layer 5's contract owner (its next round), the integrator | At set 29 the `service` strings of IF-AE-DOCK `pack_pins` and IF-PE-PACK `power` in `pcb_interfaces.yaml` still carry the pointer L4-E9's round 7 withdrew (the PS-ALLTX PLAN line's stack voltages, read as if they were decision D-11's all-transmit basis). L4-E9's LH-04 now gives that basis on Layer 9's final drafts, and it is not supplied from REQ-018's pass line (D-17 OPEN). Found by the coordinator at set 29's integration, when this record's script refused on the merged tree; row LH-04b is restated in section 4a and the contract text is left as written | restate both `service` strings in place from L4-E9's LH-04 (a registry change: the Layer 4 readers that pin `pcb_interfaces.yaml` re-pin in that set) |
 | L5-F14 | Layer 5's contract owner (its next round), the integrator | Since set 31 the contract texts restated at set 28 (L5-F09, L5-F11) carry a D-10 reading L4-E9's page no longer prints: `pcb_interfaces.yaml` IF-EXT-DC `protection` (lines 1255 to 1262: "D-10's guard-on case is OPEN since L4-E7's round 5, an absolute-rating violation at a connector fault", "PROVISIONAL, OPEN (B6-ENG-1, the engineer's stage question: R-180 an input only, R-186 Analog Devices' answer, R-187 does not hold; its wider form B6-ENG-2, R-189, D-16)"), `bench` (line 1291: "B6-ENG-1 decides: PROVISIONAL, OPEN, B6-ENG-1 and B6-ENG-2") and `l4_defects` (lines 1296 to 1297: "D-10's guard-on case OPEN (L4-E9 8a: an absolute-rating violation at a connector fault, no loop claimed to pass; PROVISIONAL: B6-ENG-1, B6-ENG-2)"); `HW-FW-CONTRACT.md` section 4.1's R-173 row (line 261: "B6-ENG-1 decides (PROVISIONAL, OPEN: B6-ENG-1, B6-ENG-2)") and V-E16 (line 313: "B6-ENG-1 and B6-ENG-2: R-180, R-186, R-187, R-189"). The page now reads D-10 as an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's E-1 (F1 to F4, the lower-source back-feed), U5's absolute-rating violation corrected in draft by P0-7 (R-240), R-186 WITHDRAWN, B6-ENG-2's D-16 addressed in drafts (section 4a). None of the five claims more than the page (each says OPEN and PROVISIONAL); they name a superseded reason and a withdrawn route. Found by record l5pwr's correction W1 | restate the five texts from L4-E9's section 6 and 8a D-10 rows by an apply script for the integrator (figures parsed, idempotent, the old texts asserted); then the re-pins of the readers that pin the two files and the `interfaces.py` re-take (CONFIG_INPUTS) |
 
@@ -322,10 +322,10 @@ Section 3 of `l5pwr_contracts.out` lists them by id; the groups:
 
 `python3 v2/docs/records/l5pwr/l5pwr_contracts.py` prints the table (a second at most, stdlib only); `_bin/regen_out.py` is the
 only way the committed output is regenerated. `env -C v2/ecad/tools/tests python3 run.py test_l5pwr` holds the predicates.
-`apply_l5pwr.py <target> --check` on the tree refuses "already applied"; on the files at `31bcc327` (the contract after
+`apply_l5pwr.py <target> --check` on the tree refuses "already applied"; on the files at `28cfedf6` (the contract after
 `../l4e5/apply_fw_a16.py`) it checks OK and reproduces the tree's files byte for byte (`test_l5pwr.py` does both). It also holds set 28's restatement: every
 withdrawn figure is one the row cites, every replacing text is matched once with its figures parsed, no figure is typed in the
 restatement's prose or patterns, and the page's section 4a equals the script's. Since W1 (decision 11) `apply_l5pwr2_contracts.py`
-and `apply_l5f11_contracts.py` read the Layer 4 files at `d3366d40` (a git checkout holding this branch's history is needed), and
+and `apply_l5f11_contracts.py` read the Layer 4 files at `8ecd72ce` (a git checkout holding this branch's history is needed), and
 `test_l5pwr` holds S27-B6's reading of set 31's D-10 both ways (it refuses set 28's sentence on the page and set 31's on a copy
 carrying set 28's).

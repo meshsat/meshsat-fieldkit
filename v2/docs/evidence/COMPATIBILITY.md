@@ -124,10 +124,10 @@ file only; a change in a module it imports is not seen (stated on `v2/docs/CURRE
 
 ## Tool entries of 27 September 2026: three, and why
 
-MESHSAT-1357, the second release attempt of layers 1 to 3 (branch `fnd/rel2` from `66d9761a`). Layer 3's release check
+MESHSAT-1357, the second release attempt of layers 1 to 3 (branch `fnd/rel2` from `68a83858`). Layer 3's release check
 (`v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md`, finding R5) asked the requirements validator in
 `v2/ecad/tools/rules_lib.py` to refuse any SC- id that no session choice of the registry defines. `rules_lib.py` is in
-the code bundle of two writers whose readings are current on `66d9761a`: `intent_checks.py` (PWR-001 on boards A, D and
+the code bundle of two writers whose readings are current on `68a83858`: `intent_checks.py` (PWR-001 on boards A, D and
 E, the `intent_rails` readings of 27 September 2026 00:26 UTC, bundle 5aa3d5157698ae2a) and `derate.py` (CMP-001 on E5,
 bundle 4c4fc2aca3d8e542). Any edit of the file changes both bundles, so without an entry `rules_status.py` reads the
 four TOOL_CHANGED. The edit cannot reach either writer, and `v2/docs/records/rel2/tool_compat.py` shows it from the
@@ -135,7 +135,7 @@ files (output `v2/docs/records/rel2/tool_compat.out`):
 
 | writer | then | now | files of the bundle that moved | what moved in it | reached by the bundle |
 |---|---|---|---|---|---|
-| `intent_checks.py` | 5aa3d5157698ae2a | 3261e823102e587f | `rules_lib.py` only (c0458c53923d7925, the file at `66d9761a`, to 6154bd6c15bdfa6b) | the syntax trees with docstrings removed differ in `validate_requirements` and `main` (its `requirements` command) and in six added names: `SC_CITING_GLOBS`, `_SC_CITED`, `_SC_DRAFT`, `_strings_of`, `session_choice_citing_files`, `undefined_session_choice_citations`; nothing removed | none: no file of the bundle takes any of those names from the module (`intent_checks.py:881` and `:937` import it for the reference prefix, `verdict.py` for the rules' fingerprints, both unchanged) |
+| `intent_checks.py` | 5aa3d5157698ae2a | 3261e823102e587f | `rules_lib.py` only (c0458c53923d7925, the file at `68a83858`, to 6154bd6c15bdfa6b) | the syntax trees with docstrings removed differ in `validate_requirements` and `main` (its `requirements` command) and in six added names: `SC_CITING_GLOBS`, `_SC_CITED`, `_SC_DRAFT`, `_strings_of`, `session_choice_citing_files`, `undefined_session_choice_citations`; nothing removed | none: no file of the bundle takes any of those names from the module (`intent_checks.py:881` and `:937` import it for the reference prefix, `verdict.py` for the rules' fingerprints, both unchanged) |
 | `derate.py` | 4c4fc2aca3d8e542 | 1e03e805d1e67712 | `rules_lib.py` only (the same change) | the same | none (`derate.py:68` imports it for the reference prefix) |
 
 This is a dependency rationale, not the documentation-only one the section above asks of an older tool: the moved file's
@@ -144,30 +144,30 @@ pin both bundles by content, so any later edit of any file of either bundle stop
 the session under the owner's standing rule of 26 September 2026.
 
 **A third entry, for `edge_length.py` (the release finalizer of layers 1 to 3, the same day).** The change was rebased
-onto main `bd282618`, where the consolidated re-take (`4ece0866`, `547238ad`) had made the SI-001 readings of boards A,
+onto main `ea8f81e5`, where the consolidated re-take (`8752f135`, `e91b33c2`) had made the SI-001 readings of boards A,
 B, C, D, E and P current (`edge_length.py`, bundle 9882ad1bc5620724, with `rules_lib.py` at c0458c53923d7925); a render
-of the rebased branch read all six TOOL_CHANGED. `v2/docs/records/rel2/tool_compat.py bd282618` over those twelve
+of the rebased branch read all six TOOL_CHANGED. `v2/docs/records/rel2/tool_compat.py ea8f81e5` over those twelve
 verdict files (`out/` and `routed/` of each board; output `v2/docs/records/rel2f/tool_compat_edge_length.out`) shows the
 same: `rules_lib.py` is the only file of the bundle that moved (c0458c53923d7925 to 6154bd6c15bdfa6b, the same change as
 above), and no file of the bundle reaches a changed or added name (`edge_length.py:384` and `:440` call only
-`board_facts()`, unchanged). With it, every reading the rules_lib.py change reaches on `bd282618` reads VALID_HISTORICAL
+`board_facts()`, unchanged). With it, every reading the rules_lib.py change reaches on `ea8f81e5` reads VALID_HISTORICAL
 and counts as current: SI-001 on boards A, B, C, D, E and P through this entry, PWR-001 on the same six and CMP-001 on
 all seven through the two above (81 current rows before the rebase, 81 after: 62 CURRENT_CANDIDATE and 19 VALID_HISTORICAL).
 
 ## Tool entries of 30 September 2026: four, and why
 
-MESHSAT-1357, layer 3's closure (branch `fnd/l3r5` from `4908bc02`). The owner's clarification D-28 asks that every
+MESHSAT-1357, layer 3's closure (branch `fnd/l3r5` from `ffe1ec2e`). The owner's clarification D-28 asks that every
 mandatory requirement and design objective be distinguishable, so the requirements validator in
 `v2/ecad/tools/rules_lib.py` gained the `obligation` field (MANDATORY or OBJECTIVE) and its checks. `rules_lib.py` is in
-the code bundle of four writers whose readings are current on `4908bc02` and on main: `derate.py` (CMP-001 on all seven
+the code bundle of four writers whose readings are current on `ffe1ec2e` and on main: `derate.py` (CMP-001 on all seven
 boards), `intent_checks.py` (PWR-001 on A, B, C, D, E and P), `edge_length.py` (SI-001 on the same six) and
 `emc_sheet.py`. A render with the edit and no entry read 26 rows TOOL_CHANGED: CMP-001 on seven boards, PWR-001 and
-SI-001 on six each, and SGN-001 on seven (below). `v2/docs/records/rel2/tool_compat.py 4908bc02` over the 39 verdicts of
+SI-001 on six each, and SGN-001 on seven (below). `v2/docs/records/rel2/tool_compat.py ffe1ec2e` over the 39 verdicts of
 those writers (output `v2/docs/records/l3r5/tool_compat_l3r5.out`) shows the edit cannot reach any of them:
 
 | writer | then | now | files of the bundle that moved | what moved in it | reached by the bundle |
 |---|---|---|---|---|---|
-| `derate.py` | 8993c5af67e24c79 | 2185776f15bff2f7 | `rules_lib.py` only (a6e2421096c1473f, the file at `4908bc02`, to a4ca98fd49f57f69) | the syntax trees with docstrings removed differ in `validate_requirements` and in one added name, `OBLIGATION`; nothing removed | none |
+| `derate.py` | 8993c5af67e24c79 | 2185776f15bff2f7 | `rules_lib.py` only (a6e2421096c1473f, the file at `ffe1ec2e`, to a4ca98fd49f57f69) | the syntax trees with docstrings removed differ in `validate_requirements` and in one added name, `OBLIGATION`; nothing removed | none |
 | `intent_checks.py` | ed6cecb873c5d32b | 932fed3864a30f88 | `rules_lib.py` only (the same change) | the same | none |
 | `edge_length.py` | 06b578216dd3aac6 | 7ac2c5111ce45105 | `rules_lib.py` only (the same change) | the same | none |
 | `emc_sheet.py` | 8b385cbfa0ff9fe9 | e2f048ceca98887f | `rules_lib.py` only (the same change) | the same | none |
@@ -251,8 +251,8 @@ compatibility:
     then: 5aa3d5157698ae2a
     now: 3261e823102e587f
     summary: "rules_lib.py gained the requirements validator's SC- id check; nothing intent_checks.py's bundle reaches moved"
-    rationale: "The only file of the bundle that moved is rules_lib.py (c0458c53923d7925 at 66d9761a to 6154bd6c15bdfa6b). With docstrings removed its syntax tree differs in validate_requirements and main and in six added names (SC_CITING_GLOBS, _SC_CITED, _SC_DRAFT, _strings_of, session_choice_citing_files, undefined_session_choice_citations), none removed; no file of the bundle takes any of them from the module (intent_checks.py:881 and :937 use it for the reference prefix, verdict.py for the rules' fingerprints, which are unchanged)."
-    method: "v2/docs/records/rel2/tool_compat.py 66d9761a with the intent_rails verdicts of boards A, D and E and E5's derate verdict; output v2/docs/records/rel2/tool_compat.out"
+    rationale: "The only file of the bundle that moved is rules_lib.py (c0458c53923d7925 at 68a83858 to 6154bd6c15bdfa6b). With docstrings removed its syntax tree differs in validate_requirements and main and in six added names (SC_CITING_GLOBS, _SC_CITED, _SC_DRAFT, _strings_of, session_choice_citing_files, undefined_session_choice_citations), none removed; no file of the bundle takes any of them from the module (intent_checks.py:881 and :937 use it for the reference prefix, verdict.py for the rules' fingerprints, which are unchanged)."
+    method: "v2/docs/records/rel2/tool_compat.py 68a83858 with the intent_rails verdicts of boards A, D and E and E5's derate verdict; output v2/docs/records/rel2/tool_compat.out"
     ruled_by: session
     ruled_on: 2026-09-27
     authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
@@ -262,7 +262,7 @@ compatibility:
     now: 1e03e805d1e67712
     summary: "rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved"
     rationale: "The only file of the bundle that moved is rules_lib.py (the same change as intent_checks.py's entry: validate_requirements and main changed, six names added, none removed). derate.py:68 uses the module for the reference prefix and verdict.py for the rules' fingerprints, neither of which changed, and no file of the bundle takes a changed or added name from it."
-    method: "v2/docs/records/rel2/tool_compat.py 66d9761a with E5's derate verdict; output v2/docs/records/rel2/tool_compat.out"
+    method: "v2/docs/records/rel2/tool_compat.py 68a83858 with E5's derate verdict; output v2/docs/records/rel2/tool_compat.out"
     ruled_by: session
     ruled_on: 2026-09-27
     authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
@@ -271,8 +271,8 @@ compatibility:
     then: 9882ad1bc5620724
     now: 5b817048ed7bc29f
     summary: "rules_lib.py gained the requirements validator's SC- id check; nothing edge_length.py's bundle reaches moved"
-    rationale: "The only file of the bundle that moved is rules_lib.py (c0458c53923d7925, the file at bd282618, to 6154bd6c15bdfa6b: validate_requirements and main changed, six names added, none removed, as in the two entries above). edge_length.py:384 and :440 call the module's board_facts() only, which did not change, and no file of the bundle takes a changed or added name from it."
-    method: "v2/docs/records/rel2/tool_compat.py bd282618 with the edge_length verdicts of boards A, B, C, D, E and P (out and routed); output v2/docs/records/rel2f/tool_compat_edge_length.out; script v2/docs/records/rel2f/apply_compat.py"
+    rationale: "The only file of the bundle that moved is rules_lib.py (c0458c53923d7925, the file at ea8f81e5, to 6154bd6c15bdfa6b: validate_requirements and main changed, six names added, none removed, as in the two entries above). edge_length.py:384 and :440 call the module's board_facts() only, which did not change, and no file of the bundle takes a changed or added name from it."
+    method: "v2/docs/records/rel2/tool_compat.py ea8f81e5 with the edge_length verdicts of boards A, B, C, D, E and P (out and routed); output v2/docs/records/rel2f/tool_compat_edge_length.out; script v2/docs/records/rel2f/apply_compat.py"
     ruled_by: session
     ruled_on: 2026-09-27
     authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
@@ -281,8 +281,8 @@ compatibility:
     then: 8993c5af67e24c79
     now: 2185776f15bff2f7
     summary: "rules_lib.py gained the requirements validator's obligation field (D-28); nothing derate.py's bundle reaches moved"
-    rationale: "The only file of the bundle that moved is rules_lib.py (a6e2421096c1473f at 4908bc02 to a4ca98fd49f57f69). With docstrings removed its syntax tree differs in validate_requirements and in one added name, OBLIGATION, none removed; no file of the bundle takes either name from the module."
-    method: "v2/docs/records/rel2/tool_compat.py 4908bc02 with the 39 verdicts of derate.py, intent_checks.py, edge_length.py and emc_sheet.py that carry a code bundle; output v2/docs/records/l3r5/tool_compat_l3r5.out"
+    rationale: "The only file of the bundle that moved is rules_lib.py (a6e2421096c1473f at ffe1ec2e to a4ca98fd49f57f69). With docstrings removed its syntax tree differs in validate_requirements and in one added name, OBLIGATION, none removed; no file of the bundle takes either name from the module."
+    method: "v2/docs/records/rel2/tool_compat.py ffe1ec2e with the 39 verdicts of derate.py, intent_checks.py, edge_length.py and emc_sheet.py that carry a code bundle; output v2/docs/records/l3r5/tool_compat_l3r5.out"
     ruled_by: session
     ruled_on: 2026-09-30
     authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
@@ -291,8 +291,8 @@ compatibility:
     then: ed6cecb873c5d32b
     now: 932fed3864a30f88
     summary: "rules_lib.py gained the requirements validator's obligation field (D-28); nothing intent_checks.py's bundle reaches moved"
-    rationale: "The only file of the bundle that moved is rules_lib.py (a6e2421096c1473f at 4908bc02 to a4ca98fd49f57f69). With docstrings removed its syntax tree differs in validate_requirements and in one added name, OBLIGATION, none removed; no file of the bundle takes either name from the module."
-    method: "v2/docs/records/rel2/tool_compat.py 4908bc02 with the 39 verdicts of derate.py, intent_checks.py, edge_length.py and emc_sheet.py that carry a code bundle; output v2/docs/records/l3r5/tool_compat_l3r5.out"
+    rationale: "The only file of the bundle that moved is rules_lib.py (a6e2421096c1473f at ffe1ec2e to a4ca98fd49f57f69). With docstrings removed its syntax tree differs in validate_requirements and in one added name, OBLIGATION, none removed; no file of the bundle takes either name from the module."
+    method: "v2/docs/records/rel2/tool_compat.py ffe1ec2e with the 39 verdicts of derate.py, intent_checks.py, edge_length.py and emc_sheet.py that carry a code bundle; output v2/docs/records/l3r5/tool_compat_l3r5.out"
     ruled_by: session
     ruled_on: 2026-09-30
     authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
@@ -301,8 +301,8 @@ compatibility:
     then: 06b578216dd3aac6
     now: 7ac2c5111ce45105
     summary: "rules_lib.py gained the requirements validator's obligation field (D-28); nothing edge_length.py's bundle reaches moved"
-    rationale: "The only file of the bundle that moved is rules_lib.py (a6e2421096c1473f at 4908bc02 to a4ca98fd49f57f69). With docstrings removed its syntax tree differs in validate_requirements and in one added name, OBLIGATION, none removed; no file of the bundle takes either name from the module."
-    method: "v2/docs/records/rel2/tool_compat.py 4908bc02 with the 39 verdicts of derate.py, intent_checks.py, edge_length.py and emc_sheet.py that carry a code bundle; output v2/docs/records/l3r5/tool_compat_l3r5.out"
+    rationale: "The only file of the bundle that moved is rules_lib.py (a6e2421096c1473f at ffe1ec2e to a4ca98fd49f57f69). With docstrings removed its syntax tree differs in validate_requirements and in one added name, OBLIGATION, none removed; no file of the bundle takes either name from the module."
+    method: "v2/docs/records/rel2/tool_compat.py ffe1ec2e with the 39 verdicts of derate.py, intent_checks.py, edge_length.py and emc_sheet.py that carry a code bundle; output v2/docs/records/l3r5/tool_compat_l3r5.out"
     ruled_by: session
     ruled_on: 2026-09-30
     authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
@@ -311,8 +311,8 @@ compatibility:
     then: 8b385cbfa0ff9fe9
     now: e2f048ceca98887f
     summary: "rules_lib.py gained the requirements validator's obligation field (D-28); nothing emc_sheet.py's bundle reaches moved"
-    rationale: "The only file of the bundle that moved is rules_lib.py (a6e2421096c1473f at 4908bc02 to a4ca98fd49f57f69). With docstrings removed its syntax tree differs in validate_requirements and in one added name, OBLIGATION, none removed; no file of the bundle takes either name from the module."
-    method: "v2/docs/records/rel2/tool_compat.py 4908bc02 with the 39 verdicts of derate.py, intent_checks.py, edge_length.py and emc_sheet.py that carry a code bundle; output v2/docs/records/l3r5/tool_compat_l3r5.out"
+    rationale: "The only file of the bundle that moved is rules_lib.py (a6e2421096c1473f at ffe1ec2e to a4ca98fd49f57f69). With docstrings removed its syntax tree differs in validate_requirements and in one added name, OBLIGATION, none removed; no file of the bundle takes either name from the module."
+    method: "v2/docs/records/rel2/tool_compat.py ffe1ec2e with the 39 verdicts of derate.py, intent_checks.py, edge_length.py and emc_sheet.py that carry a code bundle; output v2/docs/records/l3r5/tool_compat_l3r5.out"
     ruled_by: session
     ruled_on: 2026-09-30
     authority: "taken by the session under the owner's standing rule of 26 Sep 2026"

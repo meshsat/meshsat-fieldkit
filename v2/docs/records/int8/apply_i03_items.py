@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Finding I-03 (the A to B power leads, contract IF-AB-POWER) recorded in the requirements registry after the Codex
+"""Finding I-03 (the A to B power leads, contract IF-AB-POWER) recorded in the requirements registry after the second worker
 pilot and its independent check (MESHSAT-1357, integration set 7, 28 September 2026; v2/docs/records/cx1/).
 
   S-98  the interim alignment of the two ends' declarations, owed to the generator owners of boards A and B in the
@@ -27,7 +27,7 @@ T98 = (
     "(cx1, finding I-03 on the contract IF-AB-POWER) The two ends of the board A to board B power leads declare different "
     "currents for one conductor: +5V_S2 (board A 2.5 A typical and 5.0 A peak; board B 4.2 A typical and 5.63 A coincident "
     "with the 5G module at 4 A) and +5V_DEV (board A apportions 3.2 A to J_5V_DEV; board B declares 3.8 A typical arriving). "
-    "The pilot's record (v2/docs/records/cx1/ANALYSIS.md and CORRECTION.md, its independent AI check in checks/) derives "
+    "The pilot's record (v2/docs/records/cx1/ANALYSIS.md and CORRECTION.md, its independent automated check in checks/) derives "
     "board B's figures from held maker pages (the CM5's 0.9 A typical, release 3, no maximum published; the RM520N-GL's 3 A "
     "continuous and 4 A peak supply capability, Hardware Design v1.0 and v1.1) and finds no held document that decides the "
     "PS-ALLTX mode current of any of the five rails (INCONCLUSIVE on all five), so the alignment is INTERIM and the end that "

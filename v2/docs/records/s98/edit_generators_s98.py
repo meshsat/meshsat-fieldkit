@@ -3,7 +3,7 @@
 made AFTER v2/docs/records/cx1/apply_declarations_draft.py was applied (its four entries carry the interim figures).
 Kept as the byte-exact account of every change beyond the draft's, and runnable once on a tree that carries the draft:
 each replacement asserts its old text occurs exactly once, the result must parse (ast), and a tree that already carries
-the new text is refused. Prototype design, AI engineering work; nothing built, ordered or measured.
+the new text is refused. Prototype design, automated engineering work; nothing built, ordered or measured.
 
 What it changes and why (the record's README.md carries the sources):
   gen_sch_a.py
