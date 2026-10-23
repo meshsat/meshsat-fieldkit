@@ -48,11 +48,7 @@ With the MOLLE plate: 69.6 × 160.0 × 71.7 mm.
 5. Close the lid with even torque until it touches the rim. The rim is the hard stop, so don't overtighten.
 
 ## Electrical: open decisions (not designed here)
-- **9704 power (F12):** Ground Control requires a battery supply to stay within 3.6 to 4.5 V on V_BATT. An 18650 drops below 3.6 V well before empty. Options:
-  - (a) a 5 V boost converter feeding **V_IN+** (pin 15, 4.0 to 5.3 V, 500 mA); the lower bay has free space for one, y ≈ 22 to 56
-  - (b) direct V_BATT with a firmware cutoff at about 3.7 V, accepting shorter runtime
-  
-  Use I_EN/I_BTD for start-up and shutdown. Connect all four 9704 grounds. Don't use the 9704's USB and header at the same time.
+- **9704 power (F12), decided 23 Oct 2026 (MESHSAT-1507):** the cell feeds V_BATT directly from the T-Beam's VBAT header pin, and the firmware starts and stops the modem through I_EN and I_BTD. No boost converter, so the lower bay needs no space for one; the enclosure is unchanged. For the record, the options weighed: (a) a 5 V boost on **V_IN+** (pin 15, 4.0 to 5.3 V, 500 mA), which the free lower-bay area at y ≈ 22 to 56 could have taken; (b) the T-Beam's DC5 rail (3.7 V, 1 A) with a firmware cutoff, which held the modem on a full cell and dropped it on a half-charged one. Connect all four 9704 grounds. Don't use the 9704's USB and header at the same time. The six-wire harness: VBAT to 12, GND to 16 (1, 4, 10 bridged on the 9704 header), TXD to 14, RXD to 13, IO21 to 3 I_EN, IO39 to 7 I_BTD; full table in the meshsat-esp32 reference.
 - **Co-location (F13):** Ground Control's installation page says the 9704-SMA Iridium certification assumes **no other transmitter in the same housing**, the qualified helical antenna with ≤ 0.5 dB feed loss, and the antenna ≥ 1 m above ground or metal. This design puts LoRa/BLE/WiFi in the same housing and adds a pigtail and bulkhead. **Get Ground Control's written position before a final build.**
 
 ## Rebuild and verify
