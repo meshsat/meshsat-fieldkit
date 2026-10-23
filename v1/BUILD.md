@@ -179,6 +179,19 @@ All signals are 3.3 V. GPIO numbers are BCM; "pin" is the header pin. The chip i
 | 39 | | | GND | DCF77 G |
 | 40 | 21 | in | DCF77 data | DCF77 T |
 
+**9704 harness wire colours** (read from two photos of 21 Sep 2026 16:20, the bench afternoon before TTC26, `images/9704-harness-pi-header-2026-09-21-a.jpg` and `-b.jpg`; the harness is eight Dupont leads from a rainbow ribbon into the X1202's stacking header on top of the Pi). The fan connector marks the pin 39/40 end; counting header columns from the pin 1 end the housings sit on columns 1, 3, 4, 5, 8, 9, 15 and 19, which are the eight pins of the table above. The two wires standing alone are certain; the six at the pin 1 end are assigned by their order along the header and are to be confirmed on the kit with the case open (MESHSAT-1658). Which of the two kits the photos show is not recorded; both were wired alike on 20 Sep 2026.
+
+| Pi pin | Signal | 9704 pin | Colour |
+|---|---|---|---|
+| 2 | 5 V | 15, V_IN+ | yellow |
+| 6 | GND | 16, V_IN- | teal (green) |
+| 7 | UART2 TX | 14, RXD | purple |
+| 9 | GND | 1, signal ground | black |
+| 16 | I_BTD | 7 | grey |
+| 18 | P_EN | 6 | olive (khaki; the ribbon's brown under warm light) |
+| 29 | UART2 RX | 13, TXD | blue (certain: alone on column 15) |
+| 37 | I_EN | 3 | orange (certain: alone on column 19, by the fan connector) |
+
 Serial `/dev/ttyAMA2` at 230400 8N1 (UART2 on BCM 4/5). Never use UART0 (BCM 14/15) for the 9704: its TXD is undefined at power-on and the kernel console reads garbage and panics. I_BTD is open drain; always read it with `gpioget --bias=pull-up gpiochip4 23`. The DCF77 wiring above (data BCM 21, enable BCM 19) is the field wiring of 23 April 2026; the Rev D sheet's BCM 12/20 was the plan before it.
 
 ### tesseract (RockBLOCK 9603, SBD)
