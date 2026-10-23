@@ -179,6 +179,8 @@ All signals are 3.3 V. GPIO numbers are BCM; "pin" is the header pin. The chip i
 | 39 | | | GND | DCF77 G |
 | 40 | 21 | in | DCF77 data | DCF77 T |
 
+**RockBLOCK Mk2 (board v2.C, Iridium 9602) on the same harness:** `docs/MeshSat-Field-Kit-RockBLOCK-Mk2-wiring-sheet.pdf` (23 Oct 2026, one page): yellow to 8 5vIn, teal to 7 GND, black to 14 GND, purple to 3 TXD, blue to 2 RXD, grey to 10 RI; olive and orange taped off; the software switch from IMT to SBD and the account gate. Sources: Rock Seven's Developer Guide 1.4 and Ground Control's 9602 connector table.
+
 **9704 harness wire colours** (read from two photos of 21 Sep 2026 16:20, the bench afternoon before TTC26, `images/9704-harness-pi-header-2026-09-21-a.jpg` and `-b.jpg`; the harness is eight Dupont leads from a rainbow ribbon into the X1202's stacking header on top of the Pi). The fan connector marks the pin 39/40 end; counting header columns from the pin 1 end the housings sit on columns 1, 3, 4, 5, 8, 9, 15 and 19, which are the eight pins of the table above. The two wires standing alone are certain; the six at the pin 1 end are assigned by their order along the header and are to be confirmed on the kit with the case open (MESHSAT-1658). Which of the two kits the photos show is not recorded; both were wired alike on 20 Sep 2026.
 
 | Pi pin | Signal | 9704 pin | Colour |
