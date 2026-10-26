@@ -30,7 +30,7 @@ With the MOLLE plate: 69.6 × 160.0 × 71.7 mm.
 - **Carry plate:** 4× M3 heat-set inserts (same type) + 4× M3×8 countersunk
 - **Button retainer:** 6× M2×6 self-tapping
 - **9704 lock:** 2× M3×16 self-tapping, from above into the rail ends, after the board is slid in (fit before the separator)
-- **Seal:** 2.0 mm silicone O-ring cord, ~450 mm. Groove 2.7 × 1.5 mm (77.6 % fill, 25 % squeeze). Join the ends with cyanoacrylate.
+- **Seal:** 2.0 mm silicone O-ring cord, ~450 mm; a solid 2.0 mm EPDM cord also fits (stiffer). Groove 2.7 × 1.5 mm (77.6 % fill, 25 % squeeze). Join the ends with cyanoacrylate over a polyolefin primer (Loctite 406 with SF 770, or a primer-pen kit sold for PE/PP plastics): without the primer, cyanoacrylate does not hold on silicone or EPDM. Cut the ends square, put the joint beside a lid screw rather than in a corner, and hold the cord in the groove with a few dots of the same glue. No solvent contact cement: its solvents attack the ASA.
 - **Foam:** 1.5 mm closed-cell foam: 1 strip ~15 × 70 under the 18650 holder, 4 pads 1.3 × 4 on the lid hold-downs (each compressed to 1.0 mm)
 - **Window:** polycarbonate 24.0 × 38.0 × 2.0 mm (pocket 24.6 × 38.6 × 2.2), bonded with a neutral-cure silicone. Acetoxy (vinegar-smelling) silicone can craze polycarbonate.
 - **Panel parts** (exact SKUs still open; check their cut-outs against the .scad):
