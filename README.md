@@ -97,6 +97,10 @@ Concept renders of the assembled kit as designed (not built; `v2/cad/render/` ho
 - KiCad 9, Freerouting and the generator scripts run headless on a rented build host; see `v2/README.md` for the pipeline and the prerequisites.
 - `v2/vendor/` holds third-party reference material (manufacturer CAD, datasheets) under the vendors' own terms; see `v2/vendor/README.md`.
 
+## Mission and use policy
+
+MeshSat does not work with any organisation that develops, produces, integrates or operates weapon systems, and provides nothing for use in one. The licence below is unchanged: the policy covers whom we work with, not what you may do with the code. Read the [MeshSat Mission and Use Policy](https://meshsat.net/policy/).
+
 ## Licence
 
 The hardware design, documentation and generator scripts in this repository are released under the CERN Open Hardware Licence Version 2, Strongly Reciprocal (CERN-OHL-S-2.0), see [`LICENSE`](LICENSE). Third-party files under `v2/vendor/` are not covered by it.
