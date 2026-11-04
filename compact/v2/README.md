@@ -18,7 +18,7 @@ With the MOLLE plate: 69.6 × 160.0 × 71.7 mm.
 | Part | Material | Orientation (already exported this way) | Notes |
 |---|---|---|---|
 | meshsat-body | ASA | open side up | 5 perimeters, ≥40 % infill; horizontal port holes may sag slightly, so deburr |
-| meshsat-lid | ASA | outer face down | groove, pane pocket and hold-downs face up |
+| meshsat-lid | ASA | outer face down | groove, pane pocket and hold-downs face up; 5 perimeters, 100 % infill (a porous lid leaks round the window) |
 | meshsat-separator | ASA | flat underside down | 100 % infill |
 | meshsat-membrane | TPU 95A | flange down, caps up | slow (20 to 30 mm/s) |
 | meshsat-plungers ×3 | ASA/PETG | head down | |
@@ -32,7 +32,7 @@ With the MOLLE plate: 69.6 × 160.0 × 71.7 mm.
 - **9704 lock:** 2× M3×16 self-tapping, from above into the rail ends, after the board is slid in (fit before the separator)
 - **Seal:** 2.0 mm silicone O-ring cord, ~450 mm; a solid 2.0 mm EPDM cord also fits (stiffer). Groove 2.7 × 1.5 mm (77.6 % fill, 25 % squeeze). Join the ends with cyanoacrylate over a polyolefin primer (Loctite 406 with SF 770, or a primer-pen kit sold for PE/PP plastics): without the primer, cyanoacrylate does not hold on silicone or EPDM. Cut the ends square, put the joint beside a lid screw rather than in a corner, and hold the cord in the groove with a few dots of the same glue. No solvent contact cement: its solvents attack the ASA.
 - **Foam:** 1.5 mm closed-cell foam: 1 strip ~15 × 70 under the 18650 holder, 4 pads 1.3 × 4 on the lid hold-downs (each compressed to 1.0 mm)
-- **Window:** polycarbonate 24.0 × 38.0 × 2.0 mm (pocket 24.6 × 38.6 × 2.2), bonded with a neutral-cure silicone. Acetoxy (vinegar-smelling) silicone can craze polycarbonate.
+- **Window:** polycarbonate 24.0 × 38.0 × 2.0 mm (pocket 24.6 × 38.6 × 2.2 on the inner face of the lid), bonded from the inside, so water pressure pushes the pane onto its seat. Glue: a neutral-cure alkoxy silicone (the prototypes use Loctite SI 5145, 40 ml tube, MIL-A-46146B). Acetoxy (vinegar-smelling) silicone, cyanoacrylate and solvent cements craze or fog polycarbonate. Cut the pane from 2 mm sheet with a fine-tooth saw, protective film on, and file it to size (±0.2 mm; 0.3 mm of play per side) with the corners rounded about 0.5 mm; no laser, polycarbonate burns and yellows. Check the sheet with calipers first: 1.8 to 2.2 mm fits the pocket.
 - **Panel parts** (exact SKUs still open; check their cut-outs against the .scad):
   - 2× SMA female bulkhead pigtails with O-ring, Ø6.6 holes
   - IP67 panel USB-C, Ø16.2 hole; designed for a nut up to 20 mm across
@@ -41,6 +41,7 @@ With the MOLLE plate: 69.6 × 160.0 × 71.7 mm.
 - **Antennas:** Ground Control helical Iridium antenna (49 × 19 mm, SMA-M) + 868 MHz LoRa whip
 
 ## Assembly notes
+0. Bond the window a day ahead. Clean the pane and the pocket with isopropyl alcohol (never acetone, it attacks polycarbonate), run a thin bead on the outer half of the pocket floor, press the pane in, wipe off the squeeze-out and let it cure about 24 h with the lid open. Then a dunk test with a dry tissue inside.
 1. RockBLOCK goes **component side down**. Slide it along the rails from the USB end until it hits the stop, then fit the two M3×16 lock screws.
 2. Solder the harness wires directly to the 9704 header pins. There is ~3.9 mm under the pin tips, so Dupont housings won't fit. Anchor the bundle (adhesive tie mount in the free lower-bay area, y ≈ 25 to 55) so the solder joints carry no strain.
 3. Fit the separator, then the foam strip, then the Supreme. Seat the PCB edges in the lips.
