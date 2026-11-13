@@ -1,0 +1,23 @@
+ref,block,part,manufacturer_part,lcsc,qty_per_board,unit_usd,line_usd,price_source
+U1,USB hub,USB 2.0 four-port hub,FE1.1S-BSOP28BCN,C9359,1,0.77,0.77,"LCSC listing, 13 Nov 2026"
+Y1,USB hub,12 MHz crystal for the hub,,C9002,1,0.0947,0.0947,"JLCPCB parts table, 12 Sep 2026"
+U2-U5,USB ports,1.5 A current-limited port switch with fault flag,TPS2065CDBVR,C353882,4,0.2907,1.1628,"JLCPCB parts table, 12 Sep 2026"
+U6-U7,Switched feeds,"2 A load switch, touch display and satellite modem",TPS22810DRVR,C527679,2,0.5668,1.1336,"JLCPCB parts table, 12 Sep 2026"
+R1-R8,Sensing,"0.1 ohm 1% current shunt, 1206",HoJLR1206-1W-100mR-1%,C2903496,8,0.0756,0.6048,"JLCPCB parts table, 12 Sep 2026"
+U8-U15,Sensing,"current and voltage monitor, I2C",INA219AIDCNR,C87469,8,0.56,4.48,"LCSC listing, 13 Nov 2026"
+U16-U20,USB ports,"USB ESD protection, four ports and the upstream",USBLC6-2SC6,C7519,5,0.1759,0.8795,"JLCPCB parts table, 12 Sep 2026"
+U21,Control,16-bit I2C I/O expander,PCA9555PWR,C2864778,1,1.2375,1.2375,"JLCPCB parts table, 12 Sep 2026"
+U22,Always-on rail,"boost converter, X1202 cells to 5.1 V",TPS61089RNRR,C165129,1,0.7097,0.7097,"JLCPCB parts table, 12 Sep 2026"
+L1,Always-on rail,"boost inductor, about 1 uH, 4 A saturation",to be chosen,,1,,,not priced
+U23,Always-on rail,low-cell cutoff (voltage detector) for the boost enable,to be chosen,,1,,,not priced
+Q1,Always-on rail,"P-channel FET, reverse protection on the cell tap",AO3401A,C15127,1,0.0941,0.0941,"JLCPCB parts table, 12 Sep 2026"
+F1-F2,Power in,"resettable fuse 2.5 A hold, 5 V in and cell tap",1812L250/30GR,C52748011,2,0.1503,0.3006,"JLCPCB parts table, 12 Sep 2026"
+D1-D2,Power in,"5 V TVS clamp, 5 V in and always-on rail",SMBJ5.0A,C113974,2,0.0585,0.117,"JLCPCB parts table, 12 Sep 2026"
+U24,Control,3.3 V regulator for the board's logic,AP2112K-3.3,C51118,1,0.1708,0.1708,"JLCPCB parts table, 12 Sep 2026"
+C,Passives,"22 uF 10 V X7R 1210, port and rail bulk",CS3225X7R226K250NRL,C2918511,8,0.1797,1.4376,"JLCPCB parts table, 12 Sep 2026"
+C,Passives,10 uF 0805,,C15850,12,0.0788,0.9456,"JLCPCB parts table, 12 Sep 2026"
+C,Passives,100 nF 100 V 0805,,C106243,30,0.0286,0.858,"JLCPCB parts table, 12 Sep 2026"
+R,Passives,"resistors 0603 1%, assorted",0603WAF1000T5E (priced as),C22775,40,0.0031,0.124,"JLCPCB parts table, 12 Sep 2026"
+J1-J4,Connectors,"JST-VH 2-pin, latching: 5 V in, cell tap, display, satellite modem",B2P-VH-BL(LF)(SN),C274411,4,0.0886,0.3544,"JLCPCB parts table, 12 Sep 2026"
+J5-J10,Connectors,"JST-GH 4-pin, latching: upstream, four ports, I2C",SM04B-GHS-TB,C189895,6,0.27,1.62,"LCSC listing, 13 Nov 2026"
+,,"Priced lines, per board",,,,,17.09,two lines not priced
