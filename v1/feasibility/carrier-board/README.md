@@ -6,9 +6,9 @@ The question: can one board that carries only power and interconnect, and no rad
 
 This is a study. Nothing in it has been drawn in ECAD, ordered or built.
 
-**Verdict: go, with the three gates below.** Decided by Kyriakos Papadopoulos on 13 November 2026.
+**Verdict: no-go** (Kyriakos Papadopoulos, 13 November 2026). Designing and verifying a PCB needs experience the project does not have in house, and building one is not in the project's budget. The study stays as the specification if either changes.
 
-**Correction, 13 November 2026:** the first version of this study said 65 of the PicoAPRS silences ended with a press of its PTT button. That figure came from a reading rule in the device log; the button was pressed 2 or 3 times. R2 and the reasons for the verdict are corrected below, and the device log is corrected the same day. The verdict stands (Kyriakos Papadopoulos, 13 November 2026).
+**Correction, 13 November 2026:** the first version of this study said 65 of the PicoAPRS silences ended with a press of its PTT button. That figure came from a reading rule in the device log; the button was pressed 2 or 3 times. R2 and the reasons for the verdict are corrected below, and the device log is corrected the same day. The verdict, first given as "go, with the gates", was changed to no-go the same day.
 
 ## What the kits logged
 
@@ -140,7 +140,7 @@ Then build three, two kits and a spare, and fit one kit first, never in the week
 
 Why: the log's clearest failures are the ones the board answers directly. In 102 wedges the last resort was a port "cut" that never removed power, and in 17 more the cut could not act at all. The display hung three times until the whole kit was power cycled. Both wiring faults were found from symptoms. None of these has an off-the-shelf answer that also measures current. Three boards come to about USD 85 in priced parts and bare boards; the off-the-shelf hub covers less of the list for about EUR 250. A no-go keeps the kits as they are and leaves R2 and R3 to a lead from a separate always-on source and a power button.
 
-**Verdict: go, with these three gates.** Decided by Kyriakos Papadopoulos on 13 November 2026.
+**Verdict: no-go** (Kyriakos Papadopoulos, 13 November 2026). Designing and verifying a PCB needs experience the project does not have in house, and building one is not in the project's budget. The study stays as the specification if either changes. The recommendation above was the study's; the verdict is the owner's.
 
 ## Files
 

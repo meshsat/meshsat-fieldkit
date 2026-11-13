@@ -15,7 +15,7 @@ Per kit: Raspberry Pi 5 8 GB with active cooler, Geekworm X1202 UPS (4 x 18650),
 | `docs/MeshSat-Field-Kit-GPIO-Pinout.docx` | GPIO harness table, Rev C |
 | `docs/MeshSat-Field-Kit-GPIO-Pinout-Parallax.docx` | GPIO harness table for parallax, Rev D |
 | `docs/direwolf-aioc-setup.md` | the APRS chain: Direwolf with the AIOC |
-| `feasibility/carrier-board/` | carrier-board feasibility study, 13 November 2026: a power and interconnect board with no radio on it, built from the kits' failure log, with BOM, quotes and the verdict (go, with gates) |
+| `feasibility/carrier-board/` | carrier-board feasibility study, 13 November 2026: a power and interconnect board with no radio on it, built from the kits' failure log, with BOM, quotes and the verdict (no-go) |
 | `cad/` | FreeCAD model of the three plates and the component layout (`field_kit.FCStd`, build scripts, renders, `field_kit.step`) |
 | `images/` | photos: the kit in its case with the display plate, both kits opened on the bench, the operator dashboard on the Touch Display 2, and the 4 September 2026 session (both kits stacked outside in the rain, opened on the bench, the dashboards) |
 
