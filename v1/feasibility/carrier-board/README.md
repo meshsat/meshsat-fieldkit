@@ -8,6 +8,8 @@ This is a study. Nothing in it has been drawn in ECAD, ordered or built.
 
 **Verdict: go, with the three gates below.** Decided by Kyriakos Papadopoulos on 13 November 2026.
 
+**Correction, 13 November 2026:** the first version of this study said 65 of the PicoAPRS silences ended with a press of its PTT button. That figure came from a reading rule in the device log; the button was pressed 2 or 3 times. R2 and the reasons for the verdict are corrected below, and the device log is corrected the same day. The verdict stands (Kyriakos Papadopoulos, 13 November 2026).
+
 ## What the kits logged
 
 The requirements come from the device reliability log of the two field kits, tesseract and parallax, 5 September to 13 November 2026 ([export of 13 November 2026](https://github.com/meshsat/meshsat/tree/main/docs/evidence/device-log/2026-11-13), [docs page](https://docs.meshsat.net/reference/device-log)). A wedge is a device that stops answering until something resets it.
@@ -15,7 +17,7 @@ The requirements come from the device reliability log of the two field kits, tes
 | # | Requirement | What the log shows | What the board does |
 |---|---|---|---|
 | R1 | A real power cut per USB port, with its current measured | In 102 wedges the watchdog tried a cut of the device's USB hub port. On the StarTech hubs that cut turned out to be a data reconnect: the device keeps its power (found 18 September 2026). In 17 more the step could not act at all, because the device had no switchable port (RTL-SDR 11, APRS radio 6): the Pi 5's own four USB ports switch power as one group. Five RTL-SDR wedges and one cellular modem wedge ended by hand. | Four ports, each with its own current-limited switch, shunt and monitor. A cut takes the power from one device, and the log reads its current. |
-| R2 | 5 V for the APRS radio while the kit is off | 67 receive silences of the PicoAPRS; 65 ended with a press of its PTT button, which is inside the sealed case. The PicoAPRS runs on its own 850 mAh cell when USB power is gone, shuts down when the cell is empty, and only the PTT button turns it on again. The kit's USB ports have no power whenever the kit is off. | Port 2 is fed from an always-on 5.1 V rail, boosted from the X1202's cells, with a cutoff that leaves the kit enough charge to start. The Pi can still switch the port while it runs. |
+| R2 | 5 V for the APRS radio while the kit is off | 67 receive silences of the PicoAPRS. Each began in the 30 minutes after a Bridge restart, and the kit did not log how it ended; the PTT button, inside the sealed case, was pressed 2 or 3 times in that period. On 13 November 2026 both radios heard nothing while both kits transmitted next to each other, with the kits powered since 15 October, so an empty cell does not explain it. The PicoAPRS runs on its own 850 mAh cell when USB power is gone, shuts down when the cell is empty, and only the PTT button turns it on again. The cause of the silences is not known yet. | Port 2 is fed from an always-on 5.1 V rail, boosted from the X1202's cells, with a cutoff that leaves the kit enough charge to start, so the radio never runs its cell empty. The Pi can still switch the port while it runs. Whether this cures the silences depends on their cause. |
 | R3 | A power switch for the touch display | The watchdog does not watch the display. The project notes record three hangs that only a power cut cleared (24 April, 6 and 15 September 2026), each a power cycle of the whole kit, and dim panels caused by the display's 5 V lead (21 September). | The display's 5 V goes through a load switch and a monitor: the Bridge can restart the panel alone and see what it draws. |
 | R4 | One fused, measured 5 V path | 4 September 2026: 202 power-loss events, a reboot and an audio interface off USB, from the wiring around the UPS board. 21 September: the dim panels. Both were found from symptoms, not from a number. | One fused and clamped 5 V input with its own monitor, and a monitor on every output, so a wiring fault shows as a current or a voltage. |
 | R5 | Latching connectors | Five RTL-SDR wedges ended with a re-seat; the display's 5 V lead had to be moved by hand. | JST-VH for 5 V, JST-GH for USB and I2C. Both latch. |
@@ -130,13 +132,13 @@ The Yepkit YKUSH3, EUR 124.99 from Yepkit's shop on 13 November 2026 (out of sto
 
 Go, with three gates before any money is spent:
 
-1. Measure on the bench: the PicoAPRS's draw with its cell full, and the peaks of the modem, the T-Echo, the display and the RockBLOCK.
+1. Measure on the bench: the PicoAPRS's draw with its cell full, and the peaks of the modem, the T-Echo, the display and the RockBLOCK. Find out why the APRS radios go quiet after a Bridge restart, which decides whether R2 needs the always-on rail.
 2. Draw the board, then get a factory assembly quote for three.
 3. Kyriakos and Elli decide the spend.
 
 Then build three, two kits and a spare, and fit one kit first, never in the week of a demo.
 
-Why: the biggest item of hand work in the log, 65 PTT presses with the case opened, has no off-the-shelf answer that also measures current, and neither has the display. Three boards come to about USD 85 in priced parts and bare boards; the off-the-shelf hub covers less of the list for about EUR 250. A no-go keeps the kits as they are and leaves R2 and R3 to a lead from a separate always-on source and a power button.
+Why: the log's clearest failures are the ones the board answers directly. In 102 wedges the last resort was a port "cut" that never removed power, and in 17 more the cut could not act at all. The display hung three times until the whole kit was power cycled. Both wiring faults were found from symptoms. None of these has an off-the-shelf answer that also measures current. Three boards come to about USD 85 in priced parts and bare boards; the off-the-shelf hub covers less of the list for about EUR 250. A no-go keeps the kits as they are and leaves R2 and R3 to a lead from a separate always-on source and a power button.
 
 **Verdict: go, with these three gates.** Decided by Kyriakos Papadopoulos on 13 November 2026.
 
