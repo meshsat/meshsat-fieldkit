@@ -19,7 +19,7 @@ One kit. Numbers are the BOM numbers from `docs/MeshSat-Field-Kit-BOM.docx`; a d
 | - | Raspberry Pi RTC battery (ML2020) | keeps the clock while the kit is off | Pi RTC connector |
 | 19 | microSD 64 GB, A2 class | system disk | Pi slot |
 | - | RockBLOCK Mk2 (Iridium 9602, SBD) | satellite modem | Pi UART2 and 5 V, section 6 |
-| 17 | TAOGLAS IAA.01 Iridium antenna (puck) | | bulkhead, section 3 |
+| 17 | TAOGLAS IAA.01 Iridium antenna (puck) | | the SMA bulkhead, section 3 |
 | - | LILYGO T-Echo (nRF52840, SX1262, 868 MHz) | Meshtastic mesh radio; own cell and power switch | Pi USB, direct |
 | - | PicoAPRS V4 VHF | APRS transceiver with its own KISS TNC; own 850 mAh cell | Pi USB, direct |
 | 26 | LilyGO T-Call A7670E, V1.0 | 4G/2G modem (SMS, data) | Pi USB, direct |
@@ -40,11 +40,11 @@ Antenna and bulkhead materials, per kit:
 
 | Item | Qty |
 |---|---|
-| SMA female bulkhead, panel mount, waterproof (D-hole 6.5 mm) | 5 |
+| SMA female bulkhead, panel mount, waterproof (D-hole 6.5 mm) | 1 fitted (Iridium), 4 still to fit |
 | SMA pigtails, 15 cm (RG178 SMA to SMA, RG1.13 u.FL to SMA) | as in section 3 |
-| 868 MHz SMA whip, 2 to 3 dBi | 1 |
-| 4G/LTE SMA stubby, wideband | 1 |
-| VHF antenna for the PicoAPRS | 1 |
+| 868 MHz SMA whip, 2 to 3 dBi, for the mesh socket still to fit | 1 |
+| 4G/LTE SMA stubby, wideband, for the cellular socket still to fit | 1 |
+| VHF antenna for the APRS socket still to fit | 1 |
 | SMA male to female 90 degree adapter | 1 |
 | TY16 panel socket and plug (12 V inlet) | 1 set |
 | M12 IP68 vent plug (membrane) | 1 |
@@ -58,26 +58,14 @@ Drill with a step bit (6.5 mm and 16.5 mm holes), deburring tool, a crimp tool f
 
 ## 3. Case preparation
 
-Holes to drill per kit:
+Through the case wall today: the 12 V inlet and one SMA bulkhead for the Iridium antenna. The four other SMA bulkheads of the April plan (mesh, cellular, APRS and a spare) are still to be fitted; until then those radios are not on wall sockets.
 
-| Hole | Size | Where |
-|---|---|---|
-| SMA bulkhead x 5 | 6.5 mm D-hole | one wall, in a row, clear of the plate stack |
-| 12 V inlet | 16.5 mm for the TY16 back-nut socket | front wall, reachable with the lid closed; the socket is rated for walls up to 3 mm |
-| M12 vent plug | 12 mm | bottom of the case |
-| LED holder | 3 mm | front wall |
-
-Bulkhead assignment, with the internal cable from each radio:
-
-As built in April 2026. The radios behind sockets 2, 4 and 5 have changed since (section 9); the sockets are re-checked with the case open and this table is updated then.
-
-| Bulkhead | Radio inside (April) | Internal cable | Antenna outside |
+| Through the wall | Hole | Inside | Outside |
 |---|---|---|---|
-| 1 | Iridium modem | SMA to SMA RG178, 15 cm | TAOGLAS IAA.01 puck |
-| 2 | LoRa radio | u.FL to SMA RG1.13, 15 cm | 868 MHz whip |
-| 3 | T-Call A7670E | u.FL to SMA RG1.13, 15 cm | LTE stubby |
-| 4 | RTL-SDR V4 (taken out) | SMA to SMA RG178, 15 cm | SRH805S |
-| 5 | APRS radio | SMA to SMA RG178, 15 cm | Nagoya NA-771 through the 90 degree adapter |
+| 12 V inlet (TY16 back-nut socket) | 16.5 mm, front wall, reachable with the lid closed; the socket is rated for walls up to 3 mm | to the X1202's DC input | the brick's 12 V lead |
+| SMA bulkhead | 6.5 mm D-hole | RockBLOCK Mk2, over a short SMA pigtail | TAOGLAS IAA.01 puck |
+
+The four SMA bulkheads still to fit go in the same wall as the Iridium one, in a row, clear of the plate stack (6.5 mm D-holes). The April plan also has an M12 vent plug in the bottom (12 mm) and a 3 mm LED in the front wall.
 
 Tighten every SMA joint, inside and outside, with the 1 Nm wrench, and again after any antenna work. A loose SMA joint looks exactly like "no satellite": on 25 September 2026 the torque wrench was what got both kits a working Iridium link.
 
